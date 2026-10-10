@@ -27,15 +27,36 @@ export default function ConsultationCard({ item }: { item: Consultation }) {
     });
   }
 
+  const answerPreview = item.answer
+    ? item.answer.slice(0, 90) + (item.answer.length > 90 ? '…' : '')
+    : '';
+
   return (
     <Link href={`/result/${item.id}`} className="card">
       <div className="row">
         <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
         {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
       </div>
-      <div className="qtext">{item.question}</div>
-      {item.locked && (
-        <div className="locked-hint">🔒 専門家の回答あり・読むには¥500の相談（読み放題特典つき）が必要です</div>
+      <div className="qtext qtext-main">💬 {item.question}</div>
+      {item.locked ? (
+        <div className="card-answerbox">
+          <div className="locked-badge">🔒 専門家の回答</div>
+          <div className="blur-lines">
+            <div />
+            <div />
+            <div />
+          </div>
+        </div>
+      ) : (
+        answerPreview && (
+          <div className="card-answerbox">
+            <div className="answer-label">
+              <img src="/assets/icon_bulb.png" alt="" />
+              どうする先生（AI）
+            </div>
+            <div className="qtext">{answerPreview}</div>
+          </div>
+        )
       )}
       <div className="card-foot">
         <button className={`like-btn ${liked ? 'liked' : ''}`} onClick={toggleLike}>

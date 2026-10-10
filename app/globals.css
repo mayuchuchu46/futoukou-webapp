@@ -124,13 +124,19 @@ input, textarea { font-family: inherit; }
   font-weight: 700;
 }
 .crisis-btn {
-  border: 1px solid var(--orange);
-  background: var(--orange-bg);
-  color: var(--orange-text);
-  border-radius: 999px;
-  padding: 7px 12px;
+  padding: 4px 2px 5px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1.5px dashed var(--orange);
+  background: none;
   font-size: 12px;
   font-weight: 700;
+  color: var(--orange-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
 }
 .muted { color: var(--muted); font-size: 12px; }
 
@@ -161,16 +167,15 @@ input, textarea { font-family: inherit; }
 
 .card {
   background: var(--card);
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border: 1px solid var(--border);
+  gap: 8px;
 }
 
 .row { display: flex; justify-content: space-between; align-items: center; }
-.cat-badge { display: inline-flex; align-self: flex-start; padding: 5px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.cat-badge { display: inline-flex; align-self: flex-start; padding: 5px 13px; border-radius: 999px; font-size: 11px; font-weight: 700; }
 .cat-body { background: var(--sub); color: #1F4A3C; }
 .cat-social { background: var(--orange-bg); color: var(--orange-text); }
 .cat-school { background: var(--teal-bg); color: var(--teal-text); }
@@ -182,9 +187,12 @@ input, textarea { font-family: inherit; }
 .cat-other { background: #EFEFEF; color: var(--muted); }
 
 .qtext { font-size: 14px; line-height: 1.7; color: var(--text); }
+.qtext-main { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.7; }
+.card-answerbox { background: var(--bg); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.locked-badge { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--orange-text); }
 .answer-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--main); font-weight: 700; }
 .answer-label img { width: 16px; height: 16px; object-fit: contain; }
-.card-foot { display: flex; gap: 16px; font-size: 12px; color: var(--muted); }
+.card-foot { display: flex; gap: 16px; font-size: 12px; color: var(--muted); border-top: 1px solid #F0EEE6; padding-top: 10px; }
 .like-btn { display: flex; align-items: center; gap: 4px; background: none; border: none; color: var(--muted); font-size: 12px; padding: 0; }
 .like-btn.liked { color: var(--orange-text); font-weight: 700; }
 .view-count { font-size: 12px; color: var(--muted); }
