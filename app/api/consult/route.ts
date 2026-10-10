@@ -36,9 +36,17 @@ export async function POST(req: NextRequest) {
       max_tokens: 600,
       messages: [{ role: 'user', content: prompt }],
     });
-    const block = msg.content[0];
-    answer = block.type === 'text' ? block.text.trim() : '';
-    if (!answer) throw new Error('empty response');
+    // 応答の先頭ブロックが常にtextとは限らない（拡張思考ブロック等が
+    // 先に来るケースがある）ため、content配列からtextブロックを探す。
+    const textBlock = msg.content.find(
+      (b): b is Extract<typeof b, { type: 'text' }> => b.type === 'text'
+    );
+    answer = textBlock ? textBlock.text.trim() : '';
+    if (!answer) {
+      throw new Error(
+        `empty response (stop_reason=${msg.stop_reason}, blocks=${msg.content.map((b) => b.type).join(',')})`
+      );
+    }
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'unknown error';
     return NextResponse.json({ error: 'AI回答の生成に失敗しました: ' + message }, { status: 502 });
