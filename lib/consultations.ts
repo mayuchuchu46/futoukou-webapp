@@ -9,11 +9,13 @@ export async function getConsultationsList({
   category,
   q,
   viewerId,
+  authorId,
   limit = 50,
 }: {
   category?: string | null;
   q?: string | null;
   viewerId?: string | null;
+  authorId?: string | null;
   limit?: number;
 }): Promise<Consultation[]> {
   const supabase = getSupabaseAdmin();
@@ -30,6 +32,9 @@ export async function getConsultationsList({
   }
   if (q && q.trim()) {
     query = query.or(`question.ilike.%${q.trim()}%,answer.ilike.%${q.trim()}%`);
+  }
+  if (authorId) {
+    query = query.eq('author_id', authorId);
   }
 
   const { data, error } = await query;
