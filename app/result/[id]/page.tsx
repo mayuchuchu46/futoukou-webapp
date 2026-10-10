@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { getConsultationsList } from '@/lib/consultations';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import ResultClient from './ResultClient';
 import ViewPing from './ViewPing';
@@ -99,6 +101,10 @@ export default async function ResultPage({
 
   const cat = CATS[item.category] || CATS.other;
 
+  // 回答のすぐ下に出す「似たような相談」。同じカテゴリの他の相談から新しい順に数件。
+  const similarPool = await getConsultationsList({ category: item.category, limit: 5 });
+  const similarItems = similarPool.filter((d) => d.id !== item.id).slice(0, 4);
+
   // クローラー・初回表示用のJSON-LD（QAPage）。
   // 専門家回答がロック中の場合は本文がまだ無いので、AI回答か、
   // ロック解除済みの専門家回答がある場合だけ付与する。
@@ -136,6 +142,8 @@ export default async function ResultPage({
       )}
       <Header supervised={false} />
       <div className="main">
+        <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
+
         <div className="row">
           <div className={`cat-badge ${cat.cls}`} style={{ alignSelf: 'flex-start' }}>
             {cat.label}
@@ -166,6 +174,25 @@ export default async function ResultPage({
             </div>
           </div>
         )}
+
+        {similarItems.length > 0 && (
+          <div className="card">
+            <div className="answer-label" style={{ fontSize: 13 }}>似たような相談</div>
+            <div className="similarq">
+              {similarItems.map((d) => (
+                <Link key={d.id} href={`/result/${d.id}`} className="similar-item">
+                  <span className="similar-q">
+                    {d.question.slice(0, 42)}
+                    {d.question.length > 42 ? '…' : ''}
+                  </span>
+                  <span className="similar-arrow">›</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <Link href="/" className="backlink" style={{ margin: '4px 0 14px' }}>← もどる</Link>
 
         {/* 閲覧数カウントはSEOに関係ない副作用なので、どちらの種別でもクライアント側で送る */}
         <ViewPing id={id} />
