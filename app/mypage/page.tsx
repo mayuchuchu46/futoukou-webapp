@@ -39,6 +39,10 @@ export default function MyPage() {
           items.map((item) => <ConsultationCard key={item.id} item={item} />)
         )}
 
+        <Link href="/account" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <span>アカウント（ログイン）</span>
+          <span className="muted">›</span>
+        </Link>
         <Link href="/about" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <span>どうする先生について</span>
           <span className="muted">›</span>

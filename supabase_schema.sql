@@ -13,6 +13,14 @@
 -- alter table consultations add constraint consultations_category_check check (category in ('body','social','will','approach','course','other'));
 -- update guidelines set categories = jsonb_set(categories, '{approach}', '{"dos": [], "donts": [], "samplePhrases": []}'::jsonb) where not (categories ? 'approach');
 -- （中身の下書きを入れる場合は、このファイル下部の update guidelines ... の "approach" ブロックをコピーして個別に実行してください）
+-- 利用者アカウント（ログイン機能）を追加した場合、既存DBでは次を実行してください。
+-- create table if not exists members (
+--   id uuid primary key default gen_random_uuid(),
+--   email text not null unique,
+--   password_hash text not null,
+--   name text,
+--   created_at timestamptz not null default now()
+-- );
 
 create extension if not exists "pgcrypto";
 
@@ -70,6 +78,17 @@ create table if not exists expert_memberships (
   author_id text primary key,
   expires_at timestamptz not null,
   updated_at timestamptz not null default now()
+);
+
+-- 利用者（保護者）アカウント。今回はアカウント基盤（登録・ログイン・ログアウト）のみ。
+-- 既存の匿名投稿（author_id、ブラウザのlocalStorage）との紐付けはまだ行わない。
+-- 将来の「読み放題会員（月¥800）」もこのテーブルを使う想定（開発ドキュメント参照）。
+create table if not exists members (
+  id uuid primary key default gen_random_uuid(),
+  email text not null unique,
+  password_hash text not null,
+  name text,
+  created_at timestamptz not null default now()
 );
 
 create table if not exists guidelines (
