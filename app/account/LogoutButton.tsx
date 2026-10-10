@@ -16,7 +16,20 @@ export default function LogoutButton() {
   }
 
   return (
-    <button className="btn-secondary" onClick={logout} disabled={loading}>
+    <button
+      onClick={logout}
+      disabled={loading}
+      className="muted"
+      style={{
+        background: 'none',
+        border: 'none',
+        textAlign: 'center',
+        padding: '8px',
+        fontSize: 13,
+        textDecoration: 'underline',
+        cursor: loading ? 'not-allowed' : 'pointer',
+      }}
+    >
       {loading ? 'ログアウト中…' : 'ログアウト'}
     </button>
   );
