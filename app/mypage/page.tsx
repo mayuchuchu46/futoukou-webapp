@@ -29,9 +29,12 @@ export default function MyPage() {
         {items === null ? (
           <div className="muted">読み込み中…</div>
         ) : items.length === 0 ? (
-          <div className="empty">
-            まだ投稿がありません。<br />「相談する」から質問してみてください。
-          </div>
+          <>
+            <div className="empty">
+              まだ投稿がありません。<br />「相談する」から質問してみてください。
+            </div>
+            <Link href="/ask" className="btn-primary">相談する</Link>
+          </>
         ) : (
           items.map((item) => <ConsultationCard key={item.id} item={item} />)
         )}
