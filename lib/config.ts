@@ -8,3 +8,7 @@ export const EXPERT_PAYOUT_JPY = Number(process.env.EXPERT_PAYOUT_JPY || 400); /
 export function expertPayout(_priceJpy: number) {
   return EXPERT_PAYOUT_JPY;
 }
+
+// 無料AI相談を累計でこの回数使った利用者に、専門家への相談（有料）を案内する閾値。
+// 実利用データに基づく数値ではなく仮説（2026-10-11時点）。公開後のログを見て調整する。
+export const AI_USAGE_UPSELL_THRESHOLD = Number(process.env.AI_USAGE_UPSELL_THRESHOLD || 3);

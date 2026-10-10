@@ -12,6 +12,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import ResultClient from './ResultClient';
 import ViewPing from './ViewPing';
 import EyeIcon from '@/components/EyeIcon';
+import AiUsageUpsell from './AiUsageUpsell';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -163,15 +164,20 @@ export default async function ResultPage({
             <ResultClient id={id} initialItem={item} />
           </Suspense>
         ) : (
-          <div className="card">
-            <div className="answer-label">
-              <img src="/assets/sensei_logo.png" alt="" />
-              どうする先生の回答・次にやること
+          <>
+            <div className="card">
+              <div className="answer-label">
+                <img src="/assets/sensei_logo.png" alt="" />
+                どうする先生の回答・次にやること
+              </div>
+              <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
+                {item.answer}
+              </div>
             </div>
-            <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
-              {item.answer}
-            </div>
-          </div>
+            <Suspense fallback={null}>
+              <AiUsageUpsell />
+            </Suspense>
+          </>
         )}
 
         {similarItems.length > 0 && (

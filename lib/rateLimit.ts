@@ -46,6 +46,12 @@ export async function checkAiConsultRateLimit(authorId: string, ip: string | nul
   return { ok: true };
 }
 
+// 無料AI相談を、この利用者（author_id）が累計で何回使ったか（全期間）。
+// レート制限（直近24時間）とは別物。専門家への送客バナーの表示判定に使う。
+export async function countAiConsultationsAllTime(authorId: string): Promise<number> {
+  return countSince({ authorId, requestType: 'ai', onlyType: true }, new Date(0).toISOString());
+}
+
 // 有料の公認心理師相談向け：決済が絡むため緩めだが、連打・スパムは防ぐ
 export async function checkExpertRequestRateLimit(authorId: string, ip: string | null): Promise<LimitResult> {
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
