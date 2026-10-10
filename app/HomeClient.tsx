@@ -1,12 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import ConsultationCard from '@/components/ConsultationCard';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
+
+function isExpertAnswered(item: Consultation) {
+  return item.request_type === 'expert' && item.expert_status === 'answered';
+}
 
 export default function HomeClient({
   initialItems,
@@ -19,8 +24,12 @@ export default function HomeClient({
   initialCounts: Record<string, number>;
   initialTotal: number;
 }) {
+  const router = useRouter();
   const [category, setCategory] = useState('all');
   const [items, setItems] = useState<Consultation[]>(initialItems);
+  // バナー・ランキングは選んでいるカテゴリに関わらず「全体」の集計を出すので、
+  // カテゴリ切り替えで動く items とは別に保持する。
+  const [allItems, setAllItems] = useState<Consultation[]>(initialItems);
   const [loading, setLoading] = useState(false);
   const supervised = initialSupervised;
   const counts = initialCounts;
@@ -34,6 +43,7 @@ export default function HomeClient({
       const res = await fetch(`/api/consultations?${params.toString()}`);
       const d = await res.json();
       setItems(d.consultations || []);
+      if (next === 'all') setAllItems(d.consultations || []);
     } finally {
       if (showLoading) setLoading(false);
     }
@@ -52,10 +62,40 @@ export default function HomeClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const expertCount = allItems.filter(isExpertAnswered).length;
+  const ranking = [...allItems].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
+  const showExtras = category === 'all';
+
   return (
     <div className="app-shell">
       <Header supervised={supervised} />
       <div className="main">
+        {showExtras && (
+          <div className="expertbanner" onClick={() => router.push('/expertlist')}>
+            <span className="expertbanner-icon">🔒</span>
+            <div className="expertbanner-body">
+              <div className="expertbanner-title">専門家が回答した相談{expertCount ? `（${expertCount}件）` : ''}</div>
+              <div className="expertbanner-desc">公認心理師など専門家本人が直接回答。¥500で30日間読み放題</div>
+            </div>
+            <span className="expertbanner-cta">›</span>
+          </div>
+        )}
+
+        {showExtras && allItems.length >= 3 && (
+          <div className="ranking">
+            <div className="ranking-title">よく読まれている相談</div>
+            <div className="rank-list">
+              {ranking.map((item, i) => (
+                <div key={item.id} className="rank-item" onClick={() => router.push(`/result/${item.id}`)}>
+                  <span className="rank-num">{i + 1}</span>
+                  <span className="rank-q">{item.question.slice(0, 28)}{item.question.length > 28 ? '…' : ''}</span>
+                  <span className="rank-views">{item.views || 0}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="chip-row">
           <button className={`chip ${category === 'all' ? 'active' : ''}`} onClick={() => selectCategory('all')}>
             すべて（{total}）

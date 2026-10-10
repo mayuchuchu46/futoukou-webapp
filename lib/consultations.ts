@@ -10,12 +10,14 @@ export async function getConsultationsList({
   q,
   viewerId,
   authorId,
+  expertAnswered,
   limit = 50,
 }: {
   category?: string | null;
   q?: string | null;
   viewerId?: string | null;
   authorId?: string | null;
+  expertAnswered?: boolean;
   limit?: number;
 }): Promise<Consultation[]> {
   const supabase = getSupabaseAdmin();
@@ -35,6 +37,9 @@ export async function getConsultationsList({
   }
   if (authorId) {
     query = query.eq('author_id', authorId);
+  }
+  if (expertAnswered) {
+    query = query.eq('request_type', 'expert').eq('expert_status', 'answered');
   }
 
   const { data, error } = await query;
