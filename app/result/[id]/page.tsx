@@ -9,6 +9,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import ResultClient from './ResultClient';
 import ViewPing from './ViewPing';
+import EyeIcon from '@/components/EyeIcon';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -140,7 +141,8 @@ export default async function ResultPage({
             {cat.label}
           </div>
           <span className="muted">
-            {metaLabel(item) ? `${metaLabel(item)}・` : ''}閲覧 {item.views || 0}
+            {metaLabel(item) ? `${metaLabel(item)}・` : ''}
+            <EyeIcon /> {item.views || 0}
           </span>
         </div>
 

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { getUid } from '@/lib/uid';
+import EyeIcon from './EyeIcon';
 
 export default function ConsultationCard({ item }: { item: Consultation }) {
   const [likes, setLikes] = useState(item.likes);
@@ -40,7 +41,7 @@ export default function ConsultationCard({ item }: { item: Consultation }) {
         <button className={`like-btn ${liked ? 'liked' : ''}`} onClick={toggleLike}>
           参考になった {likes}人
         </button>
-        <span className="view-count">閲覧 {item.views || 0}</span>
+        <span className="view-count"><EyeIcon /> {item.views || 0}</span>
       </div>
     </Link>
   );
