@@ -65,12 +65,13 @@ input, textarea { font-family: inherit; }
 }
 .header-accent {
   position: absolute;
-  top: -14px;
+  top: auto;
+  bottom: -16px;
   right: -10px;
-  width: 100px;
+  width: 62px;
   height: auto;
   pointer-events: none;
-  opacity: 0.95;
+  opacity: 0.85;
   z-index: 0;
 }
 .header-row { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
