@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import ConsultationCard from '@/components/ConsultationCard';
+import EyeIcon from '@/components/EyeIcon';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -89,7 +90,7 @@ export default function HomeClient({
                 <div key={item.id} className="rank-item" onClick={() => router.push(`/result/${item.id}`)}>
                   <span className="rank-num">{i + 1}</span>
                   <span className="rank-q">{item.question.slice(0, 28)}{item.question.length > 28 ? '…' : ''}</span>
-                  <span className="rank-views">{item.views || 0}</span>
+                  <span className="rank-views"><EyeIcon /> {item.views || 0}</span>
                 </div>
               ))}
             </div>
