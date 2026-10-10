@@ -2,13 +2,23 @@ import { CATS } from './categories';
 
 type GuideCategory = { dos?: string[]; donts?: string[]; samplePhrases?: string[] };
 
-export function buildPrompt(category: string, text: string, guideCat: GuideCategory | undefined) {
+export function buildPrompt(
+  category: string,
+  text: string,
+  guideCat: GuideCategory | undefined,
+  grade?: string | null,
+  gender?: string | null,
+  supervised?: boolean
+) {
   const catLabel = CATS[category]?.label || category;
 
   let guidanceBlock: string;
   if (guideCat && (guideCat.dos || []).length) {
+    const sourceNote = supervised
+      ? '以下は公認心理師が監修した、このテーマに関する対応方針です。この方針に沿って回答してください。'
+      : '以下は、このテーマについて一般的に知られている対応の目安です（まだ公認心理師による正式な監修を受けていない下書きです）。参考にしつつ、断定的な言い切りは避けてください。';
     guidanceBlock = `
-以下は公認心理師が監修した、このテーマに関する対応方針です。この方針に沿って回答してください。
+${sourceNote}
 【推奨する対応】
 ${(guideCat.dos || []).map((d) => '- ' + d).join('\n')}
 【避けるべき対応】
@@ -31,6 +41,6 @@ ${guidanceBlock}
 - 回答本文のみを出力し、前置きや署名は不要
 
 テーマ：${catLabel}
-相談内容：
+${grade ? 'お子さんの学年：' + grade + '\n' : ''}${gender && gender !== '回答しない' ? '性別：' + gender + '\n' : ''}相談内容：
 ${text}`;
 }

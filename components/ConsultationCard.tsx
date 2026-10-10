@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { CATS } from '@/lib/categories';
-import { Consultation } from '@/lib/types';
+import { Consultation, metaLabel } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 
 export default function ConsultationCard({ item }: { item: Consultation }) {
@@ -28,13 +28,19 @@ export default function ConsultationCard({ item }: { item: Consultation }) {
 
   return (
     <Link href={`/result/${item.id}`} className="card">
-      <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
+      <div className="row">
+        <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
+        {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
+      </div>
       <div className="qtext">{item.question}</div>
+      {item.locked && (
+        <div className="locked-hint">🔒 専門家の回答あり・読むには¥500の相談（読み放題特典つき）が必要です</div>
+      )}
       <div className="card-foot">
         <button className={`like-btn ${liked ? 'liked' : ''}`} onClick={toggleLike}>
           参考になった {likes}人
         </button>
-        <span>コメント {item.comment_count}</span>
+        <span className="view-count">閲覧 {item.views || 0}</span>
       </div>
     </Link>
   );

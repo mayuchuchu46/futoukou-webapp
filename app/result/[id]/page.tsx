@@ -1,139 +1,174 @@
-'use client';
-
-import { useEffect, useState, Suspense } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { CATS } from '@/lib/categories';
-import { Consultation, Comment } from '@/lib/types';
-import { getUid } from '@/lib/uid';
+import { Consultation, metaLabel } from '@/lib/types';
+import { getSupabaseAdmin } from '@/lib/supabase';
+import { SITE_URL, SITE_NAME } from '@/lib/site';
+import ResultClient from './ResultClient';
+import ViewPing from './ViewPing';
 
-function ResultInner() {
-  const params = useParams();
-  const router = useRouter();
-  const id = params.id as string;
+// データベースの最新状態を毎回サーバー側で取得して表示するページなので、
+// ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
+export const instant = false;
 
-  const [item, setItem] = useState<Consultation | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [commentText, setCommentText] = useState('');
-  const [sending, setSending] = useState(false);
-  const [notFound, setNotFound] = useState(false);
+// 専門家回答つきの相談は、サーバー側では「会員ではない匿名の訪問者」として扱う
+// （= 本文を伏せたロック状態）。これは今のAPI(/api/consultations)が
+// viewer_idなしのアクセスに対して返しているものと同じ状態なので、
+// クローラーや未ログインの初回表示として正しい。
+// 本人・会員かどうかの判定はブラウザのlocalStorageのIDに依存するため、
+// それはクライアント側（ResultClient）で追加取得して表示を更新する。
+async function getConsultation(id: string): Promise<Consultation | null> {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from('consultations')
+    .select('*, experts(name, credential)')
+    .eq('id', id)
+    .eq('hidden', false)
+    .single();
 
-  async function load() {
-    const res = await fetch(`/api/consultations`);
-    const data = await res.json();
-    const found = (data.consultations || []).find((c: Consultation) => c.id === id);
-    if (found) {
-      setItem(found);
-    } else {
-      setNotFound(true);
-    }
+  if (error || !data) return null;
+
+  const isExpertAnswered = data.request_type === 'expert' && data.expert_status === 'answered';
+  if (isExpertAnswered) {
+    return { ...data, answer: '', expert_answer: null, locked: true } as Consultation;
   }
+  return { ...data, locked: false } as Consultation;
+}
 
-  async function loadComments() {
-    const res = await fetch(`/api/comments?consultation_id=${id}`);
-    const data = await res.json();
-    setComments(data.comments || []);
-  }
-
-  useEffect(() => {
-    load();
-    loadComments();
-  }, [id]);
-
-  async function sendComment() {
-    if (!commentText.trim()) return;
-    setSending(true);
-    await fetch('/api/comments', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ consultation_id: id, author_id: getUid(), body: commentText }),
-    });
-    setCommentText('');
-    await loadComments();
-    setSending(false);
-  }
-
-  if (notFound) {
-    return (
-      <div className="app-shell">
-        <Header supervised={false} />
-        <div className="main">
-          <div className="muted">相談が見つかりませんでした。</div>
-          <button className="btn-secondary" onClick={() => router.push('/')}>ホームへ</button>
-        </div>
-        <BottomNav />
-      </div>
-    );
-  }
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const item = await getConsultation(id);
 
   if (!item) {
-    return (
-      <div className="app-shell">
-        <Header supervised={false} />
-        <div className="main">
-          <div className="muted">読み込み中…</div>
-        </div>
-        <BottomNav />
-      </div>
-    );
+    return { title: `相談が見つかりません | ${SITE_NAME}` };
+  }
+
+  const cat = CATS[item.category]?.label || CATS.other.label;
+  const questionTitle = item.question.replace(/\s+/g, ' ').trim().slice(0, 48);
+  const title = `${questionTitle}｜${cat}の相談 - ${SITE_NAME}`;
+
+  const descSource =
+    item.request_type === 'ai' && item.answer
+      ? item.answer
+      : item.question;
+  const description = descSource.replace(/\s+/g, ' ').trim().slice(0, 100);
+
+  const url = `${SITE_URL}/result/${item.id}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      type: 'article',
+      locale: 'ja_JP',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+    },
+  };
+}
+
+export default async function ResultPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const item = await getConsultation(id);
+
+  // 存在しない相談IDは、検索エンジンに「見つかった薄いページ」として
+  // 評価されないよう、ソフト404ではなく正式な404ステータスを返す。
+  if (!item) {
+    notFound();
   }
 
   const cat = CATS[item.category] || CATS.other;
 
+  // クローラー・初回表示用のJSON-LD（QAPage）。
+  // 専門家回答がロック中の場合は本文がまだ無いので、AI回答か、
+  // ロック解除済みの専門家回答がある場合だけ付与する。
+  const answerTextForJsonLd =
+    item.request_type === 'ai' ? item.answer : !item.locked ? item.expert_answer : null;
+
+  const jsonLd = answerTextForJsonLd
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'QAPage',
+        mainEntity: {
+          '@type': 'Question',
+          name: item.question,
+          text: item.question,
+          answerCount: 1,
+          dateCreated: item.created_at,
+          author: { '@type': 'Person', name: metaLabel(item) || '保護者' },
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: answerTextForJsonLd,
+            dateCreated: item.created_at,
+          },
+        },
+      }
+    : null;
+
   return (
     <div className="app-shell">
+      {jsonLd && (
+        // eslint-disable-next-line react/no-danger
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
       <Header supervised={false} />
       <div className="main">
-        <div className={`cat-badge ${cat.cls}`} style={{ alignSelf: 'flex-start' }}>{cat.label}</div>
+        <div className="row">
+          <div className={`cat-badge ${cat.cls}`} style={{ alignSelf: 'flex-start' }}>
+            {cat.label}
+          </div>
+          <span className="muted">
+            {metaLabel(item) ? `${metaLabel(item)}・` : ''}閲覧 {item.views || 0}
+          </span>
+        </div>
 
         <div className="card">
           <div className="muted">質問</div>
           <div className="qtext">{item.question}</div>
         </div>
 
-        <div className="card">
-          <div className="answer-label">
-            <img src="/assets/icon_bulb.png" alt="" />
-            どうする先生の回答・次にやること
-          </div>
-          <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>{item.answer}</div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 8, borderTop: '1px solid var(--border)' }}>
-          <div style={{ fontWeight: 700, fontSize: 13 }}>みんなのコメント（{comments.length}件）</div>
-          {comments.map((c) => (
-            <div key={c.id} style={{ display: 'flex', gap: 10 }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--sub)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: '0 0 auto' }}>🙂</div>
-              <div className="card" style={{ flex: 1, padding: '12px 14px' }}>
-                <div className="qtext" style={{ fontSize: 13 }}>{c.body}</div>
-              </div>
+        {item.request_type === 'expert' ? (
+          <Suspense fallback={null}>
+            <ResultClient id={id} initialItem={item} />
+          </Suspense>
+        ) : (
+          <div className="card">
+            <div className="answer-label">
+              <img src="/assets/icon_bulb.png" alt="" />
+              どうする先生の回答・次にやること
             </div>
-          ))}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#fff', border: '1px solid var(--border)', borderRadius: 999, padding: '8px 14px' }}>
-            <input
-              className="input"
-              style={{ border: 'none', padding: 0 }}
-              placeholder="コメントを書く…"
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && sendComment()}
-            />
-            <button onClick={sendComment} disabled={sending} style={{ background: 'none', border: 'none', color: 'var(--main)', fontWeight: 700 }}>
-              送信
-            </button>
+            <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
+              {item.answer}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* 閲覧数カウントはSEOに関係ない副作用なので、どちらの種別でもクライアント側で送る */}
+        <ViewPing id={id} />
       </div>
       <BottomNav />
     </div>
-  );
-}
-
-export default function ResultPage() {
-  return (
-    <Suspense fallback={null}>
-      <ResultInner />
-    </Suspense>
   );
 }

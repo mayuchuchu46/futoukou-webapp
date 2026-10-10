@@ -7,6 +7,7 @@ import BottomNav from '@/components/BottomNav';
 import ConsultationCard from '@/components/ConsultationCard';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
+import { getUid } from '@/lib/uid';
 
 function SearchInner() {
   const params = useSearchParams();
@@ -14,10 +15,19 @@ function SearchInner() {
   const [q, setQ] = useState('');
   const [items, setItems] = useState<Consultation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    fetch('/api/consultations/counts')
+      .then((r) => r.json())
+      .then((d) => { setCounts(d.counts || {}); setTotal(d.total || 0); })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     setLoading(true);
-    const params = new URLSearchParams();
+    const params = new URLSearchParams({ viewer_id: getUid() });
     if (category !== 'all') params.set('category', category);
     if (q.trim()) params.set('q', q.trim());
     fetch(`/api/consultations?${params.toString()}`)
@@ -38,11 +48,11 @@ function SearchInner() {
         />
         <div className="chip-row">
           <button className={`chip ${category === 'all' ? 'active' : ''}`} onClick={() => setCategory('all')}>
-            すべて
+            すべて（{total}）
           </button>
           {Object.entries(CATS).map(([key, c]) => (
             <button key={key} className={`chip ${category === key ? 'active' : ''}`} onClick={() => setCategory(key)}>
-              {c.label}
+              {c.short}（{counts[key] || 0}）
             </button>
           ))}
         </div>

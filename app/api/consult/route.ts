@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildPrompt } from '@/lib/prompt';
+import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
-  const { category, text, author_id } = await req.json();
+  const { category, text, author_id, grade, gender } = await req.json();
 
   if (!category || !text || !text.trim() || !author_id) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 });
@@ -13,12 +14,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY が設定されていません' }, { status: 500 });
   }
 
+  const ip = getClientIp(req);
+  const limit = await checkAiConsultRateLimit(author_id, ip);
+  if (!limit.ok) {
+    return NextResponse.json({ error: limit.message }, { status: 429 });
+  }
+
   const supabase = getSupabaseAdmin();
 
   const { data: guidelines } = await supabase.from('guidelines').select('*').eq('id', 'default').single();
   const guideCat = guidelines?.categories?.[category];
 
-  const prompt = buildPrompt(category, text.trim(), guideCat);
+  const prompt = buildPrompt(category, text.trim(), guideCat, grade || null, gender || null, !!guidelines?.supervised);
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -43,10 +50,13 @@ export async function POST(req: NextRequest) {
       category,
       question: text.trim(),
       answer,
+      grade: grade || null,
+      gender: gender || null,
       author_id,
+      client_ip: ip,
       likes: 0,
       liked_by: [],
-      comment_count: 0,
+      views: 0,
     })
     .select()
     .single();

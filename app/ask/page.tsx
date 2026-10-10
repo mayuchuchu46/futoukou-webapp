@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { CATS, Category } from '@/lib/categories';
+import { GRADE_OPTIONS, GENDER_OPTIONS } from '@/lib/types';
 import { getUid, hasAgreedTerms, setAgreedTerms } from '@/lib/uid';
 
 export default function AskPage() {
@@ -12,12 +13,20 @@ export default function AskPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [category, setCategory] = useState<Category | null>(null);
   const [text, setText] = useState('');
+  const [grade, setGrade] = useState('');
+  const [gender, setGender] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [expertSubmitting, setExpertSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [needsTerms, setNeedsTerms] = useState(false);
+  const [expertAvailable, setExpertAvailable] = useState(false);
 
   useEffect(() => {
     setNeedsTerms(!hasAgreedTerms());
+    fetch('/api/experts/available')
+      .then((r) => r.json())
+      .then((d) => setExpertAvailable(!!d.available))
+      .catch(() => setExpertAvailable(false));
   }, []);
 
   function selectCategory(key: Category) {
@@ -33,7 +42,7 @@ export default function AskPage() {
       const res = await fetch('/api/consult', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category, text, author_id: getUid() }),
+        body: JSON.stringify({ category, text, author_id: getUid(), grade: grade || null, gender: gender || null }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
@@ -42,6 +51,25 @@ export default function AskPage() {
       setError(e instanceof Error ? e.message : 'エラーが発生しました');
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function submitToExpert() {
+    if (!category || !text.trim()) return;
+    setExpertSubmitting(true);
+    setError('');
+    try {
+      const res = await fetch('/api/expert-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, text, author_id: getUid(), grade: grade || null, gender: gender || null }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error || '失敗しました');
+      window.location.href = data.url;
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'エラーが発生しました');
+      setExpertSubmitting(false);
     }
   }
 
@@ -63,6 +91,11 @@ export default function AskPage() {
               onClick={() => {
                 setAgreedTerms();
                 setNeedsTerms(false);
+                fetch('/api/consent', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ author_id: getUid() }),
+                }).catch(() => {});
               }}
             >
               同意して相談をはじめる
@@ -102,6 +135,33 @@ export default function AskPage() {
             <div className={`cat-badge ${CATS[category].cls}`} style={{ alignSelf: 'flex-start' }}>
               {CATS[category].label}
             </div>
+            <div className="muted">お子さんの学年（任意）</div>
+            <select className="input" value={grade} onChange={(e) => setGrade(e.target.value)}>
+              <option value="">選択しない</option>
+              {GRADE_OPTIONS.map((g) => (
+                <option key={g} value={g}>{g}</option>
+              ))}
+            </select>
+
+            <div className="muted">性別（任意）</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {GENDER_OPTIONS.map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => setGender(g)}
+                  className="btn-secondary"
+                  style={{
+                    flex: 1,
+                    background: gender === g ? 'var(--sub)' : '#fff',
+                    borderColor: gender === g ? 'var(--main)' : 'var(--border)',
+                  }}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+
             <div style={{ fontWeight: 700 }}>どんなことがありましたか？できるだけ具体的に書いてください。</div>
             <textarea
               className="input"
@@ -127,12 +187,36 @@ export default function AskPage() {
               <div className="qtext">{text}</div>
             </div>
             {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
-            <button className="btn-secondary" onClick={() => setStep(2)} disabled={submitting}>
+            <button className="btn-secondary" onClick={() => setStep(2)} disabled={submitting || expertSubmitting}>
               内容を直す
             </button>
-            <button className="btn-primary" onClick={submit} disabled={submitting}>
-              {submitting ? 'どうする先生が考えています…' : 'どうする先生に相談する'}
+            <button className="btn-primary" onClick={submit} disabled={submitting || expertSubmitting}>
+              {submitting ? 'どうする先生が考えています…' : 'どうする先生に相談する（無料・AIが回答）'}
             </button>
+
+            <div className="card" style={{ gap: 8, marginTop: 4 }}>
+              <div style={{ fontWeight: 700 }}>公認心理師に相談する（有料）</div>
+              {expertAvailable ? (
+                <>
+                  <div className="muted" style={{ fontSize: 13 }}>
+                    登録している公認心理師が、数日以内にテキストで直接回答します。¥500（税込）。
+                    支払うと、その日から30日間、他の人への専門家回答もすべて読み放題になります。
+                  </div>
+                  <button className="btn-secondary" onClick={submitToExpert} disabled={submitting || expertSubmitting}>
+                    {expertSubmitting ? '決済ページへ移動中…' : '¥500で公認心理師に相談する'}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="muted" style={{ fontSize: 13 }}>
+                    現在、本人確認が完了した公認心理師がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
+                  </div>
+                  <button className="btn-secondary" disabled>
+                    準備中（近日公開）
+                  </button>
+                </>
+              )}
+            </div>
           </>
         )}
       </div>

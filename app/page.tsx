@@ -1,59 +1,63 @@
-'use client';
+import type { Metadata } from 'next';
+import { getSupabaseAdmin } from '@/lib/supabase';
+import { getConsultationsList } from '@/lib/consultations';
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
+import HomeClient from './HomeClient';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Header from '@/components/Header';
-import BottomNav from '@/components/BottomNav';
-import ConsultationCard from '@/components/ConsultationCard';
-import { CATS } from '@/lib/categories';
-import { Consultation } from '@/lib/types';
+// データベースの最新状態を毎回サーバー側で取得して表示するページなので、
+// ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
+export const instant = false;
 
-export default function HomePage() {
-  const [category, setCategory] = useState('all');
-  const [items, setItems] = useState<Consultation[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [supervised, setSupervised] = useState(false);
+export const metadata: Metadata = {
+  title: `${SITE_NAME}｜不登校の悩みをAIと専門家に相談`,
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    type: 'website',
+    locale: 'ja_JP',
+  },
+  twitter: {
+    card: 'summary',
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+  },
+};
 
-  useEffect(() => {
-    fetch('/api/guidelines')
-      .then((r) => r.json())
-      .then((d) => setSupervised(!!d.guidelines?.supervised))
-      .catch(() => {});
-  }, []);
+async function getGuidelines() {
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase.from('guidelines').select('*').eq('id', 'default').single();
+  return data;
+}
 
-  useEffect(() => {
-    setLoading(true);
-    const qs = category === 'all' ? '' : `?category=${category}`;
-    fetch(`/api/consultations${qs}`)
-      .then((r) => r.json())
-      .then((d) => setItems(d.consultations || []))
-      .finally(() => setLoading(false));
-  }, [category]);
+async function getCounts() {
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase.from('consultations').select('category').eq('hidden', false);
+  const counts: Record<string, number> = {};
+  (data || []).forEach((row: { category: string }) => {
+    counts[row.category] = (counts[row.category] || 0) + 1;
+  });
+  return { counts, total: (data || []).length };
+}
+
+export default async function HomePage() {
+  // クローラー・初回表示用に「全カテゴリ・匿名」の一覧をサーバー側で取得する。
+  // カテゴリ切り替えなど、その後の絞り込みはクライアント側（HomeClient）で行う。
+  const [items, guidelines, { counts, total }] = await Promise.all([
+    getConsultationsList({ category: 'all', viewerId: null }),
+    getGuidelines(),
+    getCounts(),
+  ]);
 
   return (
-    <div className="app-shell">
-      <Header supervised={supervised} />
-      <div className="main">
-        <div className="chip-row">
-          <button className={`chip ${category === 'all' ? 'active' : ''}`} onClick={() => setCategory('all')}>
-            すべて
-          </button>
-          {Object.entries(CATS).map(([key, c]) => (
-            <button key={key} className={`chip ${category === key ? 'active' : ''}`} onClick={() => setCategory(key)}>
-              {c.label}
-            </button>
-          ))}
-        </div>
-
-        {loading && <div className="muted">読み込み中…</div>}
-        {!loading && items.length === 0 && <div className="muted">まだ相談がありません。</div>}
-        {items.map((item) => (
-          <ConsultationCard key={item.id} item={item} />
-        ))}
-      </div>
-
-      <Link href="/ask" className="fab">＋</Link>
-      <BottomNav />
-    </div>
+    <HomeClient
+      initialItems={items}
+      initialSupervised={!!guidelines?.supervised}
+      initialCounts={counts}
+      initialTotal={total}
+    />
   );
 }
