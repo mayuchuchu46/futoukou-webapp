@@ -9,7 +9,6 @@ export default function Header({ supervised }: { supervised: boolean }) {
 
   return (
     <div className="header">
-      <img src="/assets/header_accent.png" className="header-accent" alt="" />
       <div className="header-row" style={{ alignItems: 'flex-start' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
           <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
