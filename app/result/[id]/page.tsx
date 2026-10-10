@@ -155,8 +155,7 @@ export default async function ResultPage({
         </div>
 
         <div className="card">
-          <div className="muted">質問</div>
-          <div className="qtext">{item.question}</div>
+          <div className="qtext qtext-main">💬 {item.question}</div>
         </div>
 
         {item.request_type === 'expert' ? (
