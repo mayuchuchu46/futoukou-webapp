@@ -10,10 +10,10 @@ export default function Header({ supervised }: { supervised: boolean }) {
   return (
     <div className="header">
       <div className="header-row" style={{ alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
           <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
           <span className="badge">不登校編</span>
-        </div>
+        </Link>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5, paddingTop: 2 }}>
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>
             つらいときはこちら
