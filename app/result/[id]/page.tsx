@@ -158,7 +158,7 @@ export default async function ResultPage({
         ) : (
           <div className="card">
             <div className="answer-label">
-              <img src="/assets/icon_bulb.png" alt="" />
+              <img src="/assets/sensei_logo.png" alt="" />
               どうする先生の回答・次にやること
             </div>
             <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>

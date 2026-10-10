@@ -27,6 +27,11 @@ export default async function AboutPage() {
         <Link href="/mypage" className="backlink">← もどる</Link>
 
         <div className="card" style={{ alignItems: 'center', textAlign: 'center', gap: 10 }}>
+          <img
+            src="/assets/sensei_logo.png"
+            alt="どうする先生"
+            style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--sub)' }}
+          />
           <div style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontSize: 18, fontWeight: 800, color: 'var(--main)' }}>
             どうする先生
           </div>

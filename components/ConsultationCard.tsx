@@ -51,7 +51,7 @@ export default function ConsultationCard({ item }: { item: Consultation }) {
         answerPreview && (
           <div className="card-answerbox">
             <div className="answer-label">
-              <img src="/assets/icon_bulb.png" alt="" />
+              <img src="/assets/sensei_logo.png" alt="" />
               どうする先生（AI）
             </div>
             <div className="qtext">{answerPreview}</div>

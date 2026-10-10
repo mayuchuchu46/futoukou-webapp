@@ -248,7 +248,7 @@ h2.pagetitle {
 .card-answerbox { background: var(--bg); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
 .locked-badge { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--orange-text); }
 .answer-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--main); font-weight: 700; }
-.answer-label img { width: 16px; height: 16px; object-fit: contain; }
+.answer-label img { width: 20px; height: 20px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--sub); }
 .card-foot { display: flex; gap: 16px; font-size: 12px; color: var(--muted); border-top: 1px solid #F0EEE6; padding-top: 10px; }
 .like-btn { display: flex; align-items: center; gap: 4px; background: none; border: none; color: var(--muted); font-size: 12px; padding: 0; }
 .like-btn.liked { color: var(--orange-text); font-weight: 700; }
