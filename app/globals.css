@@ -74,7 +74,7 @@ input, textarea { font-family: inherit; }
   z-index: 0;
 }
 .header-row { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
-.wordmark { height: 26px; width: auto; margin-right: 0; }
+.wordmark { height: 42px; width: auto; margin-right: 0; }
 .badge {
   position: relative;
   padding: 4px 11px;
