@@ -280,6 +280,12 @@ h2.pagetitle {
   .home-layout--with-side .home-chips { grid-area: chips; }
   .home-layout--with-side .home-ranking { grid-area: ranking; }
   .home-layout--with-side .home-tags { grid-area: tags; }
+  /* サイドのタグ一覧は横スクロールではなく、折り返して並べる */
+  .home-layout--with-side .home-tags .chip-row {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
   .home-layout--with-side .home-adbanner { grid-area: adbanner; align-self: start; }
   .home-layout--with-side .home-list { grid-area: list; }
 }
