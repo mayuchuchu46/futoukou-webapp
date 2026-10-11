@@ -273,7 +273,8 @@ h2.pagetitle {
       "search   adbanner"
       "ranking  adbanner"
       "chips    tags"
-      "list     tags";
+      "list     tags"
+      "list     experts";
     align-items: start;
   }
   .home-layout--with-side .home-search { grid-area: search; }
@@ -288,6 +289,7 @@ h2.pagetitle {
   }
   .home-layout--with-side .home-adbanner { grid-area: adbanner; align-self: start; }
   .home-layout--with-side .home-list { grid-area: list; }
+  .home-layout--with-side .home-experts-side { grid-area: experts; align-self: start; }
 }
 
 /* このバナーはPCのサイドバー用。スマホ幅ではこの位置（カテゴリ下）には出さない。 */
