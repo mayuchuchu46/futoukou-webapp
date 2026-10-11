@@ -29,17 +29,9 @@ export default function Header({ supervised }: { supervised: boolean }) {
         </div>
         <div className="header-right">
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 21s-7.5-4.6-10-9.3C.5 8.2 2.3 5 5.6 5c1.9 0 3.4 1 4.4 2.5C11 6 12.5 5 14.4 5c3.3 0 5.1 3.2 3.6 6.7C15.5 16.4 12 21 12 21z" />
-            </svg>
             つらいときはこちら
           </button>
           <Link href="/about" className="aboutlink">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 11v6" />
-              <circle cx="12" cy="7.5" r="0.5" fill="currentColor" stroke="none" />
-            </svg>
             どうする先生とは？
           </Link>
         </div>
