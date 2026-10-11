@@ -55,11 +55,28 @@ async function AdminPageContent() {
     .eq('id', 'default')
     .single();
 
+  // 専門家の回答は送信後すぐに公開されるため、運営が後から質をチェックできるよう、
+  // 直近の回答を一覧表示する（事前審査はしない＝公開を遅らせない）。
+  const { data: recentExpertAnswersRaw } = await supabase
+    .from('consultations')
+    .select('id, question, expert_answer, expert_answer_helpful, created_at, experts(name, credential)')
+    .eq('request_type', 'expert')
+    .eq('expert_status', 'answered')
+    .order('created_at', { ascending: false })
+    .limit(30);
+
+  // supabase-jsはこの形のjoinを配列型として推論するため、1件のオブジェクト（またはnull）に正規化する。
+  const recentExpertAnswers = (recentExpertAnswersRaw || []).map((row) => ({
+    ...row,
+    experts: Array.isArray(row.experts) ? row.experts[0] || null : row.experts,
+  }));
+
   return (
     <AdminClient
       unverifiedExperts={unverifiedExperts || []}
       recentConsultations={recentConsultations || []}
       overdueExpertRequests={overdueExpertRequests || []}
+      recentExpertAnswers={recentExpertAnswers}
       initialSidebarBanner={
         sidebarBanner || { enabled: false, image_url: '', link_url: '', alt_text: '' }
       }

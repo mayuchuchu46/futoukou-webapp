@@ -49,6 +49,9 @@
 -- alter table consultations drop constraint if exists consultations_payout_status_check;
 -- alter table consultations add constraint consultations_payout_status_check
 --   check (payout_status in ('unpaid','paid','void'));
+-- 専門家回答への利用者フィードバック（役に立ったか）を追加した場合、
+-- 既存DBでは次を実行してください。
+-- alter table consultations add column if not exists expert_answer_helpful boolean;
 -- 会員登録すると、別の端末・ブラウザでも相談履歴が引き継げる（member_idでの紐付け）機能と、
 -- 会員の過去の相談内容をAIが踏まえて回答する機能を追加した場合、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists member_id uuid references members(id);
@@ -131,7 +134,8 @@ create table if not exists consultations (
   expert_answer text,
   expert_payout_jpy int,               -- 専門家への報酬額（手動振込管理用）
   payout_status text not null default 'unpaid' check (payout_status in ('unpaid','paid','void')), -- void: 返金により報酬を無効化
-  refunded boolean not null default false -- 期限超過等でStripe側を返金した場合にtrue
+  refunded boolean not null default false, -- 期限超過等でStripe側を返金した場合にtrue
+  expert_answer_helpful boolean -- 専門家回答への利用者フィードバック（null=未評価, true=役に立った, false=役に立たなかった）
 );
 
 create index if not exists consultations_member_id_idx on consultations (member_id);

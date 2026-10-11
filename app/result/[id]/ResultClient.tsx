@@ -16,6 +16,20 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
 
   const [item, setItem] = useState<Consultation>(initialItem);
   const [confirming, setConfirming] = useState(false);
+  const [feedbackSending, setFeedbackSending] = useState(false);
+
+  async function sendFeedback(helpful: boolean) {
+    setFeedbackSending(true);
+    const res = await fetch('/api/consultations/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, author_id: getUid(), helpful }),
+    });
+    setFeedbackSending(false);
+    if (res.ok) {
+      setItem((prev) => ({ ...prev, expert_answer_helpful: helpful }));
+    }
+  }
 
   async function load() {
     const res = await fetch(`/api/consultations?viewer_id=${getUid()}`);
@@ -106,6 +120,34 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
           <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
             {item.expert_answer}
           </div>
+
+          {item.author_id === getUid() && (
+            <div className="card-foot" style={{ marginTop: 4 }}>
+              {item.expert_answer_helpful === undefined || item.expert_answer_helpful === null ? (
+                <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span className="muted" style={{ fontSize: 12 }}>この回答は参考になりましたか？</span>
+                  <button
+                    className="btn-secondary"
+                    disabled={feedbackSending}
+                    onClick={() => sendFeedback(true)}
+                    style={{ padding: '4px 12px', fontSize: 12 }}
+                  >
+                    👍 参考になった
+                  </button>
+                  <button
+                    className="btn-secondary"
+                    disabled={feedbackSending}
+                    onClick={() => sendFeedback(false)}
+                    style={{ padding: '4px 12px', fontSize: 12 }}
+                  >
+                    👎 あまり
+                  </button>
+                </span>
+              ) : (
+                <span className="muted" style={{ fontSize: 12 }}>フィードバックありがとうございました。</span>
+              )}
+            </div>
+          )}
         </>
       )}
     </div>

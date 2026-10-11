@@ -73,10 +73,13 @@ export default function DashboardClient({
                 {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
               </div>
               <div className="qtext">{item.question}</div>
+              <div className="muted" style={{ fontSize: 12, lineHeight: 1.6 }}>
+                良い回答の目安：①状況の受け止め（共感・ねぎらい）→②具体的な「次の一手」（今日・今週できること）→③注意点や見守りのポイント、の順で書くと伝わりやすいです。
+              </div>
               <textarea
                 className="input"
                 rows={6}
-                placeholder={`具体的な「次の一手」を含めて回答してください（${MIN_ANSWER_LENGTH}文字以上）`}
+                placeholder={`状況の受け止め→具体的な「次の一手」→注意点、の順で回答してください（${MIN_ANSWER_LENGTH}文字以上）`}
                 value={drafts[item.id] || ''}
                 onChange={(e) => setDrafts({ ...drafts, [item.id]: e.target.value })}
               />

@@ -18,6 +18,7 @@ export type Consultation = {
   expert_status: 'pending' | 'answered' | null;
   expert_answer: string | null;
   refunded: boolean;
+  expert_answer_helpful?: boolean | null;
   experts?: { name: string; credential: string } | null;
   locked?: boolean;
 };

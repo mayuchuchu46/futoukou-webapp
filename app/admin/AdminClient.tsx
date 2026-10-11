@@ -38,15 +38,26 @@ type SidebarBanner = {
   alt_text: string;
 };
 
+type RecentExpertAnswer = {
+  id: string;
+  question: string;
+  expert_answer: string | null;
+  expert_answer_helpful: boolean | null;
+  created_at: string;
+  experts: { name: string; credential: string } | null;
+};
+
 export default function AdminClient({
   unverifiedExperts,
   recentConsultations,
   overdueExpertRequests,
+  recentExpertAnswers,
   initialSidebarBanner,
 }: {
   unverifiedExperts: UnverifiedExpert[];
   recentConsultations: RecentConsultation[];
   overdueExpertRequests: OverdueExpertRequest[];
+  recentExpertAnswers: RecentExpertAnswer[];
   initialSidebarBanner: SidebarBanner;
 }) {
   const [experts, setExperts] = useState(unverifiedExperts);
@@ -211,6 +222,29 @@ export default function AdminClient({
             <button className="btn-secondary" disabled={busy === o.id} onClick={() => refund(o.id)}>
               {busy === o.id ? '処理中…' : '返金する'}
             </button>
+          </div>
+        ))}
+
+        <div style={{ fontWeight: 700, marginTop: 16 }}>専門家の回答（直近30件・事後チェック用）</div>
+        {recentExpertAnswers.length === 0 && <div className="muted">まだ回答された相談はありません。</div>}
+        {recentExpertAnswers.map((a) => (
+          <div key={a.id} className="card">
+            <div className="row">
+              <span style={{ fontWeight: 700 }}>
+                {a.experts ? `${a.experts.credential}・${a.experts.name}` : '（専門家情報なし）'}
+              </span>
+              <span className="muted">{new Date(a.created_at).toLocaleDateString('ja-JP')}</span>
+            </div>
+            <div className="qtext">💬 {a.question}</div>
+            <div className="qtext" style={{ whiteSpace: 'pre-wrap', background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
+              {a.expert_answer}
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              利用者フィードバック：
+              {a.expert_answer_helpful === true && '👍 参考になった'}
+              {a.expert_answer_helpful === false && '👎 あまり'}
+              {a.expert_answer_helpful === null && '（未評価）'}
+            </div>
           </div>
         ))}
 
