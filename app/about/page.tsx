@@ -35,7 +35,7 @@ export default async function AboutPage() {
           <div style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontSize: 18, fontWeight: 800, color: 'var(--main)' }}>
             どうする先生
           </div>
-          <div className="muted">不登校のご家庭に、次の一手を届けるAI</div>
+          <div className="muted">不登校のご家庭に、AI＋専門家から、次の一手を。</div>
         </div>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
