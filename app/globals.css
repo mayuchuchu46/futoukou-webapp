@@ -200,6 +200,33 @@ h2.pagetitle {
 
 .main { flex: 1; overflow-y: auto; padding: 16px 20px 90px 20px; display: flex; flex-direction: column; gap: 16px; }
 
+/* ホーム画面のみ、PCの広い画面では「よく読まれている相談」「気になるテーマから探す」を
+   右サイドに回し、検索・カテゴリ・一覧を左に広く使う2カラムレイアウトにする。
+   モバイル（.home-layoutがgridになる前）はDOM順そのまま（ランキング→検索→カテゴリ→
+   タグ→一覧）の1カラムで、見た目は今までと変わらない。 */
+.home-layout { display: flex; flex-direction: column; gap: 16px; }
+
+@media (min-width: 960px) {
+  .home-shell { max-width: 1080px; }
+
+  .home-layout.home-layout--with-side {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    column-gap: 28px;
+    row-gap: 16px;
+    grid-template-areas:
+      "search  ranking"
+      "chips   tags"
+      "list    list";
+    align-items: start;
+  }
+  .home-layout--with-side .home-search { grid-area: search; }
+  .home-layout--with-side .home-chips { grid-area: chips; }
+  .home-layout--with-side .home-ranking { grid-area: ranking; }
+  .home-layout--with-side .home-tags { grid-area: tags; }
+  .home-layout--with-side .home-list { grid-area: list; }
+}
+
 .chip-row {
   display: flex;
   gap: 6px;

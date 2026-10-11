@@ -86,7 +86,7 @@ export default function HomeClient({
   const showExtras = category === 'all' && !q.trim();
 
   return (
-    <div className="app-shell">
+    <div className="app-shell home-shell">
       <Header supervised={supervised} />
       <div className="main">
         {showExtras && (
@@ -100,50 +100,61 @@ export default function HomeClient({
           </div>
         )}
 
-        {showExtras && allItems.length >= 3 && (
-          <div className="ranking">
-            <div className="ranking-title">よく読まれている相談</div>
-            <div className="rank-list">
-              {ranking.map((item, i) => (
-                <div key={item.id} className="rank-item" onClick={() => router.push(`/result/${item.id}`)}>
-                  <span className="rank-num">{i + 1}</span>
-                  <span className="rank-q">{item.question.slice(0, 28)}{item.question.length > 28 ? '…' : ''}</span>
-                  <span className="rank-views"><EyeIcon /> {item.views || 0}</span>
-                </div>
-              ))}
+        {/* PCの広い画面では、ランキング・タグ検索を右サイドに回す2カラムになる
+            （app/globals.cssの.home-layout参照）。モバイルでは今まで通りの
+            1カラム（ランキング→検索→カテゴリ→タグ→一覧の順）。 */}
+        <div className={`home-layout ${showExtras ? 'home-layout--with-side' : ''}`}>
+          {showExtras && allItems.length >= 3 && (
+            <div className="ranking home-ranking">
+              <div className="ranking-title">よく読まれている相談</div>
+              <div className="rank-list">
+                {ranking.map((item, i) => (
+                  <div key={item.id} className="rank-item" onClick={() => router.push(`/result/${item.id}`)}>
+                    <span className="rank-num">{i + 1}</span>
+                    <span className="rank-q">{item.question.slice(0, 28)}{item.question.length > 28 ? '…' : ''}</span>
+                    <span className="rank-views"><EyeIcon /> {item.views || 0}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <input
-          className="input"
-          placeholder="キーワードで検索…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
+          <input
+            className="input home-search"
+            placeholder="キーワードで検索…"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
 
-        <div className="chip-row">
-          <button className={`chip ${category === 'all' ? 'active' : ''}`} onClick={() => selectCategory('all')}>
-            すべて（{total}）
-          </button>
-          {Object.entries(CATS).map(([key, c]) => (
-            <button
-              key={key}
-              className={`chip ${category === key ? 'active' : ''}`}
-              onClick={() => selectCategory(key)}
-            >
-              {c.short}（{counts[key] || 0}）
+          <div className="chip-row home-chips">
+            <button className={`chip ${category === 'all' ? 'active' : ''}`} onClick={() => selectCategory('all')}>
+              すべて（{total}）
             </button>
-          ))}
+            {Object.entries(CATS).map(([key, c]) => (
+              <button
+                key={key}
+                className={`chip ${category === key ? 'active' : ''}`}
+                onClick={() => selectCategory(key)}
+              >
+                {c.short}（{counts[key] || 0}）
+              </button>
+            ))}
+          </div>
+
+          {showExtras && (
+            <div className="home-tags">
+              <TagChips title="気になるテーマから探す" />
+            </div>
+          )}
+
+          <div className="home-list" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {loading && <div className="muted">読み込み中…</div>}
+            {!loading && items.length === 0 && (
+              <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
+            )}
+            {!loading && items.map((item) => <ConsultationCard key={item.id} item={item} />)}
+          </div>
         </div>
-
-        {showExtras && <TagChips title="気になるテーマから探す" />}
-
-        {loading && <div className="muted">読み込み中…</div>}
-        {!loading && items.length === 0 && (
-          <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
-        )}
-        {!loading && items.map((item) => <ConsultationCard key={item.id} item={item} />)}
       </div>
 
       <BottomNav />
