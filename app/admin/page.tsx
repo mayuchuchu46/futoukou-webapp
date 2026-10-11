@@ -57,9 +57,11 @@ async function AdminPageContent() {
 
   // 専門家の回答は送信後すぐに公開されるため、運営が後から質をチェックできるよう、
   // 直近の回答を一覧表示する（事前審査はしない＝公開を遅らせない）。
+  // consultationsからexpertsへの参照はexpert_id／requested_expert_idの2つあるため、
+  // experts!expert_id と明示する（指定しないとPostgRESTがどちらか判断できずエラーになる）。
   const { data: recentExpertAnswersRaw } = await supabase
     .from('consultations')
-    .select('id, question, expert_answer, expert_answer_helpful, created_at, experts(name, credential)')
+    .select('id, question, expert_answer, expert_answer_helpful, created_at, experts!expert_id(name, credential)')
     .eq('request_type', 'expert')
     .eq('expert_status', 'answered')
     .order('created_at', { ascending: false })

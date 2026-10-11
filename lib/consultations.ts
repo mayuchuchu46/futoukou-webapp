@@ -36,9 +36,12 @@ export async function getConsultationsList({
 }): Promise<Consultation[]> {
   const supabase = getSupabaseAdmin();
 
+  // consultationsからexpertsへの参照はexpert_id（回答した専門家）とrequested_expert_id
+  // （指名した専門家）の2つあるため、experts!expert_id と明示しないと「どちらの参照か」が
+  // あいまいでPostgRESTがエラーを返す（結果、一覧が全件取得できなくなる）。
   let query = supabase
     .from('consultations')
-    .select('*, experts(name, credential)')
+    .select('*, experts!expert_id(name, credential)')
     .eq('hidden', false)
     .order('created_at', { ascending: false })
     .limit(limit);

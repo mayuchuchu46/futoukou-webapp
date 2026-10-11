@@ -28,9 +28,12 @@ export const instant = false;
 // それはクライアント側（ResultClient）で追加取得して表示を更新する。
 async function getConsultation(id: string): Promise<Consultation | null> {
   const supabase = getSupabaseAdmin();
+  // consultationsからexpertsへの参照はexpert_id（回答した専門家）とrequested_expert_id
+  // （指名した専門家）の2つあるため、experts!expert_id と明示して参照先をはっきりさせる
+  // （指定しないとPostgRESTがどちらか判断できずエラーになる）。
   const { data, error } = await supabase
     .from('consultations')
-    .select('*, experts(name, credential)')
+    .select('*, experts!expert_id(name, credential)')
     .eq('id', id)
     .eq('hidden', false)
     .single();
