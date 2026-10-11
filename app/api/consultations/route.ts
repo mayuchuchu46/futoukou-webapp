@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
     authorId,
     expertAnswered,
     memberActive,
+    memberId: member?.id || null,
   });
 
   return NextResponse.json({ consultations });

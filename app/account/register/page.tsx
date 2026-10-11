@@ -1,12 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 
-export default function AccountRegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // 相談ページ（/result/[id]）からの「無料で登録する」経由で来た場合、
+  // 登録完了後にそのページへ戻す。next は相対パス（"/"始まり）の場合のみ使う
+  // （外部URLへのオープンリダイレクトを避けるため）。
+  const nextParam = searchParams.get('next');
+  const next = nextParam && nextParam.startsWith('/') ? nextParam : '/account';
   const [form, setForm] = useState({ email: '', password: '', name: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,7 +32,7 @@ export default function AccountRegisterPage() {
       setError(data.error || 'エラーが発生しました');
       return;
     }
-    router.push('/account');
+    router.push(next);
     router.refresh();
   }
 
@@ -72,5 +78,13 @@ export default function AccountRegisterPage() {
       </div>
       <BottomNav />
     </div>
+  );
+}
+
+export default function AccountRegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterForm />
+    </Suspense>
   );
 }

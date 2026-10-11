@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const COOKIE_NAME = 'dsk_auth';
 const ADMIN_COOKIE_NAME = 'dsk_admin';
 
+// 2026-10-11：テスター限定公開のための全ページ簡易パスワードゲート（dsk_auth /
+// APP_PASSWORD）を撤廃し、誰でもログインなしで通常の閲覧ができるようにした
+// （SEO対応のためにもいずれ必要だった変更）。/login・/api/login はコード・ルート
+// 自体は残しているが、どこからも強制されない（直接アクセスしても素通りする）。
+// 管理画面（/admin）だけは、これまで通り管理者専用パスワードで保護を続ける。
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // 管理画面は、一般テスター用パスワードとは別の管理者専用パスワードで保護する
   if (pathname === '/admin/login' || pathname === '/api/admin/login') {
     return NextResponse.next();
   }
@@ -18,26 +21,6 @@ export function proxy(req: NextRequest) {
       return NextResponse.redirect(url);
     }
     return NextResponse.next();
-  }
-
-  if (
-    pathname.startsWith('/login') ||
-    pathname.startsWith('/api/login') ||
-    pathname.startsWith('/expert') ||
-    pathname.startsWith('/api/expert') ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/assets') ||
-    pathname === '/favicon.ico'
-  ) {
-    return NextResponse.next();
-  }
-
-  const authed = req.cookies.get(COOKIE_NAME)?.value === '1';
-  if (!authed) {
-    const url = req.nextUrl.clone();
-    url.pathname = '/login';
-    url.searchParams.set('next', pathname);
-    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();

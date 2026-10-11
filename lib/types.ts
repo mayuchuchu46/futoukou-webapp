@@ -6,6 +6,7 @@ export type Consultation = {
   grade: string | null;
   gender: string | null;
   author_id: string;
+  member_id?: string | null;
   likes: number;
   liked_by: string[];
   views: number;

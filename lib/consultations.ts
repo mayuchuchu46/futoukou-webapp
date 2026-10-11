@@ -5,11 +5,16 @@ import { Consultation } from '@/lib/types';
 // 専門家の回答は、本人（投稿者）か、読み放題会員（memberActive）にだけ見せる。
 // それ以外には回答本文を伏せ、locked フラグだけ立てて返す（一覧でのぼかし表示用）。
 //
-// memberActive は呼び出し側が判定して渡す（このファイル自体はCookieを読まない）。
+// memberActive / memberId は呼び出し側が判定して渡す（このファイル自体はCookieを読まない）。
 // サーバーコンポーネントからの直接呼び出し（app/page.tsx・app/result/[id]/page.tsx）は
 // Suspense配下でないままCookieベースの会員判定を行うと、CDNの共有キャッシュに
-// 特定ユーザー向けの表示が乗ってしまう危険があるため、そこでは常に匿名（false）扱いにし、
+// 特定ユーザー向けの表示が乗ってしまう危険があるため、そこでは常に匿名（false / null）扱いにし、
 // 実際の会員判定はクライアント側からの再取得（/api/consultations）でのみ行う。
+//
+// マイページ（会員）での履歴表示：ログイン中の会員は、今のブラウザのauthor_id（匿名uid）
+// だけでなく、member_id が紐づいた相談（別の端末・ブラウザで投稿したものを含む）も
+// まとめて見られるようにするため、authorId と memberId が両方あるときは
+// author_id.eq.X OR member_id.eq.Y で取得する。
 export async function getConsultationsList({
   category,
   q,
@@ -17,6 +22,7 @@ export async function getConsultationsList({
   authorId,
   expertAnswered,
   memberActive = false,
+  memberId,
   limit = 50,
 }: {
   category?: string | null;
@@ -25,6 +31,7 @@ export async function getConsultationsList({
   authorId?: string | null;
   expertAnswered?: boolean;
   memberActive?: boolean;
+  memberId?: string | null;
   limit?: number;
 }): Promise<Consultation[]> {
   const supabase = getSupabaseAdmin();
@@ -43,7 +50,21 @@ export async function getConsultationsList({
     query = query.or(`question.ilike.%${q.trim()}%,answer.ilike.%${q.trim()}%`);
   }
   if (authorId) {
-    query = query.eq('author_id', authorId);
+    // author_id はクライアント（localStorageのdsk_uid）から渡される値なので、
+    // .or() に生文字列として埋め込む前に形式を検証する（PostgRESTのフィルタ構文
+    // インジェクション対策）。getUid() が作る値は "u_" + 英数字のみ。
+    // 検証に通らない場合は memberId 側の条件のみ使う（通常の .eq() はライブラリ側で
+    // パラメータ化されるため、そちらは単独では危険ではない）。
+    const safeAuthorId = /^[A-Za-z0-9_-]{1,128}$/.test(authorId) ? authorId : null;
+    if (memberId && safeAuthorId) {
+      query = query.or(`author_id.eq.${safeAuthorId},member_id.eq.${memberId}`);
+    } else if (memberId && !safeAuthorId) {
+      query = query.eq('member_id', memberId);
+    } else {
+      query = query.eq('author_id', authorId);
+    }
+  } else if (memberId) {
+    query = query.eq('member_id', memberId);
   }
   if (expertAnswered) {
     query = query.eq('request_type', 'expert').eq('expert_status', 'answered');

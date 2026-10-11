@@ -32,6 +32,10 @@
 -- insert into storage.buckets (id, name, public) values ('expert-documents', 'expert-documents', false) on conflict (id) do nothing;
 -- （このバケットはアプリがservice_roleキー経由でのみ読み書きするため、storage.objectsへの
 -- 　RLSポリシーは不要。一般ユーザー・他の専門家・匿名ユーザーからは直接アクセスできない）
+-- 会員登録すると、別の端末・ブラウザでも相談履歴が引き継げる（member_idでの紐付け）機能と、
+-- 会員の過去の相談内容をAIが踏まえて回答する機能を追加した場合、既存DBでは次を実行してください。
+-- alter table consultations add column if not exists member_id uuid references members(id);
+-- create index if not exists consultations_member_id_idx on consultations (member_id);
 
 create extension if not exists "pgcrypto";
 
@@ -57,6 +61,23 @@ insert into storage.buckets (id, name, public)
 values ('expert-documents', 'expert-documents', false)
 on conflict (id) do nothing;
 
+-- 利用者（保護者）アカウント。メール／パスワードでの登録・ログイン・ログアウトに加え、
+-- 読み放題会員（月¥800のStripeサブスクリプション）の状態もこのテーブルで管理する。
+-- consultations テーブルが member_id で参照するため、consultations より先に作成する。
+create table if not exists members (
+  id uuid primary key default gen_random_uuid(),
+  email text not null unique,
+  password_hash text not null,
+  name text,
+  created_at timestamptz not null default now(),
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  subscription_status text not null default 'inactive', -- inactive / active / past_due / canceled 等（Stripeのsubscription.statusをほぼそのまま記録）
+  subscription_current_period_end timestamptz
+);
+
+create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
+
 create table if not exists consultations (
   id uuid primary key default gen_random_uuid(),
   category text not null check (category in ('body','social','will','approach','course','other')),
@@ -65,6 +86,7 @@ create table if not exists consultations (
   grade text,
   gender text,
   author_id text not null,
+  member_id uuid references members(id), -- 投稿時にログイン中だった会員。別端末・別ブラウザでも履歴を追えるようにするための紐付け
   client_ip text,
   likes int not null default 0,
   liked_by text[] not null default '{}',
@@ -85,6 +107,8 @@ create table if not exists consultations (
   refunded boolean not null default false -- 期限超過等でStripe側を返金した場合にtrue
 );
 
+create index if not exists consultations_member_id_idx on consultations (member_id);
+
 create table if not exists consents (
   id uuid primary key default gen_random_uuid(),
   author_id text not null,
@@ -103,24 +127,6 @@ create table if not exists expert_memberships (
   expires_at timestamptz not null,
   updated_at timestamptz not null default now()
 );
-
--- 利用者（保護者）アカウント。メール／パスワードでの登録・ログイン・ログアウトに加え、
--- 読み放題会員（月¥800のStripeサブスクリプション）の状態もこのテーブルで管理する。
--- 既存の匿名投稿（author_id、ブラウザのlocalStorage）との紐付けは行わない
--- （「誰の投稿か」は匿名ID、「読み放題かどうか」はこのアカウントのログイン、という役割分担）。
-create table if not exists members (
-  id uuid primary key default gen_random_uuid(),
-  email text not null unique,
-  password_hash text not null,
-  name text,
-  created_at timestamptz not null default now(),
-  stripe_customer_id text,
-  stripe_subscription_id text,
-  subscription_status text not null default 'inactive', -- inactive / active / past_due / canceled 等（Stripeのsubscription.statusをほぼそのまま記録）
-  subscription_current_period_end timestamptz
-);
-
-create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
 
 create table if not exists guidelines (
   id text primary key default 'default',

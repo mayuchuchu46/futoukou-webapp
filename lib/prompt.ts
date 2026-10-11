@@ -2,13 +2,44 @@ import { CATS } from './categories';
 
 type GuideCategory = { dos?: string[]; donts?: string[]; samplePhrases?: string[] };
 
+export type PastConsultation = {
+  category: string;
+  question: string;
+  created_at: string;
+};
+
+// 過去の相談履歴をプロンプトに含める件数の上限（トークン量が増えすぎないようにするため）。
+const MAX_HISTORY_ITEMS = 5;
+// 履歴の各質問文を、この文字数までに切り詰める（1件あたりの肥大化を防ぐ）。
+const HISTORY_QUESTION_MAX_CHARS = 150;
+
+function buildHistoryBlock(history?: PastConsultation[]): string {
+  if (!history || history.length === 0) return '';
+  const recent = history.slice(0, MAX_HISTORY_ITEMS);
+  const lines = recent.map((h) => {
+    const label = CATS[h.category]?.label || h.category;
+    const date = h.created_at ? h.created_at.slice(0, 10) : '';
+    const q =
+      h.question.length > HISTORY_QUESTION_MAX_CHARS
+        ? h.question.slice(0, HISTORY_QUESTION_MAX_CHARS) + '…'
+        : h.question;
+    return `- （${date}・${label}）${q}`;
+  });
+  return `
+この方は会員登録済みで、過去にも相談しています。以下はこの方の直近の相談内容です。
+今回の相談と関連がありそうな場合は、話の流れを踏まえた回答にしてください。関連がなければ無視して構いません。
+【過去の相談】
+${lines.join('\n')}`;
+}
+
 export function buildPrompt(
   category: string,
   text: string,
   guideCat: GuideCategory | undefined,
   grade?: string | null,
   gender?: string | null,
-  supervised?: boolean
+  supervised?: boolean,
+  history?: PastConsultation[]
 ) {
   const catLabel = CATS[category]?.label || category;
 
@@ -30,9 +61,12 @@ ${(guideCat.samplePhrases || []).map((p) => '- ' + p).join('\n')}`;
 （このテーマについては、まだ専門家監修の対応方針が登録されていません。一般的な注意点に基づいて、断定を避けた提案にとどめてください。）`;
   }
 
+  const historyBlock = buildHistoryBlock(history);
+
   return `あなたは「どうする先生」という、不登校の子を持つ保護者向けAI相談キャラクターです。
 以下の相談に対して、今日からできる具体的な次の一手を、200〜300文字程度の日本語で答えてください。
 ${guidanceBlock}
+${historyBlock}
 
 共通ルール：
 - 「専門家に相談しましょう」のような一般論だけで終わらせず、まず家庭で今日からできる具体的な行動を1つ以上示す

@@ -13,6 +13,7 @@ import ResultClient from './ResultClient';
 import ViewPing from './ViewPing';
 import EyeIcon from '@/components/EyeIcon';
 import AiUsageUpsell from './AiUsageUpsell';
+import SaveConsultationPrompt from './SaveConsultationPrompt';
 import TagChips from '@/components/TagChips';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
@@ -175,6 +176,9 @@ export default async function ResultPage({
                 {item.answer}
               </div>
             </div>
+            <Suspense fallback={null}>
+              <SaveConsultationPrompt id={item.id} authorId={item.author_id} />
+            </Suspense>
             <Suspense fallback={null}>
               <AiUsageUpsell />
             </Suspense>
