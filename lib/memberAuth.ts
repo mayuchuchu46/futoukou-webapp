@@ -5,14 +5,26 @@ import { getSupabaseAdmin } from './supabase';
 // 専門家ログイン（EXPERT_COOKIE_NAME）・管理画面ログインとは別の、独立したセッション。
 const COOKIE_NAME = 'dsk_member_id';
 
-export async function getCurrentMember() {
+export type CurrentMember = {
+  id: string;
+  email: string;
+  name: string | null;
+  created_at: string;
+  stripe_customer_id: string | null;
+  subscription_status: string | null;
+  subscription_current_period_end: string | null;
+};
+
+export async function getCurrentMember(): Promise<CurrentMember | null> {
   const cookieStore = await cookies();
   const memberId = cookieStore.get(COOKIE_NAME)?.value;
   if (!memberId) return null;
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('members')
-    .select('id, email, name, created_at')
+    .select(
+      'id, email, name, created_at, stripe_customer_id, subscription_status, subscription_current_period_end'
+    )
     .eq('id', memberId)
     .single();
   return data || null;

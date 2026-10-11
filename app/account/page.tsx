@@ -4,12 +4,13 @@ import { Suspense } from 'react';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { getCurrentMember } from '@/lib/memberAuth';
+import { isSubscriptionActive } from '@/lib/membership';
 import LogoutButton from './LogoutButton';
+import MembershipPanel from './MembershipPanel';
 
 // 登録・ログイン直後、いきなり「自分の相談を書く」はハードルが高い人も多いので、
 // まずは他の人の相談（ホームの一覧）を見てもらう方を主導線にする。
-// 「相談する」はその次のステップとして並べ、会員限定機能（専門家相談）は
-// まだ使えないので、ログアウトなど主目的ではない操作は控えめな扱いにする。
+// 読み放題会員（月¥800、MembershipPanel）の登録・解約はこのページで完結させる。
 export default function AccountPage() {
   // Cache Componentsではcookies()を読むコンポーネントをSuspense配下に置かないと、
   // レンダリング結果がCDNの共有キャッシュに乗ってしまい、別のログイン状態の訪問者にも
@@ -32,13 +33,18 @@ async function AccountPageContent() {
         <h2 className="pagetitle">アカウント</h2>
 
         <div className="card" style={{ gap: 6 }}>
-          <div style={{ fontWeight: 700 }}>ログインに成功しました。会員限定機能は近日公開予定です。</div>
+          <div style={{ fontWeight: 700 }}>ログインしています</div>
           <div className="muted" style={{ fontSize: 13 }}>
             {member.name ? `${member.name}（${member.email}）` : member.email}
           </div>
         </div>
 
-        <Link href="/" className="btn-primary">
+        <MembershipPanel
+          active={isSubscriptionActive(member)}
+          periodEnd={member.subscription_current_period_end}
+        />
+
+        <Link href="/" className="btn-secondary">
           みんなの相談を見てみる
         </Link>
         <Link href="/ask" className="btn-secondary">

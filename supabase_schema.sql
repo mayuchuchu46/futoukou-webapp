@@ -21,6 +21,12 @@
 --   name text,
 --   created_at timestamptz not null default now()
 -- );
+-- 読み放題会員（月¥800のStripeサブスクリプション）を追加した場合、既存DBでは次を実行してください。
+-- alter table members add column if not exists stripe_customer_id text;
+-- alter table members add column if not exists stripe_subscription_id text;
+-- alter table members add column if not exists subscription_status text not null default 'inactive';
+-- alter table members add column if not exists subscription_current_period_end timestamptz;
+-- create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
 
 create extension if not exists "pgcrypto";
 
@@ -72,24 +78,35 @@ create table if not exists consents (
   agreed_at timestamptz not null default now()
 );
 
--- 専門家に一度でも有料相談（¥500）をすると、その月は他の人の専門家回答も読み放題になる特典。
--- author_id（匿名のブラウザID）ごとに1行。支払いのたびに有効期限を延長（積み上げ）する。
+-- [旧モデル・現在は未使用] かつては専門家への都度質問（¥500）を一度払うと、その日から
+-- 30日間、他の人の専門家回答も読み放題になる特典を、匿名のブラウザID（author_id）単位で
+-- このテーブルに記録していた。2026-10-10 決定の価格体系（月¥800の会員登録／都度¥500の
+-- 専門家質問の2階建て）への移行により、読み放題の判定は members テーブルの
+-- subscription_status（アカウント単位）に一本化したため、このテーブルはもう参照されない。
+-- 既存データが残っていても実害はないため、削除せずそのまま残している。
 create table if not exists expert_memberships (
   author_id text primary key,
   expires_at timestamptz not null,
   updated_at timestamptz not null default now()
 );
 
--- 利用者（保護者）アカウント。今回はアカウント基盤（登録・ログイン・ログアウト）のみ。
--- 既存の匿名投稿（author_id、ブラウザのlocalStorage）との紐付けはまだ行わない。
--- 将来の「読み放題会員（月¥800）」もこのテーブルを使う想定（開発ドキュメント参照）。
+-- 利用者（保護者）アカウント。メール／パスワードでの登録・ログイン・ログアウトに加え、
+-- 読み放題会員（月¥800のStripeサブスクリプション）の状態もこのテーブルで管理する。
+-- 既存の匿名投稿（author_id、ブラウザのlocalStorage）との紐付けは行わない
+-- （「誰の投稿か」は匿名ID、「読み放題かどうか」はこのアカウントのログイン、という役割分担）。
 create table if not exists members (
   id uuid primary key default gen_random_uuid(),
   email text not null unique,
   password_hash text not null,
   name text,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  subscription_status text not null default 'inactive', -- inactive / active / past_due / canceled 等（Stripeのsubscription.statusをほぼそのまま記録）
+  subscription_current_period_end timestamptz
 );
+
+create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
 
 create table if not exists guidelines (
   id text primary key default 'default',

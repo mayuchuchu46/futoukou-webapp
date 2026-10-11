@@ -21,6 +21,7 @@ export default function AskPage() {
   const [error, setError] = useState('');
   const [needsTerms, setNeedsTerms] = useState(false);
   const [expertAvailable, setExpertAvailable] = useState(false);
+  const [memberActive, setMemberActive] = useState(false);
 
   useEffect(() => {
     setNeedsTerms(!hasAgreedTerms());
@@ -28,6 +29,10 @@ export default function AskPage() {
       .then((r) => r.json())
       .then((d) => setExpertAvailable(!!d.available))
       .catch(() => setExpertAvailable(false));
+    fetch('/api/me')
+      .then((r) => r.json())
+      .then((d) => setMemberActive(!!d.active))
+      .catch(() => setMemberActive(false));
   }, []);
 
   async function submit() {
@@ -159,20 +164,28 @@ export default function AskPage() {
             公認心理師に相談する（有料）
             {!expertAvailable && <span className="comingsoon-badge">準備中・近日公開</span>}
           </div>
-          {expertAvailable ? (
+          {!expertAvailable ? (
+            <div className="expertteaser-desc">
+              現在、本人確認が完了した公認心理師がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
+            </div>
+          ) : memberActive ? (
             <>
               <div className="expertteaser-desc">
-                登録している公認心理師が、数日以内にテキストで直接回答します。¥500（税込）。
-                支払うと、その日から30日間、他の人への専門家回答もすべて読み放題になります。
+                登録している公認心理師が、数日以内にテキストで直接回答します。読み放題会員は追加で¥500（税込）です。
               </div>
               <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
                 {expertSubmitting ? '決済ページへ移動中…' : '¥500で公認心理師に相談する'}
               </button>
             </>
           ) : (
-            <div className="expertteaser-desc">
-              現在、本人確認が完了した公認心理師がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
-            </div>
+            <>
+              <div className="expertteaser-desc">
+                専門家への質問は、読み放題会員（月¥800）限定です。会員になると、他の利用者への専門家回答もすべて読み放題になります。
+              </div>
+              <a className="btn-secondary" href="/account">
+                読み放題会員に登録する
+              </a>
+            </>
           )}
         </div>
       </div>

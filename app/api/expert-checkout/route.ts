@@ -3,8 +3,20 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { getStripe } from '@/lib/stripe';
 import { EXPERT_PRICE_JPY } from '@/lib/config';
 import { checkExpertRequestRateLimit, getClientIp } from '@/lib/rateLimit';
+import { getCurrentMember } from '@/lib/memberAuth';
+import { isSubscriptionActive } from '@/lib/membership';
 
+// 専門家への都度質問（¥500）は、読み放題会員（月¥800のサブスク）限定。
+// 非会員はAIの無料相談のみ利用可（2026-10-10 決定の価格体系）。
 export async function POST(req: NextRequest) {
+  const member = await getCurrentMember();
+  if (!member || !isSubscriptionActive(member)) {
+    return NextResponse.json(
+      { error: '専門家への質問は、読み放題会員（月¥800）の登録が必要です', needsMembership: true },
+      { status: 403 }
+    );
+  }
+
   const { category, text, author_id, grade, gender } = await req.json();
   if (!category || !text || !text.trim() || !author_id) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 });

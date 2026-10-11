@@ -89,10 +89,10 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
             <div />
           </div>
           <div className="locked-note">
-            この相談は回答済みですが、本文を読むには専門家への相談（¥500）が必要です。一度相談すると、その日から30日間、他の人の専門家回答もすべて読み放題になります。
+            この相談は回答済みですが、本文を読むには読み放題会員（月¥800）の登録が必要です。会員はさらに1回¥500で専門家に直接質問もできます。
           </div>
-          <Link href="/ask" className="btn-primary">
-            ¥500で専門家に相談して読み放題にする
+          <Link href="/account" className="btn-primary">
+            月¥800で読み放題会員になる
           </Link>
         </>
       )}

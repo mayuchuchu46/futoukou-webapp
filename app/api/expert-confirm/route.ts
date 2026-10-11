@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getStripe } from '@/lib/stripe';
-import { grantMembership } from '@/lib/membership';
 
+// 専門家への都度質問（¥500、一回払い）の決済確認。
+// 読み放題特典の付与はここでは行わない。読み放題は別建ての会員登録（月¥800の
+// サブスク、/api/membership-checkout・/api/membership-confirm）側の責務。
 export async function POST(req: NextRequest) {
   const { session_id, consultation_id } = await req.json();
   if (!session_id || !consultation_id) {
@@ -19,19 +21,7 @@ export async function POST(req: NextRequest) {
     const supabase = getSupabaseAdmin();
     await supabase.from('consultations').update({ paid: true }).eq('id', consultation_id);
 
-    // ¥500の支払いで、専門家回答の読み放題特典（30日間）を付与する
-    const { data: row } = await supabase
-      .from('consultations')
-      .select('author_id')
-      .eq('id', consultation_id)
-      .single();
-    let membershipExpiresAt: string | null = null;
-    if (row?.author_id) {
-      const expiry = await grantMembership(supabase, row.author_id);
-      membershipExpiresAt = expiry.toISOString();
-    }
-
-    return NextResponse.json({ ok: true, paid: true, membershipExpiresAt });
+    return NextResponse.json({ ok: true, paid: true });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'unknown error';
     return NextResponse.json({ error: message }, { status: 500 });
