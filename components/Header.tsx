@@ -25,7 +25,7 @@ export default function Header({ supervised }: { supervised: boolean }) {
         </div>
       </div>
       <div className="muted" style={{ fontSize: 11 }}>
-        {supervised ? '専門家監修済み' : 'AIによる回答です（専門家監修：準備中・ベータ版・無料でお試しいただけます）'}
+        {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
       </div>
 
       {crisisOpen && <CrisisModal onClose={() => setCrisisOpen(false)} />}
