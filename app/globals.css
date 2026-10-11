@@ -74,7 +74,16 @@ input, textarea { font-family: inherit; }
   opacity: 0.85;
   z-index: 0;
 }
-.header-row { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+.header-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; gap: 10px; }
+.header-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 2px; flex: 0 0 auto; }
+/* 画面が狭いと左右の内容が収まりきらず右側が切れるため、
+   その幅ではヘッダーを縦積みにして右側（つらいときは/どうする先生とは）を
+   ロゴブロックの下に横並びで出す。 */
+@media (max-width: 460px) {
+  .header-row { flex-direction: column; gap: 8px; }
+  .header-right { flex-direction: row; align-items: center; gap: 16px; padding-top: 0; align-self: flex-start; }
+}
 .wordmark { height: 42px; width: auto; margin-right: 0; }
 .badge {
   position: relative;
@@ -150,6 +159,9 @@ input, textarea { font-family: inherit; }
   cursor: pointer;
   white-space: nowrap;
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 .muted { color: var(--muted); font-size: 12px; }
 
@@ -331,7 +343,7 @@ h2.pagetitle {
   transition: opacity 0.15s ease;
 }
 .catmenu-chip.active { opacity: 1; box-shadow: 0 1px 5px rgba(43, 43, 40, 0.12); }
-.catmenu-all { background: var(--text); color: #fff; }
+.catmenu-all { background: var(--main); color: #fff; }
 
 .card {
   background: var(--card);
