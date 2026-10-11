@@ -15,7 +15,7 @@ export default function Header({ supervised }: { supervised: boolean }) {
             <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
             <span className="badge">不登校編</span>
           </Link>
-          <div className="hero-catch">不登校のご家庭に次の一手を。</div>
+          <div className="hero-catch">不登校のご家庭に、次の一手を。</div>
           <div className="hero-sub">「今、どうする？」にAIと専門家が具体的に回答します。</div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5, paddingTop: 2 }}>
