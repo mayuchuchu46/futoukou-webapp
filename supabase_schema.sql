@@ -79,6 +79,12 @@
 --   consultation_count int not null default 0,
 --   generated_at timestamptz not null default now()
 -- );
+-- 専門家プロフィールへの「プロフィール写真のアップロード」「ご自身のサービス等へのリンク」を
+-- 追加した場合、既存DBでは次を実行してください。
+-- alter table experts add column if not exists link_url text not null default '';
+-- insert into storage.buckets (id, name, public) values ('expert-photos', 'expert-photos', true) on conflict (id) do nothing;
+-- （このバケットは一般公開（public: true）。プロフィール写真は専門家一覧などで誰でも閲覧する
+-- 　前提のため、登録証（expert-documents、非公開）とは別バケットにしている）
 
 create extension if not exists "pgcrypto";
 
@@ -93,6 +99,7 @@ create table if not exists experts (
                           -- 一般には公開しない。管理画面で署名付きURLを発行して運営のみ確認する。
   bio text not null default '',
   photo_url text,
+  link_url text not null default '', -- 専門家ご本人のサービス・サイトなどへの任意リンク（一覧に公開表示）
   verified boolean not null default false, -- 運営が資格を確認したらtrueにする。falseの間は回答できない
   verified_at timestamptz, -- 本人確認（verified=true）にした時刻。登録証（license_doc_path）の自動削除の起点に使う
   created_at timestamptz not null default now()
@@ -103,6 +110,11 @@ create table if not exists experts (
 -- RLSポリシーは不要（一般ユーザー・他の専門家・匿名ユーザーからは直接アクセスできない）。
 insert into storage.buckets (id, name, public)
 values ('expert-documents', 'expert-documents', false)
+on conflict (id) do nothing;
+
+-- 専門家プロフィール写真用の公開バケット（専門家一覧などで誰でも閲覧する前提）。
+insert into storage.buckets (id, name, public)
+values ('expert-photos', 'expert-photos', true)
 on conflict (id) do nothing;
 
 -- 利用者（保護者）アカウント。メール／パスワードでの登録・ログイン・ログアウトに加え、

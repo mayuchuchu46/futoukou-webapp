@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { EXPERT_COOKIE_NAME } from '@/lib/expertAuth';
 import { EXPERT_LICENSE_DOC_BUCKET, MAX_LICENSE_DOC_BYTES, isAllowedLicenseDocType } from '@/lib/expertLicenseDoc';
+import { MAX_PHOTO_BYTES, isAllowedPhotoType, uploadExpertPhoto } from '@/lib/expertPhoto';
 
 // 専門家登録。資格の登録番号は自己申告の文字列だけでは真偽の確認ができないため
 // （公的な番号照会システムが見当たらないことを確認済み）、登録証（画像/PDF）の
@@ -15,7 +16,9 @@ export async function POST(req: NextRequest) {
   const credential = String(form.get('credential') || '');
   const bio = String(form.get('bio') || '');
   const license_number = String(form.get('license_number') || '');
+  const link_url = String(form.get('link_url') || '');
   const licenseDoc = form.get('license_doc');
+  const photo = form.get('photo');
 
   if (!email || !password || !name) {
     return NextResponse.json({ error: 'メールアドレス・パスワード・名前は必須です' }, { status: 400 });
@@ -35,6 +38,15 @@ export async function POST(req: NextRequest) {
   if (licenseDoc.size > MAX_LICENSE_DOC_BYTES) {
     return NextResponse.json({ error: `登録証のファイルサイズは${MAX_LICENSE_DOC_BYTES / 1024 / 1024}MB以内にしてください` }, { status: 400 });
   }
+  // プロフィール写真は任意項目（登録後にプロフィール編集からでも追加・変更できる）。
+  if (photo instanceof File && photo.size > 0) {
+    if (!isAllowedPhotoType(photo.type)) {
+      return NextResponse.json({ error: '写真はjpg・png・webpのいずれかで添付してください' }, { status: 400 });
+    }
+    if (photo.size > MAX_PHOTO_BYTES) {
+      return NextResponse.json({ error: `写真のファイルサイズは${MAX_PHOTO_BYTES / 1024 / 1024}MB以内にしてください` }, { status: 400 });
+    }
+  }
 
   const supabase = getSupabaseAdmin();
   const { data: existing } = await supabase.from('experts').select('id').eq('email', email).maybeSingle();
@@ -52,6 +64,7 @@ export async function POST(req: NextRequest) {
       credential: credential || '公認心理師',
       bio: bio || '',
       license_number: license_number.trim(),
+      link_url: link_url.trim(),
       verified: false,
     })
     .select('id')
@@ -59,6 +72,16 @@ export async function POST(req: NextRequest) {
 
   if (error || !expert) {
     return NextResponse.json({ error: error?.message || '登録に失敗しました' }, { status: 500 });
+  }
+
+  // プロフィール写真（任意）：失敗しても登録自体は継続する（あとからプロフィール編集で再アップロードできる）。
+  if (photo instanceof File && photo.size > 0) {
+    try {
+      const photoUrl = await uploadExpertPhoto(expert.id, photo);
+      await supabase.from('experts').update({ photo_url: photoUrl }).eq('id', expert.id);
+    } catch {
+      // ここでは無視し、登録証アップロードの処理に進む（登録自体は完了させる）。
+    }
   }
 
   const ext = licenseDoc.name.includes('.') ? licenseDoc.name.split('.').pop() : 'bin';

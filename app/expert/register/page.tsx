@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 
 export default function ExpertRegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ email: '', password: '', name: '', credential: '公認心理師', bio: '', license_number: '' });
+  const [form, setForm] = useState({ email: '', password: '', name: '', credential: '公認心理師', bio: '', license_number: '', link_url: '' });
   const [licenseDoc, setLicenseDoc] = useState<File | null>(null);
+  const [photo, setPhoto] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +22,7 @@ export default function ExpertRegisterPage() {
     const body = new FormData();
     Object.entries(form).forEach(([key, value]) => body.set(key, value));
     body.set('license_doc', licenseDoc);
+    if (photo) body.set('photo', photo);
     const res = await fetch('/api/expert/register', {
       method: 'POST',
       body,
@@ -46,6 +48,21 @@ export default function ExpertRegisterPage() {
         <input className="input" placeholder="お名前" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <input className="input" placeholder="資格（例：公認心理師、臨床心理士など）" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })} />
         <textarea className="input" rows={4} placeholder="自己紹介（経歴・専門分野など）" value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
+        <input
+          className="input"
+          placeholder="ご自身のサービス・サイトなどへのリンク（任意）"
+          value={form.link_url}
+          onChange={(e) => setForm({ ...form, link_url: e.target.value })}
+        />
+
+        <div className="muted" style={{ marginTop: 6 }}>プロフィール写真（任意・あとから登録・変更もできます）</div>
+        <input
+          className="input"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+        />
+
         <input
           className="input"
           placeholder="資格の登録番号（公認心理師登録番号など）"

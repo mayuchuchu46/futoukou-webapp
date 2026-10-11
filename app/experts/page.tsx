@@ -14,16 +14,25 @@ type ExpertProfile = {
   credential: string;
   bio: string;
   photo_url: string | null;
+  link_url: string | null;
 };
 
 async function getVerifiedExperts(): Promise<ExpertProfile[]> {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('experts')
-    .select('id, name, credential, bio, photo_url')
+    .select('id, name, credential, bio, photo_url, link_url')
     .eq('verified', true)
     .order('created_at', { ascending: true });
   return data || [];
+}
+
+// linkUrlは専門家本人の入力値なので、http(s)で始まる値のみリンクとして表示する
+// （javascript: などの危険なスキームをそのまま出さないための簡易チェック）。
+function safeHttpUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  return /^https?:\/\//i.test(trimmed) ? trimmed : null;
 }
 
 export default async function ExpertsPage() {
@@ -61,28 +70,42 @@ export default async function ExpertsPage() {
             </div>
           </>
         ) : (
-          experts.map((e) => (
-            <div key={e.id} className="card" style={{ gap: 10 }}>
-              <div style={{ display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
-                <img
-                  src={e.photo_url || '/assets/sensei_logo.png'}
-                  alt=""
-                  style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
-                />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}</div>
-                  {e.bio && (
-                    <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
-                      {e.bio}
-                    </div>
-                  )}
+          experts.map((e) => {
+            const link = safeHttpUrl(e.link_url);
+            return (
+              <div key={e.id} className="card" style={{ gap: 10 }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
+                  <img
+                    src={e.photo_url || '/assets/sensei_logo.png'}
+                    alt=""
+                    style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+                  />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}</div>
+                    {e.bio && (
+                      <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
+                        {e.bio}
+                      </div>
+                    )}
+                    {link && (
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        className="backlink"
+                        style={{ fontSize: 13, margin: 0 }}
+                      >
+                        ご本人のサービス・サイトはこちら →
+                      </a>
+                    )}
+                  </div>
                 </div>
+                <Link href={`/ask?expert=${e.id}`} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
+                  この専門家に相談する
+                </Link>
               </div>
-              <Link href={`/ask?expert=${e.id}`} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
-                この専門家に相談する
-              </Link>
-            </div>
-          ))
+            );
+          })
         )}
 
         <Link href="/expert/recruit" className="backlink" style={{ margin: '4px 0 0' }}>

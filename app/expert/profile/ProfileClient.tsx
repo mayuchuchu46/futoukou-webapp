@@ -8,6 +8,7 @@ type Expert = {
   credential: string;
   bio: string;
   photo_url: string | null;
+  link_url?: string | null;
   license_doc_path?: string | null;
   verified?: boolean;
 };
@@ -17,8 +18,12 @@ export default function ProfileClient({ expert }: { expert: Expert }) {
     name: expert.name,
     credential: expert.credential,
     bio: expert.bio,
-    photo_url: expert.photo_url || '',
+    link_url: expert.link_url || '',
   });
+  const [photoUrl, setPhotoUrl] = useState(expert.photo_url || '');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoError, setPhotoError] = useState('');
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
 
@@ -28,6 +33,23 @@ export default function ProfileClient({ expert }: { expert: Expert }) {
   const [docUploading, setDocUploading] = useState(false);
   const [docError, setDocError] = useState('');
   const [docSaved, setDocSaved] = useState(false);
+
+  async function uploadPhoto() {
+    if (!photoFile) return;
+    setPhotoUploading(true);
+    setPhotoError('');
+    const body = new FormData();
+    body.set('photo', photoFile);
+    const res = await fetch('/api/expert/photo', { method: 'POST', body });
+    const data = await res.json();
+    setPhotoUploading(false);
+    if (!res.ok) {
+      setPhotoError(data.error || 'アップロードに失敗しました');
+      return;
+    }
+    setPhotoUrl(data.photo_url);
+    setPhotoFile(null);
+  }
 
   async function save() {
     setError('');
@@ -79,11 +101,40 @@ export default function ProfileClient({ expert }: { expert: Expert }) {
           <input className="input" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })} />
           <div className="muted">自己紹介</div>
           <textarea className="input" rows={5} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
-          <div className="muted">プロフィール画像URL（任意）</div>
-          <input className="input" value={form.photo_url} onChange={(e) => setForm({ ...form, photo_url: e.target.value })} placeholder="https://..." />
+          <div className="muted">ご自身のサービス・サイトなどへのリンク（任意）</div>
+          <input
+            className="input"
+            value={form.link_url}
+            onChange={(e) => setForm({ ...form, link_url: e.target.value })}
+            placeholder="https://..."
+          />
+          <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
+            専門家一覧などに公開表示されます。
+          </div>
           {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
           {saved && <div style={{ color: 'var(--main)', fontSize: 13 }}>保存しました</div>}
           <button className="btn-primary" onClick={save}>保存する</button>
+        </div>
+
+        <div className="card" style={{ gap: 12 }}>
+          <div style={{ fontWeight: 700 }}>プロフィール写真（アイコン）</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <img
+              src={photoUrl || '/assets/sensei_logo.png'}
+              alt=""
+              style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+            />
+            <input
+              className="input"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
+            />
+          </div>
+          {photoError && <div style={{ color: '#C0392B', fontSize: 13 }}>{photoError}</div>}
+          <button className="btn-secondary" onClick={uploadPhoto} disabled={!photoFile || photoUploading}>
+            {photoUploading ? 'アップロード中…' : '写真をアップロードする'}
+          </button>
         </div>
 
         <div className="card" style={{ gap: 12 }}>
