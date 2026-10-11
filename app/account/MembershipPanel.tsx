@@ -84,7 +84,7 @@ export default function MembershipPanel({
       <div className="card" style={{ gap: 10, alignItems: 'flex-start' }}>
         <div style={{ fontWeight: 700 }}>読み放題会員です</div>
         <div className="muted" style={{ fontSize: 13 }}>
-          他の利用者への専門家回答もすべて読めます。会員はさらに1回¥500で専門家に直接質問できます。
+          他の利用者への専門家回答もすべて読めます。専門家への質問は月1回無料で、使い切った後は1回¥600、またはお得なチケット（6回¥3000）で利用できます。
           {periodEnd ? `（次回更新日：${formatDate(periodEnd)}）` : ''}
         </div>
         {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
@@ -99,7 +99,7 @@ export default function MembershipPanel({
     <div className="card" style={{ gap: 10, alignItems: 'flex-start' }}>
       <div style={{ fontWeight: 700 }}>読み放題会員ではありません</div>
       <div className="muted" style={{ fontSize: 13 }}>
-        月¥800で、他の利用者への専門家回答がすべて読み放題になります。会員はさらに1回¥500で専門家に直接質問もできます。
+        月¥800で、他の利用者への専門家回答がすべて読み放題になります。さらに月1回は無料で専門家に質問でき、使い切った後も1回¥600、またはお得なチケット（6回¥3000）で質問できます。
       </div>
       {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
       <button className="btn-primary" onClick={startCheckout} disabled={loading}>

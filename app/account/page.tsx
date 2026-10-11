@@ -5,8 +5,10 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
+import { EXPERT_TICKET_PACK_PRICE_JPY, EXPERT_TICKET_PACK_COUNT } from '@/lib/config';
 import LogoutButton from './LogoutButton';
 import MembershipPanel from './MembershipPanel';
+import TicketsPanel from './TicketsPanel';
 
 // 登録・ログイン直後、いきなり「自分の相談を書く」はハードルが高い人も多いので、
 // まずは他の人の相談（ホームの一覧）を見てもらう方を主導線にする。
@@ -43,6 +45,14 @@ async function AccountPageContent() {
           active={isSubscriptionActive(member)}
           periodEnd={member.subscription_current_period_end}
         />
+
+        {isSubscriptionActive(member) && (
+          <TicketsPanel
+            initialCredits={member.expert_credits}
+            priceJpy={EXPERT_TICKET_PACK_PRICE_JPY}
+            packCount={EXPERT_TICKET_PACK_COUNT}
+          />
+        )}
 
         <Link href="/" className="btn-secondary">
           みんなの相談を見てみる

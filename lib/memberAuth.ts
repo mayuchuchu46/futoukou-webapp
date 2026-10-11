@@ -13,6 +13,8 @@ export type CurrentMember = {
   stripe_customer_id: string | null;
   subscription_status: string | null;
   subscription_current_period_end: string | null;
+  expert_credits: number;
+  last_free_expert_question_period_end: string | null;
 };
 
 export async function getCurrentMember(): Promise<CurrentMember | null> {
@@ -23,7 +25,7 @@ export async function getCurrentMember(): Promise<CurrentMember | null> {
   const { data } = await supabase
     .from('members')
     .select(
-      'id, email, name, created_at, stripe_customer_id, subscription_status, subscription_current_period_end'
+      'id, email, name, created_at, stripe_customer_id, subscription_status, subscription_current_period_end, expert_credits, last_free_expert_question_period_end'
     )
     .eq('id', memberId)
     .single();

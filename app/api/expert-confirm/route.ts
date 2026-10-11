@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getStripe } from '@/lib/stripe';
 
-// 専門家への都度質問（¥500、一回払い）の決済確認。
+// 専門家への都度質問（無料枠・チケットを使い切った場合の¥600、一回払い）の決済確認。
 // 読み放題特典の付与はここでは行わない。読み放題は別建ての会員登録（月¥800の
 // サブスク、/api/membership-checkout・/api/membership-confirm）側の責務。
 export async function POST(req: NextRequest) {

@@ -36,6 +36,9 @@ function AskPageContent() {
   const [needsTerms, setNeedsTerms] = useState(false);
   const [expertAvailable, setExpertAvailable] = useState(false);
   const [memberActive, setMemberActive] = useState(false);
+  const [freeQuestionAvailable, setFreeQuestionAvailable] = useState(false);
+  const [expertCredits, setExpertCredits] = useState(0);
+  const [expertPriceJpy, setExpertPriceJpy] = useState(600);
   const [requestedExpert, setRequestedExpert] = useState<RequestedExpert | null>(null);
 
   useEffect(() => {
@@ -46,7 +49,12 @@ function AskPageContent() {
       .catch(() => setExpertAvailable(false));
     fetch('/api/me')
       .then((r) => r.json())
-      .then((d) => setMemberActive(!!d.active))
+      .then((d) => {
+        setMemberActive(!!d.active);
+        setFreeQuestionAvailable(!!d.freeQuestionAvailable);
+        setExpertCredits(d.expertCredits || 0);
+        if (d.expertPriceJpy) setExpertPriceJpy(d.expertPriceJpy);
+      })
       .catch(() => setMemberActive(false));
   }, []);
 
@@ -100,7 +108,14 @@ function AskPageContent() {
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.url) throw new Error(data.error || '失敗しました');
+      if (!res.ok) throw new Error(data.error || '失敗しました');
+      if (data.funded) {
+        // 無料枠・チケット消費の場合はStripe決済なしでその場で確定しているので、
+        // 直接結果ページへ遷移する。
+        router.push(`/result/${data.consultation_id}`);
+        return;
+      }
+      if (!data.url) throw new Error('失敗しました');
       window.location.href = data.url;
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'エラーが発生しました');
@@ -209,18 +224,30 @@ function AskPageContent() {
           ) : memberActive ? (
             <>
               <div className="expertteaser-desc">
-                {requestedExpert ? (
-                  <>ご指名の専門家が、数日以内にテキストで直接回答します。読み放題会員は追加で¥500（税込）です。</>
+                {requestedExpert ? <>ご指名の専門家が、</> : <>登録している専門家が、</>}
+                数日以内にテキストで直接回答します。
+                {freeQuestionAvailable ? (
+                  <>読み放題会員は月1回、無料で質問できます（今月はまだ利用可）。</>
+                ) : expertCredits > 0 ? (
+                  <>質問チケットが残り{expertCredits}枚あります（1枚消費します）。</>
                 ) : (
+                  <>今月の無料分は使用済みのため、1回¥{expertPriceJpy}（税込）です。<a href="/account">まとめ買いチケット</a>だと割安です。</>
+                )}
+                {!requestedExpert && (
                   <>
-                    登録している専門家が、数日以内にテキストで直接回答します。読み放題会員は追加で¥500（税込）です。
                     <br />
                     <a href="/experts">どんな専門家が回答していますか？</a>
                   </>
                 )}
               </div>
               <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
-                {expertSubmitting ? '決済ページへ移動中…' : requestedExpert ? `¥500で${requestedExpert.name}さんに相談する` : '¥500で専門家に相談する'}
+                {expertSubmitting
+                  ? '送信中…'
+                  : freeQuestionAvailable
+                  ? `無料で${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`
+                  : expertCredits > 0
+                  ? `チケットを使って${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`
+                  : `¥${expertPriceJpy}で${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`}
               </button>
             </>
           ) : (

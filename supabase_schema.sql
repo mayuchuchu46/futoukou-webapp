@@ -55,6 +55,17 @@
 -- 専門家一覧から「この専門家に相談する」を選んで質問できる機能（特定の専門家を
 -- 指名した有料相談）を追加した場合、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists requested_expert_id uuid references experts(id);
+-- 専門家への質問を「月1回無料（会員特典）／チケット（6回¥3000）／都度¥600」の
+-- 3通りにした価格体系見直しを追加した場合、既存DBでは次を実行してください。
+-- alter table members add column if not exists expert_credits int not null default 0;
+-- alter table members add column if not exists last_free_expert_question_period_end timestamptz;
+-- alter table consultations add column if not exists expert_funding text check (expert_funding in ('paid','ticket','free_monthly'));
+-- create table if not exists expert_ticket_purchases (
+--   stripe_session_id text primary key,
+--   member_id uuid not null references members(id),
+--   credits int not null,
+--   created_at timestamptz not null default now()
+-- );
 -- 会員登録すると、別の端末・ブラウザでも相談履歴が引き継げる（member_idでの紐付け）機能と、
 -- 会員の過去の相談内容をAIが踏まえて回答する機能を追加した場合、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists member_id uuid references members(id);
@@ -106,10 +117,23 @@ create table if not exists members (
   stripe_customer_id text,
   stripe_subscription_id text,
   subscription_status text not null default 'inactive', -- inactive / active / past_due / canceled 等（Stripeのsubscription.statusをほぼそのまま記録）
-  subscription_current_period_end timestamptz
+  subscription_current_period_end timestamptz,
+  expert_credits int not null default 0, -- 専門家への質問チケット残数（6回¥3000パック購入分）
+  last_free_expert_question_period_end timestamptz -- 直近で「月1回無料」枠を使った時点のsubscription_current_period_end。
+                                                     -- 現在のsubscription_current_period_endより古ければ、新しい周期＝無料枠が復活している。
 );
 
 create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
+
+-- 専門家への質問チケットパック（¥3000で6回分）の購入履歴。Stripeチェックアウトの
+-- session_idを主キーにすることで、確認エンドポイントが何度呼ばれてもチケットが
+-- 二重に付与されないようにする（insertが1回しか成功しない）。
+create table if not exists expert_ticket_purchases (
+  stripe_session_id text primary key,
+  member_id uuid not null references members(id),
+  credits int not null,
+  created_at timestamptz not null default now()
+);
 
 create table if not exists consultations (
   id uuid primary key default gen_random_uuid(),
@@ -139,7 +163,8 @@ create table if not exists consultations (
   expert_payout_jpy int,               -- 専門家への報酬額（手動振込管理用）
   payout_status text not null default 'unpaid' check (payout_status in ('unpaid','paid','void')), -- void: 返金により報酬を無効化
   refunded boolean not null default false, -- 期限超過等でStripe側を返金した場合にtrue
-  expert_answer_helpful boolean -- 専門家回答への利用者フィードバック（null=未評価, true=役に立った, false=役に立たなかった）
+  expert_answer_helpful boolean, -- 専門家回答への利用者フィードバック（null=未評価, true=役に立った, false=役に立たなかった）
+  expert_funding text check (expert_funding in ('paid','ticket','free_monthly')) -- 専門家質問の財源（都度払い／チケット消費／月1回無料枠）。request_type='expert'のみ使用
 );
 
 create index if not exists consultations_member_id_idx on consultations (member_id);
