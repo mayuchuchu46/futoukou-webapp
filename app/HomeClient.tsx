@@ -122,40 +122,6 @@ export default function HomeClient({
           </div>
         )}
 
-        {showExtras && (
-          <div className="home-experts">
-            <div className="home-experts-title">専門家一覧</div>
-            {initialExperts.length === 0 ? (
-              <div className="home-expert-card home-expert-card--empty" onClick={() => router.push('/expert/recruit')}>
-                <img src="/assets/sensei_logo.png" alt="" className="home-expert-photo" style={{ opacity: 0.5 }} />
-                <div className="home-expert-body">
-                  <div className="home-expert-name">現在、専門家を募集中です</div>
-                  <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
-                </div>
-                <span className="expertbanner-cta">›</span>
-              </div>
-            ) : (
-              initialExperts.map((e) => (
-                <div
-                  key={e.id}
-                  className="home-expert-card"
-                  onClick={() => router.push(`/ask?expert=${e.id}`)}
-                >
-                  <img src={e.photo_url || '/assets/sensei_logo.png'} alt="" className="home-expert-photo" />
-                  <div className="home-expert-body">
-                    <div className="home-expert-name">{e.credential}・{e.name}</div>
-                    {e.bio && <div className="home-expert-desc">{e.bio}</div>}
-                  </div>
-                  <span className="expertbanner-cta">›</span>
-                </div>
-              ))
-            )}
-            <Link href="/experts" className="backlink" style={{ margin: '2px 0 0', fontSize: 13 }}>
-              専門家一覧をすべて見る →
-            </Link>
-          </div>
-        )}
-
         {/* PCの広い画面では、ランキング・タグ検索を右サイドに回す2カラムになる
             （app/globals.cssの.home-layout参照）。モバイルでは今まで通りの
             1カラム（ランキング→検索→カテゴリ→タグ→一覧の順）。 */}
@@ -220,6 +186,41 @@ export default function HomeClient({
               <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
             )}
             {!loading && items.map((item) => <ConsultationCard key={item.id} item={item} />)}
+
+            {showExtras && !loading && (
+              <div className="home-experts">
+                <div className="home-experts-title">専門家一覧</div>
+                {initialExperts.length === 0 ? (
+                  <div className="home-expert-card home-expert-card--empty" onClick={() => router.push('/expert/recruit')}>
+                    <img src="/assets/sensei_logo.png" alt="" className="home-expert-photo" style={{ opacity: 0.5 }} />
+                    <div className="home-expert-body">
+                      <div className="home-expert-name">現在、専門家を募集中です</div>
+                      <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
+                    </div>
+                    <span className="expertbanner-cta">›</span>
+                  </div>
+                ) : (
+                  initialExperts.map((e) => (
+                    <div
+                      key={e.id}
+                      className="home-expert-card"
+                      onClick={() => router.push(`/ask?expert=${e.id}`)}
+                    >
+                      <img src={e.photo_url || '/assets/sensei_logo.png'} alt="" className="home-expert-photo" />
+                      <div className="home-expert-body">
+                        <div className="home-expert-name">{e.credential}・{e.name}</div>
+                        {e.bio && <div className="home-expert-desc">{e.bio}</div>}
+                      </div>
+                      <span className="expertbanner-cta">›</span>
+                    </div>
+                  ))
+                )}
+                <Link href="/experts" className="backlink" style={{ margin: '2px 0 0', fontSize: 13 }}>
+                  専門家一覧をすべて見る →
+                </Link>
+              </div>
+            )}
+
             {showExtras && !loading && (
               <img
                 className="recruitnote-banner"
