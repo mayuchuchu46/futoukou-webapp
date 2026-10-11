@@ -51,6 +51,10 @@ export default function MyPage() {
           <span>利用規約・免責事項</span>
           <span className="muted">›</span>
         </Link>
+        <Link href="/expert/login" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <span>専門家として登録・ログイン</span>
+          <span className="muted">›</span>
+        </Link>
       </div>
       <BottomNav />
     </div>

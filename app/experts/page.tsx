@@ -61,8 +61,11 @@ export default async function ExpertsPage() {
           ))
         )}
 
-        <Link href="/expert/register" className="backlink" style={{ margin: '4px 0 14px' }}>
+        <Link href="/expert/register" className="backlink" style={{ margin: '4px 0 0' }}>
           専門家として登録を希望される方はこちら →
+        </Link>
+        <Link href="/expert/login" className="backlink" style={{ margin: '0 0 14px', fontSize: 13 }}>
+          すでに登録済みの専門家の方はこちらからログイン →
         </Link>
       </div>
       <BottomNav />

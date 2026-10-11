@@ -79,6 +79,9 @@ export default async function AboutPage() {
             専門家登録ページへ ›
           </div>
         </Link>
+        <Link href="/expert/login" className="backlink" style={{ margin: '-10px 0 4px', fontSize: 13 }}>
+          すでに登録済みの専門家の方はこちらからログイン →
+        </Link>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>大切なお願い</div>
