@@ -20,7 +20,7 @@ export default function PrivacyPage() {
             <div style={{ fontWeight: 700, fontSize: 13 }}>2. 事業者情報</div>
             <div className="qtext">
               運営者：manapri（個人事業主）<br />
-              お問い合わせ先：mayuchuchu46@gmail.com<br />
+              お問い合わせ先：mail.manapri@gmail.com<br />
               運営者の氏名・住所等の詳細は、お問い合わせいただいた場合に遅滞なく開示いたします。
             </div>
           </div>
@@ -118,7 +118,7 @@ export default function PrivacyPage() {
           <div>
             <div style={{ fontWeight: 700, fontSize: 13 }}>12. お問い合わせ窓口</div>
             <div className="qtext">
-              本ポリシーに関するお問い合わせは、mayuchuchu46@gmail.com までご連絡ください。
+              本ポリシーに関するお問い合わせは、mail.manapri@gmail.com までご連絡ください。
             </div>
           </div>
 
