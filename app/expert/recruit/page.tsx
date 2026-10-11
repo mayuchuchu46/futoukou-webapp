@@ -23,7 +23,7 @@ export default function ExpertRecruitPage() {
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>報酬</div>
           <div className="qtext">
-            回答1件（150文字以上、具体的な「次の一手」を含む内容）につき ¥{EXPERT_PAYOUT_JPY}（税込）をお支払いします。Stripeを通じて、ご登録いただいた口座へお振込みします。
+            回答1件（200文字以上・目安5分程度〜、具体的な「次の一手」を含む内容）につき ¥{EXPERT_PAYOUT_JPY}（税込）をお支払いします。Stripeを通じて、ご登録いただいた口座へお振込みします。
           </div>
         </div>
 
