@@ -36,6 +36,15 @@
 -- 会員の過去の相談内容をAIが踏まえて回答する機能を追加した場合、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists member_id uuid references members(id);
 -- create index if not exists consultations_member_id_idx on consultations (member_id);
+-- マイページの「AIによる状況サマリー」機能（会員の過去相談をまとめて表示）を追加した場合、
+-- 既存DBでは次を実行してください。
+-- create table if not exists member_summaries (
+--   member_id uuid primary key references members(id),
+--   status_summary text not null default '',
+--   advice text not null default '',
+--   consultation_count int not null default 0,
+--   generated_at timestamptz not null default now()
+-- );
 
 create extension if not exists "pgcrypto";
 
@@ -108,6 +117,18 @@ create table if not exists consultations (
 );
 
 create index if not exists consultations_member_id_idx on consultations (member_id);
+
+-- マイページに表示する「今のお子さんの状況」のAIサマリー。会員の過去の相談をまとめて
+-- 生成し、ここにキャッシュする（毎回のページ表示でAIを呼び直さないようにするため）。
+-- consultation_count は生成時点でのその会員の相談件数。マイページ表示時にこの値と
+-- 実際の件数を比較し、増えていれば再生成する（lib/memberSummary.ts）。
+create table if not exists member_summaries (
+  member_id uuid primary key references members(id),
+  status_summary text not null default '',
+  advice text not null default '',
+  consultation_count int not null default 0,
+  generated_at timestamptz not null default now()
+);
 
 create table if not exists consents (
   id uuid primary key default gen_random_uuid(),

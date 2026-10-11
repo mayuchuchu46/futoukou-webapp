@@ -78,3 +78,37 @@ ${historyBlock}
 ${grade ? 'お子さんの学年：' + grade + '\n' : ''}${gender && gender !== '回答しない' ? '性別：' + gender + '\n' : ''}相談内容：
 ${text}`;
 }
+
+// マイページに表示する「今のお子さんの状況」サマリー用。会員の過去の相談履歴を
+// まとめて、現状の整理＋次の一手を短くJSON形式で生成させる。
+// 件数・1件あたりの文字数の上限は buildHistoryBlock と同じ考え方（プロンプト肥大化防止）。
+const MAX_SUMMARY_ITEMS = 10;
+const SUMMARY_QA_MAX_CHARS = 200;
+
+export type SummaryConsultation = PastConsultation & { answer?: string };
+
+export function buildSummaryPrompt(history: SummaryConsultation[]): string {
+  const recent = history.slice(0, MAX_SUMMARY_ITEMS);
+  const lines = recent.map((h) => {
+    const label = CATS[h.category]?.label || h.category;
+    const date = h.created_at ? h.created_at.slice(0, 10) : '';
+    const trim = (s: string) =>
+      s.length > SUMMARY_QA_MAX_CHARS ? s.slice(0, SUMMARY_QA_MAX_CHARS) + '…' : s;
+    return `- （${date}・${label}）相談：${trim(h.question)}${h.answer ? `／回答：${trim(h.answer)}` : ''}`;
+  });
+
+  return `あなたは「どうする先生」という、不登校の子を持つ保護者向けAI相談キャラクターです。
+以下は、ある会員の方がこれまでに行った相談（質問と、どうする先生の回答）の履歴です。
+これ全体を踏まえて、今のお子さんの状況の整理（status_summary）と、保護者への次の一手のアドバイス（advice）を
+それぞれ100〜150文字程度の日本語で考えてください。
+
+【相談履歴（新しい順）】
+${lines.join('\n')}
+
+共通ルール：
+- 断定的な医学的・心理学的診断はしない。あくまで「〜の可能性がある」「〜という傾向がうかがえる」程度の、可能性レベルの整理にとどめる
+- 複数の相談から共通して見えてくる傾向や変化があれば、それを中心に整理する（単発の内容の繰り返しにしない）
+- もし履歴の中に、子ども本人の希死念慮・自傷・自殺をうかがわせる記述が含まれる場合は、status_summary・adviceのいずれでも具体的な助言は行わず、「すぐに専門の窓口に相談してほしい」という趣旨のあたたかい言葉と、24時間子供SOSダイヤル（0120-0-78310）を案内する内容だけを返してください
+- 出力は、前置きや説明を含めず、次のJSON形式のみにしてください（コードブロックや他の文章は不要）：
+{"status_summary": "…", "advice": "…"}`;
+}

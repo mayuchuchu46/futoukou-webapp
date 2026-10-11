@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import ConsultationCard from '@/components/ConsultationCard';
+import ConsultationSummaryCard from './ConsultationSummaryCard';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 
@@ -25,6 +26,8 @@ export default function MyPage() {
       <div className="main">
         <h2 className="pagetitle">マイページ</h2>
         <div className="muted" style={{ marginBottom: 4 }}>自分が投稿した相談だけを表示しています</div>
+
+        <ConsultationSummaryCard ownCount={items?.length || 0} />
 
         {items === null ? (
           <div className="muted">読み込み中…</div>
