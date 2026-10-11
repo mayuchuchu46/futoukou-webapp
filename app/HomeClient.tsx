@@ -163,7 +163,7 @@ export default function HomeClient({
               <span className="recruitbanner-icon">🙋</span>
               <div className="recruitbanner-body">
                 <div className="recruitbanner-title">専門家の方を募集しています</div>
-                <div className="recruitbanner-desc">公認心理師・臨床心理士など。1件の回答につき¥400</div>
+                <div className="recruitbanner-desc">公認心理師・臨床心理士など、有料相談に回答していただける方を募集中</div>
               </div>
               <span className="recruitbanner-cta">›</span>
             </div>
