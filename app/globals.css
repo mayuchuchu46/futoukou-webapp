@@ -271,7 +271,7 @@ h2.pagetitle {
     row-gap: 16px;
     grid-template-areas:
       "search   adbanner"
-      "ranking  tags"
+      "ranking  adbanner"
       "chips    tags"
       "list     tags";
     align-items: start;
