@@ -24,10 +24,18 @@ export default function ExpertListPage() {
       <div className="main">
         <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
         <h2 className="pagetitle">専門家が回答した相談</h2>
-        <div className="muted" style={{ marginBottom: 14 }}>
-          AIの自動回答とは別に、専門家（公認心理師など）本人が相談文を読んで直接回答したものです。読み放題会員（月¥800）になると、ここに並ぶ専門家回答がすべて読めます。さらに会員は、月1回は無料で専門家に質問でき、使い切った後も1回¥600、またはお得なチケット（6回¥3000）で質問できます。相談を重ねるほど、AIがお子さんの状況をまとめ、次の一手の具体的なアドバイスも読めるようになります（マイページ）。
+        <div className="muted" style={{ marginBottom: 10 }}>
+          AIの自動回答とは別に、専門家（公認心理師など）本人が相談文を読んで直接回答したものです。
         </div>
-        <Link href="/experts" className="backlink" style={{ margin: '-6px 0 14px' }}>
+
+        <div className="card" style={{ gap: 8, alignItems: 'flex-start', marginBottom: 10 }}>
+          <div style={{ fontWeight: 700, fontSize: 13 }}>読み放題会員（月¥800）になると</div>
+          <div className="qtext" style={{ fontSize: 13 }}>✓ ここに並ぶ専門家回答が、すべて読めるようになる</div>
+          <div className="qtext" style={{ fontSize: 13 }}>✓ 専門家への質問が、月1回は無料でできる</div>
+          <div className="qtext" style={{ fontSize: 13 }}>✓ 相談を重ねるほど、AIがお子さんの状況と次の一手をまとめてくれる（マイページ）</div>
+        </div>
+
+        <Link href="/experts" className="backlink" style={{ margin: '0 0 14px' }}>
           どんな専門家が回答していますか？ →
         </Link>
 
