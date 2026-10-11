@@ -96,6 +96,7 @@ export default function ConsultationCard({
         <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
         {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
       </div>
+      <div className="qtext qtext-main">💬 {item.question}</div>
       {matchedTags.length > 0 && (
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           {matchedTags.map((word) => (
@@ -117,7 +118,6 @@ export default function ConsultationCard({
           ))}
         </div>
       )}
-      <div className="qtext qtext-main">💬 {item.question}</div>
       {item.locked ? (
         <div className="card-answerbox">
           <div className="locked-badge">🔒 専門家の回答</div>
