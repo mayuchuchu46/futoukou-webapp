@@ -11,9 +11,11 @@ type Expert = {
   link_url?: string | null;
   license_doc_path?: string | null;
   verified?: boolean;
+  stripe_account_id?: string | null;
+  stripe_payouts_enabled?: boolean;
 };
 
-export default function ProfileClient({ expert }: { expert: Expert }) {
+export default function ProfileClient({ expert, stripeConfigured }: { expert: Expert; stripeConfigured: boolean }) {
   const [form, setForm] = useState({
     name: expert.name,
     credential: expert.credential,
@@ -33,6 +35,23 @@ export default function ProfileClient({ expert }: { expert: Expert }) {
   const [docUploading, setDocUploading] = useState(false);
   const [docError, setDocError] = useState('');
   const [docSaved, setDocSaved] = useState(false);
+
+  const [stripeStarting, setStripeStarting] = useState(false);
+  const [stripeError, setStripeError] = useState('');
+
+  async function startStripeOnboarding() {
+    setStripeStarting(true);
+    setStripeError('');
+    try {
+      const res = await fetch('/api/expert/stripe-connect/start', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error || '失敗しました');
+      window.location.href = data.url;
+    } catch (e: unknown) {
+      setStripeError(e instanceof Error ? e.message : 'エラーが発生しました');
+      setStripeStarting(false);
+    }
+  }
 
   async function uploadPhoto() {
     if (!photoFile) return;
@@ -135,6 +154,32 @@ export default function ProfileClient({ expert }: { expert: Expert }) {
           <button className="btn-secondary" onClick={uploadPhoto} disabled={!photoFile || photoUploading}>
             {photoUploading ? 'アップロード中…' : '写真をアップロードする'}
           </button>
+        </div>
+
+        <div className="card" style={{ gap: 12 }}>
+          <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
+            報酬の振込先（Stripe）
+            {!stripeConfigured && <span className="comingsoon-badge">準備中・近日公開</span>}
+          </div>
+          <div className="muted" style={{ fontSize: 13 }}>
+            {!stripeConfigured
+              ? '振込機能の準備中です。設定が整い次第、こちらからStripeアカウントの登録（本人確認・振込先口座の入力）をお願いします。'
+              : expert.stripe_payouts_enabled
+              ? '設定完了です。報酬は毎月まとめて、このStripeアカウントへお振込みします。'
+              : expert.stripe_account_id
+              ? 'Stripeアカウントの設定が未完了です。本人確認・口座情報の入力を完了してください。'
+              : '報酬の振込を受け取るには、Stripeアカウントの登録（本人確認・振込先口座の入力）が必要です。'}
+          </div>
+          {stripeError && <div style={{ color: '#C0392B', fontSize: 13 }}>{stripeError}</div>}
+          {stripeConfigured && (
+            <button className="btn-secondary" onClick={startStripeOnboarding} disabled={stripeStarting}>
+              {stripeStarting
+                ? '移動中…'
+                : expert.stripe_account_id
+                ? (expert.stripe_payouts_enabled ? '登録内容を確認・変更する' : '設定を続ける')
+                : 'Stripeアカウントを登録する'}
+            </button>
+          )}
         </div>
 
         <div className="card" style={{ gap: 12 }}>

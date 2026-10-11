@@ -38,6 +38,17 @@ type SidebarBanner = {
   alt_text: string;
 };
 
+type UnpaidPayoutSummary = {
+  count: number;
+  total: number;
+};
+
+type PayoutResult = {
+  paid: { expertName: string; amount: number; count: number }[];
+  skipped: { expertName: string; amount: number; count: number; reason: string }[];
+  errors: { expertName: string; message: string }[];
+};
+
 type RecentExpertAnswer = {
   id: string;
   question: string;
@@ -53,12 +64,16 @@ export default function AdminClient({
   overdueExpertRequests,
   recentExpertAnswers,
   initialSidebarBanner,
+  unpaidPayoutSummary,
+  stripeConfigured,
 }: {
   unverifiedExperts: UnverifiedExpert[];
   recentConsultations: RecentConsultation[];
   overdueExpertRequests: OverdueExpertRequest[];
   recentExpertAnswers: RecentExpertAnswer[];
   initialSidebarBanner: SidebarBanner;
+  unpaidPayoutSummary: UnpaidPayoutSummary;
+  stripeConfigured: boolean;
 }) {
   const [experts, setExperts] = useState(unverifiedExperts);
   const [consultations, setConsultations] = useState(recentConsultations);
@@ -67,6 +82,10 @@ export default function AdminClient({
   const [banner, setBanner] = useState(initialSidebarBanner);
   const [bannerSaving, setBannerSaving] = useState(false);
   const [bannerMessage, setBannerMessage] = useState('');
+  const [payoutSummary, setPayoutSummary] = useState(unpaidPayoutSummary);
+  const [payoutRunning, setPayoutRunning] = useState(false);
+  const [payoutResult, setPayoutResult] = useState<PayoutResult | null>(null);
+  const [payoutError, setPayoutError] = useState('');
 
   async function viewLicenseDoc(id: string) {
     setBusy(id);
@@ -133,6 +152,23 @@ export default function AdminClient({
     }
   }
 
+  async function runPayout() {
+    if (!confirm(`未振込分（${payoutSummary.count}件・¥${payoutSummary.total.toLocaleString()}）を、Stripe設定済みの専門家へ一括送金します。よろしいですか？`)) return;
+    setPayoutRunning(true);
+    setPayoutError('');
+    setPayoutResult(null);
+    const res = await fetch('/api/admin/payout/run', { method: 'POST' });
+    const data = await res.json();
+    setPayoutRunning(false);
+    if (!res.ok) {
+      setPayoutError(data.error || '失敗しました');
+      return;
+    }
+    setPayoutResult(data);
+    const paidCount = (data.paid as PayoutResult['paid']).reduce((sum, p) => sum + p.count, 0);
+    setPayoutSummary((s) => ({ count: s.count - paidCount, total: s.total - (data.paid as PayoutResult['paid']).reduce((sum, p) => sum + p.amount, 0) }));
+  }
+
   async function saveBanner() {
     setBannerSaving(true);
     setBannerMessage('');
@@ -156,7 +192,43 @@ export default function AdminClient({
         <div style={{ fontWeight: 700, fontSize: 16 }}>管理画面</div>
       </div>
       <div className="main">
-        <div style={{ fontWeight: 700 }}>ホーム画面サイドバーのバナー（PC表示のみ）</div>
+        <div style={{ fontWeight: 700 }}>専門家への報酬振込</div>
+        <div className="card" style={{ gap: 10, alignItems: 'flex-start' }}>
+          {!stripeConfigured ? (
+            <div className="muted" style={{ fontSize: 13 }}>決済機能の準備中のため、振込はまだ実行できません（STRIPE_SECRET_KEY未設定）。</div>
+          ) : (
+            <>
+              <div className="muted" style={{ fontSize: 13 }}>
+                未振込：{payoutSummary.count}件・¥{payoutSummary.total.toLocaleString()}
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                Stripeアカウントの設定が完了している専門家にだけ送金します。未完了の専門家の分はスキップされ、設定が完了すれば次回対象になります。
+              </div>
+              <button className="btn-primary" onClick={runPayout} disabled={payoutRunning || payoutSummary.count === 0}>
+                {payoutRunning ? '振込処理中…' : '今回分を一括振込する'}
+              </button>
+              {payoutError && <div style={{ color: '#C0392B', fontSize: 13 }}>{payoutError}</div>}
+              {payoutResult && (
+                <div style={{ fontSize: 13, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {payoutResult.paid.map((p, i) => (
+                    <div key={i} style={{ color: 'var(--main)' }}>✓ {p.expertName}：¥{p.amount.toLocaleString()}（{p.count}件）送金しました</div>
+                  ))}
+                  {payoutResult.skipped.map((s, i) => (
+                    <div key={i} className="muted">－ {s.expertName}：¥{s.amount.toLocaleString()}（{s.count}件）{s.reason}のためスキップ</div>
+                  ))}
+                  {payoutResult.errors.map((e, i) => (
+                    <div key={i} style={{ color: '#C0392B' }}>✕ {e.expertName}：送金エラー（{e.message}）</div>
+                  ))}
+                  {payoutResult.paid.length === 0 && payoutResult.skipped.length === 0 && payoutResult.errors.length === 0 && (
+                    <div className="muted">対象の未振込分はありませんでした。</div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        <div style={{ fontWeight: 700, marginTop: 16 }}>ホーム画面サイドバーのバナー（PC表示のみ）</div>
         <div className="card" style={{ gap: 10, alignItems: 'stretch' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
             <input

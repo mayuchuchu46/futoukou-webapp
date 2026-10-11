@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCurrentExpert } from '@/lib/expertAuth';
+import { isStripeConfigured } from '@/lib/stripe';
 import ProfileClient from './ProfileClient';
 
 export default function ExpertProfilePage() {
@@ -17,5 +18,5 @@ export default function ExpertProfilePage() {
 async function ExpertProfileContent() {
   const expert = await getCurrentExpert();
   if (!expert) redirect('/expert/login');
-  return <ProfileClient expert={expert} />;
+  return <ProfileClient expert={expert} stripeConfigured={isStripeConfigured()} />;
 }

@@ -30,6 +30,8 @@ async function ExpertEarningsContent() {
   const totalEarned = rows.reduce((sum, r) => sum + (r.expert_payout_jpy || 0), 0);
   const totalUnpaid = rows.filter((r) => r.payout_status === 'unpaid').reduce((sum, r) => sum + (r.expert_payout_jpy || 0), 0);
 
+  const payoutsEnabled = !!expert.stripe_payouts_enabled;
+
   return (
     <div className="app-shell">
       <div className="header">
@@ -46,7 +48,9 @@ async function ExpertEarningsContent() {
           <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--main)' }}>¥{totalUnpaid.toLocaleString()}</div>
         </div>
         <div className="noticebox" style={{ background: 'var(--sub)', borderRadius: 10, padding: '12px 14px', fontSize: 12, color: '#1F4A3C' }}>
-          振込は現在、運営が内容を確認のうえ、手動で行っています。振込状況についてのお問い合わせは運営までご連絡ください。
+          {payoutsEnabled
+            ? '振込は、運営が内容を確認のうえ、Stripe経由で毎月まとめて行います。振込状況についてのお問い合わせは運営までご連絡ください。'
+            : <>振込を受け取るには、Stripeアカウントの登録（本人確認・振込先口座の入力）が必要です。<a href="/expert/profile">プロフィール編集画面</a>から設定してください。</>}
         </div>
         <div style={{ fontWeight: 700, marginTop: 12 }}>内訳</div>
         {rows.map((r) => (

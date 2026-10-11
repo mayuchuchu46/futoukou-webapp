@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { isAdmin } from '@/lib/adminAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { deleteExpiredLicenseDocs } from '@/lib/expertLicenseDoc';
+import { isStripeConfigured } from '@/lib/stripe';
 import AdminClient from './AdminClient';
 
 // Cache Componentsではcookies()を読むコンポーネントをSuspense配下に置かないと、
@@ -49,6 +50,19 @@ async function AdminPageContent() {
     .lt('created_at', fiveDaysAgo)
     .order('created_at', { ascending: true });
 
+  // 専門家への報酬の未振込分を、管理画面で一括振込ボタンを押す前に件数・金額で把握できるよう集計する。
+  const { data: unpaidPayoutRows } = await supabase
+    .from('consultations')
+    .select('expert_payout_jpy')
+    .eq('payout_status', 'unpaid')
+    .eq('expert_status', 'answered')
+    .not('expert_id', 'is', null)
+    .gt('expert_payout_jpy', 0);
+  const unpaidPayoutSummary = {
+    count: (unpaidPayoutRows || []).length,
+    total: (unpaidPayoutRows || []).reduce((sum, r) => sum + (r.expert_payout_jpy || 0), 0),
+  };
+
   const { data: sidebarBanner } = await supabase
     .from('sidebar_banners')
     .select('enabled, image_url, link_url, alt_text')
@@ -82,6 +96,8 @@ async function AdminPageContent() {
       initialSidebarBanner={
         sidebarBanner || { enabled: false, image_url: '', link_url: '', alt_text: '' }
       }
+      unpaidPayoutSummary={unpaidPayoutSummary}
+      stripeConfigured={isStripeConfigured()}
     />
   );
 }

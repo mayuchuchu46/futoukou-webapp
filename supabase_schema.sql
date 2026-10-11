@@ -85,6 +85,13 @@
 -- insert into storage.buckets (id, name, public) values ('expert-photos', 'expert-photos', true) on conflict (id) do nothing;
 -- （このバケットは一般公開（public: true）。プロフィール写真は専門家一覧などで誰でも閲覧する
 -- 　前提のため、登録証（expert-documents、非公開）とは別バケットにしている）
+-- 専門家への報酬振込をStripe Connect（Express）経由の自動送金にした場合、
+-- 既存DBでは次を実行してください。
+-- alter table experts add column if not exists stripe_account_id text;
+-- alter table experts add column if not exists stripe_payouts_enabled boolean not null default false;
+-- alter table consultations add column if not exists stripe_transfer_id text;
+-- alter table consultations add column if not exists paid_at timestamptz;
+-- （StripeダッシュボードでConnect機能自体の有効化も別途必要です）
 
 create extension if not exists "pgcrypto";
 
@@ -100,6 +107,8 @@ create table if not exists experts (
   bio text not null default '',
   photo_url text,
   link_url text not null default '', -- 専門家ご本人のサービス・サイトなどへの任意リンク（一覧に公開表示）
+  stripe_account_id text, -- 報酬振込用のStripe Express（Connect）アカウントID
+  stripe_payouts_enabled boolean not null default false, -- Stripe側の本人確認・口座情報登録が完了し、振込を受け取れる状態か
   verified boolean not null default false, -- 運営が資格を確認したらtrueにする。falseの間は回答できない
   verified_at timestamptz, -- 本人確認（verified=true）にした時刻。登録証（license_doc_path）の自動削除の起点に使う
   created_at timestamptz not null default now()
@@ -172,8 +181,10 @@ create table if not exists consultations (
   requested_expert_id uuid references experts(id), -- 利用者が専門家一覧から指名した相談先（未指名ならnull＝誰でも回答可）
   expert_status text check (expert_status in ('pending','answered')),
   expert_answer text,
-  expert_payout_jpy int,               -- 専門家への報酬額（手動振込管理用）
+  expert_payout_jpy int,               -- 専門家への報酬額（振込管理用）
   payout_status text not null default 'unpaid' check (payout_status in ('unpaid','paid','void')), -- void: 返金により報酬を無効化
+  stripe_transfer_id text, -- 報酬をStripe Connect経由で振込済みの場合、その送金（Transfer）ID
+  paid_at timestamptz, -- 報酬を振込済みにした時刻
   refunded boolean not null default false, -- 期限超過等でStripe側を返金した場合にtrue
   expert_answer_helpful boolean, -- 専門家回答への利用者フィードバック（null=未評価, true=役に立った, false=役に立たなかった）
   expert_funding text check (expert_funding in ('paid','ticket','free_monthly')) -- 専門家質問の財源（都度払い／チケット消費／月1回無料枠）。request_type='expert'のみ使用
