@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import ConsultationCard from '@/components/ConsultationCard';
 import EyeIcon from '@/components/EyeIcon';
+import TagChips from '@/components/TagChips';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -111,6 +112,8 @@ export default function HomeClient({
             </button>
           ))}
         </div>
+
+        {showExtras && <TagChips title="気になるテーマから探す" />}
 
         {loading && <div className="muted">読み込み中…</div>}
         {!loading && items.length === 0 && <div className="muted">まだ相談がありません。</div>}

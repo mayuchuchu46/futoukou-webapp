@@ -13,6 +13,7 @@ import ResultClient from './ResultClient';
 import ViewPing from './ViewPing';
 import EyeIcon from '@/components/EyeIcon';
 import AiUsageUpsell from './AiUsageUpsell';
+import TagChips from '@/components/TagChips';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -196,6 +197,10 @@ export default async function ResultPage({
             </div>
           </div>
         )}
+
+        <Suspense fallback={null}>
+          <TagChips title="他にもこんなテーマの相談があります" />
+        </Suspense>
 
         <Link href="/" className="backlink" style={{ margin: '4px 0 14px' }}>← もどる</Link>
 
