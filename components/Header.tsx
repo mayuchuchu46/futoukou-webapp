@@ -10,10 +10,13 @@ export default function Header({ supervised }: { supervised: boolean }) {
   return (
     <div className="header">
       <div className="header-row" style={{ alignItems: 'flex-start' }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
-          <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
-          <span className="badge">不登校編</span>
-        </Link>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+            <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
+            <span className="badge">不登校編</span>
+          </Link>
+          <div className="hero-catch">不登校のご家庭に、次の一手を届けるAI</div>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5, paddingTop: 2 }}>
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>
             つらいときはこちら
