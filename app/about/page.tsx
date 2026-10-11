@@ -38,7 +38,7 @@ export default async function AboutPage() {
           <div style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontSize: 14, fontWeight: 700, color: 'var(--main)' }}>
             不登校のご家庭に次の一手を。
           </div>
-          <div className="muted">「どうする？」にAIと専門家が回答します。</div>
+          <div className="muted">「今、どうする？」にAIと専門家が回答します。</div>
         </div>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
