@@ -29,7 +29,7 @@ export default function TagChips({ title }: { title: string }) {
           <Link
             key={t.word}
             href={`/search?q=${encodeURIComponent(t.word)}`}
-            className="chip"
+            className="chip chip-tag"
             style={{ textDecoration: 'none', display: 'inline-block' }}
           >
             #{t.word}（{t.count}）

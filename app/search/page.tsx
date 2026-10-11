@@ -69,7 +69,7 @@ function SearchInner() {
               return (
                 <button
                   key={t.word}
-                  className={`chip ${isActive ? 'active' : ''}`}
+                  className={`chip chip-tag ${isActive ? 'active' : ''}`}
                   onClick={() => setQ(isActive ? '' : t.word)}
                 >
                   #{t.word}（{t.count}）

@@ -223,6 +223,12 @@ h2.pagetitle {
 }
 .chip.active { background: var(--sub); border-color: var(--sub); color: #1F4A3C; }
 
+/* タグチップ（キーワード回遊用）。カテゴリの.chipとは意図的に見た目を変え、
+   「固定の分類」ではなく「キーワードで探す」ものだと一目でわかるようにする。
+   どのカテゴリ色（cat-*）とも重複しないよう、ブランドカラー（--main）のアウトラインにする。 */
+.chip-tag { background: var(--card); border: 1px solid var(--main); color: var(--main); }
+.chip-tag.active { background: var(--main); border-color: var(--main); color: #fff; }
+
 .card {
   background: var(--card);
   border-radius: 14px;

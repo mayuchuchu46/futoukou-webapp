@@ -2,17 +2,32 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { getUid } from '@/lib/uid';
+import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
 import EyeIcon from './EyeIcon';
 
 export default function ConsultationCard({ item }: { item: Consultation }) {
+  const router = useRouter();
   const [likes, setLikes] = useState(item.likes);
   const [likedBy, setLikedBy] = useState<string[]>(item.liked_by || []);
   const uid = typeof window !== 'undefined' ? getUid() : '';
   const liked = likedBy.includes(uid);
   const cat = CATS[item.category] || CATS.other;
+
+  // このカードの質問・回答に、タグ候補語（lib/searchTags.ts）が含まれていれば
+  // カード内に小さく表示し、タップで /search にその語で絞り込んで遷移する。
+  const matchedTags = SEARCH_TAG_CANDIDATES.filter(
+    (word) => item.question.includes(word) || (item.answer && item.answer.includes(word))
+  ).slice(0, 4);
+
+  function goToTag(e: React.MouseEvent, word: string) {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/search?q=${encodeURIComponent(word)}`);
+  }
 
   async function toggleLike(e: React.MouseEvent) {
     e.preventDefault();
@@ -37,6 +52,27 @@ export default function ConsultationCard({ item }: { item: Consultation }) {
         <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
         {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
       </div>
+      {matchedTags.length > 0 && (
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          {matchedTags.map((word) => (
+            <button
+              key={word}
+              onClick={(e) => goToTag(e, word)}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                color: 'var(--main)',
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              #{word}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="qtext qtext-main">💬 {item.question}</div>
       {item.locked ? (
         <div className="card-answerbox">
