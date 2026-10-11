@@ -260,9 +260,10 @@ h2.pagetitle {
     column-gap: 28px;
     row-gap: 16px;
     grid-template-areas:
-      "search  ranking"
-      "chips   tags"
-      "list    adbanner";
+      "search   tags"
+      "ranking  tags"
+      "chips    adbanner"
+      "list     adbanner";
     align-items: start;
   }
   .home-layout--with-side .home-search { grid-area: search; }

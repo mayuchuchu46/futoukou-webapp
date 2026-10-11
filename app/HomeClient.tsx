@@ -148,9 +148,9 @@ export default function HomeClient({
           </div>
         )}
 
-        {/* PCの広い画面では、ランキング・タグ検索を右サイドに回す2カラムになる
-            （app/globals.cssの.home-layout参照）。モバイルでは今まで通りの
-            1カラム（ランキング→検索→カテゴリ→タグ→一覧の順）。 */}
+        {/* PCの広い画面では、ランキングを検索ボックスの下（左カラム）に、
+            タグ検索を右サイドに回す2カラムになる（app/globals.cssの.home-layout参照）。
+            モバイルでは今まで通りの1カラム（ランキング→タグ→検索→カテゴリ→一覧の順）。 */}
         <div className={`home-layout ${showExtras ? 'home-layout--with-side' : ''}`}>
           {showExtras && allItems.length >= 3 && (
             <div className="ranking home-ranking">
@@ -164,6 +164,12 @@ export default function HomeClient({
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {showExtras && (
+            <div className="home-tags">
+              <TagChips title="気になるテーマから探す" />
             </div>
           )}
 
@@ -188,12 +194,6 @@ export default function HomeClient({
               </button>
             ))}
           </div>
-
-          {showExtras && (
-            <div className="home-tags">
-              <TagChips title="気になるテーマから探す" />
-            </div>
-          )}
 
           {showExtras && showBanner && (
             <a
