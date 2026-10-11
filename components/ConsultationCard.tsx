@@ -154,7 +154,7 @@ export default function ConsultationCard({
                 disabled={deleting}
                 style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, fontWeight: 700, color: '#C0392B', cursor: 'pointer' }}
               >
-                {deleting ? '削除中…' : '削除する'}
+                {deleting ? '削除中…' : '🗑️ 削除する'}
               </button>
               <button
                 onClick={handleCancelDelete}
@@ -168,7 +168,7 @@ export default function ConsultationCard({
               onClick={handleDeleteClick}
               style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, color: 'var(--muted)', cursor: 'pointer' }}
             >
-              この投稿を削除
+              🗑️ この投稿を削除
             </button>
           )}
         </div>
