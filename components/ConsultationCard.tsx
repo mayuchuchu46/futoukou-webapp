@@ -9,10 +9,22 @@ import { getUid } from '@/lib/uid';
 import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
 import EyeIcon from './EyeIcon';
 
-export default function ConsultationCard({ item }: { item: Consultation }) {
+export default function ConsultationCard({
+  item,
+  showDelete = false,
+  onDeleted,
+}: {
+  item: Consultation;
+  // マイページ（自分の投稿一覧）でだけtrueにして、削除ボタンを出す。
+  // 「みんなの相談」はそのまま公開される仕様のため、誤投稿時の取り下げ手段として用意した。
+  showDelete?: boolean;
+  onDeleted?: (id: string) => void;
+}) {
   const router = useRouter();
   const [likes, setLikes] = useState(item.likes);
   const [likedBy, setLikedBy] = useState<string[]>(item.liked_by || []);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const uid = typeof window !== 'undefined' ? getUid() : '';
   const liked = likedBy.includes(uid);
   const cat = CATS[item.category] || CATS.other;
@@ -40,6 +52,38 @@ export default function ConsultationCard({ item }: { item: Consultation }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: item.id, uid, liked: nowLiked }),
     });
+  }
+
+  async function handleDeleteClick(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirmingDelete) {
+      setConfirmingDelete(true);
+      return;
+    }
+    setDeleting(true);
+    try {
+      const res = await fetch('/api/consultations/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: item.id, author_id: uid }),
+      });
+      if (res.ok) {
+        onDeleted?.(item.id);
+      } else {
+        setDeleting(false);
+        setConfirmingDelete(false);
+      }
+    } catch {
+      setDeleting(false);
+      setConfirmingDelete(false);
+    }
+  }
+
+  function handleCancelDelete(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setConfirmingDelete(false);
   }
 
   const answerPreview = item.answer
@@ -100,6 +144,35 @@ export default function ConsultationCard({ item }: { item: Consultation }) {
         </button>
         <span className="view-count"><EyeIcon /> {item.views || 0}</span>
       </div>
+      {showDelete && (
+        <div className="card-foot" style={{ justifyContent: 'flex-end' }}>
+          {confirmingDelete ? (
+            <span style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <span className="muted" style={{ fontSize: 12 }}>本当に削除しますか？</span>
+              <button
+                onClick={handleDeleteClick}
+                disabled={deleting}
+                style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, fontWeight: 700, color: '#C0392B', cursor: 'pointer' }}
+              >
+                {deleting ? '削除中…' : '削除する'}
+              </button>
+              <button
+                onClick={handleCancelDelete}
+                style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, color: 'var(--muted)', cursor: 'pointer' }}
+              >
+                キャンセル
+              </button>
+            </span>
+          ) : (
+            <button
+              onClick={handleDeleteClick}
+              style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, color: 'var(--muted)', cursor: 'pointer' }}
+            >
+              この投稿を削除
+            </button>
+          )}
+        </div>
+      )}
     </Link>
   );
 }

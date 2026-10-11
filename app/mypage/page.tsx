@@ -39,7 +39,14 @@ export default function MyPage() {
             <Link href="/ask" className="btn-primary">相談する</Link>
           </>
         ) : (
-          items.map((item) => <ConsultationCard key={item.id} item={item} />)
+          items.map((item) => (
+            <ConsultationCard
+              key={item.id}
+              item={item}
+              showDelete
+              onDeleted={(id) => setItems((prev) => (prev || []).filter((c) => c.id !== id))}
+            />
+          ))
         )}
 
         <Link href="/account" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
