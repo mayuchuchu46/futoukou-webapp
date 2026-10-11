@@ -40,6 +40,7 @@ function AskPageContent() {
   const [expertCredits, setExpertCredits] = useState(0);
   const [expertPriceJpy, setExpertPriceJpy] = useState(600);
   const [requestedExpert, setRequestedExpert] = useState<RequestedExpert | null>(null);
+  const [stripeConfigured, setStripeConfigured] = useState(false);
 
   useEffect(() => {
     setNeedsTerms(!hasAgreedTerms());
@@ -54,6 +55,7 @@ function AskPageContent() {
         setFreeQuestionAvailable(!!d.freeQuestionAvailable);
         setExpertCredits(d.expertCredits || 0);
         if (d.expertPriceJpy) setExpertPriceJpy(d.expertPriceJpy);
+        setStripeConfigured(!!d.stripeConfigured);
       })
       .catch(() => setMemberActive(false));
   }, []);
@@ -215,9 +217,15 @@ function AskPageContent() {
             {requestedExpert
               ? `${requestedExpert.credential}・${requestedExpert.name}さんに相談する（有料）`
               : '専門家に相談する（有料）'}
-            {!expertAvailable && !requestedExpert && <span className="comingsoon-badge">準備中・近日公開</span>}
+            {(!stripeConfigured || (!expertAvailable && !requestedExpert)) && (
+              <span className="comingsoon-badge">準備中・近日公開</span>
+            )}
           </div>
-          {!expertAvailable && !requestedExpert ? (
+          {!stripeConfigured ? (
+            <div className="expertteaser-desc">
+              現在、決済機能の準備中のため、専門家への有料相談はまだご利用いただけません。準備が整い次第、こちらからご利用いただけるようになります。
+            </div>
+          ) : !expertAvailable && !requestedExpert ? (
             <div className="expertteaser-desc">
               現在、本人確認が完了した専門家（公認心理師など）がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
             </div>

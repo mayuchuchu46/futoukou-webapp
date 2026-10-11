@@ -3,6 +3,7 @@ import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
 import { hasFreeMonthlyQuestion } from '@/lib/expertQuota';
 import { EXPERT_PRICE_JPY, EXPERT_TICKET_PACK_PRICE_JPY, EXPERT_TICKET_PACK_COUNT } from '@/lib/config';
+import { isStripeConfigured } from '@/lib/stripe';
 
 // 画面側（クライアントコンポーネント）が「ログイン中か」「読み放題会員として有効か」
 // 「専門家への質問が今どの財源で利用できるか」を判定するための軽量エンドポイント。
@@ -21,5 +22,6 @@ export async function GET() {
     expertPriceJpy: EXPERT_PRICE_JPY,
     ticketPackPriceJpy: EXPERT_TICKET_PACK_PRICE_JPY,
     ticketPackCount: EXPERT_TICKET_PACK_COUNT,
+    stripeConfigured: isStripeConfigured(),
   });
 }

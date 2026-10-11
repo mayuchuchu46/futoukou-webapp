@@ -16,9 +16,11 @@ function formatDate(iso: string | null) {
 export default function MembershipPanel({
   active,
   periodEnd,
+  stripeConfigured,
 }: {
   active: boolean;
   periodEnd: string | null;
+  stripeConfigured: boolean;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -88,23 +90,34 @@ export default function MembershipPanel({
           {periodEnd ? `（次回更新日：${formatDate(periodEnd)}）` : ''}
         </div>
         {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
-        <button className="btn-secondary" onClick={openPortal} disabled={loading}>
-          {loading ? '移動中…' : '支払い方法の変更・解約はこちら'}
-        </button>
+        {stripeConfigured && (
+          <button className="btn-secondary" onClick={openPortal} disabled={loading}>
+            {loading ? '移動中…' : '支払い方法の変更・解約はこちら'}
+          </button>
+        )}
       </div>
     );
   }
 
   return (
     <div className="card" style={{ gap: 10, alignItems: 'flex-start' }}>
-      <div style={{ fontWeight: 700 }}>読み放題会員ではありません</div>
+      <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
+        読み放題会員ではありません
+        {!stripeConfigured && <span className="comingsoon-badge">準備中・近日公開</span>}
+      </div>
       <div className="muted" style={{ fontSize: 13 }}>
         月¥800で、他の利用者への専門家回答がすべて読み放題になります。さらに専門家への質問が、月1回は無料でできます。
       </div>
       {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
-      <button className="btn-primary" onClick={startCheckout} disabled={loading}>
-        {loading ? '決済ページへ移動中…' : '月¥800で読み放題会員になる'}
-      </button>
+      {stripeConfigured ? (
+        <button className="btn-primary" onClick={startCheckout} disabled={loading}>
+          {loading ? '決済ページへ移動中…' : '月¥800で読み放題会員になる'}
+        </button>
+      ) : (
+        <button className="btn-primary" disabled>
+          現在準備中です
+        </button>
+      )}
     </div>
   );
 }

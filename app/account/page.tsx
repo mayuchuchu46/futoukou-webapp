@@ -6,6 +6,7 @@ import BottomNav from '@/components/BottomNav';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
 import { EXPERT_TICKET_PACK_PRICE_JPY, EXPERT_TICKET_PACK_COUNT } from '@/lib/config';
+import { isStripeConfigured } from '@/lib/stripe';
 import LogoutButton from './LogoutButton';
 import MembershipPanel from './MembershipPanel';
 import TicketsPanel from './TicketsPanel';
@@ -44,6 +45,7 @@ async function AccountPageContent() {
         <MembershipPanel
           active={isSubscriptionActive(member)}
           periodEnd={member.subscription_current_period_end}
+          stripeConfigured={isStripeConfigured()}
         />
 
         {isSubscriptionActive(member) && (
@@ -51,6 +53,7 @@ async function AccountPageContent() {
             initialCredits={member.expert_credits}
             priceJpy={EXPERT_TICKET_PACK_PRICE_JPY}
             packCount={EXPERT_TICKET_PACK_COUNT}
+            stripeConfigured={isStripeConfigured()}
           />
         )}
 

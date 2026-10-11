@@ -10,10 +10,12 @@ export default function TicketsPanel({
   initialCredits,
   priceJpy,
   packCount,
+  stripeConfigured,
 }: {
   initialCredits: number;
   priceJpy: number;
   packCount: number;
+  stripeConfigured: boolean;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -73,9 +75,15 @@ export default function TicketsPanel({
         {packCount}枚¥{priceJpy}で、都度払いより1枚あたりお得です。
       </div>
       {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
-      <button className="btn-secondary" onClick={buyTickets} disabled={loading}>
-        {loading ? '決済ページへ移動中…' : `¥${priceJpy}で${packCount}回分のチケットを購入`}
-      </button>
+      {stripeConfigured ? (
+        <button className="btn-secondary" onClick={buyTickets} disabled={loading}>
+          {loading ? '決済ページへ移動中…' : `¥${priceJpy}で${packCount}回分のチケットを購入`}
+        </button>
+      ) : (
+        <button className="btn-secondary" disabled>
+          現在準備中です
+        </button>
+      )}
     </div>
   );
 }
