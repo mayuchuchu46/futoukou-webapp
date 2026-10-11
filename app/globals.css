@@ -201,7 +201,18 @@ h2.pagetitle {
 /* 専門家（回答する側）向けの募集導線。一覧の最後に置く、画像バナー（運営が用意した
    イラスト）。クリックで募集ページへ遷移する。高解像度の1枚（2019×303px）を
    モバイル・PC共通で使い、どちらの表示幅でもぼやけないようにしている。 */
-.recruitnote-banner { display: block; width: 100%; height: auto; border-radius: 12px; margin: 4px 0 0; cursor: pointer; }
+.recruitnote-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 4px 0 0;
+  cursor: pointer;
+  /* 画像の背景色（クリーム系）がページ背景とほぼ同色で境界が見えないため、
+     他のカードと同じように枠線をつけて輪郭をはっきりさせる。 */
+  border: 1px solid #DCDAD2;
+  box-sizing: border-box;
+}
 
 .main { flex: 1; overflow-y: auto; padding: 16px 20px 90px 20px; display: flex; flex-direction: column; gap: 16px; }
 
