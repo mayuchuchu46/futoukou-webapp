@@ -17,11 +17,16 @@ function SearchInner() {
   const [loading, setLoading] = useState(true);
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [total, setTotal] = useState(0);
+  const [tags, setTags] = useState<{ word: string; count: number }[]>([]);
 
   useEffect(() => {
     fetch('/api/consultations/counts')
       .then((r) => r.json())
       .then((d) => { setCounts(d.counts || {}); setTotal(d.total || 0); })
+      .catch(() => {});
+    fetch('/api/consultations/tag-counts')
+      .then((r) => r.json())
+      .then((d) => setTags(d.tags || []))
       .catch(() => {});
   }, []);
 
@@ -56,6 +61,23 @@ function SearchInner() {
             </button>
           ))}
         </div>
+
+        {tags.length > 0 && (
+          <div className="chip-row" style={{ marginTop: 4 }}>
+            {tags.map((t) => {
+              const isActive = q.trim() === t.word;
+              return (
+                <button
+                  key={t.word}
+                  className={`chip ${isActive ? 'active' : ''}`}
+                  onClick={() => setQ(isActive ? '' : t.word)}
+                >
+                  #{t.word}（{t.count}）
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {loading && <div className="muted">読み込み中…</div>}
         {!loading && items.length === 0 && <div className="muted">該当する相談が見つかりません。</div>}
