@@ -176,12 +176,13 @@ export default function HomeClient({
             )}
             {!loading && items.map((item) => <ConsultationCard key={item.id} item={item} />)}
             {showExtras && !loading && (
-              <div
-                className="muted"
-                style={{ textAlign: 'center', fontSize: 12, margin: '8px 0 4px', cursor: 'pointer' }}
-                onClick={() => router.push('/expert/recruit')}
-              >
-                専門家の方はこちら →
+              <div className="recruitnote" onClick={() => router.push('/expert/recruit')}>
+                <span className="recruitnote-icon">🙋</span>
+                <div className="recruitnote-body">
+                  <div className="recruitnote-title">専門家の方を募集しています</div>
+                  <div className="recruitnote-desc">公認心理師・臨床心理士など、有料相談に回答していただける方を募集中</div>
+                </div>
+                <span className="recruitnote-cta">›</span>
               </div>
             )}
           </div>
