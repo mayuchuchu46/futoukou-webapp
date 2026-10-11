@@ -35,7 +35,7 @@ export default async function AboutPage() {
           <div style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontSize: 18, fontWeight: 800, color: 'var(--main)' }}>
             どうする先生
           </div>
-          <div style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontSize: 16, fontWeight: 800, color: 'var(--main)' }}>
+          <div style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontSize: 14, fontWeight: 700, color: 'var(--main)' }}>
             不登校のご家庭に次の一手を。
           </div>
           <div className="muted">「どうする？」にAIと専門家が回答します。</div>
