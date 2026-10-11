@@ -1,10 +1,24 @@
+import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
+import { isAdmin } from '@/lib/adminAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import AdminClient from './AdminClient';
 
-// 管理者ごとに内容が変わるわけではないが、常に最新のDB状態を見る必要があるページ
-export const instant = false;
+// Cache Componentsではcookies()を読むコンポーネントをSuspense配下に置かないと、
+// レンダリング結果がCDNの共有キャッシュに乗ってしまい、未ログインの訪問者にも
+// 直前にアクセスした内容がそのまま配信される（instant=falseだけでは防げない）。
+export default function AdminPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminPageContent />
+    </Suspense>
+  );
+}
 
-export default async function AdminPage() {
+async function AdminPageContent() {
+  const admin = await isAdmin();
+  if (!admin) redirect('/admin/login');
+
   const supabase = getSupabaseAdmin();
 
   const { data: unverifiedExperts } = await supabase

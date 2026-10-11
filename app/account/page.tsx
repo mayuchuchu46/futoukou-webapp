@@ -1,18 +1,27 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { getCurrentMember } from '@/lib/memberAuth';
 import LogoutButton from './LogoutButton';
 
-// ログイン中のアカウントによって内容が変わるページなので、プリレンダーせず常に動的に実行する
-export const instant = false;
-
 // 登録・ログイン直後、いきなり「自分の相談を書く」はハードルが高い人も多いので、
 // まずは他の人の相談（ホームの一覧）を見てもらう方を主導線にする。
 // 「相談する」はその次のステップとして並べ、会員限定機能（専門家相談）は
 // まだ使えないので、ログアウトなど主目的ではない操作は控えめな扱いにする。
-export default async function AccountPage() {
+export default function AccountPage() {
+  // Cache Componentsではcookies()を読むコンポーネントをSuspense配下に置かないと、
+  // レンダリング結果がCDNの共有キャッシュに乗ってしまい、別のログイン状態の訪問者にも
+  // 直前にアクセスした人のメールアドレス等がそのまま配信される（instant=falseだけでは防げない）。
+  return (
+    <Suspense fallback={null}>
+      <AccountPageContent />
+    </Suspense>
+  );
+}
+
+async function AccountPageContent() {
   const member = await getCurrentMember();
   if (!member) redirect('/account/login');
 

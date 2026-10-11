@@ -1,12 +1,21 @@
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import { getCurrentExpert } from '@/lib/expertAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardClient from './DashboardClient';
 
-// ログイン中の専門家ごとに内容が変わるページなので、プリレンダーせず常に動的に実行する
-export const instant = false;
+export default function ExpertDashboardPage() {
+  // Cache Componentsではcookies()を読むコンポーネントをSuspense配下に置かないと、
+  // レンダリング結果がCDNの共有キャッシュに乗ってしまい、別の専門家・未ログインの訪問者にも
+  // 直前にアクセスした人の内容がそのまま配信される（instant=falseだけでは防げない）。
+  return (
+    <Suspense fallback={null}>
+      <ExpertDashboardContent />
+    </Suspense>
+  );
+}
 
-export default async function ExpertDashboardPage() {
+async function ExpertDashboardContent() {
   const expert = await getCurrentExpert();
   if (!expert) redirect('/expert/login');
 
