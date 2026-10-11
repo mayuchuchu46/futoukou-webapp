@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import PcSidebar from '@/components/PcSidebar';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
 // ビルド時の静的化はせず、監修状態（guidelines.supervised）を
@@ -23,7 +24,8 @@ export default async function AboutPage() {
   return (
     <div className="app-shell">
       <Header supervised={false} />
-      <div className="main">
+      <div className="main page-with-sidebar">
+        <div className="page-main">
         <Link href="/mypage" className="backlink">← もどる</Link>
 
         <div className="card" style={{ alignItems: 'center', textAlign: 'center', gap: 10 }}>
@@ -92,6 +94,8 @@ export default async function AboutPage() {
             緊急性が高いと感じるとき、またはお子さんの安全に関わる場合は、AIの回答を待たず、学校や医療機関、公的な相談窓口にご連絡ください。
           </div>
         </div>
+        </div>
+        <PcSidebar />
       </div>
       <BottomNav />
     </div>

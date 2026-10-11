@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import PcSidebar from '@/components/PcSidebar';
 import ConsultationCard from '@/components/ConsultationCard';
 import ConsultationSummaryCard from './ConsultationSummaryCard';
 import { Consultation } from '@/lib/types';
@@ -23,7 +24,8 @@ export default function MyPage() {
   return (
     <div className="app-shell">
       <Header supervised={false} />
-      <div className="main">
+      <div className="main page-with-sidebar">
+        <div className="page-main">
         <h2 className="pagetitle">マイページ</h2>
         <div className="muted" style={{ marginBottom: 4 }}>自分が投稿した相談だけを表示しています</div>
 
@@ -69,6 +71,8 @@ export default function MyPage() {
           <span>専門家として登録・ログイン</span>
           <span className="muted">›</span>
         </Link>
+        </div>
+        <PcSidebar />
       </div>
       <BottomNav />
     </div>

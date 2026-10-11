@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import PcSidebar from '@/components/PcSidebar';
 import ConsultationCard from '@/components/ConsultationCard';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -26,7 +27,8 @@ export default function ExpertListPage() {
   return (
     <div className="app-shell">
       <Header supervised={false} />
-      <div className="main">
+      <div className="main page-with-sidebar">
+        <div className="page-main">
         <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <h2 className="pagetitle" style={{ margin: 0 }}>専門家が回答した相談</h2>
@@ -58,6 +60,8 @@ export default function ExpertListPage() {
         ) : (
           items.map((item) => <ConsultationCard key={item.id} item={item} />)
         )}
+        </div>
+        <PcSidebar />
       </div>
       <BottomNav />
     </div>

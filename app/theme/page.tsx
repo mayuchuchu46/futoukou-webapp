@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import PcSidebar from '@/components/PcSidebar';
 import { CATS } from '@/lib/categories';
 
 export default function ThemePage() {
@@ -19,7 +20,8 @@ export default function ThemePage() {
   return (
     <div className="app-shell">
       <Header supervised={false} />
-      <div className="main">
+      <div className="main page-with-sidebar">
+        <div className="page-main">
         {Object.entries(CATS).map(([key, c]) => (
           <Link key={key} href={`/?category=${key}`} className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--sub)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -29,6 +31,8 @@ export default function ThemePage() {
             <div className="muted">{counts[key] || 0}件</div>
           </Link>
         ))}
+        </div>
+        <PcSidebar />
       </div>
       <BottomNav />
     </div>

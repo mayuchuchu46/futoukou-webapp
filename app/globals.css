@@ -280,15 +280,31 @@ h2.pagetitle {
   .home-layout--with-side .home-chips { grid-area: chips; }
   .home-layout--with-side .home-ranking { grid-area: ranking; }
   .home-layout--with-side .home-tags { grid-area: tags; }
-  /* サイドのタグ一覧は横スクロールではなく、折り返して並べる */
-  .home-layout--with-side .home-tags .chip-row {
+  .home-layout--with-side .home-adbanner { grid-area: adbanner; align-self: start; }
+  .home-layout--with-side .home-list { grid-area: list; }
+  .home-layout--with-side .home-experts-side { grid-area: experts; align-self: start; }
+
+  /* サイドのタグ一覧は横スクロールではなく、折り返して並べる
+     （ホームのサイド・他ページのPcSidebarどちらでも使うため、
+     特定の親クラスに依存させず960px以上では常にこの見た目にする） */
+  .home-tags .chip-row {
     flex-wrap: wrap;
     overflow-x: visible;
     padding-bottom: 0;
   }
-  .home-layout--with-side .home-adbanner { grid-area: adbanner; align-self: start; }
-  .home-layout--with-side .home-list { grid-area: list; }
-  .home-layout--with-side .home-experts-side { grid-area: experts; align-self: start; }
+
+  /* ホーム以外のページ用：右サイドにPcSidebarを出す2カラム構成 */
+  .page-with-sidebar {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+  }
+  .page-with-sidebar > .page-main { flex: 1; min-width: 0; }
+}
+
+.pc-sidebar { display: none; }
+@media (min-width: 960px) {
+  .pc-sidebar { display: flex; flex-direction: column; gap: 16px; width: 300px; flex: 0 0 300px; }
 }
 
 /* このバナーはPCのサイドバー用。スマホ幅ではこの位置（カテゴリ下）には出さない。 */

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import PcSidebar from '@/components/PcSidebar';
 import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { getSupabaseAdmin } from '@/lib/supabase';
@@ -147,7 +148,8 @@ export default async function ResultPage({
         />
       )}
       <Header supervised={false} />
-      <div className="main">
+      <div className="main page-with-sidebar">
+        <div className="page-main">
         <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
 
         <div className="row">
@@ -213,6 +215,8 @@ export default async function ResultPage({
 
         {/* 閲覧数カウントはSEOに関係ない副作用なので、どちらの種別でもクライアント側で送る */}
         <ViewPing id={id} />
+        </div>
+        <PcSidebar />
       </div>
       <BottomNav />
     </div>

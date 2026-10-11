@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import PcSidebar from '@/components/PcSidebar';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
 // データベースの最新状態（本人確認済みの専門家）を毎回サーバー側で取得するページなので、
@@ -41,7 +42,8 @@ export default async function ExpertsPage() {
   return (
     <div className="app-shell">
       <Header supervised={false} />
-      <div className="main">
+      <div className="main page-with-sidebar">
+        <div className="page-main">
         <Link href="/about" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
         <h2 className="pagetitle">専門家一覧</h2>
         <div className="muted" style={{ marginBottom: 14 }}>
@@ -114,6 +116,8 @@ export default async function ExpertsPage() {
         <Link href="/expert/login" className="backlink" style={{ margin: '0 0 14px', fontSize: 13 }}>
           すでに登録済みの専門家の方はこちらからログイン →
         </Link>
+        </div>
+        <PcSidebar hideExperts />
       </div>
       <BottomNav />
     </div>

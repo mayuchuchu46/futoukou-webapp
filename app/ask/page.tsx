@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import PcSidebar from '@/components/PcSidebar';
 import { CATS, Category } from '@/lib/categories';
 import { GRADE_OPTIONS, GENDER_OPTIONS } from '@/lib/types';
 import { getUid, hasAgreedTerms, setAgreedTerms } from '@/lib/uid';
@@ -163,7 +164,8 @@ function AskPageContent() {
   return (
     <div className="app-shell">
       <Header supervised={false} />
-      <div className="main">
+      <div className="main page-with-sidebar">
+        <div className="page-main">
         <h2 className="pagetitle">質問する</h2>
         <div className="muted" style={{ marginBottom: 8 }}>どのような内容ですか？当てはまるテーマを選んでください</div>
         <select className="input" value={category} onChange={(e) => setCategory(e.target.value as Category)}>
@@ -269,6 +271,8 @@ function AskPageContent() {
             </>
           )}
         </div>
+        </div>
+        <PcSidebar />
       </div>
       <BottomNav />
     </div>
