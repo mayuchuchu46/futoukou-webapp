@@ -180,14 +180,17 @@ export default function HomeClient({
             onChange={(e) => setQ(e.target.value)}
           />
 
-          <div className="chip-row home-chips">
-            <button className={`chip ${category === 'all' ? 'active' : ''}`} onClick={() => selectCategory('all')}>
+          <div className="catmenu-row home-chips">
+            <button
+              className={`catmenu-chip catmenu-all ${category === 'all' ? 'active' : ''}`}
+              onClick={() => selectCategory('all')}
+            >
               すべて（{total}）
             </button>
             {Object.entries(CATS).map(([key, c]) => (
               <button
                 key={key}
-                className={`chip ${category === key ? 'active' : ''}`}
+                className={`catmenu-chip ${c.cls} ${category === key ? 'active' : ''}`}
                 onClick={() => selectCategory(key)}
               >
                 {c.short}（{counts[key] || 0}）

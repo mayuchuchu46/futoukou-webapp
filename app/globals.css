@@ -306,6 +306,33 @@ h2.pagetitle {
 .chip-tag { background: var(--card); border: 1px solid var(--main); color: var(--main); }
 .chip-tag.active { background: var(--main); border-color: var(--main); color: #fff; }
 
+/* カテゴリメニュー（大分類の切り替え）。キーワードタグ（.chip-tag）とは
+   意図的に見た目を変え、角丸四角＋カテゴリごとの色（cat-*、カード上のバッジと同じ配色）
+   で「固定の大分類メニュー」であることを一目でわかるようにする。 */
+.catmenu-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.catmenu-row::-webkit-scrollbar { display: none; }
+.catmenu-chip {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border: none;
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+.catmenu-chip.active { opacity: 1; box-shadow: 0 1px 5px rgba(43, 43, 40, 0.12); }
+.catmenu-all { background: var(--text); color: #fff; }
+
 .card {
   background: var(--card);
   border-radius: 14px;
