@@ -62,20 +62,25 @@ export default async function ExpertsPage() {
           </>
         ) : (
           experts.map((e) => (
-            <div key={e.id} className="card" style={{ flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
-              <img
-                src={e.photo_url || '/assets/sensei_logo.png'}
-                alt=""
-                style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
-              />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}</div>
-                {e.bio && (
-                  <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
-                    {e.bio}
-                  </div>
-                )}
+            <div key={e.id} className="card" style={{ gap: 10 }}>
+              <div style={{ display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
+                <img
+                  src={e.photo_url || '/assets/sensei_logo.png'}
+                  alt=""
+                  style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+                />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}</div>
+                  {e.bio && (
+                    <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
+                      {e.bio}
+                    </div>
+                  )}
+                </div>
               </div>
+              <Link href={`/ask?expert=${e.id}`} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
+                この専門家に相談する
+              </Link>
             </div>
           ))
         )}

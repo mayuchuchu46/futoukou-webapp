@@ -198,6 +198,17 @@ h2.pagetitle {
 .expertbanner-desc { font-size: 11px; color: var(--muted); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .expertbanner-cta { flex: 0 0 auto; font-size: 14px; font-weight: 700; color: var(--orange-text); }
 
+/* ホーム画面TOPに置く「専門家一覧」の導線。/expertsページの簡易版で、
+   本人確認済みの専門家を数件（なければ募集中カードを1件）表示する。 */
+.home-experts { display: flex; flex-direction: column; gap: 8px; margin: 0; }
+.home-experts-title { font-weight: 700; font-size: 14px; color: var(--text); }
+.home-expert-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.home-expert-card--empty { border-style: dashed; }
+.home-expert-photo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
+.home-expert-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.home-expert-name { font-weight: 700; font-size: 13px; color: var(--text); }
+.home-expert-desc { font-size: 11px; color: var(--muted); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 /* 専門家（回答する側）向けの募集導線。一覧の最後に置く、画像バナー（運営が用意した
    イラスト）。クリックで募集ページへ遷移する。高解像度の1枚（2019×303px）を
    モバイル・PC共通で使い、どちらの表示幅でもぼやけないようにしている。 */

@@ -52,6 +52,9 @@
 -- 専門家回答への利用者フィードバック（役に立ったか）を追加した場合、
 -- 既存DBでは次を実行してください。
 -- alter table consultations add column if not exists expert_answer_helpful boolean;
+-- 専門家一覧から「この専門家に相談する」を選んで質問できる機能（特定の専門家を
+-- 指名した有料相談）を追加した場合、既存DBでは次を実行してください。
+-- alter table consultations add column if not exists requested_expert_id uuid references experts(id);
 -- 会員登録すると、別の端末・ブラウザでも相談履歴が引き継げる（member_idでの紐付け）機能と、
 -- 会員の過去の相談内容をAIが踏まえて回答する機能を追加した場合、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists member_id uuid references members(id);
@@ -130,6 +133,7 @@ create table if not exists consultations (
   paid boolean not null default false, -- Stripe決済が完了したか
   stripe_session_id text,
   expert_id uuid references experts(id),
+  requested_expert_id uuid references experts(id), -- 利用者が専門家一覧から指名した相談先（未指名ならnull＝誰でも回答可）
   expert_status text check (expert_status in ('pending','answered')),
   expert_answer text,
   expert_payout_jpy int,               -- 専門家への報酬額（手動振込管理用）

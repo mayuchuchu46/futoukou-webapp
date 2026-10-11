@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { CATS, Category } from '@/lib/categories';
@@ -10,8 +10,22 @@ import { getUid, hasAgreedTerms, setAgreedTerms } from '@/lib/uid';
 
 const CATEGORY_KEYS = Object.keys(CATS) as Category[];
 
+type RequestedExpert = { id: string; name: string; credential: string };
+
+// useSearchParams()（?expert=指名用）はレンダリング時点でしか値が確定しないため、
+// プリレンダーをブロックしないようにSuspenseで囲む。
 export default function AskPage() {
+  return (
+    <Suspense fallback={null}>
+      <AskPageContent />
+    </Suspense>
+  );
+}
+
+function AskPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const expertIdParam = searchParams.get('expert');
   const [category, setCategory] = useState<Category>(CATEGORY_KEYS[0]);
   const [text, setText] = useState('');
   const [grade, setGrade] = useState('');
@@ -22,6 +36,7 @@ export default function AskPage() {
   const [needsTerms, setNeedsTerms] = useState(false);
   const [expertAvailable, setExpertAvailable] = useState(false);
   const [memberActive, setMemberActive] = useState(false);
+  const [requestedExpert, setRequestedExpert] = useState<RequestedExpert | null>(null);
 
   useEffect(() => {
     setNeedsTerms(!hasAgreedTerms());
@@ -34,6 +49,19 @@ export default function AskPage() {
       .then((d) => setMemberActive(!!d.active))
       .catch(() => setMemberActive(false));
   }, []);
+
+  // 専門家一覧の「この専門家に相談する」から来た場合（?expert=ID）、
+  // 本人確認済みの専門家であることを確認したうえで、指名表示に切り替える。
+  useEffect(() => {
+    if (!expertIdParam) {
+      setRequestedExpert(null);
+      return;
+    }
+    fetch(`/api/experts/get?id=${encodeURIComponent(expertIdParam)}`)
+      .then((r) => r.json())
+      .then((d) => setRequestedExpert(d.expert || null))
+      .catch(() => setRequestedExpert(null));
+  }, [expertIdParam]);
 
   async function submit() {
     if (!text.trim()) return;
@@ -62,7 +90,14 @@ export default function AskPage() {
       const res = await fetch('/api/expert-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category, text, author_id: getUid(), grade: grade || null, gender: gender || null }),
+        body: JSON.stringify({
+          category,
+          text,
+          author_id: getUid(),
+          grade: grade || null,
+          gender: gender || null,
+          requested_expert_id: requestedExpert?.id || null,
+        }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error || '失敗しました');
@@ -162,22 +197,30 @@ export default function AskPage() {
 
         <div className="expertteaser">
           <div className="expertteaser-title">
-            専門家に相談する（有料）
-            {!expertAvailable && <span className="comingsoon-badge">準備中・近日公開</span>}
+            {requestedExpert
+              ? `${requestedExpert.credential}・${requestedExpert.name}さんに相談する（有料）`
+              : '専門家に相談する（有料）'}
+            {!expertAvailable && !requestedExpert && <span className="comingsoon-badge">準備中・近日公開</span>}
           </div>
-          {!expertAvailable ? (
+          {!expertAvailable && !requestedExpert ? (
             <div className="expertteaser-desc">
               現在、本人確認が完了した専門家（公認心理師など）がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
             </div>
           ) : memberActive ? (
             <>
               <div className="expertteaser-desc">
-                登録している専門家が、数日以内にテキストで直接回答します。読み放題会員は追加で¥500（税込）です。
-                <br />
-                <a href="/experts">どんな専門家が回答していますか？</a>
+                {requestedExpert ? (
+                  <>ご指名の専門家が、数日以内にテキストで直接回答します。読み放題会員は追加で¥500（税込）です。</>
+                ) : (
+                  <>
+                    登録している専門家が、数日以内にテキストで直接回答します。読み放題会員は追加で¥500（税込）です。
+                    <br />
+                    <a href="/experts">どんな専門家が回答していますか？</a>
+                  </>
+                )}
               </div>
               <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
-                {expertSubmitting ? '決済ページへ移動中…' : '¥500で専門家に相談する'}
+                {expertSubmitting ? '決済ページへ移動中…' : requestedExpert ? `¥500で${requestedExpert.name}さんに相談する` : '¥500で専門家に相談する'}
               </button>
             </>
           ) : (

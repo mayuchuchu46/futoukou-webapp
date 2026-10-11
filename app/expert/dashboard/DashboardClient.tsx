@@ -70,6 +70,9 @@ export default function DashboardClient({
             <div key={item.id} className="card">
               <div className="row">
                 <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
+                {item.requested_expert_id === expert.id && (
+                  <span className="muted" style={{ fontWeight: 700 }}>あなた指名の相談</span>
+                )}
                 {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
               </div>
               <div className="qtext">{item.question}</div>

@@ -15,6 +15,7 @@ export type Consultation = {
   price_jpy: number | null;
   paid: boolean;
   expert_id: string | null;
+  requested_expert_id?: string | null;
   expert_status: 'pending' | 'answered' | null;
   expert_answer: string | null;
   refunded: boolean;

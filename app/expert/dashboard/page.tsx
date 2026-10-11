@@ -40,12 +40,15 @@ async function ExpertDashboardContent() {
   }
 
   const supabase = getSupabaseAdmin();
+  // 利用者が専門家一覧から名前を指名して質問した相談（requested_expert_id）は、
+  // 指名された本人にのみ表示する。指名なし（null）の相談は誰でも回答できる。
   const { data: pending } = await supabase
     .from('consultations')
     .select('*')
     .eq('request_type', 'expert')
     .eq('paid', true)
     .eq('expert_status', 'pending')
+    .or(`requested_expert_id.is.null,requested_expert_id.eq.${expert.id}`)
     .order('created_at', { ascending: true });
 
   const { data: answeredByMe } = await supabase

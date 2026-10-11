@@ -56,14 +56,28 @@ async function getSidebarBanner() {
   return data || null;
 }
 
+// ホーム画面にも「専門家一覧」の導線を置くため、本人確認済みの専門家を取得する
+// （/expertsページと同じ条件。トップでは件数を絞って表示し、全件は/expertsへ誘導する）。
+async function getVerifiedExperts() {
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from('experts')
+    .select('id, name, credential, bio, photo_url')
+    .eq('verified', true)
+    .order('created_at', { ascending: true })
+    .limit(3);
+  return data || [];
+}
+
 export default async function HomePage() {
   // クローラー・初回表示用に「全カテゴリ・匿名」の一覧をサーバー側で取得する。
   // カテゴリ切り替えなど、その後の絞り込みはクライアント側（HomeClient）で行う。
-  const [items, guidelines, { counts, total }, sidebarBanner] = await Promise.all([
+  const [items, guidelines, { counts, total }, sidebarBanner, experts] = await Promise.all([
     getConsultationsList({ category: 'all', viewerId: null }),
     getGuidelines(),
     getCounts(),
     getSidebarBanner(),
+    getVerifiedExperts(),
   ]);
 
   return (
@@ -74,6 +88,7 @@ export default async function HomePage() {
         initialCounts={counts}
         initialTotal={total}
         initialSidebarBanner={sidebarBanner}
+        initialExperts={experts}
       />
     </Suspense>
   );

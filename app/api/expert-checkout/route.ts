@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { category, text, author_id, grade, gender } = await req.json();
+  const { category, text, author_id, grade, gender, requested_expert_id } = await req.json();
   if (!category || !text || !text.trim() || !author_id) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 });
   }
@@ -29,6 +29,20 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = getSupabaseAdmin();
+
+  // 専門家一覧から指名された場合、なりすましの指名（本人確認未完了の専門家IDを
+  // 渡す等）を避けるため、本人確認済みの専門家であることをここで確認してから保存する。
+  let requestedExpertId: string | null = null;
+  if (requested_expert_id) {
+    const { data: expertRow } = await supabase
+      .from('experts')
+      .select('id')
+      .eq('id', requested_expert_id)
+      .eq('verified', true)
+      .single();
+    requestedExpertId = expertRow?.id || null;
+  }
+
   const { data: row, error: insertErr } = await supabase
     .from('consultations')
     .insert({
@@ -43,6 +57,7 @@ export async function POST(req: NextRequest) {
       price_jpy: EXPERT_PRICE_JPY,
       paid: false,
       expert_status: 'pending',
+      requested_expert_id: requestedExpertId,
     })
     .select('id')
     .single();

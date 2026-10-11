@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
@@ -22,18 +23,28 @@ type SidebarBanner = {
   alt_text: string;
 } | null;
 
+type ExpertProfile = {
+  id: string;
+  name: string;
+  credential: string;
+  bio: string;
+  photo_url: string | null;
+};
+
 export default function HomeClient({
   initialItems,
   initialSupervised,
   initialCounts,
   initialTotal,
   initialSidebarBanner,
+  initialExperts,
 }: {
   initialItems: Consultation[];
   initialSupervised: boolean;
   initialCounts: Record<string, number>;
   initialTotal: number;
   initialSidebarBanner: SidebarBanner;
+  initialExperts: ExpertProfile[];
 }) {
   const router = useRouter();
   const urlParams = useSearchParams();
@@ -108,6 +119,40 @@ export default function HomeClient({
               <div className="expertbanner-desc">専門家（公認心理師など）本人が直接回答。月¥800で読み放題</div>
             </div>
             <span className="expertbanner-cta">›</span>
+          </div>
+        )}
+
+        {showExtras && (
+          <div className="home-experts">
+            <div className="home-experts-title">専門家一覧</div>
+            {initialExperts.length === 0 ? (
+              <div className="home-expert-card home-expert-card--empty" onClick={() => router.push('/expert/recruit')}>
+                <img src="/assets/sensei_logo.png" alt="" className="home-expert-photo" style={{ opacity: 0.5 }} />
+                <div className="home-expert-body">
+                  <div className="home-expert-name">現在、専門家を募集中です</div>
+                  <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
+                </div>
+                <span className="expertbanner-cta">›</span>
+              </div>
+            ) : (
+              initialExperts.map((e) => (
+                <div
+                  key={e.id}
+                  className="home-expert-card"
+                  onClick={() => router.push(`/ask?expert=${e.id}`)}
+                >
+                  <img src={e.photo_url || '/assets/sensei_logo.png'} alt="" className="home-expert-photo" />
+                  <div className="home-expert-body">
+                    <div className="home-expert-name">{e.credential}・{e.name}</div>
+                    {e.bio && <div className="home-expert-desc">{e.bio}</div>}
+                  </div>
+                  <span className="expertbanner-cta">›</span>
+                </div>
+              ))
+            )}
+            <Link href="/experts" className="backlink" style={{ margin: '2px 0 0', fontSize: 13 }}>
+              専門家一覧をすべて見る →
+            </Link>
           </div>
         )}
 
