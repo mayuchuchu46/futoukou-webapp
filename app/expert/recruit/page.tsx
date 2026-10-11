@@ -16,7 +16,7 @@ export default function ExpertRecruitPage() {
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="qtext">
-            「どうする先生」は、不登校のご家庭に向けたAI相談サービスです。AIの回答とは別に、公認心理師・臨床心理士など資格をお持ちの専門家本人が、利用者からの相談に直接回答する有料機能があります。この回答を担当していただける専門家の方を募集しています。
+            「どうする先生」は、不登校のご家庭に向けたAI相談サービスです。AIの回答とは別に、公認心理師・臨床心理士など資格をお持ちの専門家本人が、利用者からの相談に直接回答する機能があります。この回答を担当していただける専門家の方を募集しています。
           </div>
         </div>
 
@@ -32,7 +32,7 @@ export default function ExpertRecruitPage() {
           <ol className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
             <li>登録フォームにプロフィール（資格・自己紹介）を入力し、資格の登録証（画像またはPDF）を添付</li>
             <li>運営が登録証の内容を確認（本人確認）</li>
-            <li>確認完了後、有料相談への回答が可能になります</li>
+            <li>確認完了後、相談への回答が可能になります</li>
           </ol>
         </div>
 

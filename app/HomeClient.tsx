@@ -180,7 +180,7 @@ export default function HomeClient({
                 <span className="recruitnote-icon">🙋</span>
                 <div className="recruitnote-body">
                   <div className="recruitnote-title">専門家の方を募集しています</div>
-                  <div className="recruitnote-desc">公認心理師・臨床心理士など、有料相談に回答していただける方を募集中</div>
+                  <div className="recruitnote-desc">公認心理師・臨床心理士など、相談への回答を担当していただける方を募集中</div>
                 </div>
                 <span className="recruitnote-cta">›</span>
               </div>
