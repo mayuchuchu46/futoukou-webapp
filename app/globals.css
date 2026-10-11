@@ -346,6 +346,27 @@ h2.pagetitle {
   .fab { right: 20px; }
 }
 
+/* ページ先頭へ戻るボタン。「相談する」のfabと左右対称の位置（左側）に置く。 */
+.scroll-top-btn {
+  position: fixed;
+  left: calc(50% - 240px + 20px);
+  bottom: 84px;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--main);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  z-index: 20;
+}
+@media (max-width: 480px) {
+  .scroll-top-btn { left: 20px; }
+}
+
 .nav {
   position: sticky;
   bottom: 0;
