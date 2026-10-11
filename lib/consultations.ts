@@ -49,6 +49,11 @@ export async function getConsultationsList({
   if (q && q.trim()) {
     query = query.or(`question.ilike.%${q.trim()}%,answer.ilike.%${q.trim()}%`);
   }
+  // memberIdによる絞り込みは、呼び出し側が明示的に「自分（author_id）の相談を見せてほしい」と
+  // 言っている時（authorIdが渡されている時）だけ行う。authorIdが無い一般の一覧取得（ホーム画面の
+  // 全件表示やカテゴリ・キーワード検索など）では、たまたまログイン中の会員であっても
+  // member_idで絞り込んではいけない（絞り込むと、その会員がまだ投稿していない分だけ一覧が
+  // 空になってしまう）。
   if (authorId) {
     // author_id はクライアント（localStorageのdsk_uid）から渡される値なので、
     // .or() に生文字列として埋め込む前に形式を検証する（PostgRESTのフィルタ構文
@@ -63,24 +68,12 @@ export async function getConsultationsList({
     } else {
       query = query.eq('author_id', authorId);
     }
-  } else if (memberId) {
-    query = query.eq('member_id', memberId);
   }
   if (expertAnswered) {
     query = query.eq('request_type', 'expert').eq('expert_status', 'answered');
   }
 
   const { data, error } = await query;
-  // 2026-10-11：原因切り分け用の一時ログ（/api/consultations が空配列を返す問題の調査）。
-  // 調査が終わったら削除する。
-  console.error(
-    '[getConsultationsList] debug:',
-    JSON.stringify({
-      error: error ? error : null,
-      dataLength: data ? data.length : null,
-      params: { category, q, viewerId, authorId, expertAnswered, memberActive, memberId, limit },
-    })
-  );
   if (error || !data) return [];
 
   return data.map((item) => {
