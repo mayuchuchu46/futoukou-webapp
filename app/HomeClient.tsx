@@ -137,6 +137,7 @@ export default function HomeClient({
     <div className="app-shell">
       <Header supervised={supervised} />
       <div className="main">
+        <div className="hero-catch">不登校のご家庭に、次の一手を届けるAI</div>
         {showExtras && (
           <div className="expertbanner" onClick={() => router.push('/expertlist')}>
             <span className="expertbanner-icon">🔒</span>
