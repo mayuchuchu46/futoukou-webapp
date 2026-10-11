@@ -38,7 +38,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'アップロードに失敗しました: ' + uploadError.message }, { status: 500 });
   }
 
-  await supabase.from('experts').update({ license_doc_path: path, verified: false }).eq('id', expert.id);
+  // 差し替え後の新しい登録証なので、保管期限の起点（verified_at）もリセットする。
+  await supabase
+    .from('experts')
+    .update({ license_doc_path: path, verified: false, verified_at: null })
+    .eq('id', expert.id);
 
   return NextResponse.json({ ok: true });
 }

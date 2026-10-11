@@ -29,6 +29,9 @@
 -- create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
 -- 専門家登録時の登録証（本人確認書類）アップロードを追加した場合、既存DBでは次を実行してください。
 -- alter table experts add column if not exists license_doc_path text;
+-- 本人確認完了後に登録証を自動削除する仕組み（lib/expertLicenseDoc.ts）を追加した場合、
+-- 既存DBでは次を実行してください。
+-- alter table experts add column if not exists verified_at timestamptz;
 -- insert into storage.buckets (id, name, public) values ('expert-documents', 'expert-documents', false) on conflict (id) do nothing;
 -- （このバケットはアプリがservice_roleキー経由でのみ読み書きするため、storage.objectsへの
 -- 　RLSポリシーは不要。一般ユーザー・他の専門家・匿名ユーザーからは直接アクセスできない）
@@ -60,6 +63,7 @@ create table if not exists experts (
   bio text not null default '',
   photo_url text,
   verified boolean not null default false, -- 運営が資格を確認したらtrueにする。falseの間は回答できない
+  verified_at timestamptz, -- 本人確認（verified=true）にした時刻。登録証（license_doc_path）の自動削除の起点に使う
   created_at timestamptz not null default now()
 );
 

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { isAdmin } from '@/lib/adminAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { deleteExpiredLicenseDocs } from '@/lib/expertLicenseDoc';
 import AdminClient from './AdminClient';
 
 // Cache Componentsではcookies()を読むコンポーネントをSuspense配下に置かないと、
@@ -20,6 +21,10 @@ async function AdminPageContent() {
   if (!admin) redirect('/admin/login');
 
   const supabase = getSupabaseAdmin();
+
+  // 本人確認完了から一定期間が過ぎた登録証（本人確認書類）を自動削除する。
+  // 専用のスケジューラは設けず、運営がこの管理画面を開いたタイミングで実行する。
+  await deleteExpiredLicenseDocs();
 
   const { data: unverifiedExperts } = await supabase
     .from('experts')

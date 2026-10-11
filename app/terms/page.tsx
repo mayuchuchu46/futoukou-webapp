@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Header from '@/components/Header';
 
 export default function TermsPage() {
@@ -49,6 +50,7 @@ export default function TermsPage() {
             </div>
           </div>
         </div>
+        <Link href="/privacy" className="backlink" style={{ margin: '14px 0' }}>プライバシーポリシーを見る →</Link>
       </div>
     </div>
   );

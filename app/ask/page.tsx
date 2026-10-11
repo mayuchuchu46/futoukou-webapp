@@ -87,6 +87,7 @@ export default function AskPage() {
             </div>
           </div>
           <a className="btn-secondary" href="/terms" target="_blank">利用規約を見る</a>
+          <a className="btn-secondary" href="/privacy" target="_blank">プライバシーポリシーを見る</a>
           <button
             className="btn-primary"
             onClick={() => {
