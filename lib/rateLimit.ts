@@ -23,12 +23,8 @@ async function countSince(filters: { authorId?: string; ip?: string; requestType
 }
 
 // 無料AI相談（どうする先生）向け：APIコストが直接かかるため厳しめに制限する
-//
-// [一時的な変更 2026-10-11] マイページのAIサマリー機能の動作確認のため、上限を
-// 一時的に引き上げている（本来 userCount>=10 / ipCount>=20）。確認が終わり次第、
-// 元の値（10 / 20）に戻すこと。
-const AI_CONSULT_USER_DAILY_LIMIT = 50;
-const AI_CONSULT_IP_DAILY_LIMIT = 100;
+const AI_CONSULT_USER_DAILY_LIMIT = 10;
+const AI_CONSULT_IP_DAILY_LIMIT = 20;
 
 export async function checkAiConsultRateLimit(authorId: string, ip: string | null): Promise<LimitResult> {
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
