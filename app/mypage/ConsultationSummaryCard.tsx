@@ -89,10 +89,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
       {locked ? (
         <>
           <div className="qtext" style={{ filter: 'blur(4px)', userSelect: 'none' }} aria-hidden="true">
-            会員になると、ここに次の一手の具体的なアドバイスが表示されます。会員になると、ここに次の一手の具体的なアドバイスが表示されます。
-          </div>
-          <div className="muted" style={{ fontSize: 13 }}>
-            次の一手の具体的なアドバイスは、読み放題会員（月¥800）の特典です。
+            会員になると、ここに次の一手の具体的なアドバイスが表示されます。相談を重ねるほど、より具体的な内容になっていきます。
           </div>
           <Link className="btn-primary" href="/account">
             会員になってアドバイスを見る
