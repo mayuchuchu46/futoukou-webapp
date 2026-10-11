@@ -158,17 +158,6 @@ export default function HomeClient({
             </div>
           )}
 
-          {showExtras && (
-            <div className="recruitbanner home-recruit" onClick={() => router.push('/expert/recruit')}>
-              <span className="recruitbanner-icon">🙋</span>
-              <div className="recruitbanner-body">
-                <div className="recruitbanner-title">専門家の方を募集しています</div>
-                <div className="recruitbanner-desc">公認心理師・臨床心理士など、有料相談に回答していただける方を募集中</div>
-              </div>
-              <span className="recruitbanner-cta">›</span>
-            </div>
-          )}
-
           {showExtras && showBanner && (
             <a
               className="home-adbanner"
@@ -186,6 +175,15 @@ export default function HomeClient({
               <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
             )}
             {!loading && items.map((item) => <ConsultationCard key={item.id} item={item} />)}
+            {showExtras && !loading && (
+              <div
+                className="muted"
+                style={{ textAlign: 'center', fontSize: 12, margin: '8px 0 4px', cursor: 'pointer' }}
+                onClick={() => router.push('/expert/recruit')}
+              >
+                専門家の方はこちら →
+              </div>
+            )}
           </div>
         </div>
       </div>

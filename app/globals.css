@@ -198,15 +198,6 @@ h2.pagetitle {
 .expertbanner-desc { font-size: 11px; color: var(--muted); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .expertbanner-cta { flex: 0 0 auto; font-size: 14px; font-weight: 700; color: var(--orange-text); }
 
-/* 専門家（回答する側）向けの募集導線カード。会員向けのexpertbanner（オレンジ）とは
-   色を分け、利用者向けの案内と混同されないようにしている。 */
-.recruitbanner { background: var(--teal-bg); border: 1px solid var(--teal-text); border-radius: 12px; padding: 10px 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.recruitbanner-icon { font-size: 17px; flex: 0 0 auto; line-height: 1; }
-.recruitbanner-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.recruitbanner-title { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 13px; color: var(--teal-text); }
-.recruitbanner-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
-.recruitbanner-cta { flex: 0 0 auto; font-size: 14px; font-weight: 700; color: var(--teal-text); }
-
 .main { flex: 1; overflow-y: auto; padding: 16px 20px 90px 20px; display: flex; flex-direction: column; gap: 16px; }
 
 /* ホーム画面のみ、PCの広い画面では「よく読まれている相談」「気になるテーマから探す」を
@@ -226,7 +217,6 @@ h2.pagetitle {
     grid-template-areas:
       "search  ranking"
       "chips   tags"
-      "list    recruit"
       "list    adbanner";
     align-items: start;
   }
@@ -234,7 +224,6 @@ h2.pagetitle {
   .home-layout--with-side .home-chips { grid-area: chips; }
   .home-layout--with-side .home-ranking { grid-area: ranking; }
   .home-layout--with-side .home-tags { grid-area: tags; }
-  .home-layout--with-side .home-recruit { grid-area: recruit; align-self: start; }
   .home-layout--with-side .home-adbanner { grid-area: adbanner; align-self: start; }
   .home-layout--with-side .home-list { grid-area: list; }
 }
