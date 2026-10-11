@@ -7,7 +7,7 @@ import { Consultation, metaLabel } from '@/lib/types';
 
 type Expert = { id: string; name: string; credential: string };
 
-const MIN_ANSWER_LENGTH = 200; // 目安：5分程度〜で書ける分量
+const MIN_ANSWER_LENGTH = 200;
 
 export default function DashboardClient({
   expert,
@@ -82,7 +82,7 @@ export default function DashboardClient({
               <textarea
                 className="input"
                 rows={6}
-                placeholder={`状況の受け止め→具体的な「次の一手」→注意点、の順で回答してください（${MIN_ANSWER_LENGTH}文字以上・目安5分程度〜）`}
+                placeholder={`状況の受け止め→具体的な「次の一手」→注意点、の順で回答してください（${MIN_ANSWER_LENGTH}文字以上）`}
                 value={drafts[item.id] || ''}
                 onChange={(e) => setDrafts({ ...drafts, [item.id]: e.target.value })}
               />

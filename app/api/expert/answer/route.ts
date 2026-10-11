@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { getCurrentExpert } from '@/lib/expertAuth';
 import { expertPayout } from '@/lib/config';
 
-const MIN_ANSWER_LENGTH = 200; // 目安：5分程度〜で書ける分量
+const MIN_ANSWER_LENGTH = 200;
 
 export async function POST(req: NextRequest) {
   const expert = await getCurrentExpert();
