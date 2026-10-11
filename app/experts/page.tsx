@@ -40,7 +40,26 @@ export default async function ExpertsPage() {
         </div>
 
         {experts.length === 0 ? (
-          <div className="empty">現在、本人確認が完了した専門家の登録がありません。準備が整い次第、ここに掲載されます。</div>
+          <>
+            <div className="empty">現在、本人確認が完了した専門家の登録がありません。準備が整い次第、ここに掲載されます。</div>
+            <div className="muted" style={{ margin: '4px 0 2px', fontSize: 12 }}>掲載イメージ（サンプル）</div>
+            <div
+              className="card"
+              style={{ flexDirection: 'row', gap: 14, alignItems: 'flex-start', opacity: 0.6 }}
+            >
+              <img
+                src="/assets/sensei_logo.png"
+                alt=""
+                style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+              />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ fontWeight: 700 }}>公認心理師・（例）山田 花子</div>
+                <div className="qtext">
+                  スクールカウンセラーとして10年。不登校のご家庭への対応を専門にしています。（本人確認が完了した専門家の自己紹介がここに表示されます）
+                </div>
+              </div>
+            </div>
+          </>
         ) : (
           experts.map((e) => (
             <div key={e.id} className="card" style={{ flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
@@ -61,7 +80,7 @@ export default async function ExpertsPage() {
           ))
         )}
 
-        <Link href="/expert/register" className="backlink" style={{ margin: '4px 0 0' }}>
+        <Link href="/expert/recruit" className="backlink" style={{ margin: '4px 0 0' }}>
           専門家として登録を希望される方はこちら →
         </Link>
         <Link href="/expert/login" className="backlink" style={{ margin: '0 0 14px', fontSize: 13 }}>

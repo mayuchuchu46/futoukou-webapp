@@ -158,6 +158,17 @@ export default function HomeClient({
             </div>
           )}
 
+          {showExtras && (
+            <div className="recruitbanner home-recruit" onClick={() => router.push('/expert/recruit')}>
+              <span className="recruitbanner-icon">🙋</span>
+              <div className="recruitbanner-body">
+                <div className="recruitbanner-title">専門家の方を募集しています</div>
+                <div className="recruitbanner-desc">公認心理師・臨床心理士など。1件の回答につき¥400</div>
+              </div>
+              <span className="recruitbanner-cta">›</span>
+            </div>
+          )}
+
           {showExtras && showBanner && (
             <a
               className="home-adbanner"
