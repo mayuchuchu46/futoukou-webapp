@@ -176,14 +176,12 @@ export default function HomeClient({
             )}
             {!loading && items.map((item) => <ConsultationCard key={item.id} item={item} />)}
             {showExtras && !loading && (
-              <picture onClick={() => router.push('/expert/recruit')}>
-                <source media="(min-width: 960px)" srcSet="/assets/recruit_banner_pc.png" />
-                <img
-                  className="recruitnote-banner"
-                  src="/assets/recruit_banner.png"
-                  alt="専門家の方を募集しています。公認心理師・臨床心理士など、相談への回答を担当していただける方を募集中"
-                />
-              </picture>
+              <img
+                className="recruitnote-banner"
+                src="/assets/recruit_banner.png"
+                alt="専門家の方を募集しています。公認心理師・臨床心理士など、相談への回答を担当していただける方を募集中"
+                onClick={() => router.push('/expert/recruit')}
+              />
             )}
           </div>
         </div>
