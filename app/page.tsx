@@ -44,13 +44,26 @@ async function getCounts() {
   return { counts, total: (data || []).length };
 }
 
+// PCの広い画面でホーム画面サイドバーに出す、差し替え可能な広告・アフィリエイトバナー枠
+// （/adminで編集）。未設定・無効時はnullを返し、HomeClient側で何も表示しない。
+async function getSidebarBanner() {
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from('sidebar_banners')
+    .select('enabled, image_url, link_url, alt_text')
+    .eq('id', 'default')
+    .single();
+  return data || null;
+}
+
 export default async function HomePage() {
   // クローラー・初回表示用に「全カテゴリ・匿名」の一覧をサーバー側で取得する。
   // カテゴリ切り替えなど、その後の絞り込みはクライアント側（HomeClient）で行う。
-  const [items, guidelines, { counts, total }] = await Promise.all([
+  const [items, guidelines, { counts, total }, sidebarBanner] = await Promise.all([
     getConsultationsList({ category: 'all', viewerId: null }),
     getGuidelines(),
     getCounts(),
+    getSidebarBanner(),
   ]);
 
   return (
@@ -60,6 +73,7 @@ export default async function HomePage() {
         initialSupervised={!!guidelines?.supervised}
         initialCounts={counts}
         initialTotal={total}
+        initialSidebarBanner={sidebarBanner}
       />
     </Suspense>
   );

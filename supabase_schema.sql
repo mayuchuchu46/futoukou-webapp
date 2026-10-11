@@ -32,6 +32,15 @@
 -- 本人確認完了後に登録証を自動削除する仕組み（lib/expertLicenseDoc.ts）を追加した場合、
 -- 既存DBでは次を実行してください。
 -- alter table experts add column if not exists verified_at timestamptz;
+-- ホーム画面サイドバーの広告・アフィリエイトバナー枠を追加した場合、既存DBでは次を実行してください。
+-- create table if not exists sidebar_banners (
+--   id text primary key default 'default',
+--   enabled boolean not null default false,
+--   image_url text not null default '',
+--   link_url text not null default '',
+--   alt_text text not null default '',
+--   updated_at timestamptz not null default now()
+-- );
 -- insert into storage.buckets (id, name, public) values ('expert-documents', 'expert-documents', false) on conflict (id) do nothing;
 -- （このバケットはアプリがservice_roleキー経由でのみ読み書きするため、storage.objectsへの
 -- 　RLSポリシーは不要。一般ユーザー・他の専門家・匿名ユーザーからは直接アクセスできない）
@@ -132,6 +141,18 @@ create table if not exists member_summaries (
   advice text not null default '',
   consultation_count int not null default 0,
   generated_at timestamptz not null default now()
+);
+
+-- ホーム画面（PCの広い画面のみ）のサイドバーに表示する、差し替え可能な広告・アフィリエイト
+-- バナー枠。管理画面（/admin）から画像URL・リンク先・代替テキスト・表示ON/OFFを編集する。
+-- 1行だけの設定（id='default'）で、バナー枠は今のところ1つのみ。
+create table if not exists sidebar_banners (
+  id text primary key default 'default',
+  enabled boolean not null default false,
+  image_url text not null default '',
+  link_url text not null default '',
+  alt_text text not null default '',
+  updated_at timestamptz not null default now()
 );
 
 create table if not exists consents (

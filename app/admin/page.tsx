@@ -49,11 +49,20 @@ async function AdminPageContent() {
     .lt('created_at', fiveDaysAgo)
     .order('created_at', { ascending: true });
 
+  const { data: sidebarBanner } = await supabase
+    .from('sidebar_banners')
+    .select('enabled, image_url, link_url, alt_text')
+    .eq('id', 'default')
+    .single();
+
   return (
     <AdminClient
       unverifiedExperts={unverifiedExperts || []}
       recentConsultations={recentConsultations || []}
       overdueExpertRequests={overdueExpertRequests || []}
+      initialSidebarBanner={
+        sidebarBanner || { enabled: false, image_url: '', link_url: '', alt_text: '' }
+      }
     />
   );
 }

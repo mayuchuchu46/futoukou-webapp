@@ -217,15 +217,19 @@ h2.pagetitle {
     grid-template-areas:
       "search  ranking"
       "chips   tags"
-      "list    list";
+      "list    adbanner";
     align-items: start;
   }
   .home-layout--with-side .home-search { grid-area: search; }
   .home-layout--with-side .home-chips { grid-area: chips; }
   .home-layout--with-side .home-ranking { grid-area: ranking; }
   .home-layout--with-side .home-tags { grid-area: tags; }
+  .home-layout--with-side .home-adbanner { grid-area: adbanner; align-self: start; }
   .home-layout--with-side .home-list { grid-area: list; }
 }
+
+.home-adbanner { display: block; border-radius: 12px; overflow: hidden; }
+.home-adbanner img { display: block; width: 100%; height: auto; }
 
 .chip-row {
   display: flex;

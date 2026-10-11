@@ -15,16 +15,25 @@ function isExpertAnswered(item: Consultation) {
   return item.request_type === 'expert' && item.expert_status === 'answered';
 }
 
+type SidebarBanner = {
+  enabled: boolean;
+  image_url: string;
+  link_url: string;
+  alt_text: string;
+} | null;
+
 export default function HomeClient({
   initialItems,
   initialSupervised,
   initialCounts,
   initialTotal,
+  initialSidebarBanner,
 }: {
   initialItems: Consultation[];
   initialSupervised: boolean;
   initialCounts: Record<string, number>;
   initialTotal: number;
+  initialSidebarBanner: SidebarBanner;
 }) {
   const router = useRouter();
   const urlParams = useSearchParams();
@@ -38,6 +47,8 @@ export default function HomeClient({
   const supervised = initialSupervised;
   const counts = initialCounts;
   const total = initialTotal;
+  const banner = initialSidebarBanner;
+  const showBanner = !!(banner && banner.enabled && banner.image_url && banner.link_url);
 
   // 旧「さがす」ページのタグ・ランキングなど、別のリンクから ?q= / ?category= 付きで
   // ホームに遷移してきたときに、URLの変化を拾って絞り込みを反映する。
@@ -145,6 +156,17 @@ export default function HomeClient({
             <div className="home-tags">
               <TagChips title="気になるテーマから探す" />
             </div>
+          )}
+
+          {showExtras && showBanner && (
+            <a
+              className="home-adbanner"
+              href={banner!.link_url}
+              target="_blank"
+              rel="noopener sponsored"
+            >
+              <img src={banner!.image_url} alt={banner!.alt_text} />
+            </a>
           )}
 
           <div className="home-list" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

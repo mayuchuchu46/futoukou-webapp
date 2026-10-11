@@ -31,19 +31,31 @@ type OverdueExpertRequest = {
   stripe_session_id: string | null;
 };
 
+type SidebarBanner = {
+  enabled: boolean;
+  image_url: string;
+  link_url: string;
+  alt_text: string;
+};
+
 export default function AdminClient({
   unverifiedExperts,
   recentConsultations,
   overdueExpertRequests,
+  initialSidebarBanner,
 }: {
   unverifiedExperts: UnverifiedExpert[];
   recentConsultations: RecentConsultation[];
   overdueExpertRequests: OverdueExpertRequest[];
+  initialSidebarBanner: SidebarBanner;
 }) {
   const [experts, setExperts] = useState(unverifiedExperts);
   const [consultations, setConsultations] = useState(recentConsultations);
   const [overdue, setOverdue] = useState(overdueExpertRequests);
   const [busy, setBusy] = useState<string | null>(null);
+  const [banner, setBanner] = useState(initialSidebarBanner);
+  const [bannerSaving, setBannerSaving] = useState(false);
+  const [bannerMessage, setBannerMessage] = useState('');
 
   async function viewLicenseDoc(id: string) {
     setBusy(id);
@@ -110,13 +122,69 @@ export default function AdminClient({
     }
   }
 
+  async function saveBanner() {
+    setBannerSaving(true);
+    setBannerMessage('');
+    const res = await fetch('/api/admin/sidebar-banner', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(banner),
+    });
+    setBannerSaving(false);
+    if (res.ok) {
+      setBannerMessage('保存しました');
+    } else {
+      const data = await res.json();
+      setBannerMessage(data.error || '保存に失敗しました');
+    }
+  }
+
   return (
     <div className="app-shell">
       <div className="header">
         <div style={{ fontWeight: 700, fontSize: 16 }}>管理画面</div>
       </div>
       <div className="main">
-        <div style={{ fontWeight: 700 }}>専門家の本人確認待ち（{experts.length}件）</div>
+        <div style={{ fontWeight: 700 }}>ホーム画面サイドバーのバナー（PC表示のみ）</div>
+        <div className="card" style={{ gap: 10, alignItems: 'stretch' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
+            <input
+              type="checkbox"
+              checked={banner.enabled}
+              onChange={(e) => setBanner((b) => ({ ...b, enabled: e.target.checked }))}
+            />
+            表示する
+          </label>
+          <input
+            className="input"
+            placeholder="画像URL（例：https://...banner.png）"
+            value={banner.image_url}
+            onChange={(e) => setBanner((b) => ({ ...b, image_url: e.target.value }))}
+          />
+          <input
+            className="input"
+            placeholder="リンク先URL（アフィリエイトリンク等）"
+            value={banner.link_url}
+            onChange={(e) => setBanner((b) => ({ ...b, link_url: e.target.value }))}
+          />
+          <input
+            className="input"
+            placeholder="代替テキスト（画像が表示できない時用）"
+            value={banner.alt_text}
+            onChange={(e) => setBanner((b) => ({ ...b, alt_text: e.target.value }))}
+          />
+          {banner.enabled && banner.image_url && (
+            <img src={banner.image_url} alt={banner.alt_text} style={{ maxWidth: 260, borderRadius: 8 }} />
+          )}
+          <div className="row">
+            <button className="btn-primary" disabled={bannerSaving} onClick={saveBanner}>
+              {bannerSaving ? '保存中…' : '保存する'}
+            </button>
+            {bannerMessage && <span className="muted">{bannerMessage}</span>}
+          </div>
+        </div>
+
+        <div style={{ fontWeight: 700, marginTop: 16 }}>専門家の本人確認待ち（{experts.length}件）</div>
         {experts.length === 0 && <div className="muted">確認待ちの専門家はいません。</div>}
         {experts.map((e) => (
           <div key={e.id} className="card">
