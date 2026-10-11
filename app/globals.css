@@ -75,14 +75,12 @@ input, textarea { font-family: inherit; }
   z-index: 0;
 }
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; gap: 10px; }
-.header-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.header-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; }
 .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 2px; flex: 0 0 auto; }
-/* 画面が狭いと左右の内容が収まりきらず右側が切れるため、
-   その幅ではヘッダーを縦積みにして右側（つらいときは/どうする先生とは）を
-   ロゴブロックの下に横並びで出す。 */
-@media (max-width: 460px) {
-  .header-row { flex-direction: column; gap: 8px; }
-  .header-right { flex-direction: row; align-items: center; gap: 16px; padding-top: 0; align-self: flex-start; }
+/* 「つらいときはこちら」「どうする先生とは？」は画面幅によらず右上に固定したいので、
+   画面が狭いときは右側ではなく左側（キャッチコピー等）の方を折り返して収める。 */
+@media (max-width: 480px) {
+  .hero-sub { white-space: normal; }
 }
 .wordmark { height: 42px; width: auto; margin-right: 0; }
 .badge {
