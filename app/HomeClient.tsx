@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
@@ -53,7 +53,10 @@ export default function HomeClient({
   const [items, setItems] = useState<Consultation[]>(initialItems);
   const PAGE_SIZE = 8;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const loadMoreRef = useRef<HTMLDivElement>(null);
+  // 「読み込み中…」での出し入れで一覧末尾のsentinel要素が一度消えて作り直される
+  // （loadingがtrueの間はDOMから外れる）ため、useRefではなくstateで持ち、
+  // 要素が新しく作られるたびにIntersectionObserverを張り直す。
+  const [loadMoreEl, setLoadMoreEl] = useState<HTMLDivElement | null>(null);
   // バナー・ランキングは絞り込みに関わらず「全体」の集計を出すので、
   // category/q で動く items とは別に保持する。
   const [allItems, setAllItems] = useState<Consultation[]>(initialItems);
@@ -113,8 +116,7 @@ export default function HomeClient({
 
   // 一覧の下端に近づいたら、表示件数を少しずつ増やす（全件を一度に並べない）。
   useEffect(() => {
-    const el = loadMoreRef.current;
-    if (!el) return;
+    if (!loadMoreEl) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
@@ -123,9 +125,9 @@ export default function HomeClient({
       },
       { rootMargin: '400px' }
     );
-    observer.observe(el);
+    observer.observe(loadMoreEl);
     return () => observer.disconnect();
-  }, [items.length]);
+  }, [loadMoreEl, items.length]);
 
   const expertCount = allItems.filter(isExpertAnswered).length;
   const ranking = [...allItems].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
@@ -210,7 +212,7 @@ export default function HomeClient({
               <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
             )}
             {!loading && items.slice(0, visibleCount).map((item) => <ConsultationCard key={item.id} item={item} />)}
-            {!loading && visibleCount < items.length && <div ref={loadMoreRef} style={{ height: 1 }} />}
+            {!loading && visibleCount < items.length && <div ref={setLoadMoreEl} style={{ height: 1 }} />}
 
             {showExtras && !loading && (
               <div className="home-experts">
