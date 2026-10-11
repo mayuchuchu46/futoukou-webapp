@@ -192,12 +192,10 @@ h2.pagetitle {
 .rank-views { font-size: 11px; color: var(--muted); flex: 0 0 auto; white-space: nowrap; }
 
 .hero-catch {
-  font-family: "M PLUS Rounded 1c", system-ui, -apple-system, "Hiragino Sans", sans-serif;
-  font-weight: 800;
-  font-size: 17px;
+  font-size: 12px;
   line-height: 1.4;
   color: var(--main);
-  margin: 0 0 2px 0;
+  margin: -6px 0 0 0;
 }
 .expertbanner { background: #fff; border: 1px solid var(--orange); border-radius: 12px; padding: 10px 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
 .expertbanner-icon { font-size: 17px; flex: 0 0 auto; line-height: 1; }
