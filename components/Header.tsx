@@ -21,7 +21,7 @@ export default function Header({ supervised }: { supervised: boolean }) {
           <Link href="/about" className="aboutlink">どうする先生とは？</Link>
         </div>
       </div>
-      <div className="muted" style={{ maxWidth: 230 }}>
+      <div className="muted" style={{ whiteSpace: 'nowrap' }}>
         同じように悩んでいる人の相談と、どうする先生の回答
       </div>
       <div className="muted" style={{ fontSize: 11 }}>
