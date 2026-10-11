@@ -151,7 +151,7 @@ export default function AskPage() {
           onChange={(e) => setText(e.target.value)}
         />
         <div className="noticebox">
-          どうする先生（AI）が内容を確認し、具体的な次の一手をお届けします。内容は匿名化したうえで「みんなの相談」に掲載されることがあります。つらい状況のときは、無理に詳しく書かなくて大丈夫です。
+          どうする先生（AI）が内容を確認し、具体的な次の一手をお届けします。内容は、お名前など個人を特定できる情報を含めないうえで、誰でも見られる「みんなの相談」に公開されることがあります。つらい状況のときは、無理に詳しく書かなくて大丈夫です。
         </div>
 
         {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
