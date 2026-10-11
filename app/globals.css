@@ -234,7 +234,10 @@ h2.pagetitle {
 .home-layout { display: flex; flex-direction: column; gap: 16px; }
 
 @media (min-width: 960px) {
-  .home-shell { max-width: 1080px; }
+  /* PCの広い画面では、ホーム以外のページも同じ幅・配置に揃える
+     （以前は.home-shellだけ広がり、他のページは480pxのまま中央に
+     細く表示されていた）。 */
+  .app-shell { max-width: 1080px; }
 
   .home-layout.home-layout--with-side {
     display: grid;

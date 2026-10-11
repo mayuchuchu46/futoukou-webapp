@@ -108,7 +108,7 @@ export default function HomeClient({
   const showExtras = category === 'all' && !q.trim();
 
   return (
-    <div className="app-shell home-shell">
+    <div className="app-shell">
       <Header supervised={supervised} />
       <div className="main">
         {showExtras && (
