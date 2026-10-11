@@ -12,7 +12,7 @@ import { getUid } from '@/lib/uid';
 function SearchInner() {
   const params = useSearchParams();
   const [category, setCategory] = useState(params.get('category') || 'all');
-  const [q, setQ] = useState('');
+  const [q, setQ] = useState(params.get('q') || '');
   const [items, setItems] = useState<Consultation[]>([]);
   const [loading, setLoading] = useState(true);
   const [counts, setCounts] = useState<Record<string, number>>({});
