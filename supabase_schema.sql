@@ -44,6 +44,11 @@
 -- insert into storage.buckets (id, name, public) values ('expert-documents', 'expert-documents', false) on conflict (id) do nothing;
 -- （このバケットはアプリがservice_roleキー経由でのみ読み書きするため、storage.objectsへの
 -- 　RLSポリシーは不要。一般ユーザー・他の専門家・匿名ユーザーからは直接アクセスできない）
+-- 利用者への返金と同時に専門家への報酬を無効化する仕組み（payout_status: 'void'）を
+-- 追加した場合、既存DBでは次を実行してください。
+-- alter table consultations drop constraint if exists consultations_payout_status_check;
+-- alter table consultations add constraint consultations_payout_status_check
+--   check (payout_status in ('unpaid','paid','void'));
 -- 会員登録すると、別の端末・ブラウザでも相談履歴が引き継げる（member_idでの紐付け）機能と、
 -- 会員の過去の相談内容をAIが踏まえて回答する機能を追加した場合、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists member_id uuid references members(id);
@@ -125,7 +130,7 @@ create table if not exists consultations (
   expert_status text check (expert_status in ('pending','answered')),
   expert_answer text,
   expert_payout_jpy int,               -- 専門家への報酬額（手動振込管理用）
-  payout_status text not null default 'unpaid' check (payout_status in ('unpaid','paid')),
+  payout_status text not null default 'unpaid' check (payout_status in ('unpaid','paid','void')), -- void: 返金により報酬を無効化
   refunded boolean not null default false -- 期限超過等でStripe側を返金した場合にtrue
 );
 

@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   const supabase = getSupabaseAdmin();
   const { data: row } = await supabase
     .from('consultations')
-    .select('id, stripe_session_id, paid, refunded')
+    .select('id, stripe_session_id, paid, refunded, expert_status, expert_payout_jpy, payout_status')
     .eq('id', id)
     .single();
 
@@ -42,6 +42,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '返金処理に失敗しました: ' + message }, { status: 502 });
   }
 
-  await supabase.from('consultations').update({ refunded: true }).eq('id', id);
+  // 利用者へ返金した分、運営が専門家にも報酬を払うと「返金額＋報酬」を運営が負担する
+  // 逆ざやになるため、返金と同時に専門家への報酬（未払いの場合のみ）も無効化する。
+  // 既に振込済み（payout_status: 'paid'）の場合は、運営判断で別途対応するため変更しない。
+  const update: Record<string, unknown> = { refunded: true };
+  if (row.expert_status === 'answered' && row.payout_status !== 'paid') {
+    update.expert_payout_jpy = 0;
+    update.payout_status = 'void';
+  }
+  await supabase.from('consultations').update(update).eq('id', id);
   return NextResponse.json({ ok: true });
 }

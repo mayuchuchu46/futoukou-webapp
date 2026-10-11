@@ -52,9 +52,12 @@ async function ExpertEarningsContent() {
         {rows.map((r) => (
           <div key={r.id} className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <span className="muted">{new Date(r.created_at).toLocaleDateString('ja-JP')}</span>
-            <span>¥{(r.expert_payout_jpy || 0).toLocaleString()}</span>
-            <span className={r.payout_status === 'paid' ? 'muted' : ''} style={{ color: r.payout_status === 'paid' ? undefined : 'var(--orange-text)', fontWeight: 700 }}>
-              {r.payout_status === 'paid' ? '振込済み' : '未振込'}
+            <span className={r.payout_status === 'void' ? 'muted' : ''}>¥{(r.expert_payout_jpy || 0).toLocaleString()}</span>
+            <span
+              className={r.payout_status === 'paid' || r.payout_status === 'void' ? 'muted' : ''}
+              style={{ color: r.payout_status === 'unpaid' ? 'var(--orange-text)' : undefined, fontWeight: 700 }}
+            >
+              {r.payout_status === 'paid' ? '振込済み' : r.payout_status === 'void' ? '返金により無効' : '未振込'}
             </span>
           </div>
         ))}
