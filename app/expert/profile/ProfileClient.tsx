@@ -2,7 +2,15 @@
 
 import { useState } from 'react';
 
-type Expert = { id: string; name: string; credential: string; bio: string; photo_url: string | null };
+type Expert = {
+  id: string;
+  name: string;
+  credential: string;
+  bio: string;
+  photo_url: string | null;
+  license_doc_path?: string | null;
+  verified?: boolean;
+};
 
 export default function ProfileClient({ expert }: { expert: Expert }) {
   const [form, setForm] = useState({
@@ -13,6 +21,13 @@ export default function ProfileClient({ expert }: { expert: Expert }) {
   });
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
+
+  const [licenseDoc, setLicenseDoc] = useState<File | null>(null);
+  const [docSubmitted, setDocSubmitted] = useState(!!expert.license_doc_path);
+  const [docVerified, setDocVerified] = useState(!!expert.verified);
+  const [docUploading, setDocUploading] = useState(false);
+  const [docError, setDocError] = useState('');
+  const [docSaved, setDocSaved] = useState(false);
 
   async function save() {
     setError('');
@@ -28,6 +43,26 @@ export default function ProfileClient({ expert }: { expert: Expert }) {
       return;
     }
     setSaved(true);
+  }
+
+  async function uploadLicenseDoc() {
+    if (!licenseDoc) return;
+    setDocUploading(true);
+    setDocError('');
+    setDocSaved(false);
+    const body = new FormData();
+    body.set('license_doc', licenseDoc);
+    const res = await fetch('/api/expert/license-doc', { method: 'POST', body });
+    const data = await res.json();
+    setDocUploading(false);
+    if (!res.ok) {
+      setDocError(data.error || 'アップロードに失敗しました');
+      return;
+    }
+    setDocSubmitted(true);
+    setDocVerified(false);
+    setLicenseDoc(null);
+    setDocSaved(true);
   }
 
   return (
@@ -49,6 +84,31 @@ export default function ProfileClient({ expert }: { expert: Expert }) {
           {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
           {saved && <div style={{ color: 'var(--main)', fontSize: 13 }}>保存しました</div>}
           <button className="btn-primary" onClick={save}>保存する</button>
+        </div>
+
+        <div className="card" style={{ gap: 12 }}>
+          <div style={{ fontWeight: 700 }}>登録証（本人確認用）</div>
+          <div className="muted" style={{ fontSize: 13 }}>
+            {docSubmitted
+              ? docVerified
+                ? '提出済み・運営確認済みです。'
+                : '提出済みです。運営の確認をお待ちください。'
+              : '未提出です。登録証（画像またはPDF）を提出してください。'}
+          </div>
+          <input
+            className="input"
+            type="file"
+            accept="image/png,image/jpeg,image/webp,application/pdf"
+            onChange={(e) => setLicenseDoc(e.target.files?.[0] || null)}
+          />
+          <div className="muted" style={{ fontSize: 12 }}>
+            差し替えると、改めて運営の本人確認待ちになります（確認が完了するまで有料相談への回答はできません）。
+          </div>
+          {docError && <div style={{ color: '#C0392B', fontSize: 13 }}>{docError}</div>}
+          {docSaved && <div style={{ color: 'var(--main)', fontSize: 13 }}>提出しました。運営の確認をお待ちください。</div>}
+          <button className="btn-secondary" onClick={uploadLicenseDoc} disabled={!licenseDoc || docUploading}>
+            {docUploading ? 'アップロード中…' : docSubmitted ? '登録証を差し替える' : '登録証を提出する'}
+          </button>
         </div>
       </div>
     </div>

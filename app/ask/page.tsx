@@ -172,6 +172,8 @@ export default function AskPage() {
             <>
               <div className="expertteaser-desc">
                 登録している専門家が、数日以内にテキストで直接回答します。読み放題会員は追加で¥500（税込）です。
+                <br />
+                <a href="/experts">どんな専門家が回答していますか？</a>
               </div>
               <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
                 {expertSubmitting ? '決済ページへ移動中…' : '¥500で専門家に相談する'}

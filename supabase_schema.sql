@@ -27,6 +27,11 @@
 -- alter table members add column if not exists subscription_status text not null default 'inactive';
 -- alter table members add column if not exists subscription_current_period_end timestamptz;
 -- create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
+-- 専門家登録時の登録証（本人確認書類）アップロードを追加した場合、既存DBでは次を実行してください。
+-- alter table experts add column if not exists license_doc_path text;
+-- insert into storage.buckets (id, name, public) values ('expert-documents', 'expert-documents', false) on conflict (id) do nothing;
+-- （このバケットはアプリがservice_roleキー経由でのみ読み書きするため、storage.objectsへの
+-- 　RLSポリシーは不要。一般ユーザー・他の専門家・匿名ユーザーからは直接アクセスできない）
 
 create extension if not exists "pgcrypto";
 
@@ -37,11 +42,20 @@ create table if not exists experts (
   name text not null,
   credential text not null default '公認心理師',
   license_number text not null default '', -- 資格の登録番号など、本人確認用に申告してもらう情報
+  license_doc_path text, -- 登録証（画像/PDF）のStorageパス。非公開バケット（expert-documents）に保存し、
+                          -- 一般には公開しない。管理画面で署名付きURLを発行して運営のみ確認する。
   bio text not null default '',
   photo_url text,
   verified boolean not null default false, -- 運営が資格を確認したらtrueにする。falseの間は回答できない
   created_at timestamptz not null default now()
 );
+
+-- 専門家登録証（本人確認書類）用の非公開バケット。
+-- アプリは常にservice_roleキー経由でのみ読み書きするため、storage.objectsへの
+-- RLSポリシーは不要（一般ユーザー・他の専門家・匿名ユーザーからは直接アクセスできない）。
+insert into storage.buckets (id, name, public)
+values ('expert-documents', 'expert-documents', false)
+on conflict (id) do nothing;
 
 create table if not exists consultations (
   id uuid primary key default gen_random_uuid(),

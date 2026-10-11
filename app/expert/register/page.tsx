@@ -6,23 +6,33 @@ import { useRouter } from 'next/navigation';
 export default function ExpertRegisterPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '', name: '', credential: '公認心理師', bio: '', license_number: '' });
+  const [licenseDoc, setLicenseDoc] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!licenseDoc) {
+      setError('登録証（画像またはPDF）を添付してください');
+      return;
+    }
     setLoading(true);
     setError('');
+    const body = new FormData();
+    Object.entries(form).forEach(([key, value]) => body.set(key, value));
+    body.set('license_doc', licenseDoc);
     const res = await fetch('/api/expert/register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body,
     });
     const data = await res.json();
     setLoading(false);
     if (!res.ok) {
       setError(data.error || 'エラーが発生しました');
       return;
+    }
+    if (data.warning) {
+      alert(data.warning);
     }
     router.push('/expert/dashboard');
   }
@@ -43,8 +53,18 @@ export default function ExpertRegisterPage() {
           onChange={(e) => setForm({ ...form, license_number: e.target.value })}
           required
         />
+
+        <div className="muted" style={{ marginTop: 6 }}>登録証（画像またはPDF）</div>
+        <input
+          className="input"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,application/pdf"
+          onChange={(e) => setLicenseDoc(e.target.files?.[0] || null)}
+          required
+        />
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          本人確認のため運営が確認します。確認が完了するまで、有料相談への回答はできません。
+          登録番号の自己申告だけでは本人確認ができないため、登録証の画像またはPDFを添付してください。
+          ご提出いただいた登録証は本人確認のみに使用し、第三者には提供しません。確認が完了するまで、有料相談への回答はできません。
         </div>
         <input className="input" type="email" placeholder="メールアドレス" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
         <input className="input" type="password" placeholder="パスワード（8文字以上）" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />

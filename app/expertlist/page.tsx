@@ -27,6 +27,9 @@ export default function ExpertListPage() {
         <div className="muted" style={{ marginBottom: 14 }}>
           AIの自動回答とは別に、専門家（公認心理師など）本人が相談文を読んで直接回答したものです。月¥800の読み放題会員になると、すべて読めるようになります。
         </div>
+        <Link href="/experts" className="backlink" style={{ margin: '-6px 0 14px' }}>
+          どんな専門家が回答していますか？ →
+        </Link>
 
         {items === null ? (
           <div className="muted">読み込み中…</div>

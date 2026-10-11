@@ -60,6 +60,16 @@ export default async function AboutPage() {
           </div>
         </Link>
 
+        <Link href="/experts" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>どんな専門家が回答していますか？</div>
+          <div className="qtext">
+            本人確認が完了した専門家のプロフィールを一覧で紹介しています。
+          </div>
+          <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+            専門家一覧へ ›
+          </div>
+        </Link>
+
         <Link href="/expert/register" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>専門家としてご協力いただける方へ</div>
           <div className="qtext">

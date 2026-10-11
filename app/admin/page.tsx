@@ -23,7 +23,7 @@ async function AdminPageContent() {
 
   const { data: unverifiedExperts } = await supabase
     .from('experts')
-    .select('id, name, email, credential, license_number, created_at')
+    .select('id, name, email, credential, license_number, license_doc_path, created_at')
     .eq('verified', false)
     .order('created_at', { ascending: true });
 

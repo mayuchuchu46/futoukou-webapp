@@ -9,6 +9,7 @@ type UnverifiedExpert = {
   email: string;
   credential: string;
   license_number: string;
+  license_doc_path: string | null;
   created_at: string;
 };
 
@@ -43,6 +44,22 @@ export default function AdminClient({
   const [consultations, setConsultations] = useState(recentConsultations);
   const [overdue, setOverdue] = useState(overdueExpertRequests);
   const [busy, setBusy] = useState<string | null>(null);
+
+  async function viewLicenseDoc(id: string) {
+    setBusy(id);
+    const res = await fetch('/api/admin/experts/doc-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ expert_id: id }),
+    });
+    const data = await res.json();
+    setBusy(null);
+    if (!res.ok) {
+      alert(data.error || '取得に失敗しました');
+      return;
+    }
+    window.open(data.url, '_blank', 'noopener,noreferrer');
+  }
 
   async function verifyExpert(id: string) {
     setBusy(id);
@@ -106,9 +123,14 @@ export default function AdminClient({
             <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}</div>
             <div className="muted">{e.email}</div>
             <div className="muted">登録番号：{e.license_number || '（未入力）'}</div>
-            <button className="btn-primary" disabled={busy === e.id} onClick={() => verifyExpert(e.id)}>
-              {busy === e.id ? '処理中…' : '確認済みにする'}
-            </button>
+            <div className="row">
+              <button className="btn-secondary" disabled={busy === e.id || !e.license_doc_path} onClick={() => viewLicenseDoc(e.id)}>
+                {e.license_doc_path ? (busy === e.id ? '取得中…' : '登録証を確認') : '登録証未提出'}
+              </button>
+              <button className="btn-primary" disabled={busy === e.id} onClick={() => verifyExpert(e.id)}>
+                {busy === e.id ? '処理中…' : '確認済みにする'}
+              </button>
+            </div>
           </div>
         ))}
 
