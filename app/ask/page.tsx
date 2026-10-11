@@ -161,20 +161,20 @@ export default function AskPage() {
 
         <div className="expertteaser">
           <div className="expertteaser-title">
-            公認心理師に相談する（有料）
+            専門家に相談する（有料）
             {!expertAvailable && <span className="comingsoon-badge">準備中・近日公開</span>}
           </div>
           {!expertAvailable ? (
             <div className="expertteaser-desc">
-              現在、本人確認が完了した公認心理師がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
+              現在、本人確認が完了した専門家（公認心理師など）がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
             </div>
           ) : memberActive ? (
             <>
               <div className="expertteaser-desc">
-                登録している公認心理師が、数日以内にテキストで直接回答します。読み放題会員は追加で¥500（税込）です。
+                登録している専門家が、数日以内にテキストで直接回答します。読み放題会員は追加で¥500（税込）です。
               </div>
               <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
-                {expertSubmitting ? '決済ページへ移動中…' : '¥500で公認心理師に相談する'}
+                {expertSubmitting ? '決済ページへ移動中…' : '¥500で専門家に相談する'}
               </button>
             </>
           ) : (

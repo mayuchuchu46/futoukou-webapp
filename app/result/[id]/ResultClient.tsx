@@ -69,10 +69,10 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
         <>
           <div className="answer-label">
             <img src="/assets/icon_bulb.png" alt="" />
-            公認心理師が回答します
+            専門家が回答します
           </div>
           <div className="muted">
-            お支払いが完了しました。登録している公認心理師が内容を確認し、数日以内にテキストで回答します。回答が届くとこのページに表示されます。
+            お支払いが完了しました。登録している専門家が内容を確認し、数日以内にテキストで回答します。回答が届くとこのページに表示されます。
           </div>
         </>
       )}
@@ -81,7 +81,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
         <>
           <div className="answer-label">
             <img src="/assets/icon_bulb.png" alt="" />
-            公認心理師の回答
+            専門家の回答
           </div>
           <div className="blur-lines">
             <div />
@@ -101,7 +101,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
         <>
           <div className="answer-label">
             <img src="/assets/icon_bulb.png" alt="" />
-            {item.experts ? `${item.experts.credential}・${item.experts.name}さんの回答` : '公認心理師の回答'}
+            {item.experts ? `${item.experts.credential}・${item.experts.name}さんの回答` : '専門家の回答'}
           </div>
           <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
             {item.expert_answer}

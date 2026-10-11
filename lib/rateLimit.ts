@@ -52,7 +52,7 @@ export async function countAiConsultationsAllTime(authorId: string): Promise<num
   return countSince({ authorId, requestType: 'ai', onlyType: true }, new Date(0).toISOString());
 }
 
-// 有料の公認心理師相談向け：決済が絡むため緩めだが、連打・スパムは防ぐ
+// 有料の専門家相談向け：決済が絡むため緩めだが、連打・スパムは防ぐ
 export async function checkExpertRequestRateLimit(authorId: string, ip: string | null): Promise<LimitResult> {
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 

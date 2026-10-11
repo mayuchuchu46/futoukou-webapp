@@ -34,7 +34,7 @@ export default function ExpertRegisterPage() {
         <div className="muted">「どうする先生」で有料相談に回答する専門家としてのプロフィールを作成します。</div>
 
         <input className="input" placeholder="お名前" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-        <input className="input" placeholder="資格（例：公認心理師）" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })} />
+        <input className="input" placeholder="資格（例：公認心理師、臨床心理士など）" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })} />
         <textarea className="input" rows={4} placeholder="自己紹介（経歴・専門分野など）" value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
         <input
           className="input"

@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
         {
           price_data: {
             currency: 'jpy',
-            product_data: { name: '公認心理師への相談（どうする先生）' },
+            product_data: { name: '専門家への相談（どうする先生）' },
             unit_amount: EXPERT_PRICE_JPY,
           },
           quantity: 1,
