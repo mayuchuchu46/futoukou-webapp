@@ -71,11 +71,16 @@ export async function getConsultationsList({
   }
 
   const { data, error } = await query;
-  if (error) {
-    // 2026-10-11：原因切り分け用の一時ログ（/api/consultations が空配列を返す問題の調査）。
-    // 調査が終わったら削除する。
-    console.error('[getConsultationsList] supabase error:', JSON.stringify(error));
-  }
+  // 2026-10-11：原因切り分け用の一時ログ（/api/consultations が空配列を返す問題の調査）。
+  // 調査が終わったら削除する。
+  console.error(
+    '[getConsultationsList] debug:',
+    JSON.stringify({
+      error: error ? error : null,
+      dataLength: data ? data.length : null,
+      params: { category, q, viewerId, authorId, expertAnswered, memberActive, memberId, limit },
+    })
+  );
   if (error || !data) return [];
 
   return data.map((item) => {
