@@ -284,8 +284,12 @@ h2.pagetitle {
   .home-layout--with-side .home-list { grid-area: list; }
 }
 
-.home-adbanner { display: block; border-radius: 12px; overflow: hidden; }
+/* このバナーはPCのサイドバー用。スマホ幅ではこの位置（カテゴリ下）には出さない。 */
+.home-adbanner { display: none; border-radius: 12px; overflow: hidden; }
 .home-adbanner img { display: block; width: 100%; height: auto; }
+@media (min-width: 960px) {
+  .home-adbanner { display: block; }
+}
 
 .chip-row {
   display: flex;
