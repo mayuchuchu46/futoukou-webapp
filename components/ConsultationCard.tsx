@@ -26,7 +26,7 @@ export default function ConsultationCard({ item }: { item: Consultation }) {
   function goToTag(e: React.MouseEvent, word: string) {
     e.preventDefault();
     e.stopPropagation();
-    router.push(`/search?q=${encodeURIComponent(word)}`);
+    router.push(`/?q=${encodeURIComponent(word)}`);
   }
 
   async function toggleLike(e: React.MouseEvent) {

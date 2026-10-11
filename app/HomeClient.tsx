@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import ConsultationCard from '@/components/ConsultationCard';
@@ -27,25 +27,38 @@ export default function HomeClient({
   initialTotal: number;
 }) {
   const router = useRouter();
-  const [category, setCategory] = useState('all');
+  const urlParams = useSearchParams();
+  const [category, setCategory] = useState(urlParams.get('category') || 'all');
+  const [q, setQ] = useState(urlParams.get('q') || '');
   const [items, setItems] = useState<Consultation[]>(initialItems);
-  // バナー・ランキングは選んでいるカテゴリに関わらず「全体」の集計を出すので、
-  // カテゴリ切り替えで動く items とは別に保持する。
+  // バナー・ランキングは絞り込みに関わらず「全体」の集計を出すので、
+  // category/q で動く items とは別に保持する。
   const [allItems, setAllItems] = useState<Consultation[]>(initialItems);
   const [loading, setLoading] = useState(false);
   const supervised = initialSupervised;
   const counts = initialCounts;
   const total = initialTotal;
 
-  async function fetchCategory(next: string, { showLoading }: { showLoading: boolean }) {
+  // 旧「さがす」ページのタグ・ランキングなど、別のリンクから ?q= / ?category= 付きで
+  // ホームに遷移してきたときに、URLの変化を拾って絞り込みを反映する。
+  useEffect(() => {
+    const urlQ = urlParams.get('q') || '';
+    const urlCategory = urlParams.get('category') || 'all';
+    setQ((prev) => (prev === urlQ ? prev : urlQ));
+    setCategory((prev) => (prev === urlCategory ? prev : urlCategory));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlParams]);
+
+  async function fetchResults(nextCategory: string, nextQ: string, { showLoading }: { showLoading: boolean }) {
     if (showLoading) setLoading(true);
     const params = new URLSearchParams({ viewer_id: getUid() });
-    if (next !== 'all') params.set('category', next);
+    if (nextCategory !== 'all') params.set('category', nextCategory);
+    if (nextQ.trim()) params.set('q', nextQ.trim());
     try {
       const res = await fetch(`/api/consultations?${params.toString()}`);
       const d = await res.json();
       setItems(d.consultations || []);
-      if (next === 'all') setAllItems(d.consultations || []);
+      if (nextCategory === 'all' && !nextQ.trim()) setAllItems(d.consultations || []);
     } finally {
       if (showLoading) setLoading(false);
     }
@@ -53,20 +66,24 @@ export default function HomeClient({
 
   function selectCategory(next: string) {
     setCategory(next);
-    fetchCategory(next, { showLoading: true });
   }
 
   useEffect(() => {
     // 初回表示はサーバー側（匿名扱い）の一覧をそのまま見せ、
     // マウント後に本当のviewer_id（本人・会員かどうか）で静かに再取得して
     // ロック解除などの表示を正しいものに差し替える。
-    fetchCategory('all', { showLoading: false });
+    fetchResults('all', '', { showLoading: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    fetchResults(category, q, { showLoading: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category, q]);
+
   const expertCount = allItems.filter(isExpertAnswered).length;
   const ranking = [...allItems].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
-  const showExtras = category === 'all';
+  const showExtras = category === 'all' && !q.trim();
 
   return (
     <div className="app-shell">
@@ -98,6 +115,13 @@ export default function HomeClient({
           </div>
         )}
 
+        <input
+          className="input"
+          placeholder="キーワードで検索…"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
+
         <div className="chip-row">
           <button className={`chip ${category === 'all' ? 'active' : ''}`} onClick={() => selectCategory('all')}>
             すべて（{total}）
@@ -116,7 +140,9 @@ export default function HomeClient({
         {showExtras && <TagChips title="気になるテーマから探す" />}
 
         {loading && <div className="muted">読み込み中…</div>}
-        {!loading && items.length === 0 && <div className="muted">まだ相談がありません。</div>}
+        {!loading && items.length === 0 && (
+          <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
+        )}
         {!loading && items.map((item) => <ConsultationCard key={item.id} item={item} />)}
       </div>
 

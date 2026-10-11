@@ -28,7 +28,7 @@ export default function TagChips({ title }: { title: string }) {
         {tags.map((t) => (
           <Link
             key={t.word}
-            href={`/search?q=${encodeURIComponent(t.word)}`}
+            href={`/?q=${encodeURIComponent(t.word)}`}
             className="chip chip-tag"
             style={{ textDecoration: 'none', display: 'inline-block' }}
           >

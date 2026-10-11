@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
@@ -53,11 +54,13 @@ export default async function HomePage() {
   ]);
 
   return (
-    <HomeClient
-      initialItems={items}
-      initialSupervised={!!guidelines?.supervised}
-      initialCounts={counts}
-      initialTotal={total}
-    />
+    <Suspense fallback={null}>
+      <HomeClient
+        initialItems={items}
+        initialSupervised={!!guidelines?.supervised}
+        initialCounts={counts}
+        initialTotal={total}
+      />
+    </Suspense>
   );
 }

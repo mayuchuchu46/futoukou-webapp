@@ -21,7 +21,7 @@ export default function ThemePage() {
       <Header supervised={false} />
       <div className="main">
         {Object.entries(CATS).map(([key, c]) => (
-          <Link key={key} href={`/search?category=${key}`} className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
+          <Link key={key} href={`/?category=${key}`} className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--sub)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img src={c.icon} style={{ width: 20, height: 20 }} alt="" />
             </div>
