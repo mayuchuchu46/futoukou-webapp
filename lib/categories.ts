@@ -12,7 +12,7 @@ export const CATS: Record<string, { label: string; short: string; cls: string; i
   school: { label: '学校との関係', short: '学校との関係', cls: 'cat-school', icon: '/assets/icon_book.png' },
   will: { label: '本人の意思', short: '本人の意思', cls: 'cat-will', icon: '/assets/icon_bird.png' },
   approach: { label: '関わり方', short: '関わり方', cls: 'cat-approach', icon: '/assets/icon_bell.png' },
-  course: { label: '進路', short: '進路', cls: 'cat-course', icon: '/assets/icon_cap.png' },
+  course: { label: '進路・勉強', short: '進路・勉強', cls: 'cat-course', icon: '/assets/icon_cap.png' },
   // 専用アイコン未用意のため、暫定でicon_book.pngを流用（要差し替え）。Artifact側は絵文字🧩で代用中。
   dev: { label: '発達のこと', short: '発達', cls: 'cat-dev', icon: '/assets/icon_book.png' },
   // 専用アイコン未用意のため、暫定でicon_book.pngを流用（要差し替え）。Artifact側は絵文字🏡で代用中。
