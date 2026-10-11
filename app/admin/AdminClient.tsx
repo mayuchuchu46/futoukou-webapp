@@ -86,6 +86,8 @@ export default function AdminClient({
   const [payoutRunning, setPayoutRunning] = useState(false);
   const [payoutResult, setPayoutResult] = useState<PayoutResult | null>(null);
   const [payoutError, setPayoutError] = useState('');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
 
   async function viewLicenseDoc(id: string) {
     setBusy(id);
@@ -129,6 +131,32 @@ export default function AdminClient({
     setBusy(null);
     if (res.ok) {
       setConsultations((list) => list.map((c) => (c.id === id ? { ...c, hidden } : c)));
+    } else {
+      const data = await res.json();
+      alert(data.error || '失敗しました');
+    }
+  }
+
+  function startEdit(c: RecentConsultation) {
+    setEditingId(c.id);
+    setEditText(c.question);
+  }
+
+  async function saveEdit(id: string) {
+    if (!editText.trim()) {
+      alert('本文を入力してください');
+      return;
+    }
+    setBusy(id);
+    const res = await fetch('/api/admin/consultations/edit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, question: editText }),
+    });
+    setBusy(null);
+    if (res.ok) {
+      setConsultations((list) => list.map((c) => (c.id === id ? { ...c, question: editText.trim() } : c)));
+      setEditingId(null);
     } else {
       const data = await res.json();
       alert(data.error || '失敗しました');
@@ -329,15 +357,40 @@ export default function AdminClient({
                 <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
                 <span className="muted">{c.request_type === 'expert' ? '有料' : '無料AI'}</span>
               </div>
-              <div className="qtext">{c.question}</div>
+              {editingId === c.id ? (
+                <textarea
+                  className="input"
+                  style={{ width: '100%', minHeight: 80 }}
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+              ) : (
+                <div className="qtext">{c.question}</div>
+              )}
               <div className="muted">{new Date(c.created_at).toLocaleString('ja-JP')}</div>
-              <button
-                className="btn-secondary"
-                disabled={busy === c.id}
-                onClick={() => toggleHidden(c.id, !c.hidden)}
-              >
-                {busy === c.id ? '処理中…' : c.hidden ? '表示に戻す' : '非表示にする'}
-              </button>
+              <div className="row" style={{ gap: 8 }}>
+                <button
+                  className="btn-secondary"
+                  disabled={busy === c.id}
+                  onClick={() => toggleHidden(c.id, !c.hidden)}
+                >
+                  {busy === c.id ? '処理中…' : c.hidden ? '表示に戻す' : '非表示にする'}
+                </button>
+                {editingId === c.id ? (
+                  <>
+                    <button className="btn-primary" disabled={busy === c.id} onClick={() => saveEdit(c.id)}>
+                      {busy === c.id ? '保存中…' : '保存'}
+                    </button>
+                    <button className="btn-secondary" disabled={busy === c.id} onClick={() => setEditingId(null)}>
+                      キャンセル
+                    </button>
+                  </>
+                ) : (
+                  <button className="btn-secondary" disabled={busy === c.id} onClick={() => startEdit(c)}>
+                    本文を編集
+                  </button>
+                )}
+              </div>
             </div>
           );
         })}
