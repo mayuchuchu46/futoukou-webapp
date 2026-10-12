@@ -196,7 +196,7 @@ export default async function ResultPage({
         <a
           className="share-btn"
           href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-            text: `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」に、どうする先生が回答しました。`,
+            text: `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nこの相談に、どうする先生が"今日からできる一手"を回答しました。`,
             url: `${SITE_URL}/result/${item.id}`,
             hashtags: 'どうする先生,不登校',
           })}`}
