@@ -306,8 +306,8 @@ export default async function ResultPage({
           <TagChips title="他にもこんなテーマの相談があります" wrap />
         </Suspense>
 
-        <Link href="/" className="backlink" style={{ margin: '4px 0 14px' }}>← もどる</Link>
-
+        {/* 2026-10-13: ここにあった末尾の「← もどる」は、BottomNav側に全ページ共通で
+            追加した「戻る」（固定ナビの直上）と位置・役割が重複するため削除した。 */}
         {/* 閲覧数カウントはSEOに関係ない副作用なので、どちらの種別でもクライアント側で送る */}
         <ViewPing id={id} />
         </div>
