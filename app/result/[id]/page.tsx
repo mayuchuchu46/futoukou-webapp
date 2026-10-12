@@ -124,8 +124,8 @@ export default async function ResultPage({
   const cat = CATS[item.category] || CATS.other;
 
   // 回答のすぐ下に出す「似たような相談」。同じカテゴリの他の相談から新しい順に数件。
-  const similarPool = await getConsultationsList({ category: item.category, limit: 5 });
-  const similarItems = similarPool.filter((d) => d.id !== item.id).slice(0, 4);
+  const similarPool = await getConsultationsList({ category: item.category, limit: 9 });
+  const similarItems = similarPool.filter((d) => d.id !== item.id).slice(0, 8);
 
   const expertAvailable = await getExpertAvailable();
 
