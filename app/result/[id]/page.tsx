@@ -12,6 +12,7 @@ import { getConsultationsList } from '@/lib/consultations';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import ResultClient from './ResultClient';
 import ViewPing from './ViewPing';
+import LikeButton from './LikeButton';
 import EyeIcon from '@/components/EyeIcon';
 import AiUsageUpsell from './AiUsageUpsell';
 import SaveConsultationPrompt from './SaveConsultationPrompt';
@@ -192,6 +193,9 @@ export default async function ResultPage({
             <EyeIcon /> {item.views || 0}
           </span>
         </div>
+        {/* 一覧カードには既にある「参考になった」ボタンを、詳細ページにも追加した
+            （2026-10-12）。 */}
+        <LikeButton id={item.id} initialLikes={item.likes} initialLikedBy={item.liked_by || []} />
 
         <div className="card">
           <div className="qtext qtext-main">💬 {item.question}</div>
