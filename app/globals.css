@@ -884,3 +884,22 @@ select.input {
 .notebook-tab.tab-phrase { background: var(--yellow-bg); color: var(--yellow-text); }
 .notebook-tab.tab-env { background: var(--moss-bg); color: var(--moss-text); }
 .notebook-tab.tab-school { background: var(--teal-bg); color: var(--teal-text); }
+
+/* まだ書かれていない項目を「これから書かれる欄」として見せるプレースホルダー。
+   点線枠＋薄い色で「未記入」とわかるようにし、タブの文字色はそのまま（内容が
+   入ったときと同じ場所・同じ色で現れることを予告する）。実際に文字が入った
+   .notebook-entryと見た目を揃えておくことで、「相談するとこれがこうなる」が
+   一目でわかるようにしている（2026-10-12、「次に何が書かれるかイメージできる
+   ように」との指摘を受けて追加）。 */
+.notebook-entry.placeholder {
+  background: transparent;
+  border: 1.5px dashed var(--border);
+}
+.notebook-entry.placeholder .notebook-tab {
+  opacity: 0.55;
+}
+.notebook-placeholder-text {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}

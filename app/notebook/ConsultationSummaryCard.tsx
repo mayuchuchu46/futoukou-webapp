@@ -29,6 +29,29 @@ function SchoolMatchComingSoon() {
   );
 }
 
+// まだ中身のない項目を、点線枠の「これから書かれる欄」として見せるプレビュー行。
+// 相談0件・未登録の段階では実際の分析内容を出しようがないが、「相談するとここに
+// 何が書かれるのか」を先に見せることで、中身を埋めたくなる気持ちを作る狙い
+// （2026-10-12、「次に何が書かれるかイメージできるように」との指摘を受けて追加）。
+// フル表示の状態でも、AIがその項目を生成できなかった稀なケースでは同じ見た目で
+// 「次の相談で書かれるかもしれません」というヒントになる。
+function NotebookPlaceholder({ tabClass, label, hint }: { tabClass: string; label: string; hint: string }) {
+  return (
+    <div className="notebook-entry placeholder">
+      <span className={`notebook-tab ${tabClass}`}>{label}</span>
+      <div className="notebook-placeholder-text">{hint}</div>
+    </div>
+  );
+}
+
+const PREVIEW_ENTRIES = [
+  { tabClass: 'tab-status', label: '今のお子さんの状況', hint: '相談の内容から、今の状況をどうする先生が整理します。' },
+  { tabClass: 'tab-advice', label: '次にやること', hint: '次にできる、具体的な一歩が書かれます。' },
+  { tabClass: 'tab-phrase', label: '言葉かけの提案', hint: 'この子に合いそうな声かけの例が書かれます。' },
+  { tabClass: 'tab-env', label: '環境面の工夫', hint: '今日から試せる、環境面の工夫が書かれます。' },
+  { tabClass: 'tab-school', label: '学校・居場所選びの着眼点', hint: '学校や居場所を選ぶときの着眼点が書かれます。' },
+];
+
 // 「分析ノート」の見出し部分（タイトル＋相談件数の付箋バッジ＋積み重ね表示の点）。
 // どの表示状態（未登録・相談0件・相談あり）でも同じ見出しを出し、ページ全体が
 // 一貫して「ノート」に見えるようにする（2026-10-12、ノートらしい見た目にする
@@ -109,6 +132,13 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
             ? `これまでに${ownCount}件相談しています。会員登録すると、これまでの相談を一つのノートにまとめて、今のお子さんの状況をどうする先生が整理してくれます。相談を重ねるほど、ノートの中身は詳しくなっていきます。`
             : '会員登録すると、相談するたびにどうする先生がそれまでの内容を一つのノートにまとめて、今のお子さんの状況を整理してくれます。相談を重ねるほど、ノートの中身は詳しくなっていきます。'}
         </div>
+        {/* ここに何が書かれていくのかを先に見せる「目次」プレビュー。相談0件・未登録の
+            段階では実際の分析内容はまだ出せないが、「相談するとこの5項目が埋まっていく」
+            という完成イメージを先に見せることで、埋めたくなる気持ちを作る
+            （2026-10-12、「次に何が書かれるかイメージできるように」との指摘を受けて追加）。 */}
+        {PREVIEW_ENTRIES.map((entry) => (
+          <NotebookPlaceholder key={entry.label} {...entry} />
+        ))}
         <Link className="btn-primary" href="/account/register?next=/notebook">
           無料で分析ノートを始める
         </Link>
@@ -129,6 +159,9 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
         <div className="qtext">
           まだ相談がありません。相談するたびに、ここにノートとして記録が蓄積され、どうする先生がお子さんの状況をより詳しく整理できるようになります。
         </div>
+        {PREVIEW_ENTRIES.map((entry) => (
+          <NotebookPlaceholder key={entry.label} {...entry} />
+        ))}
         <Link className="btn-primary" href="/ask">
           相談してノートを作り始める
         </Link>
@@ -174,19 +207,26 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
             <span className="notebook-tab tab-advice">次にやること</span>
             <div className="qtext">{advice}</div>
           </div>
-          {phrasingSuggestion && (
+          {phrasingSuggestion ? (
             <div className="notebook-entry">
               <span className="notebook-tab tab-phrase">言葉かけの提案</span>
               <div className="qtext">{phrasingSuggestion}</div>
             </div>
+          ) : (
+            // AIがこの項目を生成できなかった稀なケース。消してしまうと「埋まるはずの
+            // 欄」が見えなくなるので、次に相談したときにここが埋まるというヒントとして
+            // プレースホルダーのまま残す（2026-10-12 追加）。
+            <NotebookPlaceholder {...PREVIEW_ENTRIES[2]} />
           )}
-          {environmentSuggestion && (
+          {environmentSuggestion ? (
             <div className="notebook-entry">
               <span className="notebook-tab tab-env">環境面の工夫</span>
               <div className="qtext">{environmentSuggestion}</div>
             </div>
+          ) : (
+            <NotebookPlaceholder {...PREVIEW_ENTRIES[3]} />
           )}
-          {schoolFitPoints && (
+          {schoolFitPoints ? (
             // 学校・居場所選びの着眼点（簡易版）。実在の学校名は出さない、一般的な
             // チェックポイントの提案。本格的な学校ごとの相性診断はデータが揃うまでの
             // カミングソーンとして下にバッジで案内する（2026-10-12 追加）。
@@ -194,6 +234,8 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
               <span className="notebook-tab tab-school">学校・居場所選びの着眼点</span>
               <div className="qtext">{schoolFitPoints}</div>
             </div>
+          ) : (
+            <NotebookPlaceholder {...PREVIEW_ENTRIES[4]} />
           )}
           {/* フル表示になった後も、相談を重ねるたびにノートが更新・充実していくことが
               伝わるよう、次の相談への導線を必ず置く（2026-10-12 追加）。 */}
