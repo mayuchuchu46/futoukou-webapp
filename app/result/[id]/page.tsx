@@ -214,7 +214,7 @@ export default async function ResultPage({
           rel="noopener noreferrer"
         >
           <span className="share-btn-icon">𝕏</span>
-          この回答をシェアする
+          相談→回答をシェアする
         </a>
 
         {similarItems.length > 0 && (
