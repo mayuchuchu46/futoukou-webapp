@@ -190,6 +190,23 @@ export default async function ResultPage({
           </>
         )}
 
+        {/* SNS拡散導線の第一弾（2026-10-12）：Xの投稿画面を開くだけの単純なシェア
+            リンク。クライアント側の状態を持たないので、サーバー側でそのまま
+            リンクを組み立てられる（JSは不要）。 */}
+        <a
+          className="share-btn"
+          href={`https://twitter.com/intent/tweet?${new URLSearchParams({
+            text: `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」に、どうする先生が回答しました。`,
+            url: `${SITE_URL}/result/${item.id}`,
+            hashtags: 'どうする先生,不登校',
+          })}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="share-btn-icon">𝕏</span>
+          この相談をシェアする
+        </a>
+
         {similarItems.length > 0 && (
           <div className="card">
             <div className="answer-label" style={{ fontSize: 13 }}>似たような相談</div>

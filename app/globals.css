@@ -675,6 +675,23 @@ h2.pagetitle {
   border: 1px solid var(--main);
 }
 
+/* SNS拡散導線の第一弾（2026-10-12）：相談詳細ページからXへのシェアボタン。
+   ブランドカラーに寄せた黒背景のボタンで、他の.btn-secondary（白背景）とは
+   視覚的に区別する。 */
+.share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #15181C;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+}
+.share-btn-icon { flex: 0 0 auto; font-size: 15px; line-height: 1; }
+
 .genderrow { display: flex; gap: 8px; }
 .genderbtn {
   flex: 1;
