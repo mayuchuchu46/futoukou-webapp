@@ -113,6 +113,17 @@ function RegisterForm() {
               趣旨からは、ここで聞かずアカウントページ（NewsletterPanel）でいつでも
               任意に設定できる形の方が適切という判断で、登録フォームからは削除した
               （2026-10-12）。 */}
+          {/* メールアドレス・パスワードという個人情報を直接入力させる画面なので、
+              /askページの同意モーダルと同様に、利用規約・プライバシーポリシーへの
+              導線をここにも明示する（プライバシーポリシー自体の公表で法的要件は
+              満たしているが、取得の場でも案内する方が望ましいとの判断。2026-10-12）。 */}
+          <div className="muted" style={{ fontSize: 12 }}>
+            ご登録により、
+            <a href="/terms" target="_blank" style={{ textDecoration: 'underline' }}>利用規約</a>
+            ・
+            <a href="/privacy" target="_blank" style={{ textDecoration: 'underline' }}>プライバシーポリシー</a>
+            に同意したものとみなします。
+          </div>
           {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
           <button className="btn-primary" type="submit" disabled={loading}>
             {loading ? '登録中…' : '登録する'}
