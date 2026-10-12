@@ -259,7 +259,7 @@ function AskPageContent() {
         <div className="privacy-notice">
           <span className="privacy-notice-icon">⚠️</span>
           <span>
-            入力いただいた内容はそのまま「みんなの相談」に公開されます。お名前・住所・学校名など個人を特定できる情報は書かないでください。つらい状況のときは、無理に詳しく書かなくて大丈夫です。
+            入力いただいた内容はそのまま「みんなの相談」に公開されます。お名前・住所・学校名など個人を特定できる情報は書かないでください。
           </span>
         </div>
         <textarea
