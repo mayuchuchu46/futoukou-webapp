@@ -27,10 +27,14 @@ async function AdminPageContent() {
   // 専用のスケジューラは設けず、運営がこの管理画面を開いたタイミングで実行する。
   await deleteExpiredLicenseDocs();
 
+  // 'rejected'（却下済み）は運営側でこれ以上やることが無いので、一覧から外す
+  // （2026-10-13、却下した相手がいつまでも「本人確認待ち」に残り続けていたのを修正）。
+  // 'needs_fix'（差し戻し・本人の再提出待ち）は、今は運営側のアクション待ちではないが、
+  // 状況を把握できるよう引き続き一覧に残す。
   const { data: unverifiedExperts } = await supabase
     .from('experts')
-    .select('id, name, email, credential, license_number, license_doc_path, created_at')
-    .eq('verified', false)
+    .select('id, name, email, credential, license_number, license_doc_path, review_status, review_note, created_at')
+    .in('review_status', ['pending', 'needs_fix'])
     .order('created_at', { ascending: true });
 
   const { data: recentConsultations } = await supabase

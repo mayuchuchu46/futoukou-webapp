@@ -3,6 +3,11 @@
 -- 既に作成済みのDBに対しては、下の create table 文は無視されます（if not exists のため）。
 -- その場合は、新しく追加した列を反映するため、次の1行も実行してください（既にある場合はエラーなく無視されます）。
 -- alter table consultations add column if not exists views int not null default 0;
+-- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
+-- （2026-10-13追加）、既存DBでは次を実行してください。
+-- alter table experts add column if not exists review_status text not null default 'pending';
+-- alter table experts add column if not exists review_note text;
+-- update experts set review_status = 'verified' where verified = true and review_status = 'pending';
 -- create table if not exists expert_memberships (
 --   author_id text primary key,
 --   expires_at timestamptz not null,
@@ -224,6 +229,14 @@ create table if not exists experts (
   stripe_payouts_enabled boolean not null default false, -- Stripe側の本人確認・口座情報登録が完了し、振込を受け取れる状態か
   verified boolean not null default false, -- 運営が資格を確認したらtrueにする。falseの間は回答できない
   verified_at timestamptz, -- 本人確認（verified=true）にした時刻。登録証（license_doc_path）の自動削除の起点に使う
+  -- 審査状況の内訳（2026-10-13追加）。verifiedは「回答できるかどうか」の判定に
+  -- 引き続き使う（既存コードとの互換のため残す）が、それだけだと「未確認（pending）」
+  -- 「差し戻し（needs_fix・本人に直してもらい再提出待ち）」「却下（rejected・登録不可）」
+  -- の3つを区別できず、却下した相手が管理画面の「本人確認待ち」に残り続けてしまう。
+  -- review_statusでこの3状態＋verifiedを区別し、review_noteに運営からの
+  -- コメント（差し戻しの理由・本人向けの一言）を入れる。
+  review_status text not null default 'pending', -- 'pending' | 'verified' | 'needs_fix' | 'rejected'
+  review_note text, -- 運営から本人向けのコメント（差し戻し理由・却下時の一言など）。ダッシュボードに表示
   created_at timestamptz not null default now()
 );
 

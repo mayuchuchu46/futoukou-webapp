@@ -20,6 +20,70 @@ async function ExpertDashboardContent() {
   if (!expert) redirect('/expert/login');
 
   if (!expert.verified) {
+    // review_statusで3状態を出し分ける（2026-10-13追加）。旧データ（review_statusが
+    // まだ無い行）はpending相当として扱われるよう、DB側のdefaultを'pending'にしてある。
+    const reviewStatus = expert.review_status || 'pending';
+
+    if (reviewStatus === 'rejected') {
+      return (
+        <div className="app-shell">
+          <div className="header">
+            <a className="btn-ghost" href="/">← トップへ</a>
+            <div className="header-row">
+              <div style={{ fontWeight: 700, fontSize: 16 }}>専門家ダッシュボード</div>
+            </div>
+          </div>
+          <div className="main">
+            <div className="card">
+              <div style={{ fontWeight: 700 }}>ご登録について</div>
+              <div className="qtext">
+                この度は「どうする先生」専門家登録にご関心をお寄せいただき、ありがとうございました。
+                慎重に確認させていただいた結果、誠に恐縮ですが、今回はご登録を見送らせていただくこととなりました。
+                ご期待に沿えず申し訳ございません。
+              </div>
+              {expert.review_note && (
+                <div className="qtext" style={{ background: 'var(--bg)', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>
+                  {expert.review_note}
+                </div>
+              )}
+              <div className="muted" style={{ fontSize: 12 }}>
+                理由など詳しくお知りになりたい場合は、お手数ですが mail.manapri@gmail.com までご連絡ください。
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (reviewStatus === 'needs_fix') {
+      return (
+        <div className="app-shell">
+          <div className="header">
+            <a className="btn-ghost" href="/">← トップへ</a>
+            <div className="header-row">
+              <div style={{ fontWeight: 700, fontSize: 16 }}>専門家ダッシュボード</div>
+            </div>
+          </div>
+          <div className="main">
+            <div className="card">
+              <div style={{ fontWeight: 700 }}>ご登録内容の修正をお願いします</div>
+              <div className="qtext">
+                ご登録いただいた内容を確認したところ、以下の点についてご修正・再提出をお願いしたく、ご連絡いたしました。
+              </div>
+              {expert.review_note && (
+                <div className="qtext" style={{ background: 'var(--bg)', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>
+                  {expert.review_note}
+                </div>
+              )}
+              <a className="btn-primary" href="/expert/profile">
+                登録内容を修正する
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="app-shell">
         <div className="header">

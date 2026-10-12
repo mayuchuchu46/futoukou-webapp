@@ -10,6 +10,8 @@ type UnverifiedExpert = {
   credential: string;
   license_number: string;
   license_doc_path: string | null;
+  review_status?: string; // 'pending' | 'needs_fix'（一覧に残るのはこの2つ。rejectedは一覧から除外済み）
+  review_note?: string | null;
   created_at: string;
 };
 
@@ -121,11 +123,46 @@ export default function AdminClient({
     const res = await fetch('/api/admin/experts/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ expert_id: id, verified: true }),
+      body: JSON.stringify({ expert_id: id, action: 'approve' }),
     });
     setBusy(null);
     if (res.ok) {
       setExperts((list) => list.filter((e) => e.id !== id));
+    } else {
+      const data = await res.json();
+      alert(data.error || '失敗しました');
+    }
+  }
+
+  // 「差し戻し」「却下」は、本人にダッシュボードで見せるコメントを運営が必ず
+  // 一言添える運用にする（理由が分からないまま終わらせない。2026-10-13追加）。
+  // 却下は「今回は登録を見送らせていただきました」という定型文をダッシュボード側
+  // （ExpertDashboardの分岐）で必ず出した上で、この運営コメントを添えて表示する。
+  async function reviewExpert(id: string, action: 'needs_fix' | 'reject') {
+    const promptLabel =
+      action === 'needs_fix'
+        ? '差し戻しの理由（本人に表示されます）を入力してください\n例：登録証の画像が不鮮明なため、再度ご提出ください'
+        : '却下の理由（本人に表示されます）を入力してください。空欄のままだと理由なしで却下済みの表示になります';
+    const note = window.prompt(promptLabel, '');
+    if (note === null) return; // キャンセル
+    if (action === 'needs_fix' && !note.trim()) {
+      alert('差し戻しには、本人に伝える理由の入力が必要です');
+      return;
+    }
+    setBusy(id);
+    const res = await fetch('/api/admin/experts/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ expert_id: id, action, note: note.trim() || undefined }),
+    });
+    setBusy(null);
+    if (res.ok) {
+      setExperts((list) => (action === 'reject' ? list.filter((e) => e.id !== id) : list));
+      if (action === 'needs_fix') {
+        setExperts((list) =>
+          list.map((e) => (e.id === id ? { ...e, review_status: 'needs_fix', review_note: note } : e))
+        );
+      }
     } else {
       const data = await res.json();
       alert(data.error || '失敗しました');
@@ -381,12 +418,32 @@ export default function AdminClient({
             <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}</div>
             <div className="muted">{e.email}</div>
             <div className="muted">登録番号：{e.license_number || '（未入力）'}</div>
+            {e.review_status === 'needs_fix' && (
+              <div className="muted" style={{ color: 'var(--orange-text)' }}>
+                差し戻し中（本人の再提出待ち）：{e.review_note}
+              </div>
+            )}
             <div className="row">
               <button className="btn-secondary" disabled={busy === e.id || !e.license_doc_path} onClick={() => viewLicenseDoc(e.id)}>
                 {e.license_doc_path ? (busy === e.id ? '取得中…' : '登録証を確認') : '登録証未提出'}
               </button>
               <button className="btn-primary" disabled={busy === e.id} onClick={() => verifyExpert(e.id)}>
                 {busy === e.id ? '処理中…' : '確認済みにする'}
+              </button>
+            </div>
+            <div className="row">
+              <button className="btn-secondary" disabled={busy === e.id} onClick={() => reviewExpert(e.id, 'needs_fix')}>
+                差し戻す
+              </button>
+              <button
+                className="btn-secondary"
+                style={{ color: '#C0392B' }}
+                disabled={busy === e.id}
+                onClick={() => {
+                  if (window.confirm(`${e.name}さんを却下します。よろしいですか？`)) reviewExpert(e.id, 'reject');
+                }}
+              >
+                却下する
               </button>
             </div>
           </div>

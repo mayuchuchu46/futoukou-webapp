@@ -39,9 +39,11 @@ export async function POST(req: NextRequest) {
   }
 
   // 差し替え後の新しい登録証なので、保管期限の起点（verified_at）もリセットする。
+  // 差し戻し（needs_fix）中だった場合は、再提出されたので審査待ち（pending）に戻す
+  // （2026-10-13、差し戻し後に再提出しても差し戻し表示のまま変わらなかった問題を修正）。
   await supabase
     .from('experts')
-    .update({ license_doc_path: path, verified: false, verified_at: null })
+    .update({ license_doc_path: path, verified: false, verified_at: null, review_status: 'pending', review_note: null })
     .eq('id', expert.id);
 
   return NextResponse.json({ ok: true });
