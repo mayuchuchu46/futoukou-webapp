@@ -225,6 +225,17 @@ input, textarea { font-family: inherit; }
   border-radius: 999px;
   line-height: 1.4;
 }
+/* PC幅では、ヘッダー右側（つらいときはこちら／どうする先生とは？の下）に
+   余白が空いているので、そこに移動させて空間を有効活用する
+   （2026-10-12、ユーザー指摘を受けて試験的に追加。位置はフィードバックを見て調整）。 */
+@media (min-width: 481px) {
+  .supervision-note {
+    position: absolute;
+    top: 76px;
+    right: 20px;
+    align-self: auto;
+  }
+}
 
 h2.pagetitle {
   font-family: "M PLUS Rounded 1c", sans-serif;
