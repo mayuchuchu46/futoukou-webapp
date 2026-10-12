@@ -90,6 +90,10 @@ input, textarea { font-family: inherit; }
    画面が狭いときは右側ではなく左側（キャッチコピー等）の方を折り返して収める。 */
 @media (max-width: 480px) {
   .hero-sub { white-space: normal; }
+  /* account-tab（右上に固定表示される「ログイン／アカウント」タブ）が、画面幅480px未満だと
+     .header-rightの「つらいときはこちら」と同じ右上の位置に重なって隠れてしまうため、
+     スマホ幅のときだけheader-rightを少し下にずらして衝突を避ける（実機で確認して追加）。 */
+  .header-right { padding-top: 30px; }
 }
 .wordmark { height: 42px; width: auto; margin-right: 0; }
 .badge {
