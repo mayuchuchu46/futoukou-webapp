@@ -626,7 +626,9 @@ h2.pagetitle {
   gap: 3px;
   font-size: 10px;
   font-weight: 700;
-  color: #A8A59A;
+  /* 未選択タブの色が薄すぎて見えにくいとの指摘を受けて、他のmutedテキストと
+     同じ濃さに引き上げた（以前は#A8A59A、2026-10-12） */
+  color: var(--muted);
   padding: 9px 0 11px;
 }
 .nav button.active {
@@ -637,7 +639,8 @@ h2.pagetitle {
   padding: 6px 0 8px;
   width: calc(100% - 8px);
 }
-.navicon { width: 22px; height: 22px; object-fit: contain; opacity: 0.5; transition: opacity .15s ease; }
+/* 未選択アイコンの不透明度も0.5→0.8に引き上げ、はっきり見えるようにした（2026-10-12） */
+.navicon { width: 22px; height: 22px; object-fit: contain; opacity: 0.8; transition: opacity .15s ease; }
 .nav button.active .navicon { opacity: 1; }
 
 .btn-primary:disabled,
