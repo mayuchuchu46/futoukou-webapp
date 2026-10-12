@@ -8,6 +8,7 @@ import BottomNav from '@/components/BottomNav';
 import ConsultationCard from '@/components/ConsultationCard';
 import EyeIcon from '@/components/EyeIcon';
 import TagChips from '@/components/TagChips';
+import PcSidebar from '@/components/PcSidebar';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -64,8 +65,9 @@ export default function HomeClient({
   const supervised = initialSupervised;
   const counts = initialCounts;
   const total = initialTotal;
-  const banner = initialSidebarBanner;
-  const showBanner = !!(banner && banner.enabled && banner.image_url && banner.link_url);
+  // サイドバナー・専門家一覧は <PcSidebar> が自前でAPIから取得するため、
+  // ここでは initialSidebarBanner / initialExperts は使わない
+  // （page.tsx側のサーバー取得・prop自体は後方互換のため残している）。
 
   // 旧「さがす」ページのタグ・ランキングなど、別のリンクから ?q= / ?category= 付きで
   // ホームに遷移してきたときに、URLの変化を拾って絞り込みを反映する。
@@ -148,119 +150,82 @@ export default function HomeClient({
           </div>
         )}
 
-        {/* PCの広い画面では、ランキングを検索ボックスの下（左カラム）に、
-            タグ検索を右サイドに回す2カラムになる（app/globals.cssの.home-layout参照）。
+        {/* PCの広い画面では、左右を完全に独立した縦積み（flex column）の
+            2カラムにする（app/globals.cssの.home-layout参照）。検索ボックスや
+            バナーなど高さの違う要素同士を同じ行に揃えようとすると謎の空白が
+            できてしまうため、行を揃える作りはやめている。
             モバイルでは今まで通りの1カラム（ランキング→タグ→検索→カテゴリ→一覧の順）。 */}
         <div className={`home-layout ${showExtras ? 'home-layout--with-side' : ''}`}>
-          {showExtras && allItems.length >= 3 && (
-            <div className="ranking home-ranking">
-              <div className="ranking-title">よく読まれている相談</div>
-              <div className="rank-list">
-                {ranking.map((item, i) => (
-                  <div key={item.id} className="rank-item" onClick={() => router.push(`/result/${item.id}`)}>
-                    <span className="rank-num">{i + 1}</span>
-                    <span className="rank-q">{item.question.slice(0, 28)}{item.question.length > 28 ? '…' : ''}</span>
-                    <span className="rank-views"><EyeIcon /> {item.views || 0}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {showExtras && (
-            <div className="home-tags">
-              <TagChips title="気になるテーマから探す" />
-            </div>
-          )}
-
-          <input
-            className="input home-search"
-            placeholder="キーワードで検索…"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
-
-          <div className="catmenu-row home-chips">
-            <button
-              className={`catmenu-chip catmenu-all ${category === 'all' ? 'active' : ''}`}
-              onClick={() => selectCategory('all')}
-            >
-              すべて（{total}）
-            </button>
-            {Object.entries(CATS).map(([key, c]) => (
-              <button
-                key={key}
-                className={`catmenu-chip ${c.cls} ${category === key ? 'active' : ''}`}
-                onClick={() => selectCategory(key)}
-              >
-                {c.short}（{counts[key] || 0}）
-              </button>
-            ))}
-          </div>
-
-          {showExtras && showBanner && (
-            <a
-              className="home-adbanner"
-              href={banner!.link_url}
-              target="_blank"
-              rel="noopener sponsored"
-            >
-              <img src={banner!.image_url} alt={banner!.alt_text} />
-            </a>
-          )}
-
-          <div className="home-list" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {loading && <div className="muted">読み込み中…</div>}
-            {!loading && items.length === 0 && (
-              <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
-            )}
-            {!loading && items.slice(0, visibleCount).map((item) => <ConsultationCard key={item.id} item={item} />)}
-            {!loading && visibleCount < items.length && <div ref={setLoadMoreEl} style={{ height: 1 }} />}
-
-            {showExtras && !loading && (
-              <img
-                className="recruitnote-banner"
-                src="/assets/recruit_banner.png"
-                alt="専門家の方を募集しています。公認心理師・臨床心理士など、相談への回答を担当していただける方を募集中"
-                onClick={() => router.push('/expert/recruit')}
-              />
-            )}
-          </div>
-
-          {/* PCではサイド（右カラム）に、モバイルでは一覧の下に表示（app/globals.cssの.home-layout参照） */}
-          {showExtras && !loading && (
-            <div className="home-experts home-experts-side">
-              <div className="home-experts-title">専門家一覧</div>
-              {initialExperts.length === 0 ? (
-                <div className="home-expert-card home-expert-card--empty" onClick={() => router.push('/expert/recruit')}>
-                  <img src="/assets/sensei_logo.png" alt="" className="home-expert-photo" style={{ opacity: 0.5 }} />
-                  <div className="home-expert-body">
-                    <div className="home-expert-name">現在、専門家を募集中です</div>
-                    <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
-                  </div>
-                  <span className="expertbanner-cta">›</span>
-                </div>
-              ) : (
-                initialExperts.map((e) => (
-                  <div
-                    key={e.id}
-                    className="home-expert-card"
-                    onClick={() => router.push(`/ask?expert=${e.id}`)}
-                  >
-                    <img src={e.photo_url || '/assets/sensei_logo.png'} alt="" className="home-expert-photo" />
-                    <div className="home-expert-body">
-                      <div className="home-expert-name">{e.credential}・{e.name}</div>
-                      {e.bio && <div className="home-expert-desc">{e.bio}</div>}
+          <div className="home-main-col">
+            {showExtras && allItems.length >= 3 && (
+              <div className="ranking home-ranking">
+                <div className="ranking-title">よく読まれている相談</div>
+                <div className="rank-list">
+                  {ranking.map((item, i) => (
+                    <div key={item.id} className="rank-item" onClick={() => router.push(`/result/${item.id}`)}>
+                      <span className="rank-num">{i + 1}</span>
+                      <span className="rank-q">{item.question.slice(0, 28)}{item.question.length > 28 ? '…' : ''}</span>
+                      <span className="rank-views"><EyeIcon /> {item.views || 0}</span>
                     </div>
-                    <span className="expertbanner-cta">›</span>
-                  </div>
-                ))
-              )}
-              <Link href="/experts" className="backlink" style={{ margin: '2px 0 0', fontSize: 13 }}>
-                専門家一覧をすべて見る →
-              </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* PCではサイド側に同じものを出すので、ここはモバイル専用（960px以上では非表示）。 */}
+            {showExtras && (
+              <div className="home-tags home-tags-mobile">
+                <TagChips title="気になるテーマから探す" />
+              </div>
+            )}
+
+            <input
+              className="input home-search"
+              placeholder="キーワードで検索…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+
+            <div className="catmenu-row home-chips">
+              <button
+                className={`catmenu-chip catmenu-all ${category === 'all' ? 'active' : ''}`}
+                onClick={() => selectCategory('all')}
+              >
+                すべて（{total}）
+              </button>
+              {Object.entries(CATS).map(([key, c]) => (
+                <button
+                  key={key}
+                  className={`catmenu-chip ${c.cls} ${category === key ? 'active' : ''}`}
+                  onClick={() => selectCategory(key)}
+                >
+                  {c.short}（{counts[key] || 0}）
+                </button>
+              ))}
             </div>
-          )}
+
+            <div className="home-list" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {loading && <div className="muted">読み込み中…</div>}
+              {!loading && items.length === 0 && (
+                <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
+              )}
+              {!loading && items.slice(0, visibleCount).map((item) => <ConsultationCard key={item.id} item={item} />)}
+              {!loading && visibleCount < items.length && <div ref={setLoadMoreEl} style={{ height: 1 }} />}
+
+              {showExtras && !loading && (
+                <img
+                  className="recruitnote-banner"
+                  src="/assets/recruit_banner.png"
+                  alt="専門家の方を募集しています。公認心理師・臨床心理士など、相談への回答を担当していただける方を募集中"
+                  onClick={() => router.push('/expert/recruit')}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* PCではサイド（右カラム）に表示。中身はPcSidebar側で自前取得する
+              （ランキングだけは左カラムに出すので、ここでは出さない）。 */}
+          {showExtras && <PcSidebar hideRanking />}
         </div>
       </div>
 

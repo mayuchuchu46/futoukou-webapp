@@ -27,13 +27,17 @@ type ExpertProfile = {
 // （とサイドバナー）を出す。中身はホームのサイドと同じもので、
 // このコンポーネントが自前でAPIから取得する（各ページのサーバー側を
 // 変更せずに済むよう、クライアント側で完結させている）。
-export default function PcSidebar({ hideExperts = false }: { hideExperts?: boolean } = {}) {
+export default function PcSidebar({
+  hideExperts = false,
+  hideRanking = false,
+}: { hideExperts?: boolean; hideRanking?: boolean } = {}) {
   const router = useRouter();
   const [ranking, setRanking] = useState<Consultation[]>([]);
   const [banner, setBanner] = useState<SidebarBanner>(null);
   const [experts, setExperts] = useState<ExpertProfile[]>([]);
 
   useEffect(() => {
+    if (hideRanking) return;
     fetch(`/api/consultations?viewer_id=${encodeURIComponent(getUid())}`)
       .then((r) => r.json())
       .then((d) => {
@@ -41,7 +45,9 @@ export default function PcSidebar({ hideExperts = false }: { hideExperts?: boole
         setRanking([...items].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10));
       })
       .catch(() => {});
+  }, [hideRanking]);
 
+  useEffect(() => {
     fetch('/api/sidebar-banner')
       .then((r) => r.json())
       .then((d) => setBanner(d.banner || null))

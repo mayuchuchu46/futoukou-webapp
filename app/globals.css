@@ -1,5 +1,7 @@
 :root {
-  --main: #2F7568;
+  /* ロゴの葉っぱの明るい黄緑（#8DB453、PILでロゴ画像からサンプリング）に
+     少しだけ寄せた色。元の濃い緑（#2F7568）に対し約15%ブレンド。 */
+  --main: #3D7E65;
   --sub: #DDEEE8;
   --orange: #F29A7A;
   --orange-bg: #FCEAE1;
@@ -264,25 +266,35 @@ h2.pagetitle {
      細く表示されていた）。 */
   .app-shell { max-width: 1080px; }
 
+  /* 左右で高さの違う内容（検索ボックス vs サイドバナー等）を同じ行に揃えようとすると
+     片方の短い要素の下に謎の空白ができてしまうため、grid-template-areasでの行合わせは
+     やめて、左カラム・右カラムをそれぞれ独立した縦積み（flex column）にする。
+     高さは左右で完全に無関係になり、お互いに引きずられない。 */
   .home-layout.home-layout--with-side {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    column-gap: 28px;
-    row-gap: 16px;
-    grid-template-areas:
-      "search   adbanner"
-      "ranking  adbanner"
-      "chips    tags"
-      "list     experts";
-    align-items: start;
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
   }
-  .home-layout--with-side .home-search { grid-area: search; }
-  .home-layout--with-side .home-chips { grid-area: chips; }
-  .home-layout--with-side .home-ranking { grid-area: ranking; }
-  .home-layout--with-side .home-tags { grid-area: tags; }
-  .home-layout--with-side .home-adbanner { grid-area: adbanner; align-self: start; }
-  .home-layout--with-side .home-list { grid-area: list; }
-  .home-layout--with-side .home-experts-side { grid-area: experts; align-self: start; }
+  .home-main-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  /* 左カラム内の表示順（PCのみ）：検索→ランキング→カテゴリ→一覧。
+     モバイルのDOM順（ランキングが先）はそのまま、orderだけで並び替える。 */
+  .home-main-col .home-search { order: 1; }
+  .home-main-col .home-ranking { order: 2; }
+  .home-main-col .home-chips { order: 3; }
+  .home-main-col .home-list { order: 4; }
+  /* タグ一覧はPCではサイド側（.pc-sidebar内）に出すので、
+     一覧内に残っているモバイル用の方は隠す。 */
+  .home-tags-mobile { display: none; }
+
+  /* 「よく読まれている相談」はPCでは5位まで表示（モバイルは今まで通り10位まで）。
+     データ自体は10件取得したまま、表示だけCSSで絞る。 */
+  .rank-list .rank-item:nth-child(n + 6) { display: none; }
 
   /* サイドのタグ一覧は横スクロールではなく、折り返して並べる
      （ホームのサイド・他ページのPcSidebarどちらでも使うため、
@@ -344,8 +356,10 @@ h2.pagetitle {
 .chip-tag.active { background: var(--main); border-color: var(--main); color: #fff; }
 
 /* カテゴリメニュー（大分類の切り替え）。キーワードタグ（.chip-tag）とは
-   意図的に見た目を変え、角丸四角＋カテゴリごとの色（cat-*、カード上のバッジと同じ配色）
-   で「固定の大分類メニュー」であることを一目でわかるようにする。 */
+   意図的に見た目を変え、角丸四角で「固定の大分類メニュー」であることを
+   一目でわかるようにする。ただし色自体はカードのバッジ（cat-*）ほど
+   カラフルにはせず、未選択時はニュートラルな色にし、選択中のものだけ
+   カテゴリごとの色（cat-*、カード上のバッジと同じ配色）で目立たせる。 */
 .catmenu-row {
   display: flex;
   gap: 8px;
@@ -363,12 +377,38 @@ h2.pagetitle {
   border-radius: 10px;
   font-size: 12.5px;
   font-weight: 700;
-  border: none;
-  opacity: 0.85;
-  transition: opacity 0.15s ease;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  opacity: 1;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.catmenu-chip.active { opacity: 1; box-shadow: 0 1px 5px rgba(43, 43, 40, 0.12); }
-.catmenu-all { background: var(--main); color: #fff; }
+.catmenu-chip.active { border-color: transparent; box-shadow: 0 1px 5px rgba(43, 43, 40, 0.12); }
+.catmenu-all { background: var(--main); color: #fff; border-color: transparent; }
+/* cat-*単体のセレクタ（カードのバッジ用、.cat-badgeと組み合わせて使う）が
+   同じ詳細度で後から定義されていてもここが優先されるよう、
+   .catmenu-chip.cat-* の2クラス指定で明示的に未選択時の色を上書きする。 */
+.catmenu-chip.cat-body,
+.catmenu-chip.cat-social,
+.catmenu-chip.cat-school,
+.catmenu-chip.cat-will,
+.catmenu-chip.cat-approach,
+.catmenu-chip.cat-course,
+.catmenu-chip.cat-dev,
+.catmenu-chip.cat-home,
+.catmenu-chip.cat-other {
+  background: var(--card);
+  color: var(--text);
+}
+.catmenu-chip.cat-body.active { background: var(--sub); color: #1F4A3C; }
+.catmenu-chip.cat-social.active { background: var(--orange-bg); color: var(--orange-text); }
+.catmenu-chip.cat-school.active { background: var(--teal-bg); color: var(--teal-text); }
+.catmenu-chip.cat-will.active { background: var(--yellow-bg); color: var(--yellow-text); }
+.catmenu-chip.cat-approach.active { background: var(--moss-bg); color: var(--moss-text); }
+.catmenu-chip.cat-course.active { background: var(--seal-bg); color: var(--seal-text); }
+.catmenu-chip.cat-dev.active { background: var(--slate-bg); color: var(--slate-text); }
+.catmenu-chip.cat-home.active { background: var(--clay-bg); color: var(--clay-text); }
+.catmenu-chip.cat-other.active { background: #EFEFEF; color: var(--muted); }
 
 .card {
   background: var(--card);
