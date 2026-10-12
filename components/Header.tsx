@@ -46,23 +46,28 @@ export default function Header({ supervised }: { supervised: boolean }) {
           <Link href="/about" className="aboutlink">
             どうする先生とは？
           </Link>
-          {loggedIn !== null && (
-            <Link href={loggedIn ? '/account' : '/account/login'} className="accountlink">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20a8 8 0 0 1 16 0z" />
-              </svg>
-              {/* 未ログイン時は「ログイン」だけでなく新規登録も誘導したいので、ログインページへの
-                  リンクのまま文言だけ両方を伝える形にする（/account/loginからは
-                  /account/registerへの導線が既にある）。 */}
-              {loggedIn ? 'アカウント' : 'ログイン / 無料登録'}
-            </Link>
-          )}
         </div>
       </div>
       <span className="supervision-note">
         {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
       </span>
+
+      {/* ログイン／アカウントへの導線。他の情報系リンク（つらいときはこちら／どうする先生とは？）
+          と並べて同じ見た目にすると埋もれてしまうため、画面右上の角にタブのようにぶら下げて
+          常時固定表示する形にした。position: fixedなのでスクロールしても常に見える
+          （2026-10-12、header-rightの縦積みから切り出し）。 */}
+      {loggedIn !== null && (
+        <Link href={loggedIn ? '/account' : '/account/login'} className="account-tab">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20a8 8 0 0 1 16 0z" />
+          </svg>
+          {/* 未ログイン時は「ログイン」だけでなく新規登録も誘導したいので、ログインページへの
+              リンクのまま文言だけ両方を伝える形にする（/account/loginからは
+              /account/registerへの導線が既にある）。 */}
+          {loggedIn ? 'アカウント' : 'ログイン / 無料登録'}
+        </Link>
+      )}
 
       {crisisOpen && <CrisisModal onClose={() => setCrisisOpen(false)} />}
     </div>
