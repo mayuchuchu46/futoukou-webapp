@@ -49,6 +49,9 @@ export default function DashboardClient({
   return (
     <div className="app-shell">
       <div className="header">
+        {/* 専門家ログイン周りのページには戻る手段が無かったため追加（2026-10-12）。
+            ダッシュボードは専門家エリアの一番上なので、戻り先はトップページにした。 */}
+        <a className="btn-ghost" href="/">← トップへ</a>
         <div className="header-row">
           <div style={{ fontWeight: 700, fontSize: 16 }}>専門家ダッシュボード</div>
           <button className="btn-ghost" onClick={logout}>ログアウト</button>

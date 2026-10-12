@@ -42,6 +42,8 @@ export default function ExpertRegisterPage() {
   return (
     <div className="login-wrap">
       <form onSubmit={submit} className="card" style={{ width: '100%', maxWidth: 420, gap: 14 }}>
+        {/* 専門家ログイン周りのページには戻る手段が無かったため追加（2026-10-12）。 */}
+        <a className="btn-ghost" href="/" style={{ alignSelf: 'flex-start' }}>← トップへ</a>
         <div style={{ fontWeight: 700, fontSize: 18 }}>専門家登録</div>
         <div className="muted">「どうする先生」で有料相談に回答する専門家としてのプロフィールを作成します。</div>
 

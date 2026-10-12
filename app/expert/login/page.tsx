@@ -31,6 +31,10 @@ export default function ExpertLoginPage() {
   return (
     <div className="login-wrap">
       <form onSubmit={submit} className="card" style={{ width: '100%', maxWidth: 360, gap: 14 }}>
+        {/* 専門家ログイン周りのページには戻る手段が無かったため追加
+            （2026-10-12）。login-wrapはHeaderを使わない単体レイアウトなので、
+            カード内に明示的なリンクを置く。 */}
+        <a className="btn-ghost" href="/" style={{ alignSelf: 'flex-start' }}>← トップへ</a>
         <div style={{ fontWeight: 700, fontSize: 18 }}>専門家ログイン</div>
         <input className="input" type="email" placeholder="メールアドレス" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <input className="input" type="password" placeholder="パスワード" value={password} onChange={(e) => setPassword(e.target.value)} required />

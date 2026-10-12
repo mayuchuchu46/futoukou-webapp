@@ -23,6 +23,8 @@ async function ExpertDashboardContent() {
     return (
       <div className="app-shell">
         <div className="header">
+          {/* 専門家ログイン周りのページには戻る手段が無かったため追加（2026-10-12）。 */}
+          <a className="btn-ghost" href="/">← トップへ</a>
           <div className="header-row">
             <div style={{ fontWeight: 700, fontSize: 16 }}>専門家ダッシュボード</div>
           </div>
