@@ -92,6 +92,10 @@
 -- alter table consultations add column if not exists stripe_transfer_id text;
 -- alter table consultations add column if not exists paid_at timestamptz;
 -- （StripeダッシュボードでConnect機能自体の有効化も別途必要です）
+-- 分析ノートのAIサマリーに「言葉かけの提案」「環境面の工夫の提案」を追加した場合、
+-- 既存DBでは次を実行してください。
+-- alter table member_summaries add column if not exists phrasing_suggestion text not null default '';
+-- alter table member_summaries add column if not exists environment_suggestion text not null default '';
 
 create extension if not exists "pgcrypto";
 
@@ -200,6 +204,8 @@ create table if not exists member_summaries (
   member_id uuid primary key references members(id),
   status_summary text not null default '',
   advice text not null default '',
+  phrasing_suggestion text not null default '',
+  environment_suggestion text not null default '',
   consultation_count int not null default 0,
   generated_at timestamptz not null default now()
 );

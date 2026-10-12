@@ -5,9 +5,33 @@ import { buildSummaryPrompt, SummaryConsultation } from '@/lib/prompt';
 export type MemberSummary = {
   statusSummary: string;
   advice: string;
+  phrasingSuggestion: string;
+  environmentSuggestion: string;
   consultationCount: number;
   generatedAt: string;
 };
+
+type CachedRow = {
+  status_summary: string;
+  advice: string;
+  phrasing_suggestion: string | null;
+  environment_suggestion: string | null;
+  consultation_count: number;
+  generated_at: string;
+};
+
+function fromCachedRow(cached: CachedRow, consultationCount?: number): MemberSummary {
+  return {
+    statusSummary: cached.status_summary,
+    advice: cached.advice,
+    // phrasing_suggestion/environment_suggestionは後から追加した列のため、
+    // 追加前に生成された古いキャッシュ行ではnullのことがある。
+    phrasingSuggestion: cached.phrasing_suggestion || '',
+    environmentSuggestion: cached.environment_suggestion || '',
+    consultationCount: consultationCount ?? cached.consultation_count,
+    generatedAt: cached.generated_at,
+  };
+}
 
 // マイページの「今のお子さんの状況」サマリーを取得する。
 // 会員の相談件数が、キャッシュ生成時から増えていなければキャッシュをそのまま返し、
@@ -26,30 +50,18 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
 
   const { data: cached } = await supabase
     .from('member_summaries')
-    .select('status_summary, advice, consultation_count, generated_at')
+    .select('status_summary, advice, phrasing_suggestion, environment_suggestion, consultation_count, generated_at')
     .eq('member_id', memberId)
     .single();
 
   if (cached && cached.consultation_count === consultationCount) {
-    return {
-      statusSummary: cached.status_summary,
-      advice: cached.advice,
-      consultationCount,
-      generatedAt: cached.generated_at,
-    };
+    return fromCachedRow(cached as CachedRow, consultationCount);
   }
 
   if (!process.env.ANTHROPIC_API_KEY) {
     // APIキーが無い環境（ローカルビルド確認等）では、キャッシュが古くても
     // 古い内容のまま返す。キャッシュも無ければ生成を諦めて null を返す。
-    if (cached) {
-      return {
-        statusSummary: cached.status_summary,
-        advice: cached.advice,
-        consultationCount: cached.consultation_count,
-        generatedAt: cached.generated_at,
-      };
-    }
+    if (cached) return fromCachedRow(cached as CachedRow);
     return null;
   }
 
@@ -68,10 +80,12 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
 
   let statusSummary = '';
   let advice = '';
+  let phrasingSuggestion = '';
+  let environmentSuggestion = '';
   try {
     const msg = await anthropic.messages.create({
       model: 'claude-sonnet-5',
-      max_tokens: 500,
+      max_tokens: 700,
       messages: [{ role: 'user', content: prompt }],
     });
     const textBlock = msg.content.find(
@@ -85,18 +99,14 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
     const parsed = JSON.parse(raw.slice(jsonStart, jsonEnd + 1));
     statusSummary = typeof parsed.status_summary === 'string' ? parsed.status_summary.trim() : '';
     advice = typeof parsed.advice === 'string' ? parsed.advice.trim() : '';
+    phrasingSuggestion = typeof parsed.phrasing_suggestion === 'string' ? parsed.phrasing_suggestion.trim() : '';
+    environmentSuggestion =
+      typeof parsed.environment_suggestion === 'string' ? parsed.environment_suggestion.trim() : '';
     if (!statusSummary || !advice) throw new Error('サマリーが空でした');
   } catch {
     // 生成に失敗した場合、古いキャッシュがあればそれを返し、無ければ諦める
     // （マイページ全体を落とすほどの機能ではないため）。
-    if (cached) {
-      return {
-        statusSummary: cached.status_summary,
-        advice: cached.advice,
-        consultationCount: cached.consultation_count,
-        generatedAt: cached.generated_at,
-      };
-    }
+    if (cached) return fromCachedRow(cached as CachedRow);
     return null;
   }
 
@@ -105,9 +115,18 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
     member_id: memberId,
     status_summary: statusSummary,
     advice,
+    phrasing_suggestion: phrasingSuggestion,
+    environment_suggestion: environmentSuggestion,
     consultation_count: consultationCount,
     generated_at: generatedAt,
   });
 
-  return { statusSummary, advice, consultationCount, generatedAt };
+  return {
+    statusSummary,
+    advice,
+    phrasingSuggestion,
+    environmentSuggestion,
+    consultationCount,
+    generatedAt,
+  };
 }

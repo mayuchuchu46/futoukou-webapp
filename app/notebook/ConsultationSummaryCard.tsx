@@ -7,7 +7,13 @@ type SummaryResponse = {
   loggedIn: boolean;
   active: boolean;
   count: number;
-  summary: { statusSummary: string; advice: string | null; locked: boolean } | null;
+  summary: {
+    statusSummary: string;
+    advice: string | null;
+    phrasingSuggestion: string | null;
+    environmentSuggestion: string | null;
+    locked: boolean;
+  } | null;
 };
 
 // 「分析ノート」ページ（/notebook）の本体カード。自分が投稿した相談の蓄積から
@@ -22,8 +28,9 @@ type SummaryResponse = {
 //   イメージを会員登録前からも持ってもらう）
 // ・登録済み・相談0件：まだノートに書く材料がないことを伝える
 // ・登録済み・相談あり・読み放題会員ではない：状況整理（無料のお試し）だけ見せ、具体的な
-//   アドバイスは会員限定であることを案内する（新たな課金ではなく既存の読み放題会員の特典として）
-// ・登録済み・相談あり・読み放題会員：状況整理＋アドバイスの両方を見せる
+//   アドバイス・言葉かけの提案・環境面の工夫は会員限定であることを案内する
+//   （新たな課金ではなく既存の読み放題会員の特典として。2026-10-12 2項目追加）
+// ・登録済み・相談あり・読み放題会員：状況整理＋アドバイス＋言葉かけの提案＋環境面の工夫を見せる
 // どの状態でも、相談件数を見せることで「質問するほど、ノートの中身が増えていく」という
 // 積み重ねの価値を伝える。
 export default function ConsultationSummaryCard({ ownCount }: { ownCount: number }) {
@@ -82,7 +89,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
     );
   }
 
-  const { statusSummary, advice, locked } = data.summary;
+  const { statusSummary, advice, phrasingSuggestion, environmentSuggestion, locked } = data.summary;
 
   return (
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
@@ -99,16 +106,28 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
       {locked ? (
         <>
           <div className="qtext" style={{ filter: 'blur(4px)', userSelect: 'none' }} aria-hidden="true">
-            会員になると、ここに次の一手の具体的なアドバイスが表示されます。相談を重ねるほど、より具体的な内容になっていきます。
+            会員になると、ここに次の一手の具体的なアドバイス・この子に合いそうな言葉かけ・環境面の工夫が表示されます。相談を重ねるほど、より具体的な内容になっていきます。
           </div>
           <Link className="btn-primary" href="/account">
-            会員になってアドバイスを見る
+            会員になって見る
           </Link>
         </>
       ) : (
         <>
           <div className="answer-label" style={{ fontSize: 13 }}>次にやること</div>
           <div className="qtext">{advice}</div>
+          {phrasingSuggestion && (
+            <>
+              <div className="answer-label" style={{ fontSize: 13 }}>言葉かけの提案</div>
+              <div className="qtext">{phrasingSuggestion}</div>
+            </>
+          )}
+          {environmentSuggestion && (
+            <>
+              <div className="answer-label" style={{ fontSize: 13 }}>環境面の工夫</div>
+              <div className="qtext">{environmentSuggestion}</div>
+            </>
+          )}
         </>
       )}
     </div>
