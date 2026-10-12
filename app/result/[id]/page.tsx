@@ -126,6 +126,29 @@ export default async function ResultPage({
   const answerSnippet =
     answerSnippetSource.length > 40 ? `${answerSnippetSource.slice(0, 40)}…` : answerSnippetSource;
 
+  // SNS拡散導線の第一弾（2026-10-12）：Xの投稿画面を開くだけの単純なシェアリンク。
+  // クライアント側の状態を持たないので、サーバー側でそのままリンクを組み立てられる
+  // （JSは不要）。AI回答・専門家回答の両方から同じ場所に出せるよう、JSX変数として
+  // 共通化した（2026-10-12、「もっと詳しく相談してみませんか？」より上に出す配置に
+  // 変更した際に、両方の分岐で同じボタンを使い回せるようにするため）。
+  const shareButton = (
+    <a
+      className="share-btn"
+      href={`https://twitter.com/intent/tweet?${new URLSearchParams({
+        text: answerSnippet
+          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nどうする先生の回答はこうはじまります。\n「${answerSnippet}」\n\n続きはこちら。`
+          : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nこの相談に、どうする先生が出した"今日からできる一手"とは。`,
+        url: `${SITE_URL}/result/${item.id}`,
+        hashtags: 'どうする先生,不登校',
+      })}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span className="share-btn-icon">𝕏</span>
+      相談→回答をシェアする
+    </a>
+  );
+
   const jsonLd = answerTextForJsonLd
     ? {
         '@context': 'https://schema.org',
@@ -175,9 +198,12 @@ export default async function ResultPage({
         </div>
 
         {item.request_type === 'expert' ? (
-          <Suspense fallback={null}>
-            <ResultClient id={id} initialItem={item} />
-          </Suspense>
+          <>
+            <Suspense fallback={null}>
+              <ResultClient id={id} initialItem={item} />
+            </Suspense>
+            {shareButton}
+          </>
         ) : (
           <>
             <div className="card">
@@ -192,30 +218,15 @@ export default async function ResultPage({
             <Suspense fallback={null}>
               <SaveConsultationPrompt id={item.id} authorId={item.author_id} />
             </Suspense>
+            {/* 「もっと詳しく相談してみませんか？」（AiUsageUpsell、有料導線）より上に
+                シェアボタンを置く。無料でできる行動（シェア）を、課金に近い案内より
+                先に提示する並び（2026-10-12）。 */}
+            {shareButton}
             <Suspense fallback={null}>
               <AiUsageUpsell />
             </Suspense>
           </>
         )}
-
-        {/* SNS拡散導線の第一弾（2026-10-12）：Xの投稿画面を開くだけの単純なシェア
-            リンク。クライアント側の状態を持たないので、サーバー側でそのまま
-            リンクを組み立てられる（JSは不要）。 */}
-        <a
-          className="share-btn"
-          href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-            text: answerSnippet
-              ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nどうする先生の回答はこうはじまります。\n「${answerSnippet}」\n\n続きはこちら。`
-              : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nこの相談に、どうする先生が出した"今日からできる一手"とは。`,
-            url: `${SITE_URL}/result/${item.id}`,
-            hashtags: 'どうする先生,不登校',
-          })}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span className="share-btn-icon">𝕏</span>
-          相談→回答をシェアする
-        </a>
 
         {similarItems.length > 0 && (
           <div className="card">
