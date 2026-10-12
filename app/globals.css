@@ -831,19 +831,27 @@ select.input {
   padding: 20px;
 }
 
+/* 2026-10-13: 質問文1行だけの簡素なリストから、カテゴリ・回答の抜粋・「続きを読む」の
+   CTAまで見せるミニカード形式に変更し、テキスト量を増やしてクリックの動機を作った。 */
 .similarq { display: flex; flex-direction: column; }
 .similar-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 0;
+  display: block;
+  padding: 12px 0;
   border-top: 1px solid #F0EEE6;
   cursor: pointer;
 }
 .similar-item:first-of-type { border-top: none; }
-.similar-q { flex: 1; font-size: 13px; color: var(--text); line-height: 1.5; }
-.similar-arrow { flex: 0 0 auto; color: var(--muted); font-size: 13px; }
+.similar-item-main { display: flex; flex-direction: column; gap: 2px; }
+.similar-q { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
+.similar-a { font-size: 13px; color: var(--muted); line-height: 1.5; margin-top: 2px; }
+.similar-a-locked { color: var(--orange-text); }
+.similar-cta {
+  align-self: flex-end;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--orange-text);
+  margin-top: 4px;
+}
 
 /* ============================================================
    分析ノート（/notebook）：相談が増えるほど中身が充実していく様子を、

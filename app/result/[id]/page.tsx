@@ -253,15 +253,36 @@ export default async function ResultPage({
           <div className="card">
             <div className="answer-label" style={{ fontSize: 13 }}>似たような相談</div>
             <div className="similarq">
-              {similarItems.map((d) => (
-                <Link key={d.id} href={`/result/${d.id}`} className="similar-item">
-                  <span className="similar-q">
-                    {d.question.slice(0, 42)}
-                    {d.question.length > 42 ? '…' : ''}
-                  </span>
-                  <span className="similar-arrow">›</span>
-                </Link>
-              ))}
+              {similarItems.map((d) => {
+                const dCat = CATS[d.category] || CATS.other;
+                const answerPreview = d.locked
+                  ? null
+                  : d.answer
+                    ? d.answer.replace(/\s+/g, ' ').trim().slice(0, 56) +
+                      (d.answer.replace(/\s+/g, ' ').trim().length > 56 ? '…' : '')
+                    : null;
+                return (
+                  <Link key={d.id} href={`/result/${d.id}`} className="similar-item">
+                    <div className="similar-item-main">
+                      <div className="row" style={{ marginBottom: 4 }}>
+                        <span className={`cat-badge ${dCat.cls}`} style={{ fontSize: 11, padding: '2px 8px' }}>
+                          {dCat.label}
+                        </span>
+                      </div>
+                      <div className="similar-q">
+                        {d.question.slice(0, 60)}
+                        {d.question.length > 60 ? '…' : ''}
+                      </div>
+                      {d.locked ? (
+                        <div className="similar-a similar-a-locked">🔒 専門家が回答済み</div>
+                      ) : answerPreview ? (
+                        <div className="similar-a">💬 {answerPreview}</div>
+                      ) : null}
+                      <div className="similar-cta">続きを読む ›</div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
