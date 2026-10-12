@@ -86,13 +86,42 @@ input, textarea { font-family: inherit; }
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; gap: 10px; }
 .header-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; }
 .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 2px; flex: 0 0 auto; }
-/* ロゴ＋「不登校編」バッジと「専門家監修：準備中…」を同じ行に並べる。PC幅では横に
-   並ぶが、入りきらないスマホ幅では自然に折り返して2行になる（2026-10-12）。 */
-.header-brand-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* トップページ以外のヘッダーに出す、さりげない「戻る」。他のヘッダーリンクより
+   控えめな見た目にして、ロゴやアカウントタブより目立たないようにする（2026-10-12）。 */
+.header-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: none;
+  background: none;
+  padding: 0;
+  margin-bottom: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+.header-back svg { flex-shrink: 0; }
 /* 「つらいときはこちら」「どうする先生とは？」は画面幅によらず右上に固定したいので、
    画面が狭いときは右側ではなく左側（キャッチコピー等）の方を折り返して収める。 */
 @media (max-width: 480px) {
   .hero-sub { white-space: normal; }
+  /* account-tab（画面右上に常時position: fixedで固定表示される「ログイン／アカウント」タブ、
+     高さ約33px）が、画面幅480px以下だと.header-rightの「つらいときはこちら」と同じ右上の
+     位置に重なってしまう。header全体やロゴを下げると今度はロゴ上に無駄な余白ができて
+     しまうため、header-rightだけをaccount-tabの高さぶん下にずらして避ける
+     （header-leftのhero-subは上のwhite-space:normalで折り返すようにしてあるので、
+     header-rightを下げても重ならない。2026-10-12、実機確認して調整）。 */
+  .header-right { padding-top: 38px; }
+  /* トップページ以外（分析ノート・マイページ等）では、スマホ幅だと「専門家監修：準備中…」
+     「不登校のご家庭に、次の一手を。」等のトップページ向け説明文はもう不要という指摘を
+     受けて非表示に。ロゴ＋バッジ、右側のリンク類はそのまま残す。PC幅では従来どおり
+     全ページに表示する（2026-10-12）。 */
+  .header-subpage .supervision-note,
+  .header-subpage .hero-catch,
+  .header-subpage .hero-sub {
+    display: none;
+  }
 }
 .wordmark { height: 42px; width: auto; margin-right: 0; }
 .badge {
@@ -175,14 +204,21 @@ input, textarea { font-family: inherit; }
 }
 /* ログイン／アカウントへのリンク。「つらいときはこちら」「どうする先生とは？」は
    読み物系の補足情報リンクなので破線下線で揃えているが、こちらは会員登録・ログインへの
-   導線という役割が異なるため見た目を変えて目立たせる。
-   スマホ幅では.header-right内で他のリンクと同じく縦に自然に並ぶ、通常のチップとして表示する
-   （position: fixedの角タブにすると、縦スペースが限られるスマホで他要素と重なりやすく、
-   実機検証で2回崩れたため、固定表示はPC幅限定にした。2026-10-12）。 */
+   導線という役割が異なるため見た目を変えて目立たせる。画面右上の角にタブのようにぶら下げ、
+   position: fixedでスクロールしても常に見える位置に固定する（画面幅によらず常時。
+   2026-10-12、重なり対策は.header-right側のpadding-topで行う方式に戻した）。
+   rightは.fab/.scroll-top-btnと同じ、中央寄せされた480px幅のコンテンツ列基準の計算式だが、
+   480px未満の画面幅（実機の多くのスマホ）だとcalc()がマイナスになり右端からはみ出して
+   切れてしまうため、max()で「画面端から最低12pxは必ず空ける」下限を足した
+   （実機検証で欠けを確認して修正）。 */
 .account-tab {
+  position: fixed;
+  top: 0;
+  right: max(12px, calc(50% - 240px + 16px));
+  z-index: 30;
   padding: 7px 14px 8px;
   border: none;
-  border-radius: 10px;
+  border-radius: 0 0 12px 12px;
   /* 黄色系トークンに変更（2026-10-12、緑系だと他の要素と馴染みすぎるとの指摘を受けて） */
   background: var(--yellow);
   color: var(--yellow-text);
@@ -197,26 +233,13 @@ input, textarea { font-family: inherit; }
   text-decoration: none;
 }
 .account-tab svg { flex-shrink: 0; }
-/* PC幅（480px超）では、画面右上の角にタブのようにぶら下げ、position: fixedで
-   スクロールしても常に見える位置に固定する。rightは.fab/.scroll-top-btnと同じ、
-   中央寄せされた480px幅のコンテンツ列基準の計算式。480px以下はこのブロック自体が
-   効かないのでmax()の下限は不要（2026-10-12、スマホ幅はヘッダー内に通常表示する
-   方式に変更したため）。 */
-@media (min-width: 481px) {
-  .account-tab {
-    position: fixed;
-    top: 0;
-    right: calc(50% - 240px + 16px);
-    z-index: 30;
-    border-radius: 0 0 12px 12px;
-  }
-}
 .muted { color: var(--muted); font-size: 12px; }
 
-/* 「専門家監修：準備中…」の注記。ロゴ＋「不登校編」バッジと同じ行（.header-brand-row）に
-   並べるピル型バッジ（2026-10-12、ロゴの横に置きたいという指摘を受けてheader-rightの
-   余白に固定表示する方式から変更）。 */
+/* 「専門家監修：準備中…」の注記。header-rowの外に単独で置く、小さなピル型バッジ
+   （2026-10-12、ロゴの横に並べる形を試したが、hero-catchがロゴ直下に来る配置の方が
+   良いとのことで、以前の単独配置に戻した）。 */
 .supervision-note {
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   font-size: 11px;
