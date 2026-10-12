@@ -58,7 +58,9 @@ input, textarea { font-family: inherit; }
 }
 
 .header {
-  padding: 20px 20px 12px 20px;
+  /* 下パディングは「専門家監修：準備中…」の注記のすぐ下に次のカードが来るよう、
+     他の余白より少し詰めている（.mainのpadding-top:16pxと合わせて次要素との間隔になる）。 */
+  padding: 20px 20px 4px 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -259,6 +261,10 @@ h2.pagetitle {
    モバイル（.home-layoutがgridになる前）はDOM順そのまま（ランキング→検索→カテゴリ→
    タグ→一覧）の1カラムで、見た目は今までと変わらない。 */
 .home-layout { display: flex; flex-direction: column; gap: 16px; }
+/* .home-main-colはPC版では.home-layoutの左カラムになるが、モバイルでは
+   ただのdivとして.home-layout（flex column, gap:16px）に直接積まれるだけなので、
+   ここでも同じflex column + gapを指定しておかないと中身同士の余白が詰まってしまう。 */
+.home-main-col { display: flex; flex-direction: column; gap: 16px; }
 
 @media (min-width: 960px) {
   /* PCの広い画面では、ホーム以外のページも同じ幅・配置に揃える
