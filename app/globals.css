@@ -450,6 +450,10 @@ h2.pagetitle {
   padding-bottom: 2px;
 }
 .chip-row::-webkit-scrollbar { display: none; }
+/* 相談詳細ページ下部のテーマタグは、横スクロールではなく全件を折り返して
+   一覧表示したいとの要望（2026-10-13）に対応。.chip-rowの上書きなので、
+   wrap propを渡したTagChipsにだけ付与する。 */
+.chip-row-wrap { flex-wrap: wrap; overflow-x: visible; padding-bottom: 0; }
 .chip {
   flex: 0 0 auto;
   white-space: nowrap;

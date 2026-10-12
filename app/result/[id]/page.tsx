@@ -303,7 +303,7 @@ export default async function ResultPage({
         )}
 
         <Suspense fallback={null}>
-          <TagChips title="他にもこんなテーマの相談があります" />
+          <TagChips title="他にもこんなテーマの相談があります" wrap />
         </Suspense>
 
         <Link href="/" className="backlink" style={{ margin: '4px 0 14px' }}>← もどる</Link>
