@@ -140,7 +140,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
           <NotebookPlaceholder key={entry.label} {...entry} />
         ))}
         <Link className="btn-primary" href="/account/register?next=/notebook">
-          無料で分析ノートを始める
+          会員登録（無料）で分析ノートを見る
         </Link>
         {/* 登録はまだ早いが、相談自体はログイン不要でできる（/askは匿名ブラウザIDで利用可能）。
             ここで離脱させず、まず相談してもらうことがノートの材料を増やす第一歩になるため、
