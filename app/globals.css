@@ -799,30 +799,11 @@ select.input {
    今度は「存在感つよすぎ」との指摘で、紙の色・罫線・赤線すべて控えめに引き戻した。
    「ノートらしさ」は罫線の主張でなく、カード自体の形（タブ付きインデックスカード）
    で出す方針に寄せ、背景は気づく程度の薄さにとどめる（2026-10-12）。 */
+/* ノート用紙風の罫線背景・左の赤い margin line は「わかりにくい」
+   「強すぎる」とフィードバックが続いたため、結局なしにした
+   （プレーンな.cardの見た目に戻す。2026-10-12）。 */
 .notebook-card {
-  position: relative;
-  padding-left: 30px;
   gap: 14px;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 31px,
-    #EFE9DA 31px,
-    #EFE9DA 32px
-  );
-  background-color: #FDFBF6;
-  background-position: 0 4px;
-}
-/* ノート用紙の定番、左の赤い罫線。主張しすぎないよう細く・薄く。 */
-.notebook-card::before {
-  content: '';
-  position: absolute;
-  top: 16px;
-  bottom: 16px;
-  left: 18px;
-  width: 1.5px;
-  background: var(--orange);
-  opacity: 0.35;
 }
 .notebook-head {
   display: flex;
