@@ -86,18 +86,13 @@ input, textarea { font-family: inherit; }
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; gap: 10px; }
 .header-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; }
 .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 2px; flex: 0 0 auto; }
+/* ロゴ＋「不登校編」バッジと「専門家監修：準備中…」を同じ行に並べる。PC幅では横に
+   並ぶが、入りきらないスマホ幅では自然に折り返して2行になる（2026-10-12）。 */
+.header-brand-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 /* 「つらいときはこちら」「どうする先生とは？」は画面幅によらず右上に固定したいので、
    画面が狭いときは右側ではなく左側（キャッチコピー等）の方を折り返して収める。 */
 @media (max-width: 480px) {
   .hero-sub { white-space: normal; }
-  /* account-tab（右上に固定表示される「ログイン／アカウント」タブ）が、画面幅480px未満だと
-     .header-rightの「つらいときはこちら」と同じ右上の位置に重なって隠れてしまう。
-     最初はheader-rightだけを下にずらしたが、それだと今度はheader-right（つらいときは
-     こちら等）がheader-left側のhero-sub（「今、どうしたらいい？」の説明文）と同じ高さに
-     来てテキストに重なってしまったため、header全体（ロゴ含む）を一緒に下にずらす方式に
-     変更した。これなら header-left と header-right の相対位置関係は崩れない
-     （実機で2回確認して修正）。 */
-  .header { padding-top: 46px; }
 }
 .wordmark { height: 42px; width: auto; margin-right: 0; }
 .badge {
@@ -180,20 +175,14 @@ input, textarea { font-family: inherit; }
 }
 /* ログイン／アカウントへのリンク。「つらいときはこちら」「どうする先生とは？」は
    読み物系の補足情報リンクなので破線下線で揃えているが、こちらは会員登録・ログインへの
-   導線という役割が異なるため見た目を変えて目立たせる。画面右上の角にタブのようにぶら下げ、
-   position: fixedでスクロールしても常に見える位置に固定する（2026-10-12）。
-   rightは.fab/.scroll-top-btnと同じ、中央寄せされた480px幅のコンテンツ列基準の計算式だが、
-   480px未満の画面幅（実機の多くのスマホ）だとcalc()がマイナスになり右端からはみ出して
-   切れてしまうため、max()で「画面端から最低12pxは必ず空ける」下限を足した
-   （実機検証で欠けを確認して修正）。 */
+   導線という役割が異なるため見た目を変えて目立たせる。
+   スマホ幅では.header-right内で他のリンクと同じく縦に自然に並ぶ、通常のチップとして表示する
+   （position: fixedの角タブにすると、縦スペースが限られるスマホで他要素と重なりやすく、
+   実機検証で2回崩れたため、固定表示はPC幅限定にした。2026-10-12）。 */
 .account-tab {
-  position: fixed;
-  top: 0;
-  right: max(12px, calc(50% - 240px + 16px));
-  z-index: 30;
   padding: 7px 14px 8px;
   border: none;
-  border-radius: 0 0 12px 12px;
+  border-radius: 10px;
   /* 黄色系トークンに変更（2026-10-12、緑系だと他の要素と馴染みすぎるとの指摘を受けて） */
   background: var(--yellow);
   color: var(--yellow-text);
@@ -208,13 +197,26 @@ input, textarea { font-family: inherit; }
   text-decoration: none;
 }
 .account-tab svg { flex-shrink: 0; }
+/* PC幅（480px超）では、画面右上の角にタブのようにぶら下げ、position: fixedで
+   スクロールしても常に見える位置に固定する。rightは.fab/.scroll-top-btnと同じ、
+   中央寄せされた480px幅のコンテンツ列基準の計算式。480px以下はこのブロック自体が
+   効かないのでmax()の下限は不要（2026-10-12、スマホ幅はヘッダー内に通常表示する
+   方式に変更したため）。 */
+@media (min-width: 481px) {
+  .account-tab {
+    position: fixed;
+    top: 0;
+    right: calc(50% - 240px + 16px);
+    z-index: 30;
+    border-radius: 0 0 12px 12px;
+  }
+}
 .muted { color: var(--muted); font-size: 12px; }
 
-/* 「専門家監修：準備中…」の注記。何にも属さないテキストとして単独で
-   置かれていると浮いて見えるため、.comingsoon-badgeと同系統の
-   小さなピル型バッジにして、見た目の居場所を持たせる。 */
+/* 「専門家監修：準備中…」の注記。ロゴ＋「不登校編」バッジと同じ行（.header-brand-row）に
+   並べるピル型バッジ（2026-10-12、ロゴの横に置きたいという指摘を受けてheader-rightの
+   余白に固定表示する方式から変更）。 */
 .supervision-note {
-  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   font-size: 11px;
@@ -224,17 +226,6 @@ input, textarea { font-family: inherit; }
   padding: 4px 10px;
   border-radius: 999px;
   line-height: 1.4;
-}
-/* PC幅では、ヘッダー右側（つらいときはこちら／どうする先生とは？の下）に
-   余白が空いているので、そこに移動させて空間を有効活用する
-   （2026-10-12、ユーザー指摘を受けて試験的に追加。位置はフィードバックを見て調整）。 */
-@media (min-width: 481px) {
-  .supervision-note {
-    position: absolute;
-    top: 76px;
-    right: 20px;
-    align-self: auto;
-  }
 }
 
 h2.pagetitle {

@@ -8,8 +8,13 @@ import { getOrGenerateMemberSummary } from '@/lib/memberSummary';
 //
 // status_summary（状況の整理）は、会員登録済みで相談履歴があれば誰でも見られる無料の
 // お試し表示。advice（次の一手のアドバイス）・phrasing_suggestion（言葉かけの提案）・
-// environment_suggestion（環境面の工夫の提案）は、読み放題会員だけのフル機能とし、
-// 新たな課金を増やさず既存の会員特典に統合する。非会員にはこれらをlockedとして伏せる。
+// environment_suggestion（環境面の工夫の提案）・school_fit_points（学校選びの着眼点）は、
+// 当初は読み放題会員（有料）だけのフル機能にしていたが、2026-10-12の方針変更で、
+// 今の段階ではここを無料会員（ログインしているだけ）にも開放し、ノートの中身が増えて
+// 詳しくなっていく体験そのものをまず知ってもらう方針にした。
+// 将来的には、相談（＝ノートの材料）が一定件数を超えて分析が詳しくなった先は
+// 有料会員限定にする、という課金導線をここに追加する想定（未実装。現状はactiveに
+// かかわらず常にlocked:falseで全部開放している）。
 export async function GET() {
   const member = await getCurrentMember();
   if (!member) {
@@ -29,11 +34,11 @@ export async function GET() {
     count: result.consultationCount,
     summary: {
       statusSummary: result.statusSummary,
-      advice: active ? result.advice : null,
-      phrasingSuggestion: active ? result.phrasingSuggestion : null,
-      environmentSuggestion: active ? result.environmentSuggestion : null,
-      schoolFitPoints: active ? result.schoolFitPoints : null,
-      locked: !active,
+      advice: result.advice,
+      phrasingSuggestion: result.phrasingSuggestion,
+      environmentSuggestion: result.environmentSuggestion,
+      schoolFitPoints: result.schoolFitPoints,
+      locked: false,
     },
   });
 }
