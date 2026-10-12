@@ -36,19 +36,18 @@ async function ExpertDashboardContent() {
           <div className="main">
             <div className="card">
               <div style={{ fontWeight: 700 }}>ご登録について</div>
+              {/* 却下理由は基本的に登録証の不備・有効期限切れなど事務的なものが大半なので、
+                  個別のやり取り（問い合わせ→回答）を発生させず、ここで完結する定型文にした
+                  （2026-10-13、「理由を聞かれて答える流れはやめたい」との指摘を受けて変更）。 */}
               <div className="qtext">
                 この度は「どうする先生」専門家登録にご関心をお寄せいただき、ありがとうございました。
-                慎重に確認させていただいた結果、誠に恐縮ですが、今回はご登録を見送らせていただくこととなりました。
-                ご期待に沿えず申し訳ございません。
+                ご提出いただいた登録証の内容を確認した結果、記載内容の不備や有効期限切れなど、登録要件を満たしていることを確認できなかったため、今回はご登録を見送らせていただくこととなりました。
               </div>
               {expert.review_note && (
                 <div className="qtext" style={{ background: 'var(--bg)', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>
                   {expert.review_note}
                 </div>
               )}
-              <div className="muted" style={{ fontSize: 12 }}>
-                理由など詳しくお知りになりたい場合は、お手数ですが mail.manapri@gmail.com までご連絡ください。
-              </div>
             </div>
           </div>
         </div>

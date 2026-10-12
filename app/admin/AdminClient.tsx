@@ -134,26 +134,31 @@ export default function AdminClient({
     }
   }
 
-  // 「差し戻し」「却下」は、本人にダッシュボードで見せるコメントを運営が必ず
-  // 一言添える運用にする（理由が分からないまま終わらせない。2026-10-13追加）。
-  // 却下は「今回は登録を見送らせていただきました」という定型文をダッシュボード側
-  // （ExpertDashboardの分岐）で必ず出した上で、この運営コメントを添えて表示する。
+  // 差し戻し：何を直してほしいかが本人に伝わらないと再提出できないため、理由の入力を必須にする。
+  // 却下：却下理由は登録証の不備・期限切れなど事務的なものが大半で、ダッシュボード側に
+  // 既に定型文があるため、本人への問い合わせを誘発する個別の理由入力は求めない
+  // （2026-10-13、「理由を聞いて答える流れはやめたい」との指摘を受けて変更）。
+  // 運営の内部メモとして一言残したい場合だけ、任意でnoteを入力できる。
   async function reviewExpert(id: string, action: 'needs_fix' | 'reject') {
-    const promptLabel =
-      action === 'needs_fix'
-        ? '差し戻しの理由（本人に表示されます）を入力してください\n例：登録証の画像が不鮮明なため、再度ご提出ください'
-        : '却下の理由（本人に表示されます）を入力してください。空欄のままだと理由なしで却下済みの表示になります';
-    const note = window.prompt(promptLabel, '');
-    if (note === null) return; // キャンセル
-    if (action === 'needs_fix' && !note.trim()) {
-      alert('差し戻しには、本人に伝える理由の入力が必要です');
-      return;
+    let note = '';
+    if (action === 'needs_fix') {
+      const input = window.prompt(
+        '差し戻しの理由（本人に表示されます）を入力してください\n例：登録証の画像が不鮮明なため、再度ご提出ください',
+        ''
+      );
+      if (input === null) return; // キャンセル
+      if (!input.trim()) {
+        alert('差し戻しには、本人に伝える理由の入力が必要です');
+        return;
+      }
+      note = input.trim();
     }
+    // reject時の確認ダイアログは呼び出し元（却下するボタンのonClick）で既に出しているので、ここでは出さない。
     setBusy(id);
     const res = await fetch('/api/admin/experts/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ expert_id: id, action, note: note.trim() || undefined }),
+      body: JSON.stringify({ expert_id: id, action, note: note || undefined }),
     });
     setBusy(null);
     if (res.ok) {
