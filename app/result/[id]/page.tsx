@@ -29,6 +29,19 @@ export const instant = false;
 // クローラーや未ログインの初回表示として正しい。
 // 本人・会員かどうかの判定はブラウザのlocalStorageのIDに依存するため、
 // それはクライアント側（ResultClient）で追加取得して表示を更新する。
+// 専門家サービスへの導線を出す場所（AI回答直下の免責文など）で、実際にまだ
+// 本人確認済みの専門家がいない間は「準備中」と明示するための判定。
+// app/api/experts/available/route.ts と同じ条件をサーバーコンポーネント内で直接見る。
+async function getExpertAvailable() {
+  const supabase = getSupabaseAdmin();
+  const { count, error } = await supabase
+    .from('experts')
+    .select('id', { count: 'exact', head: true })
+    .eq('verified', true);
+  if (error) return false;
+  return (count || 0) > 0;
+}
+
 async function getConsultation(id: string): Promise<Consultation | null> {
   const supabase = getSupabaseAdmin();
   // consultationsからexpertsへの参照はexpert_id（回答した専門家）とrequested_expert_id
@@ -113,6 +126,8 @@ export default async function ResultPage({
   // 回答のすぐ下に出す「似たような相談」。同じカテゴリの他の相談から新しい順に数件。
   const similarPool = await getConsultationsList({ category: item.category, limit: 5 });
   const similarItems = similarPool.filter((d) => d.id !== item.id).slice(0, 4);
+
+  const expertAvailable = await getExpertAvailable();
 
   // クローラー・初回表示用のJSON-LD（QAPage）。
   // 専門家回答がロック中の場合は本文がまだ無いので、AI回答か、
@@ -233,7 +248,7 @@ export default async function ResultPage({
                 <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
                   専門家に相談する
                 </Link>
-                こともできます。
+                こともできます{!expertAvailable && '（現在、専門家サービスは準備中です）'}。
               </div>
             </div>
             <Suspense fallback={null}>
