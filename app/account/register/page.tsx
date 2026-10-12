@@ -13,14 +13,22 @@ function RegisterForm() {
   // （外部URLへのオープンリダイレクトを避けるため）。
   const nextParam = searchParams.get('next');
   const next = nextParam && nextParam.startsWith('/') ? nextParam : '/account';
-  const [form, setForm] = useState({ email: '', password: '', name: '' });
+  const [form, setForm] = useState({ email: '', password: '', confirmPassword: '', name: '', newsletterOptIn: false });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  // パスワード欄の表示・非表示の切り替え（デフォルトは非表示＝●●●●）。
+  // 確認欄を追加したぶん入力ミスに気づきにくくなるので、見えるようにする手段も
+  // 合わせて用意した（2026-10-12）。
+  const [showPassword, setShowPassword] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    if (form.password !== form.confirmPassword) {
+      setError('パスワードが一致しません');
+      return;
+    }
+    setLoading(true);
     const res = await fetch('/api/account/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -59,14 +67,55 @@ function RegisterForm() {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             required
           />
-          <input
-            className="input"
-            type="password"
-            placeholder="パスワード（8文字以上）"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            required
-          />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ position: 'relative' }}>
+              <input
+                className="input"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="パスワード（8文字以上）"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                required
+                style={{ width: '100%', paddingRight: 56 }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                style={{
+                  position: 'absolute',
+                  right: 10,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--muted)',
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  padding: 4,
+                }}
+                aria-label={showPassword ? 'パスワードを隠す' : 'パスワードを表示'}
+              >
+                {showPassword ? '隠す' : '表示'}
+              </button>
+            </div>
+            <input
+              className="input"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="パスワード（確認）"
+              value={form.confirmPassword}
+              onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+              required
+            />
+          </div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={form.newsletterOptIn}
+              onChange={(e) => setForm({ ...form, newsletterOptIn: e.target.checked })}
+            />
+            お知らせ・メルマガを受け取る（任意）
+          </label>
           {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
           <button className="btn-primary" type="submit" disabled={loading}>
             {loading ? '登録中…' : '登録する'}

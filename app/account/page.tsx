@@ -10,6 +10,7 @@ import { isStripeConfigured } from '@/lib/stripe';
 import LogoutButton from './LogoutButton';
 import MembershipPanel from './MembershipPanel';
 import TicketsPanel from './TicketsPanel';
+import NewsletterPanel from './NewsletterPanel';
 
 // 登録・ログイン直後、いきなり「自分の相談を書く」はハードルが高い人も多いので、
 // まずは他の人の相談（ホームの一覧）を見てもらう方を主導線にする。
@@ -56,6 +57,8 @@ async function AccountPageContent() {
             stripeConfigured={isStripeConfigured()}
           />
         )}
+
+        <NewsletterPanel initialOptIn={member.newsletter_opt_in} />
 
         <Link href="/" className="btn-secondary">
           みんなの相談を見てみる

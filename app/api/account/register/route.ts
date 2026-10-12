@@ -4,7 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { MEMBER_COOKIE_NAME, MEMBER_COOKIE_MAX_AGE } from '@/lib/memberAuth';
 
 export async function POST(req: NextRequest) {
-  const { email, password, name } = await req.json();
+  const { email, password, name, newsletterOptIn } = await req.json();
   if (!email || !password) {
     return NextResponse.json({ error: 'メールアドレスとパスワードを入力してください' }, { status: 400 });
   }
@@ -19,9 +19,12 @@ export async function POST(req: NextRequest) {
   }
 
   const password_hash = await bcrypt.hash(password, 10);
+  // newsletter_opt_in は「お知らせ・メルマガを受け取る」チェックボックスへの同意。
+  // 配信機能自体は未実装だが、特定電子メール法のオプトイン要件に合わせ、同意の記録は
+  // 登録時点から取っておく（デフォルトOFF、2026-10-12）。
   const { data: member, error } = await supabase
     .from('members')
-    .insert({ email, password_hash, name: name || null })
+    .insert({ email, password_hash, name: name || null, newsletter_opt_in: !!newsletterOptIn })
     .select('id')
     .single();
 

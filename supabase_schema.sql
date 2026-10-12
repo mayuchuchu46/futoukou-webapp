@@ -100,6 +100,10 @@
 -- 既存DBでは次を実行してください。実在の学校名は出さない暫定版の着眼点提案です
 -- （本格的な学校ごとの相性診断は、実在の学校データが揃うまでのカミングソーン扱い）。
 -- alter table member_summaries add column if not exists school_fit_points text not null default '';
+-- 会員登録時に「お知らせ・メルマガを受け取る」の同意（デフォルトOFF＝オプトイン）を
+-- 追加した場合、既存DBでは次を実行してください。配信自体は別途実装予定で、今回は
+-- 同意の記録のみ（2026-10-12）。
+-- alter table members add column if not exists newsletter_opt_in boolean not null default false;
 
 create extension if not exists "pgcrypto";
 
@@ -148,8 +152,11 @@ create table if not exists members (
   subscription_status text not null default 'inactive', -- inactive / active / past_due / canceled 等（Stripeのsubscription.statusをほぼそのまま記録）
   subscription_current_period_end timestamptz,
   expert_credits int not null default 0, -- 専門家への質問チケット残数（6回¥3000パック購入分）
-  last_free_expert_question_period_end timestamptz -- 直近で「月1回無料」枠を使った時点のsubscription_current_period_end。
+  last_free_expert_question_period_end timestamptz, -- 直近で「月1回無料」枠を使った時点のsubscription_current_period_end。
                                                      -- 現在のsubscription_current_period_endより古ければ、新しい周期＝無料枠が復活している。
+  newsletter_opt_in boolean not null default false -- 「お知らせ・メルマガを受け取る」への同意。特定電子メール法のオプトイン
+                                                     -- 要件に合わせ、登録時チェックボックスのデフォルトはOFF。配信機能自体は未実装で、
+                                                     -- 今は同意の記録のみ（2026-10-12）。
 );
 
 create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
