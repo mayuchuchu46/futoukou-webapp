@@ -120,7 +120,10 @@ export default function ConsultationCard({
       )}
       {item.locked ? (
         <div className="card-answerbox">
-          <div className="locked-badge">🔒 専門家の回答</div>
+          <div className="locked-badge">
+            <img src="/assets/icon_lock.png" alt="" className="locked-badge-icon" />
+            専門家の回答
+          </div>
           <div className="blur-lines">
             <div />
             <div />

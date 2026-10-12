@@ -311,7 +311,9 @@ h2.pagetitle {
   margin-top: 1px;
 }
 .expertbanner { background: #fff; border: 1px solid var(--orange); border-radius: 12px; padding: 8px 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.expertbanner-icon { font-size: 17px; flex: 0 0 auto; line-height: 1; }
+/* 🔒絵文字から、アプリのイラストと同じ塗り＋太いアウトラインのオリジナル鍵アイコン
+   （icon_lock.png）に変更（2026-10-12）。 */
+.expertbanner-icon { width: 22px; height: 22px; object-fit: contain; flex: 0 0 auto; }
 .expertbanner-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .expertbanner-title { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 13px; color: var(--orange-text); }
 .expertbanner-desc { font-size: 11px; color: var(--muted); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -541,6 +543,7 @@ h2.pagetitle {
 .qtext-main { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.7; }
 .card-answerbox { background: var(--bg); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
 .locked-badge { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--orange-text); }
+.locked-badge-icon { width: 16px; height: 16px; object-fit: contain; flex: 0 0 auto; }
 .answer-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--main); font-weight: 700; }
 .answer-label img { width: 20px; height: 20px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--sub); }
 .card-foot { display: flex; gap: 16px; font-size: 12px; color: var(--muted); border-top: 1px solid #F0EEE6; padding-top: 10px; }

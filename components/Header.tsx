@@ -61,7 +61,7 @@ export default function Header({ supervised }: { supervised: boolean }) {
             <span className="badge">不登校編</span>
           </Link>
           <div className="hero-catch">不登校のご家庭に、次の一手を。</div>
-          <div className="hero-sub">「今、どうしたらいい？」にAIと専門家が具体的に回答します。</div>
+          <div className="hero-sub">「どうしたらいい？」にAIと専門家が具体的に回答</div>
         </div>
         <div className="header-right">
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>

@@ -144,7 +144,7 @@ export default function HomeClient({
       <div className="main">
         {showExtras && (
           <div className="expertbanner" onClick={() => router.push('/expertlist')}>
-            <span className="expertbanner-icon">🔒</span>
+            <img src="/assets/icon_lock.png" alt="" className="expertbanner-icon" />
             <div className="expertbanner-body">
               <div className="expertbanner-title">専門家が回答した相談{expertCount ? `（${expertCount}件）` : ''}</div>
               <div className="expertbanner-desc">専門家（公認心理師など）本人が直接回答。読み放題会員限定</div>

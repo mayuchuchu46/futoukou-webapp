@@ -56,7 +56,10 @@ export default async function AboutPage() {
         </div>
 
         <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>🔒 専門家による有料回答について</div>
+          <div className="answer-label" style={{ fontSize: 14 }}>
+            <img src="/assets/icon_lock.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
+            専門家による有料回答について
+          </div>
           <div className="qtext">
             AIの自動回答とは別に、公認心理師など資格を持つ専門家本人が相談文を直接読んで回答する有料機能も用意しています。読み放題会員になると、他の人への専門家回答もすべて読めます。会員は月1回、無料で専門家に質問できます。
           </div>
