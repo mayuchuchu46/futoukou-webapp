@@ -6,6 +6,10 @@
   --orange: #F29A7A;
   --orange-bg: #FCEAE1;
   --orange-text: #9C4B2E;
+  /* ロゴの「どうする先生」の文字で使われているコーラルピンクの実測値
+     （PILでロゴ画像から高彩度・高明度のピクセルを平均）。--orangeより
+     赤寄り（色相約8°、--orangeは約16°）で、見た目の差が出るため別トークンにした。 */
+  --logo-pink: #F68E7D;
   --yellow: #F5D77A;
   --yellow-bg: #FDF3D7;
   --yellow-text: #8A6A1A;
@@ -485,14 +489,14 @@ h2.pagetitle {
   height: 46px;
   padding: 0 18px;
   border-radius: 999px;
-  /* ロゴに本当のピンクは無く、実際はこのコーラル/オレンジ（--orange）なので、
-     「ピンクにして」はこの色に寄せる。 */
-  background: var(--orange);
+  /* ロゴの文字で使われているコーラルピンクの実測値（--logo-pink）。
+     --orangeより赤寄りで、ロゴの色によりちゃんと一致する。 */
+  background: var(--logo-pink);
   color: #fff;
   display: flex; align-items: center; justify-content: center; gap: 7px;
   font-size: 13px;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(242,154,122,0.4);
+  box-shadow: 0 4px 14px rgba(246,142,125,0.4);
   z-index: 20;
 }
 .fab img { width: 17px; height: 17px; object-fit: contain; filter: brightness(0) invert(1); }
