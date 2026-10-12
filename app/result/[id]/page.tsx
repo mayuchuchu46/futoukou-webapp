@@ -224,6 +224,17 @@ export default async function ResultPage({
               <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
                 {item.answer}
               </div>
+              {/* AIは一般論ベースの回答で外れることもあるという前提を明示しつつ、
+                  「個別の状況は専門家へ」という差別化の文脈で専門家相談への導線も
+                  兼ねる一文。AiUsageUpsell（利用回数の閾値後に出る導線）とは別に、
+                  AI回答には毎回必ず表示する（2026-10-13追加）。 */}
+              <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
+                ⚠️ AIの回答は一般的な傾向をもとにした目安で、状況によって合わない・間違っている場合もあります。お子さんの状況に即した判断が必要なときは、
+                <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+                  専門家に相談する
+                </Link>
+                こともできます。
+              </div>
             </div>
             <Suspense fallback={null}>
               <SaveConsultationPrompt id={item.id} authorId={item.author_id} />
