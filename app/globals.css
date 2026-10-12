@@ -486,20 +486,21 @@ h2.pagetitle {
   position: fixed;
   right: calc(50% - 240px + 20px);
   bottom: 84px;
-  height: 50px;
-  padding: 0 20px;
+  height: 44px;
+  padding: 0 16px;
   border-radius: 999px;
   /* ロゴの文字で使われているコーラルピンクの実測値（--logo-pink）。
      --orangeより赤寄りで、ロゴの色によりちゃんと一致する。 */
   background: var(--logo-pink);
   color: #fff;
-  display: flex; align-items: center; justify-content: center; gap: 7px;
-  font-size: 16px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 14px;
   font-weight: 700;
   box-shadow: 0 4px 14px rgba(246,142,125,0.4);
   z-index: 20;
 }
-.fab img { width: 19px; height: 19px; object-fit: contain; filter: brightness(0) invert(1); }
+/* アイコンは文字より一回り大きくして、ボタンの中でちゃんと目立つようにする */
+.fab img { width: 20px; height: 20px; object-fit: contain; filter: brightness(0) invert(1); }
 @media (max-width: 480px) {
   .fab { right: 20px; }
 }
