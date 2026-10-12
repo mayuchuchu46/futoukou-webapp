@@ -244,7 +244,7 @@ export default async function ResultPage({
                   兼ねる一文。AiUsageUpsell（利用回数の閾値後に出る導線）とは別に、
                   AI回答には毎回必ず表示する（2026-10-13追加）。 */}
               <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
-                ⚠️ AIの回答は一般的な目安で、外れることもあります。
+                ⚠️ AIの回答は一般的な目安で、お子さんの状況には当てはまらないこともあります。
                 <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
                   専門家に相談する
                 </Link>
