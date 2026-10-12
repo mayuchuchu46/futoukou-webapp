@@ -8,6 +8,9 @@
 -- alter table experts add column if not exists review_status text not null default 'pending';
 -- alter table experts add column if not exists review_note text;
 -- update experts set review_status = 'verified' where verified = true and review_status = 'pending';
+-- 専門家の「本名」(name, 本人確認用)と「表示名」(display_name, 相談者への公開用)を
+-- 分けられるようにする場合（2026-10-13追加）、既存DBでは次を実行してください。
+-- alter table experts add column if not exists display_name text;
 -- create table if not exists expert_memberships (
 --   author_id text primary key,
 --   expires_at timestamptz not null,
@@ -217,7 +220,8 @@ create table if not exists experts (
   id uuid primary key default gen_random_uuid(),
   email text not null unique,
   password_hash text not null,
-  name text not null,
+  name text not null, -- 本名（本人確認用。登録証の氏名と照合するため、運営のみが参照する）
+  display_name text, -- 相談者に公開される表示名。未設定ならnameをそのまま表示する（2026-10-13追加）
   credential text not null default '公認心理師',
   license_number text not null default '', -- 資格の登録番号など、本人確認用に申告してもらう情報
   license_doc_path text, -- 登録証（画像/PDF）のStorageパス。非公開バケット（expert-documents）に保存し、

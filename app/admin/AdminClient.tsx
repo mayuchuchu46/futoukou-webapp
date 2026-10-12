@@ -6,6 +6,7 @@ import { CATS } from '@/lib/categories';
 type UnverifiedExpert = {
   id: string;
   name: string;
+  display_name?: string | null;
   email: string;
   credential: string;
   license_number: string;
@@ -420,7 +421,8 @@ export default function AdminClient({
         {experts.length === 0 && <div className="muted">確認待ちの専門家はいません。</div>}
         {experts.map((e) => (
           <div key={e.id} className="card">
-            <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}</div>
+            <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}（本名）</div>
+            {e.display_name && <div className="muted">表示名：{e.display_name}</div>}
             <div className="muted">{e.email}</div>
             <div className="muted">登録番号：{e.license_number || '（未入力）'}</div>
             {e.review_status === 'needs_fix' && (

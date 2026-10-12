@@ -5,6 +5,7 @@ import { useState } from 'react';
 type Expert = {
   id: string;
   name: string;
+  display_name?: string | null;
   credential: string;
   bio: string;
   photo_url: string | null;
@@ -18,6 +19,7 @@ type Expert = {
 export default function ProfileClient({ expert, stripeConfigured }: { expert: Expert; stripeConfigured: boolean }) {
   const [form, setForm] = useState({
     name: expert.name,
+    display_name: expert.display_name || '',
     credential: expert.credential,
     bio: expert.bio,
     link_url: expert.link_url || '',
@@ -114,8 +116,15 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
       </div>
       <div className="main">
         <div className="card" style={{ gap: 12 }}>
-          <div className="muted">お名前</div>
+          <div className="muted">お名前（本名・本人確認用。公開されません）</div>
           <input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <div className="muted">表示名（相談者に公開される名前。未入力ならお名前が表示されます）</div>
+          <input
+            className="input"
+            value={form.display_name}
+            onChange={(e) => setForm({ ...form, display_name: e.target.value })}
+            placeholder={form.name}
+          />
           <div className="muted">資格</div>
           <input className="input" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })} />
           <div className="muted">自己紹介</div>

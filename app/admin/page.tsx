@@ -33,7 +33,7 @@ async function AdminPageContent() {
   // 状況を把握できるよう引き続き一覧に残す。
   const { data: unverifiedExperts } = await supabase
     .from('experts')
-    .select('id, name, email, credential, license_number, license_doc_path, review_status, review_note, created_at')
+    .select('id, name, display_name, email, credential, license_number, license_doc_path, review_status, review_note, created_at')
     .in('review_status', ['pending', 'needs_fix'])
     .order('created_at', { ascending: true });
 

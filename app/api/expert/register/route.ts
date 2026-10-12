@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
   const email = String(form.get('email') || '');
   const password = String(form.get('password') || '');
   const name = String(form.get('name') || '');
+  const display_name = String(form.get('display_name') || '');
   const credential = String(form.get('credential') || '');
   const bio = String(form.get('bio') || '');
   const license_number = String(form.get('license_number') || '');
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
       email,
       password_hash,
       name,
+      display_name: display_name.trim() || null,
       credential: credential || '公認心理師',
       bio: bio || '',
       license_number: license_number.trim(),

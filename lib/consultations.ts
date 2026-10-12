@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { Consultation } from '@/lib/types';
+import { expertDisplayName } from '@/lib/expertDisplay';
 
 // 相談一覧の取得＋ロック判定（API route とホーム画面のSSRで共通利用）。
 // 専門家の回答は、本人（投稿者）か、読み放題会員（memberActive）にだけ見せる。
@@ -45,7 +46,7 @@ export async function getConsultationsList({
   // あいまいでPostgRESTがエラーを返す（結果、一覧が全件取得できなくなる）。
   let query = supabase
     .from('consultations')
-    .select('*, experts!expert_id(name, credential)')
+    .select('*, experts!expert_id(name, display_name, credential)')
     .eq('hidden', false)
     .order('created_at', { ascending: false })
     .limit(limit);
@@ -87,11 +88,15 @@ export async function getConsultationsList({
   if (error || !data) return [];
 
   return data.map((item) => {
+    // 専門家の本名（experts.name）は本人確認用のため、相談者には表示名のみを渡す
+    // （2026-10-13、本名と表示名を分離）。
+    const experts = item.experts ? { name: expertDisplayName(item.experts), credential: item.experts.credential } : null;
+    const base = { ...item, experts };
     const isExpertAnswered = item.request_type === 'expert' && item.expert_status === 'answered';
     const isOwner = viewerId && item.author_id === viewerId;
     if (isExpertAnswered && !isOwner && !memberActive) {
-      return { ...item, answer: '', expert_answer: null, locked: true };
+      return { ...base, answer: '', expert_answer: null, locked: true };
     }
-    return { ...item, locked: false };
+    return { ...base, locked: false };
   }) as Consultation[];
 }

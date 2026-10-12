@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { expertDisplayName } from '@/lib/expertDisplay';
 
 // データベースの最新状態（本人確認済みの専門家）を毎回サーバー側で取得するページなので、
 // ビルド時の静的化はせず、リクエストごとに生成する。閲覧者ごとに表示が変わる情報は
@@ -22,10 +23,12 @@ async function getVerifiedExperts(): Promise<ExpertProfile[]> {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('experts')
-    .select('id, name, credential, bio, photo_url, link_url')
+    .select('id, name, display_name, credential, bio, photo_url, link_url')
     .eq('verified', true)
     .order('created_at', { ascending: true });
-  return data || [];
+  // 本名（name）は本人確認用のため、公開ページに渡す前に表示名へ置き換える
+  // （2026-10-13、本名と表示名を分離）。
+  return (data || []).map((e) => ({ ...e, name: expertDisplayName(e) }));
 }
 
 // linkUrlは専門家本人の入力値なので、http(s)で始まる値のみリンクとして表示する

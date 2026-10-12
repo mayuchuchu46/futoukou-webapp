@@ -9,6 +9,7 @@ import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
+import { expertDisplayName } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import ResultClient from './ResultClient';
 import ViewPing from './ViewPing';
@@ -49,18 +50,23 @@ async function getConsultation(id: string): Promise<Consultation | null> {
   // （指定しないとPostgRESTがどちらか判断できずエラーになる）。
   const { data, error } = await supabase
     .from('consultations')
-    .select('*, experts!expert_id(name, credential)')
+    .select('*, experts!expert_id(name, display_name, credential)')
     .eq('id', id)
     .eq('hidden', false)
     .single();
 
   if (error || !data) return null;
 
+  // 専門家の本名（experts.name）は本人確認用のため、相談者には表示名のみを渡す
+  // （2026-10-13、本名と表示名を分離）。
+  const experts = data.experts ? { name: expertDisplayName(data.experts), credential: data.experts.credential } : null;
+  const base = { ...data, experts };
+
   const isExpertAnswered = data.request_type === 'expert' && data.expert_status === 'answered';
   if (isExpertAnswered) {
-    return { ...data, answer: '', expert_answer: null, locked: true } as Consultation;
+    return { ...base, answer: '', expert_answer: null, locked: true } as Consultation;
   }
-  return { ...data, locked: false } as Consultation;
+  return { ...base, locked: false } as Consultation;
 }
 
 export async function generateMetadata({

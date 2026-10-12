@@ -20,7 +20,7 @@ const CREDENTIAL_OPTIONS = [
 
 export default function ExpertRegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ email: '', password: '', name: '', credential: '公認心理師', credentialOther: '', bio: '', license_number: '', link_url: '' });
+  const [form, setForm] = useState({ email: '', password: '', name: '', display_name: '', credential: '公認心理師', credentialOther: '', bio: '', license_number: '', link_url: '' });
   const [licenseDoc, setLicenseDoc] = useState<File | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
   const [error, setError] = useState('');
@@ -67,8 +67,14 @@ export default function ExpertRegisterPage() {
 
         <input className="input" placeholder="お名前（本名）" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          登録証に記載の氏名と同じ本名でご登録ください。相談者にはこのお名前が表示されます。
+          登録証に記載の氏名と同じ本名でご登録ください。本人確認のみに使用し、相談者には公開されません。
         </div>
+        <input
+          className="input"
+          placeholder="表示名（相談者に公開される名前。未入力の場合は上のお名前が表示されます）"
+          value={form.display_name}
+          onChange={(e) => setForm({ ...form, display_name: e.target.value })}
+        />
         <select className="input" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })}>
           {CREDENTIAL_OPTIONS.map((c) => (
             <option key={c} value={c}>{c}</option>

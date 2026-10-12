@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
+import { expertDisplayName } from '@/lib/expertDisplay';
 import { CATS } from '@/lib/categories';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
 import HomeClient from './HomeClient';
@@ -81,11 +82,13 @@ async function getVerifiedExperts() {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('experts')
-    .select('id, name, credential, bio, photo_url')
+    .select('id, name, display_name, credential, bio, photo_url')
     .eq('verified', true)
     .order('created_at', { ascending: true })
     .limit(3);
-  return data || [];
+  // 本名（name）は本人確認用のため、公開ページに渡す前に表示名へ置き換える
+  // （2026-10-13、本名と表示名を分離）。
+  return (data || []).map((e) => ({ ...e, name: expertDisplayName(e) }));
 }
 
 export default async function HomePage() {
