@@ -36,9 +36,9 @@ export default function Header({ supervised }: { supervised: boolean }) {
           </Link>
         </div>
       </div>
-      <div className="muted" style={{ fontSize: 11 }}>
+      <span className="supervision-note">
         {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
-      </div>
+      </span>
 
       {crisisOpen && <CrisisModal onClose={() => setCrisisOpen(false)} />}
     </div>

@@ -168,6 +168,22 @@ input, textarea { font-family: inherit; }
 }
 .muted { color: var(--muted); font-size: 12px; }
 
+/* 「専門家監修：準備中…」の注記。何にも属さないテキストとして単独で
+   置かれていると浮いて見えるため、.comingsoon-badgeと同系統の
+   小さなピル型バッジにして、見た目の居場所を持たせる。 */
+.supervision-note {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  background: #EFECE2;
+  padding: 4px 10px;
+  border-radius: 999px;
+  line-height: 1.4;
+}
+
 h2.pagetitle {
   font-family: "M PLUS Rounded 1c", sans-serif;
   font-size: 20px;
