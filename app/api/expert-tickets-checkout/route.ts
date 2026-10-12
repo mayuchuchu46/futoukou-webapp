@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   const member = await getCurrentMember();
   if (!member || !isSubscriptionActive(member)) {
     return NextResponse.json(
-      { error: 'チケットの購入は、読み放題会員（月¥800）の登録が必要です', needsMembership: true },
+      { error: 'チケットの購入は、読み放題会員の登録が必要です', needsMembership: true },
       { status: 403 }
     );
   }

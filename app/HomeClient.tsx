@@ -147,7 +147,7 @@ export default function HomeClient({
             <span className="expertbanner-icon">🔒</span>
             <div className="expertbanner-body">
               <div className="expertbanner-title">専門家が回答した相談{expertCount ? `（${expertCount}件）` : ''}</div>
-              <div className="expertbanner-desc">専門家（公認心理師など）本人が直接回答。月¥800で読み放題</div>
+              <div className="expertbanner-desc">専門家（公認心理師など）本人が直接回答。読み放題会員限定</div>
             </div>
             <span className="expertbanner-cta">›</span>
           </div>

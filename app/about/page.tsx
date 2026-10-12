@@ -58,7 +58,7 @@ export default async function AboutPage() {
         <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>🔒 専門家による有料回答について</div>
           <div className="qtext">
-            AIの自動回答とは別に、公認心理師など資格を持つ専門家本人が相談文を直接読んで回答する有料機能も用意しています。月¥800の読み放題会員になると、他の人への専門家回答もすべて読めます。会員は月1回、無料で専門家に質問できます。
+            AIの自動回答とは別に、公認心理師など資格を持つ専門家本人が相談文を直接読んで回答する有料機能も用意しています。読み放題会員になると、他の人への専門家回答もすべて読めます。会員は月1回、無料で専門家に質問できます。
           </div>
           <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
             相談するページへ ›

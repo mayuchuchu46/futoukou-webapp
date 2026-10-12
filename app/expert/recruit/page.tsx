@@ -22,7 +22,7 @@ export default function ExpertRecruitPage() {
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>報酬</div>
           <div className="qtext">
-            回答1件（200文字以上、具体的な「次の一手」を含む内容）につき報酬をお支払いします。金額は決まり次第こちらでお知らせします。振込はStripe（Stripe
+            回答1件（具体的な「次の一手」を含む内容）につき報酬をお支払いします。文字数の目安・金額は決まり次第こちらでお知らせします。振込はStripe（Stripe
             Express）を通じて毎月まとめて行います。ご登録後、プロフィール編集画面からStripeアカウントの登録（本人確認・振込先口座の入力）をお願いします。
           </div>
         </div>

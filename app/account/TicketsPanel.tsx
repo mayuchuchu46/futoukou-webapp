@@ -72,12 +72,12 @@ export default function TicketsPanel({
       <div style={{ fontWeight: 700 }}>専門家への質問チケット</div>
       <div className="muted" style={{ fontSize: 13 }}>
         残り{credits}枚。月1回の無料分を使い切った後の質問に使えます（1回の質問につき1枚消費）。
-        {packCount}枚¥{priceJpy}で、都度払いより1枚あたりお得です。
+        {packCount}枚セットのまとめ買いで、都度払いより1枚あたりお得です。
       </div>
       {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
       {stripeConfigured ? (
         <button className="btn-secondary" onClick={buyTickets} disabled={loading}>
-          {loading ? '決済ページへ移動中…' : `¥${priceJpy}で${packCount}回分のチケットを購入`}
+          {loading ? '決済ページへ移動中…' : `${packCount}回分のチケットを購入`}
         </button>
       ) : (
         <button className="btn-secondary" disabled>

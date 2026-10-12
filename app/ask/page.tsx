@@ -241,7 +241,7 @@ function AskPageContent() {
                 ) : expertCredits > 0 ? (
                   <>質問チケットが残り{expertCredits}枚あります（1枚消費します）。</>
                 ) : (
-                  <>今月の無料分は使用済みのため、1回¥{expertPriceJpy}（税込）です。<a href="/account">まとめ買いチケット</a>だと割安です。</>
+                  <>今月の無料分は使用済みのため、都度払いとなります。<a href="/account">まとめ買いチケット</a>だと割安です。</>
                 )}
                 {!requestedExpert && (
                   <>
@@ -257,13 +257,13 @@ function AskPageContent() {
                   ? `無料で${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`
                   : expertCredits > 0
                   ? `チケットを使って${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`
-                  : `¥${expertPriceJpy}で${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`}
+                  : `${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`}
               </button>
             </>
           ) : (
             <>
               <div className="expertteaser-desc">
-                専門家への質問は、読み放題会員（月¥800）限定です。会員になると、他の利用者への専門家回答もすべて読み放題になります。
+                専門家への質問は、読み放題会員限定です。会員になると、他の利用者への専門家回答もすべて読み放題になります。
               </div>
               <a className="btn-secondary" href="/account">
                 読み放題会員に登録する

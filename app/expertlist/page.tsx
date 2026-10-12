@@ -41,7 +41,7 @@ export default function ExpertListPage() {
 
         <div className="card" style={{ gap: 8, alignItems: 'flex-start', marginBottom: 10 }}>
           <div style={{ fontWeight: 700, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
-            読み放題会員（月¥800）になると
+            読み放題会員になると
             {!stripeConfigured && <span className="comingsoon-badge">準備中</span>}
           </div>
           <div className="qtext" style={{ fontSize: 13 }}>✓ ここに並ぶ専門家回答が、すべて読めるようになる</div>
