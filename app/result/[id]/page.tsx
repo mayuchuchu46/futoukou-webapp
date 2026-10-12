@@ -248,7 +248,7 @@ export default async function ResultPage({
                 <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
                   専門家に相談する
                 </Link>
-                こともできます{!expertAvailable && '（現在、専門家サービスは準備中です）'}。
+                こともできます{!expertAvailable && '（現在、準備中）'}。
               </div>
             </div>
             <Suspense fallback={null}>
