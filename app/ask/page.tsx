@@ -212,7 +212,7 @@ function AskPageContent() {
       <Header supervised={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-        <h2 className="pagetitle">質問する</h2>
+        <h2 className="pagetitle">相談する</h2>
         {/* 書く前に「どんな回答が返ってくるか」を見せて、書く労力をかける前の不安を
             減らす（2026-10-12、新規ユーザーの離脱対策として追加）。実例を1件に固定
             せず「みんなの相談」一覧へのリンクにしているのは、特定の相談IDがデータ
