@@ -711,7 +711,10 @@ h2.pagetitle {
    必要があるため、他の薄い緑の案内文（.noticebox、--sub）とは別に、注意を引く
    オレンジ系＋アイコン付きにした。.noticeboxは他ページ（専門家の振込案内）
    でも使われておりスタイルを共有できないため、別クラスとして分けた
-   （2026-10-12）。 */
+   （2026-10-12）。
+   太字（font-weight 700）は、書く前の不安を必要以上に強めて離脱を招くリスクが
+   あったため、見た目の強さだけ少し落とした（文言・色・枠線はそのまま維持し、
+   必要な注意喚起自体は弱めない。2026-10-12、新規ユーザーの離脱対策として調整）。 */
 .privacy-notice {
   display: flex;
   align-items: flex-start;
@@ -721,7 +724,7 @@ h2.pagetitle {
   border-radius: 10px;
   padding: 12px 14px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--orange-text);
   line-height: 1.6;
 }

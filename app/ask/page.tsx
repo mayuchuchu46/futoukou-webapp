@@ -7,9 +7,26 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { CATS, Category } from '@/lib/categories';
 import { GRADE_OPTIONS, GENDER_OPTIONS } from '@/lib/types';
-import { getUid, hasAgreedTerms, setAgreedTerms } from '@/lib/uid';
+import { getUid, hasAgreedTerms, setAgreedTerms, getAskDraft, setAskDraft, clearAskDraft } from '@/lib/uid';
 
 const CATEGORY_KEYS = Object.keys(CATS) as Category[];
+
+// カテゴリごとの入力例。以前は全カテゴリ共通で1つの例文（身体的要因向け）しか
+// 出ていなかったため、カテゴリと合わない例文が「何を書けばいいか分からない」の
+// 原因になっていた。カテゴリ選択に応じて切り替える（2026-10-12、新規ユーザーの
+// 離脱対策として追加）。
+const CATEGORY_EXAMPLES: Record<Category, string> = {
+  body: '例：小5の息子が、ここ2週間毎朝「お腹痛い」と言って学校に行きたがりません…',
+  social: '例：中1の娘が、クラスの友達との関係がうまくいかず、最近「学校に行きたくない」と言うようになりました…',
+  school: '例：担任の先生と合わないようで、小6の息子が学校に行きたがらなくなりました…',
+  will: '例：中2の息子が「もう学校には行かない」と自分の意思で言うようになりました…',
+  approach: '例：小4の娘が登校を渋っていて、どこまで無理に行かせるべきか声のかけ方に悩んでいます…',
+  course: '例：高校に行くかどうか本人も決めきれず、進路の話をするとふさぎこんでしまいます…',
+  dev: '例：発達障害の診断を受けている小3の息子が、学校の環境に慣れず行きたがらなくなりました…',
+  home: '例：子どもの不登校への対応方針が夫婦で合わず、家庭内でどう関わるか揉めています…',
+  other: '例：子どもが不登校気味で、どう対応すればいいか分からず相談したいです…',
+};
+const DEFAULT_PLACEHOLDER = CATEGORY_EXAMPLES.body;
 
 type RequestedExpert = { id: string; name: string; credential: string };
 
@@ -46,6 +63,27 @@ function AskPageContent() {
   const [expertPriceJpy, setExpertPriceJpy] = useState(600);
   const [requestedExpert, setRequestedExpert] = useState<RequestedExpert | null>(null);
   const [stripeConfigured, setStripeConfigured] = useState(false);
+  const [draftLoaded, setDraftLoaded] = useState(false);
+
+  // 離脱してタブを閉じても、書いた内容が消えないようにする下書き保存。
+  // マウント時に一度だけ復元し（draftLoadedが立つまでは保存側のeffectを動かさない
+  // ことで、復元前の空の状態で上書きしてしまうのを防ぐ）、以後は入力内容の変化に
+  // 合わせて自動保存する（2026-10-12、新規ユーザーの離脱対策として追加）。
+  useEffect(() => {
+    const draft = getAskDraft();
+    if (draft) {
+      if (draft.category) setCategory(draft.category as Category);
+      setText(draft.text || '');
+      setGrade(draft.grade || '');
+      setGender(draft.gender || '');
+    }
+    setDraftLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!draftLoaded) return;
+    setAskDraft({ category, text, grade, gender });
+  }, [draftLoaded, category, text, grade, gender]);
 
   useEffect(() => {
     setNeedsTerms(!hasAgreedTerms());
@@ -90,6 +128,7 @@ function AskPageContent() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
+      clearAskDraft();
       router.push(`/result/${data.consultation.id}`);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'エラーが発生しました');
@@ -119,9 +158,12 @@ function AskPageContent() {
       if (data.funded) {
         // 無料枠・チケット消費の場合はStripe決済なしでその場で確定しているので、
         // 直接結果ページへ遷移する。
+        clearAskDraft();
         router.push(`/result/${data.consultation_id}`);
         return;
       }
+      // Stripe決済へ遷移する場合は、途中でキャンセルして戻ってくる可能性があるため
+      // ドラフトは消さずに残す。
       if (!data.url) throw new Error('失敗しました');
       window.location.href = data.url;
     } catch (e: unknown) {
@@ -171,6 +213,13 @@ function AskPageContent() {
       <div className="main page-with-sidebar">
         <div className="page-main">
         <h2 className="pagetitle">質問する</h2>
+        {/* 書く前に「どんな回答が返ってくるか」を見せて、書く労力をかける前の不安を
+            減らす（2026-10-12、新規ユーザーの離脱対策として追加）。実例を1件に固定
+            せず「みんなの相談」一覧へのリンクにしているのは、特定の相談IDがデータ
+            移行や削除で無くなってもリンク切れにならないため。 */}
+        <a href="/" className="muted" style={{ fontSize: 12, textDecoration: 'underline', marginBottom: 4 }}>
+          こんな回答が届きます（みんなの相談を見る）
+        </a>
         <div className="muted" style={{ marginBottom: 8 }}>どのような内容ですか？当てはまるテーマを選んでください</div>
         <select className="input" value={category} onChange={(e) => setCategory(e.target.value as Category)}>
           <option value="" disabled>選択してください</option>
@@ -216,7 +265,7 @@ function AskPageContent() {
         <textarea
           className="input"
           rows={8}
-          placeholder="例：小5の息子が、ここ2週間毎朝「お腹痛い」と言って学校に行きたがりません…"
+          placeholder={category ? CATEGORY_EXAMPLES[category] : DEFAULT_PLACEHOLDER}
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
@@ -226,6 +275,13 @@ function AskPageContent() {
         <button className="btn-primary" disabled={!text.trim() || !category || submitting || expertSubmitting} onClick={submit}>
           {submitting ? 'どうする先生が考えています…' : 'どうする先生に相談する（無料・AIが回答）'}
         </button>
+        {/* 待ち時間の目安を出すことで、「固まった？」と思ってタブを閉じる離脱を防ぐ
+            （2026-10-12、新規ユーザーの離脱対策として追加）。 */}
+        {submitting && (
+          <div className="muted" style={{ fontSize: 12, textAlign: 'center' }}>
+            通常20〜30秒ほどで回答が出ます。このままお待ちください。
+          </div>
+        )}
 
         <div className="expertteaser">
           <div className="expertteaser-title">
