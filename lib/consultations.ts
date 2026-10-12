@@ -21,6 +21,7 @@ export async function getConsultationsList({
   viewerId,
   authorId,
   expertAnswered,
+  expertId,
   memberActive = false,
   memberId,
   limit = 50,
@@ -30,6 +31,9 @@ export async function getConsultationsList({
   viewerId?: string | null;
   authorId?: string | null;
   expertAnswered?: boolean;
+  // 専門家個別ページ（/experts/[id]）で「この専門家が回答した相談」だけに絞るための条件。
+  // expertAnswered（専門家回答全体）とは別に、回答した専門家本人のidで絞り込む（2026-10-12追加）。
+  expertId?: string | null;
   memberActive?: boolean;
   memberId?: string | null;
   limit?: number;
@@ -74,6 +78,9 @@ export async function getConsultationsList({
   }
   if (expertAnswered) {
     query = query.eq('request_type', 'expert').eq('expert_status', 'answered');
+  }
+  if (expertId) {
+    query = query.eq('expert_id', expertId);
   }
 
   const { data, error } = await query;
