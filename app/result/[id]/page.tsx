@@ -118,6 +118,14 @@ export default async function ResultPage({
   const answerTextForJsonLd =
     item.request_type === 'ai' ? item.answer : !item.locked ? item.expert_answer : null;
 
+  // シェア文に回答の冒頭を少しだけ見せて続きを気にさせるための抜粋。
+  // 専門家回答がロック中など本文が無い場合は抜粋を作らず、質問文のみのテキストにする。
+  const answerSnippetSource = answerTextForJsonLd
+    ? answerTextForJsonLd.replace(/\s+/g, ' ').trim()
+    : '';
+  const answerSnippet =
+    answerSnippetSource.length > 40 ? `${answerSnippetSource.slice(0, 40)}…` : answerSnippetSource;
+
   const jsonLd = answerTextForJsonLd
     ? {
         '@context': 'https://schema.org',
@@ -196,7 +204,9 @@ export default async function ResultPage({
         <a
           className="share-btn"
           href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-            text: `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nこの相談に、どうする先生が出した"今日からできる一手"とは。`,
+            text: answerSnippet
+              ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nどうする先生の回答はこうはじまります。\n「${answerSnippet}」\n\n続きはこちら。`
+              : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nこの相談に、どうする先生が出した"今日からできる一手"とは。`,
             url: `${SITE_URL}/result/${item.id}`,
             hashtags: 'どうする先生,不登校',
           })}`}
