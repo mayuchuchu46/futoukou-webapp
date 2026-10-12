@@ -157,8 +157,15 @@ export default function HomeClient({
             2カラムにする（app/globals.cssの.home-layout参照）。検索ボックスや
             バナーなど高さの違う要素同士を同じ行に揃えようとすると謎の空白が
             できてしまうため、行を揃える作りはやめている。
-            モバイルでは今まで通りの1カラム（ランキング→タグ→検索→カテゴリ→一覧の順）。 */}
-        <div className={`home-layout ${showExtras ? 'home-layout--with-side' : ''}`}>
+            モバイルでは今まで通りの1カラム（ランキング→タグ→検索→カテゴリ→一覧の順）。
+            以前はshowExtras（カテゴリ「すべて」・検索なしの時だけ）でこのクラスと
+            PcSidebarの表示を切っていたため、PCでテーマ・カテゴリ絞り込み中だけ
+            サイドバーが消えて1カラムに戻ってしまっていた。ランキング・専門家募集
+            バナーなど「すべて」専用のコンテンツは引き続きshowExtras時だけ出すが、
+            2カラムのレイアウト自体・サイドバー（ランキングはサイド側では隠す）は
+            絞り込み中でも常に出すようにした（2026-10-12、「各テーマ・カテゴリーの
+            ページもPCは2コラムに統一して」との指摘を受けて修正）。 */}
+        <div className="home-layout home-layout--with-side">
           <div className="home-main-col">
             {showExtras && allItems.length >= 3 && (
               <div className="ranking home-ranking">
@@ -231,8 +238,9 @@ export default function HomeClient({
           </div>
 
           {/* PCではサイド（右カラム）に表示。中身はPcSidebar側で自前取得する
-              （ランキングだけは左カラムに出すので、ここでは出さない）。 */}
-          {showExtras && <PcSidebar hideRanking />}
+              （ランキングだけは左カラムに出すので、ここでは出さない）。絞り込み中
+              でも2カラムのレイアウトは保つため、showExtrasに関わらず常に表示する。 */}
+          <PcSidebar hideRanking />
         </div>
       </div>
 
