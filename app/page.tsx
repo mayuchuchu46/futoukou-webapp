@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
+import { CATS } from '@/lib/categories';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
 import HomeClient from './HomeClient';
 
@@ -34,14 +35,32 @@ async function getGuidelines() {
   return data;
 }
 
+// カテゴリごとの件数（テーマ一覧チップの「身体面（12）」等に使う）とトップページの
+// 合計件数を取得する。以前は全行（category列のみとはいえ）を毎回丸ごと取得してJS側で
+// 数えていたため、投稿が増えるほど重くなる作りだった。head:trueの件数クエリ（行データを
+// 転送しない）をカテゴリ数ぶん並列実行する形に変更し、データ量が増えても軽いままにした
+// （2026-10-13、トップページの表示が遅いとの指摘を受けて）。
 async function getCounts() {
   const supabase = getSupabaseAdmin();
-  const { data } = await supabase.from('consultations').select('category').eq('hidden', false);
+  const categoryKeys = Object.keys(CATS);
+
+  const [totalResult, ...categoryResults] = await Promise.all([
+    supabase.from('consultations').select('*', { count: 'exact', head: true }).eq('hidden', false),
+    ...categoryKeys.map((key) =>
+      supabase
+        .from('consultations')
+        .select('*', { count: 'exact', head: true })
+        .eq('hidden', false)
+        .eq('category', key)
+    ),
+  ]);
+
   const counts: Record<string, number> = {};
-  (data || []).forEach((row: { category: string }) => {
-    counts[row.category] = (counts[row.category] || 0) + 1;
+  categoryKeys.forEach((key, i) => {
+    counts[key] = categoryResults[i].count || 0;
   });
-  return { counts, total: (data || []).length };
+
+  return { counts, total: totalResult.count || 0 };
 }
 
 // PCの広い画面でホーム画面サイドバーに出す、差し替え可能な広告・アフィリエイトバナー枠
