@@ -36,7 +36,18 @@ export async function checkAiConsultRateLimit(authorId: string, ip: string | nul
 
   const userCount = await countSince({ authorId, requestType: 'ai', onlyType: true }, since);
   if (userCount >= AI_CONSULT_USER_DAILY_LIMIT) {
-    return { ok: false, message: `1日にご利用いただける回数の上限（${AI_CONSULT_USER_DAILY_LIMIT}回）に達しました。また明日お試しください。` };
+    // 個人単位で10回の上限に実際に当たった人がどれくらいいるかを計測する（2026-10-13）。
+    // 「10回を超えてもっと使いたい人」向け有料プランを作るかどうかを、この件数を見てから
+    // 判断する。失敗しても案内自体は出したいので、結果を待たずfire-and-forgetにする。
+    const supabase = getSupabaseAdmin();
+    supabase.from('ai_limit_hits').insert({ author_id: authorId, client_ip: ip }).then(
+      () => {},
+      () => {}
+    );
+    return {
+      ok: false,
+      message: `1日にご利用いただける回数の上限（${AI_CONSULT_USER_DAILY_LIMIT}回）に達しました。また明日お試しください。`,
+    };
   }
 
   if (ip) {

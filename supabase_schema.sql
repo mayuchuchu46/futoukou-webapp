@@ -109,6 +109,14 @@
 -- 既存DBでは次を実行してください（2026-10-12）。
 -- alter table consultations add column if not exists reports int not null default 0;
 -- alter table consultations add column if not exists reported_by text[] not null default '{}';
+-- 無料AI相談の1日10回の上限に実際に当たった人を計測するログテーブルを追加した場合、
+-- 既存DBでは次を実行してください（2026-10-13）。
+-- create table if not exists ai_limit_hits (
+--   id uuid primary key default gen_random_uuid(),
+--   author_id text not null,
+--   client_ip text,
+--   created_at timestamptz not null default now()
+-- );
 
 create extension if not exists "pgcrypto";
 
@@ -246,6 +254,18 @@ create table if not exists consents (
   author_id text not null,
   client_ip text,
   agreed_at timestamptz not null default now()
+);
+
+-- 無料AI相談の1日あたり上限（1人10回）に実際に当たった人がどれくらいいるかを
+-- 計測するためのログ。「10回を超えてもっと使いたい人」向けの有料プランを
+-- 本格的に作るかどうかを、ここの件数を見てから判断する（2026-10-13追加）。
+-- 同一IP・全体の上限（20回/300回）に当たったケースはここには記録しない
+-- （知りたいのはあくまで「個人単位で10回を使い切る人がどれだけいるか」のため）。
+create table if not exists ai_limit_hits (
+  id uuid primary key default gen_random_uuid(),
+  author_id text not null,
+  client_ip text,
+  created_at timestamptz not null default now()
 );
 
 -- [旧モデル・現在は未使用] かつては専門家への都度質問（¥500）を一度払うと、その日から

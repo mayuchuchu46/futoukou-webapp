@@ -44,6 +44,11 @@ type UnpaidPayoutSummary = {
   total: number;
 };
 
+type AiLimitHitSummary = {
+  hitCount: number;
+  uniqueUserCount: number;
+};
+
 type PayoutResult = {
   paid: { expertName: string; amount: number; count: number }[];
   skipped: { expertName: string; amount: number; count: number; reason: string }[];
@@ -67,6 +72,7 @@ export default function AdminClient({
   recentExpertAnswers,
   initialSidebarBanner,
   unpaidPayoutSummary,
+  aiLimitHitSummary,
   stripeConfigured,
 }: {
   unverifiedExperts: UnverifiedExpert[];
@@ -76,6 +82,7 @@ export default function AdminClient({
   recentExpertAnswers: RecentExpertAnswer[];
   initialSidebarBanner: SidebarBanner;
   unpaidPayoutSummary: UnpaidPayoutSummary;
+  aiLimitHitSummary: AiLimitHitSummary;
   stripeConfigured: boolean;
 }) {
   const [experts, setExperts] = useState(unverifiedExperts);
@@ -354,6 +361,16 @@ export default function AdminClient({
               {bannerSaving ? '保存中…' : '保存する'}
             </button>
             {bannerMessage && <span className="muted">{bannerMessage}</span>}
+          </div>
+        </div>
+
+        {/* 無料AI相談の1日10回の上限に実際に当たっている人の数（2026-10-13追加）。
+            「もっと使いたい人」向け有料プランを作るかどうかの判断材料として、
+            ユーザーには見せずにここでだけ確認する。 */}
+        <div style={{ fontWeight: 700, marginTop: 16 }}>AI相談の上限到達状況（直近30日）</div>
+        <div className="card">
+          <div className="qtext">
+            1日10回の上限に当たった回数：{aiLimitHitSummary.hitCount}回（のべ{aiLimitHitSummary.uniqueUserCount}人）
           </div>
         </div>
 

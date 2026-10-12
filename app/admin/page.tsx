@@ -72,6 +72,18 @@ async function AdminPageContent() {
     total: (unpaidPayoutRows || []).reduce((sum, r) => sum + (r.expert_payout_jpy || 0), 0),
   };
 
+  // 無料AI相談の1日10回の上限に、直近30日でどれだけの人が当たっているかを把握する
+  // （「もっと使いたい人」向け有料プランを作るかどうかの判断材料、2026-10-13追加）。
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: aiLimitHitRows } = await supabase
+    .from('ai_limit_hits')
+    .select('author_id')
+    .gte('created_at', thirtyDaysAgo);
+  const aiLimitHitSummary = {
+    hitCount: (aiLimitHitRows || []).length,
+    uniqueUserCount: new Set((aiLimitHitRows || []).map((r) => r.author_id)).size,
+  };
+
   const { data: sidebarBanner } = await supabase
     .from('sidebar_banners')
     .select('enabled, image_url, link_url, alt_text')
@@ -101,6 +113,7 @@ async function AdminPageContent() {
       unverifiedExperts={unverifiedExperts || []}
       recentConsultations={recentConsultations || []}
       reportedConsultations={reportedConsultations || []}
+      aiLimitHitSummary={aiLimitHitSummary}
       overdueExpertRequests={overdueExpertRequests || []}
       recentExpertAnswers={recentExpertAnswers}
       initialSidebarBanner={
