@@ -284,7 +284,8 @@ h2.pagetitle {
 .ranking-title { font-family: "M PLUS Rounded 1c", sans-serif; font-size: 14px; font-weight: 800; color: var(--main); margin-bottom: 4px; }
 /* スマホのファーストビューで実際の相談カードまで早く辿り着けるよう、
    ランキングは3件分の高さだけ見せて、残りはこの枠内スクロールにする
-   （取得自体は5件のまま。全部見せたい場合は枠内をスクロールできる）。 */
+   （取得自体は10件。スクロールすれば10位まで見られる。2026-10-12、
+   5件までだったのを10件まで見られるよう拡大）。 */
 .rank-list { max-height: 92px; overflow-y: auto; }
 .rank-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-top: 1px solid #F0EEE6; cursor: pointer; }
 .rank-item:first-of-type { border-top: none; }
