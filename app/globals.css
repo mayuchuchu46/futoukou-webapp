@@ -272,6 +272,7 @@ h2.pagetitle {
      高さは左右で完全に無関係になり、お互いに引きずられない。 */
   .home-layout.home-layout--with-side {
     display: flex;
+    flex-direction: row;
     align-items: flex-start;
     gap: 28px;
   }
@@ -308,6 +309,7 @@ h2.pagetitle {
   /* ホーム以外のページ用：右サイドにPcSidebarを出す2カラム構成 */
   .page-with-sidebar {
     display: flex;
+    flex-direction: row;
     align-items: flex-start;
     gap: 28px;
   }
