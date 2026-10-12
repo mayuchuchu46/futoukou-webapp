@@ -105,13 +105,12 @@ input, textarea { font-family: inherit; }
 /* 「つらいときはこちら」「どうする先生とは？」は画面幅によらず右上に固定したいので、
    画面が狭いときは右側ではなく左側（キャッチコピー等）の方を折り返して収める。 */
 @media (max-width: 480px) {
-  .hero-sub { white-space: normal; }
   /* account-tab（画面右上に常時position: fixedで固定表示される「ログイン／アカウント」タブ、
      高さ約33px）が、画面幅480px以下だと.header-rightの「つらいときはこちら」と同じ右上の
      位置に重なってしまう。header全体やロゴを下げると今度はロゴ上に無駄な余白ができて
      しまうため、header-rightだけをaccount-tabの高さぶん下にずらして避ける
-     （header-leftのhero-subは上のwhite-space:normalで折り返すようにしてあるので、
-     header-rightを下げても重ならない。2026-10-12、実機確認して調整）。 */
+     （header-leftのhero-subは折り返される前提なので、header-rightを下げても重ならない。
+     2026-10-12、実機確認して調整）。 */
   .header-right { padding-top: 38px; }
   /* トップページ以外（分析ノート・マイページ等）では、スマホ幅だと「専門家監修：準備中…」
      「今、どうしたらいい？」にAIと専門家が…」等の補足説明はもう不要という指摘を受けて
@@ -305,7 +304,10 @@ h2.pagetitle {
   font-size: 11px;
   line-height: 1.4;
   color: var(--muted);
-  white-space: nowrap;
+  /* white-space:nowrapにしていたが、このルールがファイル内で下の方（＝カスケードで後勝ち）
+     にあったため、スマホ用に@media内で指定していたwhite-space:normalが効かず、実機で
+     「どうする先生とは？」等に文字が重なる不具合が起きていた。nowrapにする理由は特になく、
+     常時折り返しありで問題ないため、ここではnowrap自体をやめた（2026-10-12、実機画面で発覚）。 */
   margin-top: 1px;
 }
 .expertbanner { background: #fff; border: 1px solid var(--orange); border-radius: 12px; padding: 8px 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -482,6 +484,9 @@ h2.pagetitle {
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 .catmenu-chip.active { border-color: transparent; box-shadow: 0 1px 5px rgba(43, 43, 40, 0.12); }
+/* 選択中のテーマチップに付けるチェックマーク。背景色の変化だけだと選択状態が
+   わかりにくいとの指摘を受けて追加（2026-10-12）。 */
+.catmenu-check { margin-right: 3px; font-weight: 800; }
 /* 「すべて」は常時緑ではなく、他のカテゴリと同じく選択時だけ色がつくようにする。
    濃い--mainそのものだと他のカテゴリ（薄い色味）より目立ちすぎるため、
    同系統の薄い色（--sub）に揃える。 */

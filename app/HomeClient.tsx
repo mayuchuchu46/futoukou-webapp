@@ -189,11 +189,14 @@ export default function HomeClient({
               onChange={(e) => setQ(e.target.value)}
             />
 
+            {/* テーマの絞り込みチップ。選んでいるテーマが背景色の変化だけだとわかりにくいとの
+                指摘を受けて、選択中のものにチェックマークを付けた（2026-10-12）。 */}
             <div className="catmenu-row home-chips">
               <button
                 className={`catmenu-chip catmenu-all ${category === 'all' ? 'active' : ''}`}
                 onClick={() => selectCategory('all')}
               >
+                {category === 'all' && <span className="catmenu-check">✓</span>}
                 すべて（{total}）
               </button>
               {Object.entries(CATS).map(([key, c]) => (
@@ -202,6 +205,7 @@ export default function HomeClient({
                   className={`catmenu-chip ${c.cls} ${category === key ? 'active' : ''}`}
                   onClick={() => selectCategory(key)}
                 >
+                  {category === key && <span className="catmenu-check">✓</span>}
                   {c.short}（{counts[key] || 0}）
                 </button>
               ))}
