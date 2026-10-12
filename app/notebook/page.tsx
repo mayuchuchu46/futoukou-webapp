@@ -27,14 +27,11 @@ export default function NotebookPage() {
       <Header supervised={false} />
       <div className="main">
         <h2 className="pagetitle">分析ノート</h2>
-        <div className="muted" style={{ marginBottom: 4 }}>
-          相談を重ねるほど、どうする先生が今のお子さんの状況をここにまとめます
-        </div>
         {/* 分析ノートは本人の相談内容（子どもの状況）を踏み込んでまとめるものなので、
-            安心して相談を重ねてもらえるよう、他の人には見えないことを明示する
-            （/api/member-summary はログイン中の本人のみ取得できる、2026-10-13追加）。 */}
-        <div className="muted" style={{ marginBottom: 12, fontSize: 12 }}>
-          🔒 分析ノートの内容は、あなたご本人以外には表示されません。
+            安心して相談を重ねてもらえるよう、他の人には見えないことも同じ文に
+            含めて伝える（2026-10-13、独立した行だと座りが悪かったため1文にまとめた）。 */}
+        <div className="muted" style={{ marginBottom: 12 }}>
+          相談を重ねるほど、どうする先生が今のお子さんの状況をここにまとめます。内容はあなたご本人以外には表示されません。
         </div>
 
         {ownCount !== null && <ConsultationSummaryCard ownCount={ownCount} />}
