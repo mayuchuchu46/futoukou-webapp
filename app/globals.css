@@ -418,8 +418,10 @@ h2.pagetitle {
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 .catmenu-chip.active { border-color: transparent; box-shadow: 0 1px 5px rgba(43, 43, 40, 0.12); }
-/* 「すべて」は常時緑ではなく、他のカテゴリと同じく選択時だけ色がつくようにする */
-.catmenu-all.active { background: var(--main); color: #fff; border-color: transparent; }
+/* 「すべて」は常時緑ではなく、他のカテゴリと同じく選択時だけ色がつくようにする。
+   濃い--mainそのものだと他のカテゴリ（薄い色味）より目立ちすぎるため、
+   同系統の薄い色（--sub）に揃える。 */
+.catmenu-all.active { background: var(--sub); color: #1F4A3C; border-color: transparent; }
 /* cat-*単体のセレクタ（カードのバッジ用、.cat-badgeと組み合わせて使う）が
    同じ詳細度で後から定義されていてもここが優先されるよう、
    .catmenu-chip.cat-* の2クラス指定で明示的に未選択時の色を上書きする。 */
