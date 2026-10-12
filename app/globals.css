@@ -170,6 +170,26 @@ input, textarea { font-family: inherit; }
   align-items: center;
   gap: 4px;
 }
+/* ログイン／アカウントへのリンク。「つらいときはこちら」「どうする先生とは？」は
+   読み物系の補足情報リンクなので破線下線で揃えているが、こちらは会員登録・ログインへの
+   導線という役割が異なるため、あえて見た目を変えて「操作できるボタン」として目立たせる
+   （2026-10-12、同じ破線スタイルだと情報リンクと区別がつかないという指摘を受けて変更）。 */
+.accountlink {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 999px;
+  background: var(--sub);
+  color: #1F4A3C;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.accountlink svg { flex-shrink: 0; }
 .muted { color: var(--muted); font-size: 12px; }
 
 /* 「専門家監修：準備中…」の注記。何にも属さないテキストとして単独で

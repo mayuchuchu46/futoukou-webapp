@@ -68,6 +68,12 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
         <Link className="btn-primary" href="/account/register?next=/notebook">
           無料で分析ノートを始める
         </Link>
+        {/* 登録はまだ早いが、相談自体はログイン不要でできる（/askは匿名ブラウザIDで利用可能）。
+            ここで離脱させず、まず相談してもらうことがノートの材料を増やす第一歩になるため、
+            登録を迷っている人向けの選択肢として出す（2026-10-12 追加）。 */}
+        <Link href="/ask" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+          まずは相談してみる
+        </Link>
       </div>
     );
   }
@@ -82,8 +88,8 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
         <div className="qtext">
           まだ相談がありません。相談するたびに、ここにノートとして記録が蓄積され、どうする先生がお子さんの状況をより詳しく整理できるようになります。
         </div>
-        <Link className="btn-secondary" href="/ask">
-          相談する
+        <Link className="btn-primary" href="/ask">
+          相談してノートを作り始める
         </Link>
       </div>
     );
@@ -111,6 +117,13 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
           <Link className="btn-primary" href="/account">
             会員になって見る
           </Link>
+          {/* 課金導線（会員になって見る）を一番手にしつつ、まだ相談するか迷っている人にも
+              「相談を増やす」という選択肢を出しておく。相談が増えるほど状況整理の精度が
+              上がり、会員になったときに見える内容も充実するため、ここで相談を離脱させない
+              ための導線（2026-10-12 追加）。 */}
+          <Link href="/ask" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+            さらに相談して、ノートの材料を増やす
+          </Link>
         </>
       ) : (
         <>
@@ -128,6 +141,14 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
               <div className="qtext">{environmentSuggestion}</div>
             </>
           )}
+          {/* フル表示（読み放題会員）になった後も、相談を重ねるたびにノートが更新・充実して
+              いくことが伝わるよう、次の相談への導線を必ず置く（2026-10-12 追加）。 */}
+          <div className="muted" style={{ fontSize: 12 }}>
+            相談を重ねるほど、ノートの中身はさらに詳しくなります
+          </div>
+          <Link href="/ask" className="btn-secondary">
+            新しく相談する
+          </Link>
         </>
       )}
     </div>
