@@ -40,7 +40,7 @@ export default async function AboutPage() {
           <div style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
             不登校のご家庭に、次の一手を。
           </div>
-          <div className="muted">「今、どうしたらいい？」に、今日からできる一手をAIと専門家が教えます。</div>
+          <div className="muted">「今、どうしたらいい？」に、今日からできることをAIと専門家が教えます。</div>
         </div>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
