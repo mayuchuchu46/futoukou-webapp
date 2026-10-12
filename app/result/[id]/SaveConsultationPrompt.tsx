@@ -65,12 +65,12 @@ export default function SaveConsultationPrompt({ id, authorId }: { id: string; a
 
   return (
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-      <div className="answer-label" style={{ fontSize: 14 }}>この相談、残しておけます</div>
+      <div className="answer-label" style={{ fontSize: 14 }}>この相談、分析ノートに残せます</div>
       <div className="qtext">
-        無料登録すると、スマホを買い替えても、別のブラウザで開いても、この相談を後から読み返せます。
+        無料登録すると、この相談が「分析ノート」に記録され、今のお子さんの状況や次にやることをどうする先生が整理してくれます。相談を重ねるほど、ノートの中身は詳しくなります。
       </div>
       <div className="row" style={{ gap: 10, width: '100%' }}>
-        <a className="btn-primary" href={`/account/register?next=${encodeURIComponent(`/result/${id}`)}`}>
+        <a className="btn-primary" href={`/account/register?next=${encodeURIComponent('/notebook')}`}>
           無料で登録する
         </a>
         <button type="button" className="btn-ghost" onClick={skip}>
