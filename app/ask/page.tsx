@@ -27,7 +27,11 @@ function AskPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const expertIdParam = searchParams.get('expert');
-  const [category, setCategory] = useState<Category>(CATEGORY_KEYS[0]);
+  // 以前はCATEGORY_KEYS[0]（＝オブジェクトの先頭に書かれているだけの「身体的要因」）が
+  // 何もしなくても選択済みになっていた。意図した選択ではないのに、選ばずに送信すると
+  // 違うカテゴリで投稿・回答生成されてしまうため、未選択（''）を初期値にし、
+  // 選ぶまで送信できないようにした（2026-10-12）。
+  const [category, setCategory] = useState<Category | ''>('');
   const [text, setText] = useState('');
   const [grade, setGrade] = useState('');
   const [gender, setGender] = useState('');
@@ -75,7 +79,7 @@ function AskPageContent() {
   }, [expertIdParam]);
 
   async function submit() {
-    if (!text.trim()) return;
+    if (!text.trim() || !category) return;
     setSubmitting(true);
     setError('');
     try {
@@ -94,7 +98,7 @@ function AskPageContent() {
   }
 
   async function submitToExpert() {
-    if (!text.trim()) return;
+    if (!text.trim() || !category) return;
     setExpertSubmitting(true);
     setError('');
     try {
@@ -169,6 +173,7 @@ function AskPageContent() {
         <h2 className="pagetitle">質問する</h2>
         <div className="muted" style={{ marginBottom: 8 }}>どのような内容ですか？当てはまるテーマを選んでください</div>
         <select className="input" value={category} onChange={(e) => setCategory(e.target.value as Category)}>
+          <option value="" disabled>選択してください</option>
           {CATEGORY_KEYS.map((key) => (
             <option key={key} value={key}>{CATS[key].label}</option>
           ))}
@@ -210,7 +215,7 @@ function AskPageContent() {
 
         {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
 
-        <button className="btn-primary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submit}>
+        <button className="btn-primary" disabled={!text.trim() || !category || submitting || expertSubmitting} onClick={submit}>
           {submitting ? 'どうする先生が考えています…' : 'どうする先生に相談する（無料・AIが回答）'}
         </button>
 
@@ -250,7 +255,7 @@ function AskPageContent() {
                   </>
                 )}
               </div>
-              <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
+              <button className="btn-secondary" disabled={!text.trim() || !category || submitting || expertSubmitting} onClick={submitToExpert}>
                 {expertSubmitting
                   ? '送信中…'
                   : freeQuestionAvailable
