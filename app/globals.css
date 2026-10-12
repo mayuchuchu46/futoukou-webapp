@@ -792,29 +792,35 @@ select.input {
    見せる（2026-10-12、「ノートっぽく・整理整頓が楽しくなるように」との
    指摘を受けて追加）。
    ============================================================ */
+/* 罫線がカード（白地の.notebook-entry）にほぼ覆われてしまい「わかりにくい」との
+   指摘を受け、(1)台紙自体をクリーム色の紙にして白いカードとの対比をはっきりさせ、
+   (2)罫線をはっきり見える色・太さにし、(3)カード同士の間隔を広げて紙面が覗く
+   すき間を増やす、の3点で見直した（2026-10-12）。 */
 .notebook-card {
   position: relative;
   padding-left: 30px;
+  gap: 14px;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0px,
-    transparent 29px,
-    #ECE6D6 29px,
-    #ECE6D6 30px
+    transparent 31px,
+    #CFDED2 31px,
+    #CFDED2 33px
   );
-  background-color: var(--card);
-  background-position: 0 2px;
+  background-color: #FBF6E7;
+  background-position: 0 4px;
 }
-/* ノート用紙の定番、左の赤い罫線。 */
+/* ノート用紙の定番、左の赤い罫線。紙の端まで届かせて、見出し行の背景が
+   かぶっても存在がわかるよう少し濃いめに。 */
 .notebook-card::before {
   content: '';
   position: absolute;
-  top: 16px;
-  bottom: 16px;
+  top: 0;
+  bottom: 0;
   left: 18px;
-  width: 1.5px;
+  width: 2px;
   background: var(--orange);
-  opacity: 0.5;
+  opacity: 0.65;
 }
 .notebook-head {
   display: flex;
@@ -868,7 +874,29 @@ select.input {
   border: 1px solid var(--border);
   border-radius: 4px 14px 14px 14px;
   padding: 4px 14px 14px;
+  /* クリーム色の紙に「貼り付けたカード」に見えるよう、わずかに影をつけて
+     紙面から浮かせる（2026-10-12、罫線の背景が伝わりにくいとの指摘を受けて、
+     紙とカードのコントラストを強める目的で追加）。 */
+  box-shadow: 0 1px 3px rgba(43, 43, 40, 0.08);
 }
+
+/* 「相談を重ねるほど詳しくなる」という、次の相談への誘導をもっと目立たせたい
+   との指摘を受けて、小さな文字だけの案内から、アイコン付きの帯（バナー）に
+   格上げ（2026-10-12）。 */
+.notebook-nudge {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--sub);
+  color: #1F4A3C;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+.notebook-nudge-icon { flex: 0 0 auto; font-size: 16px; line-height: 1; }
 .notebook-tab {
   display: inline-flex;
   align-items: center;

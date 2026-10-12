@@ -238,12 +238,16 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
             <NotebookPlaceholder {...PREVIEW_ENTRIES[4]} />
           )}
           {/* フル表示になった後も、相談を重ねるたびにノートが更新・充実していくことが
-              伝わるよう、次の相談への導線を必ず置く（2026-10-12 追加）。 */}
-          <div className="muted" style={{ fontSize: 12 }}>
-            相談を重ねるほど、ノートの中身はさらに詳しくなります
+              伝わるよう、次の相談への導線を必ず置く（2026-10-12 追加）。以前は小さな
+              muted文字だけだったが、「この誘導はもっと強化したい」との指摘を受けて、
+              アイコン付きの帯に格上げし、文言も「書き足される」という具体的な動作を
+              示す形に強めた（2026-10-12）。 */}
+          <div className="notebook-nudge">
+            <span className="notebook-nudge-icon">✏️</span>
+            相談を重ねるほど、ノートの中身はさらに詳しくなります。次の相談で、ここに新しいページが書き足されます。
           </div>
-          <Link href="/ask" className="btn-secondary">
-            新しく相談する
+          <Link href="/ask" className="btn-primary">
+            新しく相談して、ノートを書き足す
           </Link>
           <SchoolMatchComingSoon />
         </>
