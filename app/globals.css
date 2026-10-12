@@ -626,6 +626,28 @@ h2.pagetitle {
   .scroll-top-btn { left: 20px; }
 }
 
+/* 下の固定ナビ（.nav）の直上に出す「戻る」。ヘッダーの.header-backと同じ見た目・
+   挙動（router.back()）で、長いページを下までスクロールした人にも戻り先が
+   見えるようにする（2026-10-13）。 */
+.bottomnav-back-row {
+  display: flex;
+  justify-content: center;
+  background: var(--card);
+}
+.bottomnav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  padding: 6px 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+}
+.bottomnav-back svg { flex-shrink: 0; }
+
 .nav {
   position: sticky;
   bottom: 0;

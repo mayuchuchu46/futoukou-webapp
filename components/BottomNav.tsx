@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const ITEMS = [
@@ -19,7 +19,13 @@ const SCROLL_TOP_SHOW_THRESHOLD = 400;
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const onAskPage = pathname.startsWith('/ask');
+  // Header（画面上部）には既に「戻る」があるが、長いページでは上までスクロールしないと
+  // 見えないため、下の固定ナビのすぐ上にも同じ「戻る」を出す（2026-10-13、全ページ下部にも
+  // 欲しいとの指摘を受けて追加）。行き先はHeaderと同じくrouter.back()（直前の画面）。
+  // ホームページでは意味がないので出さない。
+  const isHome = pathname === '/';
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -51,6 +57,16 @@ export default function BottomNav() {
             <path d="M5 12l7-7 7 7" />
           </svg>
         </button>
+      )}
+      {!isHome && (
+        <div className="bottomnav-back-row">
+          <button type="button" className="bottomnav-back" onClick={() => router.back()}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+            戻る
+          </button>
+        </div>
       )}
       <nav className="nav">
         {ITEMS.map((item) => {
