@@ -59,8 +59,9 @@ input, textarea { font-family: inherit; }
 
 .header {
   /* 下パディングは「専門家監修：準備中…」の注記のすぐ下に次のカードが来るよう、
-     他の余白より少し詰めている（.mainのpadding-top:16pxと合わせて次要素との間隔になる）。 */
-  padding: 20px 20px 4px 20px;
+     他の余白より少し詰めている（.mainのpadding-topと合わせて次要素との間隔になる）。
+     上パディングもスマホのファーストビューで実際の相談カードが見えるよう少し詰めた。 */
+  padding: 16px 20px 4px 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -196,10 +197,10 @@ h2.pagetitle {
   gap: 4px;
 }
 
-.ranking { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; margin: 0; }
-.ranking-title { font-family: "M PLUS Rounded 1c", sans-serif; font-size: 14px; font-weight: 800; color: var(--main); margin-bottom: 6px; }
+.ranking { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; margin: 0; }
+.ranking-title { font-family: "M PLUS Rounded 1c", sans-serif; font-size: 14px; font-weight: 800; color: var(--main); margin-bottom: 4px; }
 .rank-list { max-height: 117px; overflow-y: auto; }
-.rank-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid #F0EEE6; cursor: pointer; }
+.rank-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-top: 1px solid #F0EEE6; cursor: pointer; }
 .rank-item:first-of-type { border-top: none; }
 .rank-num { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; color: var(--yellow-text); font-size: 13px; flex: 0 0 auto; width: 14px; }
 .rank-q { flex: 1; font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -254,17 +255,17 @@ h2.pagetitle {
   box-sizing: border-box;
 }
 
-.main { flex: 1; overflow-y: auto; padding: 16px 20px 90px 20px; display: flex; flex-direction: column; gap: 16px; }
+.main { flex: 1; overflow-y: auto; padding: 12px 20px 90px 20px; display: flex; flex-direction: column; gap: 12px; }
 
 /* ホーム画面のみ、PCの広い画面では「よく読まれている相談」「気になるテーマから探す」を
    右サイドに回し、検索・カテゴリ・一覧を左に広く使う2カラムレイアウトにする。
    モバイル（.home-layoutがgridになる前）はDOM順そのまま（ランキング→検索→カテゴリ→
    タグ→一覧）の1カラムで、見た目は今までと変わらない。 */
-.home-layout { display: flex; flex-direction: column; gap: 16px; }
+.home-layout { display: flex; flex-direction: column; gap: 12px; }
 /* .home-main-colはPC版では.home-layoutの左カラムになるが、モバイルでは
-   ただのdivとして.home-layout（flex column, gap:16px）に直接積まれるだけなので、
+   ただのdivとして.home-layout（flex column, gap）に直接積まれるだけなので、
    ここでも同じflex column + gapを指定しておかないと中身同士の余白が詰まってしまう。 */
-.home-main-col { display: flex; flex-direction: column; gap: 16px; }
+.home-main-col { display: flex; flex-direction: column; gap: 12px; }
 
 @media (min-width: 960px) {
   /* PCの広い画面では、ホーム以外のページも同じ幅・配置に揃える
@@ -298,10 +299,6 @@ h2.pagetitle {
   /* タグ一覧はPCではサイド側（.pc-sidebar内）に出すので、
      一覧内に残っているモバイル用の方は隠す。 */
   .home-tags-mobile { display: none; }
-
-  /* 「よく読まれている相談」はPCでは5位まで表示（モバイルは今まで通り10位まで）。
-     データ自体は10件取得したまま、表示だけCSSで絞る。 */
-  .rank-list .rank-item:nth-child(n + 6) { display: none; }
 
   /* サイドのタグ一覧は横スクロールではなく、折り返して並べる
      （ホームのサイド・他ページのPcSidebarどちらでも使うため、

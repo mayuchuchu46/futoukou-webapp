@@ -132,7 +132,10 @@ export default function HomeClient({
   }, [loadMoreEl, items.length]);
 
   const expertCount = allItems.filter(isExpertAnswered).length;
-  const ranking = [...allItems].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
+  // スマホのファーストビューでも実際の相談カードが見えるよう、ランキングは
+  // 5件までに抑える（以前は10件取得してPCのみCSSで5件に絞っていたが、
+  // モバイルでも場所を取りすぎていたため、取得自体を5件にした）。
+  const ranking = [...allItems].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
   const showExtras = category === 'all' && !q.trim();
 
   return (

@@ -42,7 +42,7 @@ export default function PcSidebar({
       .then((r) => r.json())
       .then((d) => {
         const items: Consultation[] = d.consultations || [];
-        setRanking([...items].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10));
+        setRanking([...items].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5));
       })
       .catch(() => {});
   }, [hideRanking]);
