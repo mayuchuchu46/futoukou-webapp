@@ -202,6 +202,17 @@ function AskPageContent() {
         </div>
 
         <div className="muted" style={{ margin: '14px 0 6px' }}>状況をくわしく教えてください</div>
+        {/* 「公開されます」の注意書きは、以前は入力欄の後ろにあり、書き終えてから
+            初めて気づく流れになっていた（個人情報を書いてしまってからでは遅い）。
+            書き始める前に目に入るよう入力欄の上に移動し、見た目も他の案内文と
+            同じ薄い緑から、注意を引くオレンジ系＋アイコン付きに強化した
+            （2026-10-12、「もっと目立たせた方がいい？」との指摘を受けて）。 */}
+        <div className="privacy-notice">
+          <span className="privacy-notice-icon">⚠️</span>
+          <span>
+            入力いただいた内容はそのまま「みんなの相談」に公開されます。お名前・住所・学校名など個人を特定できる情報は書かないでください。つらい状況のときは、無理に詳しく書かなくて大丈夫です。
+          </span>
+        </div>
         <textarea
           className="input"
           rows={8}
@@ -209,9 +220,6 @@ function AskPageContent() {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <div className="noticebox">
-          入力いただいた内容はそのまま「みんなの相談」に公開されるため、お名前・住所・学校名など個人を特定できる情報は書かないでください。つらい状況のときは、無理に詳しく書かなくて大丈夫です。
-        </div>
 
         {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
 

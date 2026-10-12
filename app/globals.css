@@ -690,6 +690,25 @@ h2.pagetitle {
 .genderbtn.selected { border-color: var(--main); background: var(--sub); color: #1F4A3C; font-weight: 700; }
 
 .noticebox { background: var(--sub); border-radius: 10px; padding: 12px 14px; font-size: 12px; color: #1F4A3C; line-height: 1.6; }
+/* 「公開されます」の注意書き（/ask）専用。個人情報を書いてしまう前に目を引く
+   必要があるため、他の薄い緑の案内文（.noticebox、--sub）とは別に、注意を引く
+   オレンジ系＋アイコン付きにした。.noticeboxは他ページ（専門家の振込案内）
+   でも使われておりスタイルを共有できないため、別クラスとして分けた
+   （2026-10-12）。 */
+.privacy-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--orange-bg);
+  border: 1px solid var(--orange);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--orange-text);
+  line-height: 1.6;
+}
+.privacy-notice-icon { flex: 0 0 auto; font-size: 16px; line-height: 1.6; }
 
 .expertteaser {
   background: #fff;
