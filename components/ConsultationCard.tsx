@@ -8,6 +8,7 @@ import { Consultation, metaLabel } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
 import EyeIcon from './EyeIcon';
+import ReportButton from './ReportButton';
 
 export default function ConsultationCard({
   item,
@@ -146,6 +147,7 @@ export default function ConsultationCard({
           参考になった {likes}人
         </button>
         <span className="view-count"><EyeIcon /> {item.views || 0}</span>
+        <ReportButton id={item.id} />
       </div>
       {showDelete && (
         <div className="card-foot" style={{ justifyContent: 'flex-end' }}>

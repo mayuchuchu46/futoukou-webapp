@@ -13,6 +13,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import ResultClient from './ResultClient';
 import ViewPing from './ViewPing';
 import LikeButton from './LikeButton';
+import ReportButton from '@/components/ReportButton';
 import EyeIcon from '@/components/EyeIcon';
 import AiUsageUpsell from './AiUsageUpsell';
 import SaveConsultationPrompt from './SaveConsultationPrompt';
@@ -195,7 +196,12 @@ export default async function ResultPage({
         </div>
         {/* 一覧カードには既にある「参考になった」ボタンを、詳細ページにも追加した
             （2026-10-12）。 */}
-        <LikeButton id={item.id} initialLikes={item.likes} initialLikedBy={item.liked_by || []} />
+        <div className="row" style={{ alignItems: 'center' }}>
+          <LikeButton id={item.id} initialLikes={item.likes} initialLikedBy={item.liked_by || []} />
+          {/* 個人情報の混入・不適切な内容などを閲覧者が運営に知らせる手段（2026-10-12追加）。
+              自動非表示はせず、運営が管理画面で件数を見て確認する。 */}
+          <ReportButton id={item.id} />
+        </div>
 
         <div className="card">
           <div className="qtext qtext-main">💬 {item.question}</div>

@@ -35,8 +35,17 @@ async function AdminPageContent() {
 
   const { data: recentConsultations } = await supabase
     .from('consultations')
-    .select('id, category, question, author_id, hidden, request_type, created_at')
+    .select('id, category, question, author_id, hidden, request_type, created_at, reports')
     .order('created_at', { ascending: false })
+    .limit(50);
+
+  // 通報が1件以上ある相談は、直近50件の中に埋もれて見逃されないよう、
+  // 直近50件とは別に新着順で取得して画面の先頭に出す（2026-10-12）。
+  const { data: reportedConsultations } = await supabase
+    .from('consultations')
+    .select('id, category, question, author_id, hidden, request_type, created_at, reports')
+    .gt('reports', 0)
+    .order('reports', { ascending: false })
     .limit(50);
 
   const fiveDaysAgo = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString();
@@ -91,6 +100,7 @@ async function AdminPageContent() {
     <AdminClient
       unverifiedExperts={unverifiedExperts || []}
       recentConsultations={recentConsultations || []}
+      reportedConsultations={reportedConsultations || []}
       overdueExpertRequests={overdueExpertRequests || []}
       recentExpertAnswers={recentExpertAnswers}
       initialSidebarBanner={

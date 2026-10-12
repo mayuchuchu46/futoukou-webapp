@@ -21,6 +21,7 @@ type RecentConsultation = {
   hidden: boolean;
   request_type: 'ai' | 'expert';
   created_at: string;
+  reports?: number;
 };
 
 type OverdueExpertRequest = {
@@ -61,6 +62,7 @@ type RecentExpertAnswer = {
 export default function AdminClient({
   unverifiedExperts,
   recentConsultations,
+  reportedConsultations,
   overdueExpertRequests,
   recentExpertAnswers,
   initialSidebarBanner,
@@ -69,6 +71,7 @@ export default function AdminClient({
 }: {
   unverifiedExperts: UnverifiedExpert[];
   recentConsultations: RecentConsultation[];
+  reportedConsultations: RecentConsultation[];
   overdueExpertRequests: OverdueExpertRequest[];
   recentExpertAnswers: RecentExpertAnswer[];
   initialSidebarBanner: SidebarBanner;
@@ -77,6 +80,7 @@ export default function AdminClient({
 }) {
   const [experts, setExperts] = useState(unverifiedExperts);
   const [consultations, setConsultations] = useState(recentConsultations);
+  const [reported, setReported] = useState(reportedConsultations);
   const [overdue, setOverdue] = useState(overdueExpertRequests);
   const [busy, setBusy] = useState<string | null>(null);
   const [banner, setBanner] = useState(initialSidebarBanner);
@@ -131,6 +135,7 @@ export default function AdminClient({
     setBusy(null);
     if (res.ok) {
       setConsultations((list) => list.map((c) => (c.id === id ? { ...c, hidden } : c)));
+      setReported((list) => list.map((c) => (c.id === id ? { ...c, hidden } : c)));
     } else {
       const data = await res.json();
       alert(data.error || '失敗しました');
@@ -140,6 +145,62 @@ export default function AdminClient({
   function startEdit(c: RecentConsultation) {
     setEditingId(c.id);
     setEditText(c.question);
+  }
+
+  // 「通報された相談」「相談一覧」の両方で同じカード見た目を使うための共通レンダラー
+  // （通報件数バッジを両方に出したいので2026-10-12に関数へ切り出した）。
+  function renderConsultationCard(c: RecentConsultation) {
+    const cat = CATS[c.category as keyof typeof CATS] || CATS.other;
+    return (
+      <div key={c.id} className="card" style={{ opacity: c.hidden ? 0.5 : 1 }}>
+        <div className="row">
+          <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
+          <span className="muted">{c.request_type === 'expert' ? '有料' : '無料AI'}</span>
+          {!!c.reports && (
+            <span
+              className="muted"
+              style={{ color: '#C0392B', fontWeight: 700, marginLeft: 'auto' }}
+            >
+              ⚠ 通報 {c.reports}件
+            </span>
+          )}
+        </div>
+        {editingId === c.id ? (
+          <textarea
+            className="input"
+            style={{ width: '100%', minHeight: 80 }}
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+          />
+        ) : (
+          <div className="qtext">{c.question}</div>
+        )}
+        <div className="muted">{new Date(c.created_at).toLocaleString('ja-JP')}</div>
+        <div className="row" style={{ gap: 8 }}>
+          <button
+            className="btn-secondary"
+            disabled={busy === c.id}
+            onClick={() => toggleHidden(c.id, !c.hidden)}
+          >
+            {busy === c.id ? '処理中…' : c.hidden ? '表示に戻す' : '非表示にする'}
+          </button>
+          {editingId === c.id ? (
+            <>
+              <button className="btn-primary" disabled={busy === c.id} onClick={() => saveEdit(c.id)}>
+                {busy === c.id ? '保存中…' : '保存'}
+              </button>
+              <button className="btn-secondary" disabled={busy === c.id} onClick={() => setEditingId(null)}>
+                キャンセル
+              </button>
+            </>
+          ) : (
+            <button className="btn-secondary" disabled={busy === c.id} onClick={() => startEdit(c)}>
+              本文を編集
+            </button>
+          )}
+        </div>
+      </div>
+    );
   }
 
   async function saveEdit(id: string) {
@@ -156,6 +217,7 @@ export default function AdminClient({
     setBusy(null);
     if (res.ok) {
       setConsultations((list) => list.map((c) => (c.id === id ? { ...c, question: editText.trim() } : c)));
+      setReported((list) => list.map((c) => (c.id === id ? { ...c, question: editText.trim() } : c)));
       setEditingId(null);
     } else {
       const data = await res.json();
@@ -348,52 +410,17 @@ export default function AdminClient({
           </div>
         ))}
 
+        {/* 通報された相談（2026-10-12追加）。直近50件の一覧に埋もれると見逃されるため、
+            通報が1件以上あるものだけを別枠で、件数が多い順に出す。 */}
+        <div style={{ fontWeight: 700, marginTop: 16 }}>通報された相談</div>
+        {reported.length === 0 ? (
+          <div className="muted">現在、通報はありません。</div>
+        ) : (
+          reported.map((c) => renderConsultationCard(c))
+        )}
+
         <div style={{ fontWeight: 700, marginTop: 16 }}>相談一覧（直近50件）</div>
-        {consultations.map((c) => {
-          const cat = CATS[c.category as keyof typeof CATS] || CATS.other;
-          return (
-            <div key={c.id} className="card" style={{ opacity: c.hidden ? 0.5 : 1 }}>
-              <div className="row">
-                <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
-                <span className="muted">{c.request_type === 'expert' ? '有料' : '無料AI'}</span>
-              </div>
-              {editingId === c.id ? (
-                <textarea
-                  className="input"
-                  style={{ width: '100%', minHeight: 80 }}
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                />
-              ) : (
-                <div className="qtext">{c.question}</div>
-              )}
-              <div className="muted">{new Date(c.created_at).toLocaleString('ja-JP')}</div>
-              <div className="row" style={{ gap: 8 }}>
-                <button
-                  className="btn-secondary"
-                  disabled={busy === c.id}
-                  onClick={() => toggleHidden(c.id, !c.hidden)}
-                >
-                  {busy === c.id ? '処理中…' : c.hidden ? '表示に戻す' : '非表示にする'}
-                </button>
-                {editingId === c.id ? (
-                  <>
-                    <button className="btn-primary" disabled={busy === c.id} onClick={() => saveEdit(c.id)}>
-                      {busy === c.id ? '保存中…' : '保存'}
-                    </button>
-                    <button className="btn-secondary" disabled={busy === c.id} onClick={() => setEditingId(null)}>
-                      キャンセル
-                    </button>
-                  </>
-                ) : (
-                  <button className="btn-secondary" disabled={busy === c.id} onClick={() => startEdit(c)}>
-                    本文を編集
-                  </button>
-                )}
-              </div>
-            </div>
-          );
-        })}
+        {consultations.map((c) => renderConsultationCard(c))}
       </div>
     </div>
   );

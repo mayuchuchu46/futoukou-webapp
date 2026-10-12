@@ -10,6 +10,8 @@ export type Consultation = {
   likes: number;
   liked_by: string[];
   views: number;
+  reports?: number;
+  reported_by?: string[];
   created_at: string;
   request_type: 'ai' | 'expert';
   price_jpy: number | null;

@@ -104,6 +104,11 @@
 -- 追加した場合、既存DBでは次を実行してください。配信自体は別途実装予定で、今回は
 -- 同意の記録のみ（2026-10-12）。
 -- alter table members add column if not exists newsletter_opt_in boolean not null default false;
+-- 相談への「通報する」機能（個人情報の混入・不適切な内容などを閲覧者が運営に知らせる手段。
+-- 自動非表示はせず、運営が管理画面で確認するための件数記録のみ）を追加した場合、
+-- 既存DBでは次を実行してください（2026-10-12）。
+-- alter table consultations add column if not exists reports int not null default 0;
+-- alter table consultations add column if not exists reported_by text[] not null default '{}';
 
 create extension if not exists "pgcrypto";
 
@@ -184,6 +189,8 @@ create table if not exists consultations (
   likes int not null default 0,
   liked_by text[] not null default '{}',
   views int not null default 0,
+  reports int not null default 0, -- 「通報する」が押された件数（自動非表示はせず、運営が管理画面で確認するための記録）
+  reported_by text[] not null default '{}', -- 通報済みのuid一覧（同じ人の多重通報で件数が膨らまないようにするため）
   created_at timestamptz not null default now(),
   hidden boolean not null default false, -- 運営が非表示にした相談
 
