@@ -120,8 +120,9 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
           {/* 課金導線（会員になって見る）を一番手にしつつ、まだ相談するか迷っている人にも
               「相談を増やす」という選択肢を出しておく。相談が増えるほど状況整理の精度が
               上がり、会員になったときに見える内容も充実するため、ここで相談を離脱させない
-              ための導線（2026-10-12 追加）。 */}
-          <Link href="/ask" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              ための導線。最初は小さいテキストリンクにしていたが目立たなすぎたため、
+              btn-primaryと並ぶ実際のボタン（btn-secondary）に変更した（2026-10-12）。 */}
+          <Link href="/ask" className="btn-secondary" style={{ width: '100%' }}>
             さらに相談して、ノートの材料を増やす
           </Link>
         </>
