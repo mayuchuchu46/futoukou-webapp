@@ -19,7 +19,7 @@ export default function PrivacyPage() {
           <div>
             <div style={{ fontWeight: 700, fontSize: 13 }}>2. 事業者情報</div>
             <div className="qtext">
-              運営者：manapri（個人事業主）<br />
+              運営者：manapri<br />
               お問い合わせ先：mail.manapri@gmail.com
             </div>
           </div>
