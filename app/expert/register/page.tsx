@@ -83,6 +83,9 @@ export default function ExpertRegisterPage() {
         />
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
           登録番号の自己申告だけでは本人確認ができないため、登録証の画像またはPDFを添付してください。
+          {/* 2026-10-13: 差し戻し（不備・期限切れによる再提出）の大半を占める2点を、
+              申請前にあらかじめ明記しておくことで、差し戻しの件数自体を減らす狙いで追加。 */}
+          有効期限内のもので、氏名・資格名・登録番号がはっきり読み取れる状態でご提出ください（内容が確認できない場合、再提出をお願いすることがあります）。
           ご提出いただいた登録証は本人確認のみに使用し、第三者には提供しません。確認が完了するまで、有料相談への回答はできません。
         </div>
         <input className="input" type="email" placeholder="メールアドレス" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
