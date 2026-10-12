@@ -65,10 +65,14 @@ export default function SaveConsultationPrompt({ id, authorId }: { id: string; a
 
   return (
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-      <div className="answer-label" style={{ fontSize: 14 }}>この相談、分析ノートに残せます</div>
-      <div className="qtext">
-        無料登録すると、この相談が「分析ノート」に記録され、今のお子さんの状況や次にやることをどうする先生が整理してくれます。相談を重ねるほど、ノートの中身は詳しくなります。
-      </div>
+      <div className="answer-label" style={{ fontSize: 14 }}>この相談、残しておけます</div>
+      {/* 長い説明文1本ではなく、無料会員登録の魅力をポイントで整理して見せる形に変更
+          （2026-10-13、「質問の蓄積で分析ノートが作られる」ことが伝わるように）。 */}
+      <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--text)', lineHeight: 1.9 }}>
+        <li>この相談が「分析ノート」に記録されます</li>
+        <li>相談を重ねるほど、お子さんの状況をAIが整理します</li>
+        <li>次にやること・言葉かけの提案もノートに書き足されます</li>
+      </ul>
       <div className="row" style={{ gap: 10, width: '100%' }}>
         <a className="btn-primary" href={`/account/register?next=${encodeURIComponent('/notebook')}`}>
           無料で登録する
@@ -77,6 +81,9 @@ export default function SaveConsultationPrompt({ id, authorId }: { id: string; a
           今はしない
         </button>
       </div>
+      <a href="/notebook" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+        分析ノートを見る
+      </a>
     </div>
   );
 }
