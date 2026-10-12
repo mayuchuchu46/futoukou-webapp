@@ -26,9 +26,8 @@ export async function POST(req: NextRequest) {
   if (password.length < 8) {
     return NextResponse.json({ error: 'パスワードは8文字以上にしてください' }, { status: 400 });
   }
-  if (!license_number.trim()) {
-    return NextResponse.json({ error: '資格の登録番号を入力してください（運営が本人確認のため使用します）' }, { status: 400 });
-  }
+  // 資格によっては登録番号制度自体が無いものもあるため、登録番号は任意項目にしている
+  // （本人確認は登録証の提出・運営による目視確認で行う。2026-10-13、必須から変更）。
   if (!(licenseDoc instanceof File) || licenseDoc.size === 0) {
     return NextResponse.json({ error: '登録証（画像またはPDF）を添付してください' }, { status: 400 });
   }
