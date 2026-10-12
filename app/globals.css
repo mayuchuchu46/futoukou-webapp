@@ -785,3 +785,102 @@ select.input {
 .similar-item:first-of-type { border-top: none; }
 .similar-q { flex: 1; font-size: 13px; color: var(--text); line-height: 1.5; }
 .similar-arrow { flex: 0 0 auto; color: var(--muted); font-size: 13px; }
+
+/* ============================================================
+   分析ノート（/notebook）：相談が増えるほど中身が充実していく様子を、
+   紙のノート・色分けされたタブで「書き足して整理していく」感覚として
+   見せる（2026-10-12、「ノートっぽく・整理整頓が楽しくなるように」との
+   指摘を受けて追加）。
+   ============================================================ */
+.notebook-card {
+  position: relative;
+  padding-left: 30px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 29px,
+    #ECE6D6 29px,
+    #ECE6D6 30px
+  );
+  background-color: var(--card);
+  background-position: 0 2px;
+}
+/* ノート用紙の定番、左の赤い罫線。 */
+.notebook-card::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  left: 18px;
+  width: 1.5px;
+  background: var(--orange);
+  opacity: 0.5;
+}
+.notebook-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+.notebook-head-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* 相談件数を、マスキングテープで留めた付箋のように見せる。少し傾けて
+   手作業で貼ったような雰囲気にし、件数が増えるほど賑やかになる感じを狙う。 */
+.notebook-count-badge {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--orange-text);
+  background: var(--orange-bg);
+  padding: 5px 12px;
+  border-radius: 3px 14px 3px 14px;
+  transform: rotate(-2deg);
+  white-space: nowrap;
+}
+/* 相談を重ねるほど増えていく「ノートの厚み」を、小さな点の並びで見せる
+   （5件で満タン、以降は＋表示）。整理整頓・積み重ねが見えると楽しいという
+   狙いで、進捗バーよりも手書きのチェック印に近い見た目にした。 */
+.notebook-progress {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+.notebook-progress-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  flex: 0 0 auto;
+}
+.notebook-progress-dot.filled { background: var(--main); }
+.notebook-progress-label { font-size: 11px; color: var(--muted); margin-left: 2px; }
+
+/* 各項目を、色分けされたタブ付きの小さなカード（インデックスカード風）に
+   分けて並べる。背景色のペアは、ホーム画面のカテゴリータグ（.cat-*）と
+   同じ配色を流用し、アプリ全体で色の意味が揃うようにしている。 */
+.notebook-entry {
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 4px 14px 14px 14px;
+  padding: 4px 14px 14px;
+}
+.notebook-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 13px;
+  border-radius: 0 0 10px 10px;
+  margin: 0 0 8px -14px;
+}
+.notebook-tab.tab-status { background: var(--sub); color: #1F4A3C; }
+.notebook-tab.tab-advice { background: var(--orange-bg); color: var(--orange-text); }
+.notebook-tab.tab-phrase { background: var(--yellow-bg); color: var(--yellow-text); }
+.notebook-tab.tab-env { background: var(--moss-bg); color: var(--moss-text); }
+.notebook-tab.tab-school { background: var(--teal-bg); color: var(--teal-text); }

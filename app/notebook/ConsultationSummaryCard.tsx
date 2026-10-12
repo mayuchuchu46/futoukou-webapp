@@ -29,6 +29,33 @@ function SchoolMatchComingSoon() {
   );
 }
 
+// 「分析ノート」の見出し部分（タイトル＋相談件数の付箋バッジ＋積み重ね表示の点）。
+// どの表示状態（未登録・相談0件・相談あり）でも同じ見出しを出し、ページ全体が
+// 一貫して「ノート」に見えるようにする（2026-10-12、ノートらしい見た目にする
+// リニューアルで追加）。
+function NotebookHead({ count }: { count: number }) {
+  const dots = Array.from({ length: 5 }, (_, i) => i < Math.min(count, 5));
+  return (
+    <div className="notebook-head">
+      <div className="notebook-head-text">
+        <div className="answer-label" style={{ fontSize: 14 }}>
+          <img src="/assets/icon_book.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
+          分析ノート
+        </div>
+        <div className="notebook-progress">
+          {dots.map((filled, i) => (
+            <span key={i} className={`notebook-progress-dot${filled ? ' filled' : ''}`} />
+          ))}
+          <span className="notebook-progress-label">
+            {count > 5 ? `${count}件のメモ` : '相談を重ねるほど増えていきます'}
+          </span>
+        </div>
+      </div>
+      {count > 0 && <span className="notebook-count-badge">{count}件相談済み</span>}
+    </div>
+  );
+}
+
 // 「分析ノート」ページ（/notebook）の本体カード。自分が投稿した相談の蓄積から
 // どうする先生がAIで状況を整理するもの。元はマイページ内のカードだったが、
 // 会員登録・課金への導線として独立したタブ（ボトムナビ）に格上げした
@@ -36,6 +63,9 @@ function SchoolMatchComingSoon() {
 // 記録していない（匿名ブラウザIDに紐づくのみ）ため、分析材料は
 // 「本人が投稿した相談」に絞っている。これは信号としての精度が高いことに
 // 加え、「読んだだけのページも見られている」という違和感を避ける意図もある。
+// 見た目は、紙のノート（横罫線＋左の赤線）＋項目ごとに色分けしたタブ付き
+// カードで統一し、相談を重ねるほどノートが「書き足されて」整理されていく
+// 感覚を出している（.notebook-*、2026-10-12リニューアル）。
 // ・未登録：会員登録すると相談の積み重ねからノートが作られることを案内する（この時点の
 //   自分のブラウザの相談件数 ownCount を見せて、「相談を重ねるほどノートの中身が詳しくなる」
 //   イメージを会員登録前からも持ってもらう）
@@ -72,11 +102,8 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
 
   if (!data.loggedIn) {
     return (
-      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-        <div className="answer-label" style={{ fontSize: 14 }}>
-          <img src="/assets/icon_book.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
-          分析ノート
-        </div>
+      <div className="card notebook-card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <NotebookHead count={ownCount} />
         <div className="qtext">
           {ownCount > 0
             ? `これまでに${ownCount}件相談しています。会員登録すると、これまでの相談を一つのノートにまとめて、今のお子さんの状況をどうする先生が整理してくれます。相談を重ねるほど、ノートの中身は詳しくなっていきます。`
@@ -97,11 +124,8 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
 
   if (!data.summary) {
     return (
-      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-        <div className="answer-label" style={{ fontSize: 14 }}>
-          <img src="/assets/icon_book.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
-          分析ノート
-        </div>
+      <div className="card notebook-card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <NotebookHead count={0} />
         <div className="qtext">
           まだ相談がありません。相談するたびに、ここにノートとして記録が蓄積され、どうする先生がお子さんの状況をより詳しく整理できるようになります。
         </div>
@@ -115,21 +139,21 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
   const { statusSummary, advice, phrasingSuggestion, environmentSuggestion, schoolFitPoints, locked } = data.summary;
 
   return (
-    <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-      <div className="answer-label" style={{ fontSize: 14 }}>
-        <img src="/assets/icon_book.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
-        分析ノート
+    <div className="card notebook-card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <NotebookHead count={data.count} />
+
+      <div className="notebook-entry">
+        <span className="notebook-tab tab-status">今のお子さんの状況</span>
+        <div className="qtext">{statusSummary}</div>
       </div>
-      <div className="muted" style={{ fontSize: 13 }}>
-        これまでの相談：{data.count}件・相談を重ねるほど、ノートの中身は詳しくなります
-      </div>
-      <div className="answer-label" style={{ fontSize: 12 }}>今のお子さんの状況</div>
-      <div className="qtext">{statusSummary}</div>
 
       {locked ? (
         <>
-          <div className="qtext" style={{ filter: 'blur(4px)', userSelect: 'none' }} aria-hidden="true">
-            会員になると、ここに次の一手の具体的なアドバイス・この子に合いそうな言葉かけ・環境面の工夫が表示されます。相談を重ねるほど、より具体的な内容になっていきます。
+          <div className="notebook-entry">
+            <span className="notebook-tab tab-advice">次の一手</span>
+            <div className="qtext" style={{ filter: 'blur(4px)', userSelect: 'none' }} aria-hidden="true">
+              会員になると、ここに次の一手の具体的なアドバイス・この子に合いそうな言葉かけ・環境面の工夫が表示されます。相談を重ねるほど、より具体的な内容になっていきます。
+            </div>
           </div>
           <Link className="btn-primary" href="/account">
             会員になって見る
@@ -146,31 +170,33 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
         </>
       ) : (
         <>
-          <div className="answer-label" style={{ fontSize: 13 }}>次にやること</div>
-          <div className="qtext">{advice}</div>
+          <div className="notebook-entry">
+            <span className="notebook-tab tab-advice">次にやること</span>
+            <div className="qtext">{advice}</div>
+          </div>
           {phrasingSuggestion && (
-            <>
-              <div className="answer-label" style={{ fontSize: 13 }}>言葉かけの提案</div>
+            <div className="notebook-entry">
+              <span className="notebook-tab tab-phrase">言葉かけの提案</span>
               <div className="qtext">{phrasingSuggestion}</div>
-            </>
+            </div>
           )}
           {environmentSuggestion && (
-            <>
-              <div className="answer-label" style={{ fontSize: 13 }}>環境面の工夫</div>
+            <div className="notebook-entry">
+              <span className="notebook-tab tab-env">環境面の工夫</span>
               <div className="qtext">{environmentSuggestion}</div>
-            </>
+            </div>
           )}
           {schoolFitPoints && (
-            <>
-              {/* 学校・居場所選びの着眼点（簡易版）。実在の学校名は出さない、一般的な
-                  チェックポイントの提案。本格的な学校ごとの相性診断はデータが揃うまでの
-                  カミングソーンとして下にバッジで案内する（2026-10-12 追加）。 */}
-              <div className="answer-label" style={{ fontSize: 13 }}>学校・居場所選びの着眼点</div>
+            // 学校・居場所選びの着眼点（簡易版）。実在の学校名は出さない、一般的な
+            // チェックポイントの提案。本格的な学校ごとの相性診断はデータが揃うまでの
+            // カミングソーンとして下にバッジで案内する（2026-10-12 追加）。
+            <div className="notebook-entry">
+              <span className="notebook-tab tab-school">学校・居場所選びの着眼点</span>
               <div className="qtext">{schoolFitPoints}</div>
-            </>
+            </div>
           )}
-          {/* フル表示（読み放題会員）になった後も、相談を重ねるたびにノートが更新・充実して
-              いくことが伝わるよう、次の相談への導線を必ず置く（2026-10-12 追加）。 */}
+          {/* フル表示になった後も、相談を重ねるたびにノートが更新・充実していくことが
+              伝わるよう、次の相談への導線を必ず置く（2026-10-12 追加）。 */}
           <div className="muted" style={{ fontSize: 12 }}>
             相談を重ねるほど、ノートの中身はさらに詳しくなります
           </div>
