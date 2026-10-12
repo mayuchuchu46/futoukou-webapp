@@ -91,9 +91,13 @@ input, textarea { font-family: inherit; }
 @media (max-width: 480px) {
   .hero-sub { white-space: normal; }
   /* account-tab（右上に固定表示される「ログイン／アカウント」タブ）が、画面幅480px未満だと
-     .header-rightの「つらいときはこちら」と同じ右上の位置に重なって隠れてしまうため、
-     スマホ幅のときだけheader-rightを少し下にずらして衝突を避ける（実機で確認して追加）。 */
-  .header-right { padding-top: 30px; }
+     .header-rightの「つらいときはこちら」と同じ右上の位置に重なって隠れてしまう。
+     最初はheader-rightだけを下にずらしたが、それだと今度はheader-right（つらいときは
+     こちら等）がheader-left側のhero-sub（「今、どうしたらいい？」の説明文）と同じ高さに
+     来てテキストに重なってしまったため、header全体（ロゴ含む）を一緒に下にずらす方式に
+     変更した。これなら header-left と header-right の相対位置関係は崩れない
+     （実機で2回確認して修正）。 */
+  .header { padding-top: 46px; }
 }
 .wordmark { height: 42px; width: auto; margin-right: 0; }
 .badge {
