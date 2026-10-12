@@ -7,7 +7,10 @@ import { useEffect, useState } from 'react';
 const ITEMS = [
   { href: '/', label: 'ホーム', icon: '/assets/icon_house.png' },
   { href: '/ask', label: '相談する', icon: '/assets/icon_bulb.png' },
-  { href: '/mypage', label: 'マイページ', icon: '/assets/icon_book.png' },
+  // 分析ノートは独立したタブにして常時アクセスできるようにする（元はマイページ内のカードだった）。
+  // アイコンはノートを連想させるicon_book、マイページは元のicon_bookmarkに戻す。
+  { href: '/notebook', label: '分析ノート', icon: '/assets/icon_book.png' },
+  { href: '/mypage', label: 'マイページ', icon: '/assets/icon_bookmark.png' },
 ];
 
 // ある程度スクロールしたら、フッター付近にページ先頭へ戻るボタンを出す。
