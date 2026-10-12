@@ -367,6 +367,16 @@ h2.pagetitle {
      細く表示されていた）。 */
   .app-shell { max-width: 1080px; }
 
+  /* .fab（「相談する」ピンクの丸ボタン）・.scroll-top-btn・.account-tabは、
+     「中央寄せされた480px幅のコンテンツ列」を前提にした calc(50% - 240px + …) で
+     位置を計算している。.app-shellがここで1080px幅に変わる（中心からの半幅が
+     240px→540pxになる）のに合わせて計算式を更新しないと、実際のコンテンツ幅の
+     内側ではなく画面中央寄りの変な位置に浮いて見えてしまうため、ここで上書きする
+     （2026-10-12、「この位置がいいの？」との指摘を受けて修正）。 */
+  .fab { right: calc(50% - 540px + 20px); }
+  .scroll-top-btn { left: calc(50% - 540px + 20px); }
+  .account-tab { right: max(12px, calc(50% - 540px + 16px)); }
+
   /* 左右で高さの違う内容（検索ボックス vs サイドバナー等）を同じ行に揃えようとすると
      片方の短い要素の下に謎の空白ができてしまうため、grid-template-areasでの行合わせは
      やめて、左カラム・右カラムをそれぞれ独立した縦積み（flex column）にする。
@@ -565,6 +575,7 @@ h2.pagetitle {
   position: fixed;
   right: calc(50% - 240px + 20px);
   bottom: 84px;
+  /* 下のscroll-top-btn・account-tabも同じ理由でPC用の計算式を別途@media内に持つ。 */
   height: 44px;
   padding: 0 16px;
   border-radius: 999px;
