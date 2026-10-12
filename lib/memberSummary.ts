@@ -7,6 +7,7 @@ export type MemberSummary = {
   advice: string;
   phrasingSuggestion: string;
   environmentSuggestion: string;
+  schoolFitPoints: string;
   consultationCount: number;
   generatedAt: string;
 };
@@ -16,6 +17,7 @@ type CachedRow = {
   advice: string;
   phrasing_suggestion: string | null;
   environment_suggestion: string | null;
+  school_fit_points: string | null;
   consultation_count: number;
   generated_at: string;
 };
@@ -24,10 +26,11 @@ function fromCachedRow(cached: CachedRow, consultationCount?: number): MemberSum
   return {
     statusSummary: cached.status_summary,
     advice: cached.advice,
-    // phrasing_suggestion/environment_suggestionは後から追加した列のため、
+    // phrasing_suggestion/environment_suggestion/school_fit_pointsは後から追加した列のため、
     // 追加前に生成された古いキャッシュ行ではnullのことがある。
     phrasingSuggestion: cached.phrasing_suggestion || '',
     environmentSuggestion: cached.environment_suggestion || '',
+    schoolFitPoints: cached.school_fit_points || '',
     consultationCount: consultationCount ?? cached.consultation_count,
     generatedAt: cached.generated_at,
   };
@@ -50,7 +53,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
 
   const { data: cached } = await supabase
     .from('member_summaries')
-    .select('status_summary, advice, phrasing_suggestion, environment_suggestion, consultation_count, generated_at')
+    .select('status_summary, advice, phrasing_suggestion, environment_suggestion, school_fit_points, consultation_count, generated_at')
     .eq('member_id', memberId)
     .single();
 
@@ -82,6 +85,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
   let advice = '';
   let phrasingSuggestion = '';
   let environmentSuggestion = '';
+  let schoolFitPoints = '';
   try {
     const msg = await anthropic.messages.create({
       model: 'claude-sonnet-5',
@@ -102,6 +106,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
     phrasingSuggestion = typeof parsed.phrasing_suggestion === 'string' ? parsed.phrasing_suggestion.trim() : '';
     environmentSuggestion =
       typeof parsed.environment_suggestion === 'string' ? parsed.environment_suggestion.trim() : '';
+    schoolFitPoints = typeof parsed.school_fit_points === 'string' ? parsed.school_fit_points.trim() : '';
     if (!statusSummary || !advice) throw new Error('サマリーが空でした');
   } catch {
     // 生成に失敗した場合、古いキャッシュがあればそれを返し、無ければ諦める
@@ -117,6 +122,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
     advice,
     phrasing_suggestion: phrasingSuggestion,
     environment_suggestion: environmentSuggestion,
+    school_fit_points: schoolFitPoints,
     consultation_count: consultationCount,
     generated_at: generatedAt,
   });
@@ -126,6 +132,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
     advice,
     phrasingSuggestion,
     environmentSuggestion,
+    schoolFitPoints,
     consultationCount,
     generatedAt,
   };

@@ -12,9 +12,22 @@ type SummaryResponse = {
     advice: string | null;
     phrasingSuggestion: string | null;
     environmentSuggestion: string | null;
+    schoolFitPoints: string | null;
     locked: boolean;
   } | null;
 };
+
+// 学校ごとの相性診断（実在の学校名・制度名を使った具体的な提案）は、学校データが
+// 整うまでのカミングソーン扱い。今出しているのはあくまで一般的な着眼点の提案
+// （school_fit_points）で、実在の学校名は一切出さない暫定版（2026-10-12）。
+function SchoolMatchComingSoon() {
+  return (
+    <div className="muted" style={{ fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+      <span className="comingsoon-badge">準備中</span>
+      学校ごとの相性診断（実際の学校・フリースクールのデータを使った具体的な提案）は準備中です
+    </div>
+  );
+}
 
 // 「分析ノート」ページ（/notebook）の本体カード。自分が投稿した相談の蓄積から
 // どうする先生がAIで状況を整理するもの。元はマイページ内のカードだったが、
@@ -95,7 +108,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
     );
   }
 
-  const { statusSummary, advice, phrasingSuggestion, environmentSuggestion, locked } = data.summary;
+  const { statusSummary, advice, phrasingSuggestion, environmentSuggestion, schoolFitPoints, locked } = data.summary;
 
   return (
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
@@ -125,6 +138,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
           <Link href="/ask" className="btn-secondary" style={{ width: '100%' }}>
             さらに相談して、ノートの材料を増やす
           </Link>
+          <SchoolMatchComingSoon />
         </>
       ) : (
         <>
@@ -142,6 +156,15 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
               <div className="qtext">{environmentSuggestion}</div>
             </>
           )}
+          {schoolFitPoints && (
+            <>
+              {/* 学校・居場所選びの着眼点（簡易版）。実在の学校名は出さない、一般的な
+                  チェックポイントの提案。本格的な学校ごとの相性診断はデータが揃うまでの
+                  カミングソーンとして下にバッジで案内する（2026-10-12 追加）。 */}
+              <div className="answer-label" style={{ fontSize: 13 }}>学校・居場所選びの着眼点</div>
+              <div className="qtext">{schoolFitPoints}</div>
+            </>
+          )}
           {/* フル表示（読み放題会員）になった後も、相談を重ねるたびにノートが更新・充実して
               いくことが伝わるよう、次の相談への導線を必ず置く（2026-10-12 追加）。 */}
           <div className="muted" style={{ fontSize: 12 }}>
@@ -150,6 +173,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
           <Link href="/ask" className="btn-secondary">
             新しく相談する
           </Link>
+          <SchoolMatchComingSoon />
         </>
       )}
     </div>

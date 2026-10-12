@@ -96,6 +96,10 @@
 -- 既存DBでは次を実行してください。
 -- alter table member_summaries add column if not exists phrasing_suggestion text not null default '';
 -- alter table member_summaries add column if not exists environment_suggestion text not null default '';
+-- 分析ノートのAIサマリーに「学校・居場所選びの着眼点（簡易版）」を追加した場合、
+-- 既存DBでは次を実行してください。実在の学校名は出さない暫定版の着眼点提案です
+-- （本格的な学校ごとの相性診断は、実在の学校データが揃うまでのカミングソーン扱い）。
+-- alter table member_summaries add column if not exists school_fit_points text not null default '';
 
 create extension if not exists "pgcrypto";
 
@@ -206,6 +210,7 @@ create table if not exists member_summaries (
   advice text not null default '',
   phrasing_suggestion text not null default '',
   environment_suggestion text not null default '',
+  school_fit_points text not null default '',
   consultation_count int not null default 0,
   generated_at timestamptz not null default now()
 );

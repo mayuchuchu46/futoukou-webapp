@@ -32,6 +32,7 @@ export async function GET() {
       advice: active ? result.advice : null,
       phrasingSuggestion: active ? result.phrasingSuggestion : null,
       environmentSuggestion: active ? result.environmentSuggestion : null,
+      schoolFitPoints: active ? result.schoolFitPoints : null,
       locked: !active,
     },
   });
