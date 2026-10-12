@@ -123,45 +123,21 @@ input, textarea { font-family: inherit; }
   }
 }
 .wordmark { height: 42px; width: auto; margin-right: 0; }
+/* 以前は白背景＋黄色枠の吹き出し型バッジ（独立したUI部品に見える）だったが、
+   「もっとロゴよりに」という指摘を受けて、枠・背景・吹き出しの矢印を廃止し、
+   ロゴ本体から実測した文字色（--logo-pink）とロゴ本文と同じ丸ゴシックで
+   組んだ、ロゴに直接書き足されたサブ文字のような形に変更（2026-10-12）。 */
 .badge {
-  position: relative;
-  padding: 4px 11px;
-  border-radius: 14px;
-  background: #fff;
-  border: 1px solid var(--yellow);
-  font-size: 12px;
-  color: var(--yellow-text);
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  line-height: 1.4;
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--logo-pink);
+  line-height: 1;
   white-space: nowrap;
   flex: 0 0 auto;
-  margin-left: -6px;
-}
-.badge::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -6.5px;
-  margin-top: -6px;
-  width: 0;
-  height: 0;
-  border: 6px solid transparent;
-  border-left: 0;
-  border-right: 6.5px solid var(--yellow);
-}
-.badge::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -5px;
-  margin-top: -4.5px;
-  width: 0;
-  height: 0;
-  border: 4.5px solid transparent;
-  border-left: 0;
-  border-right: 5.5px solid #fff;
+  margin-left: -20px;
+  transform: rotate(-6deg) translateY(11px);
+  display: inline-block;
 }
 .beta-badge {
   padding: 3px 9px;
