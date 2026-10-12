@@ -117,6 +117,34 @@
 --   client_ip text,
 --   created_at timestamptz not null default now()
 -- );
+-- 新テーマ「学校との関係」(school)・「発達のこと」(dev)・「家庭・自分のこと」(home) を
+-- lib/categories.ts に追加した際、このDB側の制約・ガイドライン初期値への反映が漏れていた
+-- （2026-10-13発覚・修正）。既存DBでは次を実行してください。
+-- alter table consultations drop constraint if exists consultations_category_check;
+-- alter table consultations add constraint consultations_category_check
+--   check (category in ('body','social','school','will','approach','course','dev','home','other'));
+-- update guidelines set categories = jsonb_set(categories, '{school}', '{"dos": [], "donts": [], "samplePhrases": []}'::jsonb) where not (categories ? 'school');
+-- update guidelines set categories = jsonb_set(categories, '{dev}', '{"dos": [], "donts": [], "samplePhrases": []}'::jsonb) where not (categories ? 'dev');
+-- update guidelines set categories = jsonb_set(categories, '{home}', '{"dos": [], "donts": [], "samplePhrases": []}'::jsonb) where not (categories ? 'home');
+-- （中身の下書きを入れる場合は、このファイル下部の update guidelines ... の "school"/"dev"/"home" ブロックをコピーして個別に実行してください）
+-- サンプル相談を追加する場合（2026-10-13、上の3カテゴリも含めて既存の4件に追加）、
+-- 既存DBでは次を実行してください。
+-- insert into consultations (category, question, answer, author_id, likes) values
+-- ('school', '小4の娘が、担任の先生に提出物を忘れたことを強く叱られてから学校に行けなくなりました。先生とどう関わればいいか分かりません。',
+--  'まずは担任の先生に、「叱られたことをきっかけに行けなくなっている」という経過だけを、感情的にならず事実として伝えてください。次に、保健室登校や別室登校など、教室に入らなくても出席扱いになる制度があるか、学校に確認してみてください。本人には、先生と話す・話さないを無理強いせず、「お母さん（お父さん）が先に先生と話してくるね」と伝えて、本人の負担を減らすところから始めましょう。',
+--  'seed', 9),
+-- ('approach', '中1の息子が不登校になって3ヶ月。毎日「学校どうするの」と聞いてしまい、本人も私もしんどくなっています。',
+--  '今日から1週間、学校の話題を自分から持ち出すのをやめてみてください。その代わり、朝「おはよう」、夜「おやすみ」だけは必ず声をかけ続けます。学校の話は、本人から話してきたときだけ応じる形に切り替えると、家の中の緊張がまず和らぎます。',
+--  'seed', 23),
+-- ('dev', '小3の息子が、授業中じっとしていられない・忘れ物が多いと先生から度々指摘され、本人も嫌になって行き渋るようになりました。発達障害を疑った方がいいでしょうか。',
+--  'まずは学校のスクールカウンセラーに、授業中の様子や忘れ物の頻度など、具体的なエピソードを伝えて相談してみてください。必要に応じて、発達外来など専門機関を紹介してもらえます。診断がつくかどうかにかかわらず、「座っていられない」「忘れ物が多い」という困りごと自体に、座席の配置や持ち物チェック表など、今日から試せる工夫もあるので、まずは困っていることを整理するところから始めましょう。',
+--  'seed', 17),
+-- ('home', '子どもが不登校になってから、夫と対応方針が合わず、話すたびに喧嘩になります。子どもの前でも言い合いをしてしまいました。',
+--  'まずは子どもの前での言い合いを避けることを、お二人の共通ルールにしてください。話し合いは子どもが寝た後など、別のタイミングに移すだけでも、子どもが感じる緊張は減ります。その上で、「今週は様子を見る」「来週は一緒に〇〇を試す」のように、期間を区切って一つずつ対応を決めていくと、意見の違いがあっても前に進めやすくなります。',
+--  'seed', 31),
+-- ('other', '小5の娘が不登校になってから半年経ちますが、きっかけが本人にもはっきり分からないと言います。何から手をつければいいでしょうか。',
+--  'きっかけが分からないときは、原因探しより、今の生活リズム（起床・食事・睡眠の時間）を1週間記録することから始めてください。リズムが崩れている場合は、まずそこを整えるだけで状態が変わることがあります。記録をとる中で、学校の話題が出たときの表情や反応など、小さなヒントが見えてくることもあります。',
+--  'seed', 14);
 
 create extension if not exists "pgcrypto";
 
@@ -186,7 +214,7 @@ create table if not exists expert_ticket_purchases (
 
 create table if not exists consultations (
   id uuid primary key default gen_random_uuid(),
-  category text not null check (category in ('body','social','will','approach','course','other')),
+  category text not null check (category in ('body','social','school','will','approach','course','dev','home','other')),
   question text not null,
   answer text not null default '',
   grade text,
@@ -288,9 +316,12 @@ create table if not exists guidelines (
   categories jsonb not null default '{
     "body":    {"dos": [], "donts": [], "samplePhrases": []},
     "social":  {"dos": [], "donts": [], "samplePhrases": []},
+    "school":  {"dos": [], "donts": [], "samplePhrases": []},
     "will":    {"dos": [], "donts": [], "samplePhrases": []},
     "approach":{"dos": [], "donts": [], "samplePhrases": []},
     "course":  {"dos": [], "donts": [], "samplePhrases": []},
+    "dev":     {"dos": [], "donts": [], "samplePhrases": []},
+    "home":    {"dos": [], "donts": [], "samplePhrases": []},
     "other":   {"dos": [], "donts": [], "samplePhrases": []}
   }'::jsonb
 );
@@ -332,6 +363,22 @@ update guidelines set categories = '{
     "samplePhrases": [
       "クラスに戻る以外にも、できることはいろいろあるよ",
       "何があったか、話せるところだけ教えてくれる？"
+    ]
+  },
+  "school": {
+    "dos": [
+      "担任やスクールカウンセラーと、無理のない範囲で早めに情報共有し、連携の窓口をつくる",
+      "出席の扱いについて、保健室登校・別室登校・オンライン出席など、学校ごとの制度を確認する",
+      "学校に相談する際は、本人の気持ちを代弁しすぎず、先に本人の意向を確認する"
+    ],
+    "donts": [
+      "学校との連絡を本人に任せきりにしない（保護者が窓口になる）",
+      "一度の対応がうまくいかなかったからと、学校を頼ること自体をやめない",
+      "先生の対応への不満を、本人の前で感情的に話さない"
+    ],
+    "samplePhrases": [
+      "学校の先生と少し話してみようと思うけど、いい？",
+      "行けるときだけでも、先生に顔を見せられる方法を一緒に考えてみようか"
     ]
   },
   "will": {
@@ -381,10 +428,42 @@ update guidelines set categories = '{
       "見るだけ、話を聞くだけでもいいところを探そう"
     ]
   },
+  "dev": {
+    "dos": [
+      "気になる様子があれば、スクールカウンセラーや発達外来など専門機関への相談を選択肢として伝える",
+      "診断の有無にかかわらず、本人が実際に困っていることに目を向けて対応を考える",
+      "得意・不得意の差が大きいことを、わがままではなく特性として理解する姿勢を持つ"
+    ],
+    "donts": [
+      "保護者の判断だけで診断名を決めつけない",
+      "診断がついていない段階で、発達障害だからと本人に伝えない",
+      "他の子どもと比べて能力を評価しない"
+    ],
+    "samplePhrases": [
+      "得意なことと苦手なこと、両方あっていいんだよ",
+      "困っていること、一緒に整理してみようか"
+    ]
+  },
+  "home": {
+    "dos": [
+      "保護者自身が一人で抱え込まず、自治体の相談窓口や家族内での役割分担を検討する",
+      "夫婦間で対応方針に差がある場合は、子どもの前で対立を見せないようにしつつ、二人で話す時間を持つ",
+      "保護者自身の心身の余裕を保つことも、子どもへの対応の土台になると伝える"
+    ],
+    "donts": [
+      "保護者自身を責めすぎない（原因探しより、今できることに目を向ける）",
+      "家庭内の対立を子どもに仲裁させない",
+      "一人で全てを背負おうとしない"
+    ],
+    "samplePhrases": [
+      "あなた一人で頑張らなくていいんですよ",
+      "ご夫婦で少し役割分担してみるのはどうでしょう"
+    ]
+  },
   "other": {
     "dos": [
       "相談内容の背景（きっかけ、期間、変化）を整理する",
-      "身体・対人関係・本人の意思・進路のいずれかに近い部分があれば、それぞれの対応方針も参考にする"
+      "他のテーマ（身体的要因・友人関係・学校との関係・本人の意思・関わり方・進路・発達のこと・家庭のこと）に近い部分があれば、それぞれの対応方針も参考にする"
     ],
     "donts": [
       "情報が少ない段階で、断定的な原因を決めつけない"
