@@ -338,6 +338,11 @@ h2.pagetitle {
   .page-with-sidebar > .page-main { flex: 1; min-width: 0; }
 }
 
+/* .page-main（ホーム以外のページの本文カラム）には今までgap指定が無く、
+   .cardが連続すると投稿同士がぴったりくっついて見えてしまっていたため、
+   .home-main-colと同様にflex column + gapにする（PC/モバイル共通）。 */
+.page-main { display: flex; flex-direction: column; gap: 12px; }
+
 .pc-sidebar { display: none; }
 @media (min-width: 960px) {
   .pc-sidebar { display: flex; flex-direction: column; gap: 16px; width: 300px; flex: 0 0 300px; }
@@ -480,12 +485,14 @@ h2.pagetitle {
   height: 46px;
   padding: 0 18px;
   border-radius: 999px;
-  background: var(--main);
+  /* ロゴに本当のピンクは無く、実際はこのコーラル/オレンジ（--orange）なので、
+     「ピンクにして」はこの色に寄せる。 */
+  background: var(--orange);
   color: #fff;
   display: flex; align-items: center; justify-content: center; gap: 7px;
   font-size: 13px;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(47,117,104,0.35);
+  box-shadow: 0 4px 14px rgba(242,154,122,0.4);
   z-index: 20;
 }
 .fab img { width: 17px; height: 17px; object-fit: contain; filter: brightness(0) invert(1); }
