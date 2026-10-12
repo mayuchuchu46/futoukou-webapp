@@ -174,17 +174,21 @@ input, textarea { font-family: inherit; }
    読み物系の補足情報リンクなので破線下線で揃えているが、こちらは会員登録・ログインへの
    導線という役割が異なるため見た目を変えて目立たせる。画面右上の角にタブのようにぶら下げ、
    position: fixedでスクロールしても常に見える位置に固定する（2026-10-12）。
-   right位置は.fab/.scroll-top-btnと同じ、中央寄せされた480px幅のコンテンツ列基準の計算式。 */
+   rightは.fab/.scroll-top-btnと同じ、中央寄せされた480px幅のコンテンツ列基準の計算式だが、
+   480px未満の画面幅（実機の多くのスマホ）だとcalc()がマイナスになり右端からはみ出して
+   切れてしまうため、max()で「画面端から最低12pxは必ず空ける」下限を足した
+   （実機検証で欠けを確認して修正）。 */
 .account-tab {
   position: fixed;
   top: 0;
-  right: calc(50% - 240px + 16px);
+  right: max(12px, calc(50% - 240px + 16px));
   z-index: 30;
   padding: 7px 14px 8px;
   border: none;
   border-radius: 0 0 12px 12px;
-  background: var(--sub);
-  color: #1F4A3C;
+  /* 黄色系トークンに変更（2026-10-12、緑系だと他の要素と馴染みすぎるとの指摘を受けて） */
+  background: var(--yellow);
+  color: var(--yellow-text);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
@@ -192,7 +196,7 @@ input, textarea { font-family: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  box-shadow: 0 3px 10px rgba(31, 74, 60, 0.18);
+  box-shadow: 0 3px 10px rgba(138, 106, 26, 0.25);
   text-decoration: none;
 }
 .account-tab svg { flex-shrink: 0; }
