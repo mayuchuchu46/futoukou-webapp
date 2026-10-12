@@ -13,7 +13,7 @@ function RegisterForm() {
   // （外部URLへのオープンリダイレクトを避けるため）。
   const nextParam = searchParams.get('next');
   const next = nextParam && nextParam.startsWith('/') ? nextParam : '/account';
-  const [form, setForm] = useState({ email: '', password: '', confirmPassword: '', name: '', newsletterOptIn: false });
+  const [form, setForm] = useState({ email: '', password: '', confirmPassword: '', name: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   // パスワード欄の表示・非表示の切り替え（デフォルトは非表示＝●●●●）。
@@ -108,14 +108,11 @@ function RegisterForm() {
               required
             />
           </div>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              checked={form.newsletterOptIn}
-              onChange={(e) => setForm({ ...form, newsletterOptIn: e.target.checked })}
-            />
-            お知らせ・メルマガを受け取る（任意）
-          </label>
+          {/* メルマガ同意は、登録フォームに並べると「あえてチェックしない＝断る」という
+              構図を登録のその場で作ってしまう。積極的な同意を求める特定電子メール法の
+              趣旨からは、ここで聞かずアカウントページ（NewsletterPanel）でいつでも
+              任意に設定できる形の方が適切という判断で、登録フォームからは削除した
+              （2026-10-12）。 */}
           {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
           <button className="btn-primary" type="submit" disabled={loading}>
             {loading ? '登録中…' : '登録する'}
