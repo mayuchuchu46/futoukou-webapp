@@ -30,6 +30,12 @@ export default function NotebookPage() {
         <div className="muted" style={{ marginBottom: 4 }}>
           相談を重ねるほど、どうする先生が今のお子さんの状況をここにまとめます
         </div>
+        {/* 分析ノートは本人の相談内容（子どもの状況）を踏み込んでまとめるものなので、
+            安心して相談を重ねてもらえるよう、他の人には見えないことを明示する
+            （/api/member-summary はログイン中の本人のみ取得できる、2026-10-13追加）。 */}
+        <div className="muted" style={{ marginBottom: 12, fontSize: 12 }}>
+          🔒 分析ノートの内容は、あなたご本人以外には表示されません。
+        </div>
 
         {ownCount !== null && <ConsultationSummaryCard ownCount={ownCount} />}
 

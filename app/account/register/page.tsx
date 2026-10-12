@@ -67,6 +67,12 @@ function RegisterForm() {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             required
           />
+          {/* お名前・メールアドレスは相談の公開表示には一切使われないが、個人情報を
+              直接入力させる画面なので、不安なく登録してもらえるよう明示する
+              （相談・コメント等に表示されるのは学年・性別のみ、2026-10-13追加）。 */}
+          <div className="muted" style={{ fontSize: 12 }}>
+            🔒 お名前・メールアドレスは公開されません（ログインのみに使用します）。
+          </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div style={{ position: 'relative' }}>
               <input
