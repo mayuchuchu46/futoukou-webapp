@@ -1,40 +1,16 @@
-'use client';
+import type { Metadata } from 'next';
+import { SITE_URL, SITE_NAME } from '@/lib/site';
+import ThemeClient from './ThemeClient';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Header from '@/components/Header';
-import BottomNav from '@/components/BottomNav';
-import PcSidebar from '@/components/PcSidebar';
-import { CATS } from '@/lib/categories';
+// 中身（カテゴリ一覧・件数のクライアント側fetch）はThemeClientに分離した。
+// Client Componentからはmetadataをexportできないため、metadata用に
+// Server Componentのpage.tsxを用意する形にした（2026-10-14、SEO対策の一環）。
+export const metadata: Metadata = {
+  title: `テーマから探す｜${SITE_NAME}`,
+  description: '身体的要因・友人関係・学校との関係など、テーマ別に不登校の相談を探せます。',
+  alternates: { canonical: `${SITE_URL}/theme` },
+};
 
 export default function ThemePage() {
-  const [counts, setCounts] = useState<Record<string, number>>({});
-
-  useEffect(() => {
-    fetch('/api/consultations/counts')
-      .then((r) => r.json())
-      .then((d) => setCounts(d.counts || {}))
-      .catch(() => {});
-  }, []);
-
-  return (
-    <div className="app-shell">
-      <Header supervised={false} />
-      <div className="main page-with-sidebar">
-        <div className="page-main">
-        {Object.entries(CATS).map(([key, c]) => (
-          <Link key={key} href={`/?category=${key}`} className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--sub)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={c.icon} style={{ width: 20, height: 20 }} alt="" />
-            </div>
-            <div style={{ fontWeight: 700, flex: 1 }}>{c.label}</div>
-            <div className="muted">{counts[key] || 0}件</div>
-          </Link>
-        ))}
-        </div>
-        <PcSidebar />
-      </div>
-      <BottomNav />
-    </div>
-  );
+  return <ThemeClient />;
 }

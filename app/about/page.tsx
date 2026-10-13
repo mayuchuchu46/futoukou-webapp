@@ -1,15 +1,26 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { CATS } from '@/lib/categories';
+import { SITE_URL, SITE_NAME } from '@/lib/site';
 
 const CATEGORY_KEYS = Object.keys(CATS);
 
 // ビルド時の静的化はせず、監修状態（guidelines.supervised）を
 // リクエストごとにサーバー側で取得して反映する。
 export const instant = false;
+
+// 以前はこのページ固有のmetadataが無く、ルートlayout.tsxの汎用title/descriptionが
+// そのまま使われていた（検索結果でトップページと同じ見え方になってしまう）ため追加
+// （2026-10-14、SEO対策の一環）。
+export const metadata: Metadata = {
+  title: `どうする先生とは？｜${SITE_NAME}`,
+  description: '不登校の悩みにAIと専門家が答える「どうする先生」の使い方・対応するお悩みの種類・ご利用の流れをご紹介します。',
+  alternates: { canonical: `${SITE_URL}/about` },
+};
 
 async function getGuidelines() {
   const supabase = getSupabaseAdmin();

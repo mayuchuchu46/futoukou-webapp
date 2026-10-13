@@ -1,5 +1,15 @@
+import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import { SITE_URL, SITE_NAME } from '@/lib/site';
+
+// 検索結果でトップページと同じtitle/descriptionになっていたため、ページ固有の
+// metadataを追加（2026-10-14、SEO対策の一環）。
+export const metadata: Metadata = {
+  title: `相談窓口のご案内｜${SITE_NAME}`,
+  description: '不登校に関する公的な相談窓口・電話相談をまとめてご案内します。すべて無料・匿名で利用できます。',
+  alternates: { canonical: `${SITE_URL}/support` },
+};
 
 // AI・専門家への相談とは別に、公的な相談機関の情報もまとめて案内してほしいという
 // 要望を受けて追加（2026-10-13）。電話番号・受付時間は各機関の公式サイトで確認した

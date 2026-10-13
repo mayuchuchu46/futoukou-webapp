@@ -60,7 +60,12 @@ export default function Header({ supervised }: { supervised: boolean }) {
             <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
             <span className="badge">不登校編</span>
           </Link>
-          <div className="hero-catch">不登校のご家庭に、次の一手を。</div>
+          {/* サイト全体でh1タグが1つも無かった（ページ見出しは全てh2のpagetitle）ため、
+              SEO上の見出し構造を補う目的で、全ページ共通ヘッダーのこのキャッチコピーを
+              h1にした（2026-10-14）。全ページで同じテキストになる点は、タグライン的な
+              見出しとして許容範囲と判断（ブランド名＋キャッチコピーという構成）。
+              デフォルトのh1マージンは globals.css の.hero-catchでmargin:0にして打ち消している。 */}
+          <h1 className="hero-catch">不登校のご家庭に、次の一手を。</h1>
           <div className="hero-sub">「どうしたらいい？」にAIと専門家が具体的に回答</div>
         </div>
         <div className="header-right">

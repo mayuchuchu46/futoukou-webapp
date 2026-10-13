@@ -306,6 +306,9 @@ h2.pagetitle {
   line-height: 1.3;
   color: var(--main);
   max-width: 260px;
+  /* divからh1タグに変更した際、ブラウザ標準のh1マージンが付いて見た目が
+     変わらないよう明示的に打ち消す（2026-10-14）。 */
+  margin: 0;
 }
 .hero-sub {
   font-size: 11px;

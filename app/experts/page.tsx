@@ -1,14 +1,24 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
+import { SITE_URL, SITE_NAME } from '@/lib/site';
 
 // データベースの最新状態（本人確認済みの専門家）を毎回サーバー側で取得するページなので、
 // ビルド時の静的化はせず、リクエストごとに生成する。閲覧者ごとに表示が変わる情報は
 // 含まない（誰が見ても同じ内容）ため、Cookieは読まずに済み、Suspenseで囲う必要もない。
 export const instant = false;
+
+// 検索結果でトップページと同じtitle/descriptionになっていたため、ページ固有の
+// metadataを追加（2026-10-14、SEO対策の一環）。
+export const metadata: Metadata = {
+  title: `専門家一覧｜${SITE_NAME}`,
+  description: '不登校の相談に対応する、本人確認済みの専門家（公認心理師など）の一覧です。',
+  alternates: { canonical: `${SITE_URL}/experts` },
+};
 
 type ExpertProfile = {
   id: string;
