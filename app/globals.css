@@ -744,6 +744,12 @@ h2.pagetitle {
   font-size: 14px;
 }
 .share-btn-icon { flex: 0 0 auto; font-size: 15px; line-height: 1; }
+/* Facebookシェアボタンも並べて置けるよう追加（2026-10-14）。2つを横並びにし、
+   幅を均等に分ける。 */
+.share-btn-row { display: flex; gap: 8px; }
+.share-btn-row .share-btn { flex: 1; }
+.share-btn-facebook { background: #1877F2; }
+.share-btn-facebook .share-btn-icon { font-weight: 800; font-size: 16px; }
 
 .genderrow { display: flex; gap: 8px; }
 .genderbtn {

@@ -156,6 +156,8 @@ export default async function ResultPage({
   // （JSは不要）。AI回答・専門家回答の両方から同じ場所に出せるよう、JSX変数として
   // 共通化した（2026-10-12、「もっと詳しく相談してみませんか？」より上に出す配置に
   // 変更した際に、両方の分岐で同じボタンを使い回せるようにするため）。
+  const resultUrl = `${SITE_URL}/result/${item.id}`;
+
   const shareButton = (
     <a
       className="share-btn"
@@ -163,7 +165,7 @@ export default async function ResultPage({
         text: answerSnippet
           ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、\n\nどうする先生は\n「${answerSnippet}」と回答。\n\n続きはこちら。`
           : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
-        url: `${SITE_URL}/result/${item.id}`,
+        url: resultUrl,
         hashtags: 'どうする先生,不登校',
       })}`}
       target="_blank"
@@ -172,6 +174,30 @@ export default async function ResultPage({
       <span className="share-btn-icon">𝕏</span>
       この回答をシェアする
     </a>
+  );
+
+  // Facebookは投稿文を事前に渡すAPIを提供していない（urlのみ）ため、OGPタグ
+  // （og:title・og:description・og:image。個別ページ分はresult/[id]/opengraph-image.tsx
+  // 等で既に設定済み）がそのままシェアカードの見た目になる。Xのボタンと並べて置けるよう、
+  // 同じ.share-btnを使い、ブランドカラーのみFacebookの青に変えた
+  // （2026-10-14、「Facebookシェアボタンも同じやり方で」との要望を受けて追加）。
+  const facebookShareButton = (
+    <a
+      className="share-btn share-btn-facebook"
+      href={`https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: resultUrl })}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span className="share-btn-icon">f</span>
+      Facebookでシェアする
+    </a>
+  );
+
+  const shareButtons = (
+    <div className="share-btn-row">
+      {shareButton}
+      {facebookShareButton}
+    </div>
   );
 
   // 回答を見た後、「このまま終わり」にならないよう、もう一度（別の内容で）相談できる
@@ -251,7 +277,7 @@ export default async function ResultPage({
             <Suspense fallback={null}>
               <ResultClient id={id} initialItem={item} />
             </Suspense>
-            {shareButton}
+            {shareButtons}
             {askAgainBlock}
           </>
         ) : (
@@ -295,7 +321,7 @@ export default async function ResultPage({
             {/* 「もっと詳しく相談してみませんか？」（AiUsageUpsell、有料導線）より上に
                 シェアボタンを置く。無料でできる行動（シェア）を、課金に近い案内より
                 先に提示する並び（2026-10-12）。 */}
-            {shareButton}
+            {shareButtons}
             <Suspense fallback={null}>
               <AiUsageUpsell />
             </Suspense>
