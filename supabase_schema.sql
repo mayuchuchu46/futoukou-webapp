@@ -16,6 +16,20 @@
 --   expires_at timestamptz not null,
 --   updated_at timestamptz not null default now()
 -- );
+-- Supabaseのセキュリティアドバイザーの指摘（全テーブルでRLS未設定のため、外部から直接
+-- 読み書き・削除できてしまう状態）を受けて、全テーブルでRLSを有効にした場合
+-- （2026-10-14追加）、既存DBでは次を実行してください。アプリは常にservice_roleキー
+-- 経由でのみアクセスするため、ポリシーの追加は不要（RLSを有効にするだけでよい）。
+-- alter table experts enable row level security;
+-- alter table members enable row level security;
+-- alter table expert_ticket_purchases enable row level security;
+-- alter table consultations enable row level security;
+-- alter table member_summaries enable row level security;
+-- alter table sidebar_banners enable row level security;
+-- alter table consents enable row level security;
+-- alter table ai_limit_hits enable row level security;
+-- alter table expert_memberships enable row level security;
+-- alter table guidelines enable row level security;
 -- 新テーマ「関わり方」(approach) を追加した場合、既存DBでは次の2つも実行してください。
 -- alter table consultations drop constraint if exists consultations_category_check;
 -- alter table consultations add constraint consultations_category_check check (category in ('body','social','will','approach','course','other'));
@@ -243,6 +257,10 @@ create table if not exists experts (
   review_note text, -- 運営から本人向けのコメント（差し戻し理由・却下時の一言など）。ダッシュボードに表示
   created_at timestamptz not null default now()
 );
+-- アプリは常にservice_roleキー経由でのみ読み書きし、anon/authenticatedロールで
+-- 直接アクセスすることは無いため、ポリシーは追加せずRLSを有効にするだけでよい
+-- （Supabaseのセキュリティアドバイザーの指摘を受けて2026-10-14追加）。
+alter table experts enable row level security;
 
 -- 専門家登録証（本人確認書類）用の非公開バケット。
 -- アプリは常にservice_roleキー経由でのみ読み書きするため、storage.objectsへの
@@ -276,6 +294,7 @@ create table if not exists members (
                                                      -- 要件に合わせ、登録時チェックボックスのデフォルトはOFF。配信機能自体は未実装で、
                                                      -- 今は同意の記録のみ（2026-10-12）。
 );
+alter table members enable row level security;
 
 create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
 
@@ -288,6 +307,7 @@ create table if not exists expert_ticket_purchases (
   credits int not null,
   created_at timestamptz not null default now()
 );
+alter table expert_ticket_purchases enable row level security;
 
 create table if not exists consultations (
   id uuid primary key default gen_random_uuid(),
@@ -324,6 +344,7 @@ create table if not exists consultations (
   expert_answer_helpful boolean, -- 専門家回答への利用者フィードバック（null=未評価, true=役に立った, false=役に立たなかった）
   expert_funding text check (expert_funding in ('paid','ticket','free_monthly')) -- 専門家質問の財源（都度払い／チケット消費／月1回無料枠）。request_type='expert'のみ使用
 );
+alter table consultations enable row level security;
 
 create index if not exists consultations_member_id_idx on consultations (member_id);
 
@@ -341,6 +362,7 @@ create table if not exists member_summaries (
   consultation_count int not null default 0,
   generated_at timestamptz not null default now()
 );
+alter table member_summaries enable row level security;
 
 -- ホーム画面（PCの広い画面のみ）のサイドバーに表示する、差し替え可能な広告・アフィリエイト
 -- バナー枠。管理画面（/admin）から画像URL・リンク先・代替テキスト・表示ON/OFFを編集する。
@@ -353,6 +375,7 @@ create table if not exists sidebar_banners (
   alt_text text not null default '',
   updated_at timestamptz not null default now()
 );
+alter table sidebar_banners enable row level security;
 
 create table if not exists consents (
   id uuid primary key default gen_random_uuid(),
@@ -360,6 +383,7 @@ create table if not exists consents (
   client_ip text,
   agreed_at timestamptz not null default now()
 );
+alter table consents enable row level security;
 
 -- 無料AI相談の1日あたり上限（1人10回）に実際に当たった人がどれくらいいるかを
 -- 計測するためのログ。「10回を超えてもっと使いたい人」向けの有料プランを
@@ -372,6 +396,7 @@ create table if not exists ai_limit_hits (
   client_ip text,
   created_at timestamptz not null default now()
 );
+alter table ai_limit_hits enable row level security;
 
 -- [旧モデル・現在は未使用] かつては専門家への都度質問（¥500）を一度払うと、その日から
 -- 30日間、他の人の専門家回答も読み放題になる特典を、匿名のブラウザID（author_id）単位で
@@ -384,6 +409,7 @@ create table if not exists expert_memberships (
   expires_at timestamptz not null,
   updated_at timestamptz not null default now()
 );
+alter table expert_memberships enable row level security;
 
 create table if not exists guidelines (
   id text primary key default 'default',
@@ -402,6 +428,7 @@ create table if not exists guidelines (
     "other":   {"dos": [], "donts": [], "samplePhrases": []}
   }'::jsonb
 );
+alter table guidelines enable row level security;
 
 insert into guidelines (id) values ('default') on conflict (id) do nothing;
 
