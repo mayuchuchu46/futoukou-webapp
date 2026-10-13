@@ -224,17 +224,16 @@ function AskPageContent() {
             <div className="qtext">
               このアプリの回答はAIによる一般的な情報提供であり、医療的・心理的な診断ではありません。
               重大な判断の際は、専門機関（学校・医療機関・公的な相談窓口）に相談してください。
-              詳しくは利用規約をご確認ください。
+              {/* 「同意して相談をはじめる」ボタンを目立たせたいとの要望を受けて、各リンクは
+                  個別のボタン・行として並べず、案内文中のテキストリンクに統合した（2026-10-13）。 */}
+              詳しくは
+              <a href="/terms" target="_blank">利用規約</a>
+              ・
+              <a href="/privacy" target="_blank">プライバシーポリシー</a>
+              ・
+              <a href="/support" target="_blank">相談窓口の一覧</a>
+              をご確認ください。
             </div>
-          </div>
-          {/* 「同意して相談をはじめる」ボタンを目立たせたいとの要望を受けて、各リンクは
-              ボタンではなく文中のテキストリンクに変更した（2026-10-13）。 */}
-          <div className="muted" style={{ fontSize: 13, textAlign: 'center' }}>
-            <a href="/terms" target="_blank">利用規約</a>
-            {' ・ '}
-            <a href="/privacy" target="_blank">プライバシーポリシー</a>
-            {' ・ '}
-            <a href="/support" target="_blank">相談窓口の一覧</a>
           </div>
           <button
             className="btn-primary"
