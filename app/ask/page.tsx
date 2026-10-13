@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
@@ -66,6 +66,13 @@ function AskPageContent() {
   const [requestedExpert, setRequestedExpert] = useState<RequestedExpert | null>(null);
   const [stripeConfigured, setStripeConfigured] = useState(false);
   const [draftLoaded, setDraftLoaded] = useState(false);
+  // テーマ選択の手間を省くため、相談文の入力に合わせてAIが自動でテーマを判定する
+  // （2026-10-13追加）。一度でも自分でテーマを選び直した場合は、それ以降は自動判定で
+  // 上書きしない。非同期処理の完了を待つ間に手動で選び直される可能性があるため、
+  // 判定中かどうかに関わらず常に最新の値を読めるようref（コールバック内から参照しても
+  // 古い値を見てしまわない）で管理する。
+  const categoryTouchedRef = useRef(false);
+  const [classifying, setClassifying] = useState(false);
 
   // 離脱してタブを閉じても、書いた内容が消えないようにする下書き保存。
   // マウント時に一度だけ復元し（draftLoadedが立つまでは保存側のeffectを動かさない
@@ -74,7 +81,12 @@ function AskPageContent() {
   useEffect(() => {
     const draft = getAskDraft();
     if (draft) {
-      if (draft.category) setCategory(draft.category as Category);
+      // 復元した下書きに既にテーマがあれば、それは過去に選ばれた（または自動判定済みの）
+      // ものなので、再入力のたびに自動判定で上書きしないよう「選択済み」扱いにする。
+      if (draft.category) {
+        setCategory(draft.category as Category);
+        categoryTouchedRef.current = true;
+      }
       setText(draft.text || '');
       setGrade(draft.grade || '');
       setGender(draft.gender || '');
@@ -86,6 +98,34 @@ function AskPageContent() {
     if (!draftLoaded) return;
     setAskDraft({ category, text, grade, gender });
   }, [draftLoaded, category, text, grade, gender]);
+
+  // 相談文の入力が一区切りついたタイミング（1.2秒操作がない）で、AIにテーマを
+  // 判定してもらい、自動で選んでおく。手動で選び直された後は呼ばない。
+  useEffect(() => {
+    if (!draftLoaded || categoryTouchedRef.current) return;
+    if (text.trim().length < 10) return;
+    const timer = setTimeout(async () => {
+      setClassifying(true);
+      try {
+        const res = await fetch('/api/classify-category', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: text.trim(), author_id: getUid() }),
+        });
+        const data = await res.json();
+        // 応答が返ってくるまでの間に手動で選び直された場合は、上書きしない
+        // （refなので、このコールバックの中でも常に最新の値を見られる）。
+        if (res.ok && data.category && !categoryTouchedRef.current) {
+          setCategory(data.category as Category);
+        }
+      } catch {
+        // 自動判定に失敗しても、下の選択欄から手動で選べるので致命的ではない。
+      } finally {
+        setClassifying(false);
+      }
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [text, draftLoaded]);
 
   useEffect(() => {
     setNeedsTerms(!hasAgreedTerms());
@@ -225,8 +265,51 @@ function AskPageContent() {
         <a href="/" className="muted" style={{ fontSize: 12, textDecoration: 'underline', marginBottom: 4 }}>
           こんな回答が届きます（みんなの相談を見る）
         </a>
-        <div className="muted" style={{ marginBottom: 8 }}>どのような内容ですか？当てはまるテーマを選んでください</div>
-        <select className="input" value={category} onChange={(e) => setCategory(e.target.value as Category)}>
+        {/* 登録不要・匿名で相談できることを、書き始める前に安心材料として一文に
+            含めて伝える（2026-10-13、独立した行だと座りが悪かったため統合した）。 */}
+        <div className="muted" style={{ marginBottom: 6 }}>
+          状況をくわしく教えてください（登録不要・匿名のまま相談できます）
+        </div>
+        {/* 「公開されます」の注意書きは、以前は入力欄の後ろにあり、書き終えてから
+            初めて気づく流れになっていた（個人情報を書いてしまってからでは遅い）。
+            書き始める前に目に入るよう入力欄の上に移動し、見た目も他の案内文と
+            同じ薄い緑から、注意を引くオレンジ系＋アイコン付きに強化した
+            （2026-10-12、「もっと目立たせた方がいい？」との指摘を受けて）。 */}
+        <div className="privacy-notice">
+          <span className="privacy-notice-icon">⚠️</span>
+          <span>
+            入力いただいた内容はそのまま「みんなの相談」に公開されます。お名前・住所・学校名など個人を特定できる情報は書かないでください。
+          </span>
+        </div>
+        <textarea
+          className="input"
+          rows={8}
+          placeholder={category ? CATEGORY_EXAMPLES[category] : DEFAULT_PLACEHOLDER}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+
+        {/* テーマは、以前は書く前に手動で選んでもらっていたが、相談文を書き終えた
+            タイミングでAIが自動判定して選んでおく方式に変更（2026-10-13、
+            「選ぶ手間を省きたい」との要望を受けて）。判定結果はガイドラインの
+            dos/dontsの選択に関わる重要な項目のため、間違っていたら選び直せるよう
+            選択欄自体は残している。 */}
+        <div className="muted" style={{ margin: '14px 0 6px' }}>
+          テーマ
+          {classifying
+            ? '（AIが判定中…）'
+            : category
+            ? '（AIが自動で選びました。違う場合はこちらで選び直してください）'
+            : '（相談文を入力すると自動で選ばれます。先に選んでもかまいません）'}
+        </div>
+        <select
+          className="input"
+          value={category}
+          onChange={(e) => {
+            setCategory(e.target.value as Category);
+            categoryTouchedRef.current = true;
+          }}
+        >
           <option value="" disabled>選択してください</option>
           {CATEGORY_KEYS.map((key) => (
             <option key={key} value={key}>{CATS[key].label}</option>
@@ -254,30 +337,6 @@ function AskPageContent() {
             </button>
           ))}
         </div>
-
-        {/* 登録不要・匿名で相談できることを、書き始める前に安心材料として一文に
-            含めて伝える（2026-10-13、独立した行だと座りが悪かったため統合した）。 */}
-        <div className="muted" style={{ margin: '14px 0 6px' }}>
-          状況をくわしく教えてください（登録不要・匿名のまま相談できます）
-        </div>
-        {/* 「公開されます」の注意書きは、以前は入力欄の後ろにあり、書き終えてから
-            初めて気づく流れになっていた（個人情報を書いてしまってからでは遅い）。
-            書き始める前に目に入るよう入力欄の上に移動し、見た目も他の案内文と
-            同じ薄い緑から、注意を引くオレンジ系＋アイコン付きに強化した
-            （2026-10-12、「もっと目立たせた方がいい？」との指摘を受けて）。 */}
-        <div className="privacy-notice">
-          <span className="privacy-notice-icon">⚠️</span>
-          <span>
-            入力いただいた内容はそのまま「みんなの相談」に公開されます。お名前・住所・学校名など個人を特定できる情報は書かないでください。
-          </span>
-        </div>
-        <textarea
-          className="input"
-          rows={8}
-          placeholder={category ? CATEGORY_EXAMPLES[category] : DEFAULT_PLACEHOLDER}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
 
         {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
 

@@ -1,5 +1,22 @@
 import { CATS } from './categories';
 
+// 相談文からテーマ（カテゴリ）を自動判定するためのプロンプト。選択の手間を省くため、
+// 質問する画面でテキスト入力に合わせてこれを呼び出し、テーマ欄を自動で埋める
+// （2026-10-13追加）。ガイドラインのdos/dontsの選択に関わるため、キー名のみを
+// 1つだけ出力させ、余計な説明を混ぜさせないようにする。
+export function buildCategoryClassificationPrompt(text: string): string {
+  const list = Object.keys(CATS)
+    .map((key) => `${key}: ${CATS[key].label}`)
+    .join('\n');
+  return `以下は、不登校の子を持つ保護者からの相談文です。内容から、最も当てはまるテーマを1つだけ選び、キー名だけを出力してください（説明・記号・改行は一切不要。キー名のみ）。
+
+【テーマ一覧】
+${list}
+
+【相談文】
+${text.slice(0, 1000)}`;
+}
+
 type GuideCategory = { dos?: string[]; donts?: string[]; samplePhrases?: string[] };
 
 export type PastConsultation = {
