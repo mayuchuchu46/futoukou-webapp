@@ -193,10 +193,30 @@ export default async function ResultPage({
     </a>
   );
 
+  // LINEは日本の子育て世代の共有先として特に使われるため追加（2026-10-14）。
+  // LINE It!のシェアリンクはurlとtext（任意）を受け付ける。
+  const lineShareButton = (
+    <a
+      className="share-btn share-btn-line"
+      href={`https://social-plugins.line.me/lineit/share?${new URLSearchParams({
+        url: resultUrl,
+        text: answerSnippet
+          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生は「${answerSnippet}」と回答。`
+          : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
+      })}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span className="share-btn-icon">L</span>
+      LINEでシェアする
+    </a>
+  );
+
   const shareButtons = (
     <div className="share-btn-row">
       {shareButton}
       {facebookShareButton}
+      {lineShareButton}
     </div>
   );
 
