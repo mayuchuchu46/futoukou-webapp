@@ -251,11 +251,15 @@ export default async function ResultPage({
                   「個別の状況は専門家へ」という差別化の文脈で専門家相談への導線も
                   兼ねる一文。AiUsageUpsell（利用回数の閾値後に出る導線）とは別に、
                   AI回答には毎回必ず表示する（2026-10-13追加）。 */}
-              <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
+              <div
+                className="muted"
+                style={{ fontSize: 12, marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}
+              >
                 {/* 2026-10-13: AIの提案通りに動いて状況が悪化するケースもあり得るため、
                     「あくまで一つの案」「最終判断は保護者自身」というニュアンスを一言添えた。
                     あわせて、専門家（有料・現在準備中）だけでなく、公的な相談機関（/support）
-                    にも導線を出すよう変更。 */}
+                    にも導線を出すよう変更。上に薄い区切り線を追加し、回答本文との境目を
+                    分かりやすくした（2026-10-13）。 */}
                 ⚠️ AIの回答は一つの案で、間違えることもあります。実際にどうするかはご家庭の状況に合わせてご判断ください。重要なことは
                 <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
                   専門家に相談する
