@@ -3,6 +3,9 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { CATS } from '@/lib/categories';
+
+const CATEGORY_KEYS = Object.keys(CATS);
 
 // ビルド時の静的化はせず、監修状態（guidelines.supervised）を
 // リクエストごとにサーバー側で取得して反映する。
@@ -48,6 +51,46 @@ export default async function AboutPage() {
           <div className="qtext">
             「どうする先生」は、入力された状況をもとに、今できる具体的な対応を一緒に考えるAIです。実在する人物ではありません。一般的に知られている対応の目安をもとに回答しています。医療的・心理的な診断は行いません。
           </div>
+        </div>
+
+        {/* 「どうする先生とは」の一文だけではサービス全体像が伝わりにくいとの指摘を
+            受けて、できること・対応する悩み・使い方の流れの3点を追加した
+            （2026-10-13）。 */}
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>「どうする先生」でできること</div>
+          <div className="qtext">
+            <strong>AIへの相談（無料）</strong>：今の状況を入力すると、どうする先生が今日からできる次の一手を提案します。登録不要・匿名で、何度でも使えます。
+          </div>
+          <div className="qtext">
+            <strong>専門家への相談（有料）</strong>：公認心理師など資格を持つ専門家本人が、相談文を直接読んで回答します。
+          </div>
+          <div className="qtext">
+            <strong>分析ノート</strong>：会員登録すると、これまでの相談内容を一つのノートにまとめ、今のお子さんの状況や次にできそうなことを整理します。相談を重ねるほど詳しくなります。
+          </div>
+        </div>
+
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>どんな悩みに対応していますか</div>
+          <div className="qtext">
+            身体的な不調、友人関係、学校との関係、本人の意思、ご家庭での関わり方、進路・勉強、発達のこと、ご家庭・保護者自身のことなど、不登校にまつわる幅広いテーマの相談に対応しています。
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {CATEGORY_KEYS.map((key) => (
+              <span key={key} className={`chip ${CATS[key].cls}`} style={{ fontSize: 12 }}>
+                {CATS[key].label}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>使い方の流れ</div>
+          <div className="qtext">
+            1. 登録不要・匿名のまま「相談する」から今の状況を相談できます。<br />
+            2. 会員登録（無料）すると、これまでの相談が「分析ノート」として整理されるようになります。<br />
+            3. さらに詳しく聞きたいときは、専門家への有料相談も利用できます。
+          </div>
+          <Link href="/ask" className="btn-secondary">相談するページへ</Link>
         </div>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
