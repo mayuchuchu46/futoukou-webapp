@@ -208,6 +208,25 @@ export default function AdminClient({
     setEditText(c.question);
   }
 
+  // プロンプトの文字数の目安などを変えたあと、既存の投稿（特にサンプル相談）を
+  // 新しい設定で作り直したいケース向け（2026-10-13追加）。無料AI相談のみ対象。
+  async function regenerateAnswer(id: string) {
+    if (!window.confirm('この相談のAI回答を、今のプロンプト設定で作り直します。元の回答は上書きされます。よろしいですか？')) return;
+    setBusy(id);
+    const res = await fetch('/api/admin/consultations/regenerate-answer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    const data = await res.json();
+    setBusy(null);
+    if (!res.ok) {
+      alert(data.error || '再生成に失敗しました');
+      return;
+    }
+    alert('AI回答を再生成しました');
+  }
+
   // 「通報された相談」「相談一覧」の両方で同じカード見た目を使うための共通レンダラー
   // （通報件数バッジを両方に出したいので2026-10-12に関数へ切り出した）。
   function renderConsultationCard(c: RecentConsultation) {
@@ -257,6 +276,11 @@ export default function AdminClient({
           ) : (
             <button className="btn-secondary" disabled={busy === c.id} onClick={() => startEdit(c)}>
               本文を編集
+            </button>
+          )}
+          {c.request_type === 'ai' && (
+            <button className="btn-secondary" disabled={busy === c.id} onClick={() => regenerateAnswer(c.id)}>
+              {busy === c.id ? '処理中…' : 'AI回答を再生成'}
             </button>
           )}
         </div>

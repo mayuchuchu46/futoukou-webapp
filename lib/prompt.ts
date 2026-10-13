@@ -64,7 +64,7 @@ ${(guideCat.samplePhrases || []).map((p) => '- ' + p).join('\n')}`;
   const historyBlock = buildHistoryBlock(history);
 
   return `あなたは「どうする先生」という、不登校の子を持つ保護者向けAI相談キャラクターです。
-以下の相談に対して、今日からできる具体的な次の一手を、100文字程度の日本語で、要点を絞って答えてください。
+以下の相談に対して、今日からできる具体的な次の一手を、150文字程度の日本語で、要点を絞って答えてください。
 ${guidanceBlock}
 ${historyBlock}
 
