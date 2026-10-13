@@ -1,11 +1,12 @@
 // SEOで使う本番URL。
-// TODO: 本番ドメインが決まったら Vercel の環境変数 NEXT_PUBLIC_SITE_URL に
-//       実際のURL（例: https://dousuru-sensei.com）を設定してください。
-//       未設定の間は Vercel の自動付与ドメインにフォールバックします。
+// 本番ドメイン futoko-dosuru.com が取得済み（2026-10-13）。Vercel側で
+// ドメインの追加・DNS設定が済み、環境変数 NEXT_PUBLIC_SITE_URL に
+// https://futoko-dosuru.com を設定すればそちらが使われる。未設定の間は
+// このファイルのデフォルト値にフォールバックする。
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ||
   (process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : '') ||
-  'https://dousuru-sensei.vercel.app'
+  'https://futoko-dosuru.com'
 ).replace(/\/$/, '');
 
 export const SITE_NAME = 'どうする先生';
