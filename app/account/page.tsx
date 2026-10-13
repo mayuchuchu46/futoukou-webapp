@@ -10,7 +10,6 @@ import { isStripeConfigured } from '@/lib/stripe';
 import LogoutButton from './LogoutButton';
 import MembershipPanel from './MembershipPanel';
 import TicketsPanel from './TicketsPanel';
-import NewsletterPanel from './NewsletterPanel';
 
 // 登録・ログイン直後、いきなり「自分の相談を書く」はハードルが高い人も多いので、
 // まずは他の人の相談（ホームの一覧）を見てもらう方を主導線にする。
@@ -58,7 +57,9 @@ async function AccountPageContent() {
           />
         )}
 
-        <NewsletterPanel initialOptIn={member.newsletter_opt_in} />
+        {/* お知らせ・メルマガの受信設定は不要とのことで非表示にした（2026-10-14）。
+            APIやDBの購読状態は変更していないので、再表示したくなった場合は
+            NewsletterPanelをここに戻すだけでよい。 */}
 
         <Link href="/" className="btn-secondary">
           みんなの相談を見てみる
