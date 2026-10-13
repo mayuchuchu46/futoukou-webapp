@@ -250,7 +250,9 @@ export default async function ResultPage({
                   兼ねる一文。AiUsageUpsell（利用回数の閾値後に出る導線）とは別に、
                   AI回答には毎回必ず表示する（2026-10-13追加）。 */}
               <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
-                ⚠️ AIは間違えることがあります。重要なことは
+                {/* 2026-10-13: AIの提案通りに動いて状況が悪化するケースもあり得るため、
+                    「あくまで一つの案」「最終判断は保護者自身」というニュアンスを一言添えた。 */}
+                ⚠️ AIの回答は一つの案で、間違えることもあります。実際にどうするかはご家庭の状況に合わせてご判断ください。重要なことは
                 <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
                   専門家に相談する
                 </Link>
