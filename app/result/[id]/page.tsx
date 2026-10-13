@@ -172,7 +172,7 @@ export default async function ResultPage({
       rel="noopener noreferrer"
     >
       <span className="share-btn-icon">𝕏</span>
-      この回答をシェアする
+      シェア
     </a>
   );
 
@@ -189,7 +189,7 @@ export default async function ResultPage({
       rel="noopener noreferrer"
     >
       <span className="share-btn-icon">f</span>
-      Facebookでシェアする
+      シェア
     </a>
   );
 
@@ -208,7 +208,7 @@ export default async function ResultPage({
       rel="noopener noreferrer"
     >
       <span className="share-btn-icon">L</span>
-      LINEでシェアする
+      シェア
     </a>
   );
 
