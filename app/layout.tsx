@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -34,7 +35,12 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Vercel Web Analytics（訪問者数の計測）。2026-10-13、プロジェクトのAnalytics
+            タブでEnableし、計測用コンポーネントを追加。 */}
+        <Analytics />
+      </body>
     </html>
   );
 }
