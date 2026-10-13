@@ -219,7 +219,8 @@ function AskPageContent() {
     return (
       <div className="app-shell">
         <Header supervised={false} />
-        <div className="main">
+        <div className="main page-with-sidebar">
+        <div className="page-main">
           <h2 className="pagetitle">ご利用前の確認</h2>
           <div className="card">
             <div className="qtext">
@@ -254,6 +255,8 @@ function AskPageContent() {
           >
             同意して相談をはじめる
           </button>
+        </div>
+        <PcSidebar />
         </div>
         <BottomNav />
       </div>
