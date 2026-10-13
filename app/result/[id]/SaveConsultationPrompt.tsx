@@ -43,7 +43,7 @@ export default function SaveConsultationPrompt({ id, authorId }: { id: string; a
       <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--text)', lineHeight: 1.9 }}>
         <li>この相談が「分析ノート」に記録されます</li>
         <li>相談を重ねるほど、お子さんの状況をAIが整理します</li>
-        <li>次にやること・言葉かけの提案もノートに書き足されます</li>
+        <li>次にできそうなこと・言葉かけの提案もノートに書き足されます</li>
       </ul>
       <a className="btn-primary" href={`/account/register?next=${encodeURIComponent('/notebook')}`}>
         無料で登録する

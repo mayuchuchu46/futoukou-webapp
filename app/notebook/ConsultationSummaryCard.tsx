@@ -46,7 +46,7 @@ function NotebookPlaceholder({ tabClass, label, hint }: { tabClass: string; labe
 
 const PREVIEW_ENTRIES = [
   { tabClass: 'tab-status', label: '今のお子さんの状況', hint: '相談の内容から、今の状況をどうする先生が整理します。' },
-  { tabClass: 'tab-advice', label: '次にやること', hint: '次にできる、具体的な一歩が書かれます。' },
+  { tabClass: 'tab-advice', label: '次にできそうなこと', hint: '次にできそうな、具体的な一歩の案が書かれます。' },
   { tabClass: 'tab-phrase', label: '言葉かけの提案', hint: 'この子に合いそうな声かけの例が書かれます。' },
   { tabClass: 'tab-env', label: '環境面の工夫', hint: '今日から試せる、環境面の工夫が書かれます。' },
   { tabClass: 'tab-school', label: '学校・居場所選びの着眼点', hint: '学校や居場所を選ぶときの着眼点が書かれます。' },
@@ -199,9 +199,9 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
       {locked ? (
         <>
           <div className="notebook-entry">
-            <span className="notebook-tab tab-advice">次の一手</span>
+            <span className="notebook-tab tab-advice">次にできそうなこと</span>
             <div className="qtext" style={{ filter: 'blur(4px)', userSelect: 'none' }} aria-hidden="true">
-              会員になると、ここに次の一手の具体的なアドバイス・この子に合いそうな言葉かけ・環境面の工夫が表示されます。相談を重ねるほど、より具体的な内容になっていきます。
+              会員になると、ここに次にできそうなことの具体的な案・この子に合いそうな言葉かけ・環境面の工夫が表示されます。相談を重ねるほど、より具体的な内容になっていきます。
             </div>
           </div>
           <Link className="btn-primary" href="/account">
@@ -220,7 +220,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
       ) : (
         <>
           <div className="notebook-entry">
-            <span className="notebook-tab tab-advice">次にやること</span>
+            <span className="notebook-tab tab-advice">次にできそうなこと</span>
             <div className="qtext">{advice}</div>
           </div>
           {phrasingSuggestion ? (
