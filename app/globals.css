@@ -996,11 +996,11 @@ select.input {
   background: transparent;
   border: 1.5px dashed var(--border);
 }
-.notebook-entry.placeholder .notebook-tab {
-  opacity: 0.55;
-}
+/* 以前はタブの色を半透明にして「未記入」を表現していたが、色が薄すぎて
+   読みにくいとの指摘を受けて、タブ自体は他のエントリーと同じ濃さのまま出し、
+   枠線の点線だけで「まだ埋まっていない」ことを伝える形にした（2026-10-13）。 */
 .notebook-placeholder-text {
   font-size: 13px;
-  color: var(--muted);
+  color: var(--text);
   line-height: 1.6;
 }
