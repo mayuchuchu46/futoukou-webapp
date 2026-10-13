@@ -89,7 +89,12 @@ input, textarea { font-family: inherit; }
 }
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; gap: 10px; }
 .header-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; }
-.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 2px; flex: 0 0 auto; }
+/* account-tab（画面右上に常時position: fixedで固定表示される「ログイン／アカウント」タブ、
+   高さ約35px）と、.header-rightの「つらいときはこちら」が同じ右上の位置に重なってしまう
+   問題。以前はスマホ幅（480px以下）だけこのpadding-topで避けていたが、PC幅でも同様に
+   重なって読めなくなるとの指摘を受けて、画面幅によらず常にこの余白を空ける形にした
+   （2026-10-13）。 */
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 38px; flex: 0 0 auto; }
 /* トップページ以外のヘッダーに出す、さりげない「戻る」。他のヘッダーリンクより
    控えめな見た目にして、ロゴやアカウントタブより目立たないようにする（2026-10-12）。 */
 .header-back {
@@ -109,13 +114,8 @@ input, textarea { font-family: inherit; }
 /* 「つらいときはこちら」「どうする先生とは？」は画面幅によらず右上に固定したいので、
    画面が狭いときは右側ではなく左側（キャッチコピー等）の方を折り返して収める。 */
 @media (max-width: 480px) {
-  /* account-tab（画面右上に常時position: fixedで固定表示される「ログイン／アカウント」タブ、
-     高さ約33px）が、画面幅480px以下だと.header-rightの「つらいときはこちら」と同じ右上の
-     位置に重なってしまう。header全体やロゴを下げると今度はロゴ上に無駄な余白ができて
-     しまうため、header-rightだけをaccount-tabの高さぶん下にずらして避ける
-     （header-leftのhero-subは折り返される前提なので、header-rightを下げても重ならない。
-     2026-10-12、実機確認して調整）。 */
-  .header-right { padding-top: 38px; }
+  /* account-tabとの重なり対策（.header-rightのpadding-top）は2026-10-13に
+     画面幅によらない基本スタイルへ移動したので、ここでの指定は不要になった。 */
   /* トップページ以外（分析ノート・マイページ等）では、スマホ幅だと「専門家監修：準備中…」
      「今、どうしたらいい？」にAIと専門家が…」等の補足説明はもう不要という指摘を受けて
      非表示に。ただし「不登校のご家庭に、次の一手を。」（hero-catch）は、ロゴとセットで
