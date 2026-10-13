@@ -16,6 +16,15 @@ type UnverifiedExpert = {
   created_at: string;
 };
 
+type VerifiedExpert = {
+  id: string;
+  name: string;
+  display_name?: string | null;
+  email: string;
+  credential: string;
+  created_at: string;
+};
+
 type RecentConsultation = {
   id: string;
   category: string;
@@ -69,6 +78,7 @@ type RecentExpertAnswer = {
 
 export default function AdminClient({
   unverifiedExperts,
+  verifiedExperts,
   recentConsultations,
   reportedConsultations,
   overdueExpertRequests,
@@ -79,6 +89,7 @@ export default function AdminClient({
   stripeConfigured,
 }: {
   unverifiedExperts: UnverifiedExpert[];
+  verifiedExperts: VerifiedExpert[];
   recentConsultations: RecentConsultation[];
   reportedConsultations: RecentConsultation[];
   overdueExpertRequests: OverdueExpertRequest[];
@@ -452,6 +463,21 @@ export default function AdminClient({
               >
                 却下する
               </button>
+            </div>
+          </div>
+        ))}
+
+        {/* Stripe登録の案内など、専門家への連絡は今のところ自動メールの仕組みが無く、
+            運営から手動でメールする運用にしたため、確認済みの専門家の連絡先を
+            ここでまとめて見られるようにした（2026-10-13）。 */}
+        <div style={{ fontWeight: 700, marginTop: 16 }}>確認済みの専門家（{verifiedExperts.length}件）</div>
+        {verifiedExperts.length === 0 && <div className="muted">確認済みの専門家はまだいません。</div>}
+        {verifiedExperts.map((e) => (
+          <div key={e.id} className="card">
+            <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}（本名）</div>
+            {e.display_name && <div className="muted">表示名：{e.display_name}</div>}
+            <div className="muted">
+              <a href={`mailto:${e.email}`}>{e.email}</a>
             </div>
           </div>
         ))}

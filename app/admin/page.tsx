@@ -37,6 +37,15 @@ async function AdminPageContent() {
     .in('review_status', ['pending', 'needs_fix'])
     .order('created_at', { ascending: true });
 
+  // 確認済みの専門家は上の一覧から外れてしまい、連絡先（メールアドレス）を
+  // 確認する手段が無くなっていたため追加（2026-10-13、Stripe設定案内などを
+  // 運営から直接メールする運用にしたことに伴う）。
+  const { data: verifiedExperts } = await supabase
+    .from('experts')
+    .select('id, name, display_name, email, credential, created_at')
+    .eq('verified', true)
+    .order('created_at', { ascending: true });
+
   const { data: recentConsultations } = await supabase
     .from('consultations')
     .select('id, category, question, author_id, hidden, request_type, created_at, reports')
@@ -115,6 +124,7 @@ async function AdminPageContent() {
   return (
     <AdminClient
       unverifiedExperts={unverifiedExperts || []}
+      verifiedExperts={verifiedExperts || []}
       recentConsultations={recentConsultations || []}
       reportedConsultations={reportedConsultations || []}
       aiLimitHitSummary={aiLimitHitSummary}
