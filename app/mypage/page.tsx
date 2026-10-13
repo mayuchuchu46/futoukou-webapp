@@ -73,6 +73,10 @@ export default function MyPage() {
           <span>プライバシーポリシー</span>
           <span className="muted">›</span>
         </Link>
+        <Link href="/tokushoho" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <span>特定商取引法に基づく表記</span>
+          <span className="muted">›</span>
+        </Link>
         <Link href="/expert/login" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <span>専門家として登録・ログイン</span>
           <span className="muted">›</span>
