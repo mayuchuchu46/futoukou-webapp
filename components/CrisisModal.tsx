@@ -14,6 +14,11 @@ export default function CrisisModal({ onClose }: { onClose: () => void }) {
           <div className="muted">よりそいホットライン</div>
           <div className="num">0120-279-338</div>
         </div>
+        {/* 「つらいときはこちら」はHeaderからほぼ全ページで開けるため、相談窓口ページ
+            （/support）への一番目立つ入り口としてここにもリンクを置いた（2026-10-13）。 */}
+        <a href="/support" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+          ほかの相談窓口も見る →
+        </a>
         <button className="btn-secondary" style={{ width: '100%' }} onClick={onClose}>
           閉じる
         </button>

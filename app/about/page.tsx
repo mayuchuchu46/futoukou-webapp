@@ -96,6 +96,7 @@ export default async function AboutPage() {
           <div className="qtext">
             緊急性が高いと感じるとき、またはお子さんの安全に関わる場合は、AIの回答を待たず、学校や医療機関、公的な相談窓口にご連絡ください。
           </div>
+          <Link href="/support" className="btn-secondary">相談窓口の一覧を見る</Link>
         </div>
         </div>
         <PcSidebar />

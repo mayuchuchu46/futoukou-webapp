@@ -187,7 +187,10 @@ function AskPageContent() {
               詳しくは利用規約をご確認ください。
             </div>
           </div>
-          <a className="btn-secondary" href="/terms" target="_blank">利用規約を見る</a>
+          <div className="row">
+            <a className="btn-secondary" href="/terms" target="_blank">利用規約を見る</a>
+            <a className="btn-secondary" href="/support" target="_blank">相談窓口の一覧を見る</a>
+          </div>
           <a className="btn-secondary" href="/privacy" target="_blank">プライバシーポリシーを見る</a>
           <button
             className="btn-primary"
