@@ -251,12 +251,18 @@ export default async function ResultPage({
                   AI回答には毎回必ず表示する（2026-10-13追加）。 */}
               <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
                 {/* 2026-10-13: AIの提案通りに動いて状況が悪化するケースもあり得るため、
-                    「あくまで一つの案」「最終判断は保護者自身」というニュアンスを一言添えた。 */}
+                    「あくまで一つの案」「最終判断は保護者自身」というニュアンスを一言添えた。
+                    あわせて、専門家（有料・現在準備中）だけでなく、公的な相談機関（/support）
+                    にも導線を出すよう変更。 */}
                 ⚠️ AIの回答は一つの案で、間違えることもあります。実際にどうするかはご家庭の状況に合わせてご判断ください。重要なことは
                 <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
                   専門家に相談する
                 </Link>
                 こともできます{!expertAvailable && '（現在、準備中）'}。
+                <Link href="/support" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+                  公的な相談機関
+                </Link>
+                もご活用ください。
               </div>
             </div>
             <Suspense fallback={null}>
