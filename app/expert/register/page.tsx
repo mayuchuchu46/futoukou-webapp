@@ -193,10 +193,13 @@ export default function ExpertRegisterPage() {
 
         <input
           className="input"
-          placeholder="資格の登録番号（公認心理師登録番号など。登録番号がない資格の場合は空欄でかまいません）"
+          placeholder="資格の登録番号（任意）"
           value={form.license_number}
           onChange={(e) => setForm({ ...form, license_number: e.target.value })}
         />
+        <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
+          公認心理師登録番号など。登録番号がない資格の場合は空欄でかまいません。
+        </div>
 
         <div className="muted" style={{ marginTop: 6 }}>登録証（画像またはPDF）</div>
         <input
