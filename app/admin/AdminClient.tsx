@@ -210,21 +210,54 @@ export default function AdminClient({
 
   // プロンプトの文字数の目安などを変えたあと、既存の投稿（特にサンプル相談）を
   // 新しい設定で作り直したいケース向け（2026-10-13追加）。無料AI相談のみ対象。
-  async function regenerateAnswer(id: string) {
-    if (!window.confirm('この相談のAI回答を、今のプロンプト設定で作り直します。元の回答は上書きされます。よろしいですか？')) return;
-    setBusy(id);
+  async function regenerateOne(id: string): Promise<boolean> {
     const res = await fetch('/api/admin/consultations/regenerate-answer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     });
-    const data = await res.json();
+    return res.ok;
+  }
+
+  async function regenerateAnswer(id: string) {
+    if (!window.confirm('この相談のAI回答を、今のプロンプト設定で作り直します。元の回答は上書きされます。よろしいですか？')) return;
+    setBusy(id);
+    const ok = await regenerateOne(id);
     setBusy(null);
-    if (!res.ok) {
-      alert(data.error || '再生成に失敗しました');
+    alert(ok ? 'AI回答を再生成しました' : '再生成に失敗しました');
+  }
+
+  // 「本日投稿されたAI相談を全部やり直したい」という要望向け（2026-10-13追加）。
+  // 直近50件の一覧に含まれる、今日の日付・無料AI相談のものだけをまとめて再生成する
+  // （1件ずつ順番に処理。Anthropic APIへの同時多発リクエストを避けるため並列化はしない）。
+  const [bulkRegenerating, setBulkRegenerating] = useState(false);
+  const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number } | null>(null);
+
+  const todayAiConsultations = consultations.filter(
+    (c) => c.request_type === 'ai' && new Date(c.created_at).toDateString() === new Date().toDateString()
+  );
+
+  async function regenerateAllToday() {
+    const targets = todayAiConsultations;
+    if (targets.length === 0) return;
+    if (
+      !window.confirm(
+        `本日投稿された無料AI相談、${targets.length}件のAI回答をまとめて作り直します。元の回答は上書きされます。よろしいですか？`
+      )
+    )
       return;
+    setBulkRegenerating(true);
+    let okCount = 0;
+    let ngCount = 0;
+    for (let i = 0; i < targets.length; i++) {
+      setBulkProgress({ done: i, total: targets.length });
+      const ok = await regenerateOne(targets[i].id);
+      if (ok) okCount++;
+      else ngCount++;
     }
-    alert('AI回答を再生成しました');
+    setBulkProgress(null);
+    setBulkRegenerating(false);
+    alert(`完了：成功${okCount}件${ngCount ? `／失敗${ngCount}件` : ''}`);
   }
 
   // 「通報された相談」「相談一覧」の両方で同じカード見た目を使うための共通レンダラー
@@ -551,6 +584,16 @@ export default function AdminClient({
         )}
 
         <div style={{ fontWeight: 700, marginTop: 16 }}>相談一覧（直近50件）</div>
+        {todayAiConsultations.length > 0 && (
+          <div className="card" style={{ gap: 8 }}>
+            <div className="muted">本日投稿された無料AI相談：{todayAiConsultations.length}件</div>
+            <button className="btn-secondary" disabled={bulkRegenerating} onClick={regenerateAllToday}>
+              {bulkRegenerating
+                ? `再生成中…（${bulkProgress ? bulkProgress.done + 1 : 1}/${todayAiConsultations.length}）`
+                : '本日のAI相談をまとめて再生成'}
+            </button>
+          </div>
+        )}
         {consultations.map((c) => renderConsultationCard(c))}
       </div>
     </div>
