@@ -30,6 +30,11 @@
 -- alter table ai_limit_hits enable row level security;
 -- alter table expert_memberships enable row level security;
 -- alter table guidelines enable row level security;
+-- 新テーマ「日常生活のこと」(daily) を追加した際、consultationsのcategory CHECK制約に
+-- dailyを入れ忘れていた（2026-10-14発覚）。このままではdailyでの投稿が失敗するため、
+-- 既存DBでは次を実行してください。
+-- alter table consultations drop constraint if exists consultations_category_check;
+-- alter table consultations add constraint consultations_category_check check (category in ('body','social','school','will','approach','course','dev','home','daily','other'));
 -- 新テーマ「関わり方」(approach) を追加した場合、既存DBでは次の2つも実行してください。
 -- alter table consultations drop constraint if exists consultations_category_check;
 -- alter table consultations add constraint consultations_category_check check (category in ('body','social','will','approach','course','other'));
@@ -311,7 +316,7 @@ alter table expert_ticket_purchases enable row level security;
 
 create table if not exists consultations (
   id uuid primary key default gen_random_uuid(),
-  category text not null check (category in ('body','social','school','will','approach','course','dev','home','other')),
+  category text not null check (category in ('body','social','school','will','approach','course','dev','home','daily','other')),
   question text not null,
   answer text not null default '',
   grade text,
