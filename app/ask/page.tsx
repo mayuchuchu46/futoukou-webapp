@@ -5,30 +5,17 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
-import { CATS, Category } from '@/lib/categories';
+import { CATS, Category, CATEGORY_EXAMPLES } from '@/lib/categories';
 import { GRADE_OPTIONS, GENDER_OPTIONS } from '@/lib/types';
 import { getUid, hasAgreedTerms, setAgreedTerms, getAskDraft, setAskDraft, clearAskDraft } from '@/lib/uid';
 
 const CATEGORY_KEYS = Object.keys(CATS) as Category[];
 
-// カテゴリごとの入力例。以前は全カテゴリ共通で1つの例文（身体的要因向け）しか
-// 出ていなかったため、カテゴリと合わない例文が「何を書けばいいか分からない」の
-// 原因になっていた。カテゴリ選択に応じて切り替える（2026-10-12、新規ユーザーの
-// 離脱対策として追加）。
-// 2026-10-13: 全カテゴリの書き出しが「〇年生の〇〇が」で揃ってしまっていたため、
-// カテゴリを切り替えても毎回同じパターンに見えないよう、書き出しを散らした。
-const CATEGORY_EXAMPLES: Record<Category, string> = {
-  body: '例：ここ2週間、毎朝「お腹痛い」と言って学校に行きたがりません…',
-  social: '例：クラスの友達との関係がうまくいかなくなってから、「学校に行きたくない」と言うようになりました…',
-  school: '例：担任の先生と合わないようで、学校に行きたがらなくなりました…',
-  will: '例：「もう学校には行かない」と、本人が自分の意思で言うようになりました…',
-  approach: '例：登校を渋る子に、どこまで無理に行かせるべきか声のかけ方に悩んでいます…',
-  course: '例：高校に行くかどうか本人も決めきれず、進路の話をするとふさぎこんでしまいます…',
-  dev: '例：発達障害の診断を受けている子が、学校の環境に慣れず行きたがらなくなりました…',
-  home: '例：子どもの不登校への対応方針が夫婦で合わず、家庭内でどう関わるか揉めています…',
-  daily: '例：昼夜逆転してしまい、ゲームばかりで生活リズムが乱れています…',
-  other: '例：子どもが不登校気味で、どう対応すればいいか分からず相談したいです…',
-};
+// カテゴリごとの入力例（CATEGORY_EXAMPLES）は、自動投稿機能と共有するため
+// lib/categories.tsに移動した（2026-10-14）。以前は全カテゴリ共通で1つの例文
+// （身体的要因向け）しか出ていなかったため、カテゴリと合わない例文が
+// 「何を書けばいいか分からない」の原因になっていた。カテゴリ選択に応じて
+// 切り替える（2026-10-12、新規ユーザーの離脱対策として追加）。
 const DEFAULT_PLACEHOLDER = CATEGORY_EXAMPLES.body;
 
 type RequestedExpert = { id: string; name: string; credential: string };
