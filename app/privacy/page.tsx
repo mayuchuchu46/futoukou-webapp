@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import BottomNav from '@/components/BottomNav';
 
 export default function PrivacyPage() {
   return (
@@ -133,6 +134,10 @@ export default function PrivacyPage() {
           </div>
         </div>
       </div>
+      {/* 相談ページ（/ask）など他のページからリンクで開いた後、戻る手段が無かったため
+          BottomNavを追加。これによりヘッダー上部（.header-back）と固定ナビ直上
+          （.bottomnav-back）の両方に「戻る」が出る（2026-10-13）。 */}
+      <BottomNav />
     </div>
   );
 }
