@@ -140,7 +140,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
             分析ノートは、相談するとここに作られます。
           </div>
           <Link className="btn-primary" href="/ask">
-            まずは相談してみる
+            まずは無料で相談してみる
           </Link>
           {PREVIEW_ENTRIES.map((entry) => (
             <NotebookPlaceholder key={entry.label} {...entry} />
