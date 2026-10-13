@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import PcSidebar from '@/components/PcSidebar';
 import ConsultationSummaryCard from './ConsultationSummaryCard';
 import { getUid } from '@/lib/uid';
 
@@ -25,7 +26,8 @@ export default function NotebookPage() {
   return (
     <div className="app-shell">
       <Header supervised={false} />
-      <div className="main">
+      <div className="main page-with-sidebar">
+        <div className="page-main">
         <h2 className="pagetitle">分析ノート</h2>
         {/* 分析ノートは本人の相談内容（子どもの状況）を踏み込んでまとめるものなので、
             安心して相談を重ねてもらえるよう、他の人には見えないことも同じ文に
@@ -40,6 +42,8 @@ export default function NotebookPage() {
           <span>これまで投稿した相談を見る</span>
           <span className="muted">›</span>
         </Link>
+        </div>
+        <PcSidebar />
       </div>
       <BottomNav />
     </div>
