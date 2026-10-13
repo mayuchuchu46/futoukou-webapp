@@ -124,15 +124,38 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
   if (!data) return null;
 
   if (!data.loggedIn) {
+    // 相談が0件の段階では、会員登録してもノートに書く材料が無く空のままになってしまう
+    // ため、先に「会員登録」を主役にすると「登録したのに何も無い」という空振りを招く。
+    // この段階では「相談する」こそが次にやるべきことだと分かるよう、CTAの主役を
+    // 「相談する」に入れ替え、会員登録はその先の話として控えめに案内する（2026-10-13、
+    // 「まず相談しないとここが見れないと分かるようにしたい」との指摘を受けて）。
+    // 既に相談がある場合は、引き続き「会員登録してノートを見る」を主役にする。
+    if (ownCount === 0) {
+      return (
+        <div className="card notebook-card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <NotebookHead count={0} />
+          <div className="qtext">
+            分析ノートは、相談した内容をもとに作られます。まずは「相談する」から、今の状況を聞かせてください。相談後に会員登録すると、ここにノートとして整理されます。
+          </div>
+          {PREVIEW_ENTRIES.map((entry) => (
+            <NotebookPlaceholder key={entry.label} {...entry} />
+          ))}
+          <Link className="btn-primary" href="/ask">
+            まずは相談してみる
+          </Link>
+          <Link href="/account/register?next=/notebook" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+            会員登録について見る
+          </Link>
+        </div>
+      );
+    }
     return (
       <div className="card notebook-card" style={{ alignItems: 'flex-start', gap: 10 }}>
         <NotebookHead count={ownCount} />
         <div className="qtext">
-          {ownCount > 0
-            ? `これまでに${ownCount}件相談しています。会員登録すると、これまでの相談を一つのノートにまとめて、今のお子さんの状況をどうする先生が整理してくれます。相談を重ねるほど、ノートの中身は詳しくなっていきます。`
-            : '会員登録すると、相談するたびにどうする先生がそれまでの内容を一つのノートにまとめて、今のお子さんの状況を整理してくれます。相談を重ねるほど、ノートの中身は詳しくなっていきます。'}
+          {`これまでに${ownCount}件相談しています。会員登録すると、これまでの相談を一つのノートにまとめて、今のお子さんの状況をどうする先生が整理してくれます。相談を重ねるほど、ノートの中身は詳しくなっていきます。`}
         </div>
-        {/* ここに何が書かれていくのかを先に見せる「目次」プレビュー。相談0件・未登録の
+        {/* ここに何が書かれていくのかを先に見せる「目次」プレビュー。相談はあるがまだ未登録の
             段階では実際の分析内容はまだ出せないが、「相談するとこの5項目が埋まっていく」
             という完成イメージを先に見せることで、埋めたくなる気持ちを作る
             （2026-10-12、「次に何が書かれるかイメージできるように」との指摘を受けて追加）。 */}
@@ -142,11 +165,8 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
         <Link className="btn-primary" href="/account/register?next=/notebook">
           会員登録（無料）で分析ノートを見る
         </Link>
-        {/* 登録はまだ早いが、相談自体はログイン不要でできる（/askは匿名ブラウザIDで利用可能）。
-            ここで離脱させず、まず相談してもらうことがノートの材料を増やす第一歩になるため、
-            登録を迷っている人向けの選択肢として出す（2026-10-12 追加）。 */}
         <Link href="/ask" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
-          まずは相談してみる
+          さらに相談してから登録する
         </Link>
       </div>
     );
