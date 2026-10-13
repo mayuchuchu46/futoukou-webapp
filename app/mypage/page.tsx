@@ -65,16 +65,22 @@ export default function MyPage() {
           <span>どうする先生について</span>
           <span className="muted">›</span>
         </Link>
+        <Link href="/expert/login" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <span>専門家として登録・ログイン</span>
+          <span className="muted">›</span>
+        </Link>
+
+        {/* 利用規約・プライバシーポリシー等は、サイト全体のフッターの代わりとして
+            ここ（マイページ）にまとめている。BottomNavから常に一タップで来られるため、
+            ボトムナビ型アプリとしてはこの位置が実質的なフッターの役割を果たす
+            （2026-10-13、まとめて見出しを付けた）。 */}
+        <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>規約・ポリシー</div>
         <Link href="/terms" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <span>利用規約・免責事項</span>
           <span className="muted">›</span>
         </Link>
         <Link href="/privacy" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <span>プライバシーポリシー</span>
-          <span className="muted">›</span>
-        </Link>
-        <Link href="/expert/login" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <span>専門家として登録・ログイン</span>
           <span className="muted">›</span>
         </Link>
         </div>
