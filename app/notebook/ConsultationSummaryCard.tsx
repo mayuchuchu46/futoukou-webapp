@@ -175,6 +175,22 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
     <div className="card notebook-card" style={{ alignItems: 'flex-start', gap: 10 }}>
       <NotebookHead count={data.count} />
 
+      {/* 結果ページのAI回答に付けている免責文と同じ考え方を、分析ノートにも適用。
+          ノートの中身（状況整理・次の一手・言葉かけ等）は全てAI生成であり、相談結果
+          ページと同じく「一つの見方」「間違えることもある」「最終判断は保護者自身」
+          という前提と、専門家・相談窓口への導線をここにもまとめて置く（2026-10-13）。 */}
+      <div className="muted" style={{ fontSize: 12 }}>
+        ⚠️ このノートの内容はAIが相談内容をもとに整理した一つの見方で、間違えることもあります。実際にどうするかはご家庭の状況に合わせてご判断ください。
+        <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+          専門家
+        </Link>
+        や
+        <Link href="/support" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+          相談窓口
+        </Link>
+        もあわせてご活用ください。
+      </div>
+
       <div className="notebook-entry">
         <span className="notebook-tab tab-status">今のお子さんの状況</span>
         <div className="qtext">{statusSummary}</div>
