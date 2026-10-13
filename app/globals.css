@@ -30,6 +30,10 @@
   --clay-text: #70593F;
   --slate-bg: #E3E6ED;
   --slate-text: #3F4A66;
+  /* 日常生活のことカテゴリ用に追加（2026-10-13）。既存の色味（他カテゴリで
+     使い切っていた）と被らない、淡いライラック系。 */
+  --lilac-bg: #ECE4F2;
+  --lilac-text: #5C4A73;
 }
 
 * { box-sizing: border-box; }
@@ -521,6 +525,7 @@ h2.pagetitle {
 .catmenu-chip.cat-course,
 .catmenu-chip.cat-dev,
 .catmenu-chip.cat-home,
+.catmenu-chip.cat-daily,
 .catmenu-chip.cat-other {
   background: var(--card);
   color: var(--text);
@@ -533,6 +538,7 @@ h2.pagetitle {
 .catmenu-chip.cat-course.active { background: var(--seal-bg); color: var(--seal-text); }
 .catmenu-chip.cat-dev.active { background: var(--slate-bg); color: var(--slate-text); }
 .catmenu-chip.cat-home.active { background: var(--clay-bg); color: var(--clay-text); }
+.catmenu-chip.cat-daily.active { background: var(--lilac-bg); color: var(--lilac-text); }
 .catmenu-chip.cat-other.active { background: #EFEFEF; color: var(--muted); }
 
 .card {
@@ -554,6 +560,7 @@ h2.pagetitle {
 .cat-course { background: var(--seal-bg); color: var(--seal-text); }
 .cat-dev { background: var(--slate-bg); color: var(--slate-text); }
 .cat-home { background: var(--clay-bg); color: var(--clay-text); }
+.cat-daily { background: var(--lilac-bg); color: var(--lilac-text); }
 .cat-other { background: #EFEFEF; color: var(--muted); }
 
 .qtext { font-size: 14px; line-height: 1.7; color: var(--text); }

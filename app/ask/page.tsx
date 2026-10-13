@@ -26,6 +26,7 @@ const CATEGORY_EXAMPLES: Record<Category, string> = {
   course: '例：高校に行くかどうか本人も決めきれず、進路の話をするとふさぎこんでしまいます…',
   dev: '例：発達障害の診断を受けている子が、学校の環境に慣れず行きたがらなくなりました…',
   home: '例：子どもの不登校への対応方針が夫婦で合わず、家庭内でどう関わるか揉めています…',
+  daily: '例：昼夜逆転してしまい、ゲームばかりで生活リズムが乱れています…',
   other: '例：子どもが不登校気味で、どう対応すればいいか分からず相談したいです…',
 };
 const DEFAULT_PLACEHOLDER = CATEGORY_EXAMPLES.body;

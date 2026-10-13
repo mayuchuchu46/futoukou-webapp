@@ -17,6 +17,9 @@ export const CATS: Record<string, { label: string; short: string; cls: string; i
   dev: { label: '発達のこと', short: '発達', cls: 'cat-dev', icon: '/assets/icon_book.png' },
   // 専用アイコン未用意のため、暫定でicon_book.pngを流用（要差し替え）。Artifact側は絵文字🏡で代用中。
   home: { label: '家庭・自分のこと', short: '家庭・自分', cls: 'cat-home', icon: '/assets/icon_book.png' },
+  // 生活リズム・昼夜逆転・ゲーム/スマホの使い方など、学校や対人関係以外の日常生活面の
+  // 相談用に追加（2026-10-13）。専用アイコン未用意のため、暫定でicon_book.pngを流用。
+  daily: { label: '日常生活のこと', short: '日常生活', cls: 'cat-daily', icon: '/assets/icon_book.png' },
   other: { label: 'その他', short: 'その他', cls: 'cat-other', icon: '/assets/icon_book.png' },
 };
 
