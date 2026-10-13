@@ -174,6 +174,22 @@ export default async function ResultPage({
     </a>
   );
 
+  // 回答を見た後、「このまま終わり」にならないよう、もう一度（別の内容で）相談できる
+  // ことを案内するボタン。AI回答・専門家回答どちらでも、同じ場所で使い回せるよう
+  // shareButtonと同様にJSX変数として共通化した（2026-10-14、「相談して回答を見た後の
+  // 誘導があってもいいかも」との指摘を受けて追加）。
+  const askAgainBlock = (
+    <div className="card" style={{ alignItems: 'flex-start', gap: 6 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>続きが気になること、他にもありますか？</div>
+      <div className="qtext" style={{ fontSize: 13 }}>
+        状況は日々変わるものです。気になることが出てきたら、また相談してみてください。
+      </div>
+      <Link className="btn-secondary" href="/ask">
+        もう一度相談する
+      </Link>
+    </div>
+  );
+
   const jsonLd = answerTextForJsonLd
     ? {
         '@context': 'https://schema.org',
@@ -236,6 +252,7 @@ export default async function ResultPage({
               <ResultClient id={id} initialItem={item} />
             </Suspense>
             {shareButton}
+            {askAgainBlock}
           </>
         ) : (
           <>
@@ -271,6 +288,7 @@ export default async function ResultPage({
                 もご活用ください。
               </div>
             </div>
+            {askAgainBlock}
             <Suspense fallback={null}>
               <SaveConsultationPrompt id={item.id} authorId={item.author_id} />
             </Suspense>
