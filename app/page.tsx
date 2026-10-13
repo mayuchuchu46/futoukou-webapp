@@ -22,11 +22,23 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     type: 'website',
     locale: 'ja_JP',
+    // Next.jsのmetadataはセグメントごとにopenGraph/twitterをまるごと上書きする
+    // （layout.tsxで指定したimagesは継承されない）ため、ここでも明示的に指定する
+    // 必要がある（2026-10-14、og-image.png追加時に気づいた）。
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: SITE_NAME,
+      },
+    ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
+    images: ['/og-image.png'],
   },
 };
 
