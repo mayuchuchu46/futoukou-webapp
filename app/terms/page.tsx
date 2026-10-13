@@ -53,7 +53,6 @@ export default function TermsPage() {
           </div>
         </div>
         <Link href="/privacy" className="backlink" style={{ margin: '14px 0' }}>プライバシーポリシーを見る →</Link>
-        <Link href="/tokushoho" className="backlink" style={{ margin: '-10px 0 14px' }}>特定商取引法に基づく表記を見る →</Link>
       </div>
     </div>
   );
