@@ -134,15 +134,17 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
       return (
         <div className="card notebook-card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <NotebookHead count={0} />
+          {/* 説明文が長いと誘導ボタンまで読んでもらえないとの指摘を受けて、一文に
+              短縮し、ボタンを直後に置いて迷わず押せるようにした（2026-10-13）。 */}
           <div className="qtext">
-            分析ノートは、相談した内容をもとに作られます。まずは「相談する」から、今の状況を聞かせてください。相談後に会員登録すると、ここにノートとして整理されます。
+            分析ノートは、相談するとここに作られます。
           </div>
-          {PREVIEW_ENTRIES.map((entry) => (
-            <NotebookPlaceholder key={entry.label} {...entry} />
-          ))}
           <Link className="btn-primary" href="/ask">
             まずは相談してみる
           </Link>
+          {PREVIEW_ENTRIES.map((entry) => (
+            <NotebookPlaceholder key={entry.label} {...entry} />
+          ))}
           <Link href="/account/register?next=/notebook" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
             会員登録について見る
           </Link>
