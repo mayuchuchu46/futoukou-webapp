@@ -159,8 +159,8 @@ export default async function ResultPage({
       className="share-btn"
       href={`https://twitter.com/intent/tweet?${new URLSearchParams({
         text: answerSnippet
-          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nどうする先生の回答はこうはじまります。\n「${answerSnippet}」\n\n続きはこちら。`
-          : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」\n\nこの相談に、どうする先生が出した"今日からできる一手"とは。`,
+          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、\n\nどうする先生は\n「${answerSnippet}」と回答。\n\n続きはこちら。`
+          : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
         url: `${SITE_URL}/result/${item.id}`,
         hashtags: 'どうする先生,不登校',
       })}`}
