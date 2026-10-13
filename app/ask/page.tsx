@@ -227,11 +227,15 @@ function AskPageContent() {
               詳しくは利用規約をご確認ください。
             </div>
           </div>
-          <div className="row">
-            <a className="btn-secondary" href="/terms" target="_blank">利用規約を見る</a>
-            <a className="btn-secondary" href="/support" target="_blank">相談窓口の一覧を見る</a>
+          {/* 「同意して相談をはじめる」ボタンを目立たせたいとの要望を受けて、各リンクは
+              ボタンではなく文中のテキストリンクに変更した（2026-10-13）。 */}
+          <div className="muted" style={{ fontSize: 13, textAlign: 'center' }}>
+            <a href="/terms" target="_blank">利用規約</a>
+            {' ・ '}
+            <a href="/privacy" target="_blank">プライバシーポリシー</a>
+            {' ・ '}
+            <a href="/support" target="_blank">相談窓口の一覧</a>
           </div>
-          <a className="btn-secondary" href="/privacy" target="_blank">プライバシーポリシーを見る</a>
           <button
             className="btn-primary"
             onClick={() => {
