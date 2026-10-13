@@ -46,7 +46,7 @@ export default async function AboutPage() {
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>どうする先生とは</div>
           <div className="qtext">
-            「どうする先生」は、入力された状況をもとに、今できる具体的な対応を一緒に考えるAIです。実在する人物ではありません。回答にはAnthropic社のAI「Claude」を使用しており、一般的に知られている対応の目安をもとに回答しています。医療的・心理的な診断は行いません。
+            「どうする先生」は、入力された状況をもとに、今できる具体的な対応を一緒に考えるAIです。実在する人物ではありません。一般的に知られている対応の目安をもとに回答しています。医療的・心理的な診断は行いません。
           </div>
         </div>
 
