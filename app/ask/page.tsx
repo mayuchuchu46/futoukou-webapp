@@ -225,13 +225,15 @@ function AskPageContent() {
               このアプリの回答はAIによる一般的な情報提供であり、医療的・心理的な診断ではありません。
               重大な判断の際は、専門機関（学校・医療機関・公的な相談窓口）に相談してください。
               {/* 「同意して相談をはじめる」ボタンを目立たせたいとの要望を受けて、各リンクは
-                  個別のボタン・行として並べず、案内文中のテキストリンクに統合した（2026-10-13）。 */}
+                  個別のボタン・行として並べず、案内文中のテキストリンクに統合した（2026-10-13）。
+                  ただしグローバルCSSでaタグの下線・色付けが解除されているため、リンクだと
+                  わかるよう下線＋ブランドカラーをここで明示している（同日、追加指摘を受けて）。 */}
               詳しくは
-              <a href="/terms" target="_blank">利用規約</a>
+              <a href="/terms" target="_blank" style={{ color: 'var(--main)', textDecoration: 'underline' }}>利用規約</a>
               ・
-              <a href="/privacy" target="_blank">プライバシーポリシー</a>
+              <a href="/privacy" target="_blank" style={{ color: 'var(--main)', textDecoration: 'underline' }}>プライバシーポリシー</a>
               ・
-              <a href="/support" target="_blank">相談窓口の一覧</a>
+              <a href="/support" target="_blank" style={{ color: 'var(--main)', textDecoration: 'underline' }}>相談窓口の一覧</a>
               をご確認ください。
             </div>
           </div>
