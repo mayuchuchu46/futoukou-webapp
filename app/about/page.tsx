@@ -59,7 +59,7 @@ export default async function AboutPage() {
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>「どうする先生」でできること</div>
           <div className="qtext">
-            <strong>AIへの相談（無料）</strong>：今の状況を入力すると、どうする先生が今日からできる次の一手を提案します。登録不要・匿名で、何度でも使えます。
+            <strong>AIへの相談（無料）</strong>：今の状況を入力すると、どうする先生が今日からできる次の一手を提案します。登録不要・匿名で利用できます（1日あたりのご利用回数には上限があります）。
           </div>
           <div className="qtext">
             <strong>専門家への相談（有料）</strong>：公認心理師など資格を持つ専門家本人が、相談文を直接読んで回答します。
