@@ -227,22 +227,21 @@ export default function AdminClient({
     alert(ok ? 'AI回答を再生成しました' : '再生成に失敗しました');
   }
 
-  // 「本日投稿されたAI相談を全部やり直したい」という要望向け（2026-10-13追加）。
-  // 直近50件の一覧に含まれる、今日の日付・無料AI相談のものだけをまとめて再生成する
+  // 「公開前に、これまでの回答を全部見直したい」という要望向け（2026-10-13、
+  // 当初は「今日投稿した分だけ」だったが、サービス公開前の一括見直しに対象を広げた）。
+  // 直近50件の一覧に含まれる無料AI相談すべてをまとめて再生成する
   // （1件ずつ順番に処理。Anthropic APIへの同時多発リクエストを避けるため並列化はしない）。
   const [bulkRegenerating, setBulkRegenerating] = useState(false);
   const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number } | null>(null);
 
-  const todayAiConsultations = consultations.filter(
-    (c) => c.request_type === 'ai' && new Date(c.created_at).toDateString() === new Date().toDateString()
-  );
+  const allAiConsultations = consultations.filter((c) => c.request_type === 'ai');
 
-  async function regenerateAllToday() {
-    const targets = todayAiConsultations;
+  async function regenerateAllAi() {
+    const targets = allAiConsultations;
     if (targets.length === 0) return;
     if (
       !window.confirm(
-        `本日投稿された無料AI相談、${targets.length}件のAI回答をまとめて作り直します。元の回答は上書きされます。よろしいですか？`
+        `無料AI相談、${targets.length}件のAI回答をまとめて作り直します。元の回答は上書きされます。よろしいですか？`
       )
     )
       return;
@@ -584,13 +583,13 @@ export default function AdminClient({
         )}
 
         <div style={{ fontWeight: 700, marginTop: 16 }}>相談一覧（直近50件）</div>
-        {todayAiConsultations.length > 0 && (
+        {allAiConsultations.length > 0 && (
           <div className="card" style={{ gap: 8 }}>
-            <div className="muted">本日投稿された無料AI相談：{todayAiConsultations.length}件</div>
-            <button className="btn-secondary" disabled={bulkRegenerating} onClick={regenerateAllToday}>
+            <div className="muted">無料AI相談：{allAiConsultations.length}件</div>
+            <button className="btn-secondary" disabled={bulkRegenerating} onClick={regenerateAllAi}>
               {bulkRegenerating
-                ? `再生成中…（${bulkProgress ? bulkProgress.done + 1 : 1}/${todayAiConsultations.length}）`
-                : '本日のAI相談をまとめて再生成'}
+                ? `再生成中…（${bulkProgress ? bulkProgress.done + 1 : 1}/${allAiConsultations.length}）`
+                : 'AI相談をまとめて再生成（公開前の一括見直し）'}
             </button>
           </div>
         )}
