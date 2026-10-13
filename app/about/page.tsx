@@ -67,12 +67,18 @@ export default async function AboutPage() {
           <div className="qtext">
             <strong>分析ノート</strong>：会員登録すると、これまでの相談内容を一つのノートにまとめ、今のお子さんの状況や次にできそうなことを整理します。相談を重ねるほど詳しくなります。
           </div>
+          {/* 自分が相談するだけでなく、他の人の相談・回答も読めることをサービスの特色として
+              伝えてほしいとの要望を受けて追加（2026-10-13）。 */}
+          <div className="qtext">
+            <strong>みんなの相談</strong>：自分の相談だけでなく、同じように悩んでいる他の方の相談とその回答も、登録不要で読めます。自分だけじゃないと感じられたり、参考になるヒントが見つかることもあります。
+          </div>
+          <Link href="/" className="btn-secondary">みんなの相談を見る</Link>
         </div>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>どんな悩みに対応していますか</div>
           <div className="qtext">
-            身体的な不調、友人関係、学校との関係、本人の意思、ご家庭での関わり方、進路・勉強、発達のこと、ご家庭・保護者自身のことなど、不登校にまつわる幅広いテーマの相談に対応しています。
+            身体的な不調、友人関係、学校との関係、本人の意思、ご家庭での関わり方、進路・勉強、発達のこと、ご家庭・保護者自身のこと、日常生活のことなど、不登校にまつわる幅広いテーマの相談に対応しています。
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {CATEGORY_KEYS.map((key) => (
