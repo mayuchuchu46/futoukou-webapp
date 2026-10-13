@@ -106,7 +106,9 @@ export async function generateMetadata({
       locale: 'ja_JP',
     },
     twitter: {
-      card: 'summary',
+      // 相談ごとのOGP画像（opengraph-image.tsx）を大きく表示するため、summaryから変更
+      // （2026-10-13）。
+      card: 'summary_large_image',
       title,
       description,
     },
