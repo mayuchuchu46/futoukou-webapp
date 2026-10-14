@@ -320,6 +320,22 @@ h2.pagetitle {
      常時折り返しありで問題ないため、ここではnowrap自体をやめた（2026-10-12、実機画面で発覚）。 */
   margin-top: 1px;
 }
+/* ホーム画面トップの「相談する」CTAカード（2026-10-14追加）。相談系のアクセント
+   カラー（--logo-pink、.fabと同じ）を背景に使い、他の白いカードと差別化して
+   一目で主要導線だとわかるようにしている。 */
+.home-cta {
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  background: var(--logo-pink);
+  text-decoration: none;
+  margin: 0 0 2px;
+}
+.home-cta-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.home-cta-title { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 15px; color: #fff; }
+.home-cta-desc { font-size: 12px; color: rgba(255,255,255,0.9); line-height: 1.5; }
+.home-cta-btn { flex: 0 0 auto; width: auto; padding: 10px 18px; background: #fff; color: var(--logo-pink); font-size: 13px; }
+
 .expertbanner { background: #fff; border: 1px solid var(--orange); border-radius: 12px; padding: 8px 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
 /* 🔒絵文字から、アプリのイラストと同じ塗り＋太いアウトラインのオリジナル鍵アイコン
    （icon_lock.png）に変更（2026-10-12）。 */

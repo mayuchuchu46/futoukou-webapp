@@ -142,6 +142,17 @@ export default function HomeClient({
     <div className="app-shell">
       <Header supervised={supervised} />
       <div className="main">
+        {/* トップページ本文側に「相談する」への明確な入り口が無く、画面右下の
+            固定ボタン（.fab）・下部ナビのタブだけだと見落としやすいとの指摘を
+            受けて追加（2026-10-14）。 */}
+        <Link href="/ask" className="card home-cta">
+          <div className="home-cta-body">
+            <div className="home-cta-title">「今、どうしたらいい？」を相談する</div>
+            <div className="home-cta-desc">学年や状況をかんたんに入力するだけ。匿名・無料で相談できます。</div>
+          </div>
+          <span className="btn-primary home-cta-btn">相談する</span>
+        </Link>
+
         {showExtras && (
           <div className="expertbanner" onClick={() => router.push('/expertlist')}>
             <img src="/assets/icon_lock.png" alt="" className="expertbanner-icon" />
