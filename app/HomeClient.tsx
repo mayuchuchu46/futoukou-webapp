@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
@@ -117,15 +117,21 @@ export default function HomeClient({
     setCategory(next);
   }
 
+  // 初回表示はサーバー側（匿名扱い）の一覧をそのまま見せ、マウント後に本当の
+  // viewer_id（本人・会員かどうか）で静かに再取得してロック解除などの表示を
+  // 正しいものに差し替える。以前はこれとは別に「category/q/viewTabが変わったら
+  // 取得する」effectも用意していたが、どちらも初回マウント時に発火するため、
+  // 同じ一覧を2回リクエストしてしまっていた（2026-10-15、「全体的に動きが遅い」
+  // との指摘を受けて発覚・修正）。1つのeffectにまとめ、初回だけは静かに
+  // （ローディング表示なし）、2回目以降（絞り込み変更時）はローディング表示ありで
+  // 取得するようにした。
+  const didMountRef = useRef(false);
   useEffect(() => {
-    // 初回表示はサーバー側（匿名扱い）の一覧をそのまま見せ、
-    // マウント後に本当のviewer_id（本人・会員かどうか）で静かに再取得して
-    // ロック解除などの表示を正しいものに差し替える。
-    fetchResults('all', '', { showLoading: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      fetchResults('all', '', { showLoading: false });
+      return;
+    }
     fetchResults(category, q, { showLoading: true }, viewTab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, q, viewTab]);

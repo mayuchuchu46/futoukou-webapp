@@ -36,9 +36,24 @@ export default function PcSidebar({
   const [ranking, setRanking] = useState<Consultation[]>([]);
   const [banner, setBanner] = useState<SidebarBanner>(null);
   const [experts, setExperts] = useState<ExpertProfile[]>([]);
+  // このコンポーネント自体はPC（960px以上）だけ見た目に表示される
+  // （app/globals.cssの.pc-sidebar参照）が、以前はスマホでも常にマウントされて
+  // 裏でAPIを3つ（ランキング・サイドバナー・専門家一覧。下の<TagChips>内の
+  // タグ一覧も含めると4つ）叩いていた。見えないデータのためにスマホの読み込みを
+  // 遅くしていたので、matchMediaで実際にPC幅かどうかを判定し、PC幅の時だけ
+  // 取得するようにした（2026-10-15、「全体的に動きが遅い」との指摘を受けて修正）。
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    if (hideRanking) return;
+    const mql = window.matchMedia('(min-width: 960px)');
+    setIsDesktop(mql.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    if (!isDesktop || hideRanking) return;
     fetch(`/api/consultations?viewer_id=${encodeURIComponent(getUid())}`)
       .then((r) => r.json())
       .then((d) => {
@@ -48,9 +63,10 @@ export default function PcSidebar({
         setRanking([...items].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10));
       })
       .catch(() => {});
-  }, [hideRanking]);
+  }, [isDesktop, hideRanking]);
 
   useEffect(() => {
+    if (!isDesktop) return;
     fetch('/api/sidebar-banner')
       .then((r) => r.json())
       .then((d) => setBanner(d.banner || null))
@@ -60,7 +76,7 @@ export default function PcSidebar({
       .then((r) => r.json())
       .then((d) => setExperts(d.experts || []))
       .catch(() => {});
-  }, []);
+  }, [isDesktop]);
 
   const showBanner = !!(banner && banner.enabled && banner.image_url && banner.link_url);
 
@@ -87,9 +103,13 @@ export default function PcSidebar({
         </div>
       )}
 
-      <div className="home-tags">
-        <TagChips title="気になるテーマから探す" />
-      </div>
+      {/* TagChips自体が内部でAPIを叩くため、isDesktopがtrueになるまで
+          マウントしない（スマホで見えないのに裏でfetchするのを防ぐ）。 */}
+      {isDesktop && (
+        <div className="home-tags">
+          <TagChips title="気になるテーマから探す" />
+        </div>
+      )}
 
       {!hideExperts && (
       <div className="home-experts home-experts-side">
