@@ -320,26 +320,30 @@ h2.pagetitle {
      常時折り返しありで問題ないため、ここではnowrap自体をやめた（2026-10-12、実機画面で発覚）。 */
   margin-top: 1px;
 }
-/* ホーム画面トップの「相談する」CTAカード（2026-10-14追加）。相談系のアクセント
-   カラー（--logo-pink、.fabと同じ）を背景に使い、他の白いカードと差別化して
-   一目で主要導線だとわかるようにしている。
+/* ホーム画面トップの「相談する」CTAカード（2026-10-14追加）。
    「.card home-cta」の2クラス指定だが、.cardの定義がこのファイルの下の方にあり
    同じ詳細度のため後勝ちで上書きされ、背景・横並びが効かず文字（白）が
    クリーム色の背景に同化して見えなくなる不具合があった。.card.home-cta と
    繋げて詳細度を上げることで、定義順に関係なく確実に上書きされるようにした
-   （2026-10-14、実機で発覚・修正）。 */
+   （2026-10-14、実機で発覚・修正）。
+   当初はアクセントカラーの--logo-pink（.fabと同じ）を背景にしていたが、
+   同じ画面内の他の主要ボタン・ロゴがこのアプリのメインカラーである緑
+   （--main）基調のため、ピンクだけ浮いて見える・色味がケンカするとの指摘を
+   受け、背景をブランドカラーの緑（--main）に変更。あわせて縦の余白を
+   詰めて高さを抑えた（2026-10-14）。 */
 .card.home-cta {
   flex-direction: row;
   align-items: center;
-  gap: 14px;
-  background: var(--logo-pink);
+  gap: 12px;
+  background: var(--main);
   text-decoration: none;
   margin: 0 0 2px;
+  padding: 13px 16px;
 }
-.home-cta-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-.home-cta-title { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 15px; color: #fff; }
-.home-cta-desc { font-size: 12px; color: rgba(255,255,255,0.9); line-height: 1.5; }
-.home-cta-btn { flex: 0 0 auto; width: auto; padding: 10px 18px; background: #fff; color: var(--logo-pink); font-size: 13px; }
+.home-cta-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.home-cta-title { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 14px; color: #fff; line-height: 1.4; }
+.home-cta-desc { font-size: 11px; color: rgba(255,255,255,0.85); line-height: 1.4; }
+.home-cta-btn { flex: 0 0 auto; width: auto; padding: 9px 16px; background: #fff; color: var(--main); font-size: 12px; }
 
 .expertbanner { background: #fff; border: 1px solid var(--orange); border-radius: 12px; padding: 8px 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
 /* 🔒絵文字から、アプリのイラストと同じ塗り＋太いアウトラインのオリジナル鍵アイコン
