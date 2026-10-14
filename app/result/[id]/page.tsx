@@ -162,8 +162,9 @@ export default async function ResultPage({
     <a
       className="share-btn"
       href={`https://twitter.com/intent/tweet?${new URLSearchParams({
+        // 改行で間延びして見えるとの指摘を受け、詰めた1文にした（2026-10-15）。
         text: answerSnippet
-          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、\n\nどうする先生は\n「${answerSnippet}」と回答。\n\n続きはこちら。`
+          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生は「${answerSnippet}」と回答。続きはこちら。`
           : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
         url: resultUrl,
         hashtags: 'どうする先生,不登校',
