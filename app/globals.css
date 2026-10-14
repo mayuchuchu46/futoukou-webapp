@@ -744,12 +744,12 @@ h2.pagetitle {
   font-size: 14px;
 }
 .share-btn-icon { flex: 0 0 auto; font-size: 15px; line-height: 1; }
-/* Facebook・LINEシェアボタンも並べて置けるよう追加（2026-10-14）。3つを横一列で
-   均等幅に収めるため、文言は「シェア」のみに短縮し（プラットフォームはアイコンと
-   色で判別）、各ボタンを1/3幅にしている（当初2列折り返しにしていたが、
-   「3列で並べてほしい」との指摘を受けて変更）。 */
-.share-btn-row { display: flex; gap: 8px; }
-.share-btn-row .share-btn { flex: 1; padding: 12px 4px; }
+/* Facebook・LINEシェアボタンも並べて置けるよう追加（2026-10-14）。3つとも
+   横並びにすると文言込みでスマホ幅では窮屈なため、折り返して2列にできるよう
+   flex-wrapにし、各ボタンの最小幅を確保している（一度3列・文言短縮にしたが、
+   「前の方がよかった」とのことでこちらに戻した）。 */
+.share-btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.share-btn-row .share-btn { flex: 1 1 calc(50% - 4px); min-width: 140px; }
 .share-btn-facebook { background: #1877F2; }
 .share-btn-facebook .share-btn-icon { font-weight: 800; font-size: 16px; }
 .share-btn-line { background: #06C755; }
