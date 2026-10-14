@@ -52,9 +52,12 @@ export default function HomeClient({
   const [category, setCategory] = useState(urlParams.get('category') || 'all');
   const [q, setQ] = useState(urlParams.get('q') || '');
   // 一覧の並び替え・「専門家回答のみ」フィルター（2026-10-15追加）。
-  type SortKey = 'new' | 'views' | 'likes';
-  const [sort, setSort] = useState<SortKey>('new');
-  const [expertOnly, setExpertOnly] = useState(false);
+  // 当初は「並び替え（単一選択）」＋「専門家回答のみ（独立したON/OFF）」の
+  // 組み合わせにしていたが、「専門家回答のみを押した後、他の並び替えを押しても
+  // 専門家回答のみの絞り込みが外れない」という分かりにくさの指摘を受け、
+  // 4つを排他的なタブ1列にまとめた（押したものだけが効く・タブの見た目にする）。
+  type ViewTab = 'new' | 'views' | 'likes' | 'expert';
+  const [viewTab, setViewTab] = useState<ViewTab>('new');
   const [items, setItems] = useState<Consultation[]>(initialItems);
   const PAGE_SIZE = 8;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -87,20 +90,22 @@ export default function HomeClient({
     nextCategory: string,
     nextQ: string,
     { showLoading }: { showLoading: boolean },
-    nextSort: SortKey = sort,
-    nextExpertOnly: boolean = expertOnly
+    nextTab: ViewTab = viewTab
   ) {
     if (showLoading) setLoading(true);
     const params = new URLSearchParams({ viewer_id: getUid() });
     if (nextCategory !== 'all') params.set('category', nextCategory);
     if (nextQ.trim()) params.set('q', nextQ.trim());
-    if (nextSort !== 'new') params.set('sort', nextSort);
-    if (nextExpertOnly) params.set('expert_answered', '1');
+    if (nextTab === 'expert') {
+      params.set('expert_answered', '1');
+    } else if (nextTab !== 'new') {
+      params.set('sort', nextTab);
+    }
     try {
       const res = await fetch(`/api/consultations?${params.toString()}`);
       const d = await res.json();
       setItems(d.consultations || []);
-      if (nextCategory === 'all' && !nextQ.trim() && nextSort === 'new' && !nextExpertOnly) {
+      if (nextCategory === 'all' && !nextQ.trim() && nextTab === 'new') {
         setAllItems(d.consultations || []);
       }
     } finally {
@@ -121,14 +126,14 @@ export default function HomeClient({
   }, []);
 
   useEffect(() => {
-    fetchResults(category, q, { showLoading: true }, sort, expertOnly);
+    fetchResults(category, q, { showLoading: true }, viewTab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, q, sort, expertOnly]);
+  }, [category, q, viewTab]);
 
-  // 絞り込み（カテゴリ・検索・並び替え・専門家回答のみ）が変わったら、表示件数を最初の分だけに戻す。
+  // 絞り込み（カテゴリ・検索・タブ）が変わったら、表示件数を最初の分だけに戻す。
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [category, q, sort, expertOnly]);
+  }, [category, q, viewTab]);
 
   // 一覧の下端に近づいたら、表示件数を少しずつ増やす（全件を一度に並べない）。
   useEffect(() => {
@@ -255,32 +260,31 @@ export default function HomeClient({
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
                 「参考になった順」は各カードの「参考になった◯人」と同じlikesで並べている。
                 専門家回答の絞り込みは、以前は/expertlistへの別バナーのみで案内していたが、
-                ここに統合した。 */}
-            <div className="sortbar">
-              <div className="sortbar-group">
-                {([
-                  { key: 'new', label: '新着順' },
-                  { key: 'views', label: '閲覧数順' },
-                  { key: 'likes', label: '参考になった順' },
-                ] as const).map((opt) => (
-                  <button
-                    key={opt.key}
-                    className={`sortbar-chip ${sort === opt.key ? 'active' : ''}`}
-                    onClick={() => setSort(opt.key)}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-              <button
-                className={`sortbar-chip sortbar-expert ${expertOnly ? 'active' : ''}`}
-                onClick={() => setExpertOnly((v) => !v)}
-              >
-                専門家回答のみ
-              </button>
+                ここに統合した。
+                当初は「並び替え（単一選択のチップ）」＋「専門家回答のみ（独立ON/OFF）」の
+                組み合わせにしていたが、専門家回答のみをONにした後に他のチップを押しても
+                絞り込みが外れず分かりにくいとの指摘を受け、4つを排他的なタブ1列に変更。
+                見た目も「タブで切り替えている」感が伝わるよう、下線インジケーター付きの
+                タブバーにし、すぐ下の一覧（.home-list）と背景・枠を共有してそのまま
+                地続きになるようにした（.home-list側はapp/globals.css参照）。 */}
+            <div className="viewtabs">
+              {([
+                { key: 'new', label: '新着順' },
+                { key: 'views', label: '閲覧数順' },
+                { key: 'likes', label: '参考になった順' },
+                { key: 'expert', label: '専門家回答' },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.key}
+                  className={`viewtabs-tab ${opt.key === 'expert' ? 'viewtabs-tab--expert' : ''} ${viewTab === opt.key ? 'active' : ''}`}
+                  onClick={() => setViewTab(opt.key)}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
 
-            <div className="home-list" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="home-list home-list--tabbed" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {loading && <div className="muted">読み込み中…</div>}
               {!loading && items.length === 0 && (
                 <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
