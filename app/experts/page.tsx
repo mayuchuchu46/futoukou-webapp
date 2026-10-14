@@ -7,7 +7,6 @@ import ExpertAvatar from '@/components/ExpertAvatar';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
-import { EXPERT_PRICE_JPY, MEMBERSHIP_PRICE_JPY } from '@/lib/config';
 
 // データベースの最新状態（本人確認済みの専門家）を毎回サーバー側で取得するページなので、
 // ビルド時の静的化はせず、リクエストごとに生成する。閲覧者ごとに表示が変わる情報は
@@ -65,15 +64,15 @@ export default async function ExpertsPage() {
           有料の専門家相談でご回答いただく専門家です。公認心理師・臨床心理士など、運営が本人確認を行った方のみ掲載しています。
         </div>
 
-        {/* 料金・利用の流れが以前はこのページのどこにも書かれておらず、一覧だけを見ても
-            「そもそもいくらなのか」が分からない状態だったため追加（2026-10-14、
-            「専門家一覧ページをもうちょっと整えてほしい」との要望を受けて）。
-            lib/config.tsの実際の価格設定をそのまま参照しているので、値を変更した場合も
-            自動的に反映される。 */}
+        {/* 「利用の流れ」の説明を追加（2026-10-14、「専門家一覧ページをもうちょっと
+            整えてほしい」との要望を受けて）。当初は料金も合わせて出す案だったが、
+            「まだ料金のことは出さないで」との指摘を受け、料金には触れず、相談文を
+            専門家本人が直接読んで回答する、という利用の流れのみを説明する形にした
+            （2026-10-14）。 */}
         <div className="card" style={{ alignItems: 'flex-start', gap: 8, marginBottom: 14 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>料金・利用の流れ</div>
+          <div className="answer-label" style={{ fontSize: 14 }}>専門家への相談について</div>
           <div className="qtext" style={{ fontSize: 13 }}>
-            相談文を専門家本人が直接読み、文章で回答します。都度払いなら1回¥{EXPERT_PRICE_JPY.toLocaleString()}。月¥{MEMBERSHIP_PRICE_JPY.toLocaleString()}の読み放題会員なら、月1回無料で質問でき、他の方への専門家回答もすべて読めます。
+            相談文を専門家本人が直接読み、文章で回答します。
           </div>
           <Link href="/ask" className="backlink" style={{ fontSize: 13, margin: 0 }}>
             相談するページへ →
