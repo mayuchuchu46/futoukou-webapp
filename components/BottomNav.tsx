@@ -6,7 +6,10 @@ import { useEffect, useState } from 'react';
 
 const ITEMS = [
   { href: '/', label: 'ホーム', icon: '/assets/icon_house.png' },
-  { href: '/ask', label: '相談する', icon: '/assets/icon_bulb.png' },
+  // 「下のメニューの相談するボタンを目立たせたい」との要望を受けて、アイコンを
+  // ピンクの丸バッジで一段浮かせて強調する専用スタイル（highlight）を追加
+  // （2026-10-15）。他の3タブはこれまで通り選択時だけ緑になる控えめな見た目。
+  { href: '/ask', label: '相談する', icon: '/assets/icon_bulb.png', highlight: true },
   // 分析ノートは独立したタブにして常時アクセスできるようにする（元はマイページ内のカードだった）。
   // アイコンはノートを連想させるicon_book、マイページは元のicon_bookmarkに戻す。
   { href: '/notebook', label: '分析ノート', icon: '/assets/icon_book.png' },
@@ -73,8 +76,14 @@ export default function BottomNav() {
           const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
           return (
             <Link key={item.href} href={item.href}>
-              <button className={active ? 'active' : ''}>
-                <img className="navicon" src={item.icon} alt="" />
+              <button className={`${active ? 'active' : ''} ${item.highlight ? 'nav-highlight' : ''}`}>
+                {item.highlight ? (
+                  <span className="navicon-badge">
+                    <img className="navicon" src={item.icon} alt="" />
+                  </span>
+                ) : (
+                  <img className="navicon" src={item.icon} alt="" />
+                )}
                 {item.label}
               </button>
             </Link>

@@ -786,6 +786,31 @@ h2.pagetitle {
 .navicon { width: 22px; height: 22px; object-fit: contain; opacity: 0.8; transition: opacity .15s ease; }
 .nav button.active .navicon { opacity: 1; }
 
+/* 下部ナビの「相談する」タブだけを目立たせる（2026-10-15）。アイコンをピンクの
+   丸バッジで包んで少し上に浮かせ、他の3タブ（選択時だけ緑になる控えめな見た目）
+   より常に目を引くようにしている。ラベルの文字色も常時ピンクにし、選択中は
+   他タブと同じ.active（緑の背景）を重ねず、ピンクの縁取りで選択状態を示す。 */
+.nav button.nav-highlight { color: var(--logo-pink); }
+/* .nav button.active（背景var(--sub)・緑文字）より詳細度を上げて確実に上書きする。 */
+.nav button.nav-highlight.active {
+  background: none;
+  color: var(--logo-pink);
+  border: 1.5px solid var(--logo-pink);
+  border-radius: 14px;
+}
+.navicon-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--logo-pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -16px;
+  box-shadow: 0 3px 10px rgba(246,142,125,0.45);
+}
+.navicon-badge .navicon { width: 18px; height: 18px; opacity: 1; filter: brightness(0) invert(1); }
+
 .btn-primary:disabled,
 .btn-secondary:disabled {
   opacity: 0.5;
