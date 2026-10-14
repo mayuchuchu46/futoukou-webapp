@@ -764,8 +764,17 @@ h2.pagetitle {
 /* 下部ナビの「相談する」タブだけを目立たせる（2026-10-15）。アイコンをピンクの
    丸バッジで包んで少し上に浮かせ、他の3タブ（選択時だけ緑になる控えめな見た目）
    より常に目を引くようにしている。ラベルの文字色も常時ピンクにし、選択中は
-   他タブと同じ.active（緑の背景）を重ねず、ピンクの縁取りで選択状態を示す。 */
-.nav button.nav-highlight { color: var(--logo-pink); }
+   他タブと同じ.active（緑の背景）を重ねず、ピンクの縁取りで選択状態を示す。
+   「もっと目立ってほしい」との指摘を受け、バッジを一回り大きく・高く浮かせ、
+   ナビの背景色と同じ縁取り（border）を足してバーから浮き出て見えるiOS風の
+   「ノッチ」の見た目にし、ラベルも少し大きく太くした。さらにごく控えめな
+   パルスアニメーション（影がゆっくり呼吸するだけ）を常時つけ、動きのない
+   他タブの中で自然と目に入るようにしている（2026-10-15）。 */
+.nav button.nav-highlight {
+  color: var(--logo-pink);
+  font-size: 10.5px;
+  font-weight: 800;
+}
 /* .nav button.active（背景var(--sub)・緑文字）より詳細度を上げて確実に上書きする。 */
 .nav button.nav-highlight.active {
   background: none;
@@ -774,17 +783,26 @@ h2.pagetitle {
   border-radius: 14px;
 }
 .navicon-badge {
-  width: 34px;
-  height: 34px;
+  width: 46px;
+  height: 46px;
   border-radius: 999px;
   background: var(--logo-pink);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: -16px;
-  box-shadow: 0 3px 10px rgba(246,142,125,0.45);
+  margin-top: -26px;
+  border: 3px solid var(--card);
+  box-shadow: 0 4px 12px rgba(246,142,125,0.5);
+  animation: nav-highlight-pulse 2.4s ease-in-out infinite;
 }
-.navicon-badge .navicon { width: 18px; height: 18px; opacity: 1; filter: brightness(0) invert(1); }
+.navicon-badge .navicon { width: 22px; height: 22px; opacity: 1; filter: brightness(0) invert(1); }
+@keyframes nav-highlight-pulse {
+  0%, 100% { box-shadow: 0 4px 12px rgba(246,142,125,0.5); }
+  50% { box-shadow: 0 4px 18px rgba(246,142,125,0.85); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .navicon-badge { animation: none; }
+}
 
 .btn-primary:disabled,
 .btn-secondary:disabled {
