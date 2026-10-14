@@ -150,11 +150,12 @@ export default function HomeClient({
             よりこちらがいいとのことで変更）。文字が画像に焼き込まれているため
             スマホ幅で縮小した時の可読性は少し犠牲になるが、まずはスマホのみ試す
             形で導入（960px以上では.home-cta-bannerを非表示にする。
-            app/globals.css参照）。 */}
+            app/globals.css参照）。バナー画像自体は2026-10-15、人物写真入りの
+            デザインに差し替え。 */}
         <Link href="/ask" className="card home-cta">
           <img
             src="/assets/home_cta_banner.jpg"
-            alt="「今、どうしたらいい？」どうする先生（AI）に相談する。学年や状況を入力するだけ。次の一手を一緒に整理します。"
+            alt="「今、どうしたらいい？」どうする先生（AI）に相談する。学年や状況をかんたんに入力するだけ。今できることや、次の一手を一緒に整理します。"
             className="home-cta-banner"
           />
         </Link>
