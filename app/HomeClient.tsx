@@ -146,9 +146,21 @@ export default function HomeClient({
             固定ボタン（.fab）・下部ナビのタブだけだと見落としやすいとの指摘を
             受けて追加（2026-10-14）。 */}
         <Link href="/ask" className="card home-cta">
-          <div className="home-cta-body">
-            <div className="home-cta-title">「今、どうしたらいい？」を相談する</div>
-            <div className="home-cta-desc">学年や状況をかんたんに入力するだけ。匿名・無料で相談できます。</div>
+          <div className="home-cta-row">
+            <div className="home-cta-body">
+              <div className="home-cta-title">「今、どうしたらいい？」を相談する</div>
+              <div className="home-cta-desc">学年や状況をかんたんに入力するだけ。匿名・無料で相談できます。</div>
+            </div>
+            {/* チャッピー（ChatGPT）に描いてもらったバナー案のうち、イラスト部分だけを
+                切り出して使用（2026-10-15）。見出し・説明文・ボタンの文字は画像に
+                焼き込まず引き続きHTMLのまま可変にし、スマホ幅で縮小しても文字が
+                潰れないようにしている。まずはスマホのみ表示（960px以上では
+                .home-cta-illustrationを非表示にする。app/globals.css参照）。 */}
+            <img
+              src="/assets/home_cta_illustration.png"
+              alt=""
+              className="home-cta-illustration"
+            />
           </div>
           <span className="btn-primary home-cta-btn">相談する</span>
         </Link>
