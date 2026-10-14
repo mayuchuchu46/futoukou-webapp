@@ -155,11 +155,13 @@ export default async function ResultPage({
   // 唐突に終わって見えるとの指摘を受け、answerSnippetと同じく省略時は「…」を
   // 付けるようにした（2026-10-15）。
   // 「質問の方をもう少し長く見せた方が続きを見たくなるのでは」との指摘を受け、
-  // 40→70文字に拡張（answerSnippetは引き続き40文字のまま）。悩みの背景が
-  // ある程度伝わる長さにしつつ、全文は見せずに「続きはこちら」への興味を残す。
+  // Xのシェア文からは回答の抜粋（answerSnippet）自体を削り、「どうする先生が
+  // 出した答えは」で止めて続きを気にさせる構成に変更。回答を見せない分、
+  // 質問の抜粋は90文字まで見せられるようにした（LINEのシェア文は引き続き
+  // answerSnippetも見せる構成なので、こちらも90文字まで伸びた形で使われる）。
   const questionSnippetSource = item.question.replace(/\s+/g, ' ').trim();
   const questionSnippet =
-    questionSnippetSource.length > 70 ? `${questionSnippetSource.slice(0, 70)}…` : questionSnippetSource;
+    questionSnippetSource.length > 90 ? `${questionSnippetSource.slice(0, 90)}…` : questionSnippetSource;
 
   // SNS拡散導線の第一弾（2026-10-12）：Xの投稿画面を開くだけの単純なシェアリンク。
   // クライアント側の状態を持たないので、サーバー側でそのままリンクを組み立てられる
@@ -175,8 +177,12 @@ export default async function ResultPage({
         // Xで拡散されやすい文に変更（2026-10-15）。具体的な悩みをそのまま見せて
         // 共感を引き、答えを全部見せずに「続きが気になる」余白を作る型。
         // 改行は詰めすぎず、かといって多用もせず1箇所だけに絞っている。
+        // 当初は回答の抜粋（answerSnippet）も文中に入れていたが、「どうする先生が
+        // 出した答えは」で止めて答え自体は見せない方が続きを見たくなるとのことで、
+        // 回答抜粋を削り、浮いた文字数ぶん質問の抜粋（questionSnippet）を長く見せる
+        // 構成に変更した。
         text: answerSnippet
-          ? `「${questionSnippet}」というお悩みに、どうする先生が出した答えは「${answerSnippet}」。\n\n同じように悩んでいる方はこちら↓`
+          ? `「${questionSnippet}」というお悩みに、どうする先生が出した答えは\n\n続きはこちら↓`
           : `「${questionSnippet}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
         url: resultUrl,
         hashtags: 'どうする先生,不登校',
