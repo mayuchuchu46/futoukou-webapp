@@ -378,16 +378,15 @@ export default async function ResultPage({
                   ほかの相談窓口も見る
                 </Link>
                 <div className="muted" style={{ fontSize: 12 }}>
-                  {expertAvailable ? (
-                    <>
-                      状況を直接読んだ専門家に、個別に相談することもできます。
-                      <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
-                        専門家に相談する
-                      </Link>
-                    </>
-                  ) : (
-                    '専門家への個別相談もご案内できるよう準備しています（現在、本人確認済みの専門家の登録待ちのため準備中です）。'
-                  )}
+                  {/* 以前はexpertAvailableがfalseのときリンクなしの文章だけだったが、「準備中の
+                      表示はしつつも、専門家への誘導自体はあってよい」との指摘を受けて、非crisis時
+                      の案内文と同じく、準備中でも/askへのリンク自体は常に出す形に変更した
+                      （2026-10-14）。 */}
+                  状況を直接読んだ専門家に、個別に相談することもできます。
+                  <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+                    専門家に相談する
+                  </Link>
+                  {!expertAvailable && '（現在、本人確認済みの専門家の登録待ちのため準備中です）'}
                 </div>
               </div>
             ) : (
