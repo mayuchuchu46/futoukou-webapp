@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import EyeIcon from './EyeIcon';
 import TagChips from './TagChips';
+import ExpertAvatar from './ExpertAvatar';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 
@@ -95,7 +96,8 @@ export default function PcSidebar({
         <div className="home-experts-title">専門家一覧</div>
         {experts.length === 0 ? (
           <div className="home-expert-card home-expert-card--empty" onClick={() => router.push('/expert/recruit')}>
-            <img src="/assets/sensei_logo.png" alt="" className="home-expert-photo" style={{ opacity: 0.5 }} />
+            {/* AIキャラクター画像の流用をやめ、人物を表す汎用アイコンに統一（2026-10-14） */}
+            <ExpertAvatar photoUrl={null} size={44} />
             <div className="home-expert-body">
               <div className="home-expert-name">現在、専門家を募集中です</div>
               <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
@@ -105,7 +107,7 @@ export default function PcSidebar({
         ) : (
           experts.map((e) => (
             <div key={e.id} className="home-expert-card" onClick={() => router.push(`/ask?expert=${e.id}`)}>
-              <img src={e.photo_url || '/assets/sensei_logo.png'} alt="" className="home-expert-photo" />
+              <ExpertAvatar photoUrl={e.photo_url} size={44} />
               <div className="home-expert-body">
                 <div className="home-expert-name">{e.credential}・{e.name}</div>
                 {e.bio && <div className="home-expert-desc">{e.bio}</div>}

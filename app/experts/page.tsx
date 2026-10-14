@@ -3,9 +3,11 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
+import ExpertAvatar from '@/components/ExpertAvatar';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
+import { EXPERT_PRICE_JPY, MEMBERSHIP_PRICE_JPY } from '@/lib/config';
 
 // データベースの最新状態（本人確認済みの専門家）を毎回サーバー側で取得するページなので、
 // ビルド時の静的化はせず、リクエストごとに生成する。閲覧者ごとに表示が変わる情報は
@@ -63,6 +65,21 @@ export default async function ExpertsPage() {
           有料の専門家相談でご回答いただく専門家です。公認心理師・臨床心理士など、運営が本人確認を行った方のみ掲載しています。
         </div>
 
+        {/* 料金・利用の流れが以前はこのページのどこにも書かれておらず、一覧だけを見ても
+            「そもそもいくらなのか」が分からない状態だったため追加（2026-10-14、
+            「専門家一覧ページをもうちょっと整えてほしい」との要望を受けて）。
+            lib/config.tsの実際の価格設定をそのまま参照しているので、値を変更した場合も
+            自動的に反映される。 */}
+        <div className="card" style={{ alignItems: 'flex-start', gap: 8, marginBottom: 14 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>料金・利用の流れ</div>
+          <div className="qtext" style={{ fontSize: 13 }}>
+            相談文を専門家本人が直接読み、文章で回答します。都度払いなら1回¥{EXPERT_PRICE_JPY.toLocaleString()}。月¥{MEMBERSHIP_PRICE_JPY.toLocaleString()}の読み放題会員なら、月1回無料で質問でき、他の方への専門家回答もすべて読めます。
+          </div>
+          <Link href="/ask" className="backlink" style={{ fontSize: 13, margin: 0 }}>
+            相談するページへ →
+          </Link>
+        </div>
+
         {experts.length === 0 ? (
           <>
             <div className="empty">現在、本人確認が完了した専門家の登録がありません。準備が整い次第、ここに掲載されます。</div>
@@ -71,11 +88,7 @@ export default async function ExpertsPage() {
               className="card"
               style={{ flexDirection: 'row', gap: 14, alignItems: 'flex-start', opacity: 0.6 }}
             >
-              <img
-                src="/assets/sensei_logo.png"
-                alt=""
-                style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
-              />
+              <ExpertAvatar photoUrl={null} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div style={{ fontWeight: 700 }}>公認心理師・（例）山田 花子</div>
                 <div className="qtext">
@@ -90,11 +103,7 @@ export default async function ExpertsPage() {
             return (
               <div key={e.id} className="card" style={{ gap: 10 }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
-                  <img
-                    src={e.photo_url || '/assets/sensei_logo.png'}
-                    alt=""
-                    style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
-                  />
+                  <ExpertAvatar photoUrl={e.photo_url} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     <div style={{ fontWeight: 700 }}>{e.credential}・{e.name}</div>
                     {e.bio && (
@@ -129,12 +138,17 @@ export default async function ExpertsPage() {
           })
         )}
 
-        <Link href="/expert/recruit" className="backlink" style={{ margin: '4px 0 0' }}>
-          専門家として登録を希望される方はこちら →
-        </Link>
-        <Link href="/expert/login" className="backlink" style={{ margin: '0 0 14px', fontSize: 13 }}>
-          すでに登録済みの専門家の方はこちらからログイン →
-        </Link>
+        {/* 専門家の募集・ログインは運営・専門家向けの導線で、相談に来た保護者が主役の
+            このページの本題ではないため、以前は他の導線と同じ太さのbacklinkで並んでいた
+            ものを、区切り線を挟んでより控えめな位置づけに整理した（2026-10-14）。 */}
+        <div style={{ borderTop: '1px solid var(--border)', marginTop: 8, paddingTop: 10 }}>
+          <Link href="/expert/recruit" className="backlink" style={{ margin: '0 0 4px', fontSize: 12 }}>
+            専門家として登録を希望される方はこちら →
+          </Link>
+          <Link href="/expert/login" className="backlink" style={{ margin: '0 0 14px', fontSize: 12 }}>
+            すでに登録済みの専門家の方はこちらからログイン →
+          </Link>
+        </div>
         </div>
         <PcSidebar hideExperts />
       </div>

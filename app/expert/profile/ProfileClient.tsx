@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ExpertAvatar from '@/components/ExpertAvatar';
 
 type Expert = {
   id: string;
@@ -147,11 +148,7 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
         <div className="card" style={{ gap: 12 }}>
           <div style={{ fontWeight: 700 }}>プロフィール写真（アイコン）</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <img
-              src={photoUrl || '/assets/sensei_logo.png'}
-              alt=""
-              style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
-            />
+            <ExpertAvatar photoUrl={photoUrl} />
             <input
               className="input"
               type="file"

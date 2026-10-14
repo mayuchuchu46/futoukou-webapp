@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import ConsultationCard from '@/components/ConsultationCard';
+import ExpertAvatar from '@/components/ExpertAvatar';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName } from '@/lib/expertDisplay';
@@ -76,11 +77,7 @@ export default async function ExpertProfilePublicPage({
 
           <div className="card" style={{ gap: 10 }}>
             <div style={{ display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
-              <img
-                src={expert.photo_url || '/assets/sensei_logo.png'}
-                alt=""
-                style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
-              />
+              <ExpertAvatar photoUrl={expert.photo_url} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div style={{ fontWeight: 700, fontSize: 16 }}>{expert.credential}・{expert.name}</div>
                 {expert.bio && (
