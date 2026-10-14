@@ -72,6 +72,15 @@ type CrisisDetectedSummary = {
   autoSeedTotal: number;
 };
 
+// 閲覧数の上位表示用（2026-10-14追加）。
+type TopViewedConsultation = {
+  id: string;
+  question: string;
+  category: string;
+  views: number;
+  request_type: 'ai' | 'expert';
+};
+
 type PayoutResult = {
   paid: { expertName: string; amount: number; count: number }[];
   skipped: { expertName: string; amount: number; count: number; reason: string }[];
@@ -98,6 +107,8 @@ export default function AdminClient({
   unpaidPayoutSummary,
   aiLimitHitSummary,
   crisisDetectedSummary,
+  totalViews,
+  topViewedConsultations,
   stripeConfigured,
 }: {
   unverifiedExperts: UnverifiedExpert[];
@@ -110,6 +121,8 @@ export default function AdminClient({
   unpaidPayoutSummary: UnpaidPayoutSummary;
   aiLimitHitSummary: AiLimitHitSummary;
   crisisDetectedSummary: CrisisDetectedSummary;
+  totalViews: number;
+  topViewedConsultations: TopViewedConsultation[];
   stripeConfigured: boolean;
 }) {
   const [experts, setExperts] = useState(unverifiedExperts);
@@ -512,6 +525,40 @@ export default function AdminClient({
             自動投稿（サンプル）：{crisisDetectedSummary.autoSeedTotal}件中{crisisDetectedSummary.autoSeedCount}件
           </div>
         </div>
+
+        {/* 閲覧数は各相談カード・詳細ページに個別には出ているが、全体の合計や上位を
+            まとめて見られる場所が無かったため追加（2026-10-14）。 */}
+        <div style={{ fontWeight: 700, marginTop: 16 }}>閲覧数</div>
+        <div className="card">
+          <div className="qtext">合計閲覧数：{totalViews.toLocaleString()}</div>
+        </div>
+        <div className="muted" style={{ margin: '4px 0 2px', fontSize: 12 }}>閲覧数が多い相談（上位10件）</div>
+        {topViewedConsultations.length === 0 ? (
+          <div className="muted" style={{ fontSize: 13 }}>まだ相談がありません。</div>
+        ) : (
+          topViewedConsultations.map((c, i) => {
+            const cat = CATS[c.category] || CATS.other;
+            return (
+              <a
+                key={c.id}
+                href={`/result/${c.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card"
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 10, textDecoration: 'none' }}
+              >
+                <span className="muted" style={{ fontSize: 12, flex: '0 0 auto' }}>{i + 1}</span>
+                <span className={`cat-badge ${cat.cls}`} style={{ fontSize: 11, padding: '2px 8px', flex: '0 0 auto' }}>
+                  {cat.label}
+                </span>
+                <span className="qtext" style={{ flex: 1, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {c.question}
+                </span>
+                <span className="muted" style={{ fontSize: 12, flex: '0 0 auto' }}>👁 {c.views}</span>
+              </a>
+            );
+          })
+        )}
 
         <div style={{ fontWeight: 700, marginTop: 16 }}>専門家の本人確認待ち（{experts.length}件）</div>
         {experts.length === 0 && <div className="muted">確認待ちの専門家はいません。</div>}

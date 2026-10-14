@@ -114,6 +114,19 @@ async function AdminPageContent() {
     autoSeedTotal: autoSeedCrisisRows.length,
   };
 
+  // 閲覧数（views）は各相談カード・詳細ページに個別には出ているが、全体の合計や
+  // 上位をまとめて見られる場所が無かったため追加（2026-10-14、「どこで閲覧数見れる
+  // んだっけ」という質問をきっかけに）。非表示（hidden）の相談は除く。
+  const { data: viewRows } = await supabase.from('consultations').select('views').eq('hidden', false);
+  const totalViews = (viewRows || []).reduce((sum, r) => sum + (r.views || 0), 0);
+
+  const { data: topViewedConsultations } = await supabase
+    .from('consultations')
+    .select('id, question, category, views, request_type')
+    .eq('hidden', false)
+    .order('views', { ascending: false })
+    .limit(10);
+
   const { data: sidebarBanner } = await supabase
     .from('sidebar_banners')
     .select('enabled, image_url, link_url, alt_text')
@@ -146,6 +159,8 @@ async function AdminPageContent() {
       reportedConsultations={reportedConsultations || []}
       aiLimitHitSummary={aiLimitHitSummary}
       crisisDetectedSummary={crisisDetectedSummary}
+      totalViews={totalViews}
+      topViewedConsultations={topViewedConsultations || []}
       overdueExpertRequests={overdueExpertRequests || []}
       recentExpertAnswers={recentExpertAnswers}
       initialSidebarBanner={
