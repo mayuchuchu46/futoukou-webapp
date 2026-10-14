@@ -182,7 +182,7 @@ export default async function ResultPage({
         // 回答抜粋を削り、浮いた文字数ぶん質問の抜粋（questionSnippet）を長く見せる
         // 構成に変更した。
         text: answerSnippet
-          ? `「${questionSnippet}」というお悩みに、どうする先生が出した答えは\n\n続きはこちら↓`
+          ? `「${questionSnippet}」というお悩みに、どうする先生が出した答えは…\n\n続きはこちら↓`
           : `「${questionSnippet}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
         url: resultUrl,
         hashtags: 'どうする先生,不登校',
