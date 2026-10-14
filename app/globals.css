@@ -449,15 +449,13 @@ h2.pagetitle {
   .main { padding: 12px 20px 90px 20px; gap: 12px; }
   .home-layout { gap: 12px; }
 
-  /* .fab（「相談する」ピンクの丸ボタン）・.scroll-top-btn・.account-tabは、
-     「中央寄せされた480px幅のコンテンツ列」を前提にした calc(50% - 240px + …) で
-     位置を計算している。.app-shellがここで1080px幅に変わる（中心からの半幅が
-     240px→540pxになる）のに合わせて計算式を更新しないと、実際のコンテンツ幅の
-     内側ではなく画面中央寄りの変な位置に浮いて見えてしまうため、ここで上書きする
+  /* .scroll-top-btn・.account-tabは、「中央寄せされた480px幅のコンテンツ列」を
+     前提にした calc(50% - 240px + …) で位置を計算している。.app-shellがここで
+     1080px幅に変わる（中心からの半幅が240px→540pxになる）のに合わせて計算式を
+     更新しないと、実際のコンテンツ幅の内側ではなく画面中央寄りの変な位置に
+     浮いて見えてしまうため、ここで上書きする
      （2026-10-12、「この位置がいいの？」との指摘を受けて修正）。
-     fab・scroll-top-btnの左右入れ替え（2026-10-15）にあわせて、ここの
-     left/rightも入れ替えている。 */
-  .fab { left: calc(50% - 540px + 20px); }
+     （.fabは2026-10-15に削除済み。この上書きも合わせて削除した。） */
   .scroll-top-btn { right: calc(50% - 540px + 20px); }
   .account-tab { right: max(12px, calc(50% - 540px + 16px)); }
 
@@ -676,32 +674,9 @@ h2.pagetitle {
 .blur-lines div:nth-child(3) { width: 60%; }
 .locked-note { font-size: 13px; color: var(--orange-text); background: var(--orange-bg); border-radius: 10px; padding: 10px 12px; line-height: 1.6; }
 
-/* 「相談する」のfabと「ページ先頭へ戻る」のscroll-top-btn、左右の位置を
-   入れ替えた（2026-10-15、「戻るボタンが右」との指摘を受けて）。
-   fab＝左、scroll-top-btn＝右。 */
-.fab {
-  position: fixed;
-  left: calc(50% - 240px + 20px);
-  bottom: 84px;
-  /* 下のscroll-top-btn・account-tabも同じ理由でPC用の計算式を別途@media内に持つ。 */
-  height: 44px;
-  padding: 0 16px;
-  border-radius: 999px;
-  /* ロゴの文字で使われているコーラルピンクの実測値（--logo-pink）。
-     --orangeより赤寄りで、ロゴの色によりちゃんと一致する。 */
-  background: var(--logo-pink);
-  color: #fff;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  font-size: 14px;
-  font-weight: 700;
-  box-shadow: 0 4px 14px rgba(246,142,125,0.4);
-  z-index: 20;
-}
-/* アイコンは文字より一回り大きくして、ボタンの中でちゃんと目立つようにする */
-.fab img { width: 20px; height: 20px; object-fit: contain; filter: brightness(0) invert(1); }
-@media (max-width: 480px) {
-  .fab { left: 20px; }
-}
+/* 浮いていた「相談する」ボタン（.fab）は、下部ナビが常時表示（スティッキー）な上に
+   タブ側をピンクバッジで強調したことで重複になったため削除した（2026-10-15）。
+   定義はcomponents/BottomNav.tsxのコミット履歴を参照。 */
 
 .scroll-top-btn {
   position: fixed;

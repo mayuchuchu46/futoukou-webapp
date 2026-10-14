@@ -17,13 +17,11 @@ const ITEMS = [
 ];
 
 // ある程度スクロールしたら、フッター付近にページ先頭へ戻るボタンを出す。
-// 「相談する」のfabと左右対称の位置に置き、重ならないようにする。
 const SCROLL_TOP_SHOW_THRESHOLD = 400;
 
 export default function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const onAskPage = pathname.startsWith('/ask');
   // Header（画面上部）には既に「戻る」があるが、長いページでは上までスクロールしないと
   // 見えないため、下の固定ナビのすぐ上にも同じ「戻る」を出す（2026-10-13、全ページ下部にも
   // 欲しいとの指摘を受けて追加）。行き先はHeaderと同じくrouter.back()（直前の画面）。
@@ -42,12 +40,9 @@ export default function BottomNav() {
 
   return (
     <>
-      {!onAskPage && (
-        <Link href="/ask" className="fab">
-          <img src="/assets/icon_bulb.png" alt="" />
-          相談する
-        </Link>
-      )}
+      {/* 浮いていた「相談する」ボタン（.fab）は、下部ナビが常時表示（スティッキー）な上に
+          「相談する」タブをピンクバッジで強調したことで重複になったため削除した
+          （2026-10-15）。 */}
       {showScrollTop && (
         <button
           type="button"
