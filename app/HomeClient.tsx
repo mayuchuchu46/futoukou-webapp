@@ -177,13 +177,18 @@ export default function HomeClient({
             形で導入（960px以上では.home-cta-bannerを非表示にする。
             app/globals.css参照）。バナー画像自体は2026-10-15、人物写真入りの
             デザインに差し替え（その後さらに別案に再差し替え）。 */}
-        <Link href="/ask" className="card home-cta">
-          <img
-            src="/assets/home_cta_banner.jpg"
-            alt="「今、どうしたらいい？」どうする先生に相談する。学年や状況をかんたんに入力するだけ。今できることや、次の一手を一緒に整理します。"
-            className="home-cta-banner"
-          />
-        </Link>
+        {/* カテゴリ絞り込み・検索中はトップの状態ではないため非表示にする
+            （2026-10-15、「このバナーはトップだけ表示でいいかも」との指摘を受けて
+            showExtras条件を追加）。 */}
+        {showExtras && (
+          <Link href="/ask" className="card home-cta">
+            <img
+              src="/assets/home_cta_banner.jpg"
+              alt="「今、どうしたらいい？」どうする先生に相談する。学年や状況をかんたんに入力するだけ。今できることや、次の一手を一緒に整理します。"
+              className="home-cta-banner"
+            />
+          </Link>
+        )}
 
         {showExtras && (
           <div className="expertbanner" onClick={() => router.push('/expertlist')}>
