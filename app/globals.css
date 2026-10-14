@@ -330,26 +330,21 @@ h2.pagetitle {
    同じ画面内の他の主要ボタン・ロゴがこのアプリのメインカラーである緑
    （--main）基調のため、ピンクだけ浮いて見える・色味がケンカするとの指摘を
    受け、背景をブランドカラーの緑（--main）に変更。あわせて縦の余白を
-   詰めて高さを抑えた（2026-10-14）。 */
+   詰めて高さを抑えた（2026-10-14）。
+   その後、「見出し＋説明文はHTML・イラストだけ画像」のハイブリッド構成を
+   一度試したが、チャッピー（ChatGPT）に描いてもらったバナー画像をそのまま
+   使いたいとのことで、中身を1枚の画像に差し替えた（2026-10-15）。.cardの
+   paddingがそのままだと画像の周りに余白ができてしまうため、ここでは
+   paddingを0にして画像をカード全体に敷き詰めている。 */
 .card.home-cta {
-  flex-direction: column;
-  gap: 10px;
-  background: var(--main);
+  padding: 0;
+  overflow: hidden;
   text-decoration: none;
   margin: 0 0 2px;
-  padding: 13px 16px;
+  background: var(--main);
 }
-/* 見出し・説明文とイラストを横並びにする行。ボタンはこの下にフル幅で置く
-   （2026-10-15、チャッピー案のイラスト部分を組み込む際に、元の「本文＋ボタンが
-   横並び」の構成から「本文＋イラストが横並び、ボタンは下にフル幅」に変更）。 */
-.home-cta-row { display: flex; flex-direction: row; align-items: center; gap: 12px; }
-.home-cta-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.home-cta-title { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 14px; color: #fff; line-height: 1.4; }
-.home-cta-desc { font-size: 11px; color: rgba(255,255,255,0.85); line-height: 1.4; }
-/* イラストはスマホのみ表示（まずは試しとの指摘を受け、PCでは非表示。
-   960px以上の上書きは下の@media内）。 */
-.home-cta-illustration { width: 72px; height: 72px; object-fit: cover; border-radius: 12px; flex: 0 0 auto; }
-.home-cta-btn { width: 100%; padding: 10px; background: #fff; color: var(--main); font-size: 13px; }
+/* まずはスマホのみ試す形で導入。960px以上での非表示は下の@media内。 */
+.home-cta-banner { display: block; width: 100%; height: auto; }
 
 .expertbanner { background: #fff; border: 1px solid var(--orange); border-radius: 12px; padding: 8px 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
 /* 🔒絵文字から、アプリのイラストと同じ塗り＋太いアウトラインのオリジナル鍵アイコン
@@ -442,9 +437,9 @@ h2.pagetitle {
      一覧内に残っているモバイル用の方は隠す。 */
   .home-tags-mobile { display: none; }
 
-  /* ホームCTAカードのイラストは、まずはスマホのみ試す指摘を受けて
-     PC（960px以上）では非表示にする（2026-10-15）。 */
-  .home-cta-illustration { display: none; }
+  /* ホームCTAバナーは、まずはスマホのみ試す指摘を受けてPC（960px以上）では
+     カードごと非表示にする（2026-10-15）。 */
+  .home-cta { display: none; }
 
   /* サイドのタグ一覧は横スクロールではなく、折り返して並べる
      （ホームのサイド・他ページのPcSidebarどちらでも使うため、

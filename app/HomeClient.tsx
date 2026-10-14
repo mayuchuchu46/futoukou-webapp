@@ -144,25 +144,19 @@ export default function HomeClient({
       <div className="main">
         {/* トップページ本文側に「相談する」への明確な入り口が無く、画面右下の
             固定ボタン（.fab）・下部ナビのタブだけだと見落としやすいとの指摘を
-            受けて追加（2026-10-14）。 */}
+            受けて追加（2026-10-14）。
+            チャッピー（ChatGPT）に描いてもらったバナー案をそのまま画像として
+            使用（2026-10-15、「イラストだけ切り出し＋HTML文字」のハイブリッド案
+            よりこちらがいいとのことで変更）。文字が画像に焼き込まれているため
+            スマホ幅で縮小した時の可読性は少し犠牲になるが、まずはスマホのみ試す
+            形で導入（960px以上では.home-cta-bannerを非表示にする。
+            app/globals.css参照）。 */}
         <Link href="/ask" className="card home-cta">
-          <div className="home-cta-row">
-            <div className="home-cta-body">
-              <div className="home-cta-title">「今、どうしたらいい？」を相談する</div>
-              <div className="home-cta-desc">学年や状況をかんたんに入力するだけ。匿名・無料で相談できます。</div>
-            </div>
-            {/* チャッピー（ChatGPT）に描いてもらったバナー案のうち、イラスト部分だけを
-                切り出して使用（2026-10-15）。見出し・説明文・ボタンの文字は画像に
-                焼き込まず引き続きHTMLのまま可変にし、スマホ幅で縮小しても文字が
-                潰れないようにしている。まずはスマホのみ表示（960px以上では
-                .home-cta-illustrationを非表示にする。app/globals.css参照）。 */}
-            <img
-              src="/assets/home_cta_illustration.png"
-              alt=""
-              className="home-cta-illustration"
-            />
-          </div>
-          <span className="btn-primary home-cta-btn">相談する</span>
+          <img
+            src="/assets/home_cta_banner.jpg"
+            alt="「今、どうしたらいい？」どうする先生（AI）に相談する。学年や状況を入力するだけ。次の一手を一緒に整理します。"
+            className="home-cta-banner"
+          />
         </Link>
 
         {showExtras && (
