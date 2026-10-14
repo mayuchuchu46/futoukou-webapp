@@ -618,6 +618,10 @@ h2.pagetitle {
 
 .row { display: flex; justify-content: space-between; align-items: center; }
 .cat-badge { display: inline-flex; align-self: flex-start; padding: 5px 13px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+/* 投稿から1時間以内のカードに付けるNEWバッジ。一覧に「今動いている」感を
+   出すための軽い演出（2026-10-15）。 */
+.new-badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: 0.02em; color: #fff; background: var(--logo-pink); }
+.card-time { flex: 0 0 auto; white-space: nowrap; font-size: 11px; }
 .cat-body { background: var(--sub); color: #1F4A3C; }
 .cat-social { background: var(--orange-bg); color: var(--orange-text); }
 .cat-school { background: var(--teal-bg); color: var(--teal-text); }

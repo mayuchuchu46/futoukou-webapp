@@ -7,6 +7,7 @@ import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
+import { relativeTimeLabel, isRecentPost } from '@/lib/relativeTime';
 import EyeIcon from './EyeIcon';
 import ReportButton from './ReportButton';
 
@@ -91,11 +92,22 @@ export default function ConsultationCard({
     ? item.answer.slice(0, 90) + (item.answer.length > 90 ? '…' : '')
     : '';
 
+  // 投稿日時を絶対日付ではなく「3分前」のような相対表示にし、1時間以内の
+  // 投稿にはNEWバッジを付ける（2026-10-15、一覧に「今動いている」感を
+  // 出したいとの要望を受けて追加）。
+  const timeLabel = item.created_at ? relativeTimeLabel(item.created_at) : '';
+  const isNew = !!item.created_at && isRecentPost(item.created_at);
+
   return (
     <Link href={`/result/${item.id}`} className="card">
       <div className="row">
-        <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
-        {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
+          {isNew && <span className="new-badge">NEW</span>}
+        </div>
+        <span className="muted card-time">
+          {[metaLabel(item), timeLabel].filter(Boolean).join('・')}
+        </span>
       </div>
       <div className="qtext qtext-main">💬 {item.question}</div>
       {matchedTags.length > 0 && (
