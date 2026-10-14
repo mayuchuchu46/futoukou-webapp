@@ -454,9 +454,11 @@ h2.pagetitle {
      位置を計算している。.app-shellがここで1080px幅に変わる（中心からの半幅が
      240px→540pxになる）のに合わせて計算式を更新しないと、実際のコンテンツ幅の
      内側ではなく画面中央寄りの変な位置に浮いて見えてしまうため、ここで上書きする
-     （2026-10-12、「この位置がいいの？」との指摘を受けて修正）。 */
-  .fab { right: calc(50% - 540px + 20px); }
-  .scroll-top-btn { left: calc(50% - 540px + 20px); }
+     （2026-10-12、「この位置がいいの？」との指摘を受けて修正）。
+     fab・scroll-top-btnの左右入れ替え（2026-10-15）にあわせて、ここの
+     left/rightも入れ替えている。 */
+  .fab { left: calc(50% - 540px + 20px); }
+  .scroll-top-btn { right: calc(50% - 540px + 20px); }
   .account-tab { right: max(12px, calc(50% - 540px + 16px)); }
 
   /* 左右で高さの違う内容（検索ボックス vs サイドバナー等）を同じ行に揃えようとすると
@@ -674,9 +676,12 @@ h2.pagetitle {
 .blur-lines div:nth-child(3) { width: 60%; }
 .locked-note { font-size: 13px; color: var(--orange-text); background: var(--orange-bg); border-radius: 10px; padding: 10px 12px; line-height: 1.6; }
 
+/* 「相談する」のfabと「ページ先頭へ戻る」のscroll-top-btn、左右の位置を
+   入れ替えた（2026-10-15、「戻るボタンが右」との指摘を受けて）。
+   fab＝左、scroll-top-btn＝右。 */
 .fab {
   position: fixed;
-  right: calc(50% - 240px + 20px);
+  left: calc(50% - 240px + 20px);
   bottom: 84px;
   /* 下のscroll-top-btn・account-tabも同じ理由でPC用の計算式を別途@media内に持つ。 */
   height: 44px;
@@ -695,13 +700,12 @@ h2.pagetitle {
 /* アイコンは文字より一回り大きくして、ボタンの中でちゃんと目立つようにする */
 .fab img { width: 20px; height: 20px; object-fit: contain; filter: brightness(0) invert(1); }
 @media (max-width: 480px) {
-  .fab { right: 20px; }
+  .fab { left: 20px; }
 }
 
-/* ページ先頭へ戻るボタン。「相談する」のfabと左右対称の位置（左側）に置く。 */
 .scroll-top-btn {
   position: fixed;
-  left: calc(50% - 240px + 20px);
+  right: calc(50% - 240px + 20px);
   bottom: 84px;
   width: 46px;
   height: 46px;
@@ -716,7 +720,7 @@ h2.pagetitle {
   z-index: 20;
 }
 @media (max-width: 480px) {
-  .scroll-top-btn { left: 20px; }
+  .scroll-top-btn { right: 20px; }
 }
 
 /* 下の固定ナビ（.nav）の直上に出す「戻る」。ヘッダーの.header-backと同じ見た目・
