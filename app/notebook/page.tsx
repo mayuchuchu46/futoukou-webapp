@@ -36,7 +36,13 @@ export default function NotebookPage() {
           相談を重ねるほど、どうする先生が今のお子さんの状況をここにまとめます。内容はあなたご本人以外には表示されません。
         </div>
 
-        {ownCount !== null && <ConsultationSummaryCard ownCount={ownCount} />}
+        {/* 以前はownCountが取れるまでこのカードごとマウントしない作りだったため、
+            「自分の相談件数（/api/consultations）」→「ノートの中身（/api/member-summary）」
+            の2つのAPI呼び出しが直列になり、表示が遅くなっていた。ownCountの確定を待たずに
+            マウントし、カード側でownCount（nullの間は読み込み中）を扱う形にして、
+            2つの取得を並列で走らせるようにした（2026-10-15、「分析ノートのページも表示が
+            遅い」との指摘を受けて修正）。 */}
+        <ConsultationSummaryCard ownCount={ownCount} />
 
         <Link href="/mypage" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>これまで投稿した相談を見る</span>

@@ -103,7 +103,7 @@ function NotebookHead({ count }: { count: number }) {
 //   表示されない（未実装）。
 // どの状態でも、相談件数を見せることで「質問するほど、ノートの中身が増えていく」という
 // 積み重ねの価値を伝える。
-export default function ConsultationSummaryCard({ ownCount }: { ownCount: number }) {
+export default function ConsultationSummaryCard({ ownCount }: { ownCount: number | null }) {
   const [data, setData] = useState<SummaryResponse | null>(null);
 
   useEffect(() => {
@@ -121,7 +121,10 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
     };
   }, []);
 
-  if (!data) return null;
+  // data（/api/member-summary）とownCount（親側の/api/consultations、自分の相談件数）は
+  // 親コンポーネント側で並列に取得している。未ログイン分岐の文言がownCountを使うため、
+  // 両方そろうまでは表示しない（どちらか一方が遅れても、取得自体は並列で進む）。
+  if (!data || ownCount === null) return null;
 
   if (!data.loggedIn) {
     // 相談が0件の段階では、会員登録してもノートに書く材料が無く空のままになってしまう
