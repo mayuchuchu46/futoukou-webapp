@@ -61,6 +61,17 @@ type AiLimitHitSummary = {
   uniqueUserCount: number;
 };
 
+// 希死念慮・自傷等の安全上書き（crisis_detected）が実際にどれくらいの頻度で発動しているか
+// を把握するための集計。「AIがいつもその手の回答ばかりになっていないか（過剰発動では
+// ないか）」を確認したいとの要望を受けて追加した（2026-10-14）。自動投稿（auto-seed）分は
+// 実際のユーザーの相談とは別物なので、分けて数える。
+type CrisisDetectedSummary = {
+  realCount: number;
+  realTotal: number;
+  autoSeedCount: number;
+  autoSeedTotal: number;
+};
+
 type PayoutResult = {
   paid: { expertName: string; amount: number; count: number }[];
   skipped: { expertName: string; amount: number; count: number; reason: string }[];
@@ -86,6 +97,7 @@ export default function AdminClient({
   initialSidebarBanner,
   unpaidPayoutSummary,
   aiLimitHitSummary,
+  crisisDetectedSummary,
   stripeConfigured,
 }: {
   unverifiedExperts: UnverifiedExpert[];
@@ -97,6 +109,7 @@ export default function AdminClient({
   initialSidebarBanner: SidebarBanner;
   unpaidPayoutSummary: UnpaidPayoutSummary;
   aiLimitHitSummary: AiLimitHitSummary;
+  crisisDetectedSummary: CrisisDetectedSummary;
   stripeConfigured: boolean;
 }) {
   const [experts, setExperts] = useState(unverifiedExperts);
@@ -481,6 +494,22 @@ export default function AdminClient({
         <div className="card">
           <div className="qtext">
             1日10回の上限に当たった回数：{aiLimitHitSummary.hitCount}回（のべ{aiLimitHitSummary.uniqueUserCount}人）
+          </div>
+        </div>
+
+        {/* 希死念慮・自傷等の安全上書き（ホットライン案内のみの回答）が実際にどのくらいの
+            頻度で発動しているかの確認用（2026-10-14追加）。「AIがいつもその手の回答ばかりに
+            なっていないか」を、印象ではなく実数で確認できるようにした。自動投稿
+            （auto-seed）分は実ユーザーの相談とは別物なので分けて表示する。 */}
+        <div style={{ fontWeight: 700, marginTop: 16 }}>安全上書き（希死念慮等）の発動状況（直近30日）</div>
+        <div className="card">
+          <div className="qtext">
+            実ユーザーの相談：{crisisDetectedSummary.realTotal}件中{crisisDetectedSummary.realCount}件
+            {crisisDetectedSummary.realTotal > 0 &&
+              `（${((crisisDetectedSummary.realCount / crisisDetectedSummary.realTotal) * 100).toFixed(1)}%）`}
+          </div>
+          <div className="muted" style={{ fontSize: 12 }}>
+            自動投稿（サンプル）：{crisisDetectedSummary.autoSeedTotal}件中{crisisDetectedSummary.autoSeedCount}件
           </div>
         </div>
 

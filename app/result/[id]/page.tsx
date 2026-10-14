@@ -377,17 +377,18 @@ export default async function ResultPage({
                 <Link href="/support" className="btn-secondary">
                   ほかの相談窓口も見る
                 </Link>
-                <div className="muted" style={{ fontSize: 12 }}>
-                  {/* 以前はexpertAvailableがfalseのときリンクなしの文章だけだったが、「準備中の
-                      表示はしつつも、専門家への誘導自体はあってよい」との指摘を受けて、非crisis時
-                      の案内文と同じく、準備中でも/askへのリンク自体は常に出す形に変更した
-                      （2026-10-14）。 */}
-                  状況を直接読んだ専門家に、個別に相談することもできます。
-                  <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
-                    専門家に相談する
-                  </Link>
-                  {!expertAvailable && '（現在、本人確認済みの専門家の登録待ちのため準備中です）'}
-                </div>
+                {/* 以前はテキストリンク1本だけだったが、「専門家への誘導をもっと強化してもいいのでは」
+                    との指摘を受け、他の導線（ほかの相談窓口を見る／もう一度相談する）と並ぶ
+                    ボタンに変更した。準備中の間もボタン自体は出し、注記で正確な状態を添える
+                    （2026-10-14）。 */}
+                <Link href="/ask" className="btn-primary">
+                  専門家に相談する
+                </Link>
+                {!expertAvailable && (
+                  <div className="muted" style={{ fontSize: 12 }}>
+                    現在、本人確認済みの専門家の登録待ちのため準備中です。登録が整い次第ご利用いただけます。
+                  </div>
+                )}
               </div>
             ) : (
               <Suspense fallback={null}>

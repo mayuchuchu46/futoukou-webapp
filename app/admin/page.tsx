@@ -97,6 +97,23 @@ async function AdminPageContent() {
     uniqueUserCount: new Set((aiLimitHitRows || []).map((r) => r.author_id)).size,
   };
 
+  // 希死念慮・自傷等の安全上書きが、実際にどのくらいの頻度で発動しているかの確認用
+  // （「AIがいつもその手の回答ばかりになっていないか」を実数で見られるようにする、
+  // 2026-10-14追加）。自動投稿（auto-seed）分は実ユーザーの相談と性質が異なるため分けて集計する。
+  const { data: crisisCheckRows } = await supabase
+    .from('consultations')
+    .select('author_id, crisis_detected')
+    .eq('request_type', 'ai')
+    .gte('created_at', thirtyDaysAgo);
+  const realCrisisRows = (crisisCheckRows || []).filter((r) => r.author_id !== 'auto-seed');
+  const autoSeedCrisisRows = (crisisCheckRows || []).filter((r) => r.author_id === 'auto-seed');
+  const crisisDetectedSummary = {
+    realCount: realCrisisRows.filter((r) => r.crisis_detected).length,
+    realTotal: realCrisisRows.length,
+    autoSeedCount: autoSeedCrisisRows.filter((r) => r.crisis_detected).length,
+    autoSeedTotal: autoSeedCrisisRows.length,
+  };
+
   const { data: sidebarBanner } = await supabase
     .from('sidebar_banners')
     .select('enabled, image_url, link_url, alt_text')
@@ -128,6 +145,7 @@ async function AdminPageContent() {
       recentConsultations={recentConsultations || []}
       reportedConsultations={reportedConsultations || []}
       aiLimitHitSummary={aiLimitHitSummary}
+      crisisDetectedSummary={crisisDetectedSummary}
       overdueExpertRequests={overdueExpertRequests || []}
       recentExpertAnswers={recentExpertAnswers}
       initialSidebarBanner={
