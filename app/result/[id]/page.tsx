@@ -162,9 +162,11 @@ export default async function ResultPage({
     <a
       className="share-btn"
       href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-        // 改行で間延びして見えるとの指摘を受け、詰めた1文にした（2026-10-15）。
+        // Xで拡散されやすい文に変更（2026-10-15）。具体的な悩みをそのまま見せて
+        // 共感を引き、答えを全部見せずに「続きが気になる」余白を作る型。
+        // 改行は詰めすぎず、かといって多用もせず1箇所だけに絞っている。
         text: answerSnippet
-          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生は「${answerSnippet}」と回答。続きはこちら。`
+          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」というお悩みに、どうする先生が出した答えは「${answerSnippet}」。\n\n同じように悩んでいる方はこちら↓`
           : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
         url: resultUrl,
         hashtags: 'どうする先生,不登校',
