@@ -151,6 +151,13 @@ export default async function ResultPage({
   const answerSnippet =
     answerSnippetSource.length > 40 ? `${answerSnippetSource.slice(0, 40)}…` : answerSnippetSource;
 
+  // シェア文中の質問文の抜粋。40文字で切った時に「その子も」のように文が
+  // 唐突に終わって見えるとの指摘を受け、answerSnippetと同じく省略時は「…」を
+  // 付けるようにした（2026-10-15）。
+  const questionSnippetSource = item.question.replace(/\s+/g, ' ').trim();
+  const questionSnippet =
+    questionSnippetSource.length > 40 ? `${questionSnippetSource.slice(0, 40)}…` : questionSnippetSource;
+
   // SNS拡散導線の第一弾（2026-10-12）：Xの投稿画面を開くだけの単純なシェアリンク。
   // クライアント側の状態を持たないので、サーバー側でそのままリンクを組み立てられる
   // （JSは不要）。AI回答・専門家回答の両方から同じ場所に出せるよう、JSX変数として
@@ -166,8 +173,8 @@ export default async function ResultPage({
         // 共感を引き、答えを全部見せずに「続きが気になる」余白を作る型。
         // 改行は詰めすぎず、かといって多用もせず1箇所だけに絞っている。
         text: answerSnippet
-          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」というお悩みに、どうする先生が出した答えは「${answerSnippet}」。\n\n同じように悩んでいる方はこちら↓`
-          : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
+          ? `「${questionSnippet}」というお悩みに、どうする先生が出した答えは「${answerSnippet}」。\n\n同じように悩んでいる方はこちら↓`
+          : `「${questionSnippet}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
         url: resultUrl,
         hashtags: 'どうする先生,不登校',
       })}`}
@@ -204,8 +211,8 @@ export default async function ResultPage({
       href={`https://social-plugins.line.me/lineit/share?${new URLSearchParams({
         url: resultUrl,
         text: answerSnippet
-          ? `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生は「${answerSnippet}」と回答。`
-          : `「${item.question.replace(/\s+/g, ' ').trim().slice(0, 40)}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
+          ? `「${questionSnippet}」の相談に、どうする先生は「${answerSnippet}」と回答。`
+          : `「${questionSnippet}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
       })}`}
       target="_blank"
       rel="noopener noreferrer"
