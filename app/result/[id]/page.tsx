@@ -236,6 +236,15 @@ export default async function ResultPage({
     </div>
   );
 
+  // lib/prompt.tsの安全上書き（希死念慮・自傷等を検知した場合、具体的な助言をせず
+  // ホットライン案内のみを返す指示）が発動した回答かどうか。consultations.crisis_detected
+  // （app/api/consult/route.tsで保存）を正とし、その列の追加前に投稿された古い行のために
+  // 回答本文そのものからも同じ判定をフォールバックで行う（2026-10-14追加。「希死念慮の相談は
+  // 多いので、専門家や公的支援につなげる流れを隠すのではなくしっかり作りたい」との要望を受けて、
+  // これまで回答カード下の小さな注意書き1行だけだった案内を、専用の目立つカードに変更する）。
+  const isCrisis =
+    item.request_type === 'ai' && (!!item.crisis_detected || item.answer.includes('0120-0-78310'));
+
   const jsonLd = answerTextForJsonLd
     ? {
         '@context': 'https://schema.org',
@@ -305,7 +314,7 @@ export default async function ResultPage({
             <div className="card">
               <div className="answer-label">
                 <img src="/assets/sensei_logo.png" alt="" />
-                どうする先生の回答・次にできそうなこと
+                {isCrisis ? 'どうする先生からのお返事' : 'どうする先生の回答・次にできそうなこと'}
               </div>
               <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
                 {item.answer}
@@ -313,38 +322,91 @@ export default async function ResultPage({
               {/* AIは一般論ベースの回答で外れることもあるという前提を明示しつつ、
                   「個別の状況は専門家へ」という差別化の文脈で専門家相談への導線も
                   兼ねる一文。AiUsageUpsell（利用回数の閾値後に出る導線）とは別に、
-                  AI回答には毎回必ず表示する（2026-10-13追加）。 */}
-              <div
-                className="muted"
-                style={{ fontSize: 12, marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}
-              >
-                {/* 2026-10-13: AIの提案通りに動いて状況が悪化するケースもあり得るため、
-                    「あくまで一つの案」「最終判断は保護者自身」というニュアンスを一言添えた。
-                    あわせて、専門家（有料・現在準備中）だけでなく、公的な相談機関（/support）
-                    にも導線を出すよう変更。上に薄い区切り線を追加し、回答本文との境目を
-                    分かりやすくした（2026-10-13）。 */}
-                ⚠️ AIの回答は一つの案で、間違えることもあります。実際にどうするかはご家庭の状況に合わせてご判断ください。重要なことは
-                <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
-                  専門家に相談する
-                </Link>
-                こともできます{!expertAvailable && '（現在、準備中）'}。
-                <Link href="/support" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
-                  公的な相談機関
-                </Link>
-                もご活用ください。
-              </div>
+                  AI回答には毎回必ず表示する（2026-10-13追加）。安全上書き（isCrisis）の
+                  場合は、この1行の注意書きの代わりに下の専用カードで案内するため、
+                  ここでは出さない（2026-10-14）。 */}
+              {!isCrisis && (
+                <div
+                  className="muted"
+                  style={{ fontSize: 12, marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}
+                >
+                  {/* 2026-10-13: AIの提案通りに動いて状況が悪化するケースもあり得るため、
+                      「あくまで一つの案」「最終判断は保護者自身」というニュアンスを一言添えた。
+                      あわせて、専門家（有料・現在準備中）だけでなく、公的な相談機関（/support）
+                      にも導線を出すよう変更。上に薄い区切り線を追加し、回答本文との境目を
+                      分かりやすくした（2026-10-13）。 */}
+                  ⚠️ AIの回答は一つの案で、間違えることもあります。実際にどうするかはご家庭の状況に合わせてご判断ください。重要なことは
+                  <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+                    専門家に相談する
+                  </Link>
+                  こともできます{!expertAvailable && '（現在、準備中）'}。
+                  <Link href="/support" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+                    公的な相談機関
+                  </Link>
+                  もご活用ください。
+                </div>
+              )}
             </div>
+
+            {isCrisis ? (
+              // 希死念慮・自傷等の安全上書きが発動した相談専用の案内カード。以前は回答カード下の
+              // 小さな注意書き1行だけだったが、「このテーマは相談でかなり多い。隠すのではなく、
+              // 専門家や公的支援、相談につなげる流れをしっかり作りたい」との要望を受けて、
+              // 目立つ専用カードに変更した（2026-10-14）。番号・文言は/support・CrisisModalと
+              // 揃えている。有料導線（AiUsageUpsell）・会員登録導線（SaveConsultationPrompt）・
+              // SNSシェアは、命に関わる場面にはふさわしくないため、この相談では出さない。
+              <div className="card" style={{ alignItems: 'flex-start', gap: 10, borderLeft: '4px solid #C0392B' }}>
+                <div className="answer-label" style={{ fontSize: 14, color: '#C0392B' }}>
+                  一人で抱え込まないでください
+                </div>
+                <div className="qtext" style={{ fontSize: 13 }}>
+                  お子さんの安全に関わる内容です。AIの回答だけで終わらせず、下記の窓口にもぜひご連絡ください。すべて無料で、匿名でも相談できます。
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700 }}>24時間子供SOSダイヤル</div>
+                  <div className="qtext">
+                    <a href="tel:0120078310" style={{ fontWeight: 700 }}>0120-0-78310</a>（24時間・無料）
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700 }}>よりそいホットライン</div>
+                  <div className="qtext">
+                    <a href="tel:0120279338" style={{ fontWeight: 700 }}>0120-279-338</a>（無料）
+                  </div>
+                </div>
+                <Link href="/support" className="btn-secondary">
+                  ほかの相談窓口も見る
+                </Link>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  {expertAvailable ? (
+                    <>
+                      状況を直接読んだ専門家に、個別に相談することもできます。
+                      <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+                        専門家に相談する
+                      </Link>
+                    </>
+                  ) : (
+                    '専門家への個別相談もご案内できるよう準備しています（現在、本人確認済みの専門家の登録待ちのため準備中です）。'
+                  )}
+                </div>
+              </div>
+            ) : (
+              <Suspense fallback={null}>
+                <SaveConsultationPrompt id={item.id} authorId={item.author_id} />
+              </Suspense>
+            )}
             {askAgainBlock}
-            <Suspense fallback={null}>
-              <SaveConsultationPrompt id={item.id} authorId={item.author_id} />
-            </Suspense>
-            {/* 「もっと詳しく相談してみませんか？」（AiUsageUpsell、有料導線）より上に
-                シェアボタンを置く。無料でできる行動（シェア）を、課金に近い案内より
-                先に提示する並び（2026-10-12）。 */}
-            {shareButtons}
-            <Suspense fallback={null}>
-              <AiUsageUpsell />
-            </Suspense>
+            {!isCrisis && (
+              <>
+                {/* 「もっと詳しく相談してみませんか？」（AiUsageUpsell、有料導線）より上に
+                    シェアボタンを置く。無料でできる行動（シェア）を、課金に近い案内より
+                    先に提示する並び（2026-10-12）。 */}
+                {shareButtons}
+                <Suspense fallback={null}>
+                  <AiUsageUpsell />
+                </Suspense>
+              </>
+            )}
           </>
         )}
 

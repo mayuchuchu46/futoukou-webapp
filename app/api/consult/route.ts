@@ -78,6 +78,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'AI回答の生成に失敗しました: ' + message }, { status: 502 });
   }
 
+  // lib/prompt.tsの安全上書き（希死念慮・自傷等を検知した場合、ホットライン案内のみを
+  // 返す指示）が実際に発動したかどうかを、プロンプトが必ず含めさせている電話番号の文字列
+  // で判定する。この判定結果を保存しておくことで、結果ページ側で「専門家・公的支援へつなげる
+  // 流れをしっかり作る」ための専用UIを出せるようにする（2026-10-14、「隠すのではなく」との
+  // 要望を受けて追加）。
+  const crisisDetected = answer.includes('0120-0-78310');
+
   const { data: row, error: insertErr } = await supabase
     .from('consultations')
     .insert({
@@ -92,6 +99,7 @@ export async function POST(req: NextRequest) {
       likes: 0,
       liked_by: [],
       views: 0,
+      crisis_detected: crisisDetected,
     })
     .select()
     .single();

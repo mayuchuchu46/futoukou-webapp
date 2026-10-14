@@ -89,6 +89,11 @@ ${CATEGORY_EXAMPLES[category]}
     return NextResponse.json({ error: '回答の生成に失敗しました: ' + message }, { status: 502 });
   }
 
+  // 本来の相談フロー（app/api/consult/route.ts）と同じ安全上書き判定をここでも記録する
+  // （2026-10-14追加）。自動投稿のサンプル文で発動することは想定していないが、
+  // 万一発動した場合に結果ページの専用UIが正しく出るようにするため。
+  const crisisDetected = answer.includes('0120-0-78310');
+
   const { data: row, error: insertErr } = await supabase
     .from('consultations')
     .insert({
@@ -101,6 +106,7 @@ ${CATEGORY_EXAMPLES[category]}
       likes: 0,
       liked_by: [],
       views: 0,
+      crisis_detected: crisisDetected,
     })
     .select()
     .single();

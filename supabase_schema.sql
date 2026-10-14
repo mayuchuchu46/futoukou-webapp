@@ -30,6 +30,9 @@
 -- alter table ai_limit_hits enable row level security;
 -- alter table expert_memberships enable row level security;
 -- alter table guidelines enable row level security;
+-- 希死念慮・自傷等を検知した安全上書き回答（ホットライン案内のみ）かどうかを記録する
+-- crisis_detected列を追加した場合（2026-10-14追加）、既存DBでは次を実行してください。
+-- alter table consultations add column if not exists crisis_detected boolean not null default false;
 -- 新テーマ「日常生活のこと」(daily) を追加した際、consultationsのcategory CHECK制約に
 -- dailyを入れ忘れていた（2026-10-14発覚）。このままではdailyでの投稿が失敗するため、
 -- 既存DBでは次を実行してください。
@@ -347,7 +350,15 @@ create table if not exists consultations (
   paid_at timestamptz, -- 報酬を振込済みにした時刻
   refunded boolean not null default false, -- 期限超過等でStripe側を返金した場合にtrue
   expert_answer_helpful boolean, -- 専門家回答への利用者フィードバック（null=未評価, true=役に立った, false=役に立たなかった）
-  expert_funding text check (expert_funding in ('paid','ticket','free_monthly')) -- 専門家質問の財源（都度払い／チケット消費／月1回無料枠）。request_type='expert'のみ使用
+  expert_funding text check (expert_funding in ('paid','ticket','free_monthly')), -- 専門家質問の財源（都度払い／チケット消費／月1回無料枠）。request_type='expert'のみ使用
+
+  -- 希死念慮・自傷等を検知し、lib/prompt.tsの安全上書き（ホットライン案内のみを返す）が
+  -- 発動したAI回答かどうか。従来はこの判定結果がどこにも保存されておらず、結果ページ側は
+  -- 小さな注意書き1行のみで、専門家・公的支援への導線が目立たなかった。「隠すのではなく、
+  -- しっかりした流れを作りたい」との要望を受け、app/api/consult/route.ts側で
+  -- answer.includes('0120-0-78310')によりこの列に記録し、結果ページで目立つ専用の
+  -- 案内カードを出すために使う（2026-10-14）。
+  crisis_detected boolean not null default false
 );
 alter table consultations enable row level security;
 

@@ -24,6 +24,8 @@ export type Consultation = {
   expert_answer_helpful?: boolean | null;
   experts?: { name: string; credential: string } | null;
   locked?: boolean;
+  // 希死念慮・自傷等を検知した安全上書き回答（ホットライン案内のみ）かどうか（2026-10-14追加）。
+  crisis_detected?: boolean;
 };
 
 export const GRADE_OPTIONS = ['小学1年生','小学2年生','小学3年生','小学4年生','小学5年生','小学6年生','中学1年生','中学2年生','中学3年生','高校1年生','高校2年生','高校3年生','その他'];
