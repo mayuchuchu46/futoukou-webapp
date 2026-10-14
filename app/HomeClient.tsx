@@ -214,10 +214,12 @@ export default function HomeClient({
               </div>
             )}
 
-            {/* PCではサイド側に同じものを出すので、ここはモバイル専用（960px以上では非表示）。 */}
+            {/* PCではサイド側に同じものを出すので、ここはモバイル専用（960px以上では非表示）。
+                見出しテキスト「気になるテーマから探す」は、スマホでは無くても
+                チップ列だけで用途がわかるとのことで省略した（2026-10-15）。 */}
             {showExtras && (
               <div className="home-tags home-tags-mobile">
-                <TagChips title="気になるテーマから探す" />
+                <TagChips />
               </div>
             )}
 

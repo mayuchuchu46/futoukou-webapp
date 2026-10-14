@@ -404,23 +404,34 @@ h2.pagetitle {
   box-sizing: border-box;
 }
 
-.main { flex: 1; overflow-y: auto; padding: 12px 20px 90px 20px; display: flex; flex-direction: column; gap: 12px; }
+/* スマホでは上下の余白が間延びして見えるとの指摘を受け、上下方向
+   （padding上端・ブロック間のgap）を詰めた。左右のpaddingは20pxのまま
+   だと相対的に広く感じたため18pxに少し寄せてバランスを取っている
+   （PCでは下の@media内で元の値に戻す。2026-10-15）。 */
+.main { flex: 1; overflow-y: auto; padding: 8px 18px 90px 18px; display: flex; flex-direction: column; gap: 8px; }
 
 /* ホーム画面のみ、PCの広い画面では「よく読まれている相談」「気になるテーマから探す」を
    右サイドに回し、検索・カテゴリ・一覧を左に広く使う2カラムレイアウトにする。
    モバイル（.home-layoutがgridになる前）はDOM順そのまま（ランキング→検索→カテゴリ→
    タグ→一覧）の1カラムで、見た目は今までと変わらない。 */
-.home-layout { display: flex; flex-direction: column; gap: 12px; }
+.home-layout { display: flex; flex-direction: column; gap: 8px; }
 /* .home-main-colはPC版では.home-layoutの左カラムになるが、モバイルでは
    ただのdivとして.home-layout（flex column, gap）に直接積まれるだけなので、
-   ここでも同じflex column + gapを指定しておかないと中身同士の余白が詰まってしまう。 */
-.home-main-col { display: flex; flex-direction: column; gap: 12px; }
+   ここでも同じflex column + gapを指定しておかないと中身同士の余白が詰まってしまう。
+   （2026-10-15、スマホの上下余白を詰める指摘を受けて12px→8pxに変更。
+   PC側は下の@media内で16pxのまま。） */
+.home-main-col { display: flex; flex-direction: column; gap: 8px; }
 
 @media (min-width: 960px) {
   /* PCの広い画面では、ホーム以外のページも同じ幅・配置に揃える
      （以前は.home-shellだけ広がり、他のページは480pxのまま中央に
      細く表示されていた）。 */
   .app-shell { max-width: 1080px; }
+
+  /* .main・.home-layoutの上下詰め（2026-10-15）はスマホ限定の調整なので、
+     PCでは元の余白に戻す。 */
+  .main { padding: 12px 20px 90px 20px; gap: 12px; }
+  .home-layout { gap: 12px; }
 
   /* .fab（「相談する」ピンクの丸ボタン）・.scroll-top-btn・.account-tabは、
      「中央寄せされた480px幅のコンテンツ列」を前提にした calc(50% - 240px + …) で

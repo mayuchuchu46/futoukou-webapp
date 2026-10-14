@@ -14,7 +14,9 @@ export default function TagChips({
   // 折り返して一覧で見せたいとの要望（2026-10-13）に応えるためのフラグ。
   wrap = false,
 }: {
-  title: string;
+  // スマホのホーム画面では見出しテキストが不要とのことで省略可にした
+  // （2026-10-15）。省略時は見出し行自体を出さない。
+  title?: string;
   wrap?: boolean;
 }) {
   const [tags, setTags] = useState<{ word: string; count: number }[]>([]);
@@ -30,9 +32,11 @@ export default function TagChips({
 
   return (
     <div style={{ marginBottom: 4 }}>
-      <div className="muted" style={{ marginBottom: 8 }}>
-        {title}
-      </div>
+      {title && (
+        <div className="muted" style={{ marginBottom: 8 }}>
+          {title}
+        </div>
+      )}
       <div className={wrap ? 'chip-row chip-row-wrap' : 'chip-row'}>
         {tags.map((t) => (
           <Link
