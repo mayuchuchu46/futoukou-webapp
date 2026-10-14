@@ -154,9 +154,12 @@ export default async function ResultPage({
   // シェア文中の質問文の抜粋。40文字で切った時に「その子も」のように文が
   // 唐突に終わって見えるとの指摘を受け、answerSnippetと同じく省略時は「…」を
   // 付けるようにした（2026-10-15）。
+  // 「質問の方をもう少し長く見せた方が続きを見たくなるのでは」との指摘を受け、
+  // 40→70文字に拡張（answerSnippetは引き続き40文字のまま）。悩みの背景が
+  // ある程度伝わる長さにしつつ、全文は見せずに「続きはこちら」への興味を残す。
   const questionSnippetSource = item.question.replace(/\s+/g, ' ').trim();
   const questionSnippet =
-    questionSnippetSource.length > 40 ? `${questionSnippetSource.slice(0, 40)}…` : questionSnippetSource;
+    questionSnippetSource.length > 70 ? `${questionSnippetSource.slice(0, 70)}…` : questionSnippetSource;
 
   // SNS拡散導線の第一弾（2026-10-12）：Xの投稿画面を開くだけの単純なシェアリンク。
   // クライアント側の状態を持たないので、サーバー側でそのままリンクを組み立てられる
