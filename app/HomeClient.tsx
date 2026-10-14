@@ -51,6 +51,10 @@ export default function HomeClient({
   const urlParams = useSearchParams();
   const [category, setCategory] = useState(urlParams.get('category') || 'all');
   const [q, setQ] = useState(urlParams.get('q') || '');
+  // 一覧の並び替え・「専門家回答のみ」フィルター（2026-10-15追加）。
+  type SortKey = 'new' | 'views' | 'likes';
+  const [sort, setSort] = useState<SortKey>('new');
+  const [expertOnly, setExpertOnly] = useState(false);
   const [items, setItems] = useState<Consultation[]>(initialItems);
   const PAGE_SIZE = 8;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -79,16 +83,26 @@ export default function HomeClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlParams]);
 
-  async function fetchResults(nextCategory: string, nextQ: string, { showLoading }: { showLoading: boolean }) {
+  async function fetchResults(
+    nextCategory: string,
+    nextQ: string,
+    { showLoading }: { showLoading: boolean },
+    nextSort: SortKey = sort,
+    nextExpertOnly: boolean = expertOnly
+  ) {
     if (showLoading) setLoading(true);
     const params = new URLSearchParams({ viewer_id: getUid() });
     if (nextCategory !== 'all') params.set('category', nextCategory);
     if (nextQ.trim()) params.set('q', nextQ.trim());
+    if (nextSort !== 'new') params.set('sort', nextSort);
+    if (nextExpertOnly) params.set('expert_answered', '1');
     try {
       const res = await fetch(`/api/consultations?${params.toString()}`);
       const d = await res.json();
       setItems(d.consultations || []);
-      if (nextCategory === 'all' && !nextQ.trim()) setAllItems(d.consultations || []);
+      if (nextCategory === 'all' && !nextQ.trim() && nextSort === 'new' && !nextExpertOnly) {
+        setAllItems(d.consultations || []);
+      }
     } finally {
       if (showLoading) setLoading(false);
     }
@@ -107,14 +121,14 @@ export default function HomeClient({
   }, []);
 
   useEffect(() => {
-    fetchResults(category, q, { showLoading: true });
+    fetchResults(category, q, { showLoading: true }, sort, expertOnly);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, q]);
+  }, [category, q, sort, expertOnly]);
 
-  // 絞り込み（カテゴリ・検索）が変わったら、表示件数を最初の分だけに戻す。
+  // 絞り込み（カテゴリ・検索・並び替え・専門家回答のみ）が変わったら、表示件数を最初の分だけに戻す。
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [category, q]);
+  }, [category, q, sort, expertOnly]);
 
   // 一覧の下端に近づいたら、表示件数を少しずつ増やす（全件を一度に並べない）。
   useEffect(() => {
@@ -234,6 +248,34 @@ export default function HomeClient({
                   {c.short}（{counts[key] || 0}）
                 </button>
               ))}
+            </div>
+
+            {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
+                「参考になった順」は各カードの「参考になった◯人」と同じlikesで並べている。
+                専門家回答の絞り込みは、以前は/expertlistへの別バナーのみで案内していたが、
+                ここに統合した。 */}
+            <div className="sortbar">
+              <div className="sortbar-group">
+                {([
+                  { key: 'new', label: '新着順' },
+                  { key: 'views', label: '閲覧数順' },
+                  { key: 'likes', label: '参考になった順' },
+                ] as const).map((opt) => (
+                  <button
+                    key={opt.key}
+                    className={`sortbar-chip ${sort === opt.key ? 'active' : ''}`}
+                    onClick={() => setSort(opt.key)}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+              <button
+                className={`sortbar-chip sortbar-expert ${expertOnly ? 'active' : ''}`}
+                onClick={() => setExpertOnly((v) => !v)}
+              >
+                専門家回答のみ
+              </button>
             </div>
 
             <div className="home-list" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

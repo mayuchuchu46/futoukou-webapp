@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getConsultationsList } from '@/lib/consultations';
+import { ConsultationSort, getConsultationsList } from '@/lib/consultations';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
 
@@ -12,6 +12,9 @@ export async function GET(req: NextRequest) {
   const viewerId = req.nextUrl.searchParams.get('viewer_id');
   const authorId = req.nextUrl.searchParams.get('author_id');
   const expertAnswered = req.nextUrl.searchParams.get('expert_answered') === '1';
+  // 並び替え（2026-10-15追加）。不正な値が来た場合は既定の新着順にフォールバックする。
+  const sortParam = req.nextUrl.searchParams.get('sort');
+  const sort: ConsultationSort = sortParam === 'views' || sortParam === 'likes' ? sortParam : 'new';
 
   const member = await getCurrentMember();
   const memberActive = isSubscriptionActive(member);
@@ -24,6 +27,7 @@ export async function GET(req: NextRequest) {
     expertAnswered,
     memberActive,
     memberId: member?.id || null,
+    sort,
   });
 
   return NextResponse.json({ consultations });

@@ -355,6 +355,28 @@ h2.pagetitle {
 .expertbanner-desc { font-size: 11px; color: var(--muted); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .expertbanner-cta { flex: 0 0 auto; font-size: 14px; font-weight: 700; color: var(--orange-text); }
 
+/* 一覧の並び替え・「専門家回答のみ」絞り込みバー（2026-10-15追加）。
+   見た目は.catmenu-chipを踏襲しつつ、サイズを一段小さくして補助的な
+   コントロールだとわかるようにしている。並び替え（左）と専門家回答のみの
+   トグル（右）を分け、スマホの横幅が狭くてもトグル側が折り返して潰れない
+   ようにjustify-content: space-betweenではなくflex-wrapで対応。 */
+.sortbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 2px 0 0; }
+.sortbar-group { display: flex; gap: 6px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.sortbar-group::-webkit-scrollbar { display: none; }
+.sortbar-chip {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+}
+.sortbar-chip.active { border-color: var(--main); color: var(--main); background: var(--sub); }
+.sortbar-expert { margin-left: auto; }
+
 /* ホーム画面TOPに置く「専門家一覧」の導線。/expertsページの簡易版で、
    本人確認済みの専門家を数件（なければ募集中カードを1件）表示する。 */
 .home-experts { display: flex; flex-direction: column; gap: 8px; margin: 0; }

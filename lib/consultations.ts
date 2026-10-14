@@ -16,6 +16,11 @@ import { expertDisplayName } from '@/lib/expertDisplay';
 // だけでなく、member_id が紐づいた相談（別の端末・ブラウザで投稿したものを含む）も
 // まとめて見られるようにするため、authorId と memberId が両方あるときは
 // author_id.eq.X OR member_id.eq.Y で取得する。
+// ホーム画面の並び替え選択肢（2026-10-15追加）。「参考になった順」は
+// LikeButton/ConsultationCardで表示している likes（「参考になった◯人」）と
+// 同じ指標で、新たに別の集計を作るのではなく既存のlikesカラムをそのまま使う。
+export type ConsultationSort = 'new' | 'views' | 'likes';
+
 export async function getConsultationsList({
   category,
   q,
@@ -26,6 +31,7 @@ export async function getConsultationsList({
   memberActive = false,
   memberId,
   limit = 50,
+  sort = 'new',
 }: {
   category?: string | null;
   q?: string | null;
@@ -38,6 +44,7 @@ export async function getConsultationsList({
   memberActive?: boolean;
   memberId?: string | null;
   limit?: number;
+  sort?: ConsultationSort;
 }): Promise<Consultation[]> {
   const supabase = getSupabaseAdmin();
 
@@ -48,8 +55,17 @@ export async function getConsultationsList({
     .from('consultations')
     .select('*, experts!expert_id(name, display_name, credential)')
     .eq('hidden', false)
-    .order('created_at', { ascending: false })
     .limit(limit);
+
+  // 主な並び替え軸（新着・閲覧数・参考になった数）を指定したうえで、
+  // 同値が並んだ時の順序が安定するよう常にcreated_at descを副軸として追加する。
+  if (sort === 'views') {
+    query = query.order('views', { ascending: false }).order('created_at', { ascending: false });
+  } else if (sort === 'likes') {
+    query = query.order('likes', { ascending: false }).order('created_at', { ascending: false });
+  } else {
+    query = query.order('created_at', { ascending: false });
+  }
 
   if (category && category !== 'all') {
     query = query.eq('category', category);
