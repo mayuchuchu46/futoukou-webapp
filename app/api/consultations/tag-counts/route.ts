@@ -11,7 +11,10 @@ export async function GET() {
   const { data, error } = await supabase
     .from('consultations')
     .select('question, answer')
-    .eq('hidden', false);
+    .eq('hidden', false)
+    // AIの回答への返信（ラリー）として作られた続きの相談は、一覧に出さない方針
+    // （lib/consultations.ts参照）に合わせ、件数にも含めない（2026-10-16追加）。
+    .is('parent_id', null);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 

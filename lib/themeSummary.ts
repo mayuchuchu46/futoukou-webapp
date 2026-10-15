@@ -53,6 +53,9 @@ export const getThemeDictionaryData = cache(async function getThemeDictionaryDat
     .from('consultations')
     .select('id', { count: 'exact', head: true })
     .eq('hidden', false)
+    // AIの回答への返信（ラリー）の続きは件数・サンプルに含めない（lib/consultations.ts参照、
+    // 2026-10-16追加）。
+    .is('parent_id', null)
     .or(orFilter);
 
   const consultationCount = count || 0;
@@ -61,6 +64,7 @@ export const getThemeDictionaryData = cache(async function getThemeDictionaryDat
     .from('consultations')
     .select('id, category, question, created_at')
     .eq('hidden', false)
+    .is('parent_id', null)
     .or(orFilter)
     .order('created_at', { ascending: false })
     .limit(SAMPLE_LIMIT);

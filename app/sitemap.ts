@@ -28,6 +28,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .from('consultations')
     .select('id, created_at')
     .eq('hidden', false)
+    // AIの回答への返信（ラリー）の続きは、単独の詳細ページとしては出さないため
+    // サイトマップにも含めない（lib/consultations.ts参照、2026-10-16追加）。
+    .is('parent_id', null)
     .order('created_at', { ascending: false })
     .limit(5000);
 
@@ -45,7 +48,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categoryKeys = Object.keys(CATS);
   const categoryCounts = await Promise.all(
     categoryKeys.map((key) =>
-      supabase.from('consultations').select('id', { count: 'exact', head: true }).eq('hidden', false).eq('category', key)
+      supabase
+        .from('consultations')
+        .select('id', { count: 'exact', head: true })
+        .eq('hidden', false)
+        .is('parent_id', null)
+        .eq('category', key)
     )
   );
   const dictionaryEntries: MetadataRoute.Sitemap = categoryKeys
@@ -65,6 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .from('consultations')
         .select('id', { count: 'exact', head: true })
         .eq('hidden', false)
+        .is('parent_id', null)
         .or(buildThemeOrFilter(word))
     )
   );

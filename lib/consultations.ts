@@ -56,6 +56,11 @@ export async function getConsultationsList({
     .from('consultations')
     .select('*, experts!expert_id(name, display_name, credential)')
     .eq('hidden', false)
+    // AIの回答に対する「その場での返信（ラリー）」として作られた続きの相談（parent_idあり）は、
+    // 他の人向けの一覧・検索には出さない（文脈がないと意味が分からない断片になる、
+    // テーマ別件数が実質的な新規相談でないものまで膨らむ、等の理由。2026-10-16追加）。
+    // 元の相談の詳細ページでだけ、別途まとめて表示する。
+    .is('parent_id', null)
     .limit(limit);
 
   // 主な並び替え軸（新着・閲覧数・参考になった数）を指定したうえで、

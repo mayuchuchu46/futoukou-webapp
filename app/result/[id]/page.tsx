@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { cacheLife } from 'next/cache';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
@@ -20,6 +20,7 @@ import ReportButton from '@/components/ReportButton';
 import EyeIcon from '@/components/EyeIcon';
 import AiUsageUpsell from './AiUsageUpsell';
 import SaveConsultationPrompt from './SaveConsultationPrompt';
+import FollowupThread from './FollowupThread';
 import TagChips from '@/components/TagChips';
 import { SEARCH_TAG_CANDIDATES, matchesThemeText } from '@/lib/searchTags';
 
@@ -63,6 +64,12 @@ async function getConsultation(id: string): Promise<Consultation | null> {
     .single();
 
   if (error || !data) return null;
+  // 続き（parent_idあり）は単独の詳細ページとしては成立しない（元の質問・回答の
+  // 文脈がないと意味が分からないため）。呼び出し側（ResultPage）でparent_idへ
+  // リダイレクトする（2026-10-16追加）。
+  if (data.parent_id) {
+    return { ...data, parent_id: data.parent_id } as Consultation;
+  }
 
   // 専門家の本名（experts.name）は本人確認用のため、相談者には表示名のみを渡す
   // （2026-10-13、本名と表示名を分離）。
@@ -140,12 +147,28 @@ export default async function ResultPage({
     notFound();
   }
 
+  // 「もう一度相談する」で作られた続き（parent_idあり）への直接アクセスは、
+  // 元の相談の詳細ページへ飛ばす（続きは単独では文脈が分からないため）。
+  if (item.parent_id) {
+    redirect(`/result/${item.parent_id}`);
+  }
+
   const cat = CATS[item.category] || CATS.other;
 
   // 回答のすぐ下に出す「似たような相談」。同じカテゴリの他の相談から新しい順に数件。
   // item.categoryが必要なため、これはgetConsultationの後でしか取得できない。
   const similarPool = await getConsultationsList({ category: item.category, limit: 9 });
   const similarItems = similarPool.filter((d) => d.id !== item.id).slice(0, 8);
+
+  // この相談に対する「その場での返信（ラリー）」の続き一覧（2026-10-16追加）。
+  // AIの回答のみが対象（専門家回答・安全上書き回答には出さない）なので、ここでは
+  // 常に取得しておき、表示するかどうかはJSX側でrequest_type/isCrisisを見て判断する。
+  const { data: followupRows } = await getSupabaseAdmin()
+    .from('consultations')
+    .select('id, question, answer')
+    .eq('parent_id', item.id)
+    .order('created_at', { ascending: true });
+  const followups = (followupRows || []) as { id: string; question: string; answer: string }[];
 
   // クローラー・初回表示用のJSON-LD（QAPage）。
   // 専門家回答がロック中の場合は本文がまだ無いので、AI回答か、
@@ -396,6 +419,10 @@ export default async function ResultPage({
                 </div>
               )}
             </div>
+
+            {!isCrisis && (
+              <FollowupThread parentId={item.id} initialFollowups={followups} />
+            )}
 
             {isCrisis ? (
               // 希死念慮・自傷等の安全上書きが発動した相談専用の案内カード。以前は回答カード下の

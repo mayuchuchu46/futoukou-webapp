@@ -45,6 +45,9 @@ export const getCategoryDictionaryData = cache(async function getCategoryDiction
     .from('consultations')
     .select('id', { count: 'exact', head: true })
     .eq('hidden', false)
+    // AIの回答への返信（ラリー）の続きは件数・サンプルに含めない（lib/consultations.ts参照、
+    // 2026-10-16追加）。
+    .is('parent_id', null)
     .eq('category', category);
 
   const consultationCount = count || 0;
@@ -53,6 +56,7 @@ export const getCategoryDictionaryData = cache(async function getCategoryDiction
     .from('consultations')
     .select('id, category, question, created_at')
     .eq('hidden', false)
+    .is('parent_id', null)
     .eq('category', category)
     .order('created_at', { ascending: false })
     .limit(SAMPLE_LIMIT);

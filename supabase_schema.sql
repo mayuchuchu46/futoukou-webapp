@@ -7,6 +7,9 @@
 -- （2026-10-16追加）、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists reactions jsonb not null default '{}';
 -- alter table consultations add column if not exists reacted_by jsonb not null default '{}';
+-- 相談詳細ページでAIの回答に対してその場で返信（ラリー）できる機能用の列を追加した場合
+-- （2026-10-16追加）、既存DBでは次を実行してください。
+-- alter table consultations add column if not exists parent_id uuid references consultations(id);
 -- マイページサマリー（member_summaries）に、直近の相談でセーフティ上書きが発動したかの
 -- フラグを追加した場合（2026-10-16追加、「一度希死念慮系の相談をしたら、ずっと同じ内容が
 -- 表示されて更新されない」との指摘を受けて）、既存DBでは次を実行してください。
@@ -389,11 +392,18 @@ create table if not exists consultations (
   -- しっかりした流れを作りたい」との要望を受け、app/api/consult/route.ts側で
   -- answer.includes('0120-0-78310')によりこの列に記録し、結果ページで目立つ専用の
   -- 案内カードを出すために使う（2026-10-14）。
-  crisis_detected boolean not null default false
+  crisis_detected boolean not null default false,
+
+  -- 相談詳細ページで、AIの回答に対してその場で返信（ラリー）できる機能用（2026-10-16追加）。
+  -- nullなら新規の相談。値があれば、その相談（元の質問・回答）への続きとして作られたもの。
+  -- 続きは一覧・テーマ別件数には出さず、元の相談の詳細ページの中でだけ表示する
+  -- （lib/consultations.ts・tag-counts・themeSummary・sitemapで parent_id is null を条件に追加）。
+  parent_id uuid references consultations(id)
 );
 alter table consultations enable row level security;
 
 create index if not exists consultations_member_id_idx on consultations (member_id);
+create index if not exists consultations_parent_id_idx on consultations (parent_id);
 
 -- マイページに表示する「今のお子さんの状況」のAIサマリー。会員の過去の相談をまとめて
 -- 生成し、ここにキャッシュする（毎回のページ表示でAIを呼び直さないようにするため）。
