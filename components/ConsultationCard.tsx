@@ -10,6 +10,7 @@ import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
 import { relativeTimeLabel, isRecentPost } from '@/lib/relativeTime';
 import EyeIcon from './EyeIcon';
 import ReportButton from './ReportButton';
+import ReactionIcons from './ReactionIcons';
 
 export default function ConsultationCard({
   item,
@@ -158,6 +159,14 @@ export default function ConsultationCard({
         <button className={`like-btn ${liked ? 'liked' : ''}`} onClick={toggleLike}>
           参考になった {likes}人
         </button>
+        {/* 定型リアクション（lib/reactions.ts）を、絵文字＋件数だけの省スペース版で
+            一覧カードにも追加（2026-10-16、「トップにもその数表示されたりボタン
+            押されるといい、絵文字だけでも」との指摘を受けて）。 */}
+        <ReactionIcons
+          id={item.id}
+          initialReactions={item.reactions || {}}
+          initialReactedBy={item.reacted_by || {}}
+        />
         <span className="view-count"><EyeIcon /> {item.views || 0}</span>
         <ReportButton id={item.id} />
       </div>

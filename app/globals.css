@@ -661,7 +661,9 @@ h2.pagetitle {
 .locked-badge-icon { width: 16px; height: 16px; object-fit: contain; flex: 0 0 auto; }
 .answer-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--main); font-weight: 700; }
 .answer-label img { width: 20px; height: 20px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--sub); }
-.card-foot { display: flex; gap: 16px; font-size: 12px; color: var(--muted); border-top: 1px solid #F0EEE6; padding-top: 10px; }
+/* リアクション（絵文字3つ）を追加したことで項目数が増えたため、gapを少し詰め、
+   狭い画面でも無理に1行に収めようとせず折り返せるようにした（2026-10-16）。 */
+.card-foot { display: flex; flex-wrap: wrap; row-gap: 6px; column-gap: 12px; font-size: 12px; color: var(--muted); border-top: 1px solid #F0EEE6; padding-top: 10px; }
 .like-btn { display: flex; align-items: center; gap: 4px; background: none; border: none; color: var(--muted); font-size: 12px; padding: 0; }
 .like-btn.liked { color: var(--orange-text); font-weight: 700; }
 /* 相談詳細ページの「参考になった・わかる・うちも同じ・応援」4ボタン
@@ -696,6 +698,13 @@ h2.pagetitle {
 .reaction-emoji { font-size: 14px; }
 .reaction-count { color: var(--muted); font-weight: 400; }
 .reaction-btn.active .reaction-count { color: var(--main); }
+/* 一覧カード用の省スペース版リアクション（components/ReactionIcons.tsx、
+   2026-10-16追加）。.card-footの他の項目（.like-btn・.view-count）と同じ
+   枠なし・控えめな見た目に揃え、絵文字＋件数だけにしてカード内の幅を取らない
+   ようにした。 */
+.reaction-icon-btn { display: flex; align-items: center; gap: 2px; background: none; border: none; color: var(--muted); font-size: 12px; padding: 0; cursor: pointer; }
+.reaction-icon-btn.active { color: var(--orange-text); font-weight: 700; }
+.reaction-icon-count { font-size: 11px; }
 .view-count { font-size: 12px; color: var(--muted); }
 /* 「通報する」ボタン。参考になった・閲覧数と並べても目立ちすぎないよう控えめにし、
    うっかり押させないために確認ステップを挟む（ReportButton.tsx側）。 */
