@@ -55,6 +55,31 @@ a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; }
 input, textarea { font-family: inherit; }
 
+/* 全体的な「押した感」の付与（2026-10-16、「ロゴ押したりしたときに押した感がない、
+   全体的に押した感がわかるといい」との指摘を受けて追加）。
+   これまでタップ時の視覚フィードバックが個別のボタンにしかなく、ロゴリンクなど
+   素のa/buttonタグはブラウザ標準のタップハイライト任せで、ブラウザ・端末によって
+   出たり出なかったりして「反応が薄い・遅い」という印象につながっていた。
+   タップハイライトを消した上で、リンク・ボタン全般に共通の:active（押している間）
+   スタイルを与えることで、どこを押しても同じ「ちゃんと反応した」感触になるようにした。 */
+a, button, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+a:active,
+button:active,
+[role="button"]:active {
+  transform: scale(0.96);
+  opacity: 0.7;
+  transition: transform 0.05s ease, opacity 0.05s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  a:active,
+  button:active,
+  [role="button"]:active {
+    transform: none;
+  }
+}
+
 .app-shell {
   max-width: 480px;
   margin: 0 auto;
