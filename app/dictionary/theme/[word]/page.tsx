@@ -76,7 +76,7 @@ export default async function DictionaryThemePage({
               不登校と「{word}」
             </div>
             {overview ? (
-              <div className="qtext">{overview}</div>
+              <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>{overview}</div>
             ) : (
               <div className="muted">
                 このテーマの相談はまだ集まっていません。最初の相談を投稿してみませんか？
