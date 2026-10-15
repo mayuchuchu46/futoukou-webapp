@@ -167,13 +167,23 @@ export default function HomeClient({
     <div className="app-shell">
       <Header supervised={supervised} />
       <div className="main">
-        {/* 以前はここに、チャッピー（ChatGPT）に描いてもらったバナー画像
-            （.home-cta、/assets/home_cta_banner.jpg）を「相談する」への入り口として
-            置いていたが、「TOPの今おいてるチャッピーに作ってもらったバナーは
-            はずしてね」との指摘を受けて撤去した（2026-10-15）。「相談する」への
-            導線は、下部ナビの強調バッジ（.nav-highlight）とPC版ヘッダーの
-            .header-ask-tabでカバーする。
-            「専門家が回答した相談」はPC（960px以上）では右コラム（PcSidebar）側に
+        {/* チャッピー（ChatGPT）に描いてもらったバナー画像（.home-cta、
+            /assets/home_cta_banner.jpg）。「TOPの今おいてるチャッピーに作ってもらった
+            バナーははずしてね」との指摘を受けて一度スマホ含め全撤去したが、その指摘は
+            PCの話（右コラムに「相談する」ボタンを置く方の文脈）で、スマホ側は
+            変えなくてよかったとのことで、スマホ分のみ復活させた（2026-10-15）。
+            PCでは引き続き.home-cta（CSS側、960px以上でdisplay:none）で非表示にする。 */}
+        {showExtras && (
+          <Link href="/ask" className="card home-cta">
+            <img
+              src="/assets/home_cta_banner.jpg"
+              alt="「今、どうしたらいい？」どうする先生に相談する。学年や状況をかんたんに入力するだけ。今できることや、次の一手を一緒に整理します。"
+              className="home-cta-banner"
+            />
+          </Link>
+        )}
+
+        {/* 「専門家が回答した相談」はPC（960px以上）では右コラム（PcSidebar）側に
             出すことにしたため、ここは.home-expertbanner-mobileを付けてモバイルのみ
             表示にし、PCでは非表示にする（2026-10-15、「専門家が回答した相談の箇所は
             右コラムに配置して」との指摘を受けて修正）。 */}
