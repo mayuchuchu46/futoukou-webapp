@@ -95,10 +95,16 @@ input, textarea { font-family: inherit; }
    重なって読めなくなるとの指摘を受けて、画面幅によらず常にこの余白を空ける形にした
    （2026-10-13）。 */
 .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 38px; flex: 0 0 auto; }
-/* PC幅（960px以上）のヘッダー中央に出す「相談する」ボタン。モバイルでは出さない
-   （下部ナビの強調済みタブで十分なため）。表示は下の@media (min-width: 960px)内。
-   2026-10-15追加。 */
-.header-cta-btn { display: none; }
+/* ロゴ＋バッジ＋（PCのみ）「相談する」タブを横に並べる行。モバイルでは
+   .header-ask-tab自体をdisplay:noneにしているので、このrowは見た目上
+   ロゴ＋バッジだけの行のまま変わらない。2026-10-15追加。 */
+.header-logo-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+/* ロゴの右隣（PCで空いている横のスペース）に置く「相談する」タブ。
+   .account-tab（右上の「ログイン／無料登録」）と同じ「上が角丸のぶら下がりタブ」の
+   見た目に揃えつつ、position: fixedにはせずheader-logo-row内の通常の並びに
+   する。モバイルでは出さない（下部ナビの強調済みタブで十分なため）。
+   2026-10-15、ヘッダー中央への絶対配置案から変更。 */
+.header-ask-tab { display: none; }
 /* トップページ以外のヘッダーに出す、さりげない「戻る」。他のヘッダーリンクより
    控えめな見た目にして、ロゴやアカウントタブより目立たないようにする（2026-10-12）。 */
 .header-back {
@@ -324,32 +330,6 @@ h2.pagetitle {
      常時折り返しありで問題ないため、ここではnowrap自体をやめた（2026-10-12、実機画面で発覚）。 */
   margin-top: 1px;
 }
-/* ホーム画面トップの「相談する」CTAカード（2026-10-14追加）。
-   「.card home-cta」の2クラス指定だが、.cardの定義がこのファイルの下の方にあり
-   同じ詳細度のため後勝ちで上書きされ、背景・横並びが効かず文字（白）が
-   クリーム色の背景に同化して見えなくなる不具合があった。.card.home-cta と
-   繋げて詳細度を上げることで、定義順に関係なく確実に上書きされるようにした
-   （2026-10-14、実機で発覚・修正）。
-   当初はアクセントカラーの--logo-pink（.fabと同じ）を背景にしていたが、
-   同じ画面内の他の主要ボタン・ロゴがこのアプリのメインカラーである緑
-   （--main）基調のため、ピンクだけ浮いて見える・色味がケンカするとの指摘を
-   受け、背景をブランドカラーの緑（--main）に変更。あわせて縦の余白を
-   詰めて高さを抑えた（2026-10-14）。
-   その後、「見出し＋説明文はHTML・イラストだけ画像」のハイブリッド構成を
-   一度試したが、チャッピー（ChatGPT）に描いてもらったバナー画像をそのまま
-   使いたいとのことで、中身を1枚の画像に差し替えた（2026-10-15）。.cardの
-   paddingがそのままだと画像の周りに余白ができてしまうため、ここでは
-   paddingを0にして画像をカード全体に敷き詰めている。 */
-.card.home-cta {
-  padding: 0;
-  overflow: hidden;
-  text-decoration: none;
-  margin: 0 0 2px;
-  background: var(--main);
-}
-/* まずはスマホのみ試す形で導入。960px以上での非表示は下の@media内。 */
-.home-cta-banner { display: block; width: 100%; height: auto; }
-
 .expertbanner { background: #fff; border: 1px solid var(--orange); border-radius: 12px; padding: 8px 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
 /* 🔒絵文字から、アプリのイラストと同じ塗り＋太いアウトラインのオリジナル鍵アイコン
    （icon_lock.png）に変更（2026-10-12）。 */
@@ -448,29 +428,22 @@ h2.pagetitle {
      細く表示されていた）。 */
   .app-shell { max-width: 1080px; }
 
-  /* ロゴ・キャッチコピー（header-left）と「つらいときはこちら」等（header-right）の
-     間に生まれる横の余白に「相談する」ボタンを出す。header-rowの通常のflex子として
-     並べるとheader-leftがflex:1でその余白ぶんも占有してしまい右端に押し出されて
-     しまうため、position: absoluteでheader-row内に直接重ねて中央に置く
-     （header-rowは.header-rowでposition: relativeになっている）。
-     （2026-10-15追加） */
-  .header-cta-btn {
+  /* ロゴの右隣、PCで空いている横のスペースに出す「相談する」タブ。
+     .account-tab（画面右上の「ログイン／無料登録」）と見た目のトーンを揃え、
+     上が角丸の「ぶら下がりタブ」形にする。ただしposition: fixedにはせず、
+     header-logo-row内の通常のインライン要素として並べる（2026-10-15）。 */
+  .header-ask-tab {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    padding: 10px 22px;
-    border-radius: 999px;
+    padding: 6px 14px 7px;
+    border-radius: 0 0 12px 12px;
     background: var(--logo-pink);
     color: #fff;
     font-weight: 800;
-    font-size: 14px;
+    font-size: 13px;
     text-decoration: none;
     white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(246,142,125,0.4);
+    box-shadow: 0 3px 10px rgba(246,142,125,0.35);
   }
 
   /* .main・.home-layoutの上下詰め（2026-10-15）はスマホ限定の調整なので、
@@ -523,12 +496,6 @@ h2.pagetitle {
   /* タグ一覧はPCではサイド側（.pc-sidebar内）に出すので、
      一覧内に残っているモバイル用の方は隠す。 */
   .home-tags-mobile { display: none; }
-
-  /* ホームCTAバナーは、PC（960px以上）ではカードごと非表示にする。一時的に
-     2カラム左側に表示する.home-cta--desktop版も試したが、「このバナー使わずに、
-     空いてるところにボタンをつける」方針に変更したため撤回し、PCでは単純に
-     非表示に戻した（ボタンはヘッダー中央の.header-cta-btn。2026-10-15）。 */
-  .home-cta { display: none; }
 
   /* サイドのタグ一覧は横スクロールではなく、折り返して並べる
      （ホームのサイド・他ページのPcSidebarどちらでも使うため、

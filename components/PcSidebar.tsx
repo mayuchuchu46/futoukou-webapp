@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import EyeIcon from './EyeIcon';
 import TagChips from './TagChips';
@@ -82,6 +83,14 @@ export default function PcSidebar({
 
   return (
     <div className="pc-sidebar">
+      {/* PC（960px以上）の右カラムにも、目立つ「相談する」への導線を置く
+          （2026-10-15、「右コラムにも、相談誘導へのボタンを目立つように置きたい」
+          との指摘を受けて追加）。サイドの一番上、常にスクロールせず見える位置に
+          大きめのボタンとして配置する。 */}
+      <Link href="/ask" className="btn-primary" style={{ textDecoration: 'none' }}>
+        どうする先生に相談する →
+      </Link>
+
       {showBanner && (
         <a className="home-adbanner" href={banner!.link_url} target="_blank" rel="noopener sponsored">
           <img src={banner!.image_url} alt={banner!.alt_text} />
@@ -110,6 +119,22 @@ export default function PcSidebar({
           <TagChips title="気になるテーマから探す" />
         </div>
       )}
+
+      {/* PC（960px以上）のサイドに「お悩み辞典」（/theme・/dictionary/[category]）への
+          導線を追加（2026-10-15、「サイドバナーのほうに、お悩み辞典への誘導できる
+          見せ方の何かをいれたい」との指摘を受けて）。/theme・/dictionary/[category]は
+          これまでアプリ内のどこからもリンクされていなかった孤立ページだったため、
+          ホーム画面の「テーマから探す・お悩み辞典を見る」リンクに続き、常時表示される
+          PCサイドにも入り口を作る。見た目は既存の.home-expert-cardと揃え、
+          新しい見た目を増やさないようにした。 */}
+      <div className="home-expert-card" onClick={() => router.push('/theme')} style={{ cursor: 'pointer' }}>
+        <div style={{ fontSize: 22, flex: '0 0 auto' }} aria-hidden="true">📖</div>
+        <div className="home-expert-body">
+          <div className="home-expert-name">お悩み辞典</div>
+          <div className="home-expert-desc">テーマ別に、実際の相談とよくある傾向をまとめました</div>
+        </div>
+        <span className="expertbanner-cta">›</span>
+      </div>
 
       {!hideExperts && (
       <div className="home-experts home-experts-side">

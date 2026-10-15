@@ -167,29 +167,12 @@ export default function HomeClient({
     <div className="app-shell">
       <Header supervised={supervised} />
       <div className="main">
-        {/* トップページ本文側に「相談する」への明確な入り口が無く、画面右下の
-            固定ボタン（.fab）・下部ナビのタブだけだと見落としやすいとの指摘を
-            受けて追加（2026-10-14）。
-            チャッピー（ChatGPT）に描いてもらったバナー案をそのまま画像として
-            使用（2026-10-15、「イラストだけ切り出し＋HTML文字」のハイブリッド案
-            よりこちらがいいとのことで変更）。文字が画像に焼き込まれているため
-            スマホ幅で縮小した時の可読性は少し犠牲になるが、まずはスマホのみ試す
-            形で導入（960px以上では.home-cta-bannerを非表示にする。
-            app/globals.css参照）。バナー画像自体は2026-10-15、人物写真入りの
-            デザインに差し替え（その後さらに別案に再差し替え）。 */}
-        {/* カテゴリ絞り込み・検索中はトップの状態ではないため非表示にする
-            （2026-10-15、「このバナーはトップだけ表示でいいかも」との指摘を受けて
-            showExtras条件を追加）。 */}
-        {showExtras && (
-          <Link href="/ask" className="card home-cta">
-            <img
-              src="/assets/home_cta_banner.jpg"
-              alt="「今、どうしたらいい？」どうする先生に相談する。学年や状況をかんたんに入力するだけ。今できることや、次の一手を一緒に整理します。"
-              className="home-cta-banner"
-            />
-          </Link>
-        )}
-
+        {/* 以前はここに、チャッピー（ChatGPT）に描いてもらったバナー画像
+            （.home-cta、/assets/home_cta_banner.jpg）を「相談する」への入り口として
+            置いていたが、「TOPの今おいてるチャッピーに作ってもらったバナーは
+            はずしてね」との指摘を受けて撤去した（2026-10-15）。「相談する」への
+            導線は、下部ナビの強調バッジ（.nav-highlight）とPC版ヘッダーの
+            .header-ask-tabでカバーする。 */}
         {showExtras && (
           <div className="expertbanner" onClick={() => router.push('/expertlist')}>
             <img src="/assets/icon_lock.png" alt="" className="expertbanner-icon" />

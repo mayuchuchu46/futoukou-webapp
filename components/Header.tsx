@@ -43,23 +43,35 @@ export default function Header({ supervised }: { supervised: boolean }) {
               戻る
             </button>
           )}
-          {/* ロゴ＋「不登校編」バッジ。直下にhero-catch（「不登校のご家庭に、次の一手を。」）が
-              来る配置が良いとのことなので、supervision-noteをこの行に混ぜるのはやめ、
-              以前の形（ロゴ→hero-catch→hero-subの並びをそのまま、supervision-noteは
-              header-rowの外に単独で配置）に戻した（2026-10-12）。 */}
-          <Link
-            href="/"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0,
-              padding: '10px 10px 10px 0',
-              margin: '-10px -10px -10px 0',
-            }}
-          >
-            <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
-            <span className="badge">不登校編</span>
-          </Link>
+          {/* ロゴ＋「不登校編」バッジ＋（PCのみ）「相談する」タブを同じ行に並べる。
+              直下にhero-catch（「不登校のご家庭に、次の一手を。」）が来る配置が良いとの
+              ことなので、supervision-noteをこの行に混ぜるのはやめ、以前の形
+              （ロゴ→hero-catch→hero-subの並びをそのまま、supervision-noteは
+              header-rowの外に単独で配置）に戻した（2026-10-12）。
+              「相談する」ボタンは、一度ヘッダー中央に絶対配置する案を試したが、
+              「ログインと同じようなボタンを、ロゴの横の空いてる空間に」という指摘を
+              受けて作り直した（2026-10-15）。ロゴ行に同居させ、見た目は
+              .account-tab（右上の「ログイン／無料登録」タブ）と同じ「上が角丸の
+              ぶら下がりタブ」スタイルにしつつ、position: fixedにはせずこの行の
+              通常の並びの一部として表示する。PCでのみ表示（下の.header-ask-tab参照）。 */}
+          <div className="header-logo-row">
+            <Link
+              href="/"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0,
+                padding: '10px 10px 10px 0',
+                margin: '-10px -10px -10px 0',
+              }}
+            >
+              <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
+              <span className="badge">不登校編</span>
+            </Link>
+            <Link href="/ask" className="header-ask-tab">
+              相談する
+            </Link>
+          </div>
           {/* サイト全体でh1タグが1つも無かった（ページ見出しは全てh2のpagetitle）ため、
               SEO上の見出し構造を補う目的で、全ページ共通ヘッダーのこのキャッチコピーを
               h1にした（2026-10-14）。全ページで同じテキストになる点は、タグライン的な
@@ -72,18 +84,6 @@ export default function Header({ supervised }: { supervised: boolean }) {
               の方に残している。 */}
           <div className="hero-sub">「どうしたらいい？」にAIと専門家が具体的に回答</div>
         </div>
-        {/* PC（960px以上）で、ロゴ・キャッチコピー（header-left）と「つらいときはこちら」等
-            （header-right）の間にできる横の余白に「相談する」ボタンを置く（2026-10-15、
-            「このバナー使わずに、TOPの上の空いてるところにボタンつけるのがいいかも」との
-            指摘を受けて追加）。ホームだけでなく全ページ共通ヘッダーに出す。
-            header-leftはflex:1で領域自体は広がるが中の文字は左寄せのままなので、
-            その右側に生まれる余白に対してposition: absoluteで直接置く（header-rowの
-            flex子として並べると、header-leftがその分を全部占有してしまい右端に
-            押し出されてしまうため）。モバイルでは何も表示しない（下部ナビの
-            「相談する」タブで十分なため。app/globals.css参照）。 */}
-        <Link href="/ask" className="header-cta-btn">
-          相談する
-        </Link>
         <div className="header-right">
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>
             つらいときはこちら
