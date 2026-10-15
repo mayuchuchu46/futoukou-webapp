@@ -106,7 +106,16 @@ const SUMMARY_QA_MAX_CHARS = 200;
 
 export type SummaryConsultation = PastConsultation & { answer?: string };
 
-export function buildSummaryPrompt(history: SummaryConsultation[]): string {
+// 「一度希死念慮系の相談をしたら、ずっと同じ内容（専門窓口案内だけ）が表示されて
+// 更新されない」との指摘を受けて修正（2026-10-16）。
+// 従来はAI自身に「履歴の中に希死念慮等の記述が含まれるか」を判定させていたため、
+// 直近10件の中に古い（例えば数週間前の）該当相談が1件でも残っていれば、その後
+// 何件新しい（無関係な）相談を重ねても毎回セーフティ上書きの文面だけが生成され
+// 続けてしまっていた。これを、呼び出し側（getOrGenerateMemberSummary）が
+// consultations.crisis_detected列を見て「直近の相談で安全上書きが実際に発動したか」を
+// コードで判定し、その結果（forceCrisisOverride）をそのままプロンプトに渡す方式に変更。
+// 古い相談が履歴に含まれていても、直近の相談が落ち着いていれば通常の内容に戻る。
+export function buildSummaryPrompt(history: SummaryConsultation[], forceCrisisOverride: boolean): string {
   const recent = history.slice(0, MAX_SUMMARY_ITEMS);
   const lines = recent.map((h) => {
     const label = CATS[h.category]?.label || h.category;
@@ -134,7 +143,11 @@ ${lines.join('\n')}
 - adviceやphrasing_suggestion等の提案は、「〜しましょう」「〜してください」のような言い切り・命令形を避け、「〜という方法もあります」のように選択肢の一つとして提案する言い方にすること（最終判断は保護者自身に委ねる姿勢を文面ににじませる）
 - 複数の相談から共通して見えてくる傾向や変化があれば、それを中心に整理する（単発の内容の繰り返しにしない）
 - phrasing_suggestion・environment_suggestion・school_fit_pointsは、実在しない学校名・制度名・サービス名を一切挙げない（具体的な学校や制度の推薦ではなく、見学・比較のときに確認すると良い一般的な観点の提案にとどめる。これは実在の学校データを扱える段階になるまでの暫定版であるため厳守すること）
-- もし履歴の中に、子ども本人の希死念慮・自傷・自殺をうかがわせる記述が含まれる場合は、5項目のいずれでも具体的な助言は行わず、「すぐに専門の窓口に相談してほしい」という趣旨のあたたかい言葉と、24時間子供SOSダイヤル（0120-0-78310）を案内する内容だけを返してください
+${
+  forceCrisisOverride
+    ? '- 直近の相談で、子ども本人の希死念慮・自傷・自殺をうかがわせる内容が検知されています。5項目のいずれでも具体的な助言は行わず、「すぐに専門の窓口に相談してほしい」という趣旨のあたたかい言葉と、24時間子供SOSダイヤル（0120-0-78310）を案内する内容だけを返してください'
+    : '- 相談履歴の中に、子ども本人の希死念慮・自傷・自殺をうかがわせる古い記述が含まれていても、直近の相談がそれに該当しないのであれば、通常どおり5項目それぞれについて具体的な内容を書いてください（古い記述のみを理由に全項目を専門窓口の案内だけにしないこと）'
+}
 - 出力は、前置きや説明を含めず、次のJSON形式のみにしてください（コードブロックや他の文章は不要）：
 {"status_summary": "…", "advice": "…", "phrasing_suggestion": "…", "environment_suggestion": "…", "school_fit_points": "…"}`;
 }

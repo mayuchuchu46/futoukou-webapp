@@ -20,6 +20,10 @@ type CachedRow = {
   school_fit_points: string | null;
   consultation_count: number;
   generated_at: string;
+  // crisis_override列が無い古いキャッシュ行（本修正より前に生成されたもの）は
+  // undefined/nullになる。その場合はfalse扱いにせず「不明」として安全側＝
+  // 強制再生成（キャッシュ不一致）に倒す（下記の比較処理を参照）。
+  crisis_override?: boolean | null;
 };
 
 function fromCachedRow(cached: CachedRow, consultationCount?: number): MemberSummary {
@@ -53,11 +57,34 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
 
   const { data: cached } = await supabase
     .from('member_summaries')
-    .select('status_summary, advice, phrasing_suggestion, environment_suggestion, school_fit_points, consultation_count, generated_at')
+    .select(
+      'status_summary, advice, phrasing_suggestion, environment_suggestion, school_fit_points, consultation_count, generated_at, crisis_override'
+    )
     .eq('member_id', memberId)
     .single();
 
-  if (cached && cached.consultation_count === consultationCount) {
+  // 「一度希死念慮系の相談をしたら、ずっと同じ内容（専門窓口案内だけ）が表示されて
+  // 更新されない」との指摘を受けて追加（2026-10-16）。直近（新しい順で先頭）3件の中に
+  // crisis_detectedがあるかどうかだけで判定する。古い相談（4件目以降）にcrisis_detectedが
+  // 残っていても、直近が落ち着いていれば通常の内容に戻る（詳細はlib/prompt.ts
+  // buildSummaryPromptのコメント参照）。件数が変わっていなくても、このフラグが前回
+  // キャッシュ時と変わっていれば再生成の対象にする（例：crisis_detectedな相談が直近
+  // 3件から外れた＝新しい相談を増やさずページを開き直しただけでも、古い専門窓口案内の
+  // ままにしない）。
+  const RECENT_CRISIS_WINDOW = 3;
+  const { data: recentRows } = await supabase
+    .from('consultations')
+    .select('crisis_detected')
+    .eq('member_id', memberId)
+    .order('created_at', { ascending: false })
+    .limit(RECENT_CRISIS_WINDOW);
+  const forceCrisisOverride = (recentRows || []).some((r) => r.crisis_detected);
+
+  if (
+    cached &&
+    cached.consultation_count === consultationCount &&
+    !!(cached as CachedRow).crisis_override === forceCrisisOverride
+  ) {
     return fromCachedRow(cached as CachedRow, consultationCount);
   }
 
@@ -70,7 +97,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
 
   const { data: rows } = await supabase
     .from('consultations')
-    .select('category, question, answer, created_at')
+    .select('category, question, answer, created_at, crisis_detected')
     .eq('member_id', memberId)
     .order('created_at', { ascending: false })
     .limit(10);
@@ -78,7 +105,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
   if (!rows || rows.length === 0) return null;
 
   const history = rows as SummaryConsultation[];
-  const prompt = buildSummaryPrompt(history);
+  const prompt = buildSummaryPrompt(history, forceCrisisOverride);
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   let statusSummary = '';
@@ -124,6 +151,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
     environment_suggestion: environmentSuggestion,
     school_fit_points: schoolFitPoints,
     consultation_count: consultationCount,
+    crisis_override: forceCrisisOverride,
     generated_at: generatedAt,
   });
 

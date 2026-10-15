@@ -7,6 +7,10 @@
 -- （2026-10-16追加）、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists reactions jsonb not null default '{}';
 -- alter table consultations add column if not exists reacted_by jsonb not null default '{}';
+-- マイページサマリー（member_summaries）に、直近の相談でセーフティ上書きが発動したかの
+-- フラグを追加した場合（2026-10-16追加、「一度希死念慮系の相談をしたら、ずっと同じ内容が
+-- 表示されて更新されない」との指摘を受けて）、既存DBでは次を実行してください。
+-- alter table member_summaries add column if not exists crisis_override boolean not null default false;
 -- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
 -- （2026-10-13追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists review_status text not null default 'pending';
@@ -395,6 +399,10 @@ create index if not exists consultations_member_id_idx on consultations (member_
 -- 生成し、ここにキャッシュする（毎回のページ表示でAIを呼び直さないようにするため）。
 -- consultation_count は生成時点でのその会員の相談件数。マイページ表示時にこの値と
 -- 実際の件数を比較し、増えていれば再生成する（lib/memberSummary.ts）。
+-- crisis_override は、生成時点で直近3件以内にcrisis_detectedな相談があったか
+-- （＝セーフティ上書き文面として生成したか）のフラグ。件数が変わっていなくても、
+-- このフラグが現在の状態と変わっていれば再生成する（2026-10-16追加。「一度希死念慮系の
+-- 相談をしたら、ずっと同じ内容が表示されて更新されない」との指摘を受けて）。
 create table if not exists member_summaries (
   member_id uuid primary key references members(id),
   status_summary text not null default '',
@@ -403,6 +411,7 @@ create table if not exists member_summaries (
   environment_suggestion text not null default '',
   school_fit_points text not null default '',
   consultation_count int not null default 0,
+  crisis_override boolean not null default false,
   generated_at timestamptz not null default now()
 );
 alter table member_summaries enable row level security;
