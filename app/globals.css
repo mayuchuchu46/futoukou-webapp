@@ -345,6 +345,9 @@ h2.pagetitle {
 }
 /* まずはスマホのみ試す形で導入。960px以上での非表示は下の@media内。 */
 .home-cta-banner { display: block; width: 100%; height: auto; }
+/* PC（960px以上）の2カラム左側だけに出す方（.home-main-col内）は、モバイルでは
+   最初から隠しておく（960px以上での表示は下の@media内）。2026-10-15追加。 */
+.home-cta--desktop { display: none; }
 
 .expertbanner { background: #fff; border: 1px solid var(--orange); border-radius: 12px; padding: 8px 14px; margin: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
 /* 🔒絵文字から、アプリのイラストと同じ塗り＋太いアウトラインのオリジナル鍵アイコン
@@ -476,19 +479,34 @@ h2.pagetitle {
     flex-direction: column;
     gap: 16px;
   }
-  /* 左カラム内の表示順（PCのみ）：検索→ランキング→カテゴリ→一覧。
-     モバイルのDOM順（ランキングが先）はそのまま、orderだけで並び替える。 */
+  /* 左カラム内の表示順（PCのみ）：バナー→検索→ランキング→カテゴリ→テーマ辞典リンク→
+     並び替えタブ→一覧。モバイルのDOM順（ランキングが先）はそのまま、orderだけで
+     並び替える。
+     以前は.home-search/.home-ranking/.home-chips/.home-listの4つにだけorderを
+     指定していたが、同じ.home-main-col内にある.viewtabs（並び替えタブ）には
+     何も指定していなかった。order未指定の要素はorder:0扱いになり、order:1の
+     .home-searchより前（＝一番上）に出てしまう潜在バグだった。今回.home-cta--desktop
+     （2カラム左側バナー）・.home-theme-link（テーマ辞典への導線）を追加するにあたり、
+     残りの要素も含めて全部に明示的なorderを振り直した（2026-10-15）。 */
+  .home-main-col .home-cta--desktop { order: 0; }
   .home-main-col .home-search { order: 1; }
   .home-main-col .home-ranking { order: 2; }
   .home-main-col .home-chips { order: 3; }
-  .home-main-col .home-list { order: 4; }
+  .home-main-col .home-theme-link { order: 4; }
+  .home-main-col .viewtabs { order: 5; }
+  .home-main-col .home-list { order: 6; }
   /* タグ一覧はPCではサイド側（.pc-sidebar内）に出すので、
      一覧内に残っているモバイル用の方は隠す。 */
   .home-tags-mobile { display: none; }
 
-  /* ホームCTAバナーは、まずはスマホのみ試す指摘を受けてPC（960px以上）では
-     カードごと非表示にする（2026-10-15）。 */
-  .home-cta { display: none; }
+  /* ホームCTAバナー（モバイル用、.main直下にある方）は、まずはスマホのみ試す
+     指摘を受けてPC（960px以上）ではカードごと非表示にする（2026-10-15）。
+     「2カラムの左側だけに置いて」との指摘を受けて追加した.home-cta--desktop
+     （.home-main-col内にある方）はここでは隠さず、逆に次のルールで表示する
+     （2026-10-15）。:not()で区別しないと、同じ.home-cta クラスを持つ
+     .home-cta--desktopまで一緒に消えてしまう。 */
+  .home-cta:not(.home-cta--desktop) { display: none; }
+  .home-cta--desktop { display: block; }
 
   /* サイドのタグ一覧は横スクロールではなく、折り返して並べる
      （ホームのサイド・他ページのPcSidebarどちらでも使うため、

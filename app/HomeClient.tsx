@@ -215,6 +215,21 @@ export default function HomeClient({
             ページもPCは2コラムに統一して」との指摘を受けて修正）。 */}
         <div className="home-layout home-layout--with-side">
           <div className="home-main-col">
+            {/* PC（960px以上）では、このバナーを2カラムの左側だけに表示する。
+                モバイル用（上の.home-cta、.main直下）とはCSSの表示切り替えで
+                住み分けており（.home-cta--desktopはモバイルでdisplay:none、
+                960px以上でのみ表示。app/globals.css参照）、DOM構造上は別要素として
+                置いている（expertbanner等の並び順に影響を与えないため。2026-10-15）。 */}
+            {showExtras && (
+              <Link href="/ask" className="card home-cta home-cta--desktop">
+                <img
+                  src="/assets/home_cta_banner.jpg"
+                  alt="「今、どうしたらいい？」どうする先生に相談する。学年や状況をかんたんに入力するだけ。今できることや、次の一手を一緒に整理します。"
+                  className="home-cta-banner"
+                />
+              </Link>
+            )}
+
             {showExtras && allItems.length >= 3 && (
               <div className="ranking home-ranking">
                 <div className="ranking-title">よく読まれている相談</div>
@@ -272,7 +287,7 @@ export default function HomeClient({
                 リンクされておらず、直接URLを知らないと辿り着けない孤立ページだった。
                 一番アクセスの多いホームに、カテゴリ絞り込みチップのすぐ下という目に
                 入りやすい場所で導線を足した（2026-10-15）。 */}
-            <Link href="/theme" className="muted" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
+            <Link href="/theme" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
               テーマから探す・お悩み辞典を見る →
             </Link>
 
