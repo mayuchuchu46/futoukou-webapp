@@ -156,8 +156,13 @@ export default function ConsultationCard({
         )
       )}
       <div className="card-foot">
-        <button className={`like-btn ${liked ? 'liked' : ''}`} onClick={toggleLike}>
-          参考になった {likes}人
+        {/* 以前は「参考になった ◯人」とテキストで表示していたが、隣に絵文字＋件数
+            だけの定型リアクション（下のReactionIcons）を追加したことで見た目が
+            揃わなくなったため、こちらも👍＋件数だけの同じ見た目に統一した
+            （2026-10-16、「参考になった、だけなんか表示違う」との指摘を受けて）。 */}
+        <button className={`reaction-icon-btn ${liked ? 'active' : ''}`} onClick={toggleLike}>
+          👍
+          <span className="reaction-icon-count">{likes}</span>
         </button>
         {/* 定型リアクション（lib/reactions.ts）を、絵文字＋件数だけの省スペース版で
             一覧カードにも追加（2026-10-16、「トップにもその数表示されたりボタン
