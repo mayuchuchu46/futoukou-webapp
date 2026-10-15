@@ -72,6 +72,18 @@ export default function Header({ supervised }: { supervised: boolean }) {
               の方に残している。 */}
           <div className="hero-sub">「どうしたらいい？」にAIと専門家が具体的に回答</div>
         </div>
+        {/* PC（960px以上）で、ロゴ・キャッチコピー（header-left）と「つらいときはこちら」等
+            （header-right）の間にできる横の余白に「相談する」ボタンを置く（2026-10-15、
+            「このバナー使わずに、TOPの上の空いてるところにボタンつけるのがいいかも」との
+            指摘を受けて追加）。ホームだけでなく全ページ共通ヘッダーに出す。
+            header-leftはflex:1で領域自体は広がるが中の文字は左寄せのままなので、
+            その右側に生まれる余白に対してposition: absoluteで直接置く（header-rowの
+            flex子として並べると、header-leftがその分を全部占有してしまい右端に
+            押し出されてしまうため）。モバイルでは何も表示しない（下部ナビの
+            「相談する」タブで十分なため。app/globals.css参照）。 */}
+        <Link href="/ask" className="header-cta-btn">
+          相談する
+        </Link>
         <div className="header-right">
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>
             つらいときはこちら
