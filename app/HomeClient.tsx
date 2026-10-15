@@ -172,9 +172,16 @@ export default function HomeClient({
             置いていたが、「TOPの今おいてるチャッピーに作ってもらったバナーは
             はずしてね」との指摘を受けて撤去した（2026-10-15）。「相談する」への
             導線は、下部ナビの強調バッジ（.nav-highlight）とPC版ヘッダーの
-            .header-ask-tabでカバーする。 */}
+            .header-ask-tabでカバーする。
+            「専門家が回答した相談」はPC（960px以上）では右コラム（PcSidebar）側に
+            出すことにしたため、ここは.home-expertbanner-mobileを付けてモバイルのみ
+            表示にし、PCでは非表示にする（2026-10-15、「専門家が回答した相談の箇所は
+            右コラムに配置して」との指摘を受けて修正）。 */}
         {showExtras && (
-          <div className="expertbanner" onClick={() => router.push('/expertlist')}>
+          <div
+            className="expertbanner home-expertbanner-mobile"
+            onClick={() => router.push('/expertlist')}
+          >
             <img src="/assets/icon_lock.png" alt="" className="expertbanner-icon" />
             <div className="expertbanner-body">
               <div className="expertbanner-title">専門家が回答した相談{expertCount ? `（${expertCount}件）` : ''}</div>
@@ -256,7 +263,7 @@ export default function HomeClient({
                 一番アクセスの多いホームに、カテゴリ絞り込みチップのすぐ下という目に
                 入りやすい場所で導線を足した（2026-10-15）。 */}
             <Link href="/theme" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
-              テーマから探す・お悩み辞典を見る →
+              テーマから探す・不登校お悩み辞典を見る →
             </Link>
 
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
@@ -307,8 +314,11 @@ export default function HomeClient({
 
           {/* PCではサイド（右カラム）に表示。中身はPcSidebar側で自前取得する
               （ランキングだけは左カラムに出すので、ここでは出さない）。絞り込み中
-              でも2カラムのレイアウトは保つため、showExtrasに関わらず常に表示する。 */}
-          <PcSidebar hideRanking />
+              でも2カラムのレイアウトは保つため、showExtrasに関わらず常に表示する。
+              「専門家が回答した相談」は、絞り込みなし（showExtras）の時だけ出す
+              元の挙動に合わせ、showExtrasの時だけexpertCountを渡す
+              （2026-10-15、PCでは右コラムに配置するよう修正）。 */}
+          <PcSidebar hideRanking expertCount={showExtras ? expertCount : undefined} />
         </div>
       </div>
 

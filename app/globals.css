@@ -468,6 +468,9 @@ h2.pagetitle {
   /* タグ一覧はPCではサイド側（.pc-sidebar内）に出すので、
      一覧内に残っているモバイル用の方は隠す。 */
   .home-tags-mobile { display: none; }
+  /* 「専門家が回答した相談」も同様に、PCでは右コラム（.pc-sidebar内）に出すので、
+     上部に残っているモバイル用の方は隠す（2026-10-15）。 */
+  .home-expertbanner-mobile { display: none; }
 
   /* サイドのタグ一覧は横スクロールではなく、折り返して並べる
      （ホームのサイド・他ページのPcSidebarどちらでも使うため、

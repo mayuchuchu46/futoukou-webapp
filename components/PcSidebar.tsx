@@ -32,7 +32,8 @@ type ExpertProfile = {
 export default function PcSidebar({
   hideExperts = false,
   hideRanking = false,
-}: { hideExperts?: boolean; hideRanking?: boolean } = {}) {
+  expertCount,
+}: { hideExperts?: boolean; hideRanking?: boolean; expertCount?: number } = {}) {
   const router = useRouter();
   const [ranking, setRanking] = useState<Consultation[]>([]);
   const [banner, setBanner] = useState<SidebarBanner>(null);
@@ -94,6 +95,22 @@ export default function PcSidebar({
         どうする先生に相談する →
       </Link>
 
+      {/* 「専門家が回答した相談」。以前はホーム画面の一番上（2カラムの外）に
+          全幅で表示していたが、PC（960px以上）ではこちらの右コラムに出すよう
+          変更した（2026-10-15、「専門家が回答した相談の箇所は右コラムに配置して」
+          との指摘を受けて）。expertCountはホーム（app/HomeClient.tsx）からのみ
+          渡され、他ページのPcSidebarでは渡されない（undefinedなら非表示）。 */}
+      {typeof expertCount === 'number' && (
+        <div className="expertbanner" onClick={() => router.push('/expertlist')} style={{ cursor: 'pointer' }}>
+          <img src="/assets/icon_lock.png" alt="" className="expertbanner-icon" />
+          <div className="expertbanner-body">
+            <div className="expertbanner-title">専門家が回答した相談{expertCount ? `（${expertCount}件）` : ''}</div>
+            <div className="expertbanner-desc">専門家（公認心理師など）本人が直接回答。読み放題会員限定</div>
+          </div>
+          <span className="expertbanner-cta">›</span>
+        </div>
+      )}
+
       {showBanner && (
         <a className="home-adbanner" href={banner!.link_url} target="_blank" rel="noopener sponsored">
           <img src={banner!.image_url} alt={banner!.alt_text} />
@@ -133,7 +150,7 @@ export default function PcSidebar({
       <div className="home-expert-card" onClick={() => router.push('/theme')} style={{ cursor: 'pointer' }}>
         <div style={{ fontSize: 22, flex: '0 0 auto' }} aria-hidden="true">📖</div>
         <div className="home-expert-body">
-          <div className="home-expert-name">お悩み辞典</div>
+          <div className="home-expert-name">不登校お悩み辞典</div>
           <div className="home-expert-desc">テーマ別に、実際の相談とよくある傾向をまとめました</div>
         </div>
         <span className="expertbanner-cta">›</span>
