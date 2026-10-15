@@ -95,16 +95,6 @@ input, textarea { font-family: inherit; }
    重なって読めなくなるとの指摘を受けて、画面幅によらず常にこの余白を空ける形にした
    （2026-10-13）。 */
 .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 38px; flex: 0 0 auto; }
-/* ロゴ＋バッジ＋（PCのみ）「相談する」タブを横に並べる行。モバイルでは
-   .header-ask-tab自体をdisplay:noneにしているので、このrowは見た目上
-   ロゴ＋バッジだけの行のまま変わらない。2026-10-15追加。 */
-.header-logo-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-/* ロゴの右隣（PCで空いている横のスペース）に置く「相談する」タブ。
-   .account-tab（右上の「ログイン／無料登録」）と同じ「上が角丸のぶら下がりタブ」の
-   見た目に揃えつつ、position: fixedにはせずheader-logo-row内の通常の並びに
-   する。モバイルでは出さない（下部ナビの強調済みタブで十分なため）。
-   2026-10-15、ヘッダー中央への絶対配置案から変更。 */
-.header-ask-tab { display: none; }
 /* トップページ以外のヘッダーに出す、さりげない「戻る」。他のヘッダーリンクより
    控えめな見た目にして、ロゴやアカウントタブより目立たないようにする（2026-10-12）。 */
 .header-back {
@@ -427,24 +417,6 @@ h2.pagetitle {
      （以前は.home-shellだけ広がり、他のページは480pxのまま中央に
      細く表示されていた）。 */
   .app-shell { max-width: 1080px; }
-
-  /* ロゴの右隣、PCで空いている横のスペースに出す「相談する」タブ。
-     .account-tab（画面右上の「ログイン／無料登録」）と見た目のトーンを揃え、
-     上が角丸の「ぶら下がりタブ」形にする。ただしposition: fixedにはせず、
-     header-logo-row内の通常のインライン要素として並べる（2026-10-15）。 */
-  .header-ask-tab {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 14px 7px;
-    border-radius: 0 0 12px 12px;
-    background: var(--logo-pink);
-    color: #fff;
-    font-weight: 800;
-    font-size: 13px;
-    text-decoration: none;
-    white-space: nowrap;
-    box-shadow: 0 3px 10px rgba(246,142,125,0.35);
-  }
 
   /* .main・.home-layoutの上下詰め（2026-10-15）はスマホ限定の調整なので、
      PCでは元の余白に戻す。 */
@@ -828,6 +800,9 @@ h2.pagetitle {
   font-size: 15px;
   border: none;
 }
+/* PCサイド（右カラム）の「相談する」ボタンだけピンクにする上書き（2026-10-15）。
+   .btn-primary自体は他ページ共通の緑ボタンなので、色はここだけ変える。 */
+.sidebar-ask-btn-pink { background: var(--logo-pink); }
 .btn-secondary {
   display: block;
   text-align: center;

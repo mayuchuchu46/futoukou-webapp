@@ -87,7 +87,10 @@ export default function PcSidebar({
           （2026-10-15、「右コラムにも、相談誘導へのボタンを目立つように置きたい」
           との指摘を受けて追加）。サイドの一番上、常にスクロールせず見える位置に
           大きめのボタンとして配置する。 */}
-      <Link href="/ask" className="btn-primary" style={{ textDecoration: 'none' }}>
+      {/* .btn-primaryはアプリ全体で使う共通の緑ボタンなので、クラスの色自体は
+          変えず、ここだけピンクにする専用クラスを重ねた（2026-10-15、「右コラムの
+          相談するボタンの緑はピンク色に統一して」との指摘を受けて）。 */}
+      <Link href="/ask" className="btn-primary sidebar-ask-btn-pink" style={{ textDecoration: 'none' }}>
         どうする先生に相談する →
       </Link>
 
