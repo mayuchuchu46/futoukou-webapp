@@ -51,7 +51,9 @@ export default function ReactionButtons({
           >
             <span className="reaction-emoji">{emoji}</span>
             {label}
-            {count > 0 && <span className="reaction-count">{count}</span>}
+            {/* 「押した数も表示されているといい」との指摘を受け、0件でも常に数字を
+                出すようにした（2026-10-16。以前は0件の時は数字自体を出さなかった）。 */}
+            <span className="reaction-count">{count}</span>
           </button>
         );
       })}
