@@ -101,7 +101,7 @@ export default function PcSidebar({
           との指摘を受けて）。expertCountはホーム（app/HomeClient.tsx）からのみ
           渡され、他ページのPcSidebarでは渡されない（undefinedなら非表示）。 */}
       {typeof expertCount === 'number' && (
-        <div className="expertbanner" onClick={() => router.push('/expertlist')} style={{ cursor: 'pointer' }}>
+        <div className="expertbanner" role="button" tabIndex={0} onClick={() => router.push('/expertlist')} style={{ cursor: 'pointer' }}>
           <img src="/assets/icon_lock.png" alt="" className="expertbanner-icon" />
           <div className="expertbanner-body">
             <div className="expertbanner-title">専門家が回答した相談{expertCount ? `（${expertCount}件）` : ''}</div>
@@ -122,7 +122,7 @@ export default function PcSidebar({
           <div className="ranking-title">よく読まれている相談</div>
           <div className="rank-list">
             {ranking.map((item, i) => (
-              <div key={item.id} className="rank-item" onClick={() => router.push(`/result/${item.id}`)}>
+              <div key={item.id} className="rank-item" role="button" tabIndex={0} onClick={() => router.push(`/result/${item.id}`)}>
                 <span className="rank-num">{i + 1}</span>
                 <span className="rank-q">{item.question.slice(0, 28)}{item.question.length > 28 ? '…' : ''}</span>
                 <span className="rank-views"><EyeIcon /> {item.views || 0}</span>
@@ -147,7 +147,7 @@ export default function PcSidebar({
           ホーム画面の「テーマから探す・お悩み辞典を見る」リンクに続き、常時表示される
           PCサイドにも入り口を作る。見た目は既存の.home-expert-cardと揃え、
           新しい見た目を増やさないようにした。 */}
-      <div className="home-expert-card" onClick={() => router.push('/theme')} style={{ cursor: 'pointer' }}>
+      <div className="home-expert-card" role="button" tabIndex={0} onClick={() => router.push('/theme')} style={{ cursor: 'pointer' }}>
         <div style={{ fontSize: 22, flex: '0 0 auto' }} aria-hidden="true">📖</div>
         <div className="home-expert-body">
           <div className="home-expert-name">不登校お悩み辞典</div>
@@ -160,7 +160,7 @@ export default function PcSidebar({
       <div className="home-experts home-experts-side">
         <div className="home-experts-title">専門家一覧</div>
         {experts.length === 0 ? (
-          <div className="home-expert-card home-expert-card--empty" onClick={() => router.push('/expert/recruit')}>
+          <div className="home-expert-card home-expert-card--empty" role="button" tabIndex={0} onClick={() => router.push('/expert/recruit')}>
             {/* AIキャラクター画像の流用をやめ、人物を表す汎用アイコンに統一（2026-10-14） */}
             <ExpertAvatar photoUrl={null} size={44} />
             <div className="home-expert-body">
@@ -171,7 +171,7 @@ export default function PcSidebar({
           </div>
         ) : (
           experts.map((e) => (
-            <div key={e.id} className="home-expert-card" onClick={() => router.push(`/ask?expert=${e.id}`)}>
+            <div key={e.id} className="home-expert-card" role="button" tabIndex={0} onClick={() => router.push(`/ask?expert=${e.id}`)}>
               <ExpertAvatar photoUrl={e.photo_url} size={44} />
               <div className="home-expert-body">
                 <div className="home-expert-name">{e.credential}・{e.name}</div>

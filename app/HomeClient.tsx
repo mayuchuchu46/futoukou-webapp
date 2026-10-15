@@ -220,7 +220,7 @@ export default function HomeClient({
                 <div className="ranking-title">よく読まれている相談</div>
                 <div className="rank-list">
                   {ranking.map((item, i) => (
-                    <div key={item.id} className="rank-item" onClick={() => router.push(`/result/${item.id}`)}>
+                    <div key={item.id} className="rank-item" role="button" tabIndex={0} onClick={() => router.push(`/result/${item.id}`)}>
                       <span className="rank-num">{i + 1}</span>
                       <span className="rank-q">{item.question.slice(0, 28)}{item.question.length > 28 ? '…' : ''}</span>
                       <span className="rank-views"><EyeIcon /> {item.views || 0}</span>
@@ -316,6 +316,9 @@ export default function HomeClient({
                   className="recruitnote-banner"
                   src="/assets/recruit_banner.png"
                   alt="専門家の方を募集しています。公認心理師・臨床心理士など、相談への回答を担当していただける方を募集中"
+                  role="button"
+                  tabIndex={0}
+                  style={{ cursor: 'pointer' }}
                   onClick={() => router.push('/expert/recruit')}
                 />
               )}

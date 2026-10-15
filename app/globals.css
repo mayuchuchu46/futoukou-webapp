@@ -80,6 +80,23 @@ button:active,
   }
 }
 
+/* ルートのloading.tsx（components/RouteLoadingSkeleton.tsx）用スケルトン
+   （2026-10-16、「画面遷移の時遅い感覚がある、さくさくいかない」との指摘を受けて
+   追加）。ページ本体のサーバー側データ取得（Supabase問い合わせ）が終わるまでの間、
+   ヘッダー・カード群のおおまかな形だけを薄く表示することで、タップ直後に画面が
+   固まったように見える時間を無くす（Next.jsのloading.tsxは自動でpage.tsxをSuspense
+   境界で包むため、データ取得中はこちらが即座に表示され、完了すると実際のページに
+   切り替わる）。 */
+.skeleton-wrap { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.skeleton-block { background: var(--border); border-radius: 10px; animation: skeleton-pulse 1.4s ease-in-out infinite; }
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block { animation: none; opacity: 0.7; }
+}
+
 .app-shell {
   max-width: 480px;
   margin: 0 auto;
