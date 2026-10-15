@@ -20,7 +20,7 @@ import EyeIcon from '@/components/EyeIcon';
 import AiUsageUpsell from './AiUsageUpsell';
 import SaveConsultationPrompt from './SaveConsultationPrompt';
 import TagChips from '@/components/TagChips';
-import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
+import { SEARCH_TAG_CANDIDATES, matchesThemeText } from '@/lib/searchTags';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -273,7 +273,7 @@ export default async function ResultPage({
   // との指摘を受けて）。専門家回答がロック中の場合は本文がまだ無いため、質問文だけで
   // テーマ語の一致を判定する（answerTextForJsonLdはロック中はnullになる）。
   const dictionaryMatchSource = `${item.question} ${answerTextForJsonLd || ''}`;
-  const relatedThemeWords = SEARCH_TAG_CANDIDATES.filter((w) => dictionaryMatchSource.includes(w));
+  const relatedThemeWords = SEARCH_TAG_CANDIDATES.filter((w) => matchesThemeText(dictionaryMatchSource, w));
 
   const jsonLd = answerTextForJsonLd
     ? {

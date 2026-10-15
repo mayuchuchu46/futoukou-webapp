@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { getUid } from '@/lib/uid';
-import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
+import { SEARCH_TAG_CANDIDATES, matchesThemeText } from '@/lib/searchTags';
 import { relativeTimeLabel, isRecentPost } from '@/lib/relativeTime';
 import EyeIcon from './EyeIcon';
 import ReportButton from './ReportButton';
@@ -35,7 +35,7 @@ export default function ConsultationCard({
   // このカードの質問・回答に、タグ候補語（lib/searchTags.ts）が含まれていれば
   // カード内に小さく表示し、タップで /search にその語で絞り込んで遷移する。
   const matchedTags = SEARCH_TAG_CANDIDATES.filter(
-    (word) => item.question.includes(word) || (item.answer && item.answer.includes(word))
+    (word) => matchesThemeText(item.question, word) || matchesThemeText(item.answer, word)
   ).slice(0, 4);
 
   function goToTag(e: React.MouseEvent, word: string) {

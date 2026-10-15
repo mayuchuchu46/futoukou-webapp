@@ -2,7 +2,7 @@ import { cache } from 'react';
 import Anthropic from '@anthropic-ai/sdk';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildCategoryDictionaryPrompt, PastConsultation } from '@/lib/prompt';
-import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
+import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
 import { DICTIONARY_INDEX_THRESHOLD } from '@/lib/categorySummary';
 
 // カテゴリ別の「お悩み辞典」（lib/categorySummary.ts）に続き、「カテゴリだけじゃなく、
@@ -45,7 +45,9 @@ export const getThemeDictionaryData = cache(async function getThemeDictionaryDat
   // tag-counts APIは全件をJS側でfilter(.includes())しているが、辞典ページでは
   // 件数チェックとサンプル取得の両方をDB側のilikeで行い、全行をメモリに載せずに済むように
   // している（ホーム検索の.or(question.ilike...,answer.ilike...)と同じパターン）。
-  const orFilter = `question.ilike.%${word}%,answer.ilike.%${word}%`;
+  // 同義語（lib/searchTags.ts THEME_SYNONYMS）も対象に含める（2026-10-16追加、
+  // 「テーマの該当数を増やしたい」との要望を受けて）。
+  const orFilter = buildThemeOrFilter(word);
 
   const { count } = await supabase
     .from('consultations')

@@ -1,6 +1,7 @@
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { Consultation } from '@/lib/types';
 import { expertDisplayName } from '@/lib/expertDisplay';
+import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
 
 // 相談一覧の取得＋ロック判定（API route とホーム画面のSSRで共通利用）。
 // 専門家の回答は、本人（投稿者）か、読み放題会員（memberActive）にだけ見せる。
@@ -71,7 +72,15 @@ export async function getConsultationsList({
     query = query.eq('category', category);
   }
   if (q && q.trim()) {
-    query = query.or(`question.ilike.%${q.trim()}%,answer.ilike.%${q.trim()}%`);
+    const trimmedQ = q.trim();
+    // qが「気になるテーマから探す」のタグ候補語そのものと一致する場合は、
+    // そのテーマの同義語（lib/searchTags.ts THEME_SYNONYMS）も含めて検索する。
+    // タグ一覧（/api/consultations/tag-counts）側の件数も同じ語で数えているため、
+    // タグをタップしたときの検索結果件数と表示件数が一致する（2026-10-16追加）。
+    const orFilter = SEARCH_TAG_CANDIDATES.includes(trimmedQ)
+      ? buildThemeOrFilter(trimmedQ)
+      : `question.ilike.%${trimmedQ}%,answer.ilike.%${trimmedQ}%`;
+    query = query.or(orFilter);
   }
   // memberIdによる絞り込みは、呼び出し側が明示的に「自分（author_id）の相談を見せてほしい」と
   // 言っている時（authorIdが渡されている時）だけ行う。authorIdが無い一般の一覧取得（ホーム画面の

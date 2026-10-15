@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { SITE_URL } from '@/lib/site';
 import { CATS } from '@/lib/categories';
 import { DICTIONARY_INDEX_THRESHOLD } from '@/lib/categorySummary';
-import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
+import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -65,7 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .from('consultations')
         .select('id', { count: 'exact', head: true })
         .eq('hidden', false)
-        .or(`question.ilike.%${word}%,answer.ilike.%${word}%`)
+        .or(buildThemeOrFilter(word))
     )
   );
   const themeEntries: MetadataRoute.Sitemap = SEARCH_TAG_CANDIDATES.filter(

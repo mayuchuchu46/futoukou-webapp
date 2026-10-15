@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
+import { SEARCH_TAG_CANDIDATES, matchesThemeText } from '@/lib/searchTags';
 
 // 「探す」ページ用：候補ワード（lib/searchTags.ts）のうち、実際に投稿（question/answer）に
 // 含まれているものだけを件数付きで返す。既存の /api/consultations?q= と同じ対象（question, answer）
-// に対して判定するので、タグをクリックしたときの検索結果件数と一致する。
+// に対して判定するので、タグをクリックしたときの検索結果件数と一致する
+// （?q=の方もlib/consultations.tsでTHEME_SYNONYMSを使って同じ語を対象にしている）。
 export async function GET() {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
@@ -17,7 +18,7 @@ export async function GET() {
   const rows = data || [];
   const tags = SEARCH_TAG_CANDIDATES.map((word) => {
     const count = rows.filter(
-      (r) => (r.question && r.question.includes(word)) || (r.answer && r.answer.includes(word))
+      (r) => matchesThemeText(r.question, word) || matchesThemeText(r.answer, word)
     ).length;
     return { word, count };
   })
