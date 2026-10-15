@@ -664,6 +664,27 @@ h2.pagetitle {
 .card-foot { display: flex; gap: 16px; font-size: 12px; color: var(--muted); border-top: 1px solid #F0EEE6; padding-top: 10px; }
 .like-btn { display: flex; align-items: center; gap: 4px; background: none; border: none; color: var(--muted); font-size: 12px; padding: 0; }
 .like-btn.liked { color: var(--orange-text); font-weight: 700; }
+/* 相談詳細ページの定型リアクション（lib/reactions.ts、2026-10-16追加）。
+   .like-btnと違いボタンごとに枠のあるピル型にして、複数並んでいても
+   それぞれ独立して押せるものだと分かるようにした。押した状態（active）は
+   枠・文字色・背景をメインカラーにして塗りつぶす。 */
+.reaction-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.reaction-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+}
+.reaction-btn.active { background: var(--sub); border-color: var(--main); color: var(--main); font-weight: 700; }
+.reaction-emoji { font-size: 14px; }
+.reaction-count { color: var(--muted); font-weight: 400; }
+.reaction-btn.active .reaction-count { color: var(--main); }
 .view-count { font-size: 12px; color: var(--muted); }
 /* 「通報する」ボタン。参考になった・閲覧数と並べても目立ちすぎないよう控えめにし、
    うっかり押させないために確認ステップを挟む（ReportButton.tsx側）。 */

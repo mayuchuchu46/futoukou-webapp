@@ -3,6 +3,10 @@
 -- 既に作成済みのDBに対しては、下の create table 文は無視されます（if not exists のため）。
 -- その場合は、新しく追加した列を反映するため、次の1行も実行してください（既にある場合はエラーなく無視されます）。
 -- alter table consultations add column if not exists views int not null default 0;
+-- 相談詳細ページの定型リアクション（lib/reactions.ts）用の列を追加した場合
+-- （2026-10-16追加）、既存DBでは次を実行してください。
+-- alter table consultations add column if not exists reactions jsonb not null default '{}';
+-- alter table consultations add column if not exists reacted_by jsonb not null default '{}';
 -- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
 -- （2026-10-13追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists review_status text not null default 'pending';
@@ -350,6 +354,8 @@ create table if not exists consultations (
   client_ip text,
   likes int not null default 0,
   liked_by text[] not null default '{}',
+  reactions jsonb not null default '{}', -- 定型リアクション（lib/reactions.ts）のタイプ別件数。例: {"empathy": 3, "same": 1}
+  reacted_by jsonb not null default '{}', -- 同上、タイプ別の反応済みuid一覧（同じ人の多重カウント防止・トグル用）。例: {"empathy": ["u_xxx"]}
   views int not null default 0,
   reports int not null default 0, -- 「通報する」が押された件数（自動非表示はせず、運営が管理画面で確認するための記録）
   reported_by text[] not null default '{}', -- 通報済みのuid一覧（同じ人の多重通報で件数が膨らまないようにするため）

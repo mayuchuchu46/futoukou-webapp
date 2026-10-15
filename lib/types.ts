@@ -9,6 +9,11 @@ export type Consultation = {
   member_id?: string | null;
   likes: number;
   liked_by: string[];
+  // 定型リアクション（lib/reactions.ts参照）。タイプごとの件数・反応済みuid一覧を
+  // それぞれjsonbの1列にまとめて持つ（2026-10-16追加）。likes/liked_byと同じ
+  // 「カード側で見せる軽い反応」の仕組みだが、タイプが複数あるためjsonbにした。
+  reactions?: Partial<Record<string, number>>;
+  reacted_by?: Partial<Record<string, string[]>>;
   views: number;
   reports?: number;
   reported_by?: string[];

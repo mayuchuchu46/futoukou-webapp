@@ -14,6 +14,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import ResultClient from './ResultClient';
 import ViewPing from './ViewPing';
 import LikeButton from './LikeButton';
+import ReactionButtons from './ReactionButtons';
 import ReportButton from '@/components/ReportButton';
 import EyeIcon from '@/components/EyeIcon';
 import AiUsageUpsell from './AiUsageUpsell';
@@ -329,6 +330,17 @@ export default async function ResultPage({
         <div className="card">
           <div className="qtext qtext-main">💬 {item.question}</div>
         </div>
+
+        {/* 定型リアクション（2026-10-16追加）。自由記述のコメント欄は、このサービスの
+            テーマ（不登校・希死念慮など）と今の運営体制（モニタリング要員が実質いない）
+            だと荒れた時のリスクが大きいため見送り、タップするだけの定型リアクションに
+            した。質問の内容への共感・連帯を示すものなので、AI回答・専門家回答どちらでも
+            同じ場所（質問カードの直後）に置く。 */}
+        <ReactionButtons
+          id={item.id}
+          initialReactions={item.reactions || {}}
+          initialReactedBy={item.reacted_by || {}}
+        />
 
         {item.request_type === 'expert' ? (
           <>
