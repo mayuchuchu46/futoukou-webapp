@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { SITE_URL } from '@/lib/site';
+import { CATS } from '@/lib/categories';
+import { DICTIONARY_INDEX_THRESHOLD } from '@/lib/categorySummary';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -35,5 +37,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticEntries, ...consultationEntries];
+  // カテゴリ別「お悩み辞典」ページ（/dictionary/[category]）は、投稿が少ないうちは
+  // ページ自体がnoindexになる（app/dictionary/[category]/page.tsx参照）。noindexの
+  // ページをsitemapに載せても意味がない（むしろ矛盾したシグナルになる）ため、同じ
+  // 閾値を満たしたカテゴリだけをここに含める（2026-10-15追加）。
+  const categoryKeys = Object.keys(CATS);
+  const categoryCounts = await Promise.all(
+    categoryKeys.map((key) =>
+      supabase.from('consultations').select('id', { count: 'exact', head: true }).eq('hidden', false).eq('category', key)
+    )
+  );
+  const dictionaryEntries: MetadataRoute.Sitemap = categoryKeys
+    .filter((key, i) => (categoryCounts[i].count || 0) >= DICTIONARY_INDEX_THRESHOLD)
+    .map((key) => ({
+      url: `${SITE_URL}/dictionary/${key}`,
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    }));
+
+  return [...staticEntries, ...dictionaryEntries, ...consultationEntries];
 }

@@ -138,3 +138,31 @@ ${lines.join('\n')}
 - 出力は、前置きや説明を含めず、次のJSON形式のみにしてください（コードブロックや他の文章は不要）：
 {"status_summary": "…", "advice": "…", "phrasing_suggestion": "…", "environment_suggestion": "…", "school_fit_points": "…"}`;
 }
+
+// カテゴリ別「お悩み辞典」ページ（/dictionary/[category]）の冒頭解説文用（2026-10-15追加）。
+// member向けのサマリーと違い、特定の1人の状況整理ではなく、そのカテゴリに実際に
+// 寄せられた複数の相談から見える「よくある傾向」を一般化して説明する文章を作る。
+const DICTIONARY_QA_MAX_CHARS = 150;
+const MAX_DICTIONARY_ITEMS = 20;
+
+export function buildCategoryDictionaryPrompt(categoryLabel: string, consultations: PastConsultation[]): string {
+  const trim = (s: string) =>
+    s.length > DICTIONARY_QA_MAX_CHARS ? s.slice(0, DICTIONARY_QA_MAX_CHARS) + '…' : s;
+  const lines = consultations.slice(0, MAX_DICTIONARY_ITEMS).map((c) => `- ${trim(c.question)}`);
+
+  return `あなたは「どうする先生」という、不登校の子を持つ保護者向けサービスの編集担当です。
+以下は、保護者から実際に寄せられた「${categoryLabel}」というテーマの相談の一覧（質問文のみ、新しい順）です。
+
+【実際の相談一覧】
+${lines.join('\n')}
+
+これらを読んで、このテーマ「${categoryLabel}」について、初めてこのページに来た保護者向けの解説文（overview）を日本語で200〜280文字程度で書いてください。
+
+ルール：
+- 個別の相談1件の要約ではなく、一覧全体から見える「よくあるパターン・傾向」を一般化して説明すること
+- 実在の学校名・人名・制度名など、個人や特定の施設を特定できる情報は一切含めない
+- 断定的な医学的・心理学的診断はしない（「〜ということがよくあります」「〜という場合もあります」程度の言い方にとどめる）
+- 不安を煽る書き方にせず、「対応の選択肢はいろいろある」という前向きなトーンでまとめる
+- 出力は、前置きや説明を含めず、次のJSON形式のみにしてください（コードブロックや他の文章は不要）：
+{"overview": "…"}`;
+}

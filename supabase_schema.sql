@@ -30,6 +30,16 @@
 -- alter table ai_limit_hits enable row level security;
 -- alter table expert_memberships enable row level security;
 -- alter table guidelines enable row level security;
+-- カテゴリ別の「お悩み辞典」ページ（/dictionary/[category]）用。実際の相談を集約して
+-- AIが要約した解説文をキャッシュするテーブル。投稿が少ないうちは検索エンジンに見せない
+-- （noindex）運用にするための設計（2026-10-15追加）、既存DBでは次を実行してください。
+-- create table if not exists category_summaries (
+--   category text primary key,
+--   overview text not null default '',
+--   consultation_count int not null default 0,
+--   generated_at timestamptz not null default now()
+-- );
+-- alter table category_summaries enable row level security;
 -- 希死念慮・自傷等を検知した安全上書き回答（ホットライン案内のみ）かどうかを記録する
 -- crisis_detected列を追加した場合（2026-10-14追加）、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists crisis_detected boolean not null default false;
@@ -379,6 +389,18 @@ create table if not exists member_summaries (
   generated_at timestamptz not null default now()
 );
 alter table member_summaries enable row level security;
+
+-- カテゴリ別「お悩み辞典」ページ（/dictionary/[category]）のAI解説文キャッシュ。
+-- 投稿が少ない段階で薄い内容のままインデックスされないよう、ページ側で
+-- consultation_count が一定件数（lib/categorySummary.tsのDICTIONARY_INDEX_THRESHOLD）
+-- を超えるまではnoindexにする（2026-10-15追加）。
+create table if not exists category_summaries (
+  category text primary key,
+  overview text not null default '',
+  consultation_count int not null default 0,
+  generated_at timestamptz not null default now()
+);
+alter table category_summaries enable row level security;
 
 -- ホーム画面（PCの広い画面のみ）のサイドバーに表示する、差し替え可能な広告・アフィリエイト
 -- バナー枠。管理画面（/admin）から画像URL・リンク先・代替テキスト・表示ON/OFFを編集する。
