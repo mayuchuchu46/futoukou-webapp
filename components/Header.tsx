@@ -66,7 +66,10 @@ export default function Header({ supervised }: { supervised: boolean }) {
               見出しとして許容範囲と判断（ブランド名＋キャッチコピーという構成）。
               デフォルトのh1マージンは globals.css の.hero-catchでmargin:0にして打ち消している。 */}
           <h1 className="hero-catch">不登校のご家庭に、次の一手を。</h1>
-          <div className="hero-sub">「どうしたらいい？」にAIと専門家が具体的に回答</div>
+          {/* 「ChatGPTなどと何が違うの？」と思われそうとの指摘を受けて、サービスの核である
+              「相談を重ねるほど詳しくなる（分析ノート）」という蓄積の価値を、最初に目に入る
+              この一文にも足した（2026-10-15）。 */}
+          <div className="hero-sub">「どうしたらいい？」にAIと専門家が具体的に回答。相談を重ねるほど、お子さんに合わせた内容になっていきます。</div>
         </div>
         <div className="header-right">
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>
