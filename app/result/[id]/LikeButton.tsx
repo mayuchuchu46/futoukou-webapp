@@ -40,7 +40,9 @@ export default function LikeButton({ id, initialLikes, initialLikedBy, pill = fa
     return (
       <button className={`reaction-btn ${liked ? 'active' : ''}`} onClick={toggleLike}>
         <span className="reaction-emoji">👍</span>
-        参考になった
+        {/* 「スクロールせずに収めたい」との指摘を受け、4分割グリッドでも窮屈に
+            ならないよう「参考になった」→「参考」に短縮（2026-10-16）。 */}
+        参考
         <span className="reaction-count">{likes}</span>
       </button>
     );

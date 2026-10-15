@@ -664,35 +664,31 @@ h2.pagetitle {
 .card-foot { display: flex; gap: 16px; font-size: 12px; color: var(--muted); border-top: 1px solid #F0EEE6; padding-top: 10px; }
 .like-btn { display: flex; align-items: center; gap: 4px; background: none; border: none; color: var(--muted); font-size: 12px; padding: 0; }
 .like-btn.liked { color: var(--orange-text); font-weight: 700; }
-/* 相談詳細ページの定型リアクション（lib/reactions.ts、2026-10-16追加）。
-   .like-btnと違いボタンごとに枠のあるピル型にして、複数並んでいても
-   それぞれ独立して押せるものだと分かるようにした。押した状態（active）は
-   枠・文字色・背景をメインカラーにして塗りつぶす。
-   当初flex-wrapで3つとも折り返し可にしていたが、スマホ幅で3つ目だけ2行目に
-   落ちて見た目が揃わないとの指摘を受け、.chip-rowと同じ横スクロール方式
-   （折り返さず、入り切らない分は横にスクロール）に変更し、パディング・文字サイズも
-   少し詰めて3つが横一列に収まりやすくした（2026-10-16）。 */
+/* 相談詳細ページの「参考になった・わかる・うちも同じ・応援」4ボタン
+   （lib/reactions.ts、2026-10-16追加）。.like-btnと違いボタンごとに枠のある
+   ピル型にして、複数並んでいてもそれぞれ独立して押せるものだと分かるように
+   した。押した状態（active）は枠・文字色・背景をメインカラーにして塗りつぶす。
+   当初は横スクロール方式（flex + overflow-x: auto）にしていたが、「スクロール
+   せずに収めたい」との指摘を受け、4分割のgridに変更。常に4つ（LikeButton 1つ＋
+   ReactionButtonsの3つ）なので列数を4で固定できる。狭い画面でも必ず収まるよう、
+   ラベルは「参考」「わかる」「同じ」「応援」の2〜3文字に短縮し、縦積み
+   （絵文字→ラベル→件数）にして横幅を使わないようにした（2026-10-16）。 */
 .reaction-row {
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 6px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding-bottom: 2px;
 }
-.reaction-row::-webkit-scrollbar { display: none; }
 .reaction-btn {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  flex: 0 0 auto;
-  white-space: nowrap;
-  gap: 4px;
+  justify-content: center;
+  gap: 1px;
   background: #fff;
   border: 1.5px solid var(--border);
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 11.5px;
+  border-radius: 10px;
+  padding: 6px 2px;
+  font-size: 11px;
   color: var(--text);
   cursor: pointer;
 }

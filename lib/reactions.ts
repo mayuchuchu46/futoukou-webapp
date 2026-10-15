@@ -8,10 +8,11 @@
 export type ReactionType = 'empathy' | 'same' | 'cheer';
 
 // ラベルは当初「わかります」「うちも同じです」「応援しています」だったが、
-// 「参考になった」ボタンと同じ横一列に並べるにあたり、4つとも1行に収まりやすい
-// 短い言い方に変更した（2026-10-16）。
+// 「参考になった」ボタンと同じ行に並べるにあたり短縮（わかる・うちも同じ・応援）、
+// さらに「横スクロールせず4つとも収めたい」との指摘を受けて、4分割グリッドの
+// 縦積みレイアウトでも窮屈にならない2〜3文字にまで詰めた（2026-10-16）。
 export const REACTION_TYPES: { key: ReactionType; emoji: string; label: string }[] = [
   { key: 'empathy', emoji: '🥺', label: 'わかる' },
-  { key: 'same', emoji: '🙋', label: 'うちも同じ' },
+  { key: 'same', emoji: '🙋', label: '同じ' },
   { key: 'cheer', emoji: '📣', label: '応援' },
 ];
