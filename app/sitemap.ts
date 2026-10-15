@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { SITE_URL } from '@/lib/site';
 import { CATS } from '@/lib/categories';
 import { DICTIONARY_INDEX_THRESHOLD } from '@/lib/categorySummary';
+import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -55,5 +56,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-  return [...staticEntries, ...dictionaryEntries, ...consultationEntries];
+  // テーマ別「お悩み辞典」ページ（/dictionary/theme/[word]）も同様に、カテゴリ版と
+  // 同じ閾値・考え方でnoindexのページを除外する（2026-10-15追加、「カテゴリーだけ
+  // じゃなく、テーマも対象にして」との指摘を受けて）。
+  const themeCounts = await Promise.all(
+    SEARCH_TAG_CANDIDATES.map((word) =>
+      supabase
+        .from('consultations')
+        .select('id', { count: 'exact', head: true })
+        .eq('hidden', false)
+        .or(`question.ilike.%${word}%,answer.ilike.%${word}%`)
+    )
+  );
+  const themeEntries: MetadataRoute.Sitemap = SEARCH_TAG_CANDIDATES.filter(
+    (_, i) => (themeCounts[i].count || 0) >= DICTIONARY_INDEX_THRESHOLD
+  ).map((word) => ({
+    url: `${SITE_URL}/dictionary/theme/${encodeURIComponent(word)}`,
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  }));
+
+  return [...staticEntries, ...dictionaryEntries, ...themeEntries, ...consultationEntries];
 }

@@ -40,6 +40,17 @@
 --   generated_at timestamptz not null default now()
 -- );
 -- alter table category_summaries enable row level security;
+-- テーマ（lib/searchTags.tsの候補ワード）別の「不登校お悩み辞典」ページ
+-- （/dictionary/theme/[word]）用。category_summariesと同じ仕組みで、テーマ語単位の
+-- AI要約解説文をキャッシュするテーブル（2026-10-15追加、「カテゴリーだけじゃなく、
+-- テーマも対象にして」との指摘を受けて）、既存DBでは次を実行してください。
+-- create table if not exists theme_summaries (
+--   word text primary key,
+--   overview text not null default '',
+--   consultation_count int not null default 0,
+--   generated_at timestamptz not null default now()
+-- );
+-- alter table theme_summaries enable row level security;
 -- 希死念慮・自傷等を検知した安全上書き回答（ホットライン案内のみ）かどうかを記録する
 -- crisis_detected列を追加した場合（2026-10-14追加）、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists crisis_detected boolean not null default false;
@@ -401,6 +412,18 @@ create table if not exists category_summaries (
   generated_at timestamptz not null default now()
 );
 alter table category_summaries enable row level security;
+
+-- テーマ（lib/searchTags.tsの候補ワード）別の「不登校お悩み辞典」ページ
+-- （/dictionary/theme/[word]）用。category_summariesと同じ仕組みで、テーマ語単位の
+-- AI要約解説文をキャッシュする（2026-10-15追加、「カテゴリーだけじゃなく、テーマも
+-- 対象にして」との指摘を受けて）。
+create table if not exists theme_summaries (
+  word text primary key,
+  overview text not null default '',
+  consultation_count int not null default 0,
+  generated_at timestamptz not null default now()
+);
+alter table theme_summaries enable row level security;
 
 -- ホーム画面（PCの広い画面のみ）のサイドバーに表示する、差し替え可能な広告・アフィリエイト
 -- バナー枠。管理画面（/admin）から画像URL・リンク先・代替テキスト・表示ON/OFFを編集する。
