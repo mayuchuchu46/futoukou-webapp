@@ -9,10 +9,16 @@ import { getUid } from '@/lib/uid';
 // 閲覧数（views）はサーバー側で描画済み（ResultPage側のEyeIcon表示）なので、
 // ここでは「参考になった」の増減だけを担当する。ロジック・API（/api/like）は
 // ConsultationCardと共通。
-export default function LikeButton({ id, initialLikes, initialLikedBy }: {
+// pill: true で、定型リアクション（ReactionButtons、lib/reactions.ts）と
+// 横一列に並べるための見た目（.reaction-btn、枠のあるピル型）に切り替える
+// （2026-10-16、「わかる・うちも同じ・応援・参考になった の4つ表示どう？」との
+// 相談を受けて、同じ行に統合）。一覧カード側の見た目（.like-btn）は変えないため
+// デフォルトはfalseのまま。
+export default function LikeButton({ id, initialLikes, initialLikedBy, pill = false }: {
   id: string;
   initialLikes: number;
   initialLikedBy: string[];
+  pill?: boolean;
 }) {
   const [likes, setLikes] = useState(initialLikes);
   const [likedBy, setLikedBy] = useState<string[]>(initialLikedBy || []);
@@ -28,6 +34,16 @@ export default function LikeButton({ id, initialLikes, initialLikedBy }: {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, uid, liked: nowLiked }),
     }).catch(() => {});
+  }
+
+  if (pill) {
+    return (
+      <button className={`reaction-btn ${liked ? 'active' : ''}`} onClick={toggleLike}>
+        <span className="reaction-emoji">👍</span>
+        参考になった
+        <span className="reaction-count">{likes}</span>
+      </button>
+    );
   }
 
   return (

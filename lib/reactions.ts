@@ -7,8 +7,11 @@
 // 役割を分け、こちらは「自分も同じ」という共感・連帯のための軽いリアクションにする。
 export type ReactionType = 'empathy' | 'same' | 'cheer';
 
+// ラベルは当初「わかります」「うちも同じです」「応援しています」だったが、
+// 「参考になった」ボタンと同じ横一列に並べるにあたり、4つとも1行に収まりやすい
+// 短い言い方に変更した（2026-10-16）。
 export const REACTION_TYPES: { key: ReactionType; emoji: string; label: string }[] = [
-  { key: 'empathy', emoji: '🥺', label: 'わかります' },
-  { key: 'same', emoji: '🙋', label: 'うちも同じです' },
-  { key: 'cheer', emoji: '📣', label: '応援しています' },
+  { key: 'empathy', emoji: '🥺', label: 'わかる' },
+  { key: 'same', emoji: '🙋', label: 'うちも同じ' },
+  { key: 'cheer', emoji: '📣', label: '応援' },
 ];

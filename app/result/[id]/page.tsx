@@ -317,13 +317,9 @@ export default async function ResultPage({
             {metaLabel(item) ? `${metaLabel(item)}・` : ''}
             <EyeIcon /> {item.views || 0}
           </span>
-        </div>
-        {/* 一覧カードには既にある「参考になった」ボタンを、詳細ページにも追加した
-            （2026-10-12）。 */}
-        <div className="row" style={{ alignItems: 'center' }}>
-          <LikeButton id={item.id} initialLikes={item.likes} initialLikedBy={item.liked_by || []} />
           {/* 個人情報の混入・不適切な内容などを閲覧者が運営に知らせる手段（2026-10-12追加）。
-              自動非表示はせず、運営が管理画面で件数を見て確認する。 */}
+              自動非表示はせず、運営が管理画面で件数を見て確認する。「参考になった」が
+              下の定型リアクション行に移ったので、ここに上げた（2026-10-16）。 */}
           <ReportButton id={item.id} />
         </div>
 
@@ -331,16 +327,20 @@ export default async function ResultPage({
           <div className="qtext qtext-main">💬 {item.question}</div>
         </div>
 
-        {/* 定型リアクション（2026-10-16追加）。自由記述のコメント欄は、このサービスの
-            テーマ（不登校・希死念慮など）と今の運営体制（モニタリング要員が実質いない）
-            だと荒れた時のリスクが大きいため見送り、タップするだけの定型リアクションに
-            した。質問の内容への共感・連帯を示すものなので、AI回答・専門家回答どちらでも
-            同じ場所（質問カードの直後）に置く。 */}
-        <ReactionButtons
-          id={item.id}
-          initialReactions={item.reactions || {}}
-          initialReactedBy={item.reacted_by || {}}
-        />
+        {/* 「参考になった」「わかる・うちも同じ・応援」の4つを同じ行にまとめて表示
+            （2026-10-16、「4つ表示どう？」との相談を受けて統合）。自由記述のコメント欄は、
+            このサービスのテーマ（不登校・希死念慮など）と今の運営体制（モニタリング要員が
+            実質いない）だと荒れた時のリスクが大きいため見送り、タップするだけの定型
+            リアクションにした。質問の内容への共感・連帯を示すものなので、AI回答・
+            専門家回答どちらでも同じ場所（質問カードの直後）に置く。 */}
+        <div className="reaction-row">
+          <LikeButton id={item.id} initialLikes={item.likes} initialLikedBy={item.liked_by || []} pill />
+          <ReactionButtons
+            id={item.id}
+            initialReactions={item.reactions || {}}
+            initialReactedBy={item.reacted_by || {}}
+          />
+        </div>
 
         {item.request_type === 'expert' ? (
           <>
