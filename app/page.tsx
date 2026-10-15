@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { cacheLife } from 'next/cache';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName } from '@/lib/expertDisplay';
@@ -42,7 +43,14 @@ export const metadata: Metadata = {
   },
 };
 
+// 「もっとサクサクいけないか」との指摘を受けて追加（2026-10-16）。guidelines（専門家
+// 監修済みかどうか）はAI監修の進行状況に応じてごくまれにしか変わらないため、毎回SupabaseへSELECTしに
+// 行く必要がない。'use cache'でキャッシュし、更新が多少遅れて反映されても実害がないぶん
+// （cacheLife('minutes') = 最大1分おきに再検証、最長1時間で失効）、トップページ表示時の
+// 往復を1つ減らす。
 async function getGuidelines() {
+  'use cache';
+  cacheLife('minutes');
   const supabase = getSupabaseAdmin();
   const { data } = await supabase.from('guidelines').select('*').eq('id', 'default').single();
   return data;
@@ -53,7 +61,13 @@ async function getGuidelines() {
 // 数えていたため、投稿が増えるほど重くなる作りだった。head:trueの件数クエリ（行データを
 // 転送しない）をカテゴリ数ぶん並列実行する形に変更し、データ量が増えても軽いままにした
 // （2026-10-13、トップページの表示が遅いとの指摘を受けて）。
+// 2026-10-16: 「もっとサクサクいけないか」との指摘を受け、このカウント自体を'use cache'化。
+// 新しい投稿があっても件数表示が最大1分程度遅れて反映されるだけで実害が小さい一方、
+// 投稿が増えるほど重くなっていた「カテゴリ数ぶん並列クエリ」を毎回のアクセスで
+// 実行しなくて済むようになる。
 async function getCounts() {
+  'use cache';
+  cacheLife('minutes');
   const supabase = getSupabaseAdmin();
   const categoryKeys = Object.keys(CATS);
 
@@ -78,7 +92,10 @@ async function getCounts() {
 
 // PCの広い画面でホーム画面サイドバーに出す、差し替え可能な広告・アフィリエイトバナー枠
 // （/adminで編集）。未設定・無効時はnullを返し、HomeClient側で何も表示しない。
+// 2026-10-16: 管理画面での編集頻度は低いため'use cache'化（上記getGuidelines等と同じ理由）。
 async function getSidebarBanner() {
+  'use cache';
+  cacheLife('minutes');
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('sidebar_banners')
@@ -90,7 +107,10 @@ async function getSidebarBanner() {
 
 // ホーム画面にも「専門家一覧」の導線を置くため、本人確認済みの専門家を取得する
 // （/expertsページと同じ条件。トップでは件数を絞って表示し、全件は/expertsへ誘導する）。
+// 2026-10-16: 専門家の本人確認（verified化）は管理画面での手作業のため頻度が低く'use cache'化。
 async function getVerifiedExperts() {
+  'use cache';
+  cacheLife('minutes');
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('experts')

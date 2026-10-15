@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -35,7 +36,11 @@ export const instant = false;
 // 専門家サービスへの導線を出す場所（AI回答直下の免責文など）で、実際にまだ
 // 本人確認済みの専門家がいない間は「準備中」と明示するための判定。
 // app/api/experts/available/route.ts と同じ条件をサーバーコンポーネント内で直接見る。
+// 2026-10-16:「もっとサクサクいけないか」との指摘を受け、専門家の本人確認（verified化）は
+// 管理画面での手作業で頻度が低いため'use cache'化し、相談詳細ページ表示ごとの往復を減らす。
 async function getExpertAvailable() {
+  'use cache';
+  cacheLife('minutes');
   const supabase = getSupabaseAdmin();
   const { count, error } = await supabase
     .from('experts')
@@ -123,7 +128,11 @@ export default async function ResultPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const item = await getConsultation(id);
+  // getConsultation（本体）とgetExpertAvailable（専門家在籍判定、'use cache'済み）は
+  // 互いに依存しないため並列に取得する。以前は直列（getConsultation→似た相談→
+  // getExpertAvailable）だったため、本来不要な往復1回分の待ち時間が乗っていた
+  // （2026-10-16、「もっとサクサクいけないか」との指摘を受けて修正）。
+  const [item, expertAvailable] = await Promise.all([getConsultation(id), getExpertAvailable()]);
 
   // 存在しない相談IDは、検索エンジンに「見つかった薄いページ」として
   // 評価されないよう、ソフト404ではなく正式な404ステータスを返す。
@@ -134,10 +143,9 @@ export default async function ResultPage({
   const cat = CATS[item.category] || CATS.other;
 
   // 回答のすぐ下に出す「似たような相談」。同じカテゴリの他の相談から新しい順に数件。
+  // item.categoryが必要なため、これはgetConsultationの後でしか取得できない。
   const similarPool = await getConsultationsList({ category: item.category, limit: 9 });
   const similarItems = similarPool.filter((d) => d.id !== item.id).slice(0, 8);
-
-  const expertAvailable = await getExpertAvailable();
 
   // クローラー・初回表示用のJSON-LD（QAPage）。
   // 専門家回答がロック中の場合は本文がまだ無いので、AI回答か、
