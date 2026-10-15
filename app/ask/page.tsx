@@ -159,6 +159,16 @@ function AskPageContent() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
       clearAskDraft();
+      // 「もう一度相談する」で/askに戻ってきたとき、Next.jsのルーターキャッシュにより
+      // このページのコンポーネント自体が再マウントされず（マウント時のuseEffectが
+      // 再実行されず）、入力欄のReact state（text等）がそのまま残ってしまうことがある。
+      // localStorageの下書きを消すだけでは不十分なため、ここでstateも明示的に空にする
+      // （2026-10-16、「前回入れたテキストがそのまま入ってる」との指摘を受けて）。
+      setText('');
+      setCategory('');
+      setGrade('');
+      setGender('');
+      categoryTouchedRef.current = false;
       router.push(`/result/${data.consultation.id}`);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'エラーが発生しました');
@@ -189,6 +199,13 @@ function AskPageContent() {
         // 無料枠・チケット消費の場合はStripe決済なしでその場で確定しているので、
         // 直接結果ページへ遷移する。
         clearAskDraft();
+        // submit()と同じ理由で、ルーターキャッシュによりstateが残るのを防ぐため
+        // 明示的に空にする（2026-10-16）。
+        setText('');
+        setCategory('');
+        setGrade('');
+        setGender('');
+        categoryTouchedRef.current = false;
         router.push(`/result/${data.consultation_id}`);
         return;
       }
