@@ -19,6 +19,7 @@ import EyeIcon from '@/components/EyeIcon';
 import AiUsageUpsell from './AiUsageUpsell';
 import SaveConsultationPrompt from './SaveConsultationPrompt';
 import TagChips from '@/components/TagChips';
+import { SEARCH_TAG_CANDIDATES } from '@/lib/searchTags';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -265,6 +266,14 @@ export default async function ResultPage({
   const isCrisis =
     item.request_type === 'ai' && (!!item.crisis_detected || item.answer.includes('0120-0-78310'));
 
+  // この相談に関連する「不登校お悩み辞典」（カテゴリ・テーマ）への内部リンク。
+  // 辞典ページ同士の回遊だけでなく、相談ページ→辞典ページの導線も作る目的で追加
+  // （2026-10-15、「各投稿ページの下に、関連ワードの辞典の記載があってもいいかもね」
+  // との指摘を受けて）。専門家回答がロック中の場合は本文がまだ無いため、質問文だけで
+  // テーマ語の一致を判定する（answerTextForJsonLdはロック中はnullになる）。
+  const dictionaryMatchSource = `${item.question} ${answerTextForJsonLd || ''}`;
+  const relatedThemeWords = SEARCH_TAG_CANDIDATES.filter((w) => dictionaryMatchSource.includes(w));
+
   const jsonLd = answerTextForJsonLd
     ? {
         '@context': 'https://schema.org',
@@ -475,6 +484,31 @@ export default async function ResultPage({
         <Suspense fallback={null}>
           <TagChips title="他にもこんなテーマの相談があります" wrap />
         </Suspense>
+
+        {/* この相談のカテゴリ・一致したテーマ語の「不登校お悩み辞典」ページへのリンク。
+            カテゴリは必ず1つあるのでリンクも必ず1つ以上出る（2026-10-15追加）。 */}
+        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="muted" style={{ fontSize: 13 }}>関連する「不登校お悩み辞典」</div>
+          <div className="chip-row chip-row-wrap">
+            <Link
+              href={`/dictionary/${item.category}`}
+              className="chip chip-tag"
+              style={{ textDecoration: 'none', display: 'inline-block' }}
+            >
+              {cat.label}
+            </Link>
+            {relatedThemeWords.map((w) => (
+              <Link
+                key={w}
+                href={`/dictionary/theme/${encodeURIComponent(w)}`}
+                className="chip chip-tag"
+                style={{ textDecoration: 'none', display: 'inline-block' }}
+              >
+                #{w}
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {/* 2026-10-13: ここにあった末尾の「← もどる」は、BottomNav側に全ページ共通で
             追加した「戻る」（固定ナビの直上）と位置・役割が重複するため削除した。 */}
