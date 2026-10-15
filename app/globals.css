@@ -667,17 +667,32 @@ h2.pagetitle {
 /* 相談詳細ページの定型リアクション（lib/reactions.ts、2026-10-16追加）。
    .like-btnと違いボタンごとに枠のあるピル型にして、複数並んでいても
    それぞれ独立して押せるものだと分かるようにした。押した状態（active）は
-   枠・文字色・背景をメインカラーにして塗りつぶす。 */
-.reaction-row { display: flex; flex-wrap: wrap; gap: 8px; }
+   枠・文字色・背景をメインカラーにして塗りつぶす。
+   当初flex-wrapで3つとも折り返し可にしていたが、スマホ幅で3つ目だけ2行目に
+   落ちて見た目が揃わないとの指摘を受け、.chip-rowと同じ横スクロール方式
+   （折り返さず、入り切らない分は横にスクロール）に変更し、パディング・文字サイズも
+   少し詰めて3つが横一列に収まりやすくした（2026-10-16）。 */
+.reaction-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.reaction-row::-webkit-scrollbar { display: none; }
 .reaction-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  gap: 4px;
   background: #fff;
   border: 1.5px solid var(--border);
   border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 12px;
+  padding: 6px 10px;
+  font-size: 11.5px;
   color: var(--text);
   cursor: pointer;
 }
