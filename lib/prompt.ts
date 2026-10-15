@@ -78,6 +78,19 @@ const COMMON_ANSWER_RULES = `共通ルール：
 - 回答本文のみを出力し、前置きや署名は不要
 - 専門家への有料相談（300文字以上を想定）より短く、要点だけに絞る。一つながりの文章にせず、状況の受け止め（一言）→今日からできる一手（一言）、の2つの短い段落に分け、段落の間は空行（改行2つ）を入れること。ただし「①」「②」のような番号・記号を文章の先頭に付けない。見出しのような前置きも付けず、自然な文章の段落として書くこと`;
 
+// 直近の回答と書き出し・言い回しが似てしまうのを避けるための追加指示（任意）。
+// 自動投稿（app/api/cron/auto-post/route.ts）のように、短時間に何度も回答を
+// 生成する場面でのみ使う。通常の相談フロー（実際の利用者からの相談）は毎回
+// 内容が違うため基本的には不要だが、引数として渡せば同じ仕組みを使える
+// （2026-10-16、「自動投稿の文章がいつも似たような出だしでAIっぽい」との
+// 指摘を受けて追加）。
+function buildAvoidOpeningsBlock(avoidOpenings?: string[]): string {
+  if (!avoidOpenings || !avoidOpenings.length) return '';
+  return `
+直近の回答（これらと書き出し・言い回し・文末表現が似ないように、毎回違う入り方にすること）：
+${avoidOpenings.map((a) => `- ${a}`).join('\n')}`;
+}
+
 export function buildPrompt(
   category: string,
   text: string,
@@ -85,18 +98,22 @@ export function buildPrompt(
   grade?: string | null,
   gender?: string | null,
   supervised?: boolean,
-  history?: PastConsultation[]
+  history?: PastConsultation[],
+  avoidOpenings?: string[]
 ) {
   const catLabel = CATS[category]?.label || category;
   const guidanceBlock = buildGuidanceBlock(guideCat, supervised);
   const historyBlock = buildHistoryBlock(history);
+  const avoidOpeningsBlock = buildAvoidOpeningsBlock(avoidOpenings);
 
   return `あなたは「どうする先生」という、不登校の子を持つ保護者向けAI相談キャラクターです。
-以下の相談に対して、今日からできる具体的な次の一手を、150文字程度の日本語で、要点を絞って答えてください。
+以下の相談に対して、今日からできる具体的な次の一手を、150文字程度（200字を超えないこと）の日本語で、要点を絞って答えてください。
 ${guidanceBlock}
 ${historyBlock}
+${avoidOpeningsBlock}
 
 ${COMMON_ANSWER_RULES}
+- 「そのお気持ち、よくわかります」「〜、大変ですね」のような、状況を受け止める一言を毎回同じ言い回しで始めない。受け止め方の表現は相談内容に応じて変える
 
 テーマ：${catLabel}
 ${grade ? 'お子さんの学年：' + grade + '\n' : ''}${gender && gender !== '回答しない' ? '性別：' + gender + '\n' : ''}相談内容：

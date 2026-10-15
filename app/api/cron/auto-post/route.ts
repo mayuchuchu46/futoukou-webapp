@@ -108,7 +108,27 @@ ${
   const { data: guidelines } = await supabase.from('guidelines').select('*').eq('id', 'default').single();
   const guideCat = guidelines?.categories?.[category];
 
-  const answerPrompt = buildPrompt(category, question, guideCat, grade, gender, !!guidelines?.supervised);
+  // 質問文と同じく、回答文も「毎回似たような出だし・長さでAIっぽい」との指摘を
+  // 受けて、直近の自動投稿の回答を見せて書き出し・言い回しをばらけさせる
+  // （2026-10-16追加）。
+  const { data: recentAutoAnswerRows } = await supabase
+    .from('consultations')
+    .select('answer')
+    .eq('author_id', 'auto-seed')
+    .order('created_at', { ascending: false })
+    .limit(5);
+  const recentAnswers = (recentAutoAnswerRows || []).map((r) => r.answer).filter(Boolean);
+
+  const answerPrompt = buildPrompt(
+    category,
+    question,
+    guideCat,
+    grade,
+    gender,
+    !!guidelines?.supervised,
+    undefined,
+    recentAnswers
+  );
 
   let answer: string;
   try {
