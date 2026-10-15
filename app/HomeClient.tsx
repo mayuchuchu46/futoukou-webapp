@@ -268,6 +268,14 @@ export default function HomeClient({
               ))}
             </div>
 
+            {/* /theme・/dictionary/[category]は、作成時点ではアプリ内のどこからも
+                リンクされておらず、直接URLを知らないと辿り着けない孤立ページだった。
+                一番アクセスの多いホームに、カテゴリ絞り込みチップのすぐ下という目に
+                入りやすい場所で導線を足した（2026-10-15）。 */}
+            <Link href="/theme" className="muted" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
+              テーマから探す・お悩み辞典を見る →
+            </Link>
+
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
                 「参考になった順」は各カードの「参考になった◯人」と同じlikesで並べている。
                 専門家回答の絞り込みは、以前は/expertlistへの別バナーのみで案内していたが、
