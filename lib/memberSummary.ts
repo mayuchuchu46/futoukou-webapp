@@ -95,13 +95,12 @@ async function getOrGenerateSummary(scope: SummaryScope): Promise<MemberSummary 
   const consultationCount = count || 0;
   if (consultationCount === 0) return null;
 
-  const { data: cached } = await supabase
-    .from(table)
-    .select(
-      'status_summary, advice, phrasing_suggestion, environment_suggestion, school_fit_points, consultation_count, generated_at, crisis_override, daily_answer_count'
-    )
-    .eq(idColumn, scope.id)
-    .single();
+  // 列名を明示して select すると、その列がDB側にまだ存在しない場合（マイグレーション
+  // 未実行のタイミング）にクエリ全体がエラーになり、既存のキャッシュ内容ごと読めなく
+  // なってしまう（2026-10-16、daily_answer_count列追加時に実際に発生した不具合）。
+  // select('*') なら実際に存在する列だけが返るため、未知の列が増えても古いDBのままでも
+  // 安全に動く。
+  const { data: cached } = await supabase.from(table).select('*').eq(idColumn, scope.id).single();
 
   // 「みんなのデータ」（daily_answers）の回答も伴走ノートに取り込む（2026-10-16追加。
   // 「メモするほど伴走ノートが充実する」という要望）。直近20件を新しい順で取得し、
