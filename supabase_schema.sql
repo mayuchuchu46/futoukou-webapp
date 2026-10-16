@@ -60,16 +60,30 @@
 -- 既存DBでは次を実行してください。
 -- alter table member_summaries add column if not exists daily_answer_count int not null default 0;
 -- alter table child_summaries add column if not exists daily_answer_count int not null default 0;
--- 「兄弟（複数の子どもプロフィール）がいる場合、1人分答えたらもう1人の分が答えられない」
--- 不具合の修正（2026-10-16追加）。unique(member_id, answer_date)だと子どもを問わず
--- 1日1回までに制限されてしまっていたため、子どもごとに1日1回に変更する。child_idは
--- nullable（「全体」選択時）で、Postgresの通常のunique制約はNULL同士を別物として扱う
--- ため、そのままでは「全体」を選んだ場合だけ複数回答できてしまう。NULLをダミーUUIDに
--- 正規化したgenerated column（child_key）を間に挟むことで、「全体」もふくめて
--- 確実に1日1回に揃える。既存DBでは次を実行してください。
+-- 「みんなのデータ」（daily_answers）に2つの変更をまとめて行った場合（2026-10-16追加、
+-- 下の既存DB向けSQLをまだ実行していなければ、これ1回の実行でまとめて反映されます）。
+-- (1) 「兄弟（複数の子どもプロフィール）がいる場合、1人分答えたらもう1人の分が
+--     答えられない」不具合の修正。unique(member_id, answer_date)だと子どもを問わず
+--     1日1回までに制限されてしまっていたため、子どもごとに1日1回に変更する。child_idは
+--     nullable（「全体」選択時）で、Postgresの通常のunique制約はNULL同士を別物として
+--     扱うため、そのままでは「全体」を選んだ場合だけ複数回答できてしまう。NULLを
+--     ダミーUUIDに正規化したgenerated column（child_key）を間に挟むことで、「全体」も
+--     ふくめて確実に1日1回に揃える。
+-- (2) 「回答は会員登録なしでもできるが、結果グラフを見るには会員登録が必要」という
+--     設計への変更。それまでは会員登録必須だったが、相談（consultations）と同じ、
+--     ブラウザ単位の匿名ID（lib/uid.ts、getUid()）でも回答できるようにする。
+--     member_idをnullable化し、匿名回答用にanon_uid列を追加。member_id・anon_uidの
+--     どちらか一方だけが入っている状態を保証するCHECK制約を付け、匿名回答どうしの
+--     重複（1日1回）はunique(anon_uid, answer_date)で防ぐ
+--     （member_idがNULLの行同士はこの制約には引っかからず、別途anon_uidの制約で守られる）。
+-- 既存DBでは次を実行してください。
 -- alter table daily_answers add column if not exists child_key uuid generated always as (coalesce(child_id, '00000000-0000-0000-0000-000000000000'::uuid)) stored;
 -- alter table daily_answers drop constraint if exists daily_answers_member_id_answer_date_key;
 -- alter table daily_answers add constraint daily_answers_member_date_child_key unique (member_id, answer_date, child_key);
+-- alter table daily_answers alter column member_id drop not null;
+-- alter table daily_answers add column if not exists anon_uid text;
+-- alter table daily_answers add constraint daily_answers_anon_date_key unique (anon_uid, answer_date);
+-- alter table daily_answers add constraint daily_answers_member_or_anon_ck check ((member_id is not null) <> (anon_uid is not null));
 -- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
 -- （2026-10-13追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists review_status text not null default 'pending';
@@ -413,27 +427,36 @@ alter table children enable row level security;
 create index if not exists children_member_id_idx on children (member_id);
 
 -- 「みんなのデータ」機能（2026-10-16追加）。日替わりの簡単なアンケート（起床時間・
--- 朝ごはん等、lib/dailyQuestions.ts参照）に会員が答える。質問は1日1問しか出ないため
+-- 朝ごはん等、lib/dailyQuestions.ts参照）に答える。質問は1日1問しか出ないため
 -- answer_dateが答えた日の日付（JSTのその日）。
--- 個別の回答は本人専用（伴走ノートの材料にする想定）で、他の会員には公開しない。
+-- 個別の回答は本人専用（伴走ノートの材料にする想定）で、他の人には公開しない。
 -- 公開するのは「今日はみんなどう答えているか」という同日・同質問の集計のみ
 -- （app/api/daily-question/route.ts参照）。
--- 子どもプロフィール（兄弟）ごとに1日1回答えられるようにするため、一意制約は
+-- 子どもプロフィール（兄弟）ごとに1日1回答えられるようにするため、会員の一意制約は
 -- member_id・answer_dateだけでなくchild_idも含める。child_idはnullable（「全体」選択時）
 -- で、通常のunique制約はNULL同士を別物として扱ってしまう（＝「全体」を選んだ場合だけ
 -- 1日に何回でも答えられてしまう）ため、NULLをダミーUUIDに正規化したgenerated column
 -- （child_key）を間に挟み、「全体」もふくめて確実に1日1回に揃える
 -- （2026-10-16、「兄弟の場合、1人分答えたらもう1人の分が答えられない」不具合の修正）。
+-- 「回答は会員登録なしでもできるが、結果グラフを見るには会員登録が必要」という設計
+-- （2026-10-16変更）のため、member_idはnullableにし、匿名の場合はconsultationsと同じ
+-- ブラウザ単位の匿名ID（lib/uid.ts、getUid()）をanon_uidに入れる。member_id・anon_uidの
+-- どちらか一方だけが入っていることをCHECK制約で保証し、匿名回答の1日1回はunique
+-- (anon_uid, answer_date)で防ぐ（member_idがNULLの行同士は会員側のunique制約には
+-- 引っかからないため、別立てのこの制約が必要）。
 create table if not exists daily_answers (
   id uuid primary key default gen_random_uuid(),
-  member_id uuid not null references members(id),
+  member_id uuid references members(id),
+  anon_uid text,
   child_id uuid references children(id) on delete set null,
   child_key uuid generated always as (coalesce(child_id, '00000000-0000-0000-0000-000000000000'::uuid)) stored,
   answer_date date not null,
   question_slug text not null,
   value text not null,
   created_at timestamptz not null default now(),
-  unique (member_id, answer_date, child_key)
+  constraint daily_answers_member_or_anon_ck check ((member_id is not null) <> (anon_uid is not null)),
+  unique (member_id, answer_date, child_key),
+  unique (anon_uid, answer_date)
 );
 alter table daily_answers enable row level security;
 

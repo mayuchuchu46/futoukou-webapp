@@ -2,29 +2,24 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { getUid } from '@/lib/uid';
 
 type QuestionChoice = { value: string; label: string };
 type Question = { slug: string; text: string; choices: QuestionChoice[] };
 
 // TOPページ（ホーム）に出す「みんなのデータ」の誘導カード（2026-10-16追加）。
-// 未ログインでも、質問と選べそうな選択肢チップを見せることで「押したくなる」
-// 状態を作り、実際に押すとログイン・無料登録へ誘導する設計にしている
-// （「ログインしてなくても回答押したくなるような設計にしたい」との要望を
-// 受けて変更。以前はログイン済みの時だけチップを出し、未ログイン時は
-// 「ログインしてください」という横1行バナーだけだったが、それだと
-// 「自分も答えたい」という気持ちを作れていなかった）。
-// 答え終わった（myAnswerがある）場合だけ、横1行のコンパクトなバナー
-// （.expertbanner流用）で/todayの結果グラフへ誘導する。
+// 回答自体は会員登録なしでもできる（/ask同様、ブラウザ単位の匿名ID＝getUid()を使う）。
+// 会員登録が必要なのは「本物の集計グラフを見る」ことだけなので、未ログインで答えた
+// 後は、ぼかしのグラフ＋会員登録への誘導を出す（2026-10-16、「回答は会員じゃなくても
+// できるが、閲覧は会員じゃないと見れない」設計への変更）。
 export default function TodayQuestionTeaser() {
-  const router = useRouter();
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [myAnswer, setMyAnswer] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetch('/api/daily-question')
+    fetch(`/api/daily-question?uid=${encodeURIComponent(getUid())}`)
       .then((r) => r.json())
       .then((d) => {
         setLoggedIn(!!d.loggedIn);
@@ -41,7 +36,7 @@ export default function TodayQuestionTeaser() {
       const res = await fetch('/api/daily-question', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ value, child_id: null }),
+        body: JSON.stringify({ value, child_id: null, uid: getUid() }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -55,22 +50,12 @@ export default function TodayQuestionTeaser() {
     }
   }
 
-  function handleChoiceClick(value: string) {
-    if (loggedIn) {
-      answer(value);
-    } else {
-      // 未ログインで選択肢をタップした＝回答する意思があるということなので、
-      // 「どうする先生とは」等を挟まず、ログイン・無料登録に直接誘導する。
-      router.push('/account/login?next=/today');
-    }
-  }
-
   if (!question || loggedIn === null) return null;
 
   const questionLabel = question.text.length > 30 ? `${question.text.slice(0, 30)}…` : question.text;
 
   // まだ回答していない場合（未ログイン・ログイン済みどちらも）、その場で選べそうな
-  // チップボタンを見せる。未ログインの場合は押すとログインへ誘導される。
+  // チップボタンを見せる。未ログインでも実際にその場で回答できる（会員登録不要）。
   if (!myAnswer) {
     return (
       <div className="card" style={{ gap: 8 }}>
@@ -85,7 +70,7 @@ export default function TodayQuestionTeaser() {
               type="button"
               className="chip chip-tag"
               disabled={submitting}
-              onClick={() => handleChoiceClick(c.value)}
+              onClick={() => answer(c.value)}
             >
               {c.label}
             </button>
@@ -93,23 +78,25 @@ export default function TodayQuestionTeaser() {
         </div>
         {!loggedIn && (
           <div className="muted" style={{ fontSize: 11 }}>
-            回答するには、ログイン・無料登録が必要です
+            会員登録すると、今日みんながどう答えているかの集計グラフが見られます
           </div>
         )}
       </div>
     );
   }
 
-  // 回答済みの場合は、横1行のコンパクトなバナーで/todayの結果グラフへ誘導する。
+  // 回答済みの場合は、横1行のコンパクトなバナーで/todayへ誘導する。会員なら本物の
+  // 集計グラフへ、未ログインならぼかしグラフ＋会員登録への誘導へ（/today側で分岐）。
   return (
     <Link href="/today" className="expertbanner expertbanner-today">
       <img src="/assets/icon_comment.png" alt="" className="expertbanner-icon" />
       <div className="expertbanner-body">
         <div className="expertbanner-title">{questionLabel}</div>
-        <div className="expertbanner-desc">回答済み・今日の集計を見る</div>
+        <div className="expertbanner-desc">{loggedIn ? '回答済み・今日の集計を見る' : '回答ありがとうございます'}</div>
       </div>
       {/* 実際の集計ではなく、横1行の高さに収まるミニ棒グラフの見本（ぼかし）。
-          本物のグラフは引き続き/todayで見られる。 */}
+          会員は/todayで本物のグラフが見られる。未ログインは/todayでも引き続き
+          ぼかし見本＋会員登録への誘導が出る。 */}
       <div className="expertbanner-today-graph" aria-hidden="true">
         <span style={{ height: '45%' }} />
         <span style={{ height: '85%', background: 'var(--main)' }} />

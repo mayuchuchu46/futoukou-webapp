@@ -6,15 +6,19 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { Child } from '@/lib/types';
+import { getUid } from '@/lib/uid';
 
 type QuestionChoice = { value: string; label: string };
 type Question = { slug: string; text: string; choices: QuestionChoice[] };
 type Aggregate = { total: number; counts: Record<string, number> };
 
 // 「みんなのデータ」ページ（2026-10-16追加）。AIの回答でよく出る「気づいたときにメモ
-// しておく」というアドバイスを、実際にサービス内でできるようにした会員限定機能。
-// 自由記述ではなく選択式の日替わりアンケートで、回答すると同日の全員の回答を
-// 集計したグラフが見られる（個別の回答は非公開、見られるのは本人と集計のみ）。
+// しておく」というアドバイスを、実際にサービス内でできるようにした機能。自由記述では
+// なく選択式の日替わりアンケートで、回答すると同日の全員の回答を集計したグラフが
+// 見られる（個別の回答は非公開、見られるのは本人と集計のみ）。
+// 回答は/ask（匿名相談）と同じブラウザ単位の匿名ID（getUid()）があれば会員登録なしでも
+// できるが、集計グラフ（本物の数字）は会員登録して初めて見られる（2026-10-16、
+// 「回答は会員じゃなくてもできるが、閲覧は会員じゃないと見れない」設計に変更）。
 export default function TodayPage() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [date, setDate] = useState('');
@@ -36,13 +40,16 @@ export default function TodayPage() {
   // 兄弟（複数の子どもプロフィール）がいる場合、それぞれ別に1日1回答えられるように
   // する（2026-10-16、「1人分答えたらもう1人の分が答えられない」不具合の修正）。
   // 選んでいる子ども（全体/子どもA/子どもB…）が変わるたびに、そのスコープの
-  // 質問・回答状況を取り直す。
+  // 質問・回答状況を取り直す（子ども切り替えは会員限定なので、未ログインでは
+  // selectedChildIdは常に空のまま）。
   useEffect(() => {
     let cancelled = false;
     setMyAnswer(null);
     setAggregate(null);
-    const qs = selectedChildId ? `?child_id=${encodeURIComponent(selectedChildId)}` : '';
-    fetch(`/api/daily-question${qs}`)
+    const params = new URLSearchParams();
+    if (selectedChildId) params.set('child_id', selectedChildId);
+    params.set('uid', getUid());
+    fetch(`/api/daily-question?${params.toString()}`)
       .then((r) => r.json())
       .then((d) => {
         if (cancelled) return;
@@ -68,7 +75,7 @@ export default function TodayPage() {
       const res = await fetch('/api/daily-question', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ value, child_id: selectedChildId || null }),
+        body: JSON.stringify({ value, child_id: selectedChildId || null, uid: getUid() }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
@@ -88,71 +95,19 @@ export default function TodayPage() {
         <div className="page-main">
           <h2 className="pagetitle">みんなのデータ</h2>
           <div className="muted" style={{ marginBottom: 12 }}>
-            毎日かわる簡単な質問に答えるだけの、選択式アンケートです。あなたの回答は非公開ですが、答えると「今日、みんなはどう答えているか」の集計が見られます。
+            毎日かわる簡単な質問に答えるだけの、選択式アンケートです。回答は会員登録なしでもできます。あなたの回答は非公開ですが、会員登録すると「今日、みんなはどう答えているか」の集計グラフが見られます。
           </div>
-
-          {/* 未ログイン時も、質問自体は見せて「どんな機能か」が伝わるようにする（2026-10-16、
-              「質問は出して、アンケート結果をぼかして会員登録に誘導したい」との要望を受けて
-              変更）。選択肢ボタンは押せない見本として表示し、結果グラフは実際の集計では
-              なくぼかした見本（本物のデータは答えた会員だけに見せる、という設計は維持）。
-              回答・結果閲覧には引き続き会員登録が必要。 */}
-          {loggedIn === false && question && (
-            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="muted" style={{ fontSize: 12 }}>{date}の質問</div>
-              <div className="answer-label" style={{ fontSize: 15 }}>{question.text}</div>
-
-              <div className="genderrow" style={{ opacity: 0.5, pointerEvents: 'none' }} aria-hidden="true">
-                {question.choices.map((c) => (
-                  <button key={c.value} type="button" className="genderbtn" disabled>
-                    {c.label}
-                  </button>
-                ))}
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-                <div className="muted" style={{ fontSize: 12 }}>今日の回答：ー件</div>
-                {question.choices.map((c, i) => (
-                  <div
-                    key={c.value}
-                    style={{ display: 'flex', flexDirection: 'column', gap: 3, filter: 'blur(5px)', userSelect: 'none' }}
-                    aria-hidden="true"
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-                      <span>{c.label}</span>
-                      <span className="muted">ーー件（ーー%）</span>
-                    </div>
-                    <div style={{ background: 'var(--border)', borderRadius: 6, height: 8, overflow: 'hidden' }}>
-                      <div
-                        style={{
-                          width: `${35 + ((i * 23) % 50)}%`,
-                          height: '100%',
-                          background: 'var(--sub)',
-                          borderRadius: 6,
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="qtext">ログイン・無料登録すると、この質問に回答して、今日みんながどう答えているかの集計グラフを見られます。</div>
-              <Link className="btn-primary" href="/account/login?next=/today">
-                ログイン / 無料登録
-              </Link>
-            </div>
-          )}
 
           {loggedIn === null && <div className="muted">読み込み中…</div>}
 
-          {loggedIn && question && (
+          {loggedIn !== null && question && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="muted" style={{ fontSize: 12 }}>{date}の質問</div>
               <div className="answer-label" style={{ fontSize: 15 }}>{question.text}</div>
 
-              {/* 以前は「まだ回答していない時だけ」表示していたが、それだと兄弟がいる場合に
-                  1人分答えた時点で切り替えタブごと消えてしまい、もう1人の分に切り替えられ
-                  なくなっていた（2026-10-16、不具合修正）。答えた後も切り替えられるよう、
-                  常に表示する。 */}
+              {/* 子ども切り替えタブは会員限定（childrenListは未ログインでは常に空）。
+                  答えた後も切り替えられるよう、常に表示する（2026-10-16、兄弟の
+                  不具合修正時に変更）。 */}
               {childrenList.length > 0 && (
                 <div className="chip-row chip-row-wrap">
                   <button
@@ -195,7 +150,7 @@ export default function TodayPage() {
                     あなたの回答：<strong>{question.choices.find((c) => c.value === myAnswer)?.label || myAnswer}</strong>
                   </div>
 
-                  {aggregate && (
+                  {aggregate ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
                       <div className="muted" style={{ fontSize: 12 }}>今日の回答：{aggregate.total}件</div>
                       {question.choices.map((c) => {
@@ -220,6 +175,39 @@ export default function TodayPage() {
                           </div>
                         );
                       })}
+                    </div>
+                  ) : (
+                    // 未ログインで回答済みの場合：本物の集計は見せず、ぼかした見本＋
+                    // 会員登録への誘導を出す（2026-10-16、「回答は会員じゃなくてもできるが、
+                    // 閲覧は会員じゃないと見れない」設計への変更）。
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
+                      <div className="muted" style={{ fontSize: 12 }}>今日の回答：ー件</div>
+                      {question.choices.map((c, i) => (
+                        <div
+                          key={c.value}
+                          style={{ display: 'flex', flexDirection: 'column', gap: 3, filter: 'blur(5px)', userSelect: 'none' }}
+                          aria-hidden="true"
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                            <span>{c.label}</span>
+                            <span className="muted">ーー件（ーー%）</span>
+                          </div>
+                          <div style={{ background: 'var(--border)', borderRadius: 6, height: 8, overflow: 'hidden' }}>
+                            <div
+                              style={{
+                                width: `${35 + ((i * 23) % 50)}%`,
+                                height: '100%',
+                                background: 'var(--sub)',
+                                borderRadius: 6,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      <div className="qtext">回答ありがとうございます。会員登録（無料）すると、今日みんながどう答えているかの集計グラフを見られます。</div>
+                      <Link className="btn-primary" href="/account/login?next=/today">
+                        ログイン / 無料登録
+                      </Link>
                     </div>
                   )}
                 </>
