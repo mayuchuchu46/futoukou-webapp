@@ -53,6 +53,31 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ ok: true, child: data });
 }
 
+export async function PATCH(req: NextRequest) {
+  const member = await getCurrentMember();
+  if (!member) return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 });
+
+  const { id, name, grade, gender } = await req.json();
+  if (!id || !name || !name.trim()) {
+    return NextResponse.json({ error: 'お名前（ニックネーム）を入力してください' }, { status: 400 });
+  }
+
+  const supabase = getSupabaseAdmin();
+  // 本人の子どもプロフィールであることを確認したうえで更新する（他人の分は更新できない）。
+  const { data, error } = await supabase
+    .from('children')
+    .update({ name: name.trim().slice(0, 30), grade: grade || null, gender: gender || null })
+    .eq('id', id)
+    .eq('member_id', member.id)
+    .select('id, name, grade, gender, created_at')
+    .single();
+
+  if (error || !data) {
+    return NextResponse.json({ error: error?.message || '更新できませんでした' }, { status: 500 });
+  }
+  return NextResponse.json({ ok: true, child: data });
+}
+
 export async function DELETE(req: NextRequest) {
   const member = await getCurrentMember();
   if (!member) return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 });

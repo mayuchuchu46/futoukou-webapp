@@ -21,6 +21,14 @@ export default function ChildrenPage() {
   const [error, setError] = useState('');
   const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  // 編集機能（2026-10-16追加）。「名前を間違えた」等に、削除して登録し直すのではなく
+  // その場で直せるようにする。1人ずつ、カードをインライン編集に切り替える方式。
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editGrade, setEditGrade] = useState('');
+  const [editGender, setEditGender] = useState('');
+  const [editSubmitting, setEditSubmitting] = useState(false);
+  const [editError, setEditError] = useState('');
 
   useEffect(() => {
     fetch('/api/me')
@@ -60,6 +68,35 @@ export default function ChildrenPage() {
     }
   }
 
+  function startEdit(c: Child) {
+    setEditingId(c.id);
+    setEditName(c.name);
+    setEditGrade(c.grade || '');
+    setEditGender(c.gender || '');
+    setEditError('');
+  }
+
+  async function saveEdit(id: string) {
+    if (!editName.trim() || editSubmitting) return;
+    setEditSubmitting(true);
+    setEditError('');
+    try {
+      const res = await fetch('/api/children', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, name: editName, grade: editGrade || null, gender: editGender || null }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || '失敗しました');
+      setChildren((list) => (list || []).map((c) => (c.id === id ? data.child : c)));
+      setEditingId(null);
+    } catch (e: unknown) {
+      setEditError(e instanceof Error ? e.message : 'エラーが発生しました');
+    } finally {
+      setEditSubmitting(false);
+    }
+  }
+
   async function deleteChild(id: string) {
     if (confirmingDeleteId !== id) {
       setConfirmingDeleteId(id);
@@ -89,6 +126,13 @@ export default function ChildrenPage() {
         <div className="muted" style={{ marginBottom: 4 }}>
           兄弟・姉妹それぞれで分析ノートを分けたい場合に使います。登録しなくても、今まで通りアカウント全体で1つのノートとして使えます。
         </div>
+        {/* 「名前が掲載されないか不安」との声を受けて、非公開であることを明記した
+            （2026-10-16追加）。ここで入力した名前は、ログイン中の本人だけが見る
+            画面（このページ・相談するページの選択欄・分析ノートの切り替えタブ）
+            にのみ使われ、「みんなの相談」等の公開ページには一切表示されない。 */}
+        <div className="muted" style={{ marginBottom: 12, fontSize: 12 }}>
+          ここで登録する名前は、ログイン中のご自身の画面にのみ表示されます。「みんなの相談」など、他の人が見られるページには一切表示されません。
+        </div>
 
         {loggedIn === false && (
           <div className="card" style={{ gap: 8 }}>
@@ -107,45 +151,91 @@ export default function ChildrenPage() {
               <div className="muted" style={{ marginBottom: 4 }}>まだ登録したお子さんはいません。</div>
             ) : (
               children.map((c) => (
-                <div
-                  key={c.id}
-                  className="card"
-                  style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}
-                >
-                  <div>
-                    <div style={{ fontWeight: 700 }}>{c.name}</div>
-                    {(c.grade || (c.gender && c.gender !== '回答しない')) && (
-                      <div className="muted" style={{ fontSize: 12 }}>
-                        {[c.grade, c.gender && c.gender !== '回答しない' ? c.gender : null].filter(Boolean).join('・')}
-                      </div>
-                    )}
-                  </div>
-                  {confirmingDeleteId === c.id ? (
-                    <span style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                      <span className="muted" style={{ fontSize: 12 }}>削除しますか？</span>
-                      <button
-                        onClick={() => deleteChild(c.id)}
-                        disabled={deletingId === c.id}
-                        style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, fontWeight: 700, color: '#C0392B', cursor: 'pointer' }}
-                      >
-                        {deletingId === c.id ? '削除中…' : '削除する'}
+                editingId === c.id ? (
+                  <div key={c.id} className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+                    <input
+                      className="input"
+                      placeholder="名前・ニックネーム"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      maxLength={30}
+                    />
+                    <div className="row" style={{ gap: 8, width: '100%' }}>
+                      <select className="input" value={editGrade} onChange={(e) => setEditGrade(e.target.value)} style={{ flex: 1 }}>
+                        <option value="">学年（任意）</option>
+                        {GRADE_OPTIONS.map((g) => (
+                          <option key={g} value={g}>{g}</option>
+                        ))}
+                      </select>
+                      <select className="input" value={editGender} onChange={(e) => setEditGender(e.target.value)} style={{ flex: 1 }}>
+                        <option value="">性別（任意）</option>
+                        {GENDER_OPTIONS.filter((g) => g !== '回答しない').map((g) => (
+                          <option key={g} value={g}>{g}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {editError && <div className="muted" style={{ color: '#C0392B', fontSize: 12 }}>{editError}</div>}
+                    <div style={{ display: 'flex', gap: 10 }}>
+                      <button className="btn-primary" disabled={!editName.trim() || editSubmitting} onClick={() => saveEdit(c.id)}>
+                        {editSubmitting ? '保存中…' : '保存する'}
                       </button>
                       <button
-                        onClick={() => setConfirmingDeleteId(null)}
-                        style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, color: 'var(--muted)', cursor: 'pointer' }}
+                        onClick={() => setEditingId(null)}
+                        style={{ background: 'none', border: 'none', padding: 0, fontSize: 13, color: 'var(--muted)', cursor: 'pointer' }}
                       >
                         キャンセル
                       </button>
-                    </span>
-                  ) : (
-                    <button
-                      onClick={() => deleteChild(c.id)}
-                      style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, color: 'var(--muted)', cursor: 'pointer' }}
-                    >
-                      削除
-                    </button>
-                  )}
-                </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    key={c.id}
+                    className="card"
+                    style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 700 }}>{c.name}</div>
+                      {(c.grade || (c.gender && c.gender !== '回答しない')) && (
+                        <div className="muted" style={{ fontSize: 12 }}>
+                          {[c.grade, c.gender && c.gender !== '回答しない' ? c.gender : null].filter(Boolean).join('・')}
+                        </div>
+                      )}
+                    </div>
+                    {confirmingDeleteId === c.id ? (
+                      <span style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                        <span className="muted" style={{ fontSize: 12 }}>削除しますか？</span>
+                        <button
+                          onClick={() => deleteChild(c.id)}
+                          disabled={deletingId === c.id}
+                          style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, fontWeight: 700, color: '#C0392B', cursor: 'pointer' }}
+                        >
+                          {deletingId === c.id ? '削除中…' : '削除する'}
+                        </button>
+                        <button
+                          onClick={() => setConfirmingDeleteId(null)}
+                          style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, color: 'var(--muted)', cursor: 'pointer' }}
+                        >
+                          キャンセル
+                        </button>
+                      </span>
+                    ) : (
+                      <span style={{ display: 'flex', gap: 14 }}>
+                        <button
+                          onClick={() => startEdit(c)}
+                          style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, color: 'var(--muted)', cursor: 'pointer' }}
+                        >
+                          編集
+                        </button>
+                        <button
+                          onClick={() => deleteChild(c.id)}
+                          style={{ background: 'none', border: 'none', padding: 0, fontSize: 12, color: 'var(--muted)', cursor: 'pointer' }}
+                        >
+                          削除
+                        </button>
+                      </span>
+                    )}
+                  </div>
+                )
               ))
             )}
 
