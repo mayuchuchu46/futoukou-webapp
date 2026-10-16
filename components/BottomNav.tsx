@@ -13,9 +13,9 @@ const ITEMS = [
   // 伴走ノートは独立したタブにして常時アクセスできるようにする（元はマイページ内のカードだった）。
   // アイコンはノートを連想させるicon_book、マイページは元のicon_bookmarkに戻す。
   { href: '/notebook', label: '伴走ノート', icon: '/assets/icon_book.png' },
-  // 「今日の質問」タブ（2026-10-16追加）。「日常の中でふと気づいた時にメモする」流れに
+  // 「みんなのデータ」タブ（2026-10-16追加）。「日常の中でふと気づいた時にメモする」流れに
   // 合うよう、伴走ノートの中に埋め込むのではなく常時アクセスできる独立タブにした。
-  { href: '/today', label: '今日の質問', icon: '/assets/icon_comment.png' },
+  { href: '/today', label: 'みんなのデータ', icon: '/assets/icon_comment.png' },
   { href: '/mypage', label: 'マイページ', icon: '/assets/icon_bookmark.png' },
 ];
 

@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { getTodaysQuestion } from '@/lib/dailyQuestions';
 
-// 「今日の質問」機能のAPI（2026-10-16追加）。「気づいたときにメモしておく」という
+// 「みんなのデータ」機能のAPI（2026-10-16追加）。「気づいたときにメモしておく」という
 // AIの回答アドバイスを、サービス内の選択式アンケートとして実際にできるようにしたもの。
 // 個別の回答は本人専用（他の会員には見せない）で、公開するのは「今日はみんなどう
 // 答えているか」という同日・同質問の集計のみ。かつ、その集計も「自分がまだ今日答えて

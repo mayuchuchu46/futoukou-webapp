@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildSummaryPrompt, SummaryConsultation } from '@/lib/prompt';
+import { findQuestionBySlug } from '@/lib/dailyQuestions';
 
 export type MemberSummary = {
   statusSummary: string;
@@ -24,6 +25,9 @@ type CachedRow = {
   // undefined/nullになる。その場合はfalse扱いにせず「不明」として安全側＝
   // 強制再生成（キャッシュ不一致）に倒す（下記の比較処理を参照）。
   crisis_override?: boolean | null;
+  // 「みんなのデータ」（daily_answers）の回答件数（2026-10-16追加）。古いキャッシュ行には
+  // 無いためundefined/nullになり、その場合は0扱いにする（下記fromCachedRow参照）。
+  daily_answer_count?: number | null;
 };
 
 function fromCachedRow(cached: CachedRow, consultationCount?: number): MemberSummary {
@@ -50,15 +54,38 @@ type SummaryScope =
   | { kind: 'child'; id: string };
 
 function scopeConfig(scope: SummaryScope) {
+  // daily_answersテーブルもconsultationsと同じくmember_id/child_idの両列を持つため、
+  // 絞り込みに使う列名はconsultationColumnと共通（dailyAnswerColumnという別名でも
+  // 同じ値を指すだけ）。
   if (scope.kind === 'member') {
-    return { table: 'member_summaries', idColumn: 'member_id', consultationColumn: 'member_id' as const };
+    return {
+      table: 'member_summaries',
+      idColumn: 'member_id',
+      consultationColumn: 'member_id' as const,
+      dailyAnswerColumn: 'member_id' as const,
+    };
   }
-  return { table: 'child_summaries', idColumn: 'child_id', consultationColumn: 'child_id' as const };
+  return {
+    table: 'child_summaries',
+    idColumn: 'child_id',
+    consultationColumn: 'child_id' as const,
+    dailyAnswerColumn: 'child_id' as const,
+  };
+}
+
+// daily_answersの1行を、AIサマリー用の読みやすい1行テキストに変換する。
+// 質問文そのものだと長くなりがちなため、選択肢のラベル（回答内容）を日付と並べる形にする。
+function formatDailyAnswerLine(row: { answer_date: string; question_slug: string; value: string }): string | null {
+  const question = findQuestionBySlug(row.question_slug);
+  if (!question) return null;
+  const choice = question.choices.find((c) => c.value === row.value);
+  const label = choice ? choice.label : row.value;
+  return `- ${row.answer_date}：${question.text}→${label}`;
 }
 
 async function getOrGenerateSummary(scope: SummaryScope): Promise<MemberSummary | null> {
   const supabase = getSupabaseAdmin();
-  const { table, idColumn, consultationColumn } = scopeConfig(scope);
+  const { table, idColumn, consultationColumn, dailyAnswerColumn } = scopeConfig(scope);
 
   const { count } = await supabase
     .from('consultations')
@@ -71,10 +98,26 @@ async function getOrGenerateSummary(scope: SummaryScope): Promise<MemberSummary 
   const { data: cached } = await supabase
     .from(table)
     .select(
-      'status_summary, advice, phrasing_suggestion, environment_suggestion, school_fit_points, consultation_count, generated_at, crisis_override'
+      'status_summary, advice, phrasing_suggestion, environment_suggestion, school_fit_points, consultation_count, generated_at, crisis_override, daily_answer_count'
     )
     .eq(idColumn, scope.id)
     .single();
+
+  // 「みんなのデータ」（daily_answers）の回答も伴走ノートに取り込む（2026-10-16追加。
+  // 「メモするほど伴走ノートが充実する」という要望）。直近20件を新しい順で取得し、
+  // 件数をキャッシュ再生成の判定にも使う（相談件数が変わらなくても、新しい日々の
+  // 回答が増えていれば再生成する）。
+  const DAILY_ANSWER_LIMIT = 20;
+  const { data: dailyAnswerRows, count: dailyAnswerTotal } = await supabase
+    .from('daily_answers')
+    .select('answer_date, question_slug, value', { count: 'exact' })
+    .eq(dailyAnswerColumn, scope.id)
+    .order('answer_date', { ascending: false })
+    .limit(DAILY_ANSWER_LIMIT);
+  const dailyAnswerCount = dailyAnswerTotal || 0;
+  const dailyAnswerLines = (dailyAnswerRows || [])
+    .map(formatDailyAnswerLine)
+    .filter((l): l is string => !!l);
 
   // 「一度希死念慮系の相談をしたら、ずっと同じ内容（専門窓口案内だけ）が表示されて
   // 更新されない」との指摘を受けて追加（2026-10-16）。直近（新しい順で先頭）3件の中に
@@ -96,7 +139,8 @@ async function getOrGenerateSummary(scope: SummaryScope): Promise<MemberSummary 
   if (
     cached &&
     cached.consultation_count === consultationCount &&
-    !!(cached as CachedRow).crisis_override === forceCrisisOverride
+    !!(cached as CachedRow).crisis_override === forceCrisisOverride &&
+    ((cached as CachedRow).daily_answer_count || 0) === dailyAnswerCount
   ) {
     return fromCachedRow(cached as CachedRow, consultationCount);
   }
@@ -118,7 +162,7 @@ async function getOrGenerateSummary(scope: SummaryScope): Promise<MemberSummary 
   if (!rows || rows.length === 0) return null;
 
   const history = rows as SummaryConsultation[];
-  const prompt = buildSummaryPrompt(history, forceCrisisOverride);
+  const prompt = buildSummaryPrompt(history, forceCrisisOverride, dailyAnswerLines);
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   let statusSummary = '';
@@ -165,6 +209,7 @@ async function getOrGenerateSummary(scope: SummaryScope): Promise<MemberSummary 
     school_fit_points: schoolFitPoints,
     consultation_count: consultationCount,
     crisis_override: forceCrisisOverride,
+    daily_answer_count: dailyAnswerCount,
     generated_at: generatedAt,
   });
 

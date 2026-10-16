@@ -40,7 +40,7 @@
 --   generated_at timestamptz not null default now()
 -- );
 -- alter table child_summaries enable row level security;
--- 「今日の質問」機能（日替わりの簡単なアンケートに会員が答え、同日の回答者全体の
+-- 「みんなのデータ」機能（日替わりの簡単なアンケートに会員が答え、同日の回答者全体の
 -- 集計グラフだけを見られる。個別の回答は非公開）を追加した場合（2026-10-16追加）、
 -- 既存DBでは次を実行してください。
 -- create table if not exists daily_answers (
@@ -55,6 +55,11 @@
 -- );
 -- alter table daily_answers enable row level security;
 -- create index if not exists daily_answers_date_question_idx on daily_answers (answer_date, question_slug);
+-- 伴走ノートのAIサマリーが「みんなのデータ」の回答も材料として読み込むようにした場合
+-- （2026-10-16追加、「メモするほど伴走ノートが充実する」を実現するため）、
+-- 既存DBでは次を実行してください。
+-- alter table member_summaries add column if not exists daily_answer_count int not null default 0;
+-- alter table child_summaries add column if not exists daily_answer_count int not null default 0;
 -- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
 -- （2026-10-13追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists review_status text not null default 'pending';
@@ -397,7 +402,7 @@ alter table children enable row level security;
 
 create index if not exists children_member_id_idx on children (member_id);
 
--- 「今日の質問」機能（2026-10-16追加）。日替わりの簡単なアンケート（起床時間・
+-- 「みんなのデータ」機能（2026-10-16追加）。日替わりの簡単なアンケート（起床時間・
 -- 朝ごはん等、lib/dailyQuestions.ts参照）に会員が答える。質問は1日1問しか出ないため
 -- (member_id, answer_date)で1日1回answer_dateが答えた日の日付（JSTのその日）。
 -- 個別の回答は本人専用（伴走ノートの材料にする想定）で、他の会員には公開しない。
@@ -507,6 +512,10 @@ create table if not exists member_summaries (
   school_fit_points text not null default '',
   consultation_count int not null default 0,
   crisis_override boolean not null default false,
+  -- 「みんなのデータ」（daily_answers）の回答件数も、相談件数と同じ仕組みでサマリーの
+  -- 再生成トリガーに使う（2026-10-16追加。メモするほど伴走ノートが充実する、という
+  -- 狙いを実現するため）。生成時点での件数を記録し、増えていれば再生成する。
+  daily_answer_count int not null default 0,
   generated_at timestamptz not null default now()
 );
 alter table member_summaries enable row level security;
@@ -525,6 +534,7 @@ create table if not exists child_summaries (
   school_fit_points text not null default '',
   consultation_count int not null default 0,
   crisis_override boolean not null default false,
+  daily_answer_count int not null default 0,
   generated_at timestamptz not null default now()
 );
 alter table child_summaries enable row level security;

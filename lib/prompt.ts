@@ -178,7 +178,11 @@ export type SummaryConsultation = PastConsultation & { answer?: string };
 // consultations.crisis_detected列を見て「直近の相談で安全上書きが実際に発動したか」を
 // コードで判定し、その結果（forceCrisisOverride）をそのままプロンプトに渡す方式に変更。
 // 古い相談が履歴に含まれていても、直近の相談が落ち着いていれば通常の内容に戻る。
-export function buildSummaryPrompt(history: SummaryConsultation[], forceCrisisOverride: boolean): string {
+export function buildSummaryPrompt(
+  history: SummaryConsultation[],
+  forceCrisisOverride: boolean,
+  dailyAnswerLines?: string[]
+): string {
   const recent = history.slice(0, MAX_SUMMARY_ITEMS);
   const lines = recent.map((h) => {
     const label = CATS[h.category]?.label || h.category;
@@ -187,6 +191,16 @@ export function buildSummaryPrompt(history: SummaryConsultation[], forceCrisisOv
       s.length > SUMMARY_QA_MAX_CHARS ? s.slice(0, SUMMARY_QA_MAX_CHARS) + '…' : s;
     return `- （${date}・${label}）相談：${trim(h.question)}${h.answer ? `／回答：${trim(h.answer)}` : ''}`;
   });
+
+  // 「みんなのデータ」（日替わりの選択式アンケート、lib/dailyQuestions.ts参照）の回答履歴。
+  // 「メモするほど伴走ノートが充実する」との要望を受けて追加（2026-10-16）。相談のように
+  // 文章で悩みを書いたものではなく、起床時間や様子などの簡単な記録だが、複数日分まとめて
+  // 見ると生活リズムや様子の変化のパターンが見えることがあるため、相談履歴と合わせて
+  // AIに読ませる。
+  const dailySection =
+    dailyAnswerLines && dailyAnswerLines.length > 0
+      ? `\n\n【日々の記録（選択式アンケートの回答、新しい順）】\n${dailyAnswerLines.join('\n')}`
+      : '';
 
   return `あなたは「どうする先生」という、不登校の子を持つ保護者向けAI相談キャラクターです。
 以下は、ある会員の方がこれまでに行った相談（質問と、どうする先生の回答）の履歴です。
@@ -200,11 +214,17 @@ export function buildSummaryPrompt(history: SummaryConsultation[], forceCrisisOv
 
 【相談履歴（新しい順）】
 ${lines.join('\n')}
+${dailySection}
 
 共通ルール：
 - 断定的な医学的・心理学的診断はしない。あくまで「〜の可能性がある」「〜という傾向がうかがえる」程度の、可能性レベルの整理にとどめる
 - adviceやphrasing_suggestion等の提案は、「〜しましょう」「〜してください」のような言い切り・命令形を避け、「〜という方法もあります」のように選択肢の一つとして提案する言い方にすること（最終判断は保護者自身に委ねる姿勢を文面ににじませる）
 - 複数の相談から共通して見えてくる傾向や変化があれば、それを中心に整理する（単発の内容の繰り返しにしない）
+${
+  dailySection
+    ? '- 【日々の記録】は自由記述の相談ではなく、簡単な選択式アンケートの結果である。1日分だけの結果を過度に重視せず、複数日分から見える傾向（例：生活リズムの変化、学校や将来の話をする頻度など）があれば、相談履歴の内容と合わせて参考にする程度に扱うこと（日々の記録だけを理由に断定的な結論を出さない）'
+    : ''
+}
 - phrasing_suggestion・environment_suggestion・school_fit_pointsは、実在しない学校名・制度名・サービス名を一切挙げない（具体的な学校や制度の推薦ではなく、見学・比較のときに確認すると良い一般的な観点の提案にとどめる。これは実在の学校データを扱える段階になるまでの暫定版であるため厳守すること）
 ${
   forceCrisisOverride

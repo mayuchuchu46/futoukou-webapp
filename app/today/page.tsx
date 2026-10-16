@@ -11,7 +11,7 @@ type QuestionChoice = { value: string; label: string };
 type Question = { slug: string; text: string; choices: QuestionChoice[] };
 type Aggregate = { total: number; counts: Record<string, number> };
 
-// 「今日の質問」ページ（2026-10-16追加）。AIの回答でよく出る「気づいたときにメモ
+// 「みんなのデータ」ページ（2026-10-16追加）。AIの回答でよく出る「気づいたときにメモ
 // しておく」というアドバイスを、実際にサービス内でできるようにした会員限定機能。
 // 自由記述ではなく選択式の日替わりアンケートで、回答すると同日の全員の回答を
 // 集計したグラフが見られる（個別の回答は非公開、見られるのは本人と集計のみ）。
@@ -69,14 +69,14 @@ export default function TodayPage() {
       <Header supervised={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <h2 className="pagetitle">今日の質問</h2>
+          <h2 className="pagetitle">みんなのデータ</h2>
           <div className="muted" style={{ marginBottom: 12 }}>
             毎日かわる簡単な質問に答えるだけの、選択式アンケートです。あなたの回答は非公開ですが、答えると「今日、みんなはどう答えているか」の集計が見られます。
           </div>
 
           {loggedIn === false && (
             <div className="card" style={{ gap: 8 }}>
-              <div className="qtext">今日の質問に答えるには、ログインが必要です。</div>
+              <div className="qtext">みんなのデータを見る・質問に答えるには、ログインが必要です。</div>
               <Link className="btn-primary" href="/account/login?next=/today">
                 ログイン / 無料登録
               </Link>

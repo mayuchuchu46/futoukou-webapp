@@ -1,4 +1,4 @@
-// 「今日の質問」機能（2026-10-16追加）。「気づいたときにメモしておく」という
+// 「みんなのデータ」機能（2026-10-16追加）。「気づいたときにメモしておく」という
 // AIの回答でよく出るアドバイスを、実際にサービス内でできるようにしたもの。自由記述の
 // メモだと個人情報混入のリスクや、みんなで集計してグラフにする難しさがあるため、
 // 選択式の日替わりアンケートにした。質問は曜日や個人設定に関わらず、JSTの「今日」の
@@ -82,6 +82,107 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
       { value: 'unknown', label: '分からない' },
     ],
   },
+  {
+    slug: 'got_dressed',
+    text: '今日、お子さんはパジャマから着替えましたか？',
+    choices: [
+      { value: 'yes', label: '着替えた' },
+      { value: 'no', label: '着替えなかった' },
+      { value: 'unknown', label: '分からない' },
+    ],
+  },
+  {
+    slug: 'friend_contact',
+    text: '今日、お子さんは友達と連絡を取ったり遊んだりしましたか（オンライン含む）？',
+    choices: [
+      { value: 'yes', label: 'あった' },
+      { value: 'no', label: 'なかった' },
+      { value: 'unknown', label: '分からない' },
+    ],
+  },
+  {
+    slug: 'enjoyed_something',
+    text: '今日、お子さんが好きなこと・楽しいことをしている時間はありましたか？',
+    choices: [
+      { value: 'yes', label: 'あった' },
+      { value: 'no', label: 'なかった' },
+    ],
+  },
+  {
+    slug: 'physical_complaint',
+    text: '今日、お子さんから体調についての訴え（頭痛・腹痛など）はありましたか？',
+    choices: [
+      { value: 'yes', label: 'あった' },
+      { value: 'no', label: 'なかった' },
+    ],
+  },
+  {
+    slug: 'family_meal',
+    text: '今日、家族そろって食事をする時間はありましたか？',
+    choices: [
+      { value: 'yes', label: 'あった' },
+      { value: 'no', label: 'なかった' },
+    ],
+  },
+  {
+    slug: 'helped_chores',
+    text: '今日、お子さんは家のことを何か手伝いましたか？',
+    choices: [
+      { value: 'yes', label: '手伝った' },
+      { value: 'no', label: '手伝わなかった' },
+    ],
+  },
+  {
+    slug: 'laughed',
+    text: '今日、お子さんが笑う・楽しそうにする場面はありましたか？',
+    choices: [
+      { value: 'yes', label: 'あった' },
+      { value: 'no', label: 'なかった' },
+      { value: 'unknown', label: '分からない' },
+    ],
+  },
+  {
+    slug: 'new_interest',
+    text: '今日、お子さんが何か新しいことに興味を示しましたか？',
+    choices: [
+      { value: 'yes', label: 'あった' },
+      { value: 'no', label: 'なかった' },
+    ],
+  },
+  {
+    slug: 'routine_change',
+    text: '今日のお子さんの一日の過ごし方は、ここ最近といつも通りでしたか？',
+    choices: [
+      { value: 'usual', label: 'いつも通り' },
+      { value: 'a_little', label: '少し違った' },
+      { value: 'very', label: 'かなり違った' },
+    ],
+  },
+  {
+    slug: 'parent_condition',
+    text: 'あなた自身は今日、どちらかというと？',
+    choices: [
+      { value: 'calm', label: '落ち着いていた' },
+      { value: 'mixed', label: '半々くらいだった' },
+      { value: 'stressed', label: '余裕がなかった' },
+    ],
+  },
+  {
+    slug: 'parent_talked_to_someone',
+    text: 'あなたは今日、この状況について誰かに話しましたか（家族・友人・相談窓口など）？',
+    choices: [
+      { value: 'yes', label: '話した' },
+      { value: 'no', label: '話さなかった' },
+    ],
+  },
+  {
+    slug: 'parent_hope_moment',
+    text: '今日、少しでも「大丈夫かも」と思える瞬間はありましたか？',
+    choices: [
+      { value: 'yes', label: 'あった' },
+      { value: 'no', label: 'なかった' },
+    ],
+  },
 ];
 
 // JSTでの「今日」をYYYY-MM-DD文字列で返す（Vercelのサーバー自体はUTC動作のため、
@@ -93,7 +194,7 @@ export function todayJstDateString(): string {
 
 // JSTの通算日数（year*366+dayOfYear相当の単純な値でよく、厳密な連番でなくても
 // 「日によって一意に決まり、毎日1ずつ進む」ことだけ満たせればローテーションとして機能する）
-// をもとに、今日の質問を1つ決める。
+// をもとに、今日出す質問を1つ決める。
 function jstDayIndex(dateStr: string): number {
   // dateStrは 'YYYY-MM-DD'。UTC固定でDateを作ることで、環境によるタイムゾーンのズレを防ぐ。
   const ms = new Date(`${dateStr}T00:00:00Z`).getTime();
