@@ -36,18 +36,22 @@ export default function TodayQuestionTeaser() {
         ? '回答済み・今日の集計を見る'
         : '今日の質問に答える';
 
-  const questionLabel = question.text.length > 26 ? `${question.text.slice(0, 26)}…` : question.text;
+  // 「『みんなのデータ』というテキストはいらない、質問だけ出して」との要望を受けて
+  // タイトルは質問文そのものにした（2026-10-16）。機能名はアイコン（吹き出し2つ）で
+  // 示す。
+  const questionLabel = question.text.length > 30 ? `${question.text.slice(0, 30)}…` : question.text;
 
   return (
     <Link href="/today" className="expertbanner expertbanner-today">
       <img src="/assets/icon_comment.png" alt="" className="expertbanner-icon" />
       <div className="expertbanner-body">
-        <div className="expertbanner-title">みんなのデータ：{questionLabel}</div>
+        <div className="expertbanner-title">{questionLabel}</div>
         <div className="expertbanner-desc">{statusText}</div>
       </div>
-      {/* 「ぼかしグラフも小さく出したい」との要望を受けて追加（2026-10-16）。
-          実際の集計ではなく、横1行の高さに収まるミニ棒グラフの見本（ぼかし）。
-          本物のグラフは引き続き/todayで、答えた人だけに見せる。 */}
+      {/* 「ぼかしグラフも小さく出したい」→「もうちょい大きく」との要望を受けて
+          サイズ調整（2026-10-16）。実際の集計ではなく、横1行の高さに収まるミニ棒
+          グラフの見本（ぼかし）。本物のグラフは引き続き/todayで、答えた人だけに
+          見せる。 */}
       <div className="expertbanner-today-graph" aria-hidden="true">
         <span style={{ height: '45%' }} />
         <span style={{ height: '85%', background: 'var(--main)' }} />
