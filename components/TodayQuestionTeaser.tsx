@@ -56,6 +56,9 @@ export default function TodayQuestionTeaser() {
 
   // まだ回答していない場合（未ログイン・ログイン済みどちらも）、その場で選べそうな
   // チップボタンを見せる。未ログインでも実際にその場で回答できる（会員登録不要）。
+  // 未ログインの場合は、テキストでの説明ではなく、ぼかしのミニグラフ（登録すると
+  // 見られる本物の集計の予告）だけを添える（2026-10-16、文言を外して視覚的な
+  // 誘導に変更）。
   if (!myAnswer) {
     return (
       <div className="card" style={{ gap: 8 }}>
@@ -77,8 +80,10 @@ export default function TodayQuestionTeaser() {
           ))}
         </div>
         {!loggedIn && (
-          <div className="muted" style={{ fontSize: 11 }}>
-            会員登録すると、今日みんながどう答えているかの集計グラフが見られます
+          <div className="expertbanner-today-graph" aria-hidden="true">
+            <span style={{ height: '45%' }} />
+            <span style={{ height: '85%', background: 'var(--main)' }} />
+            <span style={{ height: '60%' }} />
           </div>
         )}
       </div>
