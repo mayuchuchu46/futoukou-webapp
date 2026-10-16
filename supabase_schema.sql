@@ -40,6 +40,21 @@
 --   generated_at timestamptz not null default now()
 -- );
 -- alter table child_summaries enable row level security;
+-- 「今日の質問」機能（日替わりの簡単なアンケートに会員が答え、同日の回答者全体の
+-- 集計グラフだけを見られる。個別の回答は非公開）を追加した場合（2026-10-16追加）、
+-- 既存DBでは次を実行してください。
+-- create table if not exists daily_answers (
+--   id uuid primary key default gen_random_uuid(),
+--   member_id uuid not null references members(id),
+--   child_id uuid references children(id) on delete set null,
+--   answer_date date not null,
+--   question_slug text not null,
+--   value text not null,
+--   created_at timestamptz not null default now(),
+--   unique (member_id, answer_date)
+-- );
+-- alter table daily_answers enable row level security;
+-- create index if not exists daily_answers_date_question_idx on daily_answers (answer_date, question_slug);
 -- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
 -- （2026-10-13追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists review_status text not null default 'pending';
@@ -381,6 +396,26 @@ create table if not exists children (
 alter table children enable row level security;
 
 create index if not exists children_member_id_idx on children (member_id);
+
+-- 「今日の質問」機能（2026-10-16追加）。日替わりの簡単なアンケート（起床時間・
+-- 朝ごはん等、lib/dailyQuestions.ts参照）に会員が答える。質問は1日1問しか出ないため
+-- (member_id, answer_date)で1日1回answer_dateが答えた日の日付（JSTのその日）。
+-- 個別の回答は本人専用（伴走ノートの材料にする想定）で、他の会員には公開しない。
+-- 公開するのは「今日はみんなどう答えているか」という同日・同質問の集計のみ
+-- （app/api/daily-question/route.ts参照）。
+create table if not exists daily_answers (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id),
+  child_id uuid references children(id) on delete set null,
+  answer_date date not null,
+  question_slug text not null,
+  value text not null,
+  created_at timestamptz not null default now(),
+  unique (member_id, answer_date)
+);
+alter table daily_answers enable row level security;
+
+create index if not exists daily_answers_date_question_idx on daily_answers (answer_date, question_slug);
 
 -- 専門家への質問チケットパック（¥3000で6回分）の購入履歴。Stripeチェックアウトの
 -- session_idを主キーにすることで、確認エンドポイントが何度呼ばれてもチケットが
