@@ -18,15 +18,26 @@ type FollowupItem = {
 // （lib/consultations.ts参照）。
 export default function FollowupThread({
   parentId,
+  authorId,
   initialFollowups,
 }: {
   parentId: string;
+  authorId: string;
   initialFollowups: FollowupItem[];
 }) {
   const [items, setItems] = useState<FollowupItem[]>(initialFollowups);
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  // 「他人の質問回答に、続けて質問が出てくるのは変」との指摘を受けて追加
+  // （2026-10-16）。返信（ラリー）は元の相談を書いた本人（同じブラウザ・端末）だけが
+  // 続けられる機能で、/api/consult-followup側でも本人確認（author_id一致）を
+  // 行っているため、他人には入力欄・ボタンを出さない。やりとり自体は相談の一部として
+  // 既に公開されている内容なので、他人にも閲覧はできるが、返信できるのは本人のみ。
+  const isOwner = getUid() === authorId;
+
+  if (!isOwner && items.length === 0) return null;
 
   async function submit() {
     if (!text.trim() || submitting) return;
@@ -51,30 +62,36 @@ export default function FollowupThread({
 
   return (
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-      <div className="answer-label" style={{ fontSize: 14 }}>この回答について、続けて話す</div>
+      <div className="answer-label" style={{ fontSize: 14 }}>
+        {isOwner ? 'この回答について、続けて話す' : '続けてのやりとり'}
+      </div>
 
       {items.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
           {items.map((f) => (
             <div key={f.id} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <div className="qtext" style={{ fontSize: 13, fontWeight: 700 }}>あなた：{f.question}</div>
+              <div className="qtext" style={{ fontSize: 13, fontWeight: 700 }}>{isOwner ? 'あなた' : '相談者'}：{f.question}</div>
               <div className="qtext" style={{ fontSize: 13, whiteSpace: 'pre-wrap' }}>どうする先生：{f.answer}</div>
             </div>
           ))}
         </div>
       )}
 
-      <textarea
-        className="input"
-        rows={3}
-        placeholder="この回答への返信・言いたいことを書いてください"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      {error && <div className="muted" style={{ color: '#C0392B', fontSize: 12 }}>{error}</div>}
-      <button className="btn-secondary" disabled={!text.trim() || submitting} onClick={submit}>
-        {submitting ? 'どうする先生が考えています…' : 'この内容で返信する'}
-      </button>
+      {isOwner && (
+        <>
+          <textarea
+            className="input"
+            rows={3}
+            placeholder="この回答への返信・言いたいことを書いてください"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          {error && <div className="muted" style={{ color: '#C0392B', fontSize: 12 }}>{error}</div>}
+          <button className="btn-secondary" disabled={!text.trim() || submitting} onClick={submit}>
+            {submitting ? 'どうする先生が考えています…' : 'この内容で返信する'}
+          </button>
+        </>
+      )}
     </div>
   );
 }

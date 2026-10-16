@@ -421,7 +421,7 @@ export default async function ResultPage({
             </div>
 
             {!isCrisis && (
-              <FollowupThread parentId={item.id} initialFollowups={followups} />
+              <FollowupThread parentId={item.id} authorId={item.author_id} initialFollowups={followups} />
             )}
 
             {isCrisis ? (
