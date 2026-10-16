@@ -151,6 +151,19 @@ export default async function AboutPage() {
           すでに登録済みの専門家の方はこちらからログイン →
         </Link>
 
+        {/* 「使い方などのQ&Aいるかな？」との相談を受けて、匿名性・料金・退会など
+            「使う前の不安」に答える/faqを別途作成し、ここから導線を張った
+            （2026-10-16追加）。 */}
+        <Link href="/faq" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>よくあるご質問</div>
+          <div className="qtext">
+            匿名で使えるか、料金はどこから有料か、子どものプロフィールとは何か、退会はできるかなど、よくいただくご質問にお答えしています。
+          </div>
+          <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+            よくあるご質問へ ›
+          </div>
+        </Link>
+
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>大切なお願い</div>
           <div className="qtext">
