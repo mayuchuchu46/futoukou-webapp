@@ -45,6 +45,14 @@ export default function TodayQuestionTeaser() {
         <div className="expertbanner-title">みんなのデータ：{questionLabel}</div>
         <div className="expertbanner-desc">{statusText}</div>
       </div>
+      {/* 「ぼかしグラフも小さく出したい」との要望を受けて追加（2026-10-16）。
+          実際の集計ではなく、横1行の高さに収まるミニ棒グラフの見本（ぼかし）。
+          本物のグラフは引き続き/todayで、答えた人だけに見せる。 */}
+      <div className="expertbanner-today-graph" aria-hidden="true">
+        <span style={{ height: '45%' }} />
+        <span style={{ height: '85%', background: 'var(--main)' }} />
+        <span style={{ height: '60%' }} />
+      </div>
       <span className="expertbanner-cta">›</span>
     </Link>
   );

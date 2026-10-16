@@ -395,6 +395,10 @@ h2.pagetitle {
 .expertbanner-today { border-color: var(--main); text-decoration: none; }
 .expertbanner-today .expertbanner-title,
 .expertbanner-today .expertbanner-cta { color: var(--main); }
+/* バナー内に小さく収めるぼかしミニグラフ（2026-10-16追加）。行の高さに収まる
+   棒3本だけの見本で、実際の集計ではない（本物は/todayで答えた人だけに見せる）。 */
+.expertbanner-today-graph { flex: 0 0 auto; display: flex; align-items: flex-end; gap: 2px; width: 26px; height: 22px; filter: blur(2px); opacity: 0.75; }
+.expertbanner-today-graph span { flex: 1; background: var(--sub); border-radius: 2px; }
 
 /* 一覧の並び替え・「専門家回答のみ」絞り込みタブ（2026-10-15）。
    当初は「並び替えチップ（単一選択）」＋「専門家回答のみ（独立ON/OFF）」の
