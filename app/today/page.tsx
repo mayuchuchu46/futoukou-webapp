@@ -11,6 +11,7 @@ import { getUid } from '@/lib/uid';
 type QuestionChoice = { value: string; label: string };
 type Question = { slug: string; text: string; choices: QuestionChoice[] };
 type Aggregate = { total: number; counts: Record<string, number> };
+type HistoryQuestion = { slug: string; text: string; choices: QuestionChoice[]; aggregate: Aggregate | null };
 
 // 「みんなのデータ」ページ（2026-10-16追加）。AIの回答でよく出る「気づいたときにメモ
 // しておく」というアドバイスを、実際にサービス内でできるようにした機能。自由記述では
@@ -22,6 +23,9 @@ type Aggregate = { total: number; counts: Record<string, number> };
 // 回答は/ask（匿名相談）と同じブラウザ単位の匿名ID（getUid()）があれば会員登録なしでも
 // できるが、集計グラフ（本物の数字）は会員登録して初めて見られる（2026-10-16、
 // 「回答は会員じゃなくてもできるが、閲覧は会員じゃないと見れない」設計に変更）。
+// 普段表示されるのは質問バンク19問のうち今日の1問だけだが、「過去の質問データも
+// 見れるといい」との要望を受けて、ページ下部に全問＋累計集計の一覧（折りたたみ式）も
+// 出している（2026-10-17、/api/daily-question/history参照）。
 export default function TodayPage() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [date, setDate] = useState('');
@@ -32,12 +36,24 @@ export default function TodayPage() {
   const [selectedChildId, setSelectedChildId] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  // 過去の質問一覧（2026-10-17追加）。「過去の質問データも見れるといい」との要望を
+  // 受けて、質問バンク全19問それぞれの累計集計を/api/daily-question/historyから
+  // まとめて取得する。子ども切り替えとは無関係（サイト全体の集計のため、
+  // selectedChildIdが変わっても取り直さない）。
+  const [history, setHistory] = useState<HistoryQuestion[] | null>(null);
 
   useEffect(() => {
     fetch('/api/children')
       .then((r) => r.json())
       .then((d) => setChildrenList(d.children || []))
       .catch(() => setChildrenList([]));
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/daily-question/history')
+      .then((r) => r.json())
+      .then((d) => setHistory(d.questions || []))
+      .catch(() => setHistory(null));
   }, []);
 
   // 兄弟（複数の子どもプロフィール）がいる場合、それぞれ別に1日1回答えられるように
@@ -218,6 +234,57 @@ export default function TodayPage() {
 
               {error && <div className="muted" style={{ color: '#C0392B', fontSize: 12 }}>{error}</div>}
             </div>
+          )}
+
+          {/* 過去の質問一覧（2026-10-17追加）。普段表示される質問は19問ローテーションの
+              うち今日の1問だけだが、「過去の質問データも見れるといい」との要望を受けて、
+              折りたたみ式（<details>）で全問＋累計集計をまとめて見られるようにした。
+              件数が多いため、デフォルトは閉じた状態にして一覧ページの縦の長さを抑える。
+              会員登録していない場合は、1問ずつぼかすのではなく、まとめて1つの案内文
+              だけを出す（19問分ぼかすと見た目が重くなるため）。 */}
+          {history && history.length > 0 && (
+            <details className="card" style={{ padding: 0 }}>
+              <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
+                過去の質問一覧を見る（全{history.length}問）
+              </summary>
+              <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {history[0].aggregate === null && (
+                  <div className="qtext" style={{ paddingTop: 4 }}>
+                    会員登録（無料）すると、質問ごとの累計の集計グラフが見られます。
+                    <Link href="/account/login?next=/today" style={{ color: 'var(--main)', fontWeight: 700, textDecoration: 'underline', marginLeft: 4 }}>
+                      ログイン / 無料登録
+                    </Link>
+                  </div>
+                )}
+                {history.map((q) => (
+                  <div key={q.slug} style={{ borderTop: '1px solid var(--border)', paddingTop: 12 }}>
+                    <div className="qtext" style={{ fontWeight: 700, fontSize: 13, marginBottom: 6 }}>{q.text}</div>
+                    {q.aggregate ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                        <div className="muted" style={{ fontSize: 11 }}>これまでの回答：{q.aggregate.total}件</div>
+                        {q.choices.map((c) => {
+                          const count = q.aggregate!.counts[c.value] || 0;
+                          const pct = q.aggregate!.total > 0 ? Math.round((count / q.aggregate!.total) * 100) : 0;
+                          return (
+                            <div key={c.value} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11 }}>
+                                <span>{c.label}</span>
+                                <span className="muted">{count}件（{pct}%）</span>
+                              </div>
+                              <div style={{ background: 'var(--border)', borderRadius: 6, height: 6, overflow: 'hidden' }}>
+                                <div style={{ width: `${pct}%`, height: '100%', background: 'var(--sub)', borderRadius: 6 }} />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="muted" style={{ fontSize: 11 }}>会員登録すると、この質問の集計が見られます。</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </details>
           )}
 
           {loggedIn && (
