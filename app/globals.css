@@ -389,6 +389,12 @@ h2.pagetitle {
 .expertbanner-title { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 13px; color: var(--orange-text); }
 .expertbanner-desc { font-size: 11px; color: var(--muted); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .expertbanner-cta { flex: 0 0 auto; font-size: 14px; font-weight: 700; color: var(--orange-text); }
+/* TOPページの「みんなのデータ」誘導バナー（2026-10-16追加）。.expertbannerと同じ
+   横1行のコンパクトな作りを流用しつつ、専門家バナーのオレンジではなく、みんなの
+   データの他の箇所（ボトムナビ等）と合わせた緑系の色味にする。 */
+.expertbanner-today { border-color: var(--main); text-decoration: none; }
+.expertbanner-today .expertbanner-title,
+.expertbanner-today .expertbanner-cta { color: var(--main); }
 
 /* 一覧の並び替え・「専門家回答のみ」絞り込みタブ（2026-10-15）。
    当初は「並び替えチップ（単一選択）」＋「専門家回答のみ（独立ON/OFF）」の
