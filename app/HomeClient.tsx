@@ -9,6 +9,7 @@ import ConsultationCard from '@/components/ConsultationCard';
 import EyeIcon from '@/components/EyeIcon';
 import TagChips from '@/components/TagChips';
 import PcSidebar from '@/components/PcSidebar';
+import TodayQuestionTeaser from '@/components/TodayQuestionTeaser';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -200,6 +201,13 @@ export default function HomeClient({
             <span className="expertbanner-cta">›</span>
           </div>
         )}
+
+        {/* 「みんなのデータ」のTOPページ誘導カード（2026-10-16追加）。「今日の質問」
+            のような見た目で、一覧より上の目立つ位置に置く（「誘導しやすくしたい」との
+            要望を受けて追加）。PC・モバイル共通（expertbannerと違いPC右コラムには
+            出していない。日々の内容が変わるため、サイド固定よりメインの導線に置く方が
+            自然という判断）。 */}
+        {showExtras && <TodayQuestionTeaser />}
 
         {/* PCの広い画面では、左右を完全に独立した縦積み（flex column）の
             2カラムにする（app/globals.cssの.home-layout参照）。検索ボックスや
