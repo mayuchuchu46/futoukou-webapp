@@ -184,23 +184,9 @@ export default function HomeClient({
           </Link>
         )}
 
-        {/* 「専門家が回答した相談」はPC（960px以上）では右コラム（PcSidebar）側に
-            出すことにしたため、ここは.home-expertbanner-mobileを付けてモバイルのみ
-            表示にし、PCでは非表示にする（2026-10-15、「専門家が回答した相談の箇所は
-            右コラムに配置して」との指摘を受けて修正）。 */}
-        {showExtras && (
-          <div
-            className="expertbanner home-expertbanner-mobile"
-            onClick={() => router.push('/expertlist')}
-          >
-            <img src="/assets/icon_lock.png" alt="" className="expertbanner-icon" />
-            <div className="expertbanner-body">
-              <div className="expertbanner-title">専門家が回答した相談{expertCount ? `（${expertCount}件）` : ''}</div>
-              <div className="expertbanner-desc">専門家（公認心理師など）本人が直接回答。読み放題会員限定</div>
-            </div>
-            <span className="expertbanner-cta">›</span>
-          </div>
-        )}
+        {/* 「専門家が回答した相談」のモバイル用バナーは、この位置（検索・一覧より上）
+            からは削除した（2026-10-16、「トップのこの場所はいらない」との指摘）。
+            PC（960px以上）の右コラム（PcSidebar）側には引き続き表示する。 */}
 
         {/* 「みんなのデータ」のTOPページ誘導カード（2026-10-16追加）。「今日の質問」
             のような見た目で、一覧より上の目立つ位置に置く（「誘導しやすくしたい」との
