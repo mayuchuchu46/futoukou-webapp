@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getCurrentMember } from '@/lib/memberAuth';
-import { getTodaysQuestion } from '@/lib/dailyQuestions';
+import { getTodaysQuestion, findQuestionBySlug } from '@/lib/dailyQuestions';
 
 // 「みんなのデータ」機能のAPI（2026-10-16追加）。「気づいたときにメモしておく」という
 // AIの回答アドバイスを、サービス内の選択式アンケートとして実際にできるようにしたもの。
@@ -26,21 +26,28 @@ async function buildAggregate(answerDate: string, questionSlug: string) {
 }
 
 export async function GET() {
-  const { date, question } = getTodaysQuestion();
+  const { date, question: todaysQuestion } = getTodaysQuestion();
   const member = await getCurrentMember();
 
   if (!member) {
-    return NextResponse.json({ loggedIn: false, date, question, myAnswer: null, aggregate: null });
+    return NextResponse.json({ loggedIn: false, date, question: todaysQuestion, myAnswer: null, aggregate: null });
   }
 
   const supabase = getSupabaseAdmin();
   const { data: existing } = await supabase
     .from('daily_answers')
-    .select('value')
+    .select('value, question_slug')
     .eq('member_id', member.id)
     .eq('answer_date', date)
     .maybeSingle();
 
+  // 既にその日に回答済みの場合、表示する質問は「保存されている回答のquestion_slug」を
+  // 使う（getTodaysQuestion()を使い回さない）。質問バンクの配列を増減させると、同じ
+  // 日付でもローテーション計算（日数 % 配列長）の結果が変わってしまい、「回答した時点の
+  // 質問」と「今計算し直した今日の質問」がズレて、回答が別の質問の選択肢として
+  // 表示されてしまう不具合があったため（2026-10-16、質問バンクを7問→19問に拡充した
+  // ときに実際に発生）。回答済みなら常に、保存された質問に対する結果として表示する。
+  const question = existing ? findQuestionBySlug(existing.question_slug) || todaysQuestion : todaysQuestion;
   const myAnswer = existing?.value || null;
   const aggregate = myAnswer ? await buildAggregate(date, question.slug) : null;
 
