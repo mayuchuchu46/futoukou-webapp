@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     .from('children')
     .select('id', { count: 'exact', head: true })
     .eq('member_id', member.id);
-  if ((count || 0) >= 10) {
+  if ((count || 0) >= 3) {
     return NextResponse.json({ error: '登録できるお子さんの数の上限に達しました' }, { status: 400 });
   }
 
