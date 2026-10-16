@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
   const viewerId = req.nextUrl.searchParams.get('viewer_id');
   const authorId = req.nextUrl.searchParams.get('author_id');
   const expertAnswered = req.nextUrl.searchParams.get('expert_answered') === '1';
+  const childId = req.nextUrl.searchParams.get('child_id');
   // 並び替え（2026-10-15追加）。不正な値が来た場合は既定の新着順にフォールバックする。
   const sortParam = req.nextUrl.searchParams.get('sort');
   const sort: ConsultationSort = sortParam === 'views' || sortParam === 'likes' ? sortParam : 'new';
@@ -27,6 +28,7 @@ export async function GET(req: NextRequest) {
     expertAnswered,
     memberActive,
     memberId: member?.id || null,
+    childId,
     sort,
   });
 

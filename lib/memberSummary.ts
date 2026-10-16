@@ -40,27 +40,40 @@ function fromCachedRow(cached: CachedRow, consultationCount?: number): MemberSum
   };
 }
 
-// マイページの「今のお子さんの状況」サマリーを取得する。
-// 会員の相談件数が、キャッシュ生成時から増えていなければキャッシュをそのまま返し、
-// 増えていれば（＝新しい相談が追加されていれば）そのときだけAIを呼び直して再生成する。
-// 相談が1件もない会員には null を返す（呼び出し側で「まだ相談がありません」表示に使う）。
-export async function getOrGenerateMemberSummary(memberId: string): Promise<MemberSummary | null> {
+// 「今のお子さんの状況」サマリー生成の本体（2026-10-16、子どもプロフィール機能の追加に
+// あわせて汎用化）。もともとは会員（member_id）単位の1種類だけだったが、子どもプロフィール
+// （children）を作っている会員は、子ども単位（child_id）でも同じ仕組みのノートを持てる
+// ようにした。scopeで対象のテーブル・列を切り替えるだけで、キャッシュ比較・安全上書き
+// 判定・AI生成のロジック自体は共通。
+type SummaryScope =
+  | { kind: 'member'; id: string }
+  | { kind: 'child'; id: string };
+
+function scopeConfig(scope: SummaryScope) {
+  if (scope.kind === 'member') {
+    return { table: 'member_summaries', idColumn: 'member_id', consultationColumn: 'member_id' as const };
+  }
+  return { table: 'child_summaries', idColumn: 'child_id', consultationColumn: 'child_id' as const };
+}
+
+async function getOrGenerateSummary(scope: SummaryScope): Promise<MemberSummary | null> {
   const supabase = getSupabaseAdmin();
+  const { table, idColumn, consultationColumn } = scopeConfig(scope);
 
   const { count } = await supabase
     .from('consultations')
     .select('id', { count: 'exact', head: true })
-    .eq('member_id', memberId);
+    .eq(consultationColumn, scope.id);
 
   const consultationCount = count || 0;
   if (consultationCount === 0) return null;
 
   const { data: cached } = await supabase
-    .from('member_summaries')
+    .from(table)
     .select(
       'status_summary, advice, phrasing_suggestion, environment_suggestion, school_fit_points, consultation_count, generated_at, crisis_override'
     )
-    .eq('member_id', memberId)
+    .eq(idColumn, scope.id)
     .single();
 
   // 「一度希死念慮系の相談をしたら、ずっと同じ内容（専門窓口案内だけ）が表示されて
@@ -75,7 +88,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
   const { data: recentRows } = await supabase
     .from('consultations')
     .select('crisis_detected')
-    .eq('member_id', memberId)
+    .eq(consultationColumn, scope.id)
     .order('created_at', { ascending: false })
     .limit(RECENT_CRISIS_WINDOW);
   const forceCrisisOverride = (recentRows || []).some((r) => r.crisis_detected);
@@ -98,7 +111,7 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
   const { data: rows } = await supabase
     .from('consultations')
     .select('category, question, answer, created_at, crisis_detected')
-    .eq('member_id', memberId)
+    .eq(consultationColumn, scope.id)
     .order('created_at', { ascending: false })
     .limit(10);
 
@@ -143,8 +156,8 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
   }
 
   const generatedAt = new Date().toISOString();
-  await supabase.from('member_summaries').upsert({
-    member_id: memberId,
+  await supabase.from(table).upsert({
+    [idColumn]: scope.id,
     status_summary: statusSummary,
     advice,
     phrasing_suggestion: phrasingSuggestion,
@@ -164,4 +177,22 @@ export async function getOrGenerateMemberSummary(memberId: string): Promise<Memb
     consultationCount,
     generatedAt,
   };
+}
+
+// マイページ（アカウント全体）の「今のお子さんの状況」サマリーを取得する。
+// 会員の相談件数が、キャッシュ生成時から増えていなければキャッシュをそのまま返し、
+// 増えていれば（＝新しい相談が追加されていれば）そのときだけAIを呼び直して再生成する。
+// 相談が1件もない会員には null を返す（呼び出し側で「まだ相談がありません」表示に使う）。
+// 子どもプロフィールを使っている会員でも、ここでの集計対象は「その会員が投稿した
+// 全ての相談」（child_idの有無を問わない）のまま変わらない。子ども単位のノートは
+// getOrGenerateChildSummaryを使う。
+export async function getOrGenerateMemberSummary(memberId: string): Promise<MemberSummary | null> {
+  return getOrGenerateSummary({ kind: 'member', id: memberId });
+}
+
+// 子どもプロフィール単位の「今の状況」サマリーを取得する（2026-10-16追加）。
+// 「相談する」画面でその子どもが選ばれていた相談（consultations.child_id）だけを
+// 対象に集計する。仕組み自体はgetOrGenerateMemberSummaryと全く同じ。
+export async function getOrGenerateChildSummary(childId: string): Promise<MemberSummary | null> {
+  return getOrGenerateSummary({ kind: 'child', id: childId });
 }

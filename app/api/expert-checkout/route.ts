@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { category, text, author_id, grade, gender, requested_expert_id } = await req.json();
+  const { category, text, author_id, grade, gender, requested_expert_id, child_id } = await req.json();
   if (!category || !text || !text.trim() || !author_id) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 });
   }
@@ -46,6 +46,19 @@ export async function POST(req: NextRequest) {
     requestedExpertId = expertRow?.id || null;
   }
 
+  // 子どもプロフィール（2026-10-16追加）。/api/consultと同じく、ログイン中の
+  // 会員自身の子どもであることを確認してから紐付ける。
+  let childId: string | null = null;
+  if (child_id) {
+    const { data: child } = await supabase
+      .from('children')
+      .select('id')
+      .eq('id', child_id)
+      .eq('member_id', member.id)
+      .single();
+    if (child) childId = child.id;
+  }
+
   const funding = resolveExpertFunding(member);
 
   if (funding === 'free_monthly' || funding === 'ticket') {
@@ -59,6 +72,7 @@ export async function POST(req: NextRequest) {
         grade: grade || null,
         gender: gender || null,
         author_id,
+        child_id: childId,
         client_ip: ip,
         request_type: 'expert',
         price_jpy: 0,
@@ -100,6 +114,7 @@ export async function POST(req: NextRequest) {
       grade: grade || null,
       gender: gender || null,
       author_id,
+      child_id: childId,
       client_ip: ip,
       request_type: 'expert',
       price_jpy: EXPERT_PRICE_JPY,

@@ -6,7 +6,7 @@ import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
 
 export async function POST(req: NextRequest) {
-  const { category, text, author_id, grade, gender } = await req.json();
+  const { category, text, author_id, grade, gender, child_id } = await req.json();
 
   if (!category || !text || !text.trim() || !author_id) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 });
@@ -38,6 +38,20 @@ export async function POST(req: NextRequest) {
     if (pastRows && pastRows.length) {
       history = pastRows as PastConsultation[];
     }
+  }
+
+  // 子どもプロフィール（2026-10-16追加）。「お子さんのプロフィール」で選んだ子がいれば、
+  // その相談として記録する（後で分析ノートが子ども単位で分かれる）。他人の子どもを
+  // 指定できないよう、ログイン中の会員自身の子どもであることを必ず確認する。
+  let childId: string | null = null;
+  if (child_id && member) {
+    const { data: child } = await supabase
+      .from('children')
+      .select('id')
+      .eq('id', child_id)
+      .eq('member_id', member.id)
+      .single();
+    if (child) childId = child.id;
   }
 
   const { data: guidelines } = await supabase.from('guidelines').select('*').eq('id', 'default').single();
@@ -95,6 +109,7 @@ export async function POST(req: NextRequest) {
       gender: gender || null,
       author_id,
       member_id: member?.id || null,
+      child_id: childId,
       client_ip: ip,
       likes: 0,
       liked_by: [],

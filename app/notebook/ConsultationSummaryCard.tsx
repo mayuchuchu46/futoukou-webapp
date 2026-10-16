@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Child } from '@/lib/types';
 
 type SummaryResponse = {
   loggedIn: boolean;
@@ -56,8 +57,11 @@ const PREVIEW_ENTRIES = [
 // どの表示状態（未登録・相談0件・相談あり）でも同じ見出しを出し、ページ全体が
 // 一貫して「ノート」に見えるようにする（2026-10-12、ノートらしい見た目にする
 // リニューアルで追加）。
-function NotebookHead({ count }: { count: number }) {
+function NotebookHead({ count, childId }: { count: number; childId?: string | null }) {
   const dots = Array.from({ length: 5 }, (_, i) => i < Math.min(count, 5));
+  // 子どもプロフィールを選んで見ている場合、マイページ側もその子の相談だけに
+  // 絞って見せる（2026-10-16、lib/consultations.ts childId絞り込み参照）。
+  const mypageHref = childId ? `/mypage?child=${childId}` : '/mypage';
   return (
     <div className="notebook-head">
       <div className="notebook-head-text">
@@ -77,10 +81,49 @@ function NotebookHead({ count }: { count: number }) {
       {/* 「何件相談したか数字で見るだけでなく、中身も確認したい」との指摘を受けて、
           件数バッジをマイページ（自分の相談一覧）へのリンクにした（2026-10-16）。 */}
       {count > 0 && (
-        <Link href="/mypage" className="notebook-count-badge" style={{ textDecoration: 'none' }}>
+        <Link href={mypageHref} className="notebook-count-badge" style={{ textDecoration: 'none' }}>
           {count}件相談済み
         </Link>
       )}
+    </div>
+  );
+}
+
+// 子どもプロフィールを複数作っている会員向けの切り替えタブ（2026-10-16追加）。
+// 「兄弟で不登校のパターンが多い」ため、1アカウントで複数の子どもを分けて記録できる
+// ようにした機能のUI部分。子どもプロフィールを1人も作っていない会員には出さない
+// （呼び出し側で判定）。
+function ChildSwitcher({
+  children: childrenList,
+  selectedChildId,
+  onSelect,
+}: {
+  children: Child[];
+  selectedChildId: string | null;
+  onSelect: (id: string | null) => void;
+}) {
+  return (
+    <div className="chip-row chip-row-wrap" style={{ marginBottom: 2 }}>
+      <button
+        type="button"
+        className={`chip chip-tag${selectedChildId === null ? ' active' : ''}`}
+        onClick={() => onSelect(null)}
+      >
+        全体
+      </button>
+      {childrenList.map((c) => (
+        <button
+          key={c.id}
+          type="button"
+          className={`chip chip-tag${selectedChildId === c.id ? ' active' : ''}`}
+          onClick={() => onSelect(c.id)}
+        >
+          {c.name}
+        </button>
+      ))}
+      <Link href="/account/children" className="chip chip-tag" style={{ textDecoration: 'none' }}>
+        ＋ 子どもを追加
+      </Link>
     </div>
   );
 }
@@ -111,10 +154,30 @@ function NotebookHead({ count }: { count: number }) {
 // 積み重ねの価値を伝える。
 export default function ConsultationSummaryCard({ ownCount }: { ownCount: number | null }) {
   const [data, setData] = useState<SummaryResponse | null>(null);
+  // 子どもプロフィール機能（2026-10-16追加）。未ログインの間はAPIが常に空配列を
+  // 返すだけなので、ログイン状態を気にせず取得してよい。
+  const [childrenList, setChildrenList] = useState<Child[] | null>(null);
+  const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    fetch('/api/member-summary')
+    fetch('/api/children')
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled) setChildrenList(d.children || []);
+      })
+      .catch(() => {
+        if (!cancelled) setChildrenList([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const qs = selectedChildId ? `?child_id=${encodeURIComponent(selectedChildId)}` : '';
+    fetch(`/api/member-summary${qs}`)
       .then((r) => r.json())
       .then((d) => {
         if (!cancelled) setData(d);
@@ -125,12 +188,23 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [selectedChildId]);
 
   // data（/api/member-summary）とownCount（親側の/api/consultations、自分の相談件数）は
   // 親コンポーネント側で並列に取得している。未ログイン分岐の文言がownCountを使うため、
   // 両方そろうまでは表示しない（どちらか一方が遅れても、取得自体は並列で進む）。
   if (!data || ownCount === null) return null;
+
+  // 子どもを複数登録している会員だけに出す切り替えタブ。ログインしていない・
+  // 子どもプロフィールが0〜1人の会員には今まで通り何も表示しない
+  // （1人の場合に出しても「全体」と変わらず意味がないため2人以上で判定）。
+  const childSwitcher =
+    data.loggedIn && childrenList && childrenList.length > 1 ? (
+      <ChildSwitcher children={childrenList} selectedChildId={selectedChildId} onSelect={setSelectedChildId} />
+    ) : null;
+  // 特定の子どもを選んでいる場合、「相談する」の遷移先にも引き継いで、/askで
+  // その子が選ばれた状態から始められるようにする（2026-10-16）。
+  const askHref = selectedChildId ? `/ask?child=${encodeURIComponent(selectedChildId)}` : '/ask';
 
   if (!data.loggedIn) {
     // 相談が0件の段階では、会員登録してもノートに書く材料が無く空のままになってしまう
@@ -186,14 +260,17 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
   if (!data.summary) {
     return (
       <div className="card notebook-card" style={{ alignItems: 'flex-start', gap: 10 }}>
-        <NotebookHead count={0} />
+        <NotebookHead count={0} childId={selectedChildId} />
+        {childSwitcher}
         <div className="qtext">
-          まだ相談がありません。相談するたびに、ここにノートとして記録が蓄積され、どうする先生がお子さんの状況をより詳しく整理できるようになります。
+          {selectedChildId
+            ? 'まだこの子についての相談がありません。相談するときに、この子を選んでみてください。'
+            : 'まだ相談がありません。相談するたびに、ここにノートとして記録が蓄積され、どうする先生がお子さんの状況をより詳しく整理できるようになります。'}
         </div>
         {PREVIEW_ENTRIES.map((entry) => (
           <NotebookPlaceholder key={entry.label} {...entry} />
         ))}
-        <Link className="btn-primary" href="/ask">
+        <Link className="btn-primary" href={askHref}>
           相談してノートを作り始める
         </Link>
       </div>
@@ -204,7 +281,8 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
 
   return (
     <div className="card notebook-card" style={{ alignItems: 'flex-start', gap: 10 }}>
-      <NotebookHead count={data.count} />
+      <NotebookHead count={data.count} childId={selectedChildId} />
+      {childSwitcher}
 
       <div className="notebook-entry">
         <span className="notebook-tab tab-status">今のお子さんの状況</span>
@@ -227,7 +305,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
               上がり、会員になったときに見える内容も充実するため、ここで相談を離脱させない
               ための導線。最初は小さいテキストリンクにしていたが目立たなすぎたため、
               btn-primaryと並ぶ実際のボタン（btn-secondary）に変更した（2026-10-12）。 */}
-          <Link href="/ask" className="btn-secondary" style={{ width: '100%' }}>
+          <Link href={askHref} className="btn-secondary" style={{ width: '100%' }}>
             さらに相談して、ノートの材料を増やす
           </Link>
           <SchoolMatchComingSoon />
@@ -277,7 +355,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
             <span className="notebook-nudge-icon">✏️</span>
             相談を重ねるほど、ノートの中身はさらに詳しくなります。次の相談で、ここに新しいページが書き足されます。
           </div>
-          <Link href="/ask" className="btn-primary">
+          <Link href={askHref} className="btn-primary">
             新しく相談して、ノートを書き足す
           </Link>
           <SchoolMatchComingSoon />

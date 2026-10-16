@@ -35,6 +35,19 @@ export type Consultation = {
   // 作られたものかどうか。nullなら新規の相談、値があればその相談の続き（2026-10-16追加）。
   // 続きは一覧・テーマ件数には出さず、元の相談の詳細ページの中でだけ表示する。
   parent_id?: string | null;
+  // どの子どもについての相談か（任意、2026-10-16追加）。ログイン中の会員が
+  // 子どもプロフィール（lib/types.ts Childを参照）を作っている場合に選べる。
+  child_id?: string | null;
+};
+
+// 子どもプロフィール（2026-10-16追加）。「兄弟で不登校のパターンが多い」ため、
+// 1つの会員アカウントで複数の子どもを分けて管理できるようにする機能。
+export type Child = {
+  id: string;
+  name: string;
+  grade: string | null;
+  gender: string | null;
+  created_at: string;
 };
 
 export const GRADE_OPTIONS = ['小学1年生','小学2年生','小学3年生','小学4年生','小学5年生','小学6年生','中学1年生','中学2年生','中学3年生','高校1年生','高校2年生','高校3年生','その他'];

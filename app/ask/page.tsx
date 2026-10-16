@@ -6,7 +6,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { CATS, Category, CATEGORY_EXAMPLES } from '@/lib/categories';
-import { GRADE_OPTIONS, GENDER_OPTIONS } from '@/lib/types';
+import { GRADE_OPTIONS, GENDER_OPTIONS, Child } from '@/lib/types';
 import { getUid, hasAgreedTerms, setAgreedTerms, getAskDraft, setAskDraft, clearAskDraft } from '@/lib/uid';
 
 const CATEGORY_KEYS = Object.keys(CATS) as Category[];
@@ -34,6 +34,9 @@ function AskPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const expertIdParam = searchParams.get('expert');
+  // 分析ノート（/notebook）の子ども切り替えや、お子さんのプロフィール画面から
+  // 「この子について相談する」で来た場合に、あらかじめ選択済みにする（2026-10-16追加）。
+  const childIdParam = searchParams.get('child');
   // 以前はCATEGORY_KEYS[0]（＝オブジェクトの先頭に書かれているだけの「身体的要因」）が
   // 何もしなくても選択済みになっていた。意図した選択ではないのに、選ばずに送信すると
   // 違うカテゴリで投稿・回答生成されてしまうため、未選択（''）を初期値にし、
@@ -54,6 +57,12 @@ function AskPageContent() {
   const [requestedExpert, setRequestedExpert] = useState<RequestedExpert | null>(null);
   const [stripeConfigured, setStripeConfigured] = useState(false);
   const [draftLoaded, setDraftLoaded] = useState(false);
+  // 子どもプロフィール機能（2026-10-16追加）。ログインしていない、またはお子さんの
+  // プロフィールを1人も登録していない会員には今まで通り何も表示されない
+  // （childrenListが空配列のまま）。
+  const [childrenList, setChildrenList] = useState<Child[]>([]);
+  const [selectedChildId, setSelectedChildId] = useState('');
+  const [childParamApplied, setChildParamApplied] = useState(false);
   // テーマ選択の手間を省くため、相談文の入力に合わせてAIが自動でテーマを判定する
   // （2026-10-13追加）。一度でも自分でテーマを選び直した場合は、それ以降は自動判定で
   // 上書きしない。非同期処理の完了を待つ間に手動で選び直される可能性があるため、
@@ -78,14 +87,15 @@ function AskPageContent() {
       setText(draft.text || '');
       setGrade(draft.grade || '');
       setGender(draft.gender || '');
+      if (draft.child_id) setSelectedChildId(draft.child_id);
     }
     setDraftLoaded(true);
   }, []);
 
   useEffect(() => {
     if (!draftLoaded) return;
-    setAskDraft({ category, text, grade, gender });
-  }, [draftLoaded, category, text, grade, gender]);
+    setAskDraft({ category, text, grade, gender, child_id: selectedChildId || undefined });
+  }, [draftLoaded, category, text, grade, gender, selectedChildId]);
 
   // 相談文の入力が一区切りついたタイミング（1.2秒操作がない）で、AIにテーマを
   // 判定してもらい、自動で選んでおく。手動で選び直された後は呼ばない。
@@ -131,7 +141,28 @@ function AskPageContent() {
         setStripeConfigured(!!d.stripeConfigured);
       })
       .catch(() => setMemberActive(false));
+    // 子どもプロフィール（2026-10-16追加）。ログインしていない場合はAPI側が
+    // {children: []}を返すだけで、他の表示には影響しない。
+    fetch('/api/children')
+      .then((r) => r.json())
+      .then((d) => setChildrenList(d.children || []))
+      .catch(() => setChildrenList([]));
   }, []);
+
+  // ?child=IDで来た場合、下書き復元で既に選ばれていなければ、一覧取得後に反映する
+  // （一覧が空のうちに即座に当ててしまうと、実在しないIDでも選択扱いになってしまうため、
+  // 実際にそのIDの子どもが一覧にあることを確認してから選ぶ）。
+  useEffect(() => {
+    if (!draftLoaded || childParamApplied) return;
+    if (!childIdParam) {
+      setChildParamApplied(true);
+      return;
+    }
+    if (!selectedChildId && childrenList.some((c) => c.id === childIdParam)) {
+      setSelectedChildId(childIdParam);
+    }
+    if (childrenList.length > 0) setChildParamApplied(true);
+  }, [draftLoaded, childParamApplied, childIdParam, childrenList, selectedChildId]);
 
   // 専門家一覧の「この専門家に相談する」から来た場合（?expert=ID）、
   // 本人確認済みの専門家であることを確認したうえで、指名表示に切り替える。
@@ -154,7 +185,14 @@ function AskPageContent() {
       const res = await fetch('/api/consult', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category, text, author_id: getUid(), grade: grade || null, gender: gender || null }),
+        body: JSON.stringify({
+          category,
+          text,
+          author_id: getUid(),
+          grade: grade || null,
+          gender: gender || null,
+          child_id: selectedChildId || null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
@@ -191,6 +229,7 @@ function AskPageContent() {
           grade: grade || null,
           gender: gender || null,
           requested_expert_id: requestedExpert?.id || null,
+          child_id: selectedChildId || null,
         }),
       });
       const data = await res.json();
@@ -303,6 +342,28 @@ function AskPageContent() {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
+
+        {/* 子どもプロフィール（2026-10-16追加）。お子さんのプロフィールを1人も登録していない
+            会員・未ログインの人には表示されず、今まで通りの画面のまま（childrenListが
+            空配列）。2人以上いる場合に「どの子のことか」を選べるようにし、選んだ内容は
+            分析ノート側の同じ子のノートに積み上がる。 */}
+        {childrenList.length > 0 && (
+          <>
+            <div className="muted" style={{ margin: '14px 0 6px' }}>どのお子さんのことですか？</div>
+            <div className="chip-row chip-row-wrap">
+              {childrenList.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  className={`chip chip-tag${selectedChildId === c.id ? ' active' : ''}`}
+                  onClick={() => setSelectedChildId(selectedChildId === c.id ? '' : c.id)}
+                >
+                  {c.name}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
         {/* テーマは、以前は書く前に手動で選んでもらっていたが、相談文を書き終えた
             タイミングでAIが自動判定して選んでおく方式に変更（2026-10-13、

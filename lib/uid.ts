@@ -20,7 +20,10 @@ export function setAgreedTerms() {
 
 // 質問するページ（/ask）の入力中ドラフトの一時保存。離脱・タブを閉じて戻ってきても
 // 書いた内容が残っているようにする（2026-10-12、新規ユーザーの離脱対策として追加）。
-export type AskDraft = { category: string; text: string; grade: string; gender: string };
+// child_idは子どもプロフィール機能（2026-10-16追加）で選んだ子ども。省略可能
+// （undefinedの場合は未選択として扱う）にしておき、古い下書き（この項目が無い）を
+// 復元してもエラーにならないようにしている。
+export type AskDraft = { category: string; text: string; grade: string; gender: string; child_id?: string };
 const ASK_DRAFT_KEY = 'dsk_ask_draft';
 
 export function getAskDraft(): AskDraft | null {

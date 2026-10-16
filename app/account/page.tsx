@@ -61,6 +61,13 @@ async function AccountPageContent() {
             APIやDBの購読状態は変更していないので、再表示したくなった場合は
             NewsletterPanelをここに戻すだけでよい。 */}
 
+        {/* 「兄弟で不登校のパターンが多い」ため、1アカウントで複数の子どもを分けて
+            管理できる機能への導線（2026-10-16追加）。 */}
+        <Link href="/account/children" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <span>お子さんのプロフィール（兄弟で分ける）</span>
+          <span className="muted">›</span>
+        </Link>
+
         <Link href="/" className="btn-secondary">
           みんなの相談を見てみる
         </Link>

@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   // 常にセットされているため、これだけで本人確認として十分（他のAPIと同じ方式）。
   const { data: parent } = await supabase
     .from('consultations')
-    .select('id, category, question, answer, grade, gender, author_id, member_id, request_type')
+    .select('id, category, question, answer, grade, gender, author_id, member_id, request_type, child_id')
     .eq('id', parent_id)
     .single();
 
@@ -98,6 +98,8 @@ export async function POST(req: NextRequest) {
       gender: parent.gender,
       author_id,
       member_id: member?.id || parent.member_id || null,
+      // 返信（ラリー）も元の相談と同じ子どものこととして扱う（2026-10-16追加）。
+      child_id: parent.child_id || null,
       client_ip: ip,
       likes: 0,
       liked_by: [],

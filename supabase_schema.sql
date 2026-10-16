@@ -14,6 +14,32 @@
 -- フラグを追加した場合（2026-10-16追加、「一度希死念慮系の相談をしたら、ずっと同じ内容が
 -- 表示されて更新されない」との指摘を受けて）、既存DBでは次を実行してください。
 -- alter table member_summaries add column if not exists crisis_override boolean not null default false;
+-- 子どもプロフィール機能（兄弟で不登校パターンが多いため、1アカウントで複数の子どもを
+-- 分けて管理できるようにする）を追加した場合（2026-10-16追加）、既存DBでは次を実行してください。
+-- create table if not exists children (
+--   id uuid primary key default gen_random_uuid(),
+--   member_id uuid not null references members(id),
+--   name text not null,
+--   grade text,
+--   gender text,
+--   created_at timestamptz not null default now()
+-- );
+-- alter table children enable row level security;
+-- create index if not exists children_member_id_idx on children (member_id);
+-- alter table consultations add column if not exists child_id uuid references children(id) on delete set null;
+-- create index if not exists consultations_child_id_idx on consultations (child_id);
+-- create table if not exists child_summaries (
+--   child_id uuid primary key references children(id) on delete cascade,
+--   status_summary text not null default '',
+--   advice text not null default '',
+--   phrasing_suggestion text not null default '',
+--   environment_suggestion text not null default '',
+--   school_fit_points text not null default '',
+--   consultation_count int not null default 0,
+--   crisis_override boolean not null default false,
+--   generated_at timestamptz not null default now()
+-- );
+-- alter table child_summaries enable row level security;
 -- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
 -- （2026-10-13追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists review_status text not null default 'pending';
@@ -338,6 +364,24 @@ alter table members enable row level security;
 
 create index if not exists members_stripe_subscription_id_idx on members (stripe_subscription_id);
 
+-- 子どもプロフィール（2026-10-16追加）。「兄弟で不登校のパターンが多い」ため、
+-- 1つの会員アカウントで複数の子ども（例：息子・娘）を分けて管理できるようにする。
+-- 相談するとき（任意）にどの子についての相談か選べるようになり（consultations.child_id）、
+-- 分析ノート（member_summaries→子ども単位ではchild_summaries）もこの子ども単位で分かれる。
+-- 子どもプロフィールを1人も作っていない会員は、従来通り「アカウント全体で1つのノート」
+-- という今までの挙動のまま変わらない（lib/memberSummary.ts参照）。
+create table if not exists children (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id),
+  name text not null, -- 「息子」「娘」「◯◯（ニックネーム）」等、自由入力
+  grade text, -- 相談する画面での学年の初期値に使う（毎回選び直せる）
+  gender text,
+  created_at timestamptz not null default now()
+);
+alter table children enable row level security;
+
+create index if not exists children_member_id_idx on children (member_id);
+
 -- 専門家への質問チケットパック（¥3000で6回分）の購入履歴。Stripeチェックアウトの
 -- session_idを主キーにすることで、確認エンドポイントが何度呼ばれてもチケットが
 -- 二重に付与されないようにする（insertが1回しか成功しない）。
@@ -398,12 +442,18 @@ create table if not exists consultations (
   -- nullなら新規の相談。値があれば、その相談（元の質問・回答）への続きとして作られたもの。
   -- 続きは一覧・テーマ別件数には出さず、元の相談の詳細ページの中でだけ表示する
   -- （lib/consultations.ts・tag-counts・themeSummary・sitemapで parent_id is null を条件に追加）。
-  parent_id uuid references consultations(id)
+  parent_id uuid references consultations(id),
+
+  -- どの子どもについての相談か（任意、2026-10-16追加）。ログイン中の会員が子どもプロフィール
+  -- （childrenテーブル）を作っている場合、相談する画面で選べる。選ばなければnullのまま
+  -- （兄弟での使い分けをしていない会員は今まで通り気にしなくてよい）。
+  child_id uuid references children(id) on delete set null
 );
 alter table consultations enable row level security;
 
 create index if not exists consultations_member_id_idx on consultations (member_id);
 create index if not exists consultations_parent_id_idx on consultations (parent_id);
+create index if not exists consultations_child_id_idx on consultations (child_id);
 
 -- マイページに表示する「今のお子さんの状況」のAIサマリー。会員の過去の相談をまとめて
 -- 生成し、ここにキャッシュする（毎回のページ表示でAIを呼び直さないようにするため）。
@@ -425,6 +475,24 @@ create table if not exists member_summaries (
   generated_at timestamptz not null default now()
 );
 alter table member_summaries enable row level security;
+
+-- 子どもごとの分析ノート（2026-10-16追加）。member_summariesと全く同じ形だが、
+-- 子どもプロフィール（children）単位でキャッシュする。子どもプロフィールを作っている
+-- 会員が、相談する画面でどの子の相談か選んでいた場合、その子のノートはここに生成される
+-- （lib/memberSummary.ts参照）。子どもプロフィールを作っていない会員は、今まで通り
+-- member_summaries（アカウント全体で1つのノート）のまま。
+create table if not exists child_summaries (
+  child_id uuid primary key references children(id) on delete cascade,
+  status_summary text not null default '',
+  advice text not null default '',
+  phrasing_suggestion text not null default '',
+  environment_suggestion text not null default '',
+  school_fit_points text not null default '',
+  consultation_count int not null default 0,
+  crisis_override boolean not null default false,
+  generated_at timestamptz not null default now()
+);
+alter table child_summaries enable row level security;
 
 -- カテゴリ別「お悩み辞典」ページ（/dictionary/[category]）のAI解説文キャッシュ。
 -- 投稿が少ない段階で薄い内容のままインデックスされないよう、ページ側で

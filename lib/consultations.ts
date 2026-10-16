@@ -31,6 +31,7 @@ export async function getConsultationsList({
   expertId,
   memberActive = false,
   memberId,
+  childId,
   limit = 50,
   sort = 'new',
 }: {
@@ -44,6 +45,8 @@ export async function getConsultationsList({
   expertId?: string | null;
   memberActive?: boolean;
   memberId?: string | null;
+  // 子どもプロフィール（2026-10-16追加）：マイページで「この子の相談だけ見る」絞り込みに使う。
+  childId?: string | null;
   limit?: number;
   sort?: ConsultationSort;
 }): Promise<Consultation[]> {
@@ -112,6 +115,9 @@ export async function getConsultationsList({
   }
   if (expertId) {
     query = query.eq('expert_id', expertId);
+  }
+  if (childId) {
+    query = query.eq('child_id', childId);
   }
 
   const { data, error } = await query;
