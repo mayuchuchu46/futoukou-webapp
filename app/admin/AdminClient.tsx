@@ -261,6 +261,11 @@ export default function AdminClient({
   const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number } | null>(null);
 
   const allAiConsultations = consultations.filter((c) => c.request_type === 'ai');
+  // 自動投稿（サンプル相談）のみを抽出（2026-10-17追加）。「質問文がAIっぽく、
+  // 同じ人が書いたように見える。過去の分も直したい」との指摘を受けた一括再生成用。
+  // 実ユーザーの相談は対象外（/api/admin/consultations/regenerate-auto-seed側でも
+  // author_id='auto-seed'以外は拒否するが、ボタンの対象自体もここで絞っている）。
+  const autoSeedConsultations = consultations.filter((c) => c.author_id === 'auto-seed');
 
   async function regenerateAllAi() {
     const targets = allAiConsultations;
@@ -282,6 +287,62 @@ export default function AdminClient({
     }
     setBulkProgress(null);
     setBulkRegenerating(false);
+    alert(`完了：成功${okCount}件${ngCount ? `／失敗${ngCount}件` : ''}`);
+  }
+
+  // 自動投稿（サンプル相談）の質問文＋回答をまとめて作り直す（2026-10-17追加）。
+  // 「質問文がAIっぽく、同じ人が書いたように見える。過去の分も直したい」との指摘向け。
+  const [autoSeedRegenerating, setAutoSeedRegenerating] = useState(false);
+  const [autoSeedProgress, setAutoSeedProgress] = useState<{ done: number; total: number } | null>(null);
+
+  async function regenerateAutoSeedOne(id: string): Promise<{ ok: boolean; question?: string; answer?: string }> {
+    const res = await fetch('/api/admin/consultations/regenerate-auto-seed', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    if (!res.ok) return { ok: false };
+    const data = await res.json();
+    return { ok: true, question: data.question, answer: data.answer };
+  }
+
+  async function regenerateAutoSeedQuestion(id: string) {
+    if (!window.confirm('この自動投稿の質問文・回答を、新しいロジックで作り直します。元の内容は上書きされます。よろしいですか？')) return;
+    setBusy(id);
+    const result = await regenerateAutoSeedOne(id);
+    setBusy(null);
+    if (result.ok && result.question) {
+      setConsultations((list) => list.map((c) => (c.id === id ? { ...c, question: result.question! } : c)));
+    }
+    alert(result.ok ? '質問文・回答を再生成しました' : '再生成に失敗しました');
+  }
+
+  async function regenerateAllAutoSeed() {
+    const targets = autoSeedConsultations;
+    if (targets.length === 0) return;
+    if (
+      !window.confirm(
+        `自動投稿（サンプル）、${targets.length}件の質問文・回答をまとめて作り直します。元の内容は上書きされます。よろしいですか？`
+      )
+    )
+      return;
+    setAutoSeedRegenerating(true);
+    let okCount = 0;
+    let ngCount = 0;
+    for (let i = 0; i < targets.length; i++) {
+      setAutoSeedProgress({ done: i, total: targets.length });
+      const result = await regenerateAutoSeedOne(targets[i].id);
+      if (result.ok && result.question) {
+        okCount++;
+        setConsultations((list) =>
+          list.map((c) => (c.id === targets[i].id ? { ...c, question: result.question! } : c))
+        );
+      } else {
+        ngCount++;
+      }
+    }
+    setAutoSeedProgress(null);
+    setAutoSeedRegenerating(false);
     alert(`完了：成功${okCount}件${ngCount ? `／失敗${ngCount}件` : ''}`);
   }
 
@@ -339,6 +400,11 @@ export default function AdminClient({
           {c.request_type === 'ai' && (
             <button className="btn-secondary" disabled={busy === c.id} onClick={() => regenerateAnswer(c.id)}>
               {busy === c.id ? '処理中…' : 'AI回答を再生成'}
+            </button>
+          )}
+          {c.author_id === 'auto-seed' && (
+            <button className="btn-secondary" disabled={busy === c.id} onClick={() => regenerateAutoSeedQuestion(c.id)}>
+              {busy === c.id ? '処理中…' : '質問文も含めて作り直す'}
             </button>
           )}
         </div>
@@ -666,6 +732,19 @@ export default function AdminClient({
               {bulkRegenerating
                 ? `再生成中…（${bulkProgress ? bulkProgress.done + 1 : 1}/${allAiConsultations.length}）`
                 : 'AI相談をまとめて再生成（公開前の一括見直し）'}
+            </button>
+          </div>
+        )}
+        {/* 自動投稿（サンプル相談）の質問文がAIっぽく見える、という指摘への対応
+            （2026-10-17追加）。質問文・回答の両方を新しいロジックで作り直す。直近50件の
+            一覧に含まれる分のみが対象（それより古い自動投稿は、ここには出てこない）。 */}
+        {autoSeedConsultations.length > 0 && (
+          <div className="card" style={{ gap: 8 }}>
+            <div className="muted">自動投稿（サンプル）：{autoSeedConsultations.length}件</div>
+            <button className="btn-secondary" disabled={autoSeedRegenerating} onClick={regenerateAllAutoSeed}>
+              {autoSeedRegenerating
+                ? `再生成中…（${autoSeedProgress ? autoSeedProgress.done + 1 : 1}/${autoSeedConsultations.length}）`
+                : '自動投稿を質問文も含めてまとめて作り直す'}
             </button>
           </div>
         )}
