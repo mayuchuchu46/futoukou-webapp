@@ -238,14 +238,15 @@ export default function TodayPage() {
 
           {/* 過去の質問一覧（2026-10-17追加）。普段表示される質問は19問ローテーションの
               うち今日の1問だけだが、「過去の質問データも見れるといい」との要望を受けて、
-              折りたたみ式（<details>）で全問＋累計集計をまとめて見られるようにした。
-              件数が多いため、デフォルトは閉じた状態にして一覧ページの縦の長さを抑える。
-              会員登録していない場合は、1問ずつぼかすのではなく、まとめて1つの案内文
-              だけを出す（19問分ぼかすと見た目が重くなるため）。 */}
+              折りたたみ式（<details>）で過去に見られるようにした。一覧に出すのは
+              「すでに出た質問（＝1件でも回答が付いている質問）」だけで、まだローテー
+              ションに出ていない質問は含めない（2026-10-17、/api/daily-question/history
+              側で絞り込み済み）。会員登録していない場合は、1問ずつぼかすのではなく、
+              まとめて1つの案内文だけを出す。 */}
           {history && history.length > 0 && (
             <details className="card" style={{ padding: 0 }}>
               <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-                過去の質問一覧を見る（全{history.length}問）
+                過去の質問一覧を見る（{history.length}問）
               </summary>
               <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {history[0].aggregate === null && (
