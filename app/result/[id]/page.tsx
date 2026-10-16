@@ -21,6 +21,7 @@ import EyeIcon from '@/components/EyeIcon';
 import AiUsageUpsell from './AiUsageUpsell';
 import SaveConsultationPrompt from './SaveConsultationPrompt';
 import FollowupThread from './FollowupThread';
+import AskAgainBlock from './AskAgainBlock';
 import TagChips from '@/components/TagChips';
 import { SEARCH_TAG_CANDIDATES, matchesThemeText } from '@/lib/searchTags';
 
@@ -274,20 +275,11 @@ export default async function ResultPage({
   );
 
   // 回答を見た後、「このまま終わり」にならないよう、もう一度（別の内容で）相談できる
-  // ことを案内するボタン。AI回答・専門家回答どちらでも、同じ場所で使い回せるよう
-  // shareButtonと同様にJSX変数として共通化した（2026-10-14、「相談して回答を見た後の
-  // 誘導があってもいいかも」との指摘を受けて追加）。
-  const askAgainBlock = (
-    <div className="card" style={{ alignItems: 'flex-start', gap: 6 }}>
-      <div className="answer-label" style={{ fontSize: 14 }}>続きが気になること、他にもありますか？</div>
-      <div className="qtext" style={{ fontSize: 13 }}>
-        状況は日々変わるものです。気になることが出てきたら、また相談してみてください。
-      </div>
-      <Link className="btn-secondary" href="/ask">
-        もう一度相談する
-      </Link>
-    </div>
-  );
+  // ことを案内するブロック。AI回答・専門家回答どちらでも、同じ場所で使い回せるよう
+  // 共通化した（2026-10-14、「相談して回答を見た後の誘導があってもいいかも」との
+  // 指摘を受けて追加）。投稿者本人にだけ表示するため、本人確認が必要でクライアント
+  // コンポーネント化したAskAgainBlock（2026-10-16）を使う。
+  const askAgainBlock = <AskAgainBlock authorId={item.author_id} />;
 
   // lib/prompt.tsの安全上書き（希死念慮・自傷等を検知した場合、具体的な助言をせず
   // ホットライン案内のみを返す指示）が発動した回答かどうか。consultations.crisis_detected
