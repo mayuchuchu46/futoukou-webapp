@@ -95,7 +95,7 @@ export default function TodayQuestionTeaser() {
       <img src="/assets/icon_comment.png" alt="" className="expertbanner-icon" />
       <div className="expertbanner-body">
         <div className="expertbanner-title">{questionLabel}</div>
-        <div className="expertbanner-desc">{loggedIn ? '回答済み・今日の集計を見る' : '回答ありがとうございます'}</div>
+        <div className="expertbanner-desc">{loggedIn ? '回答済み・みんなの集計を見る' : '回答ありがとうございます'}</div>
       </div>
       {/* 実際の集計ではなく、横1行の高さに収まるミニ棒グラフの見本（ぼかし）。
           会員は/todayで本物のグラフが見られる。未ログインは/todayでも引き続き

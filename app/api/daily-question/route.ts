@@ -5,19 +5,27 @@ import { getTodaysQuestion, findQuestionBySlug } from '@/lib/dailyQuestions';
 
 // 「みんなのデータ」機能のAPI（2026-10-16追加）。「気づいたときにメモしておく」という
 // AIの回答アドバイスを、サービス内の選択式アンケートとして実際にできるようにしたもの。
-// 個別の回答は本人専用で、他の人には見せない。公開するのは「今日はみんなどう
-// 答えているか」という同日・同質問の集計のみ。
+// 個別の回答は本人専用で、他の人には見せない。公開するのは「みんなどう答えているか」
+// という同じ質問の集計のみ。
+// 集計グラフは「今日の回答」だけでなく、同じ質問（19問ローテーションなので約19日に
+// 1回しか出ない）がこれまでに出た分も全部合わせた累計にしている（2026-10-17、
+// 「今日だけだと全然データが取れない」との指摘を受けて、日付を絞らない累計集計に
+// 変更。buildAggregate参照）。
 // 回答自体は、相談（/ask）と同じくブラウザ単位の匿名ID（lib/uid.ts、getUid()）があれば
 // 会員登録なしでもできる。ただし集計グラフ（本物の数字）は、会員登録して初めて見られる
 // （2026-10-16、「回答は会員じゃなくてもできるが、閲覧は会員じゃないと見れない」設計に
 // 変更。それまでは回答・閲覧とも会員登録必須だった）。
 
-async function buildAggregate(answerDate: string, questionSlug: string) {
+// 集計は「今日の回答だけ」ではなく、同じ質問（question_slug）がこれまでに出た分も
+// 全部合わせた累計にする（2026-10-17、「今日だけだと全然データが取れない」との
+// 指摘を受けて変更。質問は19問のローテーションなので、同じ質問が次に出るのは
+// 約19日後になり、1日分だけの集計ではサンプル数が少なすぎた）。answerDateは
+// 受け取らず、question_slugだけで全期間を集計する。
+async function buildAggregate(questionSlug: string) {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('daily_answers')
     .select('value')
-    .eq('answer_date', answerDate)
     .eq('question_slug', questionSlug);
 
   const counts: Record<string, number> = {};
@@ -88,7 +96,7 @@ export async function GET(req: NextRequest) {
   // ときに実際に発生）。回答済みなら常に、保存された質問に対する結果として表示する。
   const question = existing ? findQuestionBySlug(existing.question_slug) || todaysQuestion : todaysQuestion;
   const myAnswer = existing?.value || null;
-  const aggregate = myAnswer ? await buildAggregate(date, question.slug) : null;
+  const aggregate = myAnswer ? await buildAggregate(question.slug) : null;
 
   return NextResponse.json({ loggedIn: true, date, question, myAnswer, aggregate });
 }
@@ -157,6 +165,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  const aggregate = await buildAggregate(date, question.slug);
+  const aggregate = await buildAggregate(question.slug);
   return NextResponse.json({ ok: true, myAnswer: value, aggregate });
 }

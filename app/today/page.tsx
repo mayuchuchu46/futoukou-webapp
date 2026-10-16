@@ -14,8 +14,11 @@ type Aggregate = { total: number; counts: Record<string, number> };
 
 // 「みんなのデータ」ページ（2026-10-16追加）。AIの回答でよく出る「気づいたときにメモ
 // しておく」というアドバイスを、実際にサービス内でできるようにした機能。自由記述では
-// なく選択式の日替わりアンケートで、回答すると同日の全員の回答を集計したグラフが
+// なく選択式の日替わりアンケートで、回答すると同じ質問を選んだ全員分の集計グラフが
 // 見られる（個別の回答は非公開、見られるのは本人と集計のみ）。
+// 集計は「今日の回答だけ」ではなく、同じ質問がこれまでに出た分も全部合わせた累計
+// （2026-10-17、「今日だけだと全然データが取れない」との指摘を受けて変更。質問は
+// 19問のローテーションで、同じ質問が次に出るのは約19日後になるため）。
 // 回答は/ask（匿名相談）と同じブラウザ単位の匿名ID（getUid()）があれば会員登録なしでも
 // できるが、集計グラフ（本物の数字）は会員登録して初めて見られる（2026-10-16、
 // 「回答は会員じゃなくてもできるが、閲覧は会員じゃないと見れない」設計に変更）。
@@ -95,7 +98,7 @@ export default function TodayPage() {
         <div className="page-main">
           <h2 className="pagetitle">みんなのデータ</h2>
           <div className="muted" style={{ marginBottom: 12 }}>
-            毎日かわる簡単な質問に答えるだけの、選択式アンケートです。回答は会員登録なしでもできます。あなたの回答は非公開ですが、会員登録すると「今日、みんなはどう答えているか」の集計グラフが見られます。
+            毎日かわる簡単な質問に答えるだけの、選択式アンケートです。回答は会員登録なしでもできます。あなたの回答は非公開ですが、会員登録すると「この質問に、みんなはどう答えているか」の累計の集計グラフが見られます。
           </div>
 
           {loggedIn === null && <div className="muted">読み込み中…</div>}
@@ -152,7 +155,7 @@ export default function TodayPage() {
 
                   {aggregate ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-                      <div className="muted" style={{ fontSize: 12 }}>今日の回答：{aggregate.total}件</div>
+                      <div className="muted" style={{ fontSize: 12 }}>これまでの回答：{aggregate.total}件</div>
                       {question.choices.map((c) => {
                         const count = aggregate.counts[c.value] || 0;
                         const pct = aggregate.total > 0 ? Math.round((count / aggregate.total) * 100) : 0;
@@ -181,7 +184,7 @@ export default function TodayPage() {
                     // 会員登録への誘導を出す（2026-10-16、「回答は会員じゃなくてもできるが、
                     // 閲覧は会員じゃないと見れない」設計への変更）。
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-                      <div className="muted" style={{ fontSize: 12 }}>今日の回答：ー件</div>
+                      <div className="muted" style={{ fontSize: 12 }}>これまでの回答：ー件</div>
                       {question.choices.map((c, i) => (
                         <div
                           key={c.value}
@@ -204,7 +207,7 @@ export default function TodayPage() {
                           </div>
                         </div>
                       ))}
-                      <div className="qtext">回答ありがとうございます。会員登録（無料）すると、今日みんながどう答えているかの集計グラフを見られます。</div>
+                      <div className="qtext">回答ありがとうございます。会員登録（無料）すると、この質問にみんながどう答えているかの累計の集計グラフを見られます。</div>
                       <Link className="btn-primary" href="/account/login?next=/today">
                         ログイン / 無料登録
                       </Link>
