@@ -12,6 +12,10 @@ type Question = { slug: string; text: string; choices: QuestionChoice[] };
 // 会員登録が必要なのは「本物の集計グラフを見る」ことだけなので、未ログインで答えた
 // 後は、ぼかしのグラフ＋会員登録への誘導を出す（2026-10-16、「回答は会員じゃなくても
 // できるが、閲覧は会員じゃないと見れない」設計への変更）。
+// 未回答時の見た目は、汎用の.card/.chipではなく専用のtoday-teaser-*クラス
+// （app/globals.css）で、ブランドカラーのグラデーションラインや丸みのある
+// 専用ボタンを使った、このカードだけのデザインにしている（2026-10-16、
+// 「もっとスタイリッシュに」との要望）。
 export default function TodayQuestionTeaser() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
@@ -54,23 +58,25 @@ export default function TodayQuestionTeaser() {
 
   const questionLabel = question.text.length > 30 ? `${question.text.slice(0, 30)}…` : question.text;
 
-  // まだ回答していない場合（未ログイン・ログイン済みどちらも）、その場で選べそうな
-  // チップボタンを見せる。未ログインでも実際にその場で回答できる（会員登録不要）。
-  // ここは「回答のしやすさ」を最優先にするため、グラフや説明文などは置かず、
-  // 質問文とチップボタンだけのシンプルな見せ方にする（2026-10-16）。
+  // まだ回答していない場合（未ログイン・ログイン済みどちらも）、その場で選べる
+  // 専用デザインのボタンを見せる。未ログインでも実際にその場で回答できる
+  // （会員登録不要）。グラフや説明文は置かず、質問文とボタンだけで「回答の
+  // しやすさ」を最優先にする（2026-10-16、.cardと.chipの流用から、専用の
+  // today-teaser-*デザインに変更）。
   if (!myAnswer) {
     return (
-      <div className="card" style={{ gap: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <img src="/assets/icon_comment.png" alt="" style={{ width: 20, height: 20, objectFit: 'contain', flex: '0 0 auto' }} />
-          <div className="qtext" style={{ fontWeight: 700, fontSize: 13, flex: 1 }}>{questionLabel}</div>
+      <div className="today-teaser">
+        <div className="today-teaser-label">
+          <img src="/assets/icon_comment.png" alt="" />
+          きょうの質問
         </div>
-        <div className="chip-row chip-row-wrap">
+        <div className="today-teaser-q">{questionLabel}</div>
+        <div className="today-teaser-options">
           {question.choices.map((c) => (
             <button
               key={c.value}
               type="button"
-              className="chip chip-tag"
+              className="today-teaser-option"
               disabled={submitting}
               onClick={() => answer(c.value)}
             >
