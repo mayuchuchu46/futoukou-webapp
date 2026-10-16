@@ -28,11 +28,11 @@ export default function MyPage() {
         <h2 className="pagetitle">マイページ</h2>
         <div className="muted" style={{ marginBottom: 4 }}>自分が投稿した相談だけを表示しています</div>
 
-        {/* AIによる状況分析は独立した「分析ノート」タブに移動したため、ここは誘導リンクのみ。 */}
+        {/* AIによる状況分析は独立した「伴走ノート」タブに移動したため、ここは誘導リンクのみ。 */}
         <Link href="/notebook" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <img src="/assets/icon_book.png" alt="" style={{ width: 20, height: 20, objectFit: 'contain' }} />
-            分析ノートを見る
+            伴走ノートを見る
           </span>
           <span className="muted">›</span>
         </Link>

@@ -53,7 +53,7 @@ const PREVIEW_ENTRIES = [
   { tabClass: 'tab-school', label: '学校・居場所選びの着眼点', hint: '学校や居場所を選ぶときの着眼点が書かれます。' },
 ];
 
-// 「分析ノート」の見出し部分（タイトル＋相談件数の付箋バッジ＋積み重ね表示の点）。
+// 「伴走ノート」の見出し部分（タイトル＋相談件数の付箋バッジ＋積み重ね表示の点）。
 // どの表示状態（未登録・相談0件・相談あり）でも同じ見出しを出し、ページ全体が
 // 一貫して「ノート」に見えるようにする（2026-10-12、ノートらしい見た目にする
 // リニューアルで追加）。
@@ -67,7 +67,7 @@ function NotebookHead({ count, childId }: { count: number; childId?: string | nu
       <div className="notebook-head-text">
         <div className="answer-label" style={{ fontSize: 14 }}>
           <img src="/assets/icon_book.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
-          分析ノート
+          伴走ノート
         </div>
         <div className="notebook-progress">
           {dots.map((filled, i) => (
@@ -128,7 +128,7 @@ function ChildSwitcher({
   );
 }
 
-// 「分析ノート」ページ（/notebook）の本体カード。自分が投稿した相談の蓄積から
+// 「伴走ノート」ページ（/notebook）の本体カード。自分が投稿した相談の蓄積から
 // どうする先生がAIで状況を整理するもの。元はマイページ内のカードだったが、
 // 会員登録・課金への導線として独立したタブ（ボトムナビ）に格上げした
 // （2026-10-12）。閲覧履歴・いいね等の行動ログは今のところ会員単位で
@@ -220,7 +220,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
           {/* 説明文が長いと誘導ボタンまで読んでもらえないとの指摘を受けて、一文に
               短縮し、ボタンを直後に置いて迷わず押せるようにした（2026-10-13）。 */}
           <div className="qtext">
-            分析ノートは、相談するとここに作られます。
+            伴走ノートは、相談するとここに作られます。
           </div>
           <Link className="btn-primary" href="/ask">
             まずは相談してみる（無料）
@@ -248,7 +248,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
           <NotebookPlaceholder key={entry.label} {...entry} />
         ))}
         <Link className="btn-primary" href="/account/register?next=/notebook">
-          会員登録（無料）で分析ノートを見る
+          会員登録（無料）で伴走ノートを見る
         </Link>
         <Link href="/ask" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
           さらに相談してから登録する
@@ -362,7 +362,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
         </>
       )}
 
-      {/* 結果ページのAI回答に付けている免責文と同じ考え方を、分析ノートにも適用。
+      {/* 結果ページのAI回答に付けている免責文と同じ考え方を、伴走ノートにも適用。
           ノートの中身（状況整理・次の一手・言葉かけ等）は全てAI生成であり、相談結果
           ページと同じく「一つの見方」「間違えることもある」「最終判断は保護者自身」
           という前提と、専門家・相談窓口への導線をここにもまとめて置く。見出し直下では

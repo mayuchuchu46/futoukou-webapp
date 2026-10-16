@@ -46,10 +46,10 @@ export default function ExpertListClient() {
           </div>
           <div className="qtext" style={{ fontSize: 13 }}>✓ ここに並ぶ専門家回答が、すべて読めるようになる</div>
           <div className="qtext" style={{ fontSize: 13 }}>✓ 専門家への質問が、月1回は無料でできる</div>
-          {/* 分析ノートの基本サマリー（状況整理・次の一手・言葉かけ等）は2026-10-12より
-              無料会員にも開放したため、この行は「無料会員にはないもの」として、分析ノートを
+          {/* 伴走ノートの基本サマリー（状況整理・次の一手・言葉かけ等）は2026-10-12より
+              無料会員にも開放したため、この行は「無料会員にはないもの」として、伴走ノートを
               より詳しく見られるという有料会員向けの訴求に書き換えた。 */}
-          <div className="qtext" style={{ fontSize: 13 }}>✓ 相談を重ねるほど、分析ノートの中身をより詳しく見られるようになる</div>
+          <div className="qtext" style={{ fontSize: 13 }}>✓ 相談を重ねるほど、伴走ノートの中身をより詳しく見られるようになる</div>
         </div>
 
         <Link href="/experts" className="backlink" style={{ margin: '0 0 14px' }}>

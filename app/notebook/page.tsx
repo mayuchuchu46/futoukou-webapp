@@ -8,7 +8,7 @@ import PcSidebar from '@/components/PcSidebar';
 import ConsultationSummaryCard from './ConsultationSummaryCard';
 import { getUid } from '@/lib/uid';
 
-// 「分析ノート」専用ページ。ボトムナビの独立タブからいつでも開ける（元はマイページ内の
+// 「伴走ノート」専用ページ。ボトムナビの独立タブからいつでも開ける（元はマイページ内の
 // カードだった）。会員登録・読み放題会員登録への導線を強めるのが目的（2026-10-12 追加）。
 // このページ自体は投稿した相談の件数（ownCount）だけ把握すればよく、相談の一覧表示自体は
 // 従来どおりマイページが担当する（役割を分け、重複表示を避ける）。
@@ -28,8 +28,8 @@ export default function NotebookPage() {
       <Header supervised={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-        <h2 className="pagetitle">分析ノート</h2>
-        {/* 分析ノートは本人の相談内容（子どもの状況）を踏み込んでまとめるものなので、
+        <h2 className="pagetitle">伴走ノート</h2>
+        {/* 伴走ノートは本人の相談内容（子どもの状況）を踏み込んでまとめるものなので、
             安心して相談を重ねてもらえるよう、他の人には見えないことも同じ文に
             含めて伝える（2026-10-13、独立した行だと座りが悪かったため1文にまとめた）。 */}
         <div className="muted" style={{ marginBottom: 12 }}>
@@ -40,7 +40,7 @@ export default function NotebookPage() {
             「自分の相談件数（/api/consultations）」→「ノートの中身（/api/member-summary）」
             の2つのAPI呼び出しが直列になり、表示が遅くなっていた。ownCountの確定を待たずに
             マウントし、カード側でownCount（nullの間は読み込み中）を扱う形にして、
-            2つの取得を並列で走らせるようにした（2026-10-15、「分析ノートのページも表示が
+            2つの取得を並列で走らせるようにした（2026-10-15、「伴走ノートのページも表示が
             遅い」との指摘を受けて修正）。 */}
         <ConsultationSummaryCard ownCount={ownCount} />
 

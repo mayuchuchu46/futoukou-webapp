@@ -124,11 +124,11 @@ export default function ChildrenPage() {
       <div className="main">
         <h2 className="pagetitle">お子さんのプロフィール</h2>
         <div className="muted" style={{ marginBottom: 4 }}>
-          兄弟・姉妹それぞれで分析ノートを分けたい場合に使います。登録しなくても、今まで通りアカウント全体で1つのノートとして使えます。
+          兄弟・姉妹それぞれで伴走ノートを分けたい場合に使います。登録しなくても、今まで通りアカウント全体で1つのノートとして使えます。
         </div>
         {/* 「名前が掲載されないか不安」との声を受けて、非公開であることを明記した
             （2026-10-16追加）。ここで入力した名前は、ログイン中の本人だけが見る
-            画面（このページ・相談するページの選択欄・分析ノートの切り替えタブ）
+            画面（このページ・相談するページの選択欄・伴走ノートの切り替えタブ）
             にのみ使われ、「みんなの相談」等の公開ページには一切表示されない。 */}
         <div className="muted" style={{ marginBottom: 12, fontSize: 12 }}>
           ここで登録する名前は、ログイン中のご自身の画面にのみ表示されます。「みんなの相談」など、他の人が見られるページには一切表示されません。
@@ -271,7 +271,7 @@ export default function ChildrenPage() {
             </div>
 
             <Link href="/notebook" className="btn-secondary">
-              分析ノートに戻る
+              伴走ノートに戻る
             </Link>
           </>
         )}

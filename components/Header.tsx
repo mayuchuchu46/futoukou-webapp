@@ -7,14 +7,14 @@ import CrisisModal from './CrisisModal';
 
 export default function Header({ supervised }: { supervised: boolean }) {
   const [crisisOpen, setCrisisOpen] = useState(false);
-  // トップページ以外（分析ノート・マイページ等）のスマホ表示では、「専門家監修：準備中…」
+  // トップページ以外（伴走ノート・マイページ等）のスマホ表示では、「専門家監修：準備中…」
   // 「不登校のご家庭に、次の一手を。」といったトップページ向けの説明文はもう要らない、
   // という指摘を受けて追加。PC幅では引き続き全ページに表示する（2026-10-12）。
   const pathname = usePathname();
   const isHome = pathname === '/';
   const router = useRouter();
   // ヘッダーに常時「ログイン／アカウント」導線を出すための、ログイン状態の軽量チェック。
-  // 以前は会員登録・ログインへの入り口がマイページ・分析ノートの中に埋もれていて、
+  // 以前は会員登録・ログインへの入り口がマイページ・伴走ノートの中に埋もれていて、
   // 「今すぐログインしたいだけ」の人にも毎回それらを掘ってもらう必要があったため追加した
   // （2026-10-12）。
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
@@ -72,7 +72,7 @@ export default function Header({ supervised }: { supervised: boolean }) {
           <h1 className="hero-catch">不登校のご家庭に、次の一手を。</h1>
           {/* 「相談を重ねるほど〜」を一度hero-subに足してみたが、文が長くなりすぎるとの
               指摘を受けて元に戻した（2026-10-15）。この差別化メッセージは結果ページ
-              （SaveConsultationPrompt、会員本人向け「分析ノートに記録されました」表示）
+              （SaveConsultationPrompt、会員本人向け「伴走ノートに記録されました」表示）
               の方に残している。 */}
           <div className="hero-sub">「どうしたらいい？」にAIと専門家が具体的に回答</div>
         </div>

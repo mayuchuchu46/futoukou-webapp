@@ -180,11 +180,11 @@
 -- alter table consultations add column if not exists stripe_transfer_id text;
 -- alter table consultations add column if not exists paid_at timestamptz;
 -- （StripeダッシュボードでConnect機能自体の有効化も別途必要です）
--- 分析ノートのAIサマリーに「言葉かけの提案」「環境面の工夫の提案」を追加した場合、
+-- 伴走ノートのAIサマリーに「言葉かけの提案」「環境面の工夫の提案」を追加した場合、
 -- 既存DBでは次を実行してください。
 -- alter table member_summaries add column if not exists phrasing_suggestion text not null default '';
 -- alter table member_summaries add column if not exists environment_suggestion text not null default '';
--- 分析ノートのAIサマリーに「学校・居場所選びの着眼点（簡易版）」を追加した場合、
+-- 伴走ノートのAIサマリーに「学校・居場所選びの着眼点（簡易版）」を追加した場合、
 -- 既存DBでは次を実行してください。実在の学校名は出さない暫定版の着眼点提案です
 -- （本格的な学校ごとの相性診断は、実在の学校データが揃うまでのカミングソーン扱い）。
 -- alter table member_summaries add column if not exists school_fit_points text not null default '';
@@ -367,7 +367,7 @@ create index if not exists members_stripe_subscription_id_idx on members (stripe
 -- 子どもプロフィール（2026-10-16追加）。「兄弟で不登校のパターンが多い」ため、
 -- 1つの会員アカウントで複数の子ども（例：息子・娘）を分けて管理できるようにする。
 -- 相談するとき（任意）にどの子についての相談か選べるようになり（consultations.child_id）、
--- 分析ノート（member_summaries→子ども単位ではchild_summaries）もこの子ども単位で分かれる。
+-- 伴走ノート（member_summaries→子ども単位ではchild_summaries）もこの子ども単位で分かれる。
 -- 子どもプロフィールを1人も作っていない会員は、従来通り「アカウント全体で1つのノート」
 -- という今までの挙動のまま変わらない（lib/memberSummary.ts参照）。
 create table if not exists children (
@@ -476,7 +476,7 @@ create table if not exists member_summaries (
 );
 alter table member_summaries enable row level security;
 
--- 子どもごとの分析ノート（2026-10-16追加）。member_summariesと全く同じ形だが、
+-- 子どもごとの伴走ノート（2026-10-16追加）。member_summariesと全く同じ形だが、
 -- 子どもプロフィール（children）単位でキャッシュする。子どもプロフィールを作っている
 -- 会員が、相談する画面でどの子の相談か選んでいた場合、その子のノートはここに生成される
 -- （lib/memberSummary.ts参照）。子どもプロフィールを作っていない会員は、今まで通り

@@ -10,9 +10,9 @@ const ITEMS = [
   // ピンクの丸バッジで一段浮かせて強調する専用スタイル（highlight）を追加
   // （2026-10-15）。他の3タブはこれまで通り選択時だけ緑になる控えめな見た目。
   { href: '/ask', label: '相談する', icon: '/assets/icon_bulb.png', highlight: true },
-  // 分析ノートは独立したタブにして常時アクセスできるようにする（元はマイページ内のカードだった）。
+  // 伴走ノートは独立したタブにして常時アクセスできるようにする（元はマイページ内のカードだった）。
   // アイコンはノートを連想させるicon_book、マイページは元のicon_bookmarkに戻す。
-  { href: '/notebook', label: '分析ノート', icon: '/assets/icon_book.png' },
+  { href: '/notebook', label: '伴走ノート', icon: '/assets/icon_book.png' },
   { href: '/mypage', label: 'マイページ', icon: '/assets/icon_bookmark.png' },
 ];
 

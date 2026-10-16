@@ -4,7 +4,7 @@ import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
 import { getOrGenerateMemberSummary, getOrGenerateChildSummary } from '@/lib/memberSummary';
 
-// マイページ（分析ノート）の「今のお子さんの状況」AIサマリー用エンドポイント。動的な
+// マイページ（伴走ノート）の「今のお子さんの状況」AIサマリー用エンドポイント。動的な
 // Route Handlerなので、ここでCookieから会員情報を読んでも共有キャッシュ汚染の心配はない
 // （lib/consultations.tsのコメント参照）。
 //

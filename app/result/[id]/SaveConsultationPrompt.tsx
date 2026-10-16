@@ -10,10 +10,10 @@ import { getUid } from '@/lib/uid';
 // 以前は「今はしない」でこの相談単位にスキップできたが、毎回出してよいとの判断で
 // スキップ機能ごと削除した（2026-10-13）。
 // 以前は未登録の本人にだけ「登録すれば残せます」という勧誘を出し、会員登録済みの本人には
-// 何も表示していなかった（AIの回答を読んで終わり）。これだと「相談するほど分析ノートが
+// 何も表示していなかった（AIの回答を読んで終わり）。これだと「相談するほど伴走ノートが
 // 詳しくなっていく」という、このサービスがChatGPT等の汎用AIと違う一番の価値を、
 // 一番体感してほしい会員本人が相談のたびに確認できていなかった。会員本人には代わりに
-// 「この相談は分析ノートに記録されました」という一言＋分析ノートへの導線を出す
+// 「この相談は伴走ノートに記録されました」という一言＋伴走ノートへの導線を出す
 // （2026-10-15、「普通のチャッピーとかの回答となにが違うの？と思われそう」との指摘を受けて追加）。
 export default function SaveConsultationPrompt({ id, authorId }: { id: string; authorId: string }) {
   const [state, setState] = useState<'hidden' | 'register' | 'saved'>('hidden');
@@ -47,13 +47,13 @@ export default function SaveConsultationPrompt({ id, authorId }: { id: string; a
       <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
         <div className="answer-label" style={{ fontSize: 14 }}>
           <span aria-hidden="true">✏️</span>
-          この相談は分析ノートに記録されました
+          この相談は伴走ノートに記録されました
         </div>
         <div className="qtext" style={{ fontSize: 13 }}>
           相談を重ねるほど、お子さんの状況の整理や次にできそうなことがノートに書き足されていきます。
         </div>
         <a href="/notebook" className="btn-secondary">
-          分析ノートを見る
+          伴走ノートを見る
         </a>
       </div>
     );
@@ -63,9 +63,9 @@ export default function SaveConsultationPrompt({ id, authorId }: { id: string; a
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
       <div className="answer-label" style={{ fontSize: 14 }}>この相談、残しておけます</div>
       {/* 長い説明文1本ではなく、無料会員登録の魅力をポイントで整理して見せる形に変更
-          （2026-10-13、「質問の蓄積で分析ノートが作られる」ことが伝わるように）。 */}
+          （2026-10-13、「質問の蓄積で伴走ノートが作られる」ことが伝わるように）。 */}
       <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--text)', lineHeight: 1.9 }}>
-        <li>この相談が「分析ノート」に記録されます</li>
+        <li>この相談が「伴走ノート」に記録されます</li>
         <li>相談を重ねるほど、お子さんの状況をAIが整理します</li>
         <li>次にできそうなこと・言葉かけの提案もノートに書き足されます</li>
       </ul>
@@ -73,7 +73,7 @@ export default function SaveConsultationPrompt({ id, authorId }: { id: string; a
         無料で登録する
       </a>
       <a href="/notebook" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
-        分析ノートを見る
+        伴走ノートを見る
       </a>
     </div>
   );

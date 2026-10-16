@@ -34,7 +34,7 @@ function AskPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const expertIdParam = searchParams.get('expert');
-  // 分析ノート（/notebook）の子ども切り替えや、お子さんのプロフィール画面から
+  // 伴走ノート（/notebook）の子ども切り替えや、お子さんのプロフィール画面から
   // 「この子について相談する」で来た場合に、あらかじめ選択済みにする（2026-10-16追加）。
   const childIdParam = searchParams.get('child');
   // 以前はCATEGORY_KEYS[0]（＝オブジェクトの先頭に書かれているだけの「身体的要因」）が
@@ -346,7 +346,7 @@ function AskPageContent() {
         {/* 子どもプロフィール（2026-10-16追加）。お子さんのプロフィールを1人も登録していない
             会員・未ログインの人には表示されず、今まで通りの画面のまま（childrenListが
             空配列）。2人以上いる場合に「どの子のことか」を選べるようにし、選んだ内容は
-            分析ノート側の同じ子のノートに積み上がる。 */}
+            伴走ノート側の同じ子のノートに積み上がる。 */}
         {childrenList.length > 0 && (
           <>
             <div className="muted" style={{ margin: '14px 0 2px' }}>どのお子さんのことですか？</div>
