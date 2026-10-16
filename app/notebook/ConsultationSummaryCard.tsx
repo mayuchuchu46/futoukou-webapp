@@ -74,7 +74,13 @@ function NotebookHead({ count }: { count: number }) {
           </span>
         </div>
       </div>
-      {count > 0 && <span className="notebook-count-badge">{count}件相談済み</span>}
+      {/* 「何件相談したか数字で見るだけでなく、中身も確認したい」との指摘を受けて、
+          件数バッジをマイページ（自分の相談一覧）へのリンクにした（2026-10-16）。 */}
+      {count > 0 && (
+        <Link href="/mypage" className="notebook-count-badge" style={{ textDecoration: 'none' }}>
+          {count}件相談済み
+        </Link>
+      )}
     </div>
   );
 }
