@@ -27,21 +27,38 @@ export default function TodayPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('/api/daily-question')
+    fetch('/api/children')
+      .then((r) => r.json())
+      .then((d) => setChildrenList(d.children || []))
+      .catch(() => setChildrenList([]));
+  }, []);
+
+  // 兄弟（複数の子どもプロフィール）がいる場合、それぞれ別に1日1回答えられるように
+  // する（2026-10-16、「1人分答えたらもう1人の分が答えられない」不具合の修正）。
+  // 選んでいる子ども（全体/子どもA/子どもB…）が変わるたびに、そのスコープの
+  // 質問・回答状況を取り直す。
+  useEffect(() => {
+    let cancelled = false;
+    setMyAnswer(null);
+    setAggregate(null);
+    const qs = selectedChildId ? `?child_id=${encodeURIComponent(selectedChildId)}` : '';
+    fetch(`/api/daily-question${qs}`)
       .then((r) => r.json())
       .then((d) => {
+        if (cancelled) return;
         setLoggedIn(!!d.loggedIn);
         setDate(d.date);
         setQuestion(d.question);
         setMyAnswer(d.myAnswer);
         setAggregate(d.aggregate);
       })
-      .catch(() => setLoggedIn(false));
-    fetch('/api/children')
-      .then((r) => r.json())
-      .then((d) => setChildrenList(d.children || []))
-      .catch(() => setChildrenList([]));
-  }, []);
+      .catch(() => {
+        if (!cancelled) setLoggedIn(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedChildId]);
 
   async function answer(value: string) {
     if (submitting || myAnswer) return;
@@ -132,7 +149,11 @@ export default function TodayPage() {
               <div className="muted" style={{ fontSize: 12 }}>{date}の質問</div>
               <div className="answer-label" style={{ fontSize: 15 }}>{question.text}</div>
 
-              {!myAnswer && childrenList.length > 0 && (
+              {/* 以前は「まだ回答していない時だけ」表示していたが、それだと兄弟がいる場合に
+                  1人分答えた時点で切り替えタブごと消えてしまい、もう1人の分に切り替えられ
+                  なくなっていた（2026-10-16、不具合修正）。答えた後も切り替えられるよう、
+                  常に表示する。 */}
+              {childrenList.length > 0 && (
                 <div className="chip-row chip-row-wrap">
                   <button
                     type="button"

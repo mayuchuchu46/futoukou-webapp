@@ -60,6 +60,16 @@
 -- 既存DBでは次を実行してください。
 -- alter table member_summaries add column if not exists daily_answer_count int not null default 0;
 -- alter table child_summaries add column if not exists daily_answer_count int not null default 0;
+-- 「兄弟（複数の子どもプロフィール）がいる場合、1人分答えたらもう1人の分が答えられない」
+-- 不具合の修正（2026-10-16追加）。unique(member_id, answer_date)だと子どもを問わず
+-- 1日1回までに制限されてしまっていたため、子どもごとに1日1回に変更する。child_idは
+-- nullable（「全体」選択時）で、Postgresの通常のunique制約はNULL同士を別物として扱う
+-- ため、そのままでは「全体」を選んだ場合だけ複数回答できてしまう。NULLをダミーUUIDに
+-- 正規化したgenerated column（child_key）を間に挟むことで、「全体」もふくめて
+-- 確実に1日1回に揃える。既存DBでは次を実行してください。
+-- alter table daily_answers add column if not exists child_key uuid generated always as (coalesce(child_id, '00000000-0000-0000-0000-000000000000'::uuid)) stored;
+-- alter table daily_answers drop constraint if exists daily_answers_member_id_answer_date_key;
+-- alter table daily_answers add constraint daily_answers_member_date_child_key unique (member_id, answer_date, child_key);
 -- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
 -- （2026-10-13追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists review_status text not null default 'pending';
@@ -404,19 +414,26 @@ create index if not exists children_member_id_idx on children (member_id);
 
 -- 「みんなのデータ」機能（2026-10-16追加）。日替わりの簡単なアンケート（起床時間・
 -- 朝ごはん等、lib/dailyQuestions.ts参照）に会員が答える。質問は1日1問しか出ないため
--- (member_id, answer_date)で1日1回answer_dateが答えた日の日付（JSTのその日）。
+-- answer_dateが答えた日の日付（JSTのその日）。
 -- 個別の回答は本人専用（伴走ノートの材料にする想定）で、他の会員には公開しない。
 -- 公開するのは「今日はみんなどう答えているか」という同日・同質問の集計のみ
 -- （app/api/daily-question/route.ts参照）。
+-- 子どもプロフィール（兄弟）ごとに1日1回答えられるようにするため、一意制約は
+-- member_id・answer_dateだけでなくchild_idも含める。child_idはnullable（「全体」選択時）
+-- で、通常のunique制約はNULL同士を別物として扱ってしまう（＝「全体」を選んだ場合だけ
+-- 1日に何回でも答えられてしまう）ため、NULLをダミーUUIDに正規化したgenerated column
+-- （child_key）を間に挟み、「全体」もふくめて確実に1日1回に揃える
+-- （2026-10-16、「兄弟の場合、1人分答えたらもう1人の分が答えられない」不具合の修正）。
 create table if not exists daily_answers (
   id uuid primary key default gen_random_uuid(),
   member_id uuid not null references members(id),
   child_id uuid references children(id) on delete set null,
+  child_key uuid generated always as (coalesce(child_id, '00000000-0000-0000-0000-000000000000'::uuid)) stored,
   answer_date date not null,
   question_slug text not null,
   value text not null,
   created_at timestamptz not null default now(),
-  unique (member_id, answer_date)
+  unique (member_id, answer_date, child_key)
 );
 alter table daily_answers enable row level security;
 

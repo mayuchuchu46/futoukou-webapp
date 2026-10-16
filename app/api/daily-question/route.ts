@@ -25,7 +25,7 @@ async function buildAggregate(answerDate: string, questionSlug: string) {
   return { total: data?.length || 0, counts };
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const { date, question: todaysQuestion } = getTodaysQuestion();
   const member = await getCurrentMember();
 
@@ -33,13 +33,30 @@ export async function GET() {
     return NextResponse.json({ loggedIn: false, date, question: todaysQuestion, myAnswer: null, aggregate: null });
   }
 
+  // 兄弟（複数の子どもプロフィール）がいる場合、子どもごとに1日1回答えられるように
+  // する（2026-10-16、「1人分答えたらもう1人の分が答えられない」不具合の修正）。
+  // どの子ども（または「全体」）についての回答かをchild_idクエリパラメータで切り替える。
+  const childIdParam = new URL(req.url).searchParams.get('child_id');
+  let scopeChildId: string | null = null;
+  if (childIdParam) {
+    const supabaseCheck = getSupabaseAdmin();
+    const { data: child } = await supabaseCheck
+      .from('children')
+      .select('id')
+      .eq('id', childIdParam)
+      .eq('member_id', member.id)
+      .single();
+    if (child) scopeChildId = child.id;
+  }
+
   const supabase = getSupabaseAdmin();
-  const { data: existing } = await supabase
+  let existingQuery = supabase
     .from('daily_answers')
     .select('value, question_slug')
     .eq('member_id', member.id)
-    .eq('answer_date', date)
-    .maybeSingle();
+    .eq('answer_date', date);
+  existingQuery = scopeChildId ? existingQuery.eq('child_id', scopeChildId) : existingQuery.is('child_id', null);
+  const { data: existing } = await existingQuery.maybeSingle();
 
   // 既にその日に回答済みの場合、表示する質問は「保存されている回答のquestion_slug」を
   // 使う（getTodaysQuestion()を使い回さない）。質問バンクの配列を増減させると、同じ
@@ -82,7 +99,11 @@ export async function POST(req: NextRequest) {
     if (child) childId = child.id;
   }
 
-  // 1日1回。既に今日答えている場合は上書き（回答し直し）を許可する。
+  // 子どもごと（「全体」も含む）に1日1回。既にそのスコープで今日答えている場合は
+  // 上書き（回答し直し）を許可する。one Conflictの対象はmember_id・answer_dateに
+  // child_key（child_idのNULLをダミーUUIDに正規化したgenerated column。
+  // supabase_schema.sql参照）を加えた3列の一意制約（2026-10-16、兄弟それぞれが
+  // 答えられるようにする修正で変更）。
   const { error } = await supabase
     .from('daily_answers')
     .upsert(
@@ -93,7 +114,7 @@ export async function POST(req: NextRequest) {
         question_slug: question.slug,
         value,
       },
-      { onConflict: 'member_id,answer_date' }
+      { onConflict: 'member_id,answer_date,child_key' }
     );
 
   if (error) {
