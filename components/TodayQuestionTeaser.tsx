@@ -3,18 +3,20 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-type Question = { slug: string; text: string };
+type QuestionChoice = { value: string; label: string };
+type Question = { slug: string; text: string; choices: QuestionChoice[] };
 
 // TOPページ（ホーム）に出す「みんなのデータ」の誘導カード（2026-10-16追加）。
-// 「今日の質問」のような見た目で目に入りやすくし、/todayへの導線を強める狙い
-// （「TOPでも表示したい、誘導しやすくしたい」との要望を受けて追加）。
-// 最初は質問に直接回答できる作りにしていたが、スマホで縦に高さを取りすぎる
-// との指摘を受け、.expertbannerと同じ横1行のコンパクトな誘導バナーに変更
-// （2026-10-16）。実際の回答・結果グラフ表示は引き続き/todayが担当する。
+// 横1行のコンパクトなバナー（.expertbanner流用）にしていたが、「すぐに回答選択
+// できるようにしたい」との要望を受けて、ログイン済み・未回答の場合だけその場で
+// 選べるチップボタンを出す形に変更。以前の.genderbtn（縦に大きい）ではなく
+// .chip（横並びの小さいピル型ボタン）を使い、高さを取りすぎないようにしている。
+// 未ログイン・回答済みの場合は、引き続き横1行バナーのまま/todayへ誘導する。
 export default function TodayQuestionTeaser() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [myAnswer, setMyAnswer] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetch('/api/daily-question')
@@ -27,19 +29,58 @@ export default function TodayQuestionTeaser() {
       .catch(() => setLoggedIn(false));
   }, []);
 
+  async function answer(value: string) {
+    if (submitting || myAnswer) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/daily-question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value, child_id: null }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMyAnswer(data.myAnswer);
+      }
+    } catch {
+      // TOPの小さい誘導枠でのエラー表示は煩雑になるため、失敗時は黙って何もしない
+      // （/todayに行けば改めて答えられる）。
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   if (!question) return null;
 
-  const statusText =
-    loggedIn === false
-      ? 'ログイン・無料登録して回答する'
-      : myAnswer
-        ? '回答済み・今日の集計を見る'
-        : '今日の質問に答える';
-
-  // 「『みんなのデータ』というテキストはいらない、質問だけ出して」との要望を受けて
-  // タイトルは質問文そのものにした（2026-10-16）。機能名はアイコン（吹き出し2つ）で
-  // 示す。
   const questionLabel = question.text.length > 30 ? `${question.text.slice(0, 30)}…` : question.text;
+
+  // ログイン済み・未回答の場合だけ、その場で選べるチップボタンを出す。
+  if (loggedIn && !myAnswer) {
+    return (
+      <div className="card" style={{ gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <img src="/assets/icon_comment.png" alt="" style={{ width: 20, height: 20, objectFit: 'contain' }} />
+          <div className="qtext" style={{ fontWeight: 700, fontSize: 13 }}>{questionLabel}</div>
+        </div>
+        <div className="chip-row chip-row-wrap">
+          {question.choices.map((c) => (
+            <button
+              key={c.value}
+              type="button"
+              className="chip chip-tag"
+              disabled={submitting}
+              onClick={() => answer(c.value)}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // 未ログイン・回答済みの場合は、横1行のコンパクトなバナーで/todayに誘導する。
+  const statusText = loggedIn === false ? 'ログイン・無料登録して回答する' : '回答済み・今日の集計を見る';
 
   return (
     <Link href="/today" className="expertbanner expertbanner-today">
@@ -48,10 +89,10 @@ export default function TodayQuestionTeaser() {
         <div className="expertbanner-title">{questionLabel}</div>
         <div className="expertbanner-desc">{statusText}</div>
       </div>
-      {/* 「ぼかしグラフも小さく出したい」→「もうちょい大きく」との要望を受けて
-          サイズ調整（2026-10-16）。実際の集計ではなく、横1行の高さに収まるミニ棒
-          グラフの見本（ぼかし）。本物のグラフは引き続き/todayで、答えた人だけに
-          見せる。 */}
+      {/* 実際の集計ではなく、横1行の高さに収まるミニ棒グラフの見本（ぼかし）。
+          本物のグラフは引き続き/todayで、答えた人だけに見せる。myAnswer済みの
+          自分の行だけでも実データを出したくなるが、ここは導線用の枠として
+          あえて共通の見本のままにしている（一貫性のため）。 */}
       <div className="expertbanner-today-graph" aria-hidden="true">
         <span style={{ height: '45%' }} />
         <span style={{ height: '85%', background: 'var(--main)' }} />
