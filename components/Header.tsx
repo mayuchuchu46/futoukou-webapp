@@ -74,7 +74,9 @@ export default function Header({ supervised }: { supervised: boolean }) {
               指摘を受けて元に戻した（2026-10-15）。この差別化メッセージは結果ページ
               （SaveConsultationPrompt、会員本人向け「伴走ノートに記録されました」表示）
               の方に残している。 */}
-          <div className="hero-sub">「どうしたらいい？」にAIと専門家が具体的に回答</div>
+          {/* 「伴走ノート」への改名に合わせて、キャッチコピーも「答えて終わり」ではなく
+              継続的に寄り添う印象に変更（2026-10-16）。 */}
+          <div className="hero-sub">「どうしたらいい？」にAIと専門家が回答＆伴走</div>
         </div>
         <div className="header-right">
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>
