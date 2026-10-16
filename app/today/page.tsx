@@ -74,9 +74,51 @@ export default function TodayPage() {
             毎日かわる簡単な質問に答えるだけの、選択式アンケートです。あなたの回答は非公開ですが、答えると「今日、みんなはどう答えているか」の集計が見られます。
           </div>
 
-          {loggedIn === false && (
-            <div className="card" style={{ gap: 8 }}>
-              <div className="qtext">みんなのデータを見る・質問に答えるには、ログインが必要です。</div>
+          {/* 未ログイン時も、質問自体は見せて「どんな機能か」が伝わるようにする（2026-10-16、
+              「質問は出して、アンケート結果をぼかして会員登録に誘導したい」との要望を受けて
+              変更）。選択肢ボタンは押せない見本として表示し、結果グラフは実際の集計では
+              なくぼかした見本（本物のデータは答えた会員だけに見せる、という設計は維持）。
+              回答・結果閲覧には引き続き会員登録が必要。 */}
+          {loggedIn === false && question && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="muted" style={{ fontSize: 12 }}>{date}の質問</div>
+              <div className="answer-label" style={{ fontSize: 15 }}>{question.text}</div>
+
+              <div className="genderrow" style={{ opacity: 0.5, pointerEvents: 'none' }} aria-hidden="true">
+                {question.choices.map((c) => (
+                  <button key={c.value} type="button" className="genderbtn" disabled>
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
+                <div className="muted" style={{ fontSize: 12 }}>今日の回答：ー件</div>
+                {question.choices.map((c, i) => (
+                  <div
+                    key={c.value}
+                    style={{ display: 'flex', flexDirection: 'column', gap: 3, filter: 'blur(5px)', userSelect: 'none' }}
+                    aria-hidden="true"
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                      <span>{c.label}</span>
+                      <span className="muted">ーー件（ーー%）</span>
+                    </div>
+                    <div style={{ background: 'var(--border)', borderRadius: 6, height: 8, overflow: 'hidden' }}>
+                      <div
+                        style={{
+                          width: `${35 + ((i * 23) % 50)}%`,
+                          height: '100%',
+                          background: 'var(--sub)',
+                          borderRadius: 6,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="qtext">ログイン・無料登録すると、この質問に回答して、今日みんながどう答えているかの集計グラフを見られます。</div>
               <Link className="btn-primary" href="/account/login?next=/today">
                 ログイン / 無料登録
               </Link>
