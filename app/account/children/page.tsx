@@ -153,6 +153,7 @@ export default function ChildrenPage() {
               children.map((c) => (
                 editingId === c.id ? (
                   <div key={c.id} className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+                    <div className="muted" style={{ fontSize: 12 }}>お名前（非公開・ご自身の画面にのみ表示）</div>
                     <input
                       className="input"
                       placeholder="名前・ニックネーム"
@@ -241,6 +242,7 @@ export default function ChildrenPage() {
 
             <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>お子さんを追加</div>
+              <div className="muted" style={{ fontSize: 12, marginTop: -4 }}>お名前（非公開・ご自身の画面にのみ表示）</div>
               <input
                 className="input"
                 placeholder="名前・ニックネーム（例：息子、長男、◯◯ちゃん）"

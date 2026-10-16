@@ -349,7 +349,12 @@ function AskPageContent() {
             分析ノート側の同じ子のノートに積み上がる。 */}
         {childrenList.length > 0 && (
           <>
-            <div className="muted" style={{ margin: '14px 0 6px' }}>どのお子さんのことですか？</div>
+            <div className="muted" style={{ margin: '14px 0 2px' }}>どのお子さんのことですか？</div>
+            {/* 「ここも名前は公開されないことを書いておきたい」との要望を受けて追加
+                （2026-10-16）。/account/childrenの説明と同じ文言。 */}
+            <div className="muted" style={{ fontSize: 12, marginBottom: 6 }}>
+              お子さんの名前は、ここ（ご自身の画面）にのみ表示され、「みんなの相談」など公開ページには表示されません。
+            </div>
             <div className="chip-row chip-row-wrap">
               {childrenList.map((c) => (
                 <button
