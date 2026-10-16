@@ -344,11 +344,33 @@ export default function TodayPage() {
                         })}
                       </div>
                     ) : (
-                      // 未ログインで回答済みの場合：本物の集計は見せず「回答済み」の表示のみ
-                      // （2026-10-16からの「閲覧は会員登録しないと見れない」設計を踏襲）。
-                      <div className="muted" style={{ fontSize: 11 }}>
-                        あなたの回答：{q.choices.find((c) => c.value === q.myAnswer)?.label || q.myAnswer}
-                        （会員登録すると、この質問の集計が見られます）
+                      // 未ログインで回答済みの場合：今日の質問カードと同じ、ぼかした集計見本を
+                      // 出す（2026-10-17、「過去の一覧もぼかし入れて同じような見せ方して
+                      // ほしい」との要望を受けて、テキストのみの表示から変更）。
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
+                        <div className="muted" style={{ fontSize: 11 }}>これまでの回答：ー件</div>
+                        {q.choices.map((c, i) => (
+                          <div
+                            key={c.value}
+                            style={{ display: 'flex', flexDirection: 'column', gap: 2, filter: 'blur(5px)', userSelect: 'none' }}
+                            aria-hidden="true"
+                          >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11 }}>
+                              <span>{c.label}</span>
+                              <span className="muted">ーー件（ーー%）</span>
+                            </div>
+                            <div style={{ background: 'var(--border)', borderRadius: 6, height: 6, overflow: 'hidden' }}>
+                              <div
+                                style={{
+                                  width: `${35 + ((i * 23) % 50)}%`,
+                                  height: '100%',
+                                  background: 'var(--sub)',
+                                  borderRadius: 6,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </div>
