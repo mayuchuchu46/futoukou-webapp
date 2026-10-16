@@ -3,6 +3,10 @@
 // メモだと個人情報混入のリスクや、みんなで集計してグラフにする難しさがあるため、
 // 選択式の日替わりアンケートにした。質問は曜日や個人設定に関わらず、JSTの「今日」の
 // 日付から全員同じものが決まる（DBに質問テーブルを持たず、コード側の配列だけで管理）。
+// 集計を「その日の回答だけ」ではなく同じ質問の累計にしたのに合わせて（2026-10-17）、
+// 質問文自体も「今日、〜しましたか？」という単発の聞き方ではなく「最近、〜していますか？」
+// という聞き方に統一した。日替わりで出す質問そのもの（どの質問を今日表示するか）は
+// 従来通りJSTの日付で決まるローテーションのまま変えていない。
 
 export type QuestionChoice = { value: string; label: string };
 
@@ -17,7 +21,7 @@ export type DailyQuestion = {
 export const DAILY_QUESTIONS: DailyQuestion[] = [
   {
     slug: 'wake_time',
-    text: '今日、お子さんは何時ごろ起きましたか？',
+    text: '最近、お子さんは何時ごろ起きていますか？',
     choices: [
       { value: 'before7', label: '7時より前' },
       { value: '7to9', label: '7〜9時' },
@@ -28,7 +32,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'breakfast',
-    text: '今日の朝ごはんは？',
+    text: '最近の朝ごはんは？',
     choices: [
       { value: 'full', label: 'しっかり食べた' },
       { value: 'little', label: '少し食べた' },
@@ -37,7 +41,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'went_outside',
-    text: '今日、お子さんは家から一歩でも外に出ましたか？',
+    text: '最近、お子さんは家から一歩でも外に出ていますか？',
     choices: [
       { value: 'yes', label: '出た' },
       { value: 'no', label: '出なかった' },
@@ -45,7 +49,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'talked_about_school',
-    text: '今日、学校や将来のことについて話をしましたか？',
+    text: '最近、学校や将来のことについて話をしていますか？',
     choices: [
       { value: 'yes', label: '話した' },
       { value: 'a_little', label: '少しだけ話した' },
@@ -54,7 +58,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'screen_time',
-    text: '今日のスマホ・ゲームの時間は、普段と比べて？',
+    text: '最近のスマホ・ゲームの時間は、少し前と比べて？',
     choices: [
       { value: 'more', label: 'いつもより多かった' },
       { value: 'same', label: 'いつも通り' },
@@ -63,7 +67,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'mood',
-    text: '今日のお子さんの様子に近いものは？',
+    text: '最近のお子さんの様子に近いものは？',
     choices: [
       { value: 'calm', label: '穏やかだった' },
       { value: 'irritable', label: 'イライラしていた' },
@@ -73,7 +77,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'bed_time',
-    text: '昨夜は何時ごろ寝ましたか？',
+    text: '最近は何時ごろ寝ていますか？',
     choices: [
       { value: 'before22', label: '22時より前' },
       { value: '22to0', label: '22〜0時' },
@@ -84,7 +88,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'got_dressed',
-    text: '今日、お子さんはパジャマから着替えましたか？',
+    text: '最近、お子さんはパジャマから着替えていますか？',
     choices: [
       { value: 'yes', label: '着替えた' },
       { value: 'no', label: '着替えなかった' },
@@ -93,7 +97,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'friend_contact',
-    text: '今日、お子さんは友達と連絡を取ったり遊んだりしましたか（オンライン含む）？',
+    text: '最近、お子さんは友達と連絡を取ったり遊んだりしていますか（オンライン含む）？',
     choices: [
       { value: 'yes', label: 'あった' },
       { value: 'no', label: 'なかった' },
@@ -102,7 +106,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'enjoyed_something',
-    text: '今日、お子さんが好きなこと・楽しいことをしている時間はありましたか？',
+    text: '最近、お子さんが好きなこと・楽しいことをしている時間はありますか？',
     choices: [
       { value: 'yes', label: 'あった' },
       { value: 'no', label: 'なかった' },
@@ -110,7 +114,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'physical_complaint',
-    text: '今日、お子さんから体調についての訴え（頭痛・腹痛など）はありましたか？',
+    text: '最近、お子さんから体調についての訴え（頭痛・腹痛など）はありますか？',
     choices: [
       { value: 'yes', label: 'あった' },
       { value: 'no', label: 'なかった' },
@@ -118,7 +122,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'family_meal',
-    text: '今日、家族そろって食事をする時間はありましたか？',
+    text: '最近、家族そろって食事をする時間はありますか？',
     choices: [
       { value: 'yes', label: 'あった' },
       { value: 'no', label: 'なかった' },
@@ -126,7 +130,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'helped_chores',
-    text: '今日、お子さんは家のことを何か手伝いましたか？',
+    text: '最近、お子さんは家のことを何か手伝っていますか？',
     choices: [
       { value: 'yes', label: '手伝った' },
       { value: 'no', label: '手伝わなかった' },
@@ -134,7 +138,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'laughed',
-    text: '今日、お子さんが笑う・楽しそうにする場面はありましたか？',
+    text: '最近、お子さんが笑う・楽しそうにする場面はありますか？',
     choices: [
       { value: 'yes', label: 'あった' },
       { value: 'no', label: 'なかった' },
@@ -143,7 +147,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'new_interest',
-    text: '今日、お子さんが何か新しいことに興味を示しましたか？',
+    text: '最近、お子さんが何か新しいことに興味を示していますか？',
     choices: [
       { value: 'yes', label: 'あった' },
       { value: 'no', label: 'なかった' },
@@ -151,7 +155,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'routine_change',
-    text: '今日のお子さんの一日の過ごし方は、ここ最近といつも通りでしたか？',
+    text: '最近のお子さんの一日の過ごし方は、いつも通りですか？',
     choices: [
       { value: 'usual', label: 'いつも通り' },
       { value: 'a_little', label: '少し違った' },
@@ -160,7 +164,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'parent_condition',
-    text: 'あなた自身は今日、どちらかというと？',
+    text: 'あなた自身は最近、どちらかというと？',
     choices: [
       { value: 'calm', label: '落ち着いていた' },
       { value: 'mixed', label: '半々くらいだった' },
@@ -169,7 +173,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'parent_talked_to_someone',
-    text: 'あなたは今日、この状況について誰かに話しましたか（家族・友人・相談窓口など）？',
+    text: 'あなたは最近、この状況について誰かに話していますか（家族・友人・相談窓口など）？',
     choices: [
       { value: 'yes', label: '話した' },
       { value: 'no', label: '話さなかった' },
@@ -177,7 +181,7 @@ export const DAILY_QUESTIONS: DailyQuestion[] = [
   },
   {
     slug: 'parent_hope_moment',
-    text: '今日、少しでも「大丈夫かも」と思える瞬間はありましたか？',
+    text: '最近、少しでも「大丈夫かも」と思える瞬間はありますか？',
     choices: [
       { value: 'yes', label: 'あった' },
       { value: 'no', label: 'なかった' },
