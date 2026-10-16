@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import EyeIcon from './EyeIcon';
 import TagChips from './TagChips';
 import ExpertAvatar from './ExpertAvatar';
+import TodayQuestionTeaser from './TodayQuestionTeaser';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 
@@ -94,6 +95,11 @@ export default function PcSidebar({
       <Link href="/ask" className="btn-primary sidebar-ask-btn-pink" style={{ textDecoration: 'none' }}>
         どうする先生に相談する →
       </Link>
+
+      {/* 「今日の質問」。以前はホーム左カラム上部にあったが、PC（960px以上）では
+          この右コラムに移動した（2026-10-16、「今日の質問は右コラムの中においてみて」
+          との指摘を受けて）。モバイルではHomeClient.tsx側に残している。 */}
+      {isDesktop && <TodayQuestionTeaser />}
 
       {/* 「専門家が回答した相談」。以前はホーム画面の一番上（2カラムの外）に
           全幅で表示していたが、PC（960px以上）ではこちらの右コラムに出すよう

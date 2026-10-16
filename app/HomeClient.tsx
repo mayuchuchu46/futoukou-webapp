@@ -193,7 +193,13 @@ export default function HomeClient({
             要望を受けて追加）。PC・モバイル共通（expertbannerと違いPC右コラムには
             出していない。日々の内容が変わるため、サイド固定よりメインの導線に置く方が
             自然という判断）。 */}
-        {showExtras && <TodayQuestionTeaser />}
+        {/* PC（960px以上）では右コラム（PcSidebar）側に出すので、ここはモバイル専用
+            （2026-10-16、「今日の質問は右コラムの中においてみて」との指摘を受けて）。 */}
+        {showExtras && (
+          <div className="home-tags-mobile">
+            <TodayQuestionTeaser />
+          </div>
+        )}
 
         {/* PCの広い画面では、左右を完全に独立した縦積み（flex column）の
             2カラムにする（app/globals.cssの.home-layout参照）。検索ボックスや
