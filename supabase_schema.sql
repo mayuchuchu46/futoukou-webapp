@@ -84,6 +84,15 @@
 -- alter table daily_answers add column if not exists anon_uid text;
 -- alter table daily_answers add constraint daily_answers_anon_date_key unique (anon_uid, answer_date);
 -- alter table daily_answers add constraint daily_answers_member_or_anon_ck check ((member_id is not null) <> (anon_uid is not null));
+-- 「過去の質問一覧からも回答できるようにする」変更（2026-10-17追加）。それまでは
+-- 「1日1回答（今日の質問だけ）」というunique制約だったが、/todayページの「過去の質問
+-- 一覧」からも、過去に出た質問（今日の質問とは別のquestion_slug）に回答できるように
+-- したいため、「1日1回」ではなく「同じ質問には1人1回まで（回答し直しは可、同じ行を
+-- upsertで上書き）」という制約に変更する。既存DBでは次を実行してください。
+-- alter table daily_answers drop constraint if exists daily_answers_member_date_child_key;
+-- alter table daily_answers add constraint daily_answers_member_slug_child_key unique (member_id, question_slug, child_key);
+-- alter table daily_answers drop constraint if exists daily_answers_anon_date_key;
+-- alter table daily_answers add constraint daily_answers_anon_slug_key unique (anon_uid, question_slug);
 -- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
 -- （2026-10-13追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists review_status text not null default 'pending';
@@ -427,23 +436,28 @@ alter table children enable row level security;
 create index if not exists children_member_id_idx on children (member_id);
 
 -- 「みんなのデータ」機能（2026-10-16追加）。日替わりの簡単なアンケート（起床時間・
--- 朝ごはん等、lib/dailyQuestions.ts参照）に答える。質問は1日1問しか出ないため
--- answer_dateが答えた日の日付（JSTのその日）。
+-- 朝ごはん等、lib/dailyQuestions.ts参照）に答える。answer_dateは「最後に答えた（更新
+-- した）日付」の記録用で、一意制約には使わない（下記参照）。
 -- 個別の回答は本人専用（伴走ノートの材料にする想定）で、他の人には公開しない。
--- 公開するのは「今日はみんなどう答えているか」という同日・同質問の集計のみ
+-- 公開するのは「この質問にみんなはどう答えているか」という同じ質問の累計集計のみ
 -- （app/api/daily-question/route.ts参照）。
--- 子どもプロフィール（兄弟）ごとに1日1回答えられるようにするため、会員の一意制約は
--- member_id・answer_dateだけでなくchild_idも含める。child_idはnullable（「全体」選択時）
+-- 一意制約は「同じ質問には1人（子どもプロフィールごと）1回まで、回答し直しは
+-- upsertで上書き」。当初は「1日1回答（今日の質問だけ）」で answer_date を一意制約に
+-- 含めていたが、/todayページの「過去の質問一覧」からも、今日の質問とは別の過去の
+-- question_slugに回答できるようにしたため、answer_dateではなくquestion_slugを
+-- 一意制約のキーにする方式に変更した（2026-10-17）。
+-- 子どもプロフィール（兄弟）ごとに別々に答えられるようにするため、会員の一意制約は
+-- member_id・question_slugだけでなくchild_idも含める。child_idはnullable（「全体」選択時）
 -- で、通常のunique制約はNULL同士を別物として扱ってしまう（＝「全体」を選んだ場合だけ
--- 1日に何回でも答えられてしまう）ため、NULLをダミーUUIDに正規化したgenerated column
--- （child_key）を間に挟み、「全体」もふくめて確実に1日1回に揃える
+-- 同じ質問に何回でも答えられてしまう）ため、NULLをダミーUUIDに正規化したgenerated
+-- column（child_key）を間に挟み、「全体」もふくめて確実に質問ごと1回に揃える
 -- （2026-10-16、「兄弟の場合、1人分答えたらもう1人の分が答えられない」不具合の修正）。
 -- 「回答は会員登録なしでもできるが、結果グラフを見るには会員登録が必要」という設計
 -- （2026-10-16変更）のため、member_idはnullableにし、匿名の場合はconsultationsと同じ
 -- ブラウザ単位の匿名ID（lib/uid.ts、getUid()）をanon_uidに入れる。member_id・anon_uidの
--- どちらか一方だけが入っていることをCHECK制約で保証し、匿名回答の1日1回はunique
--- (anon_uid, answer_date)で防ぐ（member_idがNULLの行同士は会員側のunique制約には
--- 引っかからないため、別立てのこの制約が必要）。
+-- どちらか一方だけが入っていることをCHECK制約で保証し、匿名回答の質問ごと1回は
+-- unique(anon_uid, question_slug)で防ぐ（member_idがNULLの行同士は会員側のunique制約
+-- には引っかからないため、別立てのこの制約が必要）。
 create table if not exists daily_answers (
   id uuid primary key default gen_random_uuid(),
   member_id uuid references members(id),
@@ -455,8 +469,8 @@ create table if not exists daily_answers (
   value text not null,
   created_at timestamptz not null default now(),
   constraint daily_answers_member_or_anon_ck check ((member_id is not null) <> (anon_uid is not null)),
-  unique (member_id, answer_date, child_key),
-  unique (anon_uid, answer_date)
+  unique (member_id, question_slug, child_key),
+  unique (anon_uid, question_slug)
 );
 alter table daily_answers enable row level security;
 

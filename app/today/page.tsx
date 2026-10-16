@@ -11,7 +11,13 @@ import { getUid } from '@/lib/uid';
 type QuestionChoice = { value: string; label: string };
 type Question = { slug: string; text: string; choices: QuestionChoice[] };
 type Aggregate = { total: number; counts: Record<string, number> };
-type HistoryQuestion = { slug: string; text: string; choices: QuestionChoice[]; aggregate: Aggregate | null };
+type HistoryQuestion = {
+  slug: string;
+  text: string;
+  choices: QuestionChoice[];
+  myAnswer: string | null;
+  aggregate: Aggregate | null;
+};
 
 // 「みんなのデータ」ページ（2026-10-16追加）。AIの回答でよく出る「気づいたときにメモ
 // しておく」というアドバイスを、実際にサービス内でできるようにした機能。自由記述では
@@ -37,10 +43,13 @@ export default function TodayPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   // 過去の質問一覧（2026-10-17追加）。「過去の質問データも見れるといい」との要望を
-  // 受けて、質問バンク全19問それぞれの累計集計を/api/daily-question/historyから
-  // まとめて取得する。子ども切り替えとは無関係（サイト全体の集計のため、
-  // selectedChildIdが変わっても取り直さない）。
+  // 受けて、質問バンク全19問のうちすでに出た質問の累計集計を/api/daily-question/history
+  // から取得する。各質問に「自分がすでに回答しているか（myAnswer）」も含まれるため、
+  // 「過去の質問にも同じように回答を促したい」との要望を受けて（2026-10-17）、
+  // selectedChildIdが変わるたびに取り直す（今日の質問カードと同じスコープで判定する）。
   const [history, setHistory] = useState<HistoryQuestion[] | null>(null);
+  const [historySubmitting, setHistorySubmitting] = useState<string | null>(null);
+  const [historyError, setHistoryError] = useState('');
 
   useEffect(() => {
     fetch('/api/children')
@@ -50,11 +59,14 @@ export default function TodayPage() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/daily-question/history')
+    const params = new URLSearchParams();
+    if (selectedChildId) params.set('child_id', selectedChildId);
+    params.set('uid', getUid());
+    fetch(`/api/daily-question/history?${params.toString()}`)
       .then((r) => r.json())
       .then((d) => setHistory(d.questions || []))
       .catch(() => setHistory(null));
-  }, []);
+  }, [selectedChildId]);
 
   // 兄弟（複数の子どもプロフィール）がいる場合、それぞれ別に1日1回答えられるように
   // する（2026-10-16、「1人分答えたらもう1人の分が答えられない」不具合の修正）。
@@ -104,6 +116,34 @@ export default function TodayPage() {
       setError(e instanceof Error ? e.message : 'エラーが発生しました');
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  // 過去の質問一覧からの回答（2026-10-17追加）。「過去の質問にも同じように回答を
+  // 促したい、同じ見せ方で掲載しておくのがいい」との要望を受けて、今日の質問カードの
+  // answer()と同じ内容をslug付きでPOSTする。回答後はその質問だけhistory配列内で
+  // 差し替える（一覧全体を再取得しない）。
+  async function answerHistoryQuestion(slug: string, value: string) {
+    if (historySubmitting) return;
+    setHistorySubmitting(slug);
+    setHistoryError('');
+    try {
+      const res = await fetch('/api/daily-question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value, slug, child_id: selectedChildId || null, uid: getUid() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || '失敗しました');
+      setHistory((prev) =>
+        prev
+          ? prev.map((q) => (q.slug === slug ? { ...q, myAnswer: data.myAnswer, aggregate: data.aggregate } : q))
+          : prev
+      );
+    } catch (e: unknown) {
+      setHistoryError(e instanceof Error ? e.message : 'エラーが発生しました');
+    } finally {
+      setHistorySubmitting(null);
     }
   }
 
@@ -249,7 +289,7 @@ export default function TodayPage() {
                 過去の質問一覧を見る（{history.length}問）
               </summary>
               <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {history[0].aggregate === null && (
+                {!loggedIn && (
                   <div className="qtext" style={{ paddingTop: 4 }}>
                     会員登録（無料）すると、質問ごとの累計の集計グラフが見られます。
                     <Link href="/account/login?next=/today" style={{ color: 'var(--main)', fontWeight: 700, textDecoration: 'underline', marginLeft: 4 }}>
@@ -259,8 +299,25 @@ export default function TodayPage() {
                 )}
                 {history.map((q) => (
                   <div key={q.slug} style={{ borderTop: '1px solid var(--border)', paddingTop: 12 }}>
-                    <div className="qtext" style={{ fontWeight: 700, fontSize: 13, marginBottom: 6 }}>{q.text}</div>
-                    {q.aggregate ? (
+                    <div className="qtext" style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>{q.text}</div>
+                    {q.myAnswer === null ? (
+                      // 未回答（2026-10-17追加）。「過去の質問にも同じように回答を促したい、
+                      // 同じ見せ方で掲載しておくのがいい」との要望を受けて、今日の質問カードと
+                      // 同じgenderrow/genderbtnの選択肢ボタンをそのまま出す。
+                      <div className="genderrow">
+                        {q.choices.map((c) => (
+                          <button
+                            key={c.value}
+                            type="button"
+                            className="genderbtn"
+                            disabled={historySubmitting === q.slug}
+                            onClick={() => answerHistoryQuestion(q.slug, c.value)}
+                          >
+                            {c.label}
+                          </button>
+                        ))}
+                      </div>
+                    ) : q.aggregate ? (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                         <div className="muted" style={{ fontSize: 11 }}>これまでの回答：{q.aggregate.total}件</div>
                         {q.choices.map((c) => {
@@ -269,21 +326,34 @@ export default function TodayPage() {
                           return (
                             <div key={c.value} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11 }}>
-                                <span>{c.label}</span>
+                                <span style={{ fontWeight: c.value === q.myAnswer ? 700 : 400 }}>{c.label}</span>
                                 <span className="muted">{count}件（{pct}%）</span>
                               </div>
                               <div style={{ background: 'var(--border)', borderRadius: 6, height: 6, overflow: 'hidden' }}>
-                                <div style={{ width: `${pct}%`, height: '100%', background: 'var(--sub)', borderRadius: 6 }} />
+                                <div
+                                  style={{
+                                    width: `${pct}%`,
+                                    height: '100%',
+                                    background: c.value === q.myAnswer ? 'var(--main)' : 'var(--sub)',
+                                    borderRadius: 6,
+                                  }}
+                                />
                               </div>
                             </div>
                           );
                         })}
                       </div>
                     ) : (
-                      <div className="muted" style={{ fontSize: 11 }}>会員登録すると、この質問の集計が見られます。</div>
+                      // 未ログインで回答済みの場合：本物の集計は見せず「回答済み」の表示のみ
+                      // （2026-10-16からの「閲覧は会員登録しないと見れない」設計を踏襲）。
+                      <div className="muted" style={{ fontSize: 11 }}>
+                        あなたの回答：{q.choices.find((c) => c.value === q.myAnswer)?.label || q.myAnswer}
+                        （会員登録すると、この質問の集計が見られます）
+                      </div>
                     )}
                   </div>
                 ))}
+                {historyError && <div className="muted" style={{ color: '#C0392B', fontSize: 12 }}>{historyError}</div>}
               </div>
             </details>
           )}
