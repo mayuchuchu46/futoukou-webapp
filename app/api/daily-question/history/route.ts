@@ -14,8 +14,10 @@ import { DAILY_QUESTIONS } from '@/lib/dailyQuestions';
 // 今日の質問カードと同じ見せ方（未回答なら選択肢ボタン、回答済みなら結果）にする
 // ため、各質問について「このビューア（会員＋子ども、または匿名ID）がすでに回答
 // しているか（myAnswer）」も一緒に返す。回答自体は/api/daily-questionと同じく
-// 会員登録なしでもできるため、未ログインでもuidを受け取ってmyAnswerを判定する
-// （ただし集計の実数＝aggregateは引き続き会員登録しないと見せない）。
+// 会員登録なしでもできる。集計の実数（aggregate）を見せる条件も/api/daily-question
+// と同じく「会員登録」ではなく「その質問に回答済みであること」にしている
+// （2026-10-17、「ログインしなくても回答したら見れるようになるといい」との指摘を
+// 受けて変更）。
 export async function GET(req: NextRequest) {
   const member = await getCurrentMember();
   const supabase = getSupabaseAdmin();
@@ -61,30 +63,17 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  if (!member) {
-    return NextResponse.json({
-      loggedIn: false,
-      questions: appearedQuestions.map((q) => ({
-        slug: q.slug,
-        text: q.text,
-        choices: q.choices,
-        myAnswer: myAnswersBySlug[q.slug] || null,
-        aggregate: null,
-      })),
-    });
-  }
-
+  // 質問ごとに、このビューアが回答済みの場合だけ集計の実数を見せる
+  // （会員かどうかは問わない。上のコメント参照）。
   const questions = appearedQuestions.map((q) => {
+    const myAnswer = myAnswersBySlug[q.slug] || null;
+    if (!myAnswer) {
+      return { slug: q.slug, text: q.text, choices: q.choices, myAnswer: null, aggregate: null };
+    }
     const counts = countsBySlug[q.slug] || {};
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
-    return {
-      slug: q.slug,
-      text: q.text,
-      choices: q.choices,
-      myAnswer: myAnswersBySlug[q.slug] || null,
-      aggregate: { total, counts },
-    };
+    return { slug: q.slug, text: q.text, choices: q.choices, myAnswer, aggregate: { total, counts } };
   });
 
-  return NextResponse.json({ loggedIn: true, questions });
+  return NextResponse.json({ loggedIn: !!member, questions });
 }

@@ -12,9 +12,12 @@ import { getTodaysQuestion, findQuestionBySlug } from '@/lib/dailyQuestions';
 // 「今日だけだと全然データが取れない」との指摘を受けて、日付を絞らない累計集計に
 // 変更。buildAggregate参照）。
 // 回答自体は、相談（/ask）と同じくブラウザ単位の匿名ID（lib/uid.ts、getUid()）があれば
-// 会員登録なしでもできる。ただし集計グラフ（本物の数字）は、会員登録して初めて見られる
-// （2026-10-16、「回答は会員じゃなくてもできるが、閲覧は会員じゃないと見れない」設計に
-// 変更。それまでは回答・閲覧とも会員登録必須だった）。
+// 会員登録なしでもできる。集計グラフ（本物の数字）・コメント一覧を見られる条件は
+// 「その質問に回答済みであること」で、会員登録は問わない（2026-10-17、「ログインしな
+// くても回答したら見れるようになるといい」との指摘を受けて変更。この機能の狙いである
+// 「同じように悩んでいる人がいると実感できる」ことと、閲覧に会員登録を必須にすることが
+// 矛盾していたため。なお2026-10-16時点では一度「会員登録しないと見れない」設計に
+// していたが、今回これを「回答済みであること」に緩和した）。
 // POSTはslugを渡すと「今日の質問」以外（過去の質問一覧、/api/daily-question/history）
 // にも回答できる（2026-10-17、「過去の質問にも同じように回答を促したい」との要望を
 // 受けて対応。slug省略時は従来通り今日の質問に回答する）。これにあわせて、回答の
@@ -87,8 +90,8 @@ export async function GET(req: NextRequest) {
     // 未ログインでも、匿名IDで今日の質問に既に答えているかどうかは確認する
     // （質問文の一貫性のため。下のfindQuestionBySlugの説明を参照）。「今日の質問」に
     // 答えたかどうかはquestion_slugで判定する（一意制約をanswer_dateからslugベースに
-    // 変更したのにあわせた、2026-10-17）。ただし集計グラフ・コメントは会員登録する
-    // まで見せない（本物の数字は渡さず、クライアント側でぼかし見本を出す）。
+    // 変更したのにあわせた、2026-10-17）。集計グラフ・コメントは、会員登録の有無では
+    // なく「回答済みかどうか」で見せる（2026-10-17、上のコメント参照）。
     let myAnswer: string | null = null;
     const question = todaysQuestion;
     if (uid) {
@@ -102,7 +105,9 @@ export async function GET(req: NextRequest) {
         myAnswer = existing.value;
       }
     }
-    return NextResponse.json({ loggedIn: false, date, question, myAnswer, aggregate: null, comments: [] });
+    const aggregate = myAnswer ? await buildAggregate(question.slug) : null;
+    const comments = myAnswer ? await buildComments(question.slug) : [];
+    return NextResponse.json({ loggedIn: false, date, question, myAnswer, aggregate, comments });
   }
 
   // 兄弟（複数の子どもプロフィール）がいる場合、子どもごとに別々に答えられるように
@@ -165,7 +170,8 @@ export async function POST(req: NextRequest) {
 
   if (!member) {
     // 未ログイン：ブラウザ単位の匿名ID（getUid()）で回答を記録する（会員登録不要）。
-    // 集計グラフ・コメント一覧は会員登録しないと見せない設計のため、ここでは返さない。
+    // 回答済みになった時点で、集計グラフ・コメント一覧も会員と同じように返す
+    // （2026-10-17、閲覧条件を「会員登録」から「回答済みであること」に変更）。
     if (!uid) {
       return NextResponse.json({ error: 'invalid request' }, { status: 400 });
     }
@@ -178,7 +184,9 @@ export async function POST(req: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ ok: true, myAnswer: value, aggregate: null, comments: [] });
+    const aggregate = await buildAggregate(question.slug);
+    const comments = await buildComments(question.slug);
+    return NextResponse.json({ ok: true, myAnswer: value, aggregate, comments });
   }
 
   // 子どもプロフィール（任意）。他人の子どもを指定できないよう、本人の子どもである

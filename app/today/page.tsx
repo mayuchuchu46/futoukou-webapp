@@ -29,14 +29,17 @@ type HistoryQuestion = {
 // （2026-10-17、「今日だけだと全然データが取れない」との指摘を受けて変更。質問は
 // 19問のローテーションで、同じ質問が次に出るのは約19日後になるため）。
 // 回答は/ask（匿名相談）と同じブラウザ単位の匿名ID（getUid()）があれば会員登録なしでも
-// できるが、集計グラフ（本物の数字）は会員登録して初めて見られる（2026-10-16、
-// 「回答は会員じゃなくてもできるが、閲覧は会員じゃないと見れない」設計に変更）。
+// できる。集計グラフ（本物の数字）を見られる条件は「その質問に回答済みであること」で、
+// 会員登録は問わない（2026-10-17、「ログインしなくても回答したら見れるようになると
+// いい」との指摘を受けて変更。この機能の狙いである「同じように悩んでいる人がいると
+// 実感できる」こととの矛盾を解消するため。2026-10-16時点では一度「会員登録しないと
+// 見れない」設計にしていたが、今回これを「回答済みであること」に緩和した）。
 // 普段表示されるのは質問バンク19問のうち今日の1問だけだが、「過去の質問データも
 // 見れるといい」との要望を受けて、ページ下部に全問＋累計集計の一覧（折りたたみ式）も
 // 出している（2026-10-17、/api/daily-question/history参照）。
 // 回答するときに任意でひとことコメントを添えられ、他の人のコメントも見られる
 // （2026-10-17追加。「同じように悩んでいる人がいるんだと実感できるように」との
-// 要望）。コメントは集計グラフと同じく会員登録して回答した後にしか見られない。
+// 要望）。コメントも集計グラフと同じく、その質問に回答した後なら誰でも見られる。
 // 対応範囲は今のところ「今日の質問」カードのみで、下部の過去の質問一覧には
 // まだコメント機能を付けていない。
 export default function TodayPage() {
@@ -171,7 +174,7 @@ export default function TodayPage() {
         <div className="page-main">
           <h2 className="pagetitle">みんなのデータ</h2>
           <div className="muted" style={{ marginBottom: 12 }}>
-            毎日かわる簡単な質問に答えるだけの、選択式アンケートです。回答は会員登録なしでもできます。あなたの回答は非公開ですが、会員登録すると「この質問に、みんなはどう答えているか」の累計の集計グラフが見られます。
+            毎日かわる簡単な質問に答えるだけの、選択式アンケートです。回答は会員登録なしでもできます。あなたの回答は非公開ですが、回答すると「この質問に、みんなはどう答えているか」の累計の集計グラフが見られます。
           </div>
 
           {loggedIn === null && <div className="muted">読み込み中…</div>}
@@ -267,7 +270,7 @@ export default function TodayPage() {
                       })}
 
                       {/* みんなの声（任意コメント、2026-10-17追加）。集計グラフと同じく
-                          会員登録して回答した後にしか見せない。表示名は個人を特定できない
+                          回答した後なら誰でも見られる（会員登録は問わない）。表示名は個人を特定できない
                           範囲（「◯年生の保護者」「保護者」「匿名」）にとどめる
                           （/api/daily-question/route.tsのbuildComments参照）。自由記述は
                           モデレーション手段が無いとリスクが高いため、通報ボタンを
@@ -298,38 +301,11 @@ export default function TodayPage() {
                       )}
                     </div>
                   ) : (
-                    // 未ログインで回答済みの場合：本物の集計は見せず、ぼかした見本＋
-                    // 会員登録への誘導を出す（2026-10-16、「回答は会員じゃなくてもできるが、
-                    // 閲覧は会員じゃないと見れない」設計への変更）。
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-                      <div className="muted" style={{ fontSize: 12 }}>これまでの回答：ー件</div>
-                      {question.choices.map((c, i) => (
-                        <div
-                          key={c.value}
-                          style={{ display: 'flex', flexDirection: 'column', gap: 3, filter: 'blur(5px)', userSelect: 'none' }}
-                          aria-hidden="true"
-                        >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-                            <span>{c.label}</span>
-                            <span className="muted">ーー件（ーー%）</span>
-                          </div>
-                          <div style={{ background: 'var(--border)', borderRadius: 6, height: 8, overflow: 'hidden' }}>
-                            <div
-                              style={{
-                                width: `${35 + ((i * 23) % 50)}%`,
-                                height: '100%',
-                                background: 'var(--sub)',
-                                borderRadius: 6,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                      <div className="qtext">回答ありがとうございます。会員登録（無料）すると、この質問にみんながどう答えているかの累計の集計グラフを見られます。</div>
-                      <Link className="btn-primary" href="/account/login?next=/today">
-                        ログイン / 無料登録
-                      </Link>
-                    </div>
+                    // 通常は回答済みなら必ずaggregateが返るはずだが、通信エラー等の
+                    // 想定外のケース向けの簡易フォールバック（2026-10-17、閲覧条件を
+                    // 「会員登録」から「回答済みであること」に変更したのにあわせて、
+                    // 以前あった会員登録誘導は不要になったため削除）。
+                    <div className="muted" style={{ fontSize: 12 }}>集計を取得できませんでした。時間をおいて開き直してみてください。</div>
                   )}
                 </>
               )}
@@ -343,22 +319,14 @@ export default function TodayPage() {
               折りたたみ式（<details>）で過去に見られるようにした。一覧に出すのは
               「すでに出た質問（＝1件でも回答が付いている質問）」だけで、まだローテー
               ションに出ていない質問は含めない（2026-10-17、/api/daily-question/history
-              側で絞り込み済み）。会員登録していない場合は、1問ずつぼかすのではなく、
-              まとめて1つの案内文だけを出す。 */}
+              側で絞り込み済み）。質問ごとの集計を見る条件は「回答済みであること」
+              （会員登録は問わない。2026-10-17、今日の質問カードと同じ変更）。 */}
           {history && history.length > 0 && (
             <details className="card" style={{ padding: 0 }}>
               <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
                 過去の質問一覧を見る（{history.length}問）
               </summary>
               <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {!loggedIn && (
-                  <div className="qtext" style={{ paddingTop: 4 }}>
-                    会員登録（無料）すると、質問ごとの累計の集計グラフが見られます。
-                    <Link href="/account/login?next=/today" style={{ color: 'var(--main)', fontWeight: 700, textDecoration: 'underline', marginLeft: 4 }}>
-                      ログイン / 無料登録
-                    </Link>
-                  </div>
-                )}
                 {history.map((q) => (
                   <div key={q.slug} style={{ borderTop: '1px solid var(--border)', paddingTop: 12 }}>
                     <div className="qtext" style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>{q.text}</div>
@@ -406,34 +374,10 @@ export default function TodayPage() {
                         })}
                       </div>
                     ) : (
-                      // 未ログインで回答済みの場合：今日の質問カードと同じ、ぼかした集計見本を
-                      // 出す（2026-10-17、「過去の一覧もぼかし入れて同じような見せ方して
-                      // ほしい」との要望を受けて、テキストのみの表示から変更）。
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
-                        <div className="muted" style={{ fontSize: 11 }}>これまでの回答：ー件</div>
-                        {q.choices.map((c, i) => (
-                          <div
-                            key={c.value}
-                            style={{ display: 'flex', flexDirection: 'column', gap: 2, filter: 'blur(5px)', userSelect: 'none' }}
-                            aria-hidden="true"
-                          >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11 }}>
-                              <span>{c.label}</span>
-                              <span className="muted">ーー件（ーー%）</span>
-                            </div>
-                            <div style={{ background: 'var(--border)', borderRadius: 6, height: 6, overflow: 'hidden' }}>
-                              <div
-                                style={{
-                                  width: `${35 + ((i * 23) % 50)}%`,
-                                  height: '100%',
-                                  background: 'var(--sub)',
-                                  borderRadius: 6,
-                                }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                      // 通常は回答済みなら必ずaggregateが返るはずだが、想定外のケース向けの
+                      // 簡易フォールバック（2026-10-17、閲覧条件を「会員登録」から「回答済み
+                      // であること」に変更したのにあわせて、以前あったぼかし表示は削除）。
+                      <div className="muted" style={{ fontSize: 11 }}>集計を取得できませんでした。</div>
                     )}
                   </div>
                 ))}
