@@ -215,6 +215,15 @@ export default function HomeClient({
             ページもPCは2コラムに統一して」との指摘を受けて修正）。 */}
         <div className="home-layout home-layout--with-side">
           <div className="home-main-col">
+            {/* PC（960px以上）左カラムの一番上に出すヒーロー画像（2026-10-17追加、
+                ユーザーから提供されたバナー画像を使用）。「左コラムの上でいいんだけど」
+                との指摘を受けて、全ページ共通のヘッダーから、ホームの左カラム上部に
+                移動した（app/globals.cssの.home-hero-pc参照、スマホ幅では非表示）。 */}
+            <img
+              src="/assets/header_hero_pc.jpg"
+              alt="不登校のご家庭に、次の一手を一緒に。"
+              className="home-hero-pc"
+            />
             {showExtras && allItems.length >= 3 && (
               <div className="ranking home-ranking">
                 <div className="ranking-title">よく読まれている相談</div>

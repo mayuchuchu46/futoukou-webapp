@@ -363,16 +363,18 @@ h2.pagetitle {
   margin-top: 1px;
 }
 
-/* PCヘッダーのヒーロー画像（2026-10-17追加）。横長のバナー画像なので、スマホ幅では
-   場所を取りすぎるため出さない。PC（960px以上）でだけ表示する。 */
-.header-hero-pc { display: none; }
+/* PC（960px以上）のホーム、左コラム（.home-main-col）の一番上に出すヒーロー画像
+   （2026-10-17追加）。「左コラムの上でいいんだけど」との指摘を受けて、ヘッダー
+   （全ページ共通・全幅）から、ホームの左カラム上部（ホームのみ・サイドバーと
+   並ぶ幅）に移動した。横長のバナー画像なので、スマホ幅では場所を取りすぎるため
+   出さない。 */
+.home-hero-pc { display: none; }
 @media (min-width: 960px) {
-  .header-hero-pc {
+  .home-hero-pc {
     display: block;
     width: 100%;
     height: auto;
     border-radius: 16px;
-    margin-top: 4px;
   }
 }
 /* ホーム画面トップの「相談する」CTAカード。チャッピー（ChatGPT）に描いてもらった

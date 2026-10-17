@@ -91,13 +91,6 @@ export default function Header({ supervised }: { supervised: boolean }) {
         {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
       </span>
 
-      {/* PC（960px以上）のヘッダーに出すヒーロー画像（2026-10-17追加、ユーザーから
-          提供されたバナー画像を使用）。スマホ幅では場所を取りすぎるため出さず、
-          PCだけで表示する（app/globals.cssの.header-hero-pc参照）。既存のロゴ・
-          キャッチコピー・ログイン導線等はそのまま残し、その下に追加する形。 */}
-      <img src="/assets/header_hero_pc.jpg" alt="不登校のご家庭に、次の一手を一緒に。" className="header-hero-pc" />
-
-
       {/* ログイン／アカウントへの導線。他の情報系リンク（つらいときはこちら／どうする先生とは？）
           と並べて同じ見た目にすると埋もれてしまうため、画面右上の角にタブのようにぶら下げて
           常時固定表示する（position: fixedなのでスクロールしても常に見える）。スマホ幅では
