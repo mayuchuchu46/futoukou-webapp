@@ -93,6 +93,13 @@
 -- alter table daily_answers add constraint daily_answers_member_slug_child_key unique (member_id, question_slug, child_key);
 -- alter table daily_answers drop constraint if exists daily_answers_anon_date_key;
 -- alter table daily_answers add constraint daily_answers_anon_slug_key unique (anon_uid, question_slug);
+-- 「みんなのデータ」に任意コメントを添えられるようにする変更（2026-10-17追加）。
+-- 既存DBでは次を実行してください。
+-- alter table daily_answers add column if not exists comment text;
+-- alter table daily_answers add column if not exists comment_reports int not null default 0;
+-- alter table daily_answers add column if not exists comment_reported_by text[] not null default '{}';
+-- alter table daily_answers add column if not exists comment_hidden boolean not null default false;
+-- create index if not exists daily_answers_slug_comment_idx on daily_answers (question_slug) where comment is not null;
 -- 専門家の審査状況を pending/verified/needs_fix/rejected で区別できるようにする場合
 -- （2026-10-13追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists review_status text not null default 'pending';
@@ -470,11 +477,23 @@ create table if not exists daily_answers (
   created_at timestamptz not null default now(),
   constraint daily_answers_member_or_anon_ck check ((member_id is not null) <> (anon_uid is not null)),
   unique (member_id, question_slug, child_key),
-  unique (anon_uid, question_slug)
+  unique (anon_uid, question_slug),
+
+  -- 「みんなのデータ」に任意コメントを添えられるようにする機能（2026-10-17追加）。
+  -- 「同じように悩んでいる人がいるんだ」という実感を持ちやすくする狙い。自由記述の
+  -- コメントはモデレーション手段が無いとリスクが高い（過去にconsultationsへの
+  -- コメント機能を同じ理由で一度削除した経緯がある）ため、consultationsの通報機能
+  -- （reports/reported_by）と同じ考え方で、コメント単位の通報・非表示の仕組みを
+  -- 最初から用意している。
+  comment text,
+  comment_reports int not null default 0,
+  comment_reported_by text[] not null default '{}',
+  comment_hidden boolean not null default false
 );
 alter table daily_answers enable row level security;
 
 create index if not exists daily_answers_date_question_idx on daily_answers (answer_date, question_slug);
+create index if not exists daily_answers_slug_comment_idx on daily_answers (question_slug) where comment is not null;
 
 -- 専門家への質問チケットパック（¥3000で6回分）の購入履歴。Stripeチェックアウトの
 -- session_idを主キーにすることで、確認エンドポイントが何度呼ばれてもチケットが

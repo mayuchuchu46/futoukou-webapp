@@ -36,6 +36,16 @@ type RecentConsultation = {
   reports?: number;
 };
 
+type ReportedDailyComment = {
+  id: string;
+  question_slug: string;
+  value: string;
+  comment: string;
+  comment_reports: number;
+  comment_hidden: boolean;
+  created_at: string;
+};
+
 type OverdueExpertRequest = {
   id: string;
   question: string;
@@ -101,6 +111,7 @@ export default function AdminClient({
   verifiedExperts,
   recentConsultations,
   reportedConsultations,
+  reportedDailyComments,
   overdueExpertRequests,
   recentExpertAnswers,
   initialSidebarBanner,
@@ -115,6 +126,7 @@ export default function AdminClient({
   verifiedExperts: VerifiedExpert[];
   recentConsultations: RecentConsultation[];
   reportedConsultations: RecentConsultation[];
+  reportedDailyComments: ReportedDailyComment[];
   overdueExpertRequests: OverdueExpertRequest[];
   recentExpertAnswers: RecentExpertAnswer[];
   initialSidebarBanner: SidebarBanner;
@@ -128,6 +140,7 @@ export default function AdminClient({
   const [experts, setExperts] = useState(unverifiedExperts);
   const [consultations, setConsultations] = useState(recentConsultations);
   const [reported, setReported] = useState(reportedConsultations);
+  const [reportedComments, setReportedComments] = useState(reportedDailyComments);
   const [overdue, setOverdue] = useState(overdueExpertRequests);
   const [busy, setBusy] = useState<string | null>(null);
   const [banner, setBanner] = useState(initialSidebarBanner);
@@ -223,6 +236,22 @@ export default function AdminClient({
     if (res.ok) {
       setConsultations((list) => list.map((c) => (c.id === id ? { ...c, hidden } : c)));
       setReported((list) => list.map((c) => (c.id === id ? { ...c, hidden } : c)));
+    } else {
+      const data = await res.json();
+      alert(data.error || '失敗しました');
+    }
+  }
+
+  async function toggleCommentHidden(id: string, hidden: boolean) {
+    setBusy(id);
+    const res = await fetch('/api/admin/daily-comments/hide', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, hidden }),
+    });
+    setBusy(null);
+    if (res.ok) {
+      setReportedComments((list) => list.map((c) => (c.id === id ? { ...c, comment_hidden: hidden } : c)));
     } else {
       const data = await res.json();
       alert(data.error || '失敗しました');
@@ -722,6 +751,39 @@ export default function AdminClient({
           <div className="muted">現在、通報はありません。</div>
         ) : (
           reported.map((c) => renderConsultationCard(c))
+        )}
+
+        {/* 「みんなのデータ」の任意コメントが通報された場合の確認・非表示切り替え
+            （2026-10-17追加。コメント機能自体の設計意図はapp/api/daily-question/
+            route.tsのコメント参照）。 */}
+        <div style={{ fontWeight: 700, marginTop: 16 }}>通報されたコメント（みんなのデータ）</div>
+        {reportedComments.length === 0 ? (
+          <div className="muted">現在、通報はありません。</div>
+        ) : (
+          reportedComments.map((c) => (
+            <div key={c.id} className="card" style={{ opacity: c.comment_hidden ? 0.5 : 1 }}>
+              <div className="row">
+                <span className="muted">{c.question_slug}</span>
+                <span
+                  className="muted"
+                  style={{ color: '#C0392B', fontWeight: 700, marginLeft: 'auto' }}
+                >
+                  ⚠ 通報 {c.comment_reports}件
+                </span>
+              </div>
+              <div className="qtext">{c.comment}</div>
+              <div className="muted">{new Date(c.created_at).toLocaleString('ja-JP')}</div>
+              <div className="row" style={{ gap: 8 }}>
+                <button
+                  className="btn-secondary"
+                  disabled={busy === c.id}
+                  onClick={() => toggleCommentHidden(c.id, !c.comment_hidden)}
+                >
+                  {busy === c.id ? '処理中…' : c.comment_hidden ? '表示に戻す' : '非表示にする'}
+                </button>
+              </div>
+            </div>
+          ))
         )}
 
         <div style={{ fontWeight: 700, marginTop: 16 }}>相談一覧（直近50件）</div>

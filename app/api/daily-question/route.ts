@@ -20,6 +20,15 @@ import { getTodaysQuestion, findQuestionBySlug } from '@/lib/dailyQuestions';
 // 受けて対応。slug省略時は従来通り今日の質問に回答する）。これにあわせて、回答の
 // 一意制約も「1日1回」からquestion_slugベース（同じ質問には1人1回まで）に変更した
 // （supabase_schema.sql参照）。
+// 回答に任意のコメントを添えられるようにした（2026-10-17追加。「同じように悩んでいる
+// 人がいるんだと実感できるように」との要望）。コメントは集計グラフと同じく会員登録後
+// にしか見えない。自由記述はモデレーション手段が無いとリスクが高い（過去にconsultations
+// のコメント機能を同じ理由で一度削除した経緯がある）ため、通報・非表示の仕組み
+// （comment_reports/comment_hidden、supabase_schema.sql参照）を最初から用意している。
+// 今回の対応範囲は「今日の質問」カードのみで、過去の質問一覧（/api/daily-question/
+// history）側にはまだコメント機能を付けていない。
+
+const MAX_COMMENT_CHARS = 150;
 
 async function buildAggregate(questionSlug: string) {
   const supabase = getSupabaseAdmin();
@@ -35,6 +44,37 @@ async function buildAggregate(questionSlug: string) {
   return { total: data?.length || 0, counts };
 }
 
+export type DailyComment = { id: string; value: string; comment: string; label: string; createdAt: string };
+
+// この質問に寄せられた、通報で非表示になっていないコメント一覧を新しい順に返す。
+// 表示名は個人を特定できない範囲にとどめる：会員で子どもプロフィール（学年）が
+// 紐づいていれば「◯年生の保護者」、紐づいていなければ「保護者」、匿名回答者は「匿名」。
+async function buildComments(questionSlug: string): Promise<DailyComment[]> {
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from('daily_answers')
+    .select('id, value, comment, created_at, member_id, children(grade)')
+    .eq('question_slug', questionSlug)
+    .eq('comment_hidden', false)
+    .not('comment', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  return (data || [])
+    .filter((row) => !!row.comment && row.comment.trim())
+    .map((row) => {
+      const childGrade = Array.isArray(row.children) ? row.children[0]?.grade : (row.children as { grade?: string } | null)?.grade;
+      const label = !row.member_id ? '匿名' : childGrade ? `${childGrade}の保護者` : '保護者';
+      return {
+        id: row.id,
+        value: row.value,
+        comment: row.comment as string,
+        label,
+        createdAt: row.created_at,
+      };
+    });
+}
+
 export async function GET(req: NextRequest) {
   const { date, question: todaysQuestion } = getTodaysQuestion();
   const member = await getCurrentMember();
@@ -47,8 +87,8 @@ export async function GET(req: NextRequest) {
     // 未ログインでも、匿名IDで今日の質問に既に答えているかどうかは確認する
     // （質問文の一貫性のため。下のfindQuestionBySlugの説明を参照）。「今日の質問」に
     // 答えたかどうかはquestion_slugで判定する（一意制約をanswer_dateからslugベースに
-    // 変更したのにあわせた、2026-10-17）。ただし集計グラフは会員登録するまで見せない
-    // （本物の数字は渡さず、クライアント側でぼかし見本を出す）。
+    // 変更したのにあわせた、2026-10-17）。ただし集計グラフ・コメントは会員登録する
+    // まで見せない（本物の数字は渡さず、クライアント側でぼかし見本を出す）。
     let myAnswer: string | null = null;
     const question = todaysQuestion;
     if (uid) {
@@ -62,7 +102,7 @@ export async function GET(req: NextRequest) {
         myAnswer = existing.value;
       }
     }
-    return NextResponse.json({ loggedIn: false, date, question, myAnswer, aggregate: null });
+    return NextResponse.json({ loggedIn: false, date, question, myAnswer, aggregate: null, comments: [] });
   }
 
   // 兄弟（複数の子どもプロフィール）がいる場合、子どもごとに別々に答えられるように
@@ -94,13 +134,14 @@ export async function GET(req: NextRequest) {
   const question = todaysQuestion;
   const myAnswer = existing?.value || null;
   const aggregate = myAnswer ? await buildAggregate(question.slug) : null;
+  const comments = myAnswer ? await buildComments(question.slug) : [];
 
-  return NextResponse.json({ loggedIn: true, date, question, myAnswer, aggregate });
+  return NextResponse.json({ loggedIn: true, date, question, myAnswer, aggregate, comments });
 }
 
 export async function POST(req: NextRequest) {
   const member = await getCurrentMember();
-  const { value, child_id, uid, slug } = await req.json();
+  const { value, child_id, uid, slug, comment: rawComment } = await req.json();
   const { date, question: todaysQuestion } = getTodaysQuestion();
 
   // slugが渡された場合は過去の質問一覧からの回答（/api/daily-question/history参照）。
@@ -115,24 +156,29 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 });
   }
 
+  // 任意コメント。空文字・未入力ならnull扱い。上限文字数を超える分は切り詰める
+  // （エラーにはせず、黙って切り詰める。他の軽量な入力項目と同じ扱い）。
+  const comment =
+    typeof rawComment === 'string' && rawComment.trim() ? rawComment.trim().slice(0, MAX_COMMENT_CHARS) : null;
+
   const supabase = getSupabaseAdmin();
 
   if (!member) {
     // 未ログイン：ブラウザ単位の匿名ID（getUid()）で回答を記録する（会員登録不要）。
-    // 集計グラフは会員登録しないと見せない設計のため、ここではaggregateを返さない。
+    // 集計グラフ・コメント一覧は会員登録しないと見せない設計のため、ここでは返さない。
     if (!uid) {
       return NextResponse.json({ error: 'invalid request' }, { status: 400 });
     }
     const { error } = await supabase
       .from('daily_answers')
       .upsert(
-        { anon_uid: uid, answer_date: date, question_slug: question.slug, value },
+        { anon_uid: uid, answer_date: date, question_slug: question.slug, value, comment },
         { onConflict: 'anon_uid,question_slug' }
       );
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ ok: true, myAnswer: value, aggregate: null });
+    return NextResponse.json({ ok: true, myAnswer: value, aggregate: null, comments: [] });
   }
 
   // 子どもプロフィール（任意）。他人の子どもを指定できないよう、本人の子どもである
@@ -162,6 +208,7 @@ export async function POST(req: NextRequest) {
         answer_date: date,
         question_slug: question.slug,
         value,
+        comment,
       },
       { onConflict: 'member_id,question_slug,child_key' }
     );
@@ -171,5 +218,6 @@ export async function POST(req: NextRequest) {
   }
 
   const aggregate = await buildAggregate(question.slug);
-  return NextResponse.json({ ok: true, myAnswer: value, aggregate });
+  const comments = await buildComments(question.slug);
+  return NextResponse.json({ ok: true, myAnswer: value, aggregate, comments });
 }

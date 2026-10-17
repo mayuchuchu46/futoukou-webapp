@@ -61,6 +61,16 @@ async function AdminPageContent() {
     .order('reports', { ascending: false })
     .limit(50);
 
+  // 「みんなのデータ」の任意コメントで通報されたものを、通報された相談と同じ考え方で
+  // 別枠表示する（2026-10-17追加。コメント機能自体の説明はapp/api/daily-question/
+  // route.tsのコメント参照）。
+  const { data: reportedDailyComments } = await supabase
+    .from('daily_answers')
+    .select('id, question_slug, value, comment, comment_reports, comment_hidden, created_at')
+    .gt('comment_reports', 0)
+    .order('comment_reports', { ascending: false })
+    .limit(50);
+
   const fiveDaysAgo = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString();
   const { data: overdueExpertRequests } = await supabase
     .from('consultations')
@@ -157,6 +167,7 @@ async function AdminPageContent() {
       verifiedExperts={verifiedExperts || []}
       recentConsultations={recentConsultations || []}
       reportedConsultations={reportedConsultations || []}
+      reportedDailyComments={reportedDailyComments || []}
       aiLimitHitSummary={aiLimitHitSummary}
       crisisDetectedSummary={crisisDetectedSummary}
       totalViews={totalViews}

@@ -7,10 +7,12 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { Child } from '@/lib/types';
 import { getUid } from '@/lib/uid';
+import CommentReportButton from '@/components/CommentReportButton';
 
 type QuestionChoice = { value: string; label: string };
 type Question = { slug: string; text: string; choices: QuestionChoice[] };
 type Aggregate = { total: number; counts: Record<string, number> };
+type DailyComment = { id: string; value: string; comment: string; label: string; createdAt: string };
 type HistoryQuestion = {
   slug: string;
   text: string;
@@ -32,12 +34,19 @@ type HistoryQuestion = {
 // 普段表示されるのは質問バンク19問のうち今日の1問だけだが、「過去の質問データも
 // 見れるといい」との要望を受けて、ページ下部に全問＋累計集計の一覧（折りたたみ式）も
 // 出している（2026-10-17、/api/daily-question/history参照）。
+// 回答するときに任意でひとことコメントを添えられ、他の人のコメントも見られる
+// （2026-10-17追加。「同じように悩んでいる人がいるんだと実感できるように」との
+// 要望）。コメントは集計グラフと同じく会員登録して回答した後にしか見られない。
+// 対応範囲は今のところ「今日の質問」カードのみで、下部の過去の質問一覧には
+// まだコメント機能を付けていない。
 export default function TodayPage() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [date, setDate] = useState('');
   const [question, setQuestion] = useState<Question | null>(null);
   const [myAnswer, setMyAnswer] = useState<string | null>(null);
   const [aggregate, setAggregate] = useState<Aggregate | null>(null);
+  const [comments, setComments] = useState<DailyComment[]>([]);
+  const [commentInput, setCommentInput] = useState('');
   const [childrenList, setChildrenList] = useState<Child[]>([]);
   const [selectedChildId, setSelectedChildId] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -77,6 +86,7 @@ export default function TodayPage() {
     let cancelled = false;
     setMyAnswer(null);
     setAggregate(null);
+    setComments([]);
     const params = new URLSearchParams();
     if (selectedChildId) params.set('child_id', selectedChildId);
     params.set('uid', getUid());
@@ -89,6 +99,7 @@ export default function TodayPage() {
         setQuestion(d.question);
         setMyAnswer(d.myAnswer);
         setAggregate(d.aggregate);
+        setComments(d.comments || []);
       })
       .catch(() => {
         if (!cancelled) setLoggedIn(false);
@@ -106,12 +117,18 @@ export default function TodayPage() {
       const res = await fetch('/api/daily-question', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ value, child_id: selectedChildId || null, uid: getUid() }),
+        body: JSON.stringify({
+          value,
+          child_id: selectedChildId || null,
+          uid: getUid(),
+          comment: commentInput.trim() || undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
       setMyAnswer(data.myAnswer);
       setAggregate(data.aggregate);
+      setComments(data.comments || []);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'エラーが発生しました');
     } finally {
@@ -190,19 +207,33 @@ export default function TodayPage() {
               )}
 
               {!myAnswer ? (
-                <div className="genderrow">
-                  {question.choices.map((c) => (
-                    <button
-                      key={c.value}
-                      type="button"
-                      className="genderbtn"
-                      disabled={submitting}
-                      onClick={() => answer(c.value)}
-                    >
-                      {c.label}
-                    </button>
-                  ))}
-                </div>
+                <>
+                  {/* 任意コメント（2026-10-17追加）。「同じように悩んでいる人がいるんだと
+                      実感できるように」との要望を受けて、回答と一緒に一言添えられるように
+                      した。未入力でも回答自体はできる（任意）。 */}
+                  <textarea
+                    className="input"
+                    style={{ width: '100%', minHeight: 56, fontSize: 13 }}
+                    placeholder="ひとこと添える（任意）"
+                    maxLength={150}
+                    value={commentInput}
+                    disabled={submitting}
+                    onChange={(e) => setCommentInput(e.target.value)}
+                  />
+                  <div className="genderrow">
+                    {question.choices.map((c) => (
+                      <button
+                        key={c.value}
+                        type="button"
+                        className="genderbtn"
+                        disabled={submitting}
+                        onClick={() => answer(c.value)}
+                      >
+                        {c.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
               ) : (
                 <>
                   <div className="qtext" style={{ fontSize: 13 }}>
@@ -234,6 +265,37 @@ export default function TodayPage() {
                           </div>
                         );
                       })}
+
+                      {/* みんなの声（任意コメント、2026-10-17追加）。集計グラフと同じく
+                          会員登録して回答した後にしか見せない。表示名は個人を特定できない
+                          範囲（「◯年生の保護者」「保護者」「匿名」）にとどめる
+                          （/api/daily-question/route.tsのbuildComments参照）。自由記述は
+                          モデレーション手段が無いとリスクが高いため、通報ボタンを
+                          最初から付けている。 */}
+                      {comments.length > 0 && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
+                          <div className="muted" style={{ fontSize: 12 }}>みんなの声（任意コメント）</div>
+                          {comments.map((cm) => (
+                            <div
+                              key={cm.id}
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 4,
+                                background: 'var(--bg)',
+                                borderRadius: 8,
+                                padding: '8px 10px',
+                              }}
+                            >
+                              <div className="muted" style={{ fontSize: 11 }}>{cm.label}</div>
+                              <div className="qtext" style={{ fontSize: 13 }}>{cm.comment}</div>
+                              <div style={{ alignSelf: 'flex-end' }}>
+                                <CommentReportButton id={cm.id} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     // 未ログインで回答済みの場合：本物の集計は見せず、ぼかした見本＋
