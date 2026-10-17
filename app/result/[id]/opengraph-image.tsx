@@ -41,7 +41,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('consultations')
-    .select('category, question')
+    .select('category, question, one_liner, crisis_detected')
     .eq('id', id)
     .eq('hidden', false)
     .single();
@@ -50,11 +50,20 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const questionSource = data ? data.question.replace(/\s+/g, ' ').trim() : '';
   const question = questionSource.length > 60 ? `${questionSource.slice(0, 60)}…` : questionSource;
 
+  // 一言要約（one_liner）がある相談は、Xのカードにもそれを使った格言カードを出す
+  // （2026-10-17追加。それまではこのOGP画像が常にカテゴリ＋質問文の表示で、
+  // 結果ページに追加したシェアカード画像（/quote-image、プレビュー・保存用）を
+  // Xの投稿画面が参照していなかったため、シェアしても一言カードが表示されない
+  // 問題があった。XはシェアするURL＝このOGP画像しか見ないため、ここ自体を
+  // one_liner対応にする必要があった）。crisis_detectedな回答にはone_linerを
+  // 生成していない（app/api/consult/route.ts）ため、ここでも自然に通常デザインになる。
+  const oneLiner = data && !data.crisis_detected ? data.one_liner : null;
+
   const logoData = await readFile(join(process.cwd(), 'public/assets/sensei_logo.png'), 'base64');
   const logoSrc = `data:image/png;base64,${logoData}`;
 
-  // フォントは実際に描画する文字だけに絞って取得する（ブランド名＋カテゴリ＋質問文の抜粋）。
-  const fontData = await loadGoogleFont(`どうする先生不登校編${catLabel}${question}`);
+  // フォントは実際に描画する文字だけに絞って取得する（ブランド名＋カテゴリ＋質問文または一言）。
+  const fontData = await loadGoogleFont(`どうする先生不登校編${catLabel}${question}${oneLiner || ''}`);
 
   return new ImageResponse(
     (
@@ -84,19 +93,19 @@ export default async function Image({ params }: { params: Promise<{ id: string }
                 borderRadius: 999,
               }}
             >
-              {catLabel}の相談
+              {oneLiner ? `${catLabel}の相談から` : `${catLabel}の相談`}
             </div>
           )}
           <div
             style={{
               display: 'flex',
-              fontSize: 54,
-              fontWeight: 700,
+              fontSize: oneLiner ? 60 : 54,
+              fontWeight: oneLiner ? 800 : 700,
               lineHeight: 1.5,
               color: '#2B2B28',
             }}
           >
-            {question ? `「${question}」` : '不登校のご家庭に、次の一手を。'}
+            {oneLiner || (question ? `「${question}」` : '不登校のご家庭に、次の一手を。')}
           </div>
         </div>
 
