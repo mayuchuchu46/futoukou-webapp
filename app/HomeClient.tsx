@@ -10,6 +10,7 @@ import EyeIcon from '@/components/EyeIcon';
 import TagChips from '@/components/TagChips';
 import PcSidebar from '@/components/PcSidebar';
 import TodayQuestionTeaser from '@/components/TodayQuestionTeaser';
+import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -24,14 +25,6 @@ type SidebarBanner = {
   link_url: string;
   alt_text: string;
 } | null;
-
-type ExpertProfile = {
-  id: string;
-  name: string;
-  credential: string;
-  bio: string;
-  photo_url: string | null;
-};
 
 export default function HomeClient({
   initialItems,
@@ -73,9 +66,15 @@ export default function HomeClient({
   const supervised = initialSupervised;
   const counts = initialCounts;
   const total = initialTotal;
-  // サイドバナー・専門家一覧は <PcSidebar> が自前でAPIから取得するため、
-  // ここでは initialSidebarBanner / initialExperts は使わない
-  // （page.tsx側のサーバー取得・prop自体は後方互換のため残している）。
+  // サイドバナーは <PcSidebar> が自前でAPIから取得するため、ここでは
+  // initialSidebarBanner は使わない（page.tsx側のサーバー取得・prop自体は
+  // 後方互換のため残している）。
+  // 専門家一覧（initialExperts）は、これまでPC（960px以上、PcSidebar内）
+  // でしか表示しておらず、スマホでは専門家の存在を示す場所が無かったため、
+  // 2026-10-18に本流（スマホ含む）にも表示するようにした。page.tsx側で
+  // サーバー取得済みのverified:trueな専門家をそのまま使う（PcSidebarは
+  // 別途クライアント側で同じ/api/experts/listを取得しているため、ここで
+  // 二重に取得しない）。
 
   // 旧「さがす」ページのタグ・ランキングなど、別のリンクから ?q= / ?category= 付きで
   // ホームに遷移してきたときに、URLの変化を拾って絞り込みを反映する。
@@ -199,6 +198,20 @@ export default function HomeClient({
           <div className="home-tags-mobile">
             <TodayQuestionTeaser />
           </div>
+        )}
+
+        {/* 「専門家一覧」。PC（960px以上）では右コラム（PcSidebar内）に同じものが
+            出るため、ここはモバイル専用（2026-10-18、home-experts-mobileをCSS側で
+            960px以上は非表示にしている）。「専門家の紹介カードをTOPにも出したい」
+            との依頼を受けて追加。専門家がまだ0人の間はExpertsTeaser内の空状態
+            （「現在、専門家を募集中です」）がそのまま出る＝実在しない専門家を
+            でっち上げて見せることはしない。 */}
+        {showExtras && (
+          <ExpertsTeaser
+            experts={initialExperts}
+            title="専門家があなたの相談を見てくれます"
+            className="home-experts-mobile"
+          />
         )}
 
         {/* PCの広い画面では、左右を完全に独立した縦積み（flex column）の

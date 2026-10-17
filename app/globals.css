@@ -643,6 +643,10 @@ h2.pagetitle {
   /* 「専門家が回答した相談」も同様に、PCでは右コラム（.pc-sidebar内）に出すので、
      上部に残っているモバイル用の方は隠す（2026-10-15）。 */
   .home-expertbanner-mobile { display: none; }
+  /* 「専門家一覧」のモバイル用も同様に、PCでは右コラム（.pc-sidebar内、
+     .home-experts-side）に出すので、本流に出しているモバイル用の方は隠す
+     （2026-10-18）。 */
+  .home-experts-mobile { display: none; }
   /* ホームCTAバナー（チャッピーのバナー画像）は、PC（960px以上）ではカードごと
      非表示にする。「相談する」への導線はPCサイドの.sidebar-ask-btn-pinkでカバーする
      （2026-10-15）。
