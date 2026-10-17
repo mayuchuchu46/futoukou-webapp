@@ -331,6 +331,23 @@ export default async function ResultPage({
   const dictionaryMatchSource = `${item.question} ${answerTextForJsonLd || ''}`;
   const relatedThemeWords = SEARCH_TAG_CANDIDATES.filter((w) => matchesThemeText(dictionaryMatchSource, w));
 
+  // Search ConsoleでQAPage構造化データの非重大エラー（url/author/upvoteCountの欠落）が
+  // 検出されたための対応（2026-10-17追加）。このアプリには質問者個人の公開プロフィール
+  // ページが無いため、mainEntity.author.url（質問者）はこの相談自体のページを指す形にした
+  // （Google側が求めているのは「著者を特定できるURL」で、個人ページが無いサイトでは相談
+  // ページ自体を指すのが一般的な代替策）。acceptedAnswer.author（回答者）は、AI回答なら
+  // サイト運営者（どうする先生）のOrganization、専門家回答ならexperts/[id]の公開プロフィール
+  // ページを持つPersonにした。upvoteCountは既存のlikes（「参考になった」等の件数とは別の、
+  // ハートで押す「いいね」カウント）をそのまま使う。
+  const answerAuthor =
+    item.request_type === 'expert' && item.experts
+      ? {
+          '@type': 'Person' as const,
+          name: item.experts.name,
+          ...(item.expert_id ? { url: `${SITE_URL}/experts/${item.expert_id}` } : {}),
+        }
+      : { '@type': 'Organization' as const, name: SITE_NAME, url: SITE_URL };
+
   const jsonLd = answerTextForJsonLd
     ? {
         '@context': 'https://schema.org',
@@ -341,11 +358,14 @@ export default async function ResultPage({
           text: item.question,
           answerCount: 1,
           dateCreated: item.created_at,
-          author: { '@type': 'Person', name: metaLabel(item) || '保護者' },
+          author: { '@type': 'Person', name: metaLabel(item) || '保護者', url: resultUrl },
           acceptedAnswer: {
             '@type': 'Answer',
             text: answerTextForJsonLd,
             dateCreated: item.created_at,
+            url: resultUrl,
+            author: answerAuthor,
+            upvoteCount: item.likes || 0,
           },
         },
       }
