@@ -47,9 +47,14 @@ export default function TodayPage() {
   const [date, setDate] = useState('');
   const [question, setQuestion] = useState<Question | null>(null);
   const [myAnswer, setMyAnswer] = useState<string | null>(null);
+  const [myComment, setMyComment] = useState<string | null>(null);
   const [aggregate, setAggregate] = useState<Aggregate | null>(null);
   const [comments, setComments] = useState<DailyComment[]>([]);
   const [commentInput, setCommentInput] = useState('');
+  // 回答済みの質問に対して、後からコメントを追加・編集するための入力欄
+  // （2026-10-17追加。下のcommentInputは「まだ回答していないとき」専用）。
+  const [commentDraft, setCommentDraft] = useState('');
+  const [commentSaving, setCommentSaving] = useState(false);
   const [childrenList, setChildrenList] = useState<Child[]>([]);
   const [selectedChildId, setSelectedChildId] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -88,6 +93,7 @@ export default function TodayPage() {
   useEffect(() => {
     let cancelled = false;
     setMyAnswer(null);
+    setMyComment(null);
     setAggregate(null);
     setComments([]);
     const params = new URLSearchParams();
@@ -101,6 +107,8 @@ export default function TodayPage() {
         setDate(d.date);
         setQuestion(d.question);
         setMyAnswer(d.myAnswer);
+        setMyComment(d.myComment || null);
+        setCommentDraft(d.myComment || '');
         setAggregate(d.aggregate);
         setComments(d.comments || []);
       })
@@ -130,12 +138,47 @@ export default function TodayPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
       setMyAnswer(data.myAnswer);
+      setMyComment(data.myComment || null);
+      setCommentDraft(data.myComment || '');
       setAggregate(data.aggregate);
       setComments(data.comments || []);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'エラーが発生しました');
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  // すでに回答済みの質問に、後からコメントを追加・編集する（2026-10-17追加）。
+  // 「コメント入れられないよー」との指摘を受けて対応：コメント入力欄は最初に回答する
+  // ときしか出ない設計だったため、すでに回答済みの人（＝大半のユーザー）がコメントを
+  // 入れる手段が無かった。回答内容（value）は変えず、同じ値で上書き保存することで
+  // コメントだけを更新する（POST側のupsertの仕組みをそのまま利用）。
+  async function saveComment() {
+    if (!myAnswer || commentSaving) return;
+    setCommentSaving(true);
+    setError('');
+    try {
+      const res = await fetch('/api/daily-question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          value: myAnswer,
+          child_id: selectedChildId || null,
+          uid: getUid(),
+          comment: commentDraft.trim() || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || '失敗しました');
+      setMyComment(data.myComment || null);
+      setCommentDraft(data.myComment || '');
+      setAggregate(data.aggregate);
+      setComments(data.comments || []);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'エラーが発生しました');
+    } finally {
+      setCommentSaving(false);
     }
   }
 
@@ -241,6 +284,30 @@ export default function TodayPage() {
                 <>
                   <div className="qtext" style={{ fontSize: 13 }}>
                     あなたの回答：<strong>{question.choices.find((c) => c.value === myAnswer)?.label || myAnswer}</strong>
+                  </div>
+
+                  {/* 回答済みの質問へのコメント追加・編集（2026-10-17追加）。最初の回答時に
+                      コメント欄が出るのは「まだ回答していないとき」だけなので、すでに
+                      回答済みの人にも同じようにコメントを入れられるようにしている。 */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
+                    <textarea
+                      className="input"
+                      style={{ width: '100%', minHeight: 56, fontSize: 13 }}
+                      placeholder="ひとこと添える（任意）"
+                      maxLength={150}
+                      value={commentDraft}
+                      disabled={commentSaving}
+                      onChange={(e) => setCommentDraft(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      style={{ alignSelf: 'flex-end' }}
+                      disabled={commentSaving || commentDraft.trim() === (myComment || '')}
+                      onClick={saveComment}
+                    >
+                      {commentSaving ? '保存中…' : myComment ? 'コメントを更新する' : 'コメントを投稿する'}
+                    </button>
                   </div>
 
                   {aggregate ? (

@@ -30,6 +30,11 @@ import { getTodaysQuestion, findQuestionBySlug } from '@/lib/dailyQuestions';
 // （comment_reports/comment_hidden、supabase_schema.sql参照）を最初から用意している。
 // 今回の対応範囲は「今日の質問」カードのみで、過去の質問一覧（/api/daily-question/
 // history）側にはまだコメント機能を付けていない。
+// コメント入力欄は、最初に回答するときだけでなく、すでに回答済みの質問に対しても
+// 後からコメントを追加・編集できるようにしている（2026-10-17追加。「コメント入れ
+// られないよー」との指摘を受けて対応。すでに回答している質問の方が大半になるため、
+// 最初の回答時しか入力できない設計では実質コメントが使えない状態になっていた）。
+// そのため、自分自身の既存コメント（myComment）もレスポンスに含める。
 
 const MAX_COMMENT_CHARS = 150;
 
@@ -93,21 +98,23 @@ export async function GET(req: NextRequest) {
     // 変更したのにあわせた、2026-10-17）。集計グラフ・コメントは、会員登録の有無では
     // なく「回答済みかどうか」で見せる（2026-10-17、上のコメント参照）。
     let myAnswer: string | null = null;
+    let myComment: string | null = null;
     const question = todaysQuestion;
     if (uid) {
       const { data: existing } = await supabase
         .from('daily_answers')
-        .select('value')
+        .select('value, comment')
         .eq('anon_uid', uid)
         .eq('question_slug', todaysQuestion.slug)
         .maybeSingle();
       if (existing) {
         myAnswer = existing.value;
+        myComment = existing.comment || null;
       }
     }
     const aggregate = myAnswer ? await buildAggregate(question.slug) : null;
     const comments = myAnswer ? await buildComments(question.slug) : [];
-    return NextResponse.json({ loggedIn: false, date, question, myAnswer, aggregate, comments });
+    return NextResponse.json({ loggedIn: false, date, question, myAnswer, myComment, aggregate, comments });
   }
 
   // 兄弟（複数の子どもプロフィール）がいる場合、子どもごとに別々に答えられるように
@@ -130,7 +137,7 @@ export async function GET(req: NextRequest) {
   // 変更。同じ質問は次にローテーションで出たときも「既に回答済み」として扱われる）。
   let existingQuery = supabase
     .from('daily_answers')
-    .select('value')
+    .select('value, comment')
     .eq('member_id', member.id)
     .eq('question_slug', todaysQuestion.slug);
   existingQuery = scopeChildId ? existingQuery.eq('child_id', scopeChildId) : existingQuery.is('child_id', null);
@@ -138,10 +145,11 @@ export async function GET(req: NextRequest) {
 
   const question = todaysQuestion;
   const myAnswer = existing?.value || null;
+  const myComment = existing?.comment || null;
   const aggregate = myAnswer ? await buildAggregate(question.slug) : null;
   const comments = myAnswer ? await buildComments(question.slug) : [];
 
-  return NextResponse.json({ loggedIn: true, date, question, myAnswer, aggregate, comments });
+  return NextResponse.json({ loggedIn: true, date, question, myAnswer, myComment, aggregate, comments });
 }
 
 export async function POST(req: NextRequest) {
@@ -186,7 +194,7 @@ export async function POST(req: NextRequest) {
     }
     const aggregate = await buildAggregate(question.slug);
     const comments = await buildComments(question.slug);
-    return NextResponse.json({ ok: true, myAnswer: value, aggregate, comments });
+    return NextResponse.json({ ok: true, myAnswer: value, myComment: comment, aggregate, comments });
   }
 
   // 子どもプロフィール（任意）。他人の子どもを指定できないよう、本人の子どもである
@@ -227,5 +235,5 @@ export async function POST(req: NextRequest) {
 
   const aggregate = await buildAggregate(question.slug);
   const comments = await buildComments(question.slug);
-  return NextResponse.json({ ok: true, myAnswer: value, aggregate, comments });
+  return NextResponse.json({ ok: true, myAnswer: value, myComment: comment, aggregate, comments });
 }
