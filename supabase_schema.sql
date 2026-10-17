@@ -151,6 +151,9 @@
 -- 希死念慮・自傷等を検知した安全上書き回答（ホットライン案内のみ）かどうかを記録する
 -- crisis_detected列を追加した場合（2026-10-14追加）、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists crisis_detected boolean not null default false;
+-- 回答の一言要約（格言シェア機能）用のone_liner列を追加した場合（2026-10-17追加）、
+-- 既存DBでは次を実行してください。
+-- alter table consultations add column if not exists one_liner text;
 -- 新テーマ「日常生活のこと」(daily) を追加した際、consultationsのcategory CHECK制約に
 -- dailyを入れ忘れていた（2026-10-14発覚）。このままではdailyでの投稿が失敗するため、
 -- 既存DBでは次を実行してください。
@@ -560,7 +563,14 @@ create table if not exists consultations (
   -- どの子どもについての相談か（任意、2026-10-16追加）。ログイン中の会員が子どもプロフィール
   -- （childrenテーブル）を作っている場合、相談する画面で選べる。選ばなければnullのまま
   -- （兄弟での使い分けをしていない会員は今まで通り気にしなくてよい）。
-  child_id uuid references children(id) on delete set null
+  child_id uuid references children(id) on delete set null,
+
+  -- 回答を一言に要約した「格言」（20字程度）。相談直後に本回答とは別の軽量なAI呼び出しで
+  -- 生成し、結果ページのシェアカード画像・Xシェア文に使う（2026-10-17追加）。
+  -- crisis_detectedな回答（安全上書き）では生成しない＝nullのまま
+  -- （命に関わる場面でシェア導線を出さない方針、isCrisis分岐と同じ考え方）。
+  -- 生成に失敗してもnullのままにして本回答の保存は妨げない（app/api/consult/route.ts参照）。
+  one_liner text
 );
 alter table consultations enable row level security;
 

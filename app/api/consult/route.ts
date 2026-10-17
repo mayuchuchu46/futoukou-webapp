@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { buildPrompt, PastConsultation } from '@/lib/prompt';
+import { buildPrompt, buildOneLinerPrompt, PastConsultation } from '@/lib/prompt';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -99,6 +99,29 @@ export async function POST(req: NextRequest) {
   // 要望を受けて追加）。
   const crisisDetected = answer.includes('0120-0-78310');
 
+  // 回答の一言要約（Xシェア用の格言カードに使う）。crisis_detectedな回答には
+  // 生成しない（命に関わる場面でシェア導線を出さない方針、結果ページのisCrisis分岐と
+  // 同じ考え方）。生成に失敗しても本回答の保存自体は妨げず、one_linerはnullのままにする
+  // （2026-10-17追加）。
+  let oneLiner: string | null = null;
+  if (!crisisDetected) {
+    try {
+      const oneLinerMsg = await anthropic.messages.create({
+        model: 'claude-sonnet-5',
+        max_tokens: 100,
+        messages: [{ role: 'user', content: buildOneLinerPrompt(text.trim(), answer) }],
+      });
+      const oneLinerBlock = oneLinerMsg.content.find(
+        (b): b is Extract<typeof b, { type: 'text' }> => b.type === 'text'
+      );
+      const raw = oneLinerBlock ? oneLinerBlock.text.trim() : '';
+      // 万一「」で囲って返ってきた場合に備えて剥がしておく。
+      oneLiner = raw ? raw.replace(/^[「『]|[」』]$/g, '').trim() : null;
+    } catch {
+      oneLiner = null;
+    }
+  }
+
   const { data: row, error: insertErr } = await supabase
     .from('consultations')
     .insert({
@@ -115,6 +138,7 @@ export async function POST(req: NextRequest) {
       liked_by: [],
       views: 0,
       crisis_detected: crisisDetected,
+      one_liner: oneLiner,
     })
     .select()
     .single();
