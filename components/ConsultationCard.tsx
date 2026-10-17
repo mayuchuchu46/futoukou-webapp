@@ -89,9 +89,11 @@ export default function ConsultationCard({
     setConfirmingDelete(false);
   }
 
-  const answerPreview = item.answer
-    ? item.answer.slice(0, 90) + (item.answer.length > 90 ? '…' : '')
-    : '';
+  // 一覧カードでの回答の見せ方（2026-10-17変更）。以前は90文字で機械的に切っていたが、
+  // AI回答の文字数上限自体を増やした（lib/prompt.ts参照）のに合わせて、文字数で切るのは
+  // やめ、全文を表示したうえでCSSの行数クランプ（.qtext-clamp-3、約3行）で見た目を
+  // 抑える方式に変更した（画面幅によらず自然に収まる）。
+  const answerPreview = item.answer || '';
 
   // 投稿日時を絶対日付ではなく「3分前」のような相対表示にし、1時間以内の
   // 投稿にはNEWバッジを付ける（2026-10-15、一覧に「今動いている」感を
@@ -110,7 +112,7 @@ export default function ConsultationCard({
           {[metaLabel(item), timeLabel].filter(Boolean).join('・')}
         </span>
       </div>
-      <div className="qtext qtext-main">💬 {item.question}</div>
+      <div className="qtext qtext-main qtext-clamp-7">💬 {item.question}</div>
       {matchedTags.length > 0 && (
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           {matchedTags.map((word) => (
@@ -151,7 +153,7 @@ export default function ConsultationCard({
               <img src="/assets/sensei_logo.png" alt="" />
               どうする先生（AI）
             </div>
-            <div className="qtext">{answerPreview}</div>
+            <div className="qtext qtext-clamp-3">{answerPreview}</div>
           </div>
         )
       )}

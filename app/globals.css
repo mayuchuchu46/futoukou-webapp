@@ -781,6 +781,12 @@ h2.pagetitle {
 .qtext { font-size: 14px; line-height: 1.7; color: var(--text); }
 .qtext-main { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.7; }
 .card-answerbox { background: var(--bg); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+/* TOPの「みんなの相談」一覧カードで、質問文・AI回答が長いと一覧が間延びするため、
+   表示行数を頭打ちにする（2026-10-17、「Xと同じく7行までの表示」「AIの回答は3行
+   くらいに」との要望を受けて追加）。全文はカードをタップした先の詳細ページで読める
+   ため、省略時に「もっと見る」的なUIは置かず、CSSでの行数クランプのみにしている。 */
+.qtext-clamp-7 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 7; overflow: hidden; }
+.qtext-clamp-3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 .locked-badge { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--orange-text); }
 .locked-badge-icon { width: 16px; height: 16px; object-fit: contain; flex: 0 0 auto; }
 .answer-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--main); font-weight: 700; }
