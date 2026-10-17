@@ -160,7 +160,21 @@ export default function HomeClient({
   // ランキングは10件まで取得する。.rank-listが高さ固定のスクロール領域になっている
   // ため、スマホのファーストビューを圧迫せず（表示自体は最初の数件ぶんの高さのまま）、
   // スクロールすれば10位まで見られる（2026-10-12、5件までに抑えていたのを10件に拡大）。
-  const ranking = [...allItems].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10);
+  // 同一 author_id の投稿は閲覧数が最も多い1件のみをランキングに含める。
+  // 相談件数が少ない段階で同一ユーザーの投稿がワンツーを占めるのを防ぐため。
+  const ranking = (() => {
+    const sorted = [...allItems].sort((a, b) => (b.views || 0) - (a.views || 0));
+    const seen = new Set<string>();
+    const deduped: typeof sorted = [];
+    for (const item of sorted) {
+      if (!seen.has(item.author_id)) {
+        seen.add(item.author_id);
+        deduped.push(item);
+      }
+      if (deduped.length >= 10) break;
+    }
+    return deduped;
+  })();
   const showExtras = category === 'all' && !q.trim();
 
   return (
@@ -249,7 +263,7 @@ export default function HomeClient({
                   {ranking.map((item, i) => (
                     <div key={item.id} className="rank-item" role="button" tabIndex={0} onClick={() => router.push(`/result/${item.id}`)}>
                       <span className="rank-num">{i + 1}</span>
-                      <span className="rank-q">{item.question.slice(0, 28)}{item.question.length > 28 ? '…' : ''}</span>
+                      <span className="rank-q">{item.question.slice(0, 42)}{item.question.length > 42 ? '…' : ''}</span>
                       <span className="rank-views"><EyeIcon /> {item.views || 0}</span>
                     </div>
                   ))}
