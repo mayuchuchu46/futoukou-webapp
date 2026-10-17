@@ -362,6 +362,19 @@ h2.pagetitle {
      常時折り返しありで問題ないため、ここではnowrap自体をやめた（2026-10-12、実機画面で発覚）。 */
   margin-top: 1px;
 }
+
+/* PCヘッダーのヒーロー画像（2026-10-17追加）。横長のバナー画像なので、スマホ幅では
+   場所を取りすぎるため出さない。PC（960px以上）でだけ表示する。 */
+.header-hero-pc { display: none; }
+@media (min-width: 960px) {
+  .header-hero-pc {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    margin-top: 4px;
+  }
+}
 /* ホーム画面トップの「相談する」CTAカード。チャッピー（ChatGPT）に描いてもらった
    バナー画像をそのまま1枚で表示する。「.card home-cta」の2クラス指定だが、.cardの
    定義がこのファイルの下の方にあり同じ詳細度のため後勝ちで上書きされてしまう不具合が
