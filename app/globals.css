@@ -368,13 +368,22 @@ h2.pagetitle {
    （全ページ共通・全幅）から、ホームの左カラム上部（ホームのみ・サイドバーと
    並ぶ幅）に移動した。横長のバナー画像なので、スマホ幅では場所を取りすぎるため
    出さない。 */
-.home-hero-pc { display: none; }
+.home-hero-pc-link { display: none; }
+.home-hero-pc {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
 @media (min-width: 960px) {
-  .home-hero-pc {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 16px;
+  .home-hero-pc-link { display: block; }
+  /* クリックできることが伝わるよう、ホバー時に少し拡大＋影を付ける
+     （2026-10-17、「バナークリックすると、相談ページに行くようにして、ホバーも
+     入れてね」との要望）。 */
+  .home-hero-pc-link:hover .home-hero-pc {
+    transform: scale(1.01);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   }
 }
 /* ホーム画面トップの「相談する」CTAカード。チャッピー（ChatGPT）に描いてもらった

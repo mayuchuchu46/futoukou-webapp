@@ -218,12 +218,17 @@ export default function HomeClient({
             {/* PC（960px以上）左カラムの一番上に出すヒーロー画像（2026-10-17追加、
                 ユーザーから提供されたバナー画像を使用）。「左コラムの上でいいんだけど」
                 との指摘を受けて、全ページ共通のヘッダーから、ホームの左カラム上部に
-                移動した（app/globals.cssの.home-hero-pc参照、スマホ幅では非表示）。 */}
-            <img
-              src="/assets/header_hero_pc.jpg"
-              alt="不登校のご家庭に、次の一手を一緒に。"
-              className="home-hero-pc"
-            />
+                移動した（app/globals.cssの.home-hero-pc参照、スマホ幅では非表示）。
+                「バナークリックすると、相談ページに行くようにして、ホバーも入れてね」
+                との指摘を受けて、/askへのリンクにし、ホバー時に少し拡大する
+                （.home-hero-pc-linkのtransition、globals.css参照）。 */}
+            <Link href="/ask" className="home-hero-pc-link">
+              <img
+                src="/assets/header_hero_pc.jpg"
+                alt="不登校のご家庭に、次の一手を一緒に。どうする先生に相談する。"
+                className="home-hero-pc"
+              />
+            </Link>
             {showExtras && allItems.length >= 3 && (
               <div className="ranking home-ranking">
                 <div className="ranking-title">よく読まれている相談</div>
