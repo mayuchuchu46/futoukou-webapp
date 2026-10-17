@@ -18,7 +18,9 @@ type HistoryQuestion = {
   text: string;
   choices: QuestionChoice[];
   myAnswer: string | null;
+  myComment: string | null;
   aggregate: Aggregate | null;
+  comments: DailyComment[];
 };
 
 // 「みんなのデータ」ページ（2026-10-16追加）。AIの回答でよく出る「気づいたときにメモ
@@ -40,8 +42,9 @@ type HistoryQuestion = {
 // 回答するときに任意でひとことコメントを添えられ、他の人のコメントも見られる
 // （2026-10-17追加。「同じように悩んでいる人がいるんだと実感できるように」との
 // 要望）。コメントも集計グラフと同じく、その質問に回答した後なら誰でも見られる。
-// 対応範囲は今のところ「今日の質問」カードのみで、下部の過去の質問一覧には
-// まだコメント機能を付けていない。
+// 下部の過去の質問一覧にも、回答済みの質問への後からのコメント追加・編集機能を
+// 追加した（2026-10-17追加。「過去の質問も後からコメント入れられるようにして
+// おきたい」との要望）。
 export default function TodayPage() {
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [date, setDate] = useState('');
@@ -53,8 +56,12 @@ export default function TodayPage() {
   const [commentInput, setCommentInput] = useState('');
   // 回答済みの質問に対して、後からコメントを追加・編集するための入力欄
   // （2026-10-17追加。下のcommentInputは「まだ回答していないとき」専用）。
+  // 「投稿したコメントが書く欄にそのまま残ってる」との指摘を受けて、保存済みの
+  // コメントは普段はテキストとして表示するだけにし、入力欄は「編集する」を押した
+  // ときだけ出す（editingComment）ようにした。保存が終わったら入力欄を閉じる。
   const [commentDraft, setCommentDraft] = useState('');
   const [commentSaving, setCommentSaving] = useState(false);
+  const [editingComment, setEditingComment] = useState(false);
   const [childrenList, setChildrenList] = useState<Child[]>([]);
   const [selectedChildId, setSelectedChildId] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -67,6 +74,12 @@ export default function TodayPage() {
   const [history, setHistory] = useState<HistoryQuestion[] | null>(null);
   const [historySubmitting, setHistorySubmitting] = useState<string | null>(null);
   const [historyError, setHistoryError] = useState('');
+  // 過去の質問一覧の、各質問ごとのコメント編集状態（2026-10-17追加）。今日の質問
+  // カードのeditingComment/commentDraftと同じ考え方だが、質問が複数あるためslugを
+  // キーにしたマップで持つ。
+  const [historyEditingSlug, setHistoryEditingSlug] = useState<string | null>(null);
+  const [historyCommentDraft, setHistoryCommentDraft] = useState('');
+  const [historyCommentSaving, setHistoryCommentSaving] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/children')
@@ -96,6 +109,7 @@ export default function TodayPage() {
     setMyComment(null);
     setAggregate(null);
     setComments([]);
+    setEditingComment(false);
     const params = new URLSearchParams();
     if (selectedChildId) params.set('child_id', selectedChildId);
     params.set('uid', getUid());
@@ -140,6 +154,8 @@ export default function TodayPage() {
       setMyAnswer(data.myAnswer);
       setMyComment(data.myComment || null);
       setCommentDraft(data.myComment || '');
+      setCommentInput('');
+      setEditingComment(false);
       setAggregate(data.aggregate);
       setComments(data.comments || []);
     } catch (e: unknown) {
@@ -173,6 +189,7 @@ export default function TodayPage() {
       if (!res.ok) throw new Error(data.error || '失敗しました');
       setMyComment(data.myComment || null);
       setCommentDraft(data.myComment || '');
+      setEditingComment(false);
       setAggregate(data.aggregate);
       setComments(data.comments || []);
     } catch (e: unknown) {
@@ -207,6 +224,45 @@ export default function TodayPage() {
       setHistoryError(e instanceof Error ? e.message : 'エラーが発生しました');
     } finally {
       setHistorySubmitting(null);
+    }
+  }
+
+  // 過去の質問一覧で、すでに回答済みの質問に後からコメントを追加・編集する
+  // （2026-10-17追加。「過去の質問も後からコメント入れられるようにしておきたい」
+  // との要望）。今日の質問カードのsaveComment()と同じく、回答内容（value）は
+  // そのまま保持し、コメントだけを上書き保存する。
+  async function saveHistoryComment(slug: string, value: string) {
+    if (historyCommentSaving) return;
+    setHistoryCommentSaving(slug);
+    setHistoryError('');
+    try {
+      const res = await fetch('/api/daily-question', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          value,
+          slug,
+          child_id: selectedChildId || null,
+          uid: getUid(),
+          comment: historyCommentDraft.trim() || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || '失敗しました');
+      setHistory((prev) =>
+        prev
+          ? prev.map((q) =>
+              q.slug === slug
+                ? { ...q, myAnswer: data.myAnswer, myComment: data.myComment || null, aggregate: data.aggregate, comments: data.comments || [] }
+                : q
+            )
+          : prev
+      );
+      setHistoryEditingSlug(null);
+    } catch (e: unknown) {
+      setHistoryError(e instanceof Error ? e.message : 'エラーが発生しました');
+    } finally {
+      setHistoryCommentSaving(null);
     }
   }
 
@@ -288,27 +344,64 @@ export default function TodayPage() {
 
                   {/* 回答済みの質問へのコメント追加・編集（2026-10-17追加）。最初の回答時に
                       コメント欄が出るのは「まだ回答していないとき」だけなので、すでに
-                      回答済みの人にも同じようにコメントを入れられるようにしている。 */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
-                    <textarea
-                      className="input"
-                      style={{ width: '100%', minHeight: 56, fontSize: 13 }}
-                      placeholder="ひとこと添える（任意）"
-                      maxLength={150}
-                      value={commentDraft}
-                      disabled={commentSaving}
-                      onChange={(e) => setCommentDraft(e.target.value)}
-                    />
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      style={{ alignSelf: 'flex-end' }}
-                      disabled={commentSaving || commentDraft.trim() === (myComment || '')}
-                      onClick={saveComment}
-                    >
-                      {commentSaving ? '保存中…' : myComment ? 'コメントを更新する' : 'コメントを投稿する'}
-                    </button>
-                  </div>
+                      回答済みの人にも同じようにコメントを入れられるようにしている。
+                      「投稿したコメントが書く欄にそのまま残ってる」との指摘を受けて、
+                      普段は保存済みのコメントをテキストで表示するだけにし、入力欄は
+                      「編集する」を押したときだけ出す。保存が終わったら自動で閉じる。 */}
+                  {editingComment ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%' }}>
+                      <textarea
+                        className="input"
+                        style={{ width: '100%', minHeight: 56, fontSize: 13 }}
+                        placeholder="ひとこと添える（任意）"
+                        maxLength={150}
+                        value={commentDraft}
+                        disabled={commentSaving}
+                        autoFocus
+                        onChange={(e) => setCommentDraft(e.target.value)}
+                      />
+                      <div style={{ display: 'flex', gap: 8, alignSelf: 'flex-end' }}>
+                        <button
+                          type="button"
+                          className="btn-secondary"
+                          disabled={commentSaving}
+                          onClick={() => {
+                            setCommentDraft(myComment || '');
+                            setEditingComment(false);
+                          }}
+                        >
+                          キャンセル
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-secondary"
+                          disabled={commentSaving || commentDraft.trim() === (myComment || '')}
+                          onClick={saveComment}
+                        >
+                          {commentSaving ? '保存中…' : '保存する'}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>
+                      {myComment && (
+                        <div className="qtext" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
+                          {myComment}
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        className="btn-secondary"
+                        style={{ alignSelf: 'flex-start', fontSize: 12 }}
+                        onClick={() => {
+                          setCommentDraft(myComment || '');
+                          setEditingComment(true);
+                        }}
+                      >
+                        {myComment ? 'コメントを編集する' : 'ひとこと添える（任意）'}
+                      </button>
+                    </div>
+                  )}
 
                   {aggregate ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
@@ -439,6 +532,88 @@ export default function TodayPage() {
                             </div>
                           );
                         })}
+
+                        {/* 過去の質問へのコメント追加・編集（2026-10-17追加）。今日の質問
+                            カードと同じ、通常はテキスト表示＋「編集する」ボタン、押したときだけ
+                            入力欄を出す方式。 */}
+                        {historyEditingSlug === q.slug ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: '100%', marginTop: 4 }}>
+                            <textarea
+                              className="input"
+                              style={{ width: '100%', minHeight: 48, fontSize: 12 }}
+                              placeholder="ひとこと添える（任意）"
+                              maxLength={150}
+                              value={historyCommentDraft}
+                              disabled={historyCommentSaving === q.slug}
+                              autoFocus
+                              onChange={(e) => setHistoryCommentDraft(e.target.value)}
+                            />
+                            <div style={{ display: 'flex', gap: 8, alignSelf: 'flex-end' }}>
+                              <button
+                                type="button"
+                                className="btn-secondary"
+                                style={{ fontSize: 11 }}
+                                disabled={historyCommentSaving === q.slug}
+                                onClick={() => setHistoryEditingSlug(null)}
+                              >
+                                キャンセル
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-secondary"
+                                style={{ fontSize: 11 }}
+                                disabled={historyCommentSaving === q.slug || historyCommentDraft.trim() === (q.myComment || '')}
+                                onClick={() => saveHistoryComment(q.slug, q.myAnswer as string)}
+                              >
+                                {historyCommentSaving === q.slug ? '保存中…' : '保存する'}
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%', marginTop: 4 }}>
+                            {q.myComment && (
+                              <div className="qtext" style={{ fontSize: 12, background: 'var(--bg)', borderRadius: 8, padding: '6px 8px' }}>
+                                {q.myComment}
+                              </div>
+                            )}
+                            <button
+                              type="button"
+                              className="btn-secondary"
+                              style={{ alignSelf: 'flex-start', fontSize: 11 }}
+                              onClick={() => {
+                                setHistoryCommentDraft(q.myComment || '');
+                                setHistoryEditingSlug(q.slug);
+                              }}
+                            >
+                              {q.myComment ? 'コメントを編集する' : 'ひとこと添える（任意）'}
+                            </button>
+                          </div>
+                        )}
+
+                        {q.comments.length > 0 && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
+                            <div className="muted" style={{ fontSize: 11 }}>みんなの声（任意コメント）</div>
+                            {q.comments.map((cm) => (
+                              <div
+                                key={cm.id}
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: 3,
+                                  background: 'var(--bg)',
+                                  borderRadius: 8,
+                                  padding: '6px 8px',
+                                }}
+                              >
+                                <div className="muted" style={{ fontSize: 10 }}>{cm.label}</div>
+                                <div className="qtext" style={{ fontSize: 12 }}>{cm.comment}</div>
+                                <div style={{ alignSelf: 'flex-end' }}>
+                                  <CommentReportButton id={cm.id} />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       // 通常は回答済みなら必ずaggregateが返るはずだが、想定外のケース向けの
