@@ -116,7 +116,10 @@ button:active,
   flex-direction: column;
   gap: 10px;
   position: relative;
-  overflow: hidden;
+  /* 以前はoverflow: hiddenで.header-accent（装飾画像、現在は未使用）を切り取っていたが、
+     PCのグローバルメニュー（プルダウン）パネルが.header内の絶対配置のため、
+     .headerの高さを超える分がここで切れて操作できなくなっていた
+     （2026-10-18、「プルダウンがうまく操作できない」との報告を受けて削除）。 */
 }
 .header-accent {
   position: absolute;
@@ -728,10 +731,6 @@ h2.pagetitle {
     color: var(--text);
     opacity: 0.75;
     cursor: pointer;
-    /* ボタンの下にクリック可能な余白を作り、パネルまでマウスが途切れず
-       移動できるようにする（hover開閉のガタつき防止）。 */
-    padding-bottom: 14px;
-    margin-bottom: -14px;
   }
   .header-navdropdown > button:hover,
   .header-navdropdown > button.active {

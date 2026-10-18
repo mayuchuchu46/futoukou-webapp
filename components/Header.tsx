@@ -44,7 +44,7 @@ export default function Header({
   // メニューを出した方が自然だとの指摘を受けて追加（2026-10-18）。スマホではCSS側
   // （.header-globalnav）で非表示にし、下部固定ナビをそのまま使う。
   // 「ホーム」「マイページ」「相談する」は下部固定ナビ・PCサイド等に既に導線があるため
-  // ここからは外し、「学校・フリースクールを探す」「お悩み辞典」はカテゴリ数が増えた
+  // ここからは外し、「学びの場を探す」「お悩み辞典」はカテゴリ数が増えた
   // （前者5つ・後者10個）ことに合わせてプルダウン式にした（2026-10-18）。
   type NavItem =
     | { type: 'link'; href: string; label: string }
@@ -53,7 +53,7 @@ export default function Header({
     {
       type: 'dropdown',
       key: 'gakko',
-      label: '学校・フリースクールを探す',
+      label: '学びの場を探す',
       basePath: '/gakko',
       items: [
         { href: '/gakko', label: '学びの多様化学校' },
