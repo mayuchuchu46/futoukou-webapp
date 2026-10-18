@@ -12,7 +12,7 @@
 // 調査しても公式情報源が見つからず、null のまま。前者は存在自体の確認ができず、
 // 後者は運営法人（学校法人雙星舎）がウェブ上にほぼ情報を持たないため。
 //
-// note（51校で追加、2026-10-18）は、学校紹介ページの説明文をテンプレ的な一文だけで
+// note（84校中59校で追加、2026-10-18）は、学校紹介ページの説明文をテンプレ的な一文だけで
 // 終わらせず、各校固有の情報を増やすため追加。運営法人名・愛称・設置場所（◯◯内に
 // 設置、等）・開校年月・改称前の名称など、Web調査で実際に確認できた事実のみを記載。
 // 推測や未確認の関連（学校間の親子関係等）は含めていない。
@@ -49,7 +49,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "平成16年",
     "officialUrl": "https://hachioji-school.ed.jp/takao3g/",
     "address": "東京都八王子市館町1097-30 〒193-0944",
-    "note": null
+    "note": "2004年に構造改革特区制度を活用して開校した、最も早い時期の不登校特例校（学びの多様化学校）の一つです。"
   },
   {
     "no": 2,
@@ -63,7 +63,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "平成16年",
     "officialUrl": "https://cms.edu.city.kyoto.jp/201704/",
     "address": "京都市中京区姉小路通東洞院東入曇華院前町706-3 〒604-8184",
-    "note": null
+    "note": "平成16年（2004年）に、京都市の構造改革特区認定を経て開校した、最も早い時期の不登校特例校の一つです。元京都市立初音中学校の校舎を改築して使用しています。"
   },
   {
     "no": 3,
@@ -105,7 +105,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "平成19年",
     "officialUrl": null,
     "address": "京都市下京区大宮通綾小路下る綾大宮町51-2",
-    "note": null
+    "note": "京都市立洛風中学校（no.2）と並ぶ、京都市立の不登校特例校です。"
   },
   {
     "no": 6,
@@ -189,7 +189,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和3年",
     "officialUrl": "https://gifu-city.schoolcms.net/soujun-j/",
     "address": "岐阜県岐阜市金宝町4-1 〒500-8847",
-    "note": null
+    "note": "2021年に開校し、制服や細かい校則が無く、生徒自身がクラス担任を選べる、始業時間が9時30分からなど、柔軟な仕組みを特色としています。"
   },
   {
     "no": 12,
@@ -525,7 +525,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": "https://www.city.kamakura.kanagawa.jp/kisya/data/2024/documents/setsumeikaiflyer.pdf",
     "address": "神奈川県鎌倉市由比ガ浜三丁目9番",
-    "note": null
+    "note": "2025年4月に開校し、由比ガ浜駅の近くにあります。"
   },
   {
     "no": 36,
@@ -693,7 +693,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和4年",
     "officialUrl": "https://tomiya-tomiyajhs.edumap.jp/",
     "address": null,
-    "note": null
+    "note": "本校（富谷中学校）とは別の場所に設置されていますが、教室自体の所在地は確認できていません。"
   },
   {
     "no": 48,
@@ -847,7 +847,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": "https://www.lilyvale.ed.jp/",
     "address": "茨城県水戸市藤が原3丁目1117-1288",
-    "note": null
+    "note": "学校法人リリー文化学園が運営しています。"
   },
   {
     "no": 59,
@@ -861,7 +861,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": "https://www.pref.chiba.lg.jp/kyouiku/soumu/iinkai/houkoku/documents/manabinotayouka.pdf",
     "address": null,
-    "note": null
+    "note": "2025年4月に開校しました。"
   },
   {
     "no": 60,

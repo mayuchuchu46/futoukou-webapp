@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
@@ -17,9 +18,9 @@ import {
 } from '@/lib/data/correspondenceHighSchools';
 import { FREESCHOOL_SUBSIDIES, getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
 import { PREFECTURES } from '@/lib/data/prefectures';
-import { getThemeDictionaryData } from '@/lib/themeSummary';
 import PrefectureSelect from './PrefectureSelect';
 import SchoolTypeExplorer from './SchoolTypeExplorer';
+import RelatedConsultations from './RelatedConsultations';
 
 // 「学びの多様化学校」（旧：不登校特例校）と「フリースクール（民間施設）」の
 // 全国検索ページ。前者は文部科学省の指定校一覧（MANABI_TAYOUKA_GAKKO）を、
@@ -215,8 +216,10 @@ export default async function GakkoPage({
   // このタブに関連する実際の相談投稿（lib/themeSummary.ts、/dictionary/theme/[word]と
   // 同じ仕組み）。「学びの多様化学校に関する相談の投稿も載っているといい」との指摘を
   // 受けて追加（2026-10-18）。対応するテーマ語が無いタブ（online・josei）ではundefined。
+  // 実際の取得（DB問い合わせ）はRelatedConsultations側・<Suspense>配下で行う
+  // （「やっぱりすごく重い」との指摘を受け、このページ唯一のDB往復がページ全体の
+  // 表示をブロックしないよう2026-10-18に分離）。
   const themeWord = TAB_THEME_WORD[type];
-  const themeData = themeWord ? await getThemeDictionaryData(themeWord) : null;
   const selected = pref && PREFECTURES.includes(pref) ? pref : null;
   const selectedSchoolType: SchoolTypeFilter | null =
     rawSchoolType && (SCHOOL_TYPES as readonly string[]).includes(rawSchoolType)
@@ -764,27 +767,10 @@ export default async function GakkoPage({
               「学びの多様化学校に関する相談の投稿も載っているといい」との指摘を受けて
               追加）。該当するテーマ語が無いタブ（online・josei）や、まだ投稿が無い
               テーマでは表示しない。 */}
-          {themeWord && themeData && themeData.count > 0 && (
-            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>
-                「{themeWord}」に関する実際の相談（{themeData.count}件）
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                {themeData.consultations.slice(0, 5).map((c) => (
-                  <Link
-                    key={c.id}
-                    href={`/result/${c.id}`}
-                    className="qtext"
-                    style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 8 }}
-                  >
-                    {c.question.slice(0, 60)}{c.question.length > 60 ? '…' : ''}
-                  </Link>
-                ))}
-              </div>
-              <Link href={`/dictionary/theme/${encodeURIComponent(themeWord)}`} className="btn-secondary">
-                「{themeWord}」の相談をもっと見る
-              </Link>
-            </div>
+          {themeWord && (
+            <Suspense fallback={null}>
+              <RelatedConsultations themeWord={themeWord} />
+            </Suspense>
           )}
 
           {/* 「相談してみませんか？」の導線が、他の情報カードと同じ控えめな見た目のカード
