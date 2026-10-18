@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import CrisisModal from './CrisisModal';
+import { CATS } from '@/lib/categories';
 
 export default function Header({
   supervised,
@@ -42,15 +43,43 @@ export default function Header({
   // （BottomNav、スマホ的なタブバー）に集約していたが、PCではヘッダーに通常のナビゲーション
   // メニューを出した方が自然だとの指摘を受けて追加（2026-10-18）。スマホではCSS側
   // （.header-globalnav）で非表示にし、下部固定ナビをそのまま使う。
-  const GLOBAL_NAV_ITEMS = [
-    { href: '/', label: 'ホーム' },
-    { href: '/gakko', label: '学校・フリースクールを探す' },
-    { href: '/theme', label: 'お悩み辞典' },
-    { href: '/notebook', label: '伴走ノート' },
-    { href: '/today', label: 'みんなのデータ' },
-    { href: '/mypage', label: 'マイページ' },
-    { href: '/ask', label: '相談する' },
+  // 「ホーム」「マイページ」「相談する」は下部固定ナビ・PCサイド等に既に導線があるため
+  // ここからは外し、「学校・フリースクールを探す」「お悩み辞典」はカテゴリ数が増えた
+  // （前者5つ・後者10個）ことに合わせてプルダウン式にした（2026-10-18）。
+  type NavItem =
+    | { type: 'link'; href: string; label: string }
+    | { type: 'dropdown'; key: string; label: string; basePath: string; items: { href: string; label: string }[] };
+  const GLOBAL_NAV_ITEMS: NavItem[] = [
+    {
+      type: 'dropdown',
+      key: 'gakko',
+      label: '学校・フリースクールを探す',
+      basePath: '/gakko',
+      items: [
+        { href: '/gakko', label: '学びの多様化学校' },
+        { href: '/gakko?type=free', label: 'フリースクール（地域）' },
+        { href: '/gakko?type=shien', label: '教育支援センター' },
+        { href: '/gakko?type=online', label: 'オンラインフリースクール' },
+        { href: '/gakko?type=tsushin', label: '通信制高校（広域）' },
+      ],
+    },
+    {
+      type: 'dropdown',
+      key: 'theme',
+      label: '不登校お悩み辞典',
+      basePath: '/theme',
+      items: [
+        { href: '/theme', label: 'テーマ一覧を見る' },
+        ...Object.entries(CATS).map(([key, c]) => ({ href: `/dictionary/${key}`, label: c.label })),
+      ],
+    },
+    { type: 'link', href: '/notebook', label: '伴走ノート' },
+    { type: 'link', href: '/today', label: 'みんなのデータ' },
   ];
+  // 開いているプルダウンのkey（同時に1つだけ開く）。ホバーで開き、ホバーが外れたら
+  // 閉じる。マウスの無いタッチ操作（スマホ）ではこのメニュー自体を表示しないため
+  // （.header-globalnavはCSS側でPC限定）、クリックでの開閉は実装していない。
+  const [openNav, setOpenNav] = useState<string | null>(null);
 
   return (
     <div className={`header${isHome ? '' : ' header-subpage'}`}>
@@ -96,11 +125,38 @@ export default function Header({
             </Link>
             <nav className="header-globalnav">
               {GLOBAL_NAV_ITEMS.map((item) => {
-                const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+                if (item.type === 'link') {
+                  const active = pathname.startsWith(item.href);
+                  return (
+                    <Link key={item.href} href={item.href} className={active ? 'active' : ''}>
+                      {item.label}
+                    </Link>
+                  );
+                }
+                const active = pathname.startsWith(item.basePath);
                 return (
-                  <Link key={item.href} href={item.href} className={active ? 'active' : ''}>
-                    {item.label}
-                  </Link>
+                  <div
+                    key={item.key}
+                    className="header-navdropdown"
+                    onMouseEnter={() => setOpenNav(item.key)}
+                    onMouseLeave={() => setOpenNav((cur) => (cur === item.key ? null : cur))}
+                  >
+                    <button type="button" className={active ? 'active' : ''}>
+                      {item.label}
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </button>
+                    {openNav === item.key && (
+                      <div className="header-navdropdown-panel">
+                        {item.items.map((sub) => (
+                          <Link key={sub.href} href={sub.href} onClick={() => setOpenNav(null)}>
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </nav>
