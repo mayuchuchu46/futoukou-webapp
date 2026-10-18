@@ -316,6 +316,12 @@ export default function HomeClient({
             <Link href="/theme" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
               テーマから探す・不登校お悩み辞典を見る →
             </Link>
+            {/* /gakko（学びの多様化学校の都道府県別一覧）も、マイページ内に入れただけでは
+                スマホから辿りづらいとの指摘を受け、/themeと同じくホーム画面の目に入りやすい
+                位置に直接リンクを追加した（2026-10-18）。 */}
+            <Link href="/gakko" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
+              学びの多様化学校（旧：不登校特例校）を探す →
+            </Link>
 
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
                 「参考になった順」は各カードの「参考になった◯人」と同じlikesで並べている。
