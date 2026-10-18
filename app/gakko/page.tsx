@@ -32,34 +32,119 @@ import PrefectureSelect from './PrefectureSelect';
 // データはいずれも公的機関の公開情報で著作権上の問題がなく、更新頻度も低いため、
 // Supabaseにテーブルを作らずアプリ内の静的データとして持つ（「時間をかけたくない」との
 // 方針に合わせた最小実装）。
-const GAKKO_TITLE = `学びの多様化学校（旧：不登校特例校）を都道府県から探す｜${SITE_NAME}`;
-const GAKKO_DESCRIPTION =
-  '不登校の子どもの実態に配慮して、文部科学省から特別な教育課程を組むことを認められた「学びの多様化学校」（旧：不登校特例校）を都道府県から探せます。フリースクールや教育支援センター、助成金情報も掲載。文部科学省や教育委員会等の公開情報をもとにしています。';
+export type GakkoType = 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' | 'josei';
 
-export const metadata: Metadata = {
-  title: GAKKO_TITLE,
-  description: GAKKO_DESCRIPTION,
-  alternates: { canonical: `${SITE_URL}/gakko` },
-  openGraph: {
-    title: GAKKO_TITLE,
-    description: GAKKO_DESCRIPTION,
-    url: `${SITE_URL}/gakko`,
-    images: [
-      {
-        url: '/og-image-gakko.jpg',
-        width: 1200,
-        height: 630,
-        alt: GAKKO_TITLE,
-      },
-    ],
+// URLのtype=クエリ文字列から表示タブを判定する。generateMetadata（OGP等）と
+// ページ本体の両方で同じ判定を使うため共通化している（2026-10-18）。
+export function normalizeGakkoType(rawType?: string): GakkoType {
+  return rawType === 'free'
+    ? 'free'
+    : rawType === 'online'
+      ? 'online'
+      : rawType === 'shien'
+        ? 'shien'
+        : rawType === 'tsushin'
+          ? 'tsushin'
+          : rawType === 'josei'
+            ? 'josei'
+            : 'gakko';
+}
+
+// タブ（type）ごとのOGPタイトル・説明文・Xシェア文言。以前は全タブ共通の
+// 固定metadataだったため、フリースクールタブを開いても「学びの多様化学校」の
+// タイトルでシェアされてしまっていた。タブごとに内容を合わせるため、
+// generateMetadataで動的に切り替える（2026-10-18）。
+// ogImageを指定しないタブはサイト共通のog-image.png（layout.tsx）にフォール
+// バックする。各タブの専用OGP画像は今後追加予定。
+type GakkoPageContent = {
+  title: string;
+  description: string;
+  tweetText: string;
+  ogImage?: string;
+};
+
+const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
+  gakko: {
+    title: `学びの多様化学校（旧：不登校特例校）を都道府県から探す｜${SITE_NAME}`,
+    description:
+      '不登校の子どもの実態に配慮して、文部科学省から特別な教育課程を組むことを認められた「学びの多様化学校」（旧：不登校特例校）を都道府県から探せます。フリースクールや教育支援センター、助成金情報も掲載。文部科学省や教育委員会等の公開情報をもとにしています。',
+    tweetText:
+      '不登校のお子さんがいるご家庭へ。文部科学省が指定する「学びの多様化学校」（旧：不登校特例校）を都道府県から探せます。フリースクールや助成金情報も。',
+    ogImage: '/og-image-gakko.jpg',
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: GAKKO_TITLE,
-    description: GAKKO_DESCRIPTION,
-    images: ['/og-image-gakko.jpg'],
+  free: {
+    title: `フリースクール（地域）を都道府県から探す｜${SITE_NAME}`,
+    description:
+      '学校以外の場所で過ごしたり学んだりできる、お住まいの地域の民間「フリースクール」を都道府県から探せます。都道府県・市区町村教育委員会等が公開している情報をもとに掲載。オンラインフリースクールや助成金情報も。',
+    tweetText:
+      '不登校のお子さんがいるご家庭へ。お住まいの地域のフリースクールを都道府県から探せます。オンラインフリースクールや助成金情報も。',
+    ogImage: '/og-image-free.jpg',
+  },
+  online: {
+    title: `オンラインフリースクールを探す｜${SITE_NAME}`,
+    description:
+      'お住まいの地域を問わず利用できる、オンラインのフリースクール・学習支援サービスを掲載しています。仲間づくり・居場所のあるタイプ、学習サポート中心のタイプなどから選べます。',
+    tweetText:
+      '不登校のお子さんがいるご家庭へ。お住まいの地域を問わず利用できるオンラインフリースクールを探せます。',
+  },
+  shien: {
+    title: `教育支援センター（適応指導教室）を都道府県から探す｜${SITE_NAME}`,
+    description:
+      '市区町村教育委員会が設置する、公的で無料の不登校支援施設「教育支援センター（適応指導教室）」を都道府県から探せます（全国約1,873か所、文部科学省・令和6年度調査）。',
+    tweetText:
+      '不登校のお子さんがいるご家庭へ。公的で無料の「教育支援センター」を都道府県から探せます。',
+  },
+  tsushin: {
+    title: `通信制高校（広域）を都道府県から探す｜${SITE_NAME}`,
+    description:
+      'レポート提出やスクーリングを中心に、本人のペースで学べる「広域」通信制高校を都道府県から探せます。お住まいの地域にかかわらず入学できます。',
+    tweetText:
+      '不登校のお子さんがいるご家庭へ。本人のペースで学べる通信制高校（広域）を都道府県から探せます。',
+  },
+  josei: {
+    title: `フリースクール等の助成金・支援制度を都道府県から探す｜${SITE_NAME}`,
+    description:
+      'フリースクール等の利用料助成や、国の「高等学校等就学支援金」など、不登校のご家庭が使える助成金・支援制度を都道府県から探せます。',
+    tweetText:
+      '不登校のお子さんがいるご家庭へ。フリースクール等の利用料助成や就学支援金など、使える制度を都道府県から探せます。',
   },
 };
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ pref?: string; type?: string }>;
+}): Promise<Metadata> {
+  const { type: rawType } = await searchParams;
+  const type = normalizeGakkoType(rawType);
+  const { title, description, ogImage } = PAGE_CONTENT[type];
+  const image = ogImage ?? '/og-image.png';
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${SITE_URL}/gakko` },
+    openGraph: {
+      title,
+      description,
+      url: `${SITE_URL}/gakko`,
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
 
 function gakkoCount(pref: string) {
   return MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === pref).length;
@@ -98,18 +183,7 @@ export default async function GakkoPage({
   // 助成（自治体ごと）・就学支援金（国の制度）の情報を6つめのタブ（josei）として追加。
   // 利用料助成は居住地（自治体）に紐づくため、学びの多様化学校等と同様に都道府県で
   // 絞り込める形にした。
-  const type: 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' | 'josei' =
-    rawType === 'free'
-      ? 'free'
-      : rawType === 'online'
-        ? 'online'
-        : rawType === 'shien'
-          ? 'shien'
-          : rawType === 'tsushin'
-            ? 'tsushin'
-            : rawType === 'josei'
-              ? 'josei'
-              : 'gakko';
+  const type = normalizeGakkoType(rawType);
   const selected = pref && PREFECTURES.includes(pref) ? pref : null;
   const schools = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
@@ -659,7 +733,7 @@ export default async function GakkoPage({
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '12px 0 4px' }}>
             <div className="muted" style={{ fontSize: 12 }}>このページをシェアする</div>
             <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent('不登校のお子さんがいるご家庭へ。文部科学省が指定する「学びの多様化学校」（旧：不登校特例校）を都道府県から探せます。フリースクールや助成金情報も。')}&url=${encodeURIComponent('https://futoko-dosuru.com/gakko')}`}
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(PAGE_CONTENT[type].tweetText)}&url=${encodeURIComponent(`${SITE_URL}/gakko`)}`}
               target="_blank"
               rel="noopener noreferrer"
               style={{
