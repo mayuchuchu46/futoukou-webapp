@@ -112,14 +112,16 @@ export default async function GakkoSchoolPage({
             {/* 「写真イメージはのせられないかなぁ？」との要望を受けて追加（2026-10-18）。
                 学校自体の写真は、公式サイト等の写真を無断転載できず、AI生成では実在の学校の
                 見た目として不正確な画像になってしまうため、どちらも避けた。代わりに、実際の
-                所在地をGoogleマップ（航空写真・ストリートビューに切替え可能）で示すことで、
-                写真に近い「その場所の実際の様子」を、正確な情報のまま見せられるようにした。
-                住所が未確認の学校は、代わりに学校名＋市区町村でマップ検索する（ピンの精度は
-                落ちるが、架空の場所を示すことはない）。APIキー不要のGoogleマップ埋め込み
-                （maps.google.com/maps?...&output=embed）を利用している。 */}
+                所在地をGoogleマップで示すことで、写真に近い「その場所の実際の様子」を、
+                正確な情報のまま見せられるようにした。「建物が見える写真のほうを見せられる？」
+                との指摘を受け、初期表示を道路地図（t=m）から航空写真（t=k、建物が写る）に
+                変更。ストリートビューにも手動で切替え可能。住所が未確認の学校は、代わりに
+                学校名＋市区町村でマップ検索する（ピンの精度は落ちるが、架空の場所を示すことは
+                ない）。APIキー不要のGoogleマップ埋め込み（maps.google.com/maps?...&output=embed）
+                を利用している。 */}
             <div style={{ width: '100%' }}>
               <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=16&output=embed`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=18&output=embed`}
                 width="100%"
                 height={220}
                 style={{ border: 0, borderRadius: 12, display: 'block' }}
