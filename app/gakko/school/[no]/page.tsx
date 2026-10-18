@@ -76,6 +76,9 @@ export default async function GakkoSchoolPage({
   // 一覧はあえて中立な直リンクのままにする方針（同ファイルのコメント参照）ため、
   // ここも通常の<a>タグで直接リンクする。
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(fullName + ' ' + school.city)}`;
+  // Googleマップに渡す検索語。確認済みの住所があれば最優先で使い、無ければ学校名＋
+  // 市区町村でマップ検索する（架空の住所を作ることはしない）。
+  const mapQuery = school.address || `${fullName} ${school.prefecture}${school.city}`;
 
   return (
     <div className="app-shell">
@@ -106,6 +109,35 @@ export default async function GakkoSchoolPage({
                 </div>
               ))}
             </div>
+            {/* 「写真イメージはのせられないかなぁ？」との要望を受けて追加（2026-10-18）。
+                学校自体の写真は、公式サイト等の写真を無断転載できず、AI生成では実在の学校の
+                見た目として不正確な画像になってしまうため、どちらも避けた。代わりに、実際の
+                所在地をGoogleマップ（航空写真・ストリートビューに切替え可能）で示すことで、
+                写真に近い「その場所の実際の様子」を、正確な情報のまま見せられるようにした。
+                住所が未確認の学校は、代わりに学校名＋市区町村でマップ検索する（ピンの精度は
+                落ちるが、架空の場所を示すことはない）。APIキー不要のGoogleマップ埋め込み
+                （maps.google.com/maps?...&output=embed）を利用している。 */}
+            <div style={{ width: '100%' }}>
+              <iframe
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=16&output=embed`}
+                width="100%"
+                height={220}
+                style={{ border: 0, borderRadius: 12, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${fullName}の地図`}
+              />
+              <a
+                href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="muted"
+                style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
+              >
+                Googleマップで開く ›
+              </a>
+            </div>
+
             {school.officialUrl && (
               <a
                 href={school.officialUrl}
