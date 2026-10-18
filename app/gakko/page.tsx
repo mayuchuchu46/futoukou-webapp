@@ -221,7 +221,7 @@ export default async function GakkoPage({
               残す。 */}
           {type === 'gakko' && (
             <img
-              src="/assets/gakko_hero_banner.jpg"
+              src="/assets/gakko_hero_banner_v2.jpg"
               alt="学びの多様化学校（旧：不登校特例校）とは"
               style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16, margin: '0 0 12px' }}
             />
