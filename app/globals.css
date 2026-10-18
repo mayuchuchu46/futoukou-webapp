@@ -44,12 +44,13 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: system-ui, -apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
-  /* 「ページ上端で下に引っ張るとヘッダーの一部が消える」との報告（2026-10-18）への対策。
-     iOS Safariはページ最上部で下に引っ張ると、背景が見えるまでページ全体を伸び縮みさせる
-     「ラバーバンド」演出（オーバースクロール）を行うが、この際に一部要素が再描画されずに
-     消えたまま戻らないことがある既知の挙動。overscroll-behavior-yでこのバウンド演出自体を
-     止めることで、再描画漏れの引き金ごと無くす狙い。 */
-  overscroll-behavior-y: none;
+  /* 以前は「ページ上端で下に引っ張るとヘッダーの一部が消える」というiOS Safari特有の
+     不具合（ラバーバンド＝オーバースクロール時にposition: fixed要素が再描画されず消えた
+     まま戻らない既知の挙動）への対策として、overscroll-behavior-y: noneでバウンド演出
+     自体を止めていた。しかしこれによりスマホの「下に引っ張って更新」のバウンド演出まで
+     一緒に殺してしまっていた（2026-10-18、「ビヨンって更新される動きがない」との指摘）。
+     原因だった.account-tab / .scroll-top-btn側にGPU合成のヒントを与えて再描画漏れを
+     防ぐ方式に切り替え、バウンド演出自体は元に戻した。 */
 }
 
 h1, h2, h3, .answer-label {
@@ -278,6 +279,13 @@ button:active,
   top: 0;
   right: max(12px, calc(50% - 240px + 16px));
   z-index: 30;
+  /* iOS Safariのオーバースクロール（ラバーバンド）時にposition: fixed要素が再描画
+     されず消えたまま戻らないことがある既知の挙動への対策。自前のレイヤーに昇格させて
+     GPU合成させることで再描画漏れを防ぐ（2026-10-18、overscroll-behavior-y: none
+     （html,body）での対策から切り替え。詳細はhtml, bodyのコメント参照）。 */
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   padding: 7px 14px 8px;
   border: none;
   border-radius: 0 0 12px 12px;
@@ -1055,6 +1063,10 @@ a.card:hover {
   justify-content: center;
   box-shadow: 0 4px 14px rgba(0,0,0,0.12);
   z-index: 20;
+  /* .account-tabと同じ、iOS Safariオーバースクロール時の再描画漏れ対策（2026-10-18）。 */
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 @media (max-width: 480px) {
   .scroll-top-btn { right: 20px; }
