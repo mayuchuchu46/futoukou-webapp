@@ -16,21 +16,45 @@ import { MANABI_TAYOUKA_GAKKO, ManabiTayoukaGakko } from './data/manabiTayoukaGa
 // 判断になった。個別の学校・コースについて確認したい情報が増えた場合は、今回のnote欄
 // 拡充と同じやり方で、事前のWeb調査結果をmanabiTayoukaGakko.tsに追記していく）。
 
+// 「世田谷区立北沢学園中学校」のような正式名称の先頭にある設置自治体名＋「立」を取り除いた
+// 「核」となる名称（例：「北沢学園中学校」）。実際の相談文では、保護者が自治体名を省いて
+// 学校名だけで書くことが多いため（北沢学園中学校の例で実際に発生、2026-10-18）、正式名称
+// そのままの部分一致だけでは検出できないケースがあった。
+const MUNICIPAL_PREFIX_RE = /^.+?(?:都|道|府|県|市|区|町|村)立/;
+
+function coreName(name: string): string | null {
+  const m = name.match(MUNICIPAL_PREFIX_RE);
+  if (!m) return null;
+  const rest = name.slice(m[0].length);
+  // 自治体名を除いた残りが短すぎる（誤マッチしやすい）場合は使わない。
+  return rest.length > 3 ? rest : null;
+}
+
 export function findMentionedSchool(texts: (string | null | undefined)[]): ManabiTayoukaGakko | null {
   const haystack = texts.filter(Boolean).join('\n');
   if (!haystack) return null;
 
   let best: ManabiTayoukaGakko | null = null;
+  let bestMatchLen = -1;
   for (const school of MANABI_TAYOUKA_GAKKO) {
-    // 正式名称（name）・branchName（分校・分教室等の愛称）のどちらかが部分一致すればよい。
-    // 短すぎる名称での誤マッチを避けるため、3文字以下の名称は判定対象から外す。
-    const candidates = [school.name, school.branchName].filter(
-      (n): n is string => !!n && n.length > 3
-    );
-    if (candidates.some((c) => haystack.includes(c))) {
-      // 複数の学校名がたまたま同時に一致した場合は、より長い（＝より具体的な）名称が
-      // 一致した方を優先する。
-      if (!best || school.name.length > best.name.length) best = school;
+    // 正式名称（name）・branchName（分校・分教室等の愛称）・それぞれの「核」名称
+    // （自治体名を除いたもの）のいずれかが部分一致すればよい。短すぎる名称での誤マッチを
+    // 避けるため、3文字以下の名称は判定対象から外す。
+    const candidates = new Set<string>();
+    for (const n of [school.name, school.branchName]) {
+      if (!n || n.length <= 3) continue;
+      candidates.add(n);
+      const core = coreName(n);
+      if (core) candidates.add(core);
+    }
+    const matched = [...candidates].filter((c) => haystack.includes(c));
+    if (matched.length === 0) continue;
+    // 複数の学校名がたまたま同時に一致した場合は、より長い（＝より具体的な）名称が
+    // 一致した方を優先する。
+    const matchLen = Math.max(...matched.map((c) => c.length));
+    if (matchLen > bestMatchLen) {
+      best = school;
+      bestMatchLen = matchLen;
     }
   }
   return best;
