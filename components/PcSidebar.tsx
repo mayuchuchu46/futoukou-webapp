@@ -79,8 +79,10 @@ export default function PcSidebar({
   // 1本のリンクにまとめていたが、/gakkoが「学びの多様化学校／フリースクール／
   // 教育支援センター／オンラインフリースクール／通信制高校」の5カテゴリに増えたため、
   // それぞれへ直接飛べるようにカテゴリ別のリンクに分けた（2026-10-18、「PCはカテゴリ
-  // ごとにメニュー出してもいいのでは」との指摘を受けて）。PC（.pc-sidebar内）と
-  // スマホ（本文の下、.gakko-links-mobile）の両方で同じリストを使う。
+  // ごとにメニュー出してもいいのでは」との指摘を受けて）。
+  // その後、PCではヘッダーのグローバルメニュー（学びの場を探す／お悩み辞典の
+  // プルダウン）に同じ内容を統合したため、ここではスマホ用（本文の下、
+  // .gakko-links-mobile）としてのみ使う（PC版の.pc-sidebar内からは削除済み）。
   const gakkoLinks = (
     <div className="card" style={{ padding: 0, overflow: 'hidden', gap: 0 }}>
       <Link
@@ -183,13 +185,14 @@ export default function PcSidebar({
         </div>
       )}
 
-      {gakkoLinks}
-
       {!hideExperts && <ExpertsTeaser experts={experts} className="home-experts-side" />}
     </div>
 
-    {/* スマホ幅では.pc-sidebar自体が非表示になるため、カテゴリ一覧だけは本文の下に
-        別途表示する（2026-10-18）。PCではCSS側（.gakko-links-mobile）で隠す。 */}
+    {/* スマホ幅では.pc-sidebar自体が非表示になるため、カテゴリ一覧は本文の下に
+        別途表示する（2026-10-18）。PCではCSS側（.gakko-links-mobile）で隠す。
+        以前はPC（.pc-sidebar内）にも同じ一覧を出していたが、ヘッダーのグローバル
+        メニュー（学びの場を探す／お悩み辞典のプルダウン）に統合されたため、
+        PC側は重複としてこちらから削除した（2026-10-18）。 */}
     <div className="gakko-links-mobile" style={{ marginTop: 4 }}>
       {gakkoLinks}
     </div>
