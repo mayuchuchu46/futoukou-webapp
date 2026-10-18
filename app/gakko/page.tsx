@@ -119,9 +119,11 @@ export default async function GakkoPage({
 
           {/* 学校探しの入口を1ページに統合したので、冒頭でタブを切り替えられるようにした
               （2026-10-18）。都道府県の選択はタブを切り替えても保持する。
-              5タブになり1行のチップ列では種類が分かりにくかったため、「お住まいの地域で
-              探す（都道府県の選択が前提）」と「全国どこからでも選べる（居住地を問わない）」
-              の2グループに分けて見出しつきで表示する（2026-10-18）。 */}
+              6タブになり1行のチップ列では種類が分かりにくかったため、「お住まいの地域で
+              探す（都道府県の選択が前提）」「全国どこからでも選べる（居住地を問わない）」
+              「助成金・支援制度」の3グループに分けて見出しつきで表示する（2026-10-18、
+              助成金タブは「学校・施設を探す」とは性質が違うとの指摘を受け独立したグループ
+              にした）。 */}
           <div className="muted" style={{ fontSize: 11, margin: '0 0 2px', fontWeight: 700 }}>お住まいの地域で探す</div>
           <div className="chip-row chip-row-wrap" style={{ margin: '0 0 8px' }}>
             <Link
@@ -145,16 +147,9 @@ export default async function GakkoPage({
             >
               教育支援センター
             </Link>
-            <Link
-              href={selected ? `/gakko?type=josei&pref=${encodeURIComponent(selected)}` : '/gakko?type=josei'}
-              className={`chip chip-tag${type === 'josei' ? ' active' : ''}`}
-              style={{ textDecoration: 'none' }}
-            >
-              助成金・支援制度
-            </Link>
           </div>
           <div className="muted" style={{ fontSize: 11, margin: '0 0 2px', fontWeight: 700 }}>全国どこからでも選べる</div>
-          <div className="chip-row chip-row-wrap" style={{ margin: '0 0 4px' }}>
+          <div className="chip-row chip-row-wrap" style={{ margin: '0 0 8px' }}>
             <Link
               href="/gakko?type=online"
               className={`chip chip-tag${type === 'online' ? ' active' : ''}`}
@@ -170,7 +165,16 @@ export default async function GakkoPage({
               通信制高校（広域）
             </Link>
           </div>
-
+          <div className="muted" style={{ fontSize: 11, margin: '0 0 2px', fontWeight: 700 }}>助成金・支援制度を調べる</div>
+          <div className="chip-row chip-row-wrap" style={{ margin: '0 0 4px' }}>
+            <Link
+              href={selected ? `/gakko?type=josei&pref=${encodeURIComponent(selected)}` : '/gakko?type=josei'}
+              className={`chip chip-tag${type === 'josei' ? ' active' : ''}`}
+              style={{ textDecoration: 'none' }}
+            >
+              助成金・支援制度
+            </Link>
+          </div>
           {type === 'gakko' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>学びの多様化学校（旧：不登校特例校）とは</div>

@@ -642,11 +642,15 @@ h2.pagetitle {
   .home-main-col .home-search { order: 1; }
   .home-main-col .home-ranking { order: 2; }
   .home-main-col .home-chips { order: 3; }
-  .home-main-col .home-theme-link { order: 4; }
-  /* /gakko（学びの多様化学校）カード。home-theme-linkの直後・DOM順通りに出したいので
-     同じorder値にしている（同じorder同士はDOM順で並ぶ）。class未指定だとorder:0扱いになり
-     検索ボックスより上に飛んでしまう（2026-10-15のコメント参照）ため明示した（2026-10-18）。 */
-  .home-main-col .home-gakko-link { order: 4; }
+  /* 「不登校お悩み辞典」「学びの多様化学校・フリースクールを探す」への本文中の
+     テキストリンクは、PCではヘッダーのグローバルメニュー・PCサイドのカテゴリ一覧に
+     既に導線があり重複するため、PC幅では非表示にした（2026-10-18、「途中に置いてる
+     このテキストはPCのほう消していい」との指摘を受けて）。スマホでは引き続き表示する
+     （導線がヘッダーに無いため）。 */
+  .home-main-col .home-theme-link,
+  .home-main-col .home-gakko-link {
+    display: none;
+  }
   .home-main-col .viewtabs { order: 5; }
   .home-main-col .home-list { order: 6; }
   /* タグ一覧はPCではサイド側（.pc-sidebar内）に出すので、
@@ -717,9 +721,11 @@ h2.pagetitle {
   }
 
   /* 「学校・フリースクールを探す」「お悩み辞典」はカテゴリ数が増えたため
-     プルダウン式にした（2026-10-18）。ホバーで開く。 */
+     プルダウン式にした（2026-10-18）。ホバーで開く。
+     トリガー自体はlabel文字も押せるようにLinkにしている（2026-10-18、「テキストも
+     押せるといいな」との指摘を受けて、buttonからLinkに変更）。 */
   .header-navdropdown { position: relative; }
-  .header-navdropdown > button {
+  .header-navdropdown > a {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -729,11 +735,12 @@ h2.pagetitle {
     font-size: 13px;
     font-weight: 700;
     color: var(--text);
+    text-decoration: none;
     opacity: 0.75;
     cursor: pointer;
   }
-  .header-navdropdown > button:hover,
-  .header-navdropdown > button.active {
+  .header-navdropdown > a:hover,
+  .header-navdropdown > a.active {
     opacity: 1;
     color: var(--main);
   }

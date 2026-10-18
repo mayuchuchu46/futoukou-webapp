@@ -142,12 +142,15 @@ export default function Header({
                     onMouseEnter={() => setOpenNav(item.key)}
                     onMouseLeave={() => setOpenNav((cur) => (cur === item.key ? null : cur))}
                   >
-                    <button type="button" className={active ? 'active' : ''}>
+                    {/* ラベル文字自体もリンクにし、プルダウンを開かず直接basePathに
+                        遷移できるようにした（2026-10-18、「テキストも押せるといいな」
+                        との指摘を受けて）。 */}
+                    <Link href={item.basePath} className={active ? 'active' : ''} onClick={() => setOpenNav(null)}>
                       {item.label}
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M6 9l6 6 6-6" />
                       </svg>
-                    </button>
+                    </Link>
                     {openNav === item.key && (
                       <div className="header-navdropdown-panel">
                         {item.items.map((sub) => (
