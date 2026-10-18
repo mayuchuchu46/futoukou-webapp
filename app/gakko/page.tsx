@@ -8,6 +8,8 @@ import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaG
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { FREE_SCHOOL_COVERAGE, getFreeSchoolCoverage } from '@/lib/data/freeschoolCoverage';
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
+import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
+import { EDUCATION_SUPPORT_COVERAGE, getEducationSupportCoverage } from '@/lib/data/educationSupportCoverage';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import PrefectureSelect from './PrefectureSelect';
 
@@ -39,6 +41,10 @@ function freeSchoolCount(pref: string) {
   return FREE_SCHOOLS.filter((s) => s.prefecture === pref).length;
 }
 
+function shienCount(pref: string) {
+  return EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === pref).length;
+}
+
 export default async function GakkoPage({
   searchParams,
 }: {
@@ -47,14 +53,19 @@ export default async function GakkoPage({
   const { pref, type: rawType } = await searchParams;
   // 2026-10-18: オンラインフリースクールが21件まで増え、フリースクール（地域）タブに
   // 常に埋め込むと情報量が多すぎたため、「オンラインフリースクール」を独立した
-  // 3つめのタブに分離した。都道府県選択に意味があるのはgakko/freeのみ。
-  const type: 'gakko' | 'free' | 'online' = rawType === 'free' ? 'free' : rawType === 'online' ? 'online' : 'gakko';
+  // 3つめのタブに分離した。都道府県選択に意味があるのはgakko/free/shienのみ。
+  // 同日、公的・無料の「教育支援センター（適応指導教室）」情報を4つめのタブ（shien）
+  // として追加した。
+  const type: 'gakko' | 'free' | 'online' | 'shien' =
+    rawType === 'free' ? 'free' : rawType === 'online' ? 'online' : rawType === 'shien' ? 'shien' : 'gakko';
   const selected = pref && PREFECTURES.includes(pref) ? pref : null;
   const schools = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
   const coverage = selected ? getFreeSchoolCoverage(selected) : undefined;
-  const basePath = type === 'free' ? '/gakko?type=free' : '/gakko';
-  const prefHref = (p: string) => (type === 'free' ? `/gakko?type=free&pref=${encodeURIComponent(p)}` : `/gakko?pref=${encodeURIComponent(p)}`);
+  const shienCenters = selected ? EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === selected) : [];
+  const shienCoverage = selected ? getEducationSupportCoverage(selected) : undefined;
+  const typeQueryPrefix = type === 'free' ? 'type=free&' : type === 'shien' ? 'type=shien&' : '';
+  const prefHref = (p: string) => `/gakko?${typeQueryPrefix}pref=${encodeURIComponent(p)}`;
 
   return (
     <div className="app-shell">
@@ -87,6 +98,13 @@ export default async function GakkoPage({
               style={{ textDecoration: 'none' }}
             >
               オンラインフリースクール
+            </Link>
+            <Link
+              href={selected ? `/gakko?type=shien&pref=${encodeURIComponent(selected)}` : '/gakko?type=shien'}
+              className={`chip chip-tag${type === 'shien' ? ' active' : ''}`}
+              style={{ textDecoration: 'none' }}
+            >
+              教育支援センター
             </Link>
           </div>
 
@@ -124,6 +142,18 @@ export default async function GakkoPage({
               </div>
               <div className="muted" style={{ fontSize: 12 }}>
                 件数が多いため、下記で「仲間づくり・居場所のあるタイプ」「学習サポート中心のタイプ」「利用に条件があるタイプ」に分けて掲載しています。
+              </div>
+            </div>
+          )}
+
+          {type === 'shien' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>教育支援センター（適応指導教室）とは</div>
+              <div className="qtext">
+                市区町村教育委員会が設置している、公的で無料の不登校支援施設です。フリースクールのような民間施設とは異なり、ほぼすべての市区町村に1つずつ設置されています（全国で約1,873か所、文部科学省・令和6年度調査）。学校に戻ることだけを目的とせず、個別のペースで過ごしたり学んだりできる場です。
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                利用には在籍校・教育委員会を通じた申込みが必要な場合が多いため、まずはお子さんの学校またはお住まいの教育委員会にお問い合わせください。
               </div>
             </div>
           )}
@@ -206,6 +236,50 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {selected && type === 'shien' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>{selected}の教育支援センター</div>
+              {shienCoverage?.tier === 'none' || !shienCoverage ? (
+                <div className="muted">
+                  {selected}については、{shienCoverage?.note ?? '都道府県単位でまとめた一覧は見つかりませんでした。'}教育支援センターが無いという意味ではなく、都道府県単位で一覧化した公開情報が見つからなかったということです。お住まいの市区町村にはほぼ必ず設置されているため、お子さんの学校またはお住まいの教育委員会に直接お問い合わせください。
+                </div>
+              ) : shienCenters.length === 0 ? (
+                <div className="muted">掲載できる情報が見つかりませんでした。</div>
+              ) : (
+                <>
+                  <div className="muted" style={{ fontSize: 12 }}>
+                    ※ {shienCoverage.note} すべての施設・自治体を網羅したものではありません。
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                    {shienCenters.map((s, i) => (
+                      <div
+                        key={`${s.city}-${s.name}-${i}`}
+                        style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                      >
+                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                          {s.city}
+                          {s.address ? `・${s.address}` : ''}
+                          {s.contact ? `・${s.contact}` : ''}
+                        </div>
+                        {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>}
+                      </div>
+                    ))}
+                  </div>
+                  <a
+                    href={shienCenters[0].sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="muted"
+                    style={{ fontSize: 12, textDecoration: 'underline' }}
+                  >
+                    出典を見る ›
+                  </a>
+                </>
+              )}
+            </div>
+          )}
+
           {/* オンラインフリースクールは居住地を問わず利用できるため、独立タブ（type=online）
               として表示する。以前はフリースクール（地域）タブの中に常時埋め込んでいたが、
               21件まで増えて情報量が多すぎたため、2026-10-18に分離した。 */}
@@ -247,7 +321,7 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {type !== 'online' && (
+          {(type === 'gakko' || type === 'free' || type === 'shien') && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
               {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
@@ -268,7 +342,7 @@ export default async function GakkoPage({
                   </Link>
                 )}
                 {PREFECTURES.map((p) => {
-                  const count = type === 'free' ? freeSchoolCount(p) : gakkoCount(p);
+                  const count = type === 'free' ? freeSchoolCount(p) : type === 'shien' ? shienCount(p) : gakkoCount(p);
                   return (
                     <Link
                       key={p}
@@ -324,10 +398,19 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {type === 'shien' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>このページの教育支援センター情報について</div>
+              <div className="qtext">
+                教育支援センターには文部科学省の全国統一リストがなく、全国の合計数のみが公表されています。このページのデータは、都道府県教育委員会が県内市区町村分をまとめて公開している一覧をもとにしています（{EDUCATION_SUPPORT_COVERAGE.filter((c) => c.tier === 'good').length}都道府県で名称・所在地つきの一覧、{EDUCATION_SUPPORT_COVERAGE.filter((c) => c.tier === 'partial').length}都道府県で一部情報、残りの都道府県は都道府県単位でまとめた一覧が見つかりませんでした）。一覧が見つからない都道府県でも、お住まいの市区町村には教育支援センターがある可能性が高いです。最新情報は各施設・教育委員会に直接ご確認ください。
+              </div>
+            </div>
+          )}
+
           <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>進路のことを相談してみませんか？</div>
             <div className="qtext">
-              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
             </div>
             <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
               相談するページへ ›

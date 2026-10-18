@@ -15,10 +15,11 @@ export default function PrefectureSelect({
   type = 'gakko',
 }: {
   selected: string | null;
-  type?: 'gakko' | 'free' | 'online';
+  type?: 'gakko' | 'free' | 'online' | 'shien';
 }) {
   const router = useRouter();
-  const typeQuery = type === 'free' ? 'type=free&' : '';
+  const typeQuery = type === 'free' ? 'type=free&' : type === 'shien' ? 'type=shien&' : '';
+  const emptyQuery = type === 'free' ? '?type=free' : type === 'shien' ? '?type=shien' : '';
 
   return (
     <select
@@ -26,7 +27,7 @@ export default function PrefectureSelect({
       value={selected || ''}
       onChange={(e) => {
         const pref = e.target.value;
-        router.push(pref ? `/gakko?${typeQuery}pref=${encodeURIComponent(pref)}` : `/gakko${type === 'free' ? '?type=free' : ''}`);
+        router.push(pref ? `/gakko?${typeQuery}pref=${encodeURIComponent(pref)}` : `/gakko${emptyQuery}`);
       }}
     >
       <option value="">都道府県を選択…</option>
