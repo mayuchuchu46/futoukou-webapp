@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import CrisisModal from './CrisisModal';
 import { CATS } from '@/lib/categories';
 
@@ -26,6 +26,12 @@ export default function Header({
   const pathname = usePathname();
   const isHome = pathname === '/';
   const router = useRouter();
+  // 「助成金・支援制度」のようにクエリ文字列（?type=josei）込みのhrefを持つ
+  // グローバルメニューのリンクは、usePathname()だけでは現在地と一致判定できない
+  // （pathnameにクエリは含まれないため）。そのため現在のURL（パス＋クエリ）も
+  // 組み立てて比較に使う（2026-10-18、助成金リンクを独立項目として追加した際に対応）。
+  const searchParams = useSearchParams();
+  const currentUrl = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
   // ヘッダーに常時「ログイン／アカウント」導線を出すための、ログイン状態の軽量チェック。
   // 以前は会員登録・ログインへの入り口がマイページ・伴走ノートの中に埋もれていて、
   // 「今すぐログインしたいだけ」の人にも毎回それらを掘ってもらう必要があったため追加した
@@ -61,7 +67,6 @@ export default function Header({
         { href: '/gakko?type=shien', label: '教育支援センター' },
         { href: '/gakko?type=online', label: 'オンラインフリースクール' },
         { href: '/gakko?type=tsushin', label: '通信制高校（広域）' },
-        { href: '/gakko?type=josei', label: '助成金・支援制度' },
       ],
     },
     {
@@ -73,6 +78,13 @@ export default function Header({
         { href: '/theme', label: 'テーマ一覧を見る' },
         ...Object.entries(CATS).map(([key, c]) => ({ href: `/dictionary/${key}`, label: c.label })),
       ],
+    },
+    {
+      /* 「学びの場を探す」のプルダウンに入れていたが、「独立してグローバルメニューに
+         追加して」との指摘（2026-10-18）を受けて、他と並ぶ単独のリンクに変更した。 */
+      type: 'link',
+      href: '/gakko?type=josei',
+      label: '助成金・支援制度',
     },
     { type: 'link', href: '/notebook', label: '伴走ノート' },
     { type: 'link', href: '/today', label: 'みんなのデータ' },
@@ -127,7 +139,11 @@ export default function Header({
             <nav className="header-globalnav">
               {GLOBAL_NAV_ITEMS.map((item) => {
                 if (item.type === 'link') {
-                  const active = pathname.startsWith(item.href);
+                  // クエリ文字列を含むhref（例：/gakko?type=josei）は完全一致、
+                  // 含まないhref（例：/notebook）は従来通りprefix一致で判定する。
+                  const active = item.href.includes('?')
+                    ? currentUrl === item.href
+                    : pathname.startsWith(item.href);
                   return (
                     <Link key={item.href} href={item.href} className={active ? 'active' : ''}>
                       {item.label}
