@@ -324,7 +324,11 @@ export default async function GakkoPage({
               </Link>
             </div>
           </div>
-          {type === 'gakko' && (
+          {/* 「学びの多様化学校とは」の説明は、都道府県を選んで絞り込んだ後の画面でも
+              毎回同じ説明が繰り返し表示されてしまっていた。説明自体は変わらないため、
+              都道府県未選択（タブの最初の画面）のときだけ表示するようにした
+              （2026-10-19、「最初のページだけ表示でいい」との指摘を受けて）。 */}
+          {type === 'gakko' && !selected && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>学びの多様化学校（旧：不登校特例校）とは</div>
               <div className="qtext">
