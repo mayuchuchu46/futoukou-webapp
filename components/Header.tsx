@@ -178,15 +178,6 @@ export default function Header({
           {/* 「伴走ノート」への改名に合わせて、キャッチコピーも「答えて終わり」ではなく
               継続的に寄り添う印象に変更（2026-10-16）。 */}
           <div className="hero-sub">「どうしたらいい？」にAIと専門家が回答＆伴走</div>
-          {/* 「専門家監修：準備中…」バッジ。スマホでは従来通り.header-rowの外に
-              単独の行として表示するが（下のsupervision-note本体）、PCでは
-              「高さをとりすぎ」との指摘を受け、キャッチコピー行の行末に表示したい
-              とのことだったので、PC専用に同じ内容をここ（hero-subの直後、
-              header-left内）にも複製して置く。CSS側でモバイルはこちらを
-              非表示、PCは本体の方を非表示にして出し分ける（2026-10-18）。 */}
-          <span className="supervision-note supervision-note-pc">
-            {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
-          </span>
         </div>
         <div className="header-right">
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>
@@ -198,7 +189,7 @@ export default function Header({
         </div>
       </div>
 
-      <span className="supervision-note supervision-note-mobile">
+      <span className="supervision-note">
         {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
       </span>
 
