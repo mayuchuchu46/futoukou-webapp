@@ -133,9 +133,17 @@ export default async function GakkoSchoolPage({
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <Link href={`/gakko?pref=${encodeURIComponent(school.prefecture)}`} className="backlink" style={{ margin: '14px 0' }}>
-            ← {school.prefecture}の一覧へもどる
-          </Link>
+          {/* 「戻るボタンが埼玉県しかなかったりするけど、学びの多様化学校のページトップに
+              戻りたい導線が弱い」との指摘を受けて、都道府県の一覧に戻るリンクに加えて、
+              絞り込み無しの/gakkoトップに戻るリンクも並べて置いた（2026-10-18）。 */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '14px 0' }}>
+            <Link href={`/gakko?pref=${encodeURIComponent(school.prefecture)}`} className="backlink">
+              ← {school.prefecture}の一覧へもどる
+            </Link>
+            <Link href="/gakko" className="backlink">
+              学びの多様化学校トップへ
+            </Link>
+          </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>{fullName}</div>
