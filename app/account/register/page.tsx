@@ -45,10 +45,8 @@ function RegisterForm() {
   }
 
   return (
-    <div className="app-shell">
-      <Header supervised={false} />
-      <div className="main">
-        <h2 className="pagetitle">アカウント登録</h2>
+    <>
+      <h2 className="pagetitle">アカウント登録</h2>
         <div className="muted" style={{ marginBottom: 4 }}>
           メールアドレスとパスワードでアカウントを作成します。
         </div>
@@ -138,16 +136,24 @@ function RegisterForm() {
             すでにアカウントをお持ちの方はこちら
           </a>
         </form>
-      </div>
-      <BottomNav />
-    </div>
+    </>
   );
 }
 
+// 以前はHeader・BottomNav（ページ全体の外枠）までSuspenseの内側に含めてしまっていたため、
+// 再サスペンド時にfallback（何も表示しない）へ一瞬切り替わるとヘッダーごと画面から消える
+// 現象が起きていた（2026-10-18、トップページ・/ask・/accountで起きていたのと同じ原因）。
+// ここも外枠をSuspenseの外に出し、useSearchParams()を使う本文側だけに影響範囲を絞った。
 export default function AccountRegisterPage() {
   return (
-    <Suspense fallback={null}>
-      <RegisterForm />
-    </Suspense>
+    <div className="app-shell">
+      <Header supervised={false} />
+      <div className="main">
+        <Suspense fallback={null}>
+          <RegisterForm />
+        </Suspense>
+      </div>
+      <BottomNav />
+    </div>
   );
 }

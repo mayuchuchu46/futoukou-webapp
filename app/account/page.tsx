@@ -18,10 +18,21 @@ export default function AccountPage() {
   // Cache Componentsではcookies()を読むコンポーネントをSuspense配下に置かないと、
   // レンダリング結果がCDNの共有キャッシュに乗ってしまい、別のログイン状態の訪問者にも
   // 直前にアクセスした人のメールアドレス等がそのまま配信される（instant=falseだけでは防げない）。
+  // ただし、以前はHeader・BottomNav（ページ全体の外枠）までこのSuspenseの内側に
+  // 含めてしまっていたため、再サスペンド時にfallback（何も表示しない）へ一瞬切り替わると
+  // ヘッダーごと画面から消える現象が起きていた（2026-10-18、トップページ・/askで起きていた
+  // のと同じ原因。「別ページに移動するとヘッダーが消える」との報告を受けて、ここも外枠を
+  // Suspenseの外に出し、cookies()を読む本文側だけに影響範囲を絞った）。
   return (
-    <Suspense fallback={null}>
-      <AccountPageContent />
-    </Suspense>
+    <div className="app-shell">
+      <Header supervised={false} />
+      <div className="main">
+        <Suspense fallback={null}>
+          <AccountPageContent />
+        </Suspense>
+      </div>
+      <BottomNav />
+    </div>
   );
 }
 
@@ -30,10 +41,8 @@ async function AccountPageContent() {
   if (!member) redirect('/account/login');
 
   return (
-    <div className="app-shell">
-      <Header supervised={false} />
-      <div className="main">
-        <h2 className="pagetitle">アカウント</h2>
+    <>
+      <h2 className="pagetitle">アカウント</h2>
 
         <div className="card" style={{ gap: 6 }}>
           <div style={{ fontWeight: 700 }}>ログインしています</div>
@@ -76,8 +85,6 @@ async function AccountPageContent() {
         </Link>
 
         <LogoutButton />
-      </div>
-      <BottomNav />
-    </div>
+    </>
   );
 }

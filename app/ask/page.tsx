@@ -22,11 +22,23 @@ type RequestedExpert = { id: string; name: string; credential: string };
 
 // useSearchParams()（?expert=指名用）はレンダリング時点でしか値が確定しないため、
 // プリレンダーをブロックしないようにSuspenseで囲む。
+// ただし、以前はHeader・PcSidebar・BottomNav（ページ全体の外枠）までこのSuspenseの
+// 内側に含めてしまっていたため、再サスペンド時にfallback（何も表示しない）へ
+// 一瞬切り替わると、ヘッダーごと画面から消える現象が起きていた（2026-10-18、
+// トップページで起きていたのと同じ原因。「別ページに移動するとヘッダーが消える」
+// との報告を受けて、ここも外枠をSuspenseの外に出し、影響範囲を本文だけに絞った）。
 export default function AskPage() {
   return (
-    <Suspense fallback={null}>
-      <AskPageContent />
-    </Suspense>
+    <div className="app-shell">
+      <Header supervised={false} />
+      <div className="main page-with-sidebar">
+        <Suspense fallback={null}>
+          <AskPageContent />
+        </Suspense>
+        <PcSidebar />
+      </div>
+      <BottomNav />
+    </div>
   );
 }
 
@@ -260,9 +272,6 @@ function AskPageContent() {
 
   if (needsTerms) {
     return (
-      <div className="app-shell">
-        <Header supervised={false} />
-        <div className="main page-with-sidebar">
         <div className="page-main">
           <h2 className="pagetitle">ご利用前の確認</h2>
           <div className="card">
@@ -299,17 +308,10 @@ function AskPageContent() {
             同意して相談をはじめる
           </button>
         </div>
-        <PcSidebar />
-        </div>
-        <BottomNav />
-      </div>
     );
   }
 
   return (
-    <div className="app-shell">
-      <Header supervised={false} />
-      <div className="main page-with-sidebar">
         <div className="page-main">
         <h2 className="pagetitle">相談する</h2>
         {/* 書く前に「どんな回答が返ってくるか」を見せて、書く労力をかける前の不安を
@@ -490,9 +492,5 @@ function AskPageContent() {
           )}
         </div>
         </div>
-        <PcSidebar />
-      </div>
-      <BottomNav />
-    </div>
   );
 }
