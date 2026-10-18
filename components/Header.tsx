@@ -38,6 +38,20 @@ export default function Header({
       .catch(() => setLoggedIn(false));
   }, []);
 
+  // PC（960px以上）向けのグローバルメニュー。これまで主要ページへの導線は下部固定ナビ
+  // （BottomNav、スマホ的なタブバー）に集約していたが、PCではヘッダーに通常のナビゲーション
+  // メニューを出した方が自然だとの指摘を受けて追加（2026-10-18）。スマホではCSS側
+  // （.header-globalnav）で非表示にし、下部固定ナビをそのまま使う。
+  const GLOBAL_NAV_ITEMS = [
+    { href: '/', label: 'ホーム' },
+    { href: '/gakko', label: '学校・フリースクールを探す' },
+    { href: '/theme', label: 'お悩み辞典' },
+    { href: '/notebook', label: '伴走ノート' },
+    { href: '/today', label: 'みんなのデータ' },
+    { href: '/mypage', label: 'マイページ' },
+    { href: '/ask', label: '相談する' },
+  ];
+
   return (
     <div className={`header${isHome ? '' : ' header-subpage'}`}>
       <div className="header-row">
@@ -99,6 +113,17 @@ export default function Header({
           </Link>
         </div>
       </div>
+      <nav className="header-globalnav">
+        {GLOBAL_NAV_ITEMS.map((item) => {
+          const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+          return (
+            <Link key={item.href} href={item.href} className={active ? 'active' : ''}>
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+
       <span className="supervision-note">
         {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
       </span>

@@ -250,6 +250,11 @@ button:active,
   align-items: center;
   gap: 4px;
 }
+/* PC向けグローバルメニュー（ヘッダー内の通常のナビゲーション行）。スマホでは
+   下部固定ナビ（BottomNav）があるため隠し、PC（960px以上）でだけ表示する
+   （.header-globalnavのflex表示は下の@media (min-width: 960px)内。2026-10-18追加）。 */
+.header-globalnav { display: none; }
+
 /* ログイン／アカウントへのリンク。「つらいときはこちら」「どうする先生とは？」は
    読み物系の補足情報リンクなので破線下線で揃えているが、こちらは会員登録・ログインへの
    導線という役割が異なるため見た目を変えて目立たせる。画面右上の角にタブのようにぶら下げ、
@@ -678,6 +683,30 @@ h2.pagetitle {
     gap: 28px;
   }
   .page-with-sidebar > .page-main { flex: 1; min-width: 0; }
+
+  /* PC向けグローバルメニュー本体。ヘッダー内、supervision-noteの直前に
+     独立した行として表示する（2026-10-18）。 */
+  .header-globalnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+  .header-globalnav a {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    opacity: 0.75;
+  }
+  .header-globalnav a:hover,
+  .header-globalnav a.active {
+    opacity: 1;
+    color: var(--main);
+  }
 }
 
 /* .page-main（ホーム以外のページの本文カラム）には今までgap指定が無く、

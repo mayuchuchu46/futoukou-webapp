@@ -142,12 +142,16 @@ export default function HomeClient({
   }, [category, q, viewTab]);
 
   // 一覧の下端に近づいたら、表示件数を少しずつ増やす（全件を一度に並べない）。
+  // ただし自動で増やし続けると、特にスマホで「みんなの相談」がどこまでも長くなり
+  // 終わりが見えないとの指摘（2026-10-18）があったため、AUTO_LOAD_MAXまでは
+  // スクロールで自動読み込みし、それ以降は手動の「もっと見る」ボタンに切り替える。
+  const AUTO_LOAD_MAX = PAGE_SIZE * 3; // 24件まではスクロールで自動読み込み
   useEffect(() => {
     if (!loadMoreEl) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          setVisibleCount((c) => Math.min(c + PAGE_SIZE, items.length));
+          setVisibleCount((c) => Math.min(c + PAGE_SIZE, items.length, AUTO_LOAD_MAX));
         }
       },
       { rootMargin: '400px' }
@@ -388,7 +392,20 @@ export default function HomeClient({
                 <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
               )}
               {!loading && items.slice(0, visibleCount).map((item) => <ConsultationCard key={item.id} item={item} />)}
-              {!loading && visibleCount < items.length && <div ref={setLoadMoreEl} style={{ height: 1 }} />}
+              {/* AUTO_LOAD_MAXまではスクロールで自動読み込み（sentinel要素）。
+                  それ以降は手動の「もっと見る」ボタンに切り替える（2026-10-18）。 */}
+              {!loading && visibleCount < items.length && visibleCount < AUTO_LOAD_MAX && (
+                <div ref={setLoadMoreEl} style={{ height: 1 }} />
+              )}
+              {!loading && visibleCount >= AUTO_LOAD_MAX && visibleCount < items.length && (
+                <button
+                  className="btn-secondary"
+                  style={{ alignSelf: 'center', marginTop: 4 }}
+                  onClick={() => setVisibleCount((c) => Math.min(c + PAGE_SIZE, items.length))}
+                >
+                  もっと見る
+                </button>
+              )}
 
               {showExtras && !loading && (
                 <img
