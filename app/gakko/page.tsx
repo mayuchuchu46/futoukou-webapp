@@ -50,6 +50,10 @@ function shienCount(pref: string) {
   return EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === pref).length;
 }
 
+function tsushinCount(pref: string) {
+  return CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === pref).length;
+}
+
 export default async function GakkoPage({
   searchParams,
 }: {
@@ -58,11 +62,11 @@ export default async function GakkoPage({
   const { pref, type: rawType } = await searchParams;
   // 2026-10-18: オンラインフリースクールが21件まで増え、フリースクール（地域）タブに
   // 常に埋め込むと情報量が多すぎたため、「オンラインフリースクール」を独立した
-  // 3つめのタブに分離した。都道府県選択に意味があるのはgakko/free/shienのみ。
+  // 3つめのタブに分離した。
   // 同日、公的・無料の「教育支援センター（適応指導教室）」情報を4つめのタブ（shien）
   // として追加。さらに同日、広域通信制高校（私立中心）を5つめのタブ（tsushin）として
-  // 追加した。通信制高校は「広域」＝居住地を問わず入学できるため、オンラインフリー
-  // スクールと同様に都道府県選択は不要。
+  // 追加した。通信制高校は「広域」＝居住地を問わず入学できるが、本校所在地の都道府県で
+  // も絞り込めるようにしている（未選択時は全115校を表示）。
   const type: 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' =
     rawType === 'free'
       ? 'free'
@@ -79,7 +83,11 @@ export default async function GakkoPage({
   const coverage = selected ? getFreeSchoolCoverage(selected) : undefined;
   const shienCenters = selected ? EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === selected) : [];
   const shienCoverage = selected ? getEducationSupportCoverage(selected) : undefined;
-  const typeQueryPrefix = type === 'free' ? 'type=free&' : type === 'shien' ? 'type=shien&' : '';
+  const tsushinSchools = selected
+    ? CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === selected)
+    : CORRESPONDENCE_HIGH_SCHOOLS;
+  const typeQueryPrefix =
+    type === 'free' ? 'type=free&' : type === 'shien' ? 'type=shien&' : type === 'tsushin' ? 'type=tsushin&' : '';
   const prefHref = (p: string) => `/gakko?${typeQueryPrefix}pref=${encodeURIComponent(p)}`;
 
   return (
@@ -92,7 +100,7 @@ export default async function GakkoPage({
           {/* 学校探しの入口を1ページに統合したので、冒頭で「学びの多様化学校」と
               「フリースクール」のどちらを探したいかをタブで切り替えられるようにした
               （2026-10-18）。都道府県の選択はタブを切り替えても保持する。 */}
-          <div className="chip-row" style={{ margin: '0 0 4px' }}>
+          <div className="chip-row chip-row-wrap" style={{ margin: '0 0 4px' }}>
             <Link
               href={selected ? `/gakko?pref=${encodeURIComponent(selected)}` : '/gakko'}
               className={`chip chip-tag${type === 'gakko' ? ' active' : ''}`}
@@ -122,7 +130,7 @@ export default async function GakkoPage({
               教育支援センター
             </Link>
             <Link
-              href="/gakko?type=tsushin"
+              href={selected ? `/gakko?type=tsushin&pref=${encodeURIComponent(selected)}` : '/gakko?type=tsushin'}
               className={`chip chip-tag${type === 'tsushin' ? ' active' : ''}`}
               style={{ textDecoration: 'none' }}
             >
@@ -355,27 +363,40 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {/* 通信制高校（広域）も居住地を問わず入学できるため、オンラインフリースクールと
-              同様に都道府県選択は不要な独立タブとして表示する（2026-10-18）。本校所在地
-              （都道府県）ごとにグルーピングして表示する。 */}
+          {/* 通信制高校（広域）は居住地を問わず入学できるが、「本校所在地」の都道府県でも
+              絞り込めるようにしている（2026-10-18、未選択時は全115校を表示）。 */}
           {type === 'tsushin' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="muted" style={{ fontSize: 12, marginBottom: 6 }}>
-                本校所在地の都道府県ごとに表示しています（{CORRESPONDENCE_HIGH_SCHOOL_AS_OF}）。
+              <div className="answer-label" style={{ fontSize: 14 }}>
+                {selected ? `本校が${selected}にある通信制高校` : '通信制高校（広域）一覧'}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                {CORRESPONDENCE_HIGH_SCHOOLS.map((s) => (
-                  <div
-                    key={s.no}
-                    style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
-                  >
-                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                      本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
-                    </div>
+              {selected && (
+                <div className="muted" style={{ fontSize: 12 }}>
+                  「広域」の通信制高校は本校の都道府県以外からも入学できます。{selected}の学校が見つからない、または少ない場合も、他の都道府県の学校が選択肢になります。
+                </div>
+              )}
+              {tsushinSchools.length === 0 ? (
+                <div className="muted">{selected}に本校がある学校は見つかりませんでした。上記の通り、他の都道府県の学校も入学できる場合があります。</div>
+              ) : (
+                <>
+                  <div className="muted" style={{ fontSize: 12 }}>
+                    {CORRESPONDENCE_HIGH_SCHOOL_AS_OF}
                   </div>
-                ))}
-              </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                    {tsushinSchools.map((s) => (
+                      <div
+                        key={s.no}
+                        style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                      >
+                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                          本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
               <a
                 href={CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL}
                 target="_blank"
@@ -388,7 +409,7 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {(type === 'gakko' || type === 'free' || type === 'shien') && (
+          {(type === 'gakko' || type === 'free' || type === 'shien' || type === 'tsushin') && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
               {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
@@ -409,7 +430,14 @@ export default async function GakkoPage({
                   </Link>
                 )}
                 {PREFECTURES.map((p) => {
-                  const count = type === 'free' ? freeSchoolCount(p) : type === 'shien' ? shienCount(p) : gakkoCount(p);
+                  const count =
+                    type === 'free'
+                      ? freeSchoolCount(p)
+                      : type === 'shien'
+                        ? shienCount(p)
+                        : type === 'tsushin'
+                          ? tsushinCount(p)
+                          : gakkoCount(p);
                   return (
                     <Link
                       key={p}

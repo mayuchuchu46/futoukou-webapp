@@ -15,11 +15,13 @@ export default function PrefectureSelect({
   type = 'gakko',
 }: {
   selected: string | null;
-  type?: 'gakko' | 'free' | 'online' | 'shien';
+  type?: 'gakko' | 'free' | 'online' | 'shien' | 'tsushin';
 }) {
   const router = useRouter();
-  const typeQuery = type === 'free' ? 'type=free&' : type === 'shien' ? 'type=shien&' : '';
-  const emptyQuery = type === 'free' ? '?type=free' : type === 'shien' ? '?type=shien' : '';
+  const typeQuery =
+    type === 'free' ? 'type=free&' : type === 'shien' ? 'type=shien&' : type === 'tsushin' ? 'type=tsushin&' : '';
+  const emptyQuery =
+    type === 'free' ? '?type=free' : type === 'shien' ? '?type=shien' : type === 'tsushin' ? '?type=tsushin' : '';
 
   return (
     <select
