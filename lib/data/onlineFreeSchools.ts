@@ -4,25 +4,14 @@
 // 絞り込んで探す形だが、オンライン完結型のフリースクールは居住地を問わず利用できるため、
 // 都道府県の選択に関係なく常に案内できるよう、このファイルに分けて持つ。
 //
-// 前半5件は、京都市教育委員会が公開している「フリースクール等民間団体の情報提供シート」
-// （https://www.city.kyoto.lg.jp/kyoiku/page/0000332077.html）で「オンライン」区分に
-// 分類されている施設（2026年10月確認、掲載は令和8年4月1日現在）。同ページには
-// 「要件を満たす団体すべてを網羅したものではない」「京都市教育委員会が団体を認証・
-// あっせんするものではない」との注記がある。
-//
-// 後半のうちSOZOW SCHOOL、すららは政府・教育委員会の一覧には含まれておらず、
-// 運営会社自身の公式サイト・プレスリリースで確認した情報。
-//
-// NIJINアカデミーは、旭川市公式サイトの「不登校児童生徒の支援団体一覧（フリースクール等）」
-// （https://www.city.asahikawa.hokkaido.jp/kurashi/218/241/305/d082142.html 、2026年10月
-// 確認、最終更新2026年10月9日）に、オンラインの学校として掲載されている（旭川市内の施設
-// ではない）。同ページには「市の依頼に賛同した団体で、市内の全団体を網羅するものではない」
-// との注記がある。
-//
-// aini schoolは政府・教育委員会の一覧には含まれておらず、運営会社（株式会社ロコタビ）の
-// 公式サイトで確認した情報。
-//
-// sourceKindで出典の種類を区別する。
+// 各施設の出典は sourceKind / sourceUrl で個別に管理している。
+//   sourceKind: 'government'    = 教育委員会・都道府県・市区町村が公開する一覧に
+//                                 「オンライン」等として掲載されている施設
+//   sourceKind: 'official-site' = 運営会社・団体自身の公式サイト／発表のみで確認した施設
+//                                 （公的な一覧には掲載が確認できていない）
+// どちらの場合も「教育委員会・学校等が認証・あっせんするものではない」点は変わらない。
+// 2026年10月に複数回の調査を行い随時追加しているため、各施設のsourceUrlで個別に
+// 確認日・出典を追えるようにしている（一覧全体としての「網羅率」は保証できない）。
 export type OnlineFreeSchool = {
   name: string;
   operator: string;
@@ -124,5 +113,95 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '厳密には「フリースクール」ではなく自宅学習用のAI教材で、学校の出席扱い制度の活用支援として使われることが多い。他の施設のような交流の場ではない点に注意。政府・教育委員会の一覧には掲載されておらず、運営会社の公式サイトに基づく情報。',
     sourceKind: 'official-site',
     sourceUrl: 'https://surala.jp/',
+  },
+  {
+    name: 'オンラインフリースクール フォレストリンク',
+    operator: '個人運営（代表：浜 直也）',
+    ageRange: '小学1年生～中学3年生',
+    contact: '080-5365-3387',
+    url: 'https://www.pref.osaka.lg.jp/documents/35606/r8-2freeschool.pdf',
+    note: 'Discord・マインクラフト等を使ったオンラインの居場所づくり。公式サイトが見つからなかったため、リンク先は大阪府の資料（出典）になる。年4回程度、実際に集まる機会もある。',
+    sourceKind: 'government',
+    sourceUrl: 'https://www.pref.osaka.lg.jp/documents/35606/r8-2freeschool.pdf',
+  },
+  {
+    name: 'For Everyone Study',
+    operator: '個人運営（代表：植竹智央）',
+    ageRange: '小学生・中学生・高校生',
+    contact: '080-5682-2134 / fes-info@fes-project.com',
+    url: 'https://kyoiku.pref.ibaraki.jp/wp-content/uploads/2025/06/freeschool.pdf',
+    note: '学習支援・コミュニケーション支援・オンラインゲーム交流会等をオンラインで実施。所在地は茨城県石岡市だが活動はオンライン。公式サイトが見つからなかったため、リンク先は茨城県の資料（出典）になる。',
+    sourceKind: 'government',
+    sourceUrl: 'https://kyoiku.pref.ibaraki.jp/wp-content/uploads/2025/06/freeschool.pdf',
+  },
+  {
+    name: 'ハロハロラボ',
+    operator: 'NPO法人ハロハロラボ',
+    ageRange: '6歳～15歳（学習支援は6歳～12歳）',
+    contact: 'Hello.halolab@gmail.com',
+    url: 'https://www.hello-halolab.org/',
+    note: 'ZOOM・Gather Townを使ったオンラインの居場所・学習支援団体（カリキュラム型の「学校」ではない点に注意）。インターネットがあれば全国どこからでも参加可能。',
+    sourceKind: 'government',
+    sourceUrl: 'https://www.pref.kanagawa.jp/docs/ch3/cnt/nposupport/npo/07_kinrin/haroharo.html',
+  },
+  {
+    name: 'トライ式中等部',
+    operator: '株式会社トライグループ',
+    ageRange: '小学5年生～中学3年生（出願時点で中学在学中であることが条件）',
+    contact: '0120-919-439',
+    url: 'https://www.try-gakuin.com/freeschool/',
+    note: '対面・オンラインを選択できるほか、自宅訪問支援もある。学校長の判断で出席扱いとなる制度の活用支援を行っている（件数は非公開）。',
+    sourceKind: 'official-site',
+    sourceUrl: 'https://www.try-gakuin.com/freeschool/',
+  },
+  {
+    name: 'クラーク国際中等部',
+    operator: 'クラーク記念国際高等学校と連携（運営法人名は公式サイトに明記なし）',
+    ageRange: '小学6年生～中学3年生',
+    contact: '公式サイトの問い合わせフォームより',
+    url: 'https://clark-jr.jp/',
+    note: 'オンラインキャンパス「FAMcampus」で全国から参加可能。学校教育法第一条の中学校ではないと公式サイトに明記されており、出席扱いになるかは在籍校の判断次第。',
+    sourceKind: 'official-site',
+    sourceUrl: 'https://clark-jr.jp/',
+  },
+  {
+    name: '第一学院中等部',
+    operator: 'ウィザスグループ',
+    ageRange: '中学生年代（学年の明記なし）',
+    contact: '0120-953-324',
+    url: 'https://www.daiichigakuin-jr.jp/',
+    note: '月1～4回程度の登校とオンラインの相談・学習を組み合わせる形式。「中学校の出席扱いも目指せる」としているが実績数値は非公開。',
+    sourceKind: 'official-site',
+    sourceUrl: 'https://www.daiichigakuin-jr.jp/',
+  },
+  {
+    name: 'キズキ共育塾',
+    operator: '株式会社キズキ',
+    ageRange: '小学生～社会人（オンライン校では中学生も対象）',
+    contact: '0120-501-858',
+    url: 'https://kizuki.or.jp/',
+    note: '完全1対1の個別指導。不登校や発達特性による学び直し・受験サポートが中心で、オンライン授業は全国対応。',
+    sourceKind: 'official-site',
+    sourceUrl: 'https://kizuki.or.jp/',
+  },
+  {
+    name: 'Branch（ブランチ）',
+    operator: '運営会社名は公式サイトに明記なし（代表：中里祐次）',
+    ageRange: '小学生～高校生',
+    contact: '体験申込フォームまたは公式LINEより',
+    url: 'https://branchkids.jp/',
+    note: 'オンライン版「Branch home+」と東京都内の対面教室「Branch room」がある。東京都の不登校児童生徒向け利用料助成（月額上限2万円）の対象として案内されている。',
+    sourceKind: 'official-site',
+    sourceUrl: 'https://branchkids.jp/',
+  },
+  {
+    name: 'WIALIS（ウィアリス）オンラインフリースクール',
+    operator: '株式会社WIALIS',
+    ageRange: '中学生（小学校高学年は要相談）',
+    contact: '相談フォームまたは公式LINEより',
+    url: 'https://wialis.co.jp/',
+    note: '3Dバーチャルキャンパスにアバターで登校する形式。教員免許を持つスタッフが在籍。出席扱いは「目指す」支援であり実績数値は非公開。',
+    sourceKind: 'official-site',
+    sourceUrl: 'https://wialis.co.jp/',
   },
 ];
