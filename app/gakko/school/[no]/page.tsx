@@ -58,12 +58,11 @@ export async function generateMetadata({
   const description = school.note ? `${baseDescription}${school.note}` : baseDescription;
   const url = `${SITE_URL}/gakko/school/${school.no}`;
   const hasEnoughInfo = !!(school.officialUrl || school.address);
-  // openGraph・twitterにimagesを明示しないと（親レイアウトのog-image.pngが自動で
-  // 引き継がれず）SNSシェア時に画像無しになる、という/gakkoページと同じ理由で、
-  // 共有用のサイト共通画像を明示的に指定する（2026-10-18、「SEO的にどう？」との
-  // 質問を受けて確認したところ発覚）。学校ごとの写真は無い（実在校を誤って表す
-  // 画像は載せない方針）ため、サイト共通画像のままにしている。
-  const image = '/og-image.png';
+  // 2026-10-19：学校ごとに学校名入りのOGP画像を動的生成するopengraph-image.tsxを
+  // 追加したため、ここで静的なサイト共通画像（/og-image.png）をimagesに明示する
+  // 必要がなくなった。/result/[id]/page.tsxのgenerateMetadataと同じく、
+  // Next.jsのファイルベースの仕組み（opengraph-image.tsx）に任せ、ここでは
+  // imagesを指定しない。
 
   return {
     title,
@@ -77,9 +76,8 @@ export async function generateMetadata({
       siteName: SITE_NAME,
       type: 'article',
       locale: 'ja_JP',
-      images: [{ url: image, width: 1200, height: 630, alt: title }],
     },
-    twitter: { card: 'summary_large_image', title, description, images: [image] },
+    twitter: { card: 'summary_large_image', title, description },
   };
 }
 
@@ -225,6 +223,25 @@ export default async function GakkoSchoolPage({
                 学校の公式サイトを見る ›
               </a>
             )}
+            {/* このページ自体をシェアできるボタン（2026-10-19、「各学校の詳細ページも
+                シェアできるボタンほしい」との要望を受けて追加）。/result/[id]のシェア
+                ボタンと同じ.share-btnクラスを使い、学校名＋このページのURLをXで
+                共有できるようにする。シェア時のカード画像は、同じく今回追加した
+                opengraph-image.tsx（学校名入りの動的OGP画像）が使われる。 */}
+            <a
+              className="share-btn"
+              style={{ width: '100%' }}
+              href={`https://twitter.com/intent/tweet?${new URLSearchParams({
+                text: `${fullName}（${school.prefecture}${school.city}）`,
+                url: schoolUrl,
+                hashtags: 'どうする先生,学びの多様化学校',
+              })}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="share-btn-icon">𝕏</span>
+              この学校をシェア
+            </a>
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
