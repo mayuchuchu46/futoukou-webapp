@@ -10,6 +10,11 @@ import { FREE_SCHOOL_COVERAGE, getFreeSchoolCoverage } from '@/lib/data/freescho
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
 import { EDUCATION_SUPPORT_COVERAGE, getEducationSupportCoverage } from '@/lib/data/educationSupportCoverage';
+import {
+  CORRESPONDENCE_HIGH_SCHOOLS,
+  CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL,
+  CORRESPONDENCE_HIGH_SCHOOL_AS_OF,
+} from '@/lib/data/correspondenceHighSchools';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import PrefectureSelect from './PrefectureSelect';
 
@@ -55,9 +60,19 @@ export default async function GakkoPage({
   // 常に埋め込むと情報量が多すぎたため、「オンラインフリースクール」を独立した
   // 3つめのタブに分離した。都道府県選択に意味があるのはgakko/free/shienのみ。
   // 同日、公的・無料の「教育支援センター（適応指導教室）」情報を4つめのタブ（shien）
-  // として追加した。
-  const type: 'gakko' | 'free' | 'online' | 'shien' =
-    rawType === 'free' ? 'free' : rawType === 'online' ? 'online' : rawType === 'shien' ? 'shien' : 'gakko';
+  // として追加。さらに同日、広域通信制高校（私立中心）を5つめのタブ（tsushin）として
+  // 追加した。通信制高校は「広域」＝居住地を問わず入学できるため、オンラインフリー
+  // スクールと同様に都道府県選択は不要。
+  const type: 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' =
+    rawType === 'free'
+      ? 'free'
+      : rawType === 'online'
+        ? 'online'
+        : rawType === 'shien'
+          ? 'shien'
+          : rawType === 'tsushin'
+            ? 'tsushin'
+            : 'gakko';
   const selected = pref && PREFECTURES.includes(pref) ? pref : null;
   const schools = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
@@ -105,6 +120,13 @@ export default async function GakkoPage({
               style={{ textDecoration: 'none' }}
             >
               教育支援センター
+            </Link>
+            <Link
+              href="/gakko?type=tsushin"
+              className={`chip chip-tag${type === 'tsushin' ? ' active' : ''}`}
+              style={{ textDecoration: 'none' }}
+            >
+              通信制高校
             </Link>
           </div>
 
@@ -154,6 +176,18 @@ export default async function GakkoPage({
               </div>
               <div className="muted" style={{ fontSize: 12 }}>
                 利用には在籍校・教育委員会を通じた申込みが必要な場合が多いため、まずはお子さんの学校またはお住まいの教育委員会にお問い合わせください。
+              </div>
+            </div>
+          )}
+
+          {type === 'tsushin' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>通信制高校（広域）とは</div>
+              <div className="qtext">
+                レポート提出やスクーリング（面接指導）を中心に学び、高校卒業資格を取得できる正式な高等学校です。「広域」通信制高校は本校の都道府県以外からも入学できるため、お住まいの地域にかかわらず選択肢になります。全日制と違い、本人のペースに合わせて通学頻度や学び方を選べる学校が多いです。
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                学費・カリキュラム・通学（キャンパス／サポート校）の有無は学校ごとに大きく異なります。このリストには個別のキャンパス所在地や公式サイトURLは含まれていないため、気になる学校が見つかったら学校名で検索し、公式サイトで必ず確認してください。
               </div>
             </div>
           )}
@@ -321,6 +355,39 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {/* 通信制高校（広域）も居住地を問わず入学できるため、オンラインフリースクールと
+              同様に都道府県選択は不要な独立タブとして表示する（2026-10-18）。本校所在地
+              （都道府県）ごとにグルーピングして表示する。 */}
+          {type === 'tsushin' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="muted" style={{ fontSize: 12, marginBottom: 6 }}>
+                本校所在地の都道府県ごとに表示しています（{CORRESPONDENCE_HIGH_SCHOOL_AS_OF}）。
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                {CORRESPONDENCE_HIGH_SCHOOLS.map((s) => (
+                  <div
+                    key={s.no}
+                    style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                  >
+                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                      本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <a
+                href={CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="muted"
+                style={{ fontSize: 12, textDecoration: 'underline' }}
+              >
+                出典を見る ›
+              </a>
+            </div>
+          )}
+
           {(type === 'gakko' || type === 'free' || type === 'shien') && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
@@ -407,10 +474,19 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {type === 'tsushin' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>このページの通信制高校情報について</div>
+              <div className="qtext">
+                文部科学省は通信制高校の学校名を含む全国一覧を公表していないため、このページのデータは東京都生活文化局が公開している「通信教育を行う区域に東京都を含む通信制高校の一覧」（{CORRESPONDENCE_HIGH_SCHOOLS.length}校、{CORRESPONDENCE_HIGH_SCHOOL_AS_OF}）をもとにしています。東京都を対象地域に含まない狭域の学校は含まれていないため、広域通信制高校のすべてを網羅したものではありません。学費・キャンパス所在地・カリキュラム等は各校の公式サイトで直接ご確認ください。
+              </div>
+            </div>
+          )}
+
           <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>進路のことを相談してみませんか？</div>
             <div className="qtext">
-              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
             </div>
             <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
               相談するページへ ›
