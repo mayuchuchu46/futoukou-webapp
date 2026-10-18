@@ -711,6 +711,12 @@ h2.pagetitle {
      の外に単独行で表示）と入れ替えで出し分ける。 */
   .header-left {
     display: flex;
+    /* モバイル用の基本スタイル（flex-direction: column）がここでも上書きされずに
+       残ってしまい、flex-wrap:wrapと組み合わさって「ロゴ行が縦方向いっぱいに
+       伸びて、キャッチコピー等が右側の新しい列に回り込む」という崩れ方をして
+       いた（2026-10-18、「PCのロゴの位置が変」との報告で発覚）。横並びにする
+       には明示的にflex-direction: rowを指定する必要があった。 */
+    flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     column-gap: 10px;
