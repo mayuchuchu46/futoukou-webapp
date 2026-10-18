@@ -316,37 +316,40 @@ export default function HomeClient({
             <Link href="/theme" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
               テーマから探す・不登校お悩み辞典を見る →
             </Link>
-            {/* /gakko（学びの多様化学校の都道府県別一覧）。最初はテキストリンク1行のみ
-                だったが、「スマホからだと目に入りにくい」との指摘を受け、アイコン＋見出し＋
-                説明文のカード形式（ThemeClient.tsxのカテゴリカードと同じ見た目）に変更
-                （2026-10-18）。 */}
-            <Link
-              href="/gakko"
-              className="card home-gakko-link"
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 14, margin: '0 0 10px' }}
-            >
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: '50%',
-                  background: 'var(--sub)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 20,
-                  flex: '0 0 auto',
-                }}
-                aria-hidden="true"
+            {/* /gakko（学びの多様化学校の都道府県別一覧）。最初は「すべて」表示でも常に
+                出るカードだったが、「TOPは新着投稿をどんどん目にさせたい」との方針により、
+                新着フィードを見ている状態（カテゴリ「すべて」）では出さず、「進路・勉強」
+                「学校との関係」に絞り込んだ時だけ出すよう変更（2026-10-18）。この2カテゴリは
+                相談結果ページ・お悩み辞典ページでも同じ条件でgakkoの案内を出している。 */}
+            {(category === 'course' || category === 'school') && (
+              <Link
+                href="/gakko"
+                className="card home-gakko-link"
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 14, margin: '0 0 10px' }}
               >
-                🏫
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700 }}>学びの多様化学校を探す</div>
-                <div className="muted" style={{ fontSize: 12 }}>都道府県別に指定校（旧：不登校特例校）を調べられます</div>
-              </div>
-              <div className="muted">›</div>
-            </Link>
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '50%',
+                    background: 'var(--sub)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 20,
+                    flex: '0 0 auto',
+                  }}
+                  aria-hidden="true"
+                >
+                  🏫
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700 }}>学びの多様化学校を探す</div>
+                  <div className="muted" style={{ fontSize: 12 }}>都道府県別に指定校（旧：不登校特例校）を調べられます</div>
+                </div>
+                <div className="muted">›</div>
+              </Link>
+            )}
 
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
                 「参考になった順」は各カードの「参考になった◯人」と同じlikesで並べている。
