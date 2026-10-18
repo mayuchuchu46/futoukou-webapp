@@ -97,10 +97,13 @@ export default async function GakkoPage({
         <div className="page-main">
           <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
 
-          {/* 学校探しの入口を1ページに統合したので、冒頭で「学びの多様化学校」と
-              「フリースクール」のどちらを探したいかをタブで切り替えられるようにした
-              （2026-10-18）。都道府県の選択はタブを切り替えても保持する。 */}
-          <div className="chip-row chip-row-wrap" style={{ margin: '0 0 4px' }}>
+          {/* 学校探しの入口を1ページに統合したので、冒頭でタブを切り替えられるようにした
+              （2026-10-18）。都道府県の選択はタブを切り替えても保持する。
+              5タブになり1行のチップ列では種類が分かりにくかったため、「お住まいの地域で
+              探す（都道府県の選択が前提）」と「全国どこからでも選べる（居住地を問わない）」
+              の2グループに分けて見出しつきで表示する（2026-10-18）。 */}
+          <div className="muted" style={{ fontSize: 11, margin: '0 0 2px', fontWeight: 700 }}>お住まいの地域で探す</div>
+          <div className="chip-row chip-row-wrap" style={{ margin: '0 0 8px' }}>
             <Link
               href={selected ? `/gakko?pref=${encodeURIComponent(selected)}` : '/gakko'}
               className={`chip chip-tag${type === 'gakko' ? ' active' : ''}`}
@@ -113,14 +116,7 @@ export default async function GakkoPage({
               className={`chip chip-tag${type === 'free' ? ' active' : ''}`}
               style={{ textDecoration: 'none' }}
             >
-              フリースクール（地域で探す）
-            </Link>
-            <Link
-              href="/gakko?type=online"
-              className={`chip chip-tag${type === 'online' ? ' active' : ''}`}
-              style={{ textDecoration: 'none' }}
-            >
-              オンラインフリースクール
+              フリースクール
             </Link>
             <Link
               href={selected ? `/gakko?type=shien&pref=${encodeURIComponent(selected)}` : '/gakko?type=shien'}
@@ -129,12 +125,22 @@ export default async function GakkoPage({
             >
               教育支援センター
             </Link>
+          </div>
+          <div className="muted" style={{ fontSize: 11, margin: '0 0 2px', fontWeight: 700 }}>全国どこからでも選べる</div>
+          <div className="chip-row chip-row-wrap" style={{ margin: '0 0 4px' }}>
+            <Link
+              href="/gakko?type=online"
+              className={`chip chip-tag${type === 'online' ? ' active' : ''}`}
+              style={{ textDecoration: 'none' }}
+            >
+              オンラインフリースクール
+            </Link>
             <Link
               href={selected ? `/gakko?type=tsushin&pref=${encodeURIComponent(selected)}` : '/gakko?type=tsushin'}
               className={`chip chip-tag${type === 'tsushin' ? ' active' : ''}`}
               style={{ textDecoration: 'none' }}
             >
-              通信制高校
+              通信制高校（広域）
             </Link>
           </div>
 
