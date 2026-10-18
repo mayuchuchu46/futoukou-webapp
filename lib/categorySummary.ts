@@ -14,7 +14,10 @@ import { CATS, Category } from '@/lib/categories';
 // DICTIONARY_INDEX_THRESHOLD件を超えるまでnoindexにする（2026-10-15、「SEO的にいい？」
 // 「公開と同時にやりたい」との相談を受けて、作る・公開するを分離せず、件数に応じて
 // 自動でindex/noindexが切り替わる形にした）。
-export const DICTIONARY_INDEX_THRESHOLD = 20;
+// 20件だと全カテゴリが未達でindex対象ゼロのままだったため、10件に引き下げ
+// （2026-10-19、「薄いページ評価のリスクは抑えつつ、少しでも早くindex化したい」
+// との相談を受けて調整）。
+export const DICTIONARY_INDEX_THRESHOLD = 10;
 
 export type DictionaryConsultation = PastConsultation & { id: string };
 
