@@ -61,6 +61,11 @@ type GakkoPageContent = {
   description: string;
   tweetText: string;
   ogImage?: string;
+  // タブ冒頭に表示する横長バナー（チャッピー＝ChatGPTに描いてもらった画像から、上下の
+  // 白い余白を切り落として使っている）。ファイル名は中身を差し替えるたびに
+  // _v1, _v2…と変えること。同じファイル名のまま中身だけ差し替えると、ブラウザ・CDNの
+  // キャッシュにより古い画像が配信され続ける問題が実際に起きた（2026-10-18）。
+  heroBanner?: { src: string; alt: string };
 };
 
 const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
@@ -71,6 +76,7 @@ const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
     tweetText:
       '不登校のお子さんがいるご家庭へ。文部科学省が指定する「学びの多様化学校」（旧：不登校特例校）を都道府県から探せます。フリースクールや助成金情報も。',
     ogImage: '/og-image-gakko.jpg',
+    heroBanner: { src: '/assets/gakko_hero_banner_v2.jpg', alt: '学びの多様化学校（旧：不登校特例校）とは' },
   },
   free: {
     title: `フリースクール（地域）を都道府県から探す｜${SITE_NAME}`,
@@ -79,6 +85,7 @@ const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
     tweetText:
       '不登校のお子さんがいるご家庭へ。お住まいの地域のフリースクールを都道府県から探せます。オンラインフリースクールや助成金情報も。',
     ogImage: '/og-image-free.jpg',
+    heroBanner: { src: '/assets/free_hero_banner_v1.jpg', alt: '全国のフリースクール一覧' },
   },
   online: {
     title: `オンラインフリースクールを探す｜${SITE_NAME}`,
@@ -213,16 +220,13 @@ export default async function GakkoPage({
         <div className="page-main">
           <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
 
-          {/* 学びの多様化学校タブのトップバナー。チャッピー（ChatGPT）に描いてもらった
-              OGP用画像（og-image-gakko.jpg）の上部（ロゴ・見出し・親子の表情）を横長
-              バナー比率（約2.6:1、ホームのheader_hero_pcと同じ比率）でクロップしたもの
-              （2026-10-18）。「少し縦幅切ってもいいかも」との指摘を受け、下部（ノート・
-              手元）を落として上部を活かす形にした。都道府県選択時もタブ冒頭の目印として
-              残す。 */}
-          {type === 'gakko' && (
+          {/* タブ冒頭のトップバナー（PAGE_CONTENT[type].heroBanner参照）。チャッピー
+              （ChatGPT）に描いてもらった画像の上下の白い余白をタイトにクロップして使用
+              （2026-10-18）。都道府県選択時もタブ冒頭の目印として残す。 */}
+          {PAGE_CONTENT[type].heroBanner && (
             <img
-              src="/assets/gakko_hero_banner_v2.jpg"
-              alt="学びの多様化学校（旧：不登校特例校）とは"
+              src={PAGE_CONTENT[type].heroBanner!.src}
+              alt={PAGE_CONTENT[type].heroBanner!.alt}
               style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16, margin: '0 0 12px' }}
             />
           )}
