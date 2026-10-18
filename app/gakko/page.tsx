@@ -225,9 +225,9 @@ export default async function GakkoPage({
     rawSchoolType && (SCHOOL_TYPES as readonly string[]).includes(rawSchoolType)
       ? (rawSchoolType as SchoolTypeFilter)
       : null;
-  const schoolsInPref = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
-  // 学校種の絞り込み・結果一覧自体はSchoolTypeExplorer（クライアントコンポーネント）側で
-  // 行うため、ここではschoolTypeQuery（他セクションのhref組み立てに必要）だけ残す。
+  // gakkoタブの絞り込み・結果一覧（都道府県・学校種とも）はSchoolTypeExplorer
+  // （クライアントコンポーネント）側で行うため、ここではschoolTypeQuery
+  // （他タブのhref組み立てに必要）だけ残す。
   const schoolTypeQuery = (st: SchoolTypeFilter | null) => (st ? `school=${encodeURIComponent(st)}` : '');
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
   const coverage = selected ? getFreeSchoolCoverage(selected) : undefined;
@@ -347,10 +347,13 @@ export default async function GakkoPage({
               続く「都道府県から探す」の直前）に置き、絞り込んでから一覧を見られるように
               した（2026-10-18、「小中高で絞り込みできたらいい」との指摘を受けて）。 */}
           {type === 'gakko' && (
+            // 2026-10-19、都道府県の絞り込みもSchoolTypeExplorer内に統合したため
+            // （「都道府県・学校種を操作した時の反応が遅い」との指摘を受けて）、
+            // 都道府県の絞り込みカード自体もこのコンポーネントが描画する
+            // （下にある共通の「都道府県から探す」カードはgakkoタブでは使わない）。
             <SchoolTypeExplorer
               allSchools={MANABI_TAYOUKA_GAKKO}
-              schoolsInPref={schoolsInPref}
-              selectedPref={selected}
+              initialPref={selected}
               initialSchoolType={selectedSchoolType}
             />
           )}
@@ -652,7 +655,9 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {(type === 'gakko' || type === 'free' || type === 'shien' || type === 'tsushin' || type === 'josei') && (
+          {/* gakkoタブは2026-10-19からSchoolTypeExplorer内で都道府県の絞り込み自体を
+              行うため、この共通カードはgakko以外のタブでのみ使う。 */}
+          {(type === 'free' || type === 'shien' || type === 'tsushin' || type === 'josei') && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
               {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
