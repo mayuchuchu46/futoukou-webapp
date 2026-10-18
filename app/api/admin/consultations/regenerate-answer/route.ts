@@ -3,6 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { isAdmin } from '@/lib/adminAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildPrompt } from '@/lib/prompt';
+import { findMentionedSchool, buildSchoolFactsBlock } from '@/lib/schoolFacts';
 
 // 無料AI相談（request_type='ai'）のAI回答を、現在のプロンプト設定（文字数の目安など）で
 // 作り直すための管理者向けエンドポイント。プロンプトを調整したあと、既存の投稿
@@ -37,7 +38,22 @@ export async function POST(req: NextRequest) {
   const { data: guidelines } = await supabase.from('guidelines').select('*').eq('id', 'default').single();
   const guideCat = guidelines?.categories?.[row.category];
 
-  const prompt = buildPrompt(row.category, row.question, guideCat, row.grade || null, row.gender || null, !!guidelines?.supervised);
+  // 既存の相談文に学校名が含まれていれば、再生成時もサイト側の確認済み情報を渡す
+  // （lib/schoolFacts.ts参照、2026-10-18追加）。
+  const mentionedSchool = findMentionedSchool([row.question]);
+  const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
+
+  const prompt = buildPrompt(
+    row.category,
+    row.question,
+    guideCat,
+    row.grade || null,
+    row.gender || null,
+    !!guidelines?.supervised,
+    undefined,
+    undefined,
+    schoolFactsBlock
+  );
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 

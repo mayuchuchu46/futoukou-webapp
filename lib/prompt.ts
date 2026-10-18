@@ -100,7 +100,12 @@ export function buildPrompt(
   gender?: string | null,
   supervised?: boolean,
   history?: PastConsultation[],
-  avoidOpenings?: string[]
+  avoidOpenings?: string[],
+  // 相談文に、サイトの学校データ（lib/data/manabiTayoukaGakko.ts）に載っている学校名が
+  // 含まれている場合の「確認済みの学校情報」ブロック（lib/schoolFacts.ts参照、
+  // 2026-10-18追加）。呼び出し側（app/api/consult/route.ts等）で該当校が見つかった
+  // 場合のみ渡される。
+  schoolFactsBlock?: string
 ) {
   const catLabel = CATS[category]?.label || category;
   const guidanceBlock = buildGuidanceBlock(guideCat, supervised);
@@ -110,6 +115,7 @@ export function buildPrompt(
   return `あなたは「どうする先生」という、不登校の子を持つ保護者向けAI相談キャラクターです。
 以下の相談に対して、今日からできる具体的な次の一手を、200文字程度（250字を超えないこと）の日本語で答えてください。
 ${guidanceBlock}
+${schoolFactsBlock || ''}
 ${historyBlock}
 ${avoidOpeningsBlock}
 
@@ -162,7 +168,12 @@ export function buildFollowupPrompt(
   guideCat: GuideCategory | undefined,
   grade?: string | null,
   gender?: string | null,
-  supervised?: boolean
+  supervised?: boolean,
+  // buildPromptと同じ「確認済みの学校情報」ブロック（2026-10-18追加）。返信（ラリー）では
+  // 今回のメッセージ自体に学校名が出てこないことも多いため（例：最初の相談で学校名を出し、
+  // 返信では「いつ開校した？」のように聞くだけ）、呼び出し側は最初の相談文も含めて
+  // 学校名を検索した結果をここに渡す。
+  schoolFactsBlock?: string
 ) {
   const catLabel = CATS[category]?.label || category;
   const guidanceBlock = buildGuidanceBlock(guideCat, supervised);
@@ -173,6 +184,7 @@ export function buildFollowupPrompt(
 最初の相談文だと思って最初から回答し直すのではなく、直前の自分の回答を踏まえたうえで、
 今回の返信の内容にきちんと向き合って答えてください。200文字程度（250字を超えないこと）の日本語で答えてください。
 ${guidanceBlock}
+${schoolFactsBlock || ''}
 
 【最初の相談】
 ${originalQuestion}

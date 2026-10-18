@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildFollowupPrompt } from '@/lib/prompt';
+import { findMentionedSchool, buildSchoolFactsBlock } from '@/lib/schoolFacts';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -47,6 +48,12 @@ export async function POST(req: NextRequest) {
   const { data: guidelines } = await supabase.from('guidelines').select('*').eq('id', 'default').single();
   const guideCat = guidelines?.categories?.[parent.category];
 
+  // 返信（ラリー）では今回のメッセージ自体に学校名が出てこないこともあるため
+  // （最初の相談で学校名を出し、返信では事実だけ聞くパターン）、最初の相談文も
+  // あわせて学校名を検索する（lib/schoolFacts.ts参照、2026-10-18追加）。
+  const mentionedSchool = findMentionedSchool([parent.question, text]);
+  const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
+
   const prompt = buildFollowupPrompt(
     parent.category,
     parent.question,
@@ -55,7 +62,8 @@ export async function POST(req: NextRequest) {
     guideCat,
     parent.grade,
     parent.gender,
-    !!guidelines?.supervised
+    !!guidelines?.supervised,
+    schoolFactsBlock
   );
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

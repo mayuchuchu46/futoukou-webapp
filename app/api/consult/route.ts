@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildPrompt, buildOneLinerPrompt, PastConsultation } from '@/lib/prompt';
+import { findMentionedSchool, buildSchoolFactsBlock } from '@/lib/schoolFacts';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -57,6 +58,11 @@ export async function POST(req: NextRequest) {
   const { data: guidelines } = await supabase.from('guidelines').select('*').eq('id', 'default').single();
   const guideCat = guidelines?.categories?.[category];
 
+  // 相談文に、学びの多様化学校一覧に載っている学校名が含まれていれば、サイト側で
+  // 確認済みの情報をAIに渡す（lib/schoolFacts.ts参照、2026-10-18追加）。
+  const mentionedSchool = findMentionedSchool([text]);
+  const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
+
   const prompt = buildPrompt(
     category,
     text.trim(),
@@ -64,7 +70,9 @@ export async function POST(req: NextRequest) {
     grade || null,
     gender || null,
     !!guidelines?.supervised,
-    history
+    history,
+    undefined,
+    schoolFactsBlock
   );
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

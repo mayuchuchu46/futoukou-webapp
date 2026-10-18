@@ -18,6 +18,11 @@ const CATEGORY_KEYS = Object.keys(CATS) as Category[];
 // 切り替える（2026-10-12、新規ユーザーの離脱対策として追加）。
 const DEFAULT_PLACEHOLDER = CATEGORY_EXAMPLES.body;
 
+// 相談送信（AI回答生成）のタイムアウト。画面上は「通常20〜30秒ほど」と案内しているため、
+// それより十分長い時間を確保しつつ、ハングしたままボタンが永久に押せなくなる事態を防ぐ
+// （2026-10-18、「たまにボタンが押せなくなる。戻ってくると直る」との報告を受けて追加）。
+const ASK_TIMEOUT_MS = 55000;
+
 type RequestedExpert = { id: string; name: string; credential: string };
 
 // useSearchParams()（?expert=指名用）はレンダリング時点でしか値が確定しないため、
@@ -219,6 +224,14 @@ function AskPageContent() {
     if (!text.trim() || !category) return;
     setSubmitting(true);
     setError('');
+    // AIの回答生成が通常より時間がかかった場合（AI側の混雑・サーバー関数のタイムアウト等）に、
+    // fetchがエラーにも成功にもならずハングし続け、送信ボタンがグレーアウトしたまま
+    // 押せなくなる不具合への対応（2026-10-18、「たまに押せなくなる。戻ってくると
+    // 押せた」との報告を受けて追加）。ページを離れて戻ってくると直るのは、
+    // コンポーネントが再マウントされてsubmittingが初期値に戻るため。
+    // 一定時間で明示的にリクエストを中断し、必ずエラー状態に戻してボタンを再度押せるようにする。
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), ASK_TIMEOUT_MS);
     try {
       const res = await fetch('/api/consult', {
         method: 'POST',
@@ -231,6 +244,7 @@ function AskPageContent() {
           gender: gender || null,
           child_id: selectedChildId || null,
         }),
+        signal: controller.signal,
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
@@ -247,8 +261,16 @@ function AskPageContent() {
       categoryTouchedRef.current = false;
       router.push(`/result/${data.consultation.id}`);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'エラーが発生しました');
+      setError(
+        e instanceof Error && e.name === 'AbortError'
+          ? '回答の生成に時間がかかりすぎたため中断しました。お手数ですが、もう一度お試しください。'
+          : e instanceof Error
+          ? e.message
+          : 'エラーが発生しました'
+      );
       setSubmitting(false);
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
@@ -256,6 +278,9 @@ function AskPageContent() {
     if (!text.trim() || !category) return;
     setExpertSubmitting(true);
     setError('');
+    // submit()と同じ理由（ハングしたまま固まる不具合対策）でタイムアウトを設ける（2026-10-18）。
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), ASK_TIMEOUT_MS);
     try {
       const res = await fetch('/api/expert-checkout', {
         method: 'POST',
@@ -269,6 +294,7 @@ function AskPageContent() {
           requested_expert_id: requestedExpert?.id || null,
           child_id: selectedChildId || null,
         }),
+        signal: controller.signal,
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
@@ -291,8 +317,16 @@ function AskPageContent() {
       if (!data.url) throw new Error('失敗しました');
       window.location.href = data.url;
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'エラーが発生しました');
+      setError(
+        e instanceof Error && e.name === 'AbortError'
+          ? '送信に時間がかかりすぎたため中断しました。お手数ですが、もう一度お試しください。'
+          : e instanceof Error
+          ? e.message
+          : 'エラーが発生しました'
+      );
       setExpertSubmitting(false);
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 

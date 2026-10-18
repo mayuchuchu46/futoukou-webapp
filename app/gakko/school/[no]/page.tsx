@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaGakko';
+import SchoolConsultations from './SchoolConsultations';
 
 // 学びの多様化学校、1校ごとの紹介ページ。一覧（/gakko）の学校名を押すとここに来る
 // （2026-10-18、「学校名を押したらその学校の紹介ページに行くようにできる？」との
@@ -271,6 +273,13 @@ export default async function GakkoSchoolPage({
               相談する →
             </Link>
           </div>
+
+          {/* この学校名を含む実際の相談（2026-10-18追加、「北沢学園についての相談を
+              この学校のページに載せたい」との要望を受けて）。DB問い合わせがページ全体の
+              表示を止めないよう、/gakkoのRelatedConsultationsと同じくSuspenseで囲む。 */}
+          <Suspense fallback={null}>
+            <SchoolConsultations schoolName={school.name} branchName={school.branchName} />
+          </Suspense>
         </div>
         <PcSidebar />
       </div>
