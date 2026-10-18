@@ -32,11 +32,33 @@ import PrefectureSelect from './PrefectureSelect';
 // データはいずれも公的機関の公開情報で著作権上の問題がなく、更新頻度も低いため、
 // Supabaseにテーブルを作らずアプリ内の静的データとして持つ（「時間をかけたくない」との
 // 方針に合わせた最小実装）。
+const GAKKO_TITLE = `学びの多様化学校・フリースクールを都道府県から探す｜${SITE_NAME}`;
+const GAKKO_DESCRIPTION =
+  '不登校の子どもに合わせた「学びの多様化学校」（旧：不登校特例校）や、民間の「フリースクール」（地域・オンライン）を探せます。文部科学省や教育委員会等の公開情報をもとに掲載しています。';
+
 export const metadata: Metadata = {
-  title: `学びの多様化学校・フリースクールを都道府県から探す｜${SITE_NAME}`,
-  description:
-    '不登校の子どもに合わせた「学びの多様化学校」（旧：不登校特例校）や、民間の「フリースクール」（地域・オンライン）を探せます。文部科学省や教育委員会等の公開情報をもとに掲載しています。',
+  title: GAKKO_TITLE,
+  description: GAKKO_DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/gakko` },
+  openGraph: {
+    title: GAKKO_TITLE,
+    description: GAKKO_DESCRIPTION,
+    url: `${SITE_URL}/gakko`,
+    images: [
+      {
+        url: '/og-image-gakko.png',
+        width: 1200,
+        height: 630,
+        alt: GAKKO_TITLE,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: GAKKO_TITLE,
+    description: GAKKO_DESCRIPTION,
+    images: ['/og-image-gakko.png'],
+  },
 };
 
 function gakkoCount(pref: string) {
