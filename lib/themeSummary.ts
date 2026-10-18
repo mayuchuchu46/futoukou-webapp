@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { cacheLife } from 'next/cache';
 import Anthropic from '@anthropic-ai/sdk';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildCategoryDictionaryPrompt, PastConsultation } from '@/lib/prompt';
@@ -40,6 +41,13 @@ const SAMPLE_LIMIT = 20;
 export const getThemeDictionaryData = cache(async function getThemeDictionaryDataImpl(
   word: string
 ): Promise<ThemeDictionaryData> {
+  // /gakkoページに関連相談カードを追加した際（2026-10-18）、都道府県・学校種の
+  // フィルターを切り替えるたびにこのDB問い合わせ（件数カウント＋サンプル取得の2回）が
+  // 毎回走ってしまい、フィルター操作の反応が遅くなった。このデータはフィルター条件に
+  // 関係なく（テーマ語＝タブ単位でしか）変わらないため、数分単位でキャッシュする
+  // （app/result/[id]/page.tsxのgetExpertAvailableと同じ考え方）。
+  'use cache';
+  cacheLife('minutes');
   const supabase = getSupabaseAdmin();
 
   // tag-counts APIは全件をJS側でfilter(.includes())しているが、辞典ページでは

@@ -348,9 +348,14 @@ export default async function GakkoPage({
           {type === 'gakko' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>学校種で絞り込む</div>
+              {/* scroll={false}：デフォルトだとLinkのページ遷移のたびにページ最上部へ
+                  スクロールしてしまい、このカードの位置（結果一覧の直前）を見失って
+                  「選びづらい」と感じる原因になっていた。現在のスクロール位置を保ったまま
+                  絞り込めるようにする（2026-10-18）。 */}
               <div className="chip-row chip-row-wrap">
                 <Link
                   href={schoolTypeHref(null)}
+                  scroll={false}
                   className={`chip chip-tag${!selectedSchoolType ? ' active' : ''}`}
                   style={{ textDecoration: 'none' }}
                 >
@@ -360,6 +365,7 @@ export default async function GakkoPage({
                   <Link
                     key={st}
                     href={schoolTypeHref(st)}
+                    scroll={false}
                     className={`chip chip-tag${selectedSchoolType === st ? ' active' : ''}`}
                     style={{ textDecoration: 'none' }}
                   >
