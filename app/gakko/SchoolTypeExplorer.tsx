@@ -15,6 +15,30 @@ import type { ManabiTayoukaGakko } from '@/lib/data/manabiTayoukaGakko';
 // はバックグラウンドでrouter.replaceして追いつかせる方式にした。
 type SchoolTypeFilter = '小学校' | '中学校' | '高等学校' | '小・中';
 const SCHOOL_TYPES: SchoolTypeFilter[] = ['小学校', '中学校', '高等学校', '小・中'];
+// 「すべて」表示時のグループ見出しの並び順。学齢の低い順（小学校→小・中→中学校→
+// 高等学校）に並べ、進路を考える上で見渡しやすくしている。
+const GROUP_ORDER: SchoolTypeFilter[] = ['小学校', '小・中', '中学校', '高等学校'];
+
+function SchoolRow({ school: s }: { school: ManabiTayoukaGakko }) {
+  // 学校名を押すと1校ごとの紹介ページ（/gakko/school/[no]）へ飛べるようにした
+  // （2026-10-18、「学校名を押したらその学校の紹介ページに行くようにできる？」との
+  // 指摘を受けて追加）。「すべて」のグループ表示・学校種で絞り込んだ時のフラット表示の
+  // 両方で使うため、行自体をコンポーネントとして切り出した（2026-10-18）。
+  return (
+    <Link
+      href={`/gakko/school/${s.no}`}
+      style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
+    >
+      <div className="qtext" style={{ fontWeight: 700 }}>
+        {s.name}
+        {s.branchName ? `（${s.branchName}）` : ''}
+      </div>
+      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+        {s.city}・{s.schoolType}・{s.publicPrivate}・{s.type}・{s.designatedYear}指定
+      </div>
+    </Link>
+  );
+}
 
 export default function SchoolTypeExplorer({
   allSchools,
@@ -99,26 +123,33 @@ export default function SchoolTypeExplorer({
                 <>現時点で{selectedPref}には指定校がありません。指定校は年々増えているため、今後追加される可能性があります。下記の文部科学省の最新一覧もあわせてご確認ください。</>
               )}
             </div>
-          ) : (
+          ) : schoolType ? (
+            // 学校種チップで絞り込み済みなので、その種類だけのフラットな一覧でよい。
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
               {filteredInPref.map((s) => (
-                // 学校名を押すと1校ごとの紹介ページ（/gakko/school/[no]）へ飛べるように
-                // した（2026-10-18、「学校名を押したらその学校の紹介ページに行くように
-                // できる？」との指摘を受けて追加）。
-                <Link
-                  key={s.no}
-                  href={`/gakko/school/${s.no}`}
-                  style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
-                >
-                  <div className="qtext" style={{ fontWeight: 700 }}>
-                    {s.name}
-                    {s.branchName ? `（${s.branchName}）` : ''}
-                  </div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                    {s.city}・{s.schoolType}・{s.publicPrivate}・{s.type}・{s.designatedYear}指定
-                  </div>
-                </Link>
+                <SchoolRow key={s.no} school={s} />
               ))}
+            </div>
+          ) : (
+            // 「すべて」表示時は、学校種ごとにチップを押し比べなくても一度に見比べられる
+            // よう、小学校→小・中→中学校→高等学校の順で見出し付きグループ分け表示にする
+            // （2026-10-18、「小中高とチップを何回も押し比べないといけない」との指摘を
+            // 受けて追加）。チップ自体は、逆に1種類だけに絞りたい人のために残している。
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%' }}>
+              {GROUP_ORDER.map((st) => {
+                const group = filteredInPref.filter((s) => s.schoolType === st);
+                if (group.length === 0) return null;
+                return (
+                  <div key={st} style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                    <div className="muted" style={{ fontSize: 12, fontWeight: 700 }}>
+                      {st}（{group.length}）
+                    </div>
+                    {group.map((s) => (
+                      <SchoolRow key={s.no} school={s} />
+                    ))}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
