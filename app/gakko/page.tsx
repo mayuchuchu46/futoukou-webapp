@@ -213,6 +213,20 @@ export default async function GakkoPage({
         <div className="page-main">
           <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
 
+          {/* 学びの多様化学校タブのトップバナー。チャッピー（ChatGPT）に描いてもらった
+              OGP用画像（og-image-gakko.jpg）の上部（ロゴ・見出し・親子の表情）を横長
+              バナー比率（約2.6:1、ホームのheader_hero_pcと同じ比率）でクロップしたもの
+              （2026-10-18）。「少し縦幅切ってもいいかも」との指摘を受け、下部（ノート・
+              手元）を落として上部を活かす形にした。都道府県選択時もタブ冒頭の目印として
+              残す。 */}
+          {type === 'gakko' && (
+            <img
+              src="/assets/gakko_hero_banner.jpg"
+              alt="学びの多様化学校（旧：不登校特例校）とは"
+              style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16, margin: '0 0 12px' }}
+            />
+          )}
+
           {/* 学校探しの入口を1ページに統合したので、冒頭でタブを切り替えられるようにした
               （2026-10-18）。都道府県の選択はタブを切り替えても保持する。
               6タブになり1行のチップ列では種類が分かりにくかったため、「お住まいの地域で
