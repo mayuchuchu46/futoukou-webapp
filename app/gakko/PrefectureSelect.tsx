@@ -10,12 +10,18 @@ import { PREFECTURES } from '@/lib/data/prefectures';
 //
 // 「フリースクール」タブ追加（2026-10-18）にあわせて、どちらのタブで選んでも
 // 同じタブのまま都道府県だけ切り替わるよう type を保持してナビゲートする。
+//
+// 学びの多様化学校タブの学校種フィルター（小学校／中学校／高等学校／小・中）を
+// 最初から使えるようにした（2026-10-18）のにあわせて、セレクトボックスで都道府県を
+// 切り替えても選択中の学校種が外れないよう school パラメータも保持する。
 export default function PrefectureSelect({
   selected,
   type = 'gakko',
+  schoolType = null,
 }: {
   selected: string | null;
   type?: 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' | 'josei';
+  schoolType?: string | null;
 }) {
   const router = useRouter();
   const typeQuery =
@@ -38,6 +44,8 @@ export default function PrefectureSelect({
           : type === 'josei'
             ? '?type=josei'
             : '';
+  const schoolQuery = type === 'gakko' && schoolType ? `school=${encodeURIComponent(schoolType)}&` : '';
+  const schoolQueryStandalone = type === 'gakko' && schoolType ? `school=${encodeURIComponent(schoolType)}` : '';
 
   return (
     <select
@@ -45,7 +53,13 @@ export default function PrefectureSelect({
       value={selected || ''}
       onChange={(e) => {
         const pref = e.target.value;
-        router.push(pref ? `/gakko?${typeQuery}pref=${encodeURIComponent(pref)}` : `/gakko${emptyQuery}`);
+        router.push(
+          pref
+            ? `/gakko?${typeQuery}${schoolQuery}pref=${encodeURIComponent(pref)}`
+            : schoolQueryStandalone
+              ? `/gakko${emptyQuery}${emptyQuery ? '&' : '?'}${schoolQueryStandalone}`
+              : `/gakko${emptyQuery}`
+        );
       }}
     >
       <option value="">都道府県を選択…</option>

@@ -153,8 +153,16 @@ export async function generateMetadata({
   };
 }
 
-function gakkoCount(pref: string) {
-  return MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === pref).length;
+// 学びの多様化学校の学校種（文科省データのschoolTypeそのまま）。「小学校から高校まで
+// ある？」との質問を受け、学校種で絞り込めるチップを追加した（2026-10-18）。
+// 全国84校の内訳は中学校53・高等学校14・小中一貫9・小学校8で、中学校が中心だが
+// 全学齢をカバーしている。都道府県を選ぶ前から絞り込みたい人もいるはず、との指摘を
+// 受け、都道府県未選択の状態からでも選べるグローバルなチップにした（同日）。
+const SCHOOL_TYPES = ['小学校', '中学校', '高等学校', '小・中'] as const;
+type SchoolTypeFilter = (typeof SCHOOL_TYPES)[number];
+
+function gakkoCount(pref: string, schoolType: SchoolTypeFilter | null = null) {
+  return MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === pref && (!schoolType || s.schoolType === schoolType)).length;
 }
 
 function freeSchoolCount(pref: string) {
@@ -172,13 +180,6 @@ function tsushinCount(pref: string) {
 function joseiCount(pref: string) {
   return FREESCHOOL_SUBSIDIES.filter((s) => s.prefecture === pref).length;
 }
-
-// 学びの多様化学校の学校種（文科省データのschoolTypeそのまま）。「小学校から高校まで
-// ある？」との質問を受け、都道府県内に複数の学校種が混在する場合に絞り込めるチップを
-// 追加した（2026-10-18）。全国84校の内訳は中学校53・高等学校14・小中一貫9・小学校8で、
-// 中学校が中心だが全学齢をカバーしている。
-const SCHOOL_TYPES = ['小学校', '中学校', '高等学校', '小・中'] as const;
-type SchoolTypeFilter = (typeof SCHOOL_TYPES)[number];
 
 export default async function GakkoPage({
   searchParams,
@@ -204,20 +205,16 @@ export default async function GakkoPage({
       ? (rawSchoolType as SchoolTypeFilter)
       : null;
   const schoolsInPref = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
-  // 学校種チップはその都道府県に複数の学校種が混在する場合だけ表示する（1種類しかなければ
-  // 絞り込む意味がないため）。
-  const schoolTypeCounts = SCHOOL_TYPES.map((st) => ({
-    schoolType: st,
-    count: schoolsInPref.filter((s) => s.schoolType === st).length,
-  })).filter((c) => c.count > 0);
-  const schools =
-    selectedSchoolType && schoolTypeCounts.length > 1
-      ? schoolsInPref.filter((s) => s.schoolType === selectedSchoolType)
-      : schoolsInPref;
-  const schoolTypeHref = (st: SchoolTypeFilter | null) =>
-    selected
-      ? `/gakko?pref=${encodeURIComponent(selected)}${st ? `&school=${encodeURIComponent(st)}` : ''}`
-      : '/gakko';
+  // 学校種チップは都道府県選択の前から出すグローバルな絞り込み（下記参照）。選択済みの
+  // 都道府県の一覧にもそのまま適用する。
+  const schools = selectedSchoolType
+    ? schoolsInPref.filter((s) => s.schoolType === selectedSchoolType)
+    : schoolsInPref;
+  const schoolTypeQuery = (st: SchoolTypeFilter | null) => (st ? `school=${encodeURIComponent(st)}` : '');
+  const schoolTypeHref = (st: SchoolTypeFilter | null) => {
+    const params = [selected ? `pref=${encodeURIComponent(selected)}` : '', schoolTypeQuery(st)].filter(Boolean);
+    return params.length ? `/gakko?${params.join('&')}` : '/gakko';
+  };
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
   const coverage = selected ? getFreeSchoolCoverage(selected) : undefined;
   const shienCenters = selected ? EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === selected) : [];
@@ -236,7 +233,10 @@ export default async function GakkoPage({
           : type === 'josei'
             ? 'type=josei&'
             : '';
-  const prefHref = (p: string) => `/gakko?${typeQueryPrefix}pref=${encodeURIComponent(p)}`;
+  const prefHref = (p: string) => {
+    const schoolParam = type === 'gakko' ? schoolTypeQuery(selectedSchoolType) : '';
+    return `/gakko?${typeQueryPrefix}pref=${encodeURIComponent(p)}${schoolParam ? `&${schoolParam}` : ''}`;
+  };
 
   return (
     <div className="app-shell">
@@ -322,6 +322,35 @@ export default async function GakkoPage({
               </div>
               <div className="muted" style={{ fontSize: 12 }}>
                 入学には学区・転校手続き・面談など各校ごとの条件があります。気になる学校が見つかったら、まずは学校または教育委員会に直接お問い合わせください。
+              </div>
+            </div>
+          )}
+
+          {/* 学校種（小学校・中学校・高等学校・小中一貫）の絞り込みチップ。都道府県を
+              選ぶ前から「小学校だけ見たい」人もいそう、との指摘を受け、都道府県未選択の
+              状態からでも選べるようにした（2026-10-18）。選んだ学校種は都道府県チップの
+              件数表示や、都道府県選択後の一覧にもそのまま引き継がれる。 */}
+          {type === 'gakko' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>学校種で絞り込む</div>
+              <div className="chip-row chip-row-wrap">
+                <Link
+                  href={schoolTypeHref(null)}
+                  className={`chip chip-tag${!selectedSchoolType ? ' active' : ''}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  すべて（{MANABI_TAYOUKA_GAKKO.length}）
+                </Link>
+                {SCHOOL_TYPES.map((st) => (
+                  <Link
+                    key={st}
+                    href={schoolTypeHref(st)}
+                    className={`chip chip-tag${selectedSchoolType === st ? ' active' : ''}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    {st}（{MANABI_TAYOUKA_GAKKO.filter((s) => s.schoolType === st).length}）
+                  </Link>
+                ))}
               </div>
             </div>
           )}
@@ -413,33 +442,17 @@ export default async function GakkoPage({
           {selected && type === 'gakko' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>{selected}の学びの多様化学校</div>
-              {/* 学校種（小学校・中学校・高等学校・小中一貫）が複数混在する都道府県だけ
-                  絞り込みチップを出す（「小学校から高校まである？分けた方がいい」との
-                  指摘を受けて追加、2026-10-18）。 */}
-              {schoolTypeCounts.length > 1 && (
-                <div className="chip-row chip-row-wrap" style={{ margin: '0 0 2px' }}>
-                  <Link
-                    href={schoolTypeHref(null)}
-                    className={`chip chip-tag${!selectedSchoolType ? ' active' : ''}`}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    すべて（{schoolsInPref.length}）
-                  </Link>
-                  {schoolTypeCounts.map(({ schoolType, count }) => (
-                    <Link
-                      key={schoolType}
-                      href={schoolTypeHref(schoolType)}
-                      className={`chip chip-tag${selectedSchoolType === schoolType ? ' active' : ''}`}
-                      style={{ textDecoration: 'none' }}
-                    >
-                      {schoolType}（{count}）
-                    </Link>
-                  ))}
-                </div>
-              )}
               {schools.length === 0 ? (
                 <div className="muted">
-                  現時点で{selected}には指定校がありません。指定校は年々増えているため、今後追加される可能性があります。下記の文部科学省の最新一覧もあわせてご確認ください。
+                  {schoolsInPref.length > 0 && selectedSchoolType ? (
+                    <>
+                      {selected}の学びの多様化学校に「{selectedSchoolType}」はありません。
+                      <Link href={schoolTypeHref(null)} style={{ textDecoration: 'underline' }}>絞り込みを解除する</Link>
+                      と他の学校種が見られます。
+                    </>
+                  ) : (
+                    <>現時点で{selected}には指定校がありません。指定校は年々増えているため、今後追加される可能性があります。下記の文部科学省の最新一覧もあわせてご確認ください。</>
+                  )}
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
@@ -679,7 +692,7 @@ export default async function GakkoPage({
               {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
                   （2026-10-18）。チップ自体はクローラーが各都道府県ページを個別に
                   たどれるリンクとして残している。 */}
-              <PrefectureSelect selected={selected} type={type} />
+              <PrefectureSelect selected={selected} type={type} schoolType={selectedSchoolType} />
               <div className="chip-row chip-row-wrap">
                 {/* フリースクールタブでは、都道府県の一覧の中に「オンライン」も選択肢として
                     並べておく。地域で探している途中でそのまま切り替えられるように
@@ -703,7 +716,7 @@ export default async function GakkoPage({
                           ? tsushinCount(p)
                           : type === 'josei'
                             ? joseiCount(p)
-                            : gakkoCount(p);
+                            : gakkoCount(p, selectedSchoolType);
                   return (
                     <Link
                       key={p}
