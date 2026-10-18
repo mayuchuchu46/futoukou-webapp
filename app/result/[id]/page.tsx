@@ -314,6 +314,22 @@ export default async function ResultPage({
   // コンポーネント化したAskAgainBlock（2026-10-16）を使う。
   const askAgainBlock = <AskAgainBlock authorId={item.author_id} />;
 
+  // 「進路・勉強」「学校との関係」の相談には、学びの多様化学校（旧：不登校特例校）の
+  // 都道府県別一覧ページ（/gakko）への案内を出す（2026-10-18追加）。相談内容からは
+  // 居住都道府県が分からないため、都道府県選択は/gakko側で利用者自身に行ってもらう
+  // 最小実装（Supabaseにテーブルは作らず、文科省公表データを静的に保持）。
+  const gakkoBlock = (item.category === 'course' || item.category === 'school') && (
+    <Link href="/gakko" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>「学びの多様化学校」という選択肢もあります</div>
+      <div className="qtext">
+        不登校の子どもに合わせた特別な教育課程を組める学校が、文部科学省の指定で全国に84校あります。お住まいの都道府県の指定校を調べられます。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        都道府県から探す ›
+      </div>
+    </Link>
+  );
+
   // lib/prompt.tsの安全上書き（希死念慮・自傷等を検知した場合、具体的な助言をせず
   // ホットライン案内のみを返す指示）が発動した回答かどうか。consultations.crisis_detected
   // （app/api/consult/route.tsで保存）を正とし、その列の追加前に投稿された古い行のために
@@ -423,6 +439,7 @@ export default async function ResultPage({
             <Suspense fallback={null}>
               <ResultClient id={id} initialItem={item} />
             </Suspense>
+            {gakkoBlock}
             {shareButtons}
             {askAgainBlock}
           </>
@@ -468,6 +485,8 @@ export default async function ResultPage({
             {!isCrisis && (
               <FollowupThread parentId={item.id} authorId={item.author_id} initialFollowups={followups} />
             )}
+
+            {!isCrisis && gakkoBlock}
 
             {isCrisis ? (
               // 希死念慮・自傷等の安全上書きが発動した相談専用の案内カード。以前は回答カード下の
