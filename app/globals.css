@@ -316,6 +316,10 @@ button:active,
   border-radius: 999px;
   line-height: 1.4;
 }
+/* PC用に複製した.supervision-note-pc（補足文の横に表示）は、スマホでは単独行の
+   本体（.supervision-note-mobile）と二重に表示しないよう初期状態では隠し、
+   PC幅（960px以上）でだけ表示に切り替える（2026-10-18）。 */
+.supervision-note-pc { display: none; }
 
 h2.pagetitle {
   font-family: "M PLUS Rounded 1c", sans-serif;
@@ -707,15 +711,18 @@ h2.pagetitle {
   .page-with-sidebar > .page-main { flex: 1; min-width: 0; }
 
   /* 「不登校のご家庭に、次の一手を。」（hero-catch）の隣に「『どうしたらいい？』に
-     AIと専門家が回答＆伴走」（hero-sub）を並べて表示する（2026-10-18、PCでの指摘を
+     AIと専門家が回答＆伴走」（hero-sub）、さらにその横に「専門家監修：準備中…」
+     バッジ（.supervision-note-pc）を並べて表示する（2026-10-18、PCでの指摘を
      受けて）。.header-leftをflex-wrapにし、ロゴ行（.header-brand-row）だけ
-     flex-basis:100%で単独の行にすることで、残るhero-catch・hero-subの2つだけが
-     その下で横並びになる。header-right（つらいときはこちら等）やsupervision-note
-     （専門家監修バッジ）はここでは変更しない。 */
+     flex-basis:100%で単独の行にすることで、残るhero-catch・hero-sub・
+     supervision-note-pcがその下で横並びになる。header-right（つらいときは
+     こちら等）はここでは変更しない。
+     supervision-note-pcはスマホ用の本体（.supervision-note-mobile、header-row
+     の外に単独行で表示）と入れ替えで出し分ける。 */
   .header-left {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
+    align-items: center;
     column-gap: 10px;
     row-gap: 2px;
   }
@@ -723,6 +730,8 @@ h2.pagetitle {
   .header-brand-row {
     flex: 1 0 100%;
   }
+  .supervision-note-pc { display: inline-flex; }
+  .supervision-note-mobile { display: none; }
   .hero-catch {
     max-width: none;
   }
