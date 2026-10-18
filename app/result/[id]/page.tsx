@@ -101,11 +101,12 @@ export async function generateMetadata({
   const questionTitle = item.question.replace(/\s+/g, ' ').trim().slice(0, 48);
   const title = `${questionTitle}｜${cat}の相談 - ${SITE_NAME}`;
 
-  const descSource =
-    item.request_type === 'ai' && item.answer
-      ? item.answer
-      : item.question;
-  const description = descSource.replace(/\s+/g, ' ').trim().slice(0, 100);
+  // 以前はAI回答のあるページだけdescSourceに回答本文を使っていたが、Xでシェアした際の
+  // カードプレビュー（og:description）にまで回答の中身が出てしまい、「シェアボタンは
+  // 回答ではなく質問をシェアするパターンにしたい（答えは見せず続きを気にさせたい）」
+  // というこのページ自体の設計意図（下のshareButtonのtext組み立て部分のコメント参照）と
+  // 食い違っていた（2026-10-19、指摘を受けて修正）。常に質問文を使うようにする。
+  const description = item.question.replace(/\s+/g, ' ').trim().slice(0, 100);
 
   const url = `${SITE_URL}/result/${item.id}`;
 
@@ -227,7 +228,11 @@ export default async function ResultPage({
       rel="noopener noreferrer"
     >
       <span className="share-btn-icon">𝕏</span>
-      この回答をシェア
+      {/* 回答本文は見せず、質問（相談内容）だけを見せて続きを気にさせる作りなので、
+          ボタンの文言も「回答をシェア」ではなく「相談をシェア」が実態に合っている
+          （2026-10-19、「回答シェアじゃなくて相談をシェアってことになるね」との
+          指摘を受けて変更）。 */}
+      この相談をシェア
     </a>
   );
 
