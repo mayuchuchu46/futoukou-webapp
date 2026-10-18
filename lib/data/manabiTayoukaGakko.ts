@@ -12,10 +12,14 @@
 // 調査しても公式情報源が見つからず、null のまま。前者は存在自体の確認ができず、
 // 後者は運営法人（学校法人雙星舎）がウェブ上にほぼ情報を持たないため。
 //
-// note（84校中59校で追加、2026-10-18）は、学校紹介ページの説明文をテンプレ的な一文だけで
+// note（84校中77校で追加、2026-10-18）は、学校紹介ページの説明文をテンプレ的な一文だけで
 // 終わらせず、各校固有の情報を増やすため追加。運営法人名・愛称・設置場所（◯◯内に
-// 設置、等）・開校年月・改称前の名称など、Web調査で実際に確認できた事実のみを記載。
-// 推測や未確認の関連（学校間の親子関係等）は含めていない。
+// 設置、等）・開校年月・改称前の名称・開校の経緯・特色のある時間割やカリキュラム・
+// 定員など、Web調査（公式サイト・行政資料・ニュース記事等の一次情報）で実際に
+// 確認できた事実のみを記載。推測や未確認の関連（学校間の親子関係等）は含めていない。
+// 残り7校（no.31, 44, 57, 65, 79, 83, 84）は、複数回調査しても固有の情報源が
+// 見つからず、既存の住所・設置形態などの基本情報のみ。令和8年指定など開校が
+// 新しい学校が多く、Web上の情報が今後増える可能性がある。
 export type ManabiTayoukaGakko = {
   no: number;
   /** 設置形態：本校型・分校型・分教室型・コース指定型 */
@@ -217,7 +221,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和5年",
     "officialUrl": "https://www.city.sendai.jp/shogakuchose/kurashi/manabu/kyoiku/inkai/kakushu/shinse/roripoppu.html",
     "address": null,
-    "note": null
+    "note": "旧仙台市立坪沼小学校の校舎を活用して開校する私立小学校で、「個別最適な学習」を基本に、1〜3年生・4〜6年生でそれぞれ複式学級を編成する点が特徴です。地域住民が学校運営に関わるコミュニティスクールの仕組みを取り入れる構想もあります。"
   },
   {
     "no": 14,
@@ -259,7 +263,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和6年",
     "officialUrl": null,
     "address": "大阪市浪速区日本橋東3-1-23(旧大阪市立日東小学校)",
-    "note": null
+    "note": "通常の中学校と異なり、昼間部に加えて夜間学級(中学校夜間学級)も併設される点が特徴です。大阪市会で2023年2月22日に設置条例の改正案が可決され、2024年4月に開校しました。"
   },
   {
     "no": 17,
@@ -273,7 +277,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和6年",
     "officialUrl": "https://tyu.oita-ed.jp/kusu/tayouka/",
     "address": "大分県玖珠郡玖珠町森3889",
-    "note": null
+    "note": "公立の小中一貫校(義務教育学校)型の学びの多様化学校としては九州・沖縄で初めての開校で、町の予算がない中、住民からの約870万円の寄付と有志によるボランティア工事で廃校を改修して2024年4月に開校しました。"
   },
   {
     "no": 18,
@@ -301,7 +305,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": "https://www.pref.mie.lg.jp/TOPICS/m0045300148.htm",
     "address": "三重県津市柳山津興1239(県立みえ夢学園高等学校敷地内)",
-    "note": null
+    "note": "夜間中学校を併設する点が特徴で、通常の教育課程を圧縮しつつ「ワールドスタディタイム」「よつばタイム」「パフォーマンスタイム」という独自の時間を設け、教科横断的な学習を行います。2025年3月19日に文部科学大臣から学びの多様化学校の指定を受けました。"
   },
   {
     "no": 20,
@@ -329,7 +333,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": null,
     "address": "福岡市早良区百道3丁目10番1号(福岡市教育センター新館2階)",
-    "note": null
+    "note": "全校生徒は約100名規模で、授業は朝9時30分開始・1日4時間という通常より短い時間割で運営されます。校舎は福岡市教育センター新館2階にあります。"
   },
   {
     "no": 22,
@@ -371,7 +375,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和8年",
     "officialUrl": null,
     "address": "埼玉県さいたま市浦和区岸町6-13-15(さいたま市立教育研究所内・岸町キャンパス)",
-    "note": null
+    "note": "本校(さいたま市立教育研究所内)に加えて市内6か所のキャンパスを持ち、児童生徒は状態に応じてキャンパスへの登校かオンライン参加を選べます。独自教科「未来工房」では、全員必修の内容と興味に応じて選べる選択の内容を組み合わせています。"
   },
   {
     "no": 25,
@@ -399,7 +403,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和8年",
     "officialUrl": null,
     "address": "東京都世田谷区北沢4-32-20",
-    "note": null
+    "note": "各学年20名程度を定員とし、総授業時間数は840時間を予定しています。世田谷区では2022年開設の分教室「ねいろ」に続く2校目の学びの多様化学校で、ねいろとは異なり学校専用の校舎・体育館・校庭を備える「本校型」として新設されます。"
   },
   {
     "no": 27,
@@ -427,7 +431,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和8年",
     "officialUrl": "https://nisshin-jh.aichi-c.ed.jp",
     "address": "愛知県日進市米野木町三ヶ峯4-18",
-    "note": null
+    "note": "既存の愛知県立日進高等学校に附属する中高一貫型で、入学の際に適性検査は行わず、1学年1学級・定員40人までという小規模編成です。制服の規定はなく私服も可とされ、授業は午前2時間・午後2時間(9時40分〜15時25分)を基本とします。"
   },
   {
     "no": 29,
@@ -511,7 +515,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和6年",
     "officialUrl": "https://www.e-net21.city.omuta.fukuoka.jp/hoshizora/index.html",
     "address": "福岡県大牟田市大正町5丁目4-16",
-    "note": null
+    "note": "ほしぞら分校は、大牟田市立松原中学校の校舎内に設置された夜間中学としての機能も担っており、「誰一人取り残さない」を理念に2024年4月に開校しました。校名は公募（ネーミングコンテスト）によって選ばれたものです。"
   },
   {
     "no": 35,
@@ -623,7 +627,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和8年",
     "officialUrl": "https://www2.osaka-c.ed.jp/partner/folder_1/post-78",
     "address": null,
-    "note": null
+    "note": "窓明分校は2026年4月に開校した全日制・単位制の学校で、大阪府教育センターと母体校（大阪府教育センター附属高等学校）の両方で授業が行われます。対象は府立高校に在籍する1・2年生で、不登校または不登校傾向のある生徒を4月・8月の年2回、転入学の形で1学年あたり10名程度受け入れています。"
   },
   {
     "no": 43,
@@ -679,7 +683,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和3年",
     "officialUrl": "https://www.city.ota.tokyo.jp/kyouiku/gakukyou/futoukou-nayami.html",
     "address": "東京都大田区池上3-27-6（学びの多様化学校みらい学園中等部）",
-    "note": null
+    "note": "みらい学園中等部は、2025年4月21日に当時の文部科学大臣が視察に訪れました。学校側は「選択肢をたくさん作り、押し付けない」ことや生徒一人ひとりのペースに教員が合わせることを教育方針として説明しており、大臣は生徒が積極的に発言し活発に授業へ取り組む様子に感銘を受けたと紹介されています。"
   },
   {
     "no": 47,
@@ -777,7 +781,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和6年",
     "officialUrl": "https://www.city.ota.tokyo.jp/kyouiku/gakukyou/futoukou-nayami.html",
     "address": "東京都大田区大森東4-24-6（みらい学園初等部）",
-    "note": null
+    "note": "みらい学園初等部は中等部とともに大田区の学びの多様化学校（分教室型）で、区は現在、両部門を収容する新校舎の整備を進めており、そこに区全体の不登校対策の拠点となる（仮称）不登校対策支援センターの機能も合わせて設ける計画です。"
   },
   {
     "no": 54,
@@ -1085,7 +1089,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "平成20年",
     "officialUrl": "https://www.n-gaku.jp/",
     "address": "東京都国立市富士見台2-36-2",
-    "note": null
+    "note": "ライフデザインコースは、NHK学園高等学校が全国8会場で開講している少人数制のコースで、3年間の積み上げを前提としたカリキュラムが組まれています。外出や大人数の教室が苦手な生徒などを想定しており、学校側は年度途中でのコース変更には事前相談を求めています。なお、NHK学園高等学校自体は日本最初の広域通信制高校として60年以上の歴史を持つ学校法人NHK学園が運営しています。"
   },
   {
     "no": 76,
@@ -1099,7 +1103,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和6年",
     "officialUrl": "https://www.seika-h.ed.jp/",
     "address": "大阪府堺市中区辻之1517",
-    "note": null
+    "note": "フリーアカデミー（FA）コースは、精華高等学校の普通科の中で「不登校者対象」と明記されているコースで、他のコースとは異なりオンライン授業を毎日実施しています（病気・インフルエンザ等による学校閉鎖時の他コースのオンライン切替対象にはFAコースは含まれません）。"
   },
   {
     "no": 77,
@@ -1113,7 +1117,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和6年",
     "officialUrl": "https://www.mimasaka.ed.jp/",
     "address": "岡山県津山市山北500",
-    "note": null
+    "note": "Bloomコースは、心因的な理由で登校できない生徒や教室に入りづらい生徒のために設けられた、中国地方で初めての「学びの多様化学校（いわゆる不登校特例校）」のコースです。朝の始業時間を1時間遅らせたり、自宅や別室で受けられるオンライン授業を用意するなど配慮がある一方、週1日は校外の奥津キャンパスなどで体験学習・探究型の活動を行い、2年次への進級時には他のコースへ移ることもできます。"
   },
   {
     "no": 78,
@@ -1155,7 +1159,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": "https://www.f-kaisei.ed.jp/senior/",
     "address": "福岡県福岡市南区老司5-29-3",
-    "note": null
+    "note": "ブライトコースは「学び直し」を中心に基礎から学べるコースで、週30単位のゆとりあるカリキュラムの中、学習アプリ「スタディサプリ」を使った習熟度別の自学時間（PBPタイム）を設けています。登校が難しくなった場合は一部通信制で進級・卒業できる「ブライトプラス制度」が利用でき、2人担任制やスクールカウンセラー（2名）による面談など支援体制があり、募集定員は60名です。"
   },
   {
     "no": 81,
@@ -1169,7 +1173,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": "https://ogori.fku.ed.jp/",
     "address": null,
-    "note": null
+    "note": "みらい創造コースは文部科学大臣の指定を受けた「学びの多様化学校」で、始業を9時30分に遅らせて45分授業を行い、1学年20人×2クラスの少人数編成、ICTを活用した学習支援やリラックスルームの設置、コース専用の昇降口、服装の自由化など、不登校を経験した生徒に配慮した教育課程を組んでいます。中学校の学び直しを行う「ブリッジ科目」や自己理解・社会的スキルを育む「CR（キャリアリサーチ）」などの授業があり、入学定員は県内全域を対象に40人です。"
   },
   {
     "no": 82,
@@ -1183,7 +1187,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": "https://keisei-h.jp/",
     "address": "福岡県北九州市小倉北区皿山町15-1",
-    "note": null
+    "note": "至誠コースは2025年度に新設された、不登校を経験した生徒のための特別な教育課程を用意するコースです。"
   },
   {
     "no": 83,
