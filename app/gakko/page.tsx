@@ -76,7 +76,7 @@ const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
     tweetText:
       '不登校のお子さんがいるご家庭へ。文部科学省が指定する「学びの多様化学校」（旧：不登校特例校）を都道府県から探せます。フリースクールや助成金情報も。',
     ogImage: '/og-image-gakko.jpg',
-    heroBanner: { src: '/assets/gakko_hero_banner_v4.jpg', alt: '全国の学びの多様化学校一覧' },
+    heroBanner: { src: '/assets/gakko_hero_banner_v5.jpg', alt: '全国の学びの多様化学校一覧' },
   },
   free: {
     title: `フリースクール（地域）を都道府県から探す｜${SITE_NAME}`,
