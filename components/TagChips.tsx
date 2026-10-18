@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { getThemeDisplayLabel } from '@/lib/searchTags';
 
 // 他のテーマへの回遊導線として使うタグ一覧。
 // lib/searchTags.ts の候補語のうち、実際の投稿に含まれているものだけを
@@ -45,7 +46,11 @@ export default function TagChips({
             className="chip chip-tag"
             style={{ textDecoration: 'none', display: 'inline-block' }}
           >
-            #{t.word}（{t.count}）
+            {/* t.word自体は/api/consultations/tag-countsが返すcanonical word
+                （例：不登校特例校）。画面表示だけgetThemeDisplayLabelで置き換える
+                （2026-10-19、「#不登校特例校というタグ、これは違うよね」との
+                指摘を受けて修正。遷移先の/?q=クエリはcanonical wordのままにする）。 */}
+            #{getThemeDisplayLabel(t.word)}（{t.count}）
           </Link>
         ))}
       </div>

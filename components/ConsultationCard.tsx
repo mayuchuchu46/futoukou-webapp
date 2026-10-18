@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { getUid } from '@/lib/uid';
-import { SEARCH_TAG_CANDIDATES, matchesThemeText } from '@/lib/searchTags';
+import { SEARCH_TAG_CANDIDATES, matchesThemeText, getThemeDisplayLabel } from '@/lib/searchTags';
 import { relativeTimeLabel, isRecentPost } from '@/lib/relativeTime';
 import EyeIcon from './EyeIcon';
 import ReportButton from './ReportButton';
@@ -129,7 +129,12 @@ export default function ConsultationCard({
                 cursor: 'pointer',
               }}
             >
-              #{word}
+              {/* 検索・遷移用のcanonical word（例：不登校特例校）と画面表示名
+                  （学びの多様化学校）を分けるため、getThemeDisplayLabelを通す
+                  （2026-10-19、「#不登校特例校というタグ、これは違うよね」との
+                  指摘を受けて修正）。goToTagに渡すword自体はcanonicalのまま
+                  （/?q=のクエリ・集計と合わせる必要があるため）。 */}
+              #{getThemeDisplayLabel(word)}
             </button>
           ))}
         </div>

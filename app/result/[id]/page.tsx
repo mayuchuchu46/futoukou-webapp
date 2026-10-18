@@ -23,7 +23,7 @@ import SaveConsultationPrompt from './SaveConsultationPrompt';
 import FollowupThread from './FollowupThread';
 import AskAgainBlock from './AskAgainBlock';
 import TagChips from '@/components/TagChips';
-import { SEARCH_TAG_CANDIDATES, matchesThemeText } from '@/lib/searchTags';
+import { SEARCH_TAG_CANDIDATES, matchesThemeText, getThemeDisplayLabel } from '@/lib/searchTags';
 import { findMentionedSchool } from '@/lib/schoolFacts';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
@@ -643,7 +643,12 @@ export default async function ResultPage({
                 className="chip chip-tag"
                 style={{ textDecoration: 'none', display: 'inline-block' }}
               >
-                #{w}
+                {/* 検索・URL用のcanonical word（例：不登校特例校）と画面表示名
+                    （学びの多様化学校）を分けるため、getThemeDisplayLabelを通す
+                    （2026-10-19、「#不登校特例校というタグ、これは違うよね」との
+                    指摘を受けて修正。/gakko/RelatedConsultations.tsxでは既に
+                    この置き換えをしていたが、ここだけ生の語を出していた）。 */}
+                #{getThemeDisplayLabel(w)}
               </Link>
             ))}
           </div>
