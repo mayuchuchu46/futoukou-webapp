@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/gakko`,
     images: [
       {
-        url: '/og-image-gakko.png',
+        url: '/og-image-gakko.jpg',
         width: 1200,
         height: 630,
         alt: GAKKO_TITLE,
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: GAKKO_TITLE,
     description: GAKKO_DESCRIPTION,
-    images: ['/og-image-gakko.png'],
+    images: ['/og-image-gakko.jpg'],
   },
 };
 
