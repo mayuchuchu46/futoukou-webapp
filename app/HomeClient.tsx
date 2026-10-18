@@ -316,12 +316,12 @@ export default function HomeClient({
             <Link href="/theme" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
               テーマから探す・不登校お悩み辞典を見る →
             </Link>
-            {/* /gakko（学びの多様化学校の都道府県別一覧）。最初は「すべて」表示でも常に
-                出るカードだったが、「TOPは新着投稿をどんどん目にさせたい」との方針により、
-                新着フィードを見ている状態（カテゴリ「すべて」）では出さず、「進路・勉強」
-                「学校との関係」に絞り込んだ時だけ出すよう変更（2026-10-18）。この2カテゴリは
-                相談結果ページ・お悩み辞典ページでも同じ条件でgakkoの案内を出している。 */}
-            {(category === 'course' || category === 'school') && (
+            {/* /gakko（学びの多様化学校の都道府県別一覧）。「進路・勉強」「学校との関係」に
+                絞り込んだ時はアイコン付きカードで強めに出すが、それ以外（「すべて」の新着
+                フィード含む）では、新着を圧迫しないテキストリンク1行だけに弱める。
+                「スマホからだと導線が弱い」との指摘を受け、「すべて」表示でも完全に
+                消すのではなく、/theme同様の軽いリンクとして残すことにした（2026-10-18）。 */}
+            {category === 'course' || category === 'school' ? (
               <Link
                 href="/gakko"
                 className="card home-gakko-link"
@@ -348,6 +348,10 @@ export default function HomeClient({
                   <div className="muted" style={{ fontSize: 12 }}>都道府県別に指定校（旧：不登校特例校）を調べられます</div>
                 </div>
                 <div className="muted">›</div>
+              </Link>
+            ) : (
+              <Link href="/gakko" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
+                学びの多様化学校（旧：不登校特例校）を探す →
               </Link>
             )}
 
