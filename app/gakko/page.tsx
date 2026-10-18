@@ -17,6 +17,7 @@ import {
 } from '@/lib/data/correspondenceHighSchools';
 import { FREESCHOOL_SUBSIDIES, getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
 import { PREFECTURES } from '@/lib/data/prefectures';
+import { getThemeDictionaryData } from '@/lib/themeSummary';
 import PrefectureSelect from './PrefectureSelect';
 
 // 「学びの多様化学校」（旧：不登校特例校）と「フリースクール（民間施設）」の
@@ -33,6 +34,17 @@ import PrefectureSelect from './PrefectureSelect';
 // Supabaseにテーブルを作らずアプリ内の静的データとして持つ（「時間をかけたくない」との
 // 方針に合わせた最小実装）。
 export type GakkoType = 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' | 'josei';
+
+// 各タブに対応する、lib/searchTags.tsのテーマ語（実際の相談投稿を関連付けて表示する
+// ために使う）。「このページに学びの多様化学校に関する相談の投稿も載っているといい」
+// との指摘を受けて追加（2026-10-18）。オンラインフリースクール・助成金はこれに当たる
+// テーマ語が無いため対象外（該当する語を増やしたくなったらlib/searchTags.tsに追加）。
+const TAB_THEME_WORD: Partial<Record<GakkoType, string>> = {
+  gakko: '不登校特例校',
+  free: 'フリースクール',
+  shien: '教育支援センター',
+  tsushin: '通信制高校',
+};
 
 // URLのtype=クエリ文字列から表示タブを判定する。generateMetadata（OGP等）と
 // ページ本体の両方で同じ判定を使うため共通化している（2026-10-18）。
@@ -199,6 +211,11 @@ export default async function GakkoPage({
   // 利用料助成は居住地（自治体）に紐づくため、学びの多様化学校等と同様に都道府県で
   // 絞り込める形にした。
   const type = normalizeGakkoType(rawType);
+  // このタブに関連する実際の相談投稿（lib/themeSummary.ts、/dictionary/theme/[word]と
+  // 同じ仕組み）。「学びの多様化学校に関する相談の投稿も載っているといい」との指摘を
+  // 受けて追加（2026-10-18）。対応するテーマ語が無いタブ（online・josei）ではundefined。
+  const themeWord = TAB_THEME_WORD[type];
+  const themeData = themeWord ? await getThemeDictionaryData(themeWord) : null;
   const selected = pref && PREFECTURES.includes(pref) ? pref : null;
   const selectedSchoolType: SchoolTypeFilter | null =
     rawSchoolType && (SCHOOL_TYPES as readonly string[]).includes(rawSchoolType)
@@ -793,6 +810,35 @@ export default async function GakkoPage({
               <div className="qtext">
                 フリースクール等の利用料助成には文部科学省の全国統一リストがなく、実施する都道府県・市区町村も毎年変わる可能性があります。このページのデータは、2026年10月時点でWeb検索により確認できた、家庭（保護者）が直接利用料の助成を受けられる制度（{FREESCHOOL_SUBSIDIES.length}件）のみを掲載しており、フリースクール運営者向けの運営費補助等は含めていません。掲載の有無にかかわらず、最新の制度内容・対象条件・金額は必ずお住まいの自治体に直接ご確認ください。
               </div>
+            </div>
+          )}
+
+          {/* このタブに関連する実際の相談投稿。/dictionary/theme/[word]と同じデータを
+              使い、同じテーマの相談を実際にしている他の保護者がいることが伝わるように
+              した上で、そのテーマ辞典ページ・相談するページへつなげる（2026-10-18、
+              「学びの多様化学校に関する相談の投稿も載っているといい」との指摘を受けて
+              追加）。該当するテーマ語が無いタブ（online・josei）や、まだ投稿が無い
+              テーマでは表示しない。 */}
+          {themeWord && themeData && themeData.count > 0 && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>
+                「{themeWord}」に関する実際の相談（{themeData.count}件）
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                {themeData.consultations.slice(0, 5).map((c) => (
+                  <Link
+                    key={c.id}
+                    href={`/result/${c.id}`}
+                    className="qtext"
+                    style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 8 }}
+                  >
+                    {c.question.slice(0, 60)}{c.question.length > 60 ? '…' : ''}
+                  </Link>
+                ))}
+              </div>
+              <Link href={`/dictionary/theme/${encodeURIComponent(themeWord)}`} className="btn-secondary">
+                「{themeWord}」の相談をもっと見る
+              </Link>
             </div>
           )}
 
