@@ -7,6 +7,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { FREE_SCHOOL_COVERAGE, getFreeSchoolCoverage } from '@/lib/data/freeschoolCoverage';
+import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import PrefectureSelect from './PrefectureSelect';
 
@@ -176,6 +177,38 @@ export default async function GakkoPage({
                   </a>
                 </>
               )}
+            </div>
+          )}
+
+          {/* オンラインフリースクールは居住地を問わず利用できるため、都道府県の選択に
+              関係なく常に案内する（2026-10-18追加）。特に地域のリストが見つからない
+              都道府県を選んだ人にとっての代替選択肢になる。 */}
+          {type === 'free' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>オンラインフリースクール（全国どこからでも利用可）</div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                お住まいの地域にフリースクールが見つからない場合でも、オンラインで利用できる選択肢があります。
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                {ONLINE_FREE_SCHOOLS.map((s) => (
+                  <a
+                    key={s.name}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                      {s.operator}・対象：{s.ageRange}
+                    </div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>
+                  </a>
+                ))}
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                ※ このうち5件は京都市教育委員会が「オンライン」区分として公開している情報をもとに、残り2件（SOZOW SCHOOL、すらら）は運営会社の公式サイト・発表に基づき掲載しています。教育委員会・学校等が認証・あっせんするものではなく、利用前には各団体へ直接お問い合わせください。
+              </div>
             </div>
           )}
 
