@@ -15,6 +15,7 @@ import {
   CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL,
   CORRESPONDENCE_HIGH_SCHOOL_AS_OF,
 } from '@/lib/data/correspondenceHighSchools';
+import { FREESCHOOL_SUBSIDIES, getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import PrefectureSelect from './PrefectureSelect';
 
@@ -54,6 +55,10 @@ function tsushinCount(pref: string) {
   return CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === pref).length;
 }
 
+function joseiCount(pref: string) {
+  return FREESCHOOL_SUBSIDIES.filter((s) => s.prefecture === pref).length;
+}
+
 export default async function GakkoPage({
   searchParams,
 }: {
@@ -67,7 +72,11 @@ export default async function GakkoPage({
   // として追加。さらに同日、広域通信制高校（私立中心）を5つめのタブ（tsushin）として
   // 追加した。通信制高校は「広域」＝居住地を問わず入学できるが、本校所在地の都道府県で
   // も絞り込めるようにしている（未選択時は全115校を表示）。
-  const type: 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' =
+  // 同日、「助成金情報もみんな知りたいよね」との指摘を受け、フリースクール等の利用料
+  // 助成（自治体ごと）・就学支援金（国の制度）の情報を6つめのタブ（josei）として追加。
+  // 利用料助成は居住地（自治体）に紐づくため、学びの多様化学校等と同様に都道府県で
+  // 絞り込める形にした。
+  const type: 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' | 'josei' =
     rawType === 'free'
       ? 'free'
       : rawType === 'online'
@@ -76,7 +85,9 @@ export default async function GakkoPage({
           ? 'shien'
           : rawType === 'tsushin'
             ? 'tsushin'
-            : 'gakko';
+            : rawType === 'josei'
+              ? 'josei'
+              : 'gakko';
   const selected = pref && PREFECTURES.includes(pref) ? pref : null;
   const schools = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
@@ -86,8 +97,17 @@ export default async function GakkoPage({
   const tsushinSchools = selected
     ? CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === selected)
     : CORRESPONDENCE_HIGH_SCHOOLS;
+  const joseiSubsidies = selected ? getFreeschoolSubsidiesByPrefecture(selected) : [];
   const typeQueryPrefix =
-    type === 'free' ? 'type=free&' : type === 'shien' ? 'type=shien&' : type === 'tsushin' ? 'type=tsushin&' : '';
+    type === 'free'
+      ? 'type=free&'
+      : type === 'shien'
+        ? 'type=shien&'
+        : type === 'tsushin'
+          ? 'type=tsushin&'
+          : type === 'josei'
+            ? 'type=josei&'
+            : '';
   const prefHref = (p: string) => `/gakko?${typeQueryPrefix}pref=${encodeURIComponent(p)}`;
 
   return (
@@ -124,6 +144,13 @@ export default async function GakkoPage({
               style={{ textDecoration: 'none' }}
             >
               教育支援センター
+            </Link>
+            <Link
+              href={selected ? `/gakko?type=josei&pref=${encodeURIComponent(selected)}` : '/gakko?type=josei'}
+              className={`chip chip-tag${type === 'josei' ? ' active' : ''}`}
+              style={{ textDecoration: 'none' }}
+            >
+              助成金・支援制度
             </Link>
           </div>
           <div className="muted" style={{ fontSize: 11, margin: '0 0 2px', fontWeight: 700 }}>全国どこからでも選べる</div>
@@ -203,6 +230,36 @@ export default async function GakkoPage({
               <div className="muted" style={{ fontSize: 12 }}>
                 学費・カリキュラム・通学（キャンパス／サポート校）の有無は学校ごとに大きく異なります。このリストには個別のキャンパス所在地や公式サイトURLは含まれていないため、気になる学校が見つかったら学校名で検索し、公式サイトで必ず確認してください。
               </div>
+            </div>
+          )}
+
+          {type === 'josei' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>助成金・支援制度とは</div>
+              <div className="qtext">
+                フリースクール等の利用料は原則自己負担ですが、国の「高等学校等就学支援金」（通信制高校等が対象）のほか、一部の都道府県・市区町村では、フリースクール等の利用料の一部を助成する制度を独自に設けています。
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                利用料助成は自治体ごとに有無・条件・金額が大きく異なり、全国を網羅した公的な一覧も存在しません。下記はWeb検索で確認できた範囲の制度で、掲載が無い地域でも制度が存在する可能性があります。お住まいの市区町村教育委員会に直接ご確認ください。
+              </div>
+            </div>
+          )}
+
+          {type === 'josei' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>国の制度：高等学校等就学支援金</div>
+              <div className="qtext">
+                高校・通信制高校等に進学した場合、世帯の状況に応じて授業料の一部または全部を国が支援する全国統一の制度です。対象や支給額は入学した年度・学校の種類（公立／私立）によって仕組みが分かれており、ここで具体的な金額をお伝えすると古い情報になってしまう可能性があるため、詳しい内容は文部科学省の公式ページで直接ご確認ください。
+              </div>
+              <a
+                href="https://www.mext.go.jp/a_menu/shotou/mushouka/index.htm"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="muted"
+                style={{ fontSize: 12, textDecoration: 'underline' }}
+              >
+                文部科学省「高等学校等就学支援金制度」のページへ ›
+              </a>
             </div>
           )}
 
@@ -413,7 +470,43 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {(type === 'gakko' || type === 'free' || type === 'shien' || type === 'tsushin') && (
+          {selected && type === 'josei' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>{selected}の利用料助成制度</div>
+              {joseiSubsidies.length === 0 ? (
+                <div className="muted">
+                  {selected}については、Web検索で確認できる利用料助成制度が見つかりませんでした。制度が無いという意味ではなく、見つからなかったということです。お住まいの市区町村教育委員会に直接お問い合わせください。
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                  {joseiSubsidies.map((s, i) => (
+                    <div
+                      key={`${s.entity}-${s.name}-${i}`}
+                      style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                    >
+                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                        実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
+                      </div>
+                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
+                      {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>※ {s.note}</div>}
+                      <a
+                        href={s.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="muted"
+                        style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
+                      >
+                        出典を見る ›
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {(type === 'gakko' || type === 'free' || type === 'shien' || type === 'tsushin' || type === 'josei') && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
               {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
@@ -441,7 +534,9 @@ export default async function GakkoPage({
                         ? shienCount(p)
                         : type === 'tsushin'
                           ? tsushinCount(p)
-                          : gakkoCount(p);
+                          : type === 'josei'
+                            ? joseiCount(p)
+                            : gakkoCount(p);
                   return (
                     <Link
                       key={p}
@@ -515,10 +610,19 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {type === 'josei' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>この助成金情報について</div>
+              <div className="qtext">
+                フリースクール等の利用料助成には文部科学省の全国統一リストがなく、実施する都道府県・市区町村も毎年変わる可能性があります。このページのデータは、2026年10月時点でWeb検索により確認できた、家庭（保護者）が直接利用料の助成を受けられる制度（{FREESCHOOL_SUBSIDIES.length}件）のみを掲載しており、フリースクール運営者向けの運営費補助等は含めていません。掲載の有無にかかわらず、最新の制度内容・対象条件・金額は必ずお住まいの自治体に直接ご確認ください。
+              </div>
+            </div>
+          )}
+
           <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>進路のことを相談してみませんか？</div>
             <div className="qtext">
-              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
             </div>
             <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
               相談するページへ ›

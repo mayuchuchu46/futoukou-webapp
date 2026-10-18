@@ -61,6 +61,7 @@ export default function Header({
         { href: '/gakko?type=shien', label: '教育支援センター' },
         { href: '/gakko?type=online', label: 'オンラインフリースクール' },
         { href: '/gakko?type=tsushin', label: '通信制高校（広域）' },
+        { href: '/gakko?type=josei', label: '助成金・支援制度' },
       ],
     },
     {
