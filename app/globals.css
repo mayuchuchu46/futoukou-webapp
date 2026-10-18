@@ -696,28 +696,6 @@ h2.pagetitle {
   }
   .page-with-sidebar > .page-main { flex: 1; min-width: 0; }
 
-  /* ロゴ行（.header-brand-row）は従来通り単独の行のまま、その下に
-     「不登校のご家庭に、次の一手を。」（hero-catch）と「『どうしたらいい？』に
-     AIと専門家が回答＆伴走」（hero-sub）だけを1行に並べる（2026-10-18）。
-     .header-leftのモバイル用デフォルト（flex-direction: column）のままだと
-     flex-wrap:wrapが縦方向に効いてロゴ行が崩れるため、flex-directionを
-     明示的にrowへ上書きする（前回、これを書き忘れてロゴ位置が崩れた）。 */
-  .header-left {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    column-gap: 10px;
-    row-gap: 2px;
-  }
-  .header-back,
-  .header-brand-row {
-    flex: 1 0 100%;
-  }
-  .hero-catch {
-    max-width: none;
-  }
-
   /* PC向けグローバルメニュー本体。最初はヘッダー下部に独立した行として
      表示していたが、「上から吊り下げられてる感」があるとの指摘（2026-10-18）を
      受け、ロゴと同じ行（.header-brand-row）に移動した。 */
