@@ -44,6 +44,12 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: system-ui, -apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+  /* 「ページ上端で下に引っ張るとヘッダーの一部が消える」との報告（2026-10-18）への対策。
+     iOS Safariはページ最上部で下に引っ張ると、背景が見えるまでページ全体を伸び縮みさせる
+     「ラバーバンド」演出（オーバースクロール）を行うが、この際に一部要素が再描画されずに
+     消えたまま戻らないことがある既知の挙動。overscroll-behavior-yでこのバウンド演出自体を
+     止めることで、再描画漏れの引き金ごと無くす狙い。 */
+  overscroll-behavior-y: none;
 }
 
 h1, h2, h3, .answer-label {
