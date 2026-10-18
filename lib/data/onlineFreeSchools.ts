@@ -10,8 +10,19 @@
 // 「要件を満たす団体すべてを網羅したものではない」「京都市教育委員会が団体を認証・
 // あっせんするものではない」との注記がある。
 //
-// 後半2件（SOZOW SCHOOL、すらら）は政府・教育委員会の一覧には含まれておらず、
-// 運営会社自身の公式サイト・プレスリリースで確認した情報。sourceKindで区別する。
+// 後半のうちSOZOW SCHOOL、すららは政府・教育委員会の一覧には含まれておらず、
+// 運営会社自身の公式サイト・プレスリリースで確認した情報。
+//
+// NIJINアカデミーは、旭川市公式サイトの「不登校児童生徒の支援団体一覧（フリースクール等）」
+// （https://www.city.asahikawa.hokkaido.jp/kurashi/218/241/305/d082142.html 、2026年10月
+// 確認、最終更新2026年10月9日）に、オンラインの学校として掲載されている（旭川市内の施設
+// ではない）。同ページには「市の依頼に賛同した団体で、市内の全団体を網羅するものではない」
+// との注記がある。
+//
+// aini schoolは政府・教育委員会の一覧には含まれておらず、運営会社（株式会社ロコタビ）の
+// 公式サイトで確認した情報。
+//
+// sourceKindで出典の種類を区別する。
 export type OnlineFreeSchool = {
   name: string;
   operator: string;
@@ -73,6 +84,26 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '拠点は兵庫県西宮市だが、授業はオンライン中心。',
     sourceKind: 'government',
     sourceUrl: 'https://www.city.kyoto.lg.jp/kyoiku/cmsfiles/contents/0000332/332077/7_emi.pdf',
+  },
+  {
+    name: 'NIJINアカデミー',
+    operator: '株式会社NIJIN',
+    ageRange: '小学1年生～小学5年生、中学1年生～中学3年生',
+    contact: '070-4126-7703 / nijin.academy@gmail.com',
+    url: 'https://www.nijin.co.jp/academy',
+    note: 'メタバース（VR空間）上の「オンライン校舎」に通う形式。学習だけでなく子ども主体のイベント・サークル活動、専門スタッフによるメンタルサポートも行っている。',
+    sourceKind: 'government',
+    sourceUrl: 'https://www.city.asahikawa.hokkaido.jp/kurashi/218/241/305/d082142_d/fil/NIJIN.pdf',
+  },
+  {
+    name: 'aini school（アイニースクール）',
+    operator: '株式会社ロコタビ',
+    ageRange: '小学1年生～中学3年生',
+    contact: '公式サイトのLINE相談（平日10:00～17:00）または入学申込フォームより',
+    url: 'https://ainischool.helloaini.com/',
+    note: '学習支援だけでなく、心のケアや仲間づくりに重点を置くオンラインスクール。学校への出席扱いの実績があるとしている（公式サイトによれば2026年2月時点で97%）。政府・教育委員会の一覧には掲載されておらず、運営会社の公式サイトに基づく情報。',
+    sourceKind: 'official-site',
+    sourceUrl: 'https://ainischool.helloaini.com/',
   },
   {
     name: 'SOZOW SCHOOL 小中等部',

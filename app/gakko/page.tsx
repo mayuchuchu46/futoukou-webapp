@@ -207,7 +207,7 @@ export default async function GakkoPage({
                 ))}
               </div>
               <div className="muted" style={{ fontSize: 12 }}>
-                ※ このうち5件は京都市教育委員会が「オンライン」区分として公開している情報をもとに、残り2件（SOZOW SCHOOL、すらら）は運営会社の公式サイト・発表に基づき掲載しています。教育委員会・学校等が認証・あっせんするものではなく、利用前には各団体へ直接お問い合わせください。
+                ※ このうち{ONLINE_FREE_SCHOOLS.filter((s) => s.sourceKind === 'government').length}件は教育委員会・市区町村が公開している情報をもとに、残り{ONLINE_FREE_SCHOOLS.filter((s) => s.sourceKind === 'official-site').length}件は運営会社の公式サイト・発表に基づき掲載しています。教育委員会・学校等が認証・あっせんするものではなく、利用前には各団体へ直接お問い合わせください。
               </div>
             </div>
           )}
