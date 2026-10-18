@@ -647,9 +647,14 @@ h2.pagetitle {
      既に導線があり重複するため、PC幅では非表示にした（2026-10-18、「途中に置いてる
      このテキストはPCのほう消していい」との指摘を受けて）。スマホでは引き続き表示する
      （導線がヘッダーに無いため）。 */
+  /* 対象のLinkがstyle={{ display: 'inline-block' }}のようにインラインstyleで
+     displayを指定しており、インラインstyleの方が詳細度で勝ってしまい、ここの
+     display:noneが効いていなかった（2026-10-18、「テキストとって」のPC
+     スクリーンショットで実際にまだ表示されていることが判明して発覚）。
+     インラインstyleに勝つため!importantを付けた。 */
   .home-main-col .home-theme-link,
   .home-main-col .home-gakko-link {
-    display: none;
+    display: none !important;
   }
   .home-main-col .viewtabs { order: 5; }
   .home-main-col .home-list { order: 6; }
