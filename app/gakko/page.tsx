@@ -193,7 +193,7 @@ export default async function GakkoPage({
                 {ONLINE_FREE_SCHOOLS.map((s) => (
                   <a
                     key={s.name}
-                    href={s.url}
+                    href={`/out?to=${encodeURIComponent(s.url)}&id=${encodeURIComponent(s.name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
