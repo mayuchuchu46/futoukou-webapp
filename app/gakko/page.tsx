@@ -173,12 +173,19 @@ function joseiCount(pref: string) {
   return FREESCHOOL_SUBSIDIES.filter((s) => s.prefecture === pref).length;
 }
 
+// 学びの多様化学校の学校種（文科省データのschoolTypeそのまま）。「小学校から高校まで
+// ある？」との質問を受け、都道府県内に複数の学校種が混在する場合に絞り込めるチップを
+// 追加した（2026-10-18）。全国84校の内訳は中学校53・高等学校14・小中一貫9・小学校8で、
+// 中学校が中心だが全学齢をカバーしている。
+const SCHOOL_TYPES = ['小学校', '中学校', '高等学校', '小・中'] as const;
+type SchoolTypeFilter = (typeof SCHOOL_TYPES)[number];
+
 export default async function GakkoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ pref?: string; type?: string }>;
+  searchParams: Promise<{ pref?: string; type?: string; school?: string }>;
 }) {
-  const { pref, type: rawType } = await searchParams;
+  const { pref, type: rawType, school: rawSchoolType } = await searchParams;
   // 2026-10-18: オンラインフリースクールが21件まで増え、フリースクール（地域）タブに
   // 常に埋め込むと情報量が多すぎたため、「オンラインフリースクール」を独立した
   // 3つめのタブに分離した。
@@ -192,7 +199,25 @@ export default async function GakkoPage({
   // 絞り込める形にした。
   const type = normalizeGakkoType(rawType);
   const selected = pref && PREFECTURES.includes(pref) ? pref : null;
-  const schools = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
+  const selectedSchoolType: SchoolTypeFilter | null =
+    rawSchoolType && (SCHOOL_TYPES as readonly string[]).includes(rawSchoolType)
+      ? (rawSchoolType as SchoolTypeFilter)
+      : null;
+  const schoolsInPref = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
+  // 学校種チップはその都道府県に複数の学校種が混在する場合だけ表示する（1種類しかなければ
+  // 絞り込む意味がないため）。
+  const schoolTypeCounts = SCHOOL_TYPES.map((st) => ({
+    schoolType: st,
+    count: schoolsInPref.filter((s) => s.schoolType === st).length,
+  })).filter((c) => c.count > 0);
+  const schools =
+    selectedSchoolType && schoolTypeCounts.length > 1
+      ? schoolsInPref.filter((s) => s.schoolType === selectedSchoolType)
+      : schoolsInPref;
+  const schoolTypeHref = (st: SchoolTypeFilter | null) =>
+    selected
+      ? `/gakko?pref=${encodeURIComponent(selected)}${st ? `&school=${encodeURIComponent(st)}` : ''}`
+      : '/gakko';
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
   const coverage = selected ? getFreeSchoolCoverage(selected) : undefined;
   const shienCenters = selected ? EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === selected) : [];
@@ -388,6 +413,30 @@ export default async function GakkoPage({
           {selected && type === 'gakko' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>{selected}の学びの多様化学校</div>
+              {/* 学校種（小学校・中学校・高等学校・小中一貫）が複数混在する都道府県だけ
+                  絞り込みチップを出す（「小学校から高校まである？分けた方がいい」との
+                  指摘を受けて追加、2026-10-18）。 */}
+              {schoolTypeCounts.length > 1 && (
+                <div className="chip-row chip-row-wrap" style={{ margin: '0 0 2px' }}>
+                  <Link
+                    href={schoolTypeHref(null)}
+                    className={`chip chip-tag${!selectedSchoolType ? ' active' : ''}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    すべて（{schoolsInPref.length}）
+                  </Link>
+                  {schoolTypeCounts.map(({ schoolType, count }) => (
+                    <Link
+                      key={schoolType}
+                      href={schoolTypeHref(schoolType)}
+                      className={`chip chip-tag${selectedSchoolType === schoolType ? ' active' : ''}`}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      {schoolType}（{count}）
+                    </Link>
+                  ))}
+                </div>
+              )}
               {schools.length === 0 ? (
                 <div className="muted">
                   現時点で{selected}には指定校がありません。指定校は年々増えているため、今後追加される可能性があります。下記の文部科学省の最新一覧もあわせてご確認ください。
