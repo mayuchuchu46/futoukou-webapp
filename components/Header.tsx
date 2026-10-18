@@ -194,13 +194,6 @@ export default function Header({
           {/* 「伴走ノート」への改名に合わせて、キャッチコピーも「答えて終わり」ではなく
               継続的に寄り添う印象に変更（2026-10-16）。 */}
           <div className="hero-sub">「どうしたらいい？」にAIと専門家が回答＆伴走</div>
-          {/* 「専門家監修：準備中…」バッジを、PCでは右側に空いていた余白を埋める形で
-              補足文の横に置きたいとの指摘（2026-10-18）を受けて、PC専用にここ
-              （hero-subの直後、header-left内）にも複製する。スマホでは従来通り
-              header-rowの外の単独行（下のsupervision-note-mobile）のまま。 */}
-          <span className="supervision-note supervision-note-pc">
-            {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
-          </span>
         </div>
         <div className="header-right">
           <button className="crisis-btn" onClick={() => setCrisisOpen(true)}>
@@ -212,7 +205,7 @@ export default function Header({
         </div>
       </div>
 
-      <span className="supervision-note supervision-note-mobile">
+      <span className="supervision-note">
         {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
       </span>
 
