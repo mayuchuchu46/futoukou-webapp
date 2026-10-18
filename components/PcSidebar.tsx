@@ -75,7 +75,52 @@ export default function PcSidebar({
 
   const showBanner = !!(banner && banner.enabled && banner.image_url && banner.link_url);
 
+  // 「不登校お悩み辞典」と「学校・フリースクール等を探す」への導線。以前は/gakkoへの
+  // 1本のリンクにまとめていたが、/gakkoが「学びの多様化学校／フリースクール／
+  // 教育支援センター／オンラインフリースクール／通信制高校」の5カテゴリに増えたため、
+  // それぞれへ直接飛べるようにカテゴリ別のリンクに分けた（2026-10-18、「PCはカテゴリ
+  // ごとにメニュー出してもいいのでは」との指摘を受けて）。PC（.pc-sidebar内）と
+  // スマホ（本文の下、.gakko-links-mobile）の両方で同じリストを使う。
+  const gakkoLinks = (
+    <div className="card" style={{ padding: 0, overflow: 'hidden', gap: 0 }}>
+      <Link
+        href="/theme"
+        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '13px 16px', borderBottom: '1px solid var(--border)', textDecoration: 'none', color: 'var(--text)' }}
+      >
+        <span style={{ fontSize: 18 }} aria-hidden="true">📖</span>
+        <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>不登校お悩み辞典</span>
+        <span className="muted">›</span>
+      </Link>
+      {[
+        { href: '/gakko', icon: '🏫', label: '学びの多様化学校' },
+        { href: '/gakko?type=free', icon: '🏠', label: 'フリースクール（地域）' },
+        { href: '/gakko?type=shien', icon: '🧑‍🏫', label: '教育支援センター' },
+        { href: '/gakko?type=online', icon: '💻', label: 'オンラインフリースクール' },
+        { href: '/gakko?type=tsushin', icon: '📮', label: '通信制高校（広域）' },
+      ].map((item, i, arr) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '13px 16px',
+            borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
+            textDecoration: 'none',
+            color: 'var(--text)',
+          }}
+        >
+          <span style={{ fontSize: 18 }} aria-hidden="true">{item.icon}</span>
+          <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>{item.label}</span>
+          <span className="muted">›</span>
+        </Link>
+      ))}
+    </div>
+  );
+
   return (
+    <>
     <div className="pc-sidebar">
       {/* PC（960px以上）の右カラムにも、目立つ「相談する」への導線を置く
           （2026-10-15、「右コラムにも、相談誘導へのボタンを目立つように置きたい」
@@ -138,31 +183,16 @@ export default function PcSidebar({
         </div>
       )}
 
-      {/* 「不登校お悩み辞典」（/theme）と「学びの多様化学校を探す」（/gakko）への導線。
-          以前はそれぞれ別カード（アイコン＋見出し＋説明文、1件あたり約70px）で、
-          専門家募集中カード等と合わせてPCサイドが9ブロックまで積み上がり縦に長く
-          なりすぎていた。説明文を省いた1行リストにまとめ、2件で1カードぶんの高さに
-          圧縮した（2026-10-18、「サイドバーの縦の長さ」のUXレビューを受けて）。 */}
-      <div className="card" style={{ padding: 0, overflow: 'hidden', gap: 0 }}>
-        <Link
-          href="/theme"
-          style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '13px 16px', borderBottom: '1px solid var(--border)', textDecoration: 'none', color: 'var(--text)' }}
-        >
-          <span style={{ fontSize: 18 }} aria-hidden="true">📖</span>
-          <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>不登校お悩み辞典</span>
-          <span className="muted">›</span>
-        </Link>
-        <Link
-          href="/gakko"
-          style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '13px 16px', textDecoration: 'none', color: 'var(--text)' }}
-        >
-          <span style={{ fontSize: 18 }} aria-hidden="true">🏫</span>
-          <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>学校・フリースクールを探す</span>
-          <span className="muted">›</span>
-        </Link>
-      </div>
+      {gakkoLinks}
 
       {!hideExperts && <ExpertsTeaser experts={experts} className="home-experts-side" />}
     </div>
+
+    {/* スマホ幅では.pc-sidebar自体が非表示になるため、カテゴリ一覧だけは本文の下に
+        別途表示する（2026-10-18）。PCではCSS側（.gakko-links-mobile）で隠す。 */}
+    <div className="gakko-links-mobile" style={{ marginTop: 4 }}>
+      {gakkoLinks}
+    </div>
+    </>
   );
 }

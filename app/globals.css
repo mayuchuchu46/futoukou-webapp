@@ -690,6 +690,15 @@ h2.pagetitle {
   .pc-sidebar { display: flex; flex-direction: column; gap: 16px; width: 300px; flex: 0 0 300px; }
 }
 
+/* 「学びの多様化学校・フリースクール等を探す」カテゴリ一覧のモバイル版。
+   PCではこの内容を.pc-sidebar側に出すので、スマホ幅ではこちら（本文の下）に
+   出す（2026-10-18、「スマホもPCサイドの一覧を下に出してもいいのでは」との
+   指摘を受けて追加）。 */
+.gakko-links-mobile { display: block; }
+@media (min-width: 960px) {
+  .gakko-links-mobile { display: none; }
+}
+
 /* このバナーはPCのサイドバー用。スマホ幅ではこの位置（カテゴリ下）には出さない。 */
 .home-adbanner {
   display: none;
