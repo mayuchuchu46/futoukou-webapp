@@ -24,6 +24,7 @@ import FollowupThread from './FollowupThread';
 import AskAgainBlock from './AskAgainBlock';
 import TagChips from '@/components/TagChips';
 import { SEARCH_TAG_CANDIDATES, matchesThemeText } from '@/lib/searchTags';
+import { findMentionedSchool } from '@/lib/schoolFacts';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -330,6 +331,27 @@ export default async function ResultPage({
     </Link>
   );
 
+  // 相談文（・AI回答）に、学びの多様化学校一覧に載っている具体的な学校名が含まれている
+  // 場合は、都道府県一覧へのgakkoBlockより一歩進んだ、その学校自体の紹介ページへの
+  // 案内を出す（2026-10-19、「この回答ページから、この学校の詳細ページに飛ばしてあげると
+  // よくない？」との指摘を受けて追加）。lib/schoolFacts.tsのfindMentionedSchoolは
+  // どうする先生の回答プロンプトへの事実注入と同じ判定ロジックを使っているので、
+  // AIが学校の確認済み情報を使って答えたのと同じ学校がここでもリンクされる。
+  const mentionedSchool = findMentionedSchool([item.question, answerTextForJsonLd]);
+  const schoolDetailBlock = mentionedSchool && (
+    <Link href={`/gakko/school/${mentionedSchool.no}`} className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>
+        {mentionedSchool.name}{mentionedSchool.branchName ? `（${mentionedSchool.branchName}）` : ''}の詳細情報
+      </div>
+      <div className="qtext">
+        所在地・設置形態・指定年度など、このサイトで確認できている情報をまとめています。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        学校の詳細を見る ›
+      </div>
+    </Link>
+  );
+
   // lib/prompt.tsの安全上書き（希死念慮・自傷等を検知した場合、具体的な助言をせず
   // ホットライン案内のみを返す指示）が発動した回答かどうか。consultations.crisis_detected
   // （app/api/consult/route.tsで保存）を正とし、その列の追加前に投稿された古い行のために
@@ -439,7 +461,7 @@ export default async function ResultPage({
             <Suspense fallback={null}>
               <ResultClient id={id} initialItem={item} />
             </Suspense>
-            {gakkoBlock}
+            {schoolDetailBlock || gakkoBlock}
             {shareButtons}
             {askAgainBlock}
           </>
@@ -486,7 +508,7 @@ export default async function ResultPage({
               <FollowupThread parentId={item.id} authorId={item.author_id} initialFollowups={followups} />
             )}
 
-            {!isCrisis && gakkoBlock}
+            {!isCrisis && (schoolDetailBlock || gakkoBlock)}
 
             {isCrisis ? (
               // 希死念慮・自傷等の安全上書きが発動した相談専用の案内カード。以前は回答カード下の
