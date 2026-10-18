@@ -837,7 +837,7 @@ export default async function GakkoPage({
             </a>
           </div>
         </div>
-        <PcSidebar hideGakkoLinks />
+        <PcSidebar />
       </div>
       <BottomNav />
     </div>

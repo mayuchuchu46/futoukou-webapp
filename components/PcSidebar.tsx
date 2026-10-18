@@ -25,9 +25,8 @@ type SidebarBanner = {
 export default function PcSidebar({
   hideExperts = false,
   hideRanking = false,
-  hideGakkoLinks = false,
   expertCount,
-}: { hideExperts?: boolean; hideRanking?: boolean; hideGakkoLinks?: boolean; expertCount?: number } = {}) {
+}: { hideExperts?: boolean; hideRanking?: boolean; expertCount?: number } = {}) {
   const router = useRouter();
   const [ranking, setRanking] = useState<Consultation[]>([]);
   const [banner, setBanner] = useState<SidebarBanner>(null);
@@ -190,22 +189,16 @@ export default function PcSidebar({
 
       {!hideExperts && <ExpertsTeaser experts={experts} className="home-experts-side" />}
 
-      {/* /gakkoページ自体には、本文の冒頭に同じ6カテゴリへのタブ（チップ行）がすでに
-          あるため、このリンク一覧を出すと完全な重複になる（しかもスマホでは長い本文の
-          一番下という使いにくい位置）。/gakkoページからはhideGakkoLinksで非表示にする
-          （2026-10-18）。 */}
-      {!hideGakkoLinks && gakkoLinks}
+      {gakkoLinks}
     </div>
 
     {/* スマホ幅では.pc-sidebar自体が非表示になるため、カテゴリ一覧は本文の下に
         別途表示する（2026-10-18）。PCではCSS側（.gakko-links-mobile）で隠す。
         PC側（.pc-sidebar内）にも同じ一覧をそのまま残している（上記、ヘッダーの
         プルダウンと両方に導線を置く方針）。 */}
-    {!hideGakkoLinks && (
-      <div className="gakko-links-mobile" style={{ marginTop: 4 }}>
-        {gakkoLinks}
-      </div>
-    )}
+    <div className="gakko-links-mobile" style={{ marginTop: 4 }}>
+      {gakkoLinks}
+    </div>
     </>
   );
 }
