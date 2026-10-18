@@ -23,7 +23,13 @@ export function setAgreedTerms() {
 // child_idは子どもプロフィール機能（2026-10-16追加）で選んだ子ども。省略可能
 // （undefinedの場合は未選択として扱う）にしておき、古い下書き（この項目が無い）を
 // 復元してもエラーにならないようにしている。
-export type AskDraft = { category: string; text: string; grade: string; gender: string; child_id?: string };
+// prefillText: 学校紹介ページ等から「相談する」ボタンで渡されたprefillクエリの値
+// （2026-10-18追加）。draft.text===draft.prefillTextなら「まだ手を加えていない、
+// ボタンから入っただけの状態」と判定できる。これが無いと、一度どこかの学校の
+// prefillでdraftが保存された後、別の学校のボタンを押しても「下書きがある」と
+// 判定されて古い学校名のまま上書きされない問題が起きる（「全部リリーベールのテキスト
+// 入ってる」との報告を受けて修正）。
+export type AskDraft = { category: string; text: string; grade: string; gender: string; child_id?: string; prefillText?: string };
 const ASK_DRAFT_KEY = 'dsk_ask_draft';
 
 export function getAskDraft(): AskDraft | null {

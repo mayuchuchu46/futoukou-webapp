@@ -87,6 +87,11 @@ function AskPageContent() {
   // 古い値を見てしまわない）で管理する。
   const categoryTouchedRef = useRef(false);
   const [classifying, setClassifying] = useState(false);
+  // 今回表示に使ったprefillの値（無ければundefined）。下書き保存時に一緒に
+  // 保存しておき、次回「draft.text === draft.prefillText」かどうかで、
+  // 「ボタンから入れただけでまだ手を加えていない状態」か「ユーザーが実際に書いた
+  // 下書き」かを区別する（2026-10-18追加、下のeffect内コメント参照）。
+  const prefillTextRef = useRef<string | undefined>(undefined);
 
   // 離脱してタブを閉じても、書いた内容が消えないようにする下書き保存。
   // マウント時に一度だけ復元し（draftLoadedが立つまでは保存側のeffectを動かさない
@@ -101,20 +106,33 @@ function AskPageContent() {
         setCategory(draft.category as Category);
         categoryTouchedRef.current = true;
       }
-      setText(draft.text || '');
       setGrade(draft.grade || '');
       setGender(draft.gender || '');
       if (draft.child_id) setSelectedChildId(draft.child_id);
-      if (!draft.text && prefillParam) setText(prefillParam);
+      // 「全部リリーベールのテキスト入ってる」との報告を受けて修正（2026-10-18）。
+      // 以前はdraft.textが空でない限りprefillParamを無視していたため、一度どこかの
+      // 学校のprefillで下書きが保存されると、別の学校のボタンを押しても古い学校名の
+      // ままになってしまっていた。「下書きが無い」か「前回もprefillのまま手を加えて
+      // いない」場合は、新しいprefillParamを優先する。ユーザーが実際に書いた下書きは
+      // （prefillTextと異なる＝手を加えた状態として）引き続き保護する。
+      const draftIsUntouchedPrefill = !!draft.text && draft.text === draft.prefillText;
+      if (prefillParam && (!draft.text || draftIsUntouchedPrefill)) {
+        setText(prefillParam);
+        prefillTextRef.current = prefillParam;
+      } else {
+        setText(draft.text || '');
+        prefillTextRef.current = draft.prefillText;
+      }
     } else if (prefillParam) {
       setText(prefillParam);
+      prefillTextRef.current = prefillParam;
     }
     setDraftLoaded(true);
   }, []);
 
   useEffect(() => {
     if (!draftLoaded) return;
-    setAskDraft({ category, text, grade, gender, child_id: selectedChildId || undefined });
+    setAskDraft({ category, text, grade, gender, child_id: selectedChildId || undefined, prefillText: prefillTextRef.current });
   }, [draftLoaded, category, text, grade, gender, selectedChildId]);
 
   // 相談文の入力が一区切りついたタイミング（1.2秒操作がない）で、AIにテーマを
