@@ -129,15 +129,31 @@ export default async function GakkoSchoolPage({
                 referrerPolicy="no-referrer-when-downgrade"
                 title={`${fullName}の地図`}
               />
-              <a
-                href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="muted"
-                style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
-              >
-                Googleマップで開く ›
-              </a>
+              <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                <a
+                  href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="muted"
+                  style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
+                >
+                  Googleマップで開く ›
+                </a>
+                {/* ストリートビュー（実際の道路から撮影された写真）。撮影車が通っていない
+                    場所（特に他の建物内にある分教室等）では画像が存在しないため、埋め込みは
+                    せず別タブで開くリンクのみにしている（2026-10-18、「もっと違う写真の
+                    見せ方」との相談を受けて追加）。Maps URLs（map_action=pano）はAPIキー
+                    不要で、該当地点にストリートビュー画像があればそれを開く。 */}
+                <a
+                  href={`https://www.google.com/maps/@?api=1&map_action=pano&query=${encodeURIComponent(mapQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="muted"
+                  style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
+                >
+                  ストリートビューで見る ›
+                </a>
+              </div>
             </div>
 
             {school.officialUrl && (
