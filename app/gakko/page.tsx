@@ -339,6 +339,37 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {/* 学校種（小学校・中学校・高等学校・小中一貫）の絞り込みチップ。以前は
+              「都道府県から探す」カードと1枚にまとめていたが、都道府県選択後は結果一覧
+              （84校など）の下に埋もれてしまい、絞り込みたい人がそこにたどり着く前に
+              長い一覧を全部見る必要があった。結果一覧の直前（都道府県未選択時は直後に
+              続く「都道府県から探す」の直前）に置き、絞り込んでから一覧を見られるように
+              した（2026-10-18、「小中高で絞り込みできたらいい」との指摘を受けて）。 */}
+          {type === 'gakko' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>学校種で絞り込む</div>
+              <div className="chip-row chip-row-wrap">
+                <Link
+                  href={schoolTypeHref(null)}
+                  className={`chip chip-tag${!selectedSchoolType ? ' active' : ''}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  すべて（{MANABI_TAYOUKA_GAKKO.length}）
+                </Link>
+                {SCHOOL_TYPES.map((st) => (
+                  <Link
+                    key={st}
+                    href={schoolTypeHref(st)}
+                    className={`chip chip-tag${selectedSchoolType === st ? ' active' : ''}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    {st}（{MANABI_TAYOUKA_GAKKO.filter((s) => s.schoolType === st).length}）
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           {type === 'free' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>フリースクール（地域）とは</div>
@@ -672,36 +703,6 @@ export default async function GakkoPage({
 
           {(type === 'gakko' || type === 'free' || type === 'shien' || type === 'tsushin' || type === 'josei') && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              {/* 学校種（小学校・中学校・高等学校・小中一貫）の絞り込みチップ。以前は
-                  「都道府県から探す」カードとは別のカードとして間に挟んでいたが、2枚の
-                  カードの間に他の内容が何も無く、同じ「絞り込む」操作が不自然に分断されて
-                  見えていたため、1枚のカードにまとめた（2026-10-18）。都道府県を選ぶ前
-                  から選べるグローバルな絞り込みで、選んだ学校種は都道府県チップの件数
-                  表示やセレクトボックスの遷移先にもそのまま引き継がれる。 */}
-              {type === 'gakko' && (
-                <>
-                  <div className="answer-label" style={{ fontSize: 14 }}>学校種で絞り込む</div>
-                  <div className="chip-row chip-row-wrap">
-                    <Link
-                      href={schoolTypeHref(null)}
-                      className={`chip chip-tag${!selectedSchoolType ? ' active' : ''}`}
-                      style={{ textDecoration: 'none' }}
-                    >
-                      すべて（{MANABI_TAYOUKA_GAKKO.length}）
-                    </Link>
-                    {SCHOOL_TYPES.map((st) => (
-                      <Link
-                        key={st}
-                        href={schoolTypeHref(st)}
-                        className={`chip chip-tag${selectedSchoolType === st ? ' active' : ''}`}
-                        style={{ textDecoration: 'none' }}
-                      >
-                        {st}（{MANABI_TAYOUKA_GAKKO.filter((s) => s.schoolType === st).length}）
-                      </Link>
-                    ))}
-                  </div>
-                </>
-              )}
               <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
               {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
                   （2026-10-18）。チップ自体はクローラーが各都道府県ページを個別に
