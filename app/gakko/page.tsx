@@ -796,15 +796,25 @@ export default async function GakkoPage({
             </div>
           )}
 
-          <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>進路のことを相談してみませんか？</div>
+          {/* 「相談してみませんか？」の導線が、他の情報カードと同じ控えめな見た目のカード
+              リンクだったため目立たなかった。PCサイドの相談ボタン（.sidebar-ask-btn-pink）
+              と同じ、大きく塗りつぶされたボタンに変更して目立たせる（2026-10-18、
+              「ボタン大きくおきたいね」との指摘を受けて）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}について相談してみませんか？
+            </div>
             <div className="qtext">
               {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
             </div>
-            <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
-              相談するページへ ›
-            </div>
-          </Link>
+            <Link
+              href="/ask"
+              className="btn-primary sidebar-ask-btn-pink"
+              style={{ textDecoration: 'none', width: '100%' }}
+            >
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}について相談する →
+            </Link>
+          </div>
 
           {/* Xシェアボタン */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '12px 0 4px' }}>
