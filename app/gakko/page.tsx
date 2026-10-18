@@ -369,18 +369,16 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {/* 通信制高校（広域）は居住地を問わず入学できるが、「本校所在地」の都道府県でも
-              絞り込めるようにしている（2026-10-18、未選択時は全115校を表示）。 */}
-          {type === 'tsushin' && (
+          {/* 通信制高校（広域）は居住地を問わず入学できるが、学びの多様化学校タブと同様に
+              「本校所在地」の都道府県を選んでから一覧を見る形にする（2026-10-18、未選択時は
+              一覧を出さずチップ選択を促す。以前は未選択時に全115校を表示していたが、
+              わかりにくいとの指摘で変更）。 */}
+          {selected && type === 'tsushin' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>
-                {selected ? `本校が${selected}にある通信制高校` : '通信制高校（広域）一覧'}
+              <div className="answer-label" style={{ fontSize: 14 }}>本校が{selected}にある通信制高校</div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                「広域」の通信制高校は本校の都道府県以外からも入学できます。{selected}の学校が見つからない、または少ない場合も、他の都道府県の学校が選択肢になります。
               </div>
-              {selected && (
-                <div className="muted" style={{ fontSize: 12 }}>
-                  「広域」の通信制高校は本校の都道府県以外からも入学できます。{selected}の学校が見つからない、または少ない場合も、他の都道府県の学校が選択肢になります。
-                </div>
-              )}
               {tsushinSchools.length === 0 ? (
                 <div className="muted">{selected}に本校がある学校は見つかりませんでした。上記の通り、他の都道府県の学校も入学できる場合があります。</div>
               ) : (
@@ -388,49 +386,19 @@ export default async function GakkoPage({
                   <div className="muted" style={{ fontSize: 12 }}>
                     {CORRESPONDENCE_HIGH_SCHOOL_AS_OF}
                   </div>
-                  {/* 115校を1本のリストで出すと探しにくいとの指摘（2026-10-18）を受けて、
-                      本校所在地の都道府県ごとに見出しをつけてグループ化する。すでに
-                      選択済みの場合は1都道府県分だけなのでグループ化しない。 */}
-                  {selected ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                      {tsushinSchools.map((s) => (
-                        <div
-                          key={s.no}
-                          style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
-                        >
-                          <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                          <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                            本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
-                          </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                    {tsushinSchools.map((s) => (
+                      <div
+                        key={s.no}
+                        style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                      >
+                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                          本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
                         </div>
-                      ))}
-                    </div>
-                  ) : (
-                    PREFECTURES.map((p) => {
-                      const group = tsushinSchools.filter((s) => s.prefecture === p);
-                      if (group.length === 0) return null;
-                      return (
-                        <div key={p} style={{ width: '100%' }}>
-                          <div className="qtext" style={{ fontWeight: 700, fontSize: 13, marginTop: 6 }}>
-                            本校：{p}（{group.length}校）
-                          </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 4 }}>
-                            {group.map((s) => (
-                              <div
-                                key={s.no}
-                                style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
-                              >
-                                <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                                <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                                  {s.municipality ? `${s.municipality}・` : ''}設置者：{s.operator}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
+                      </div>
+                    ))}
+                  </div>
                 </>
               )}
               <a
