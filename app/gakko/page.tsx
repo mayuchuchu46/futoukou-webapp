@@ -27,7 +27,7 @@ import PrefectureSelect from './PrefectureSelect';
 export const metadata: Metadata = {
   title: `学びの多様化学校・フリースクールを都道府県から探す｜${SITE_NAME}`,
   description:
-    '不登校の子どもに合わせた「学びの多様化学校」（旧：不登校特例校）や、民間の「フリースクール」を都道府県から探せます。文部科学省や教育委員会等の公開情報をもとに掲載しています。',
+    '不登校の子どもに合わせた「学びの多様化学校」（旧：不登校特例校）や、民間の「フリースクール」（地域・オンライン）を探せます。文部科学省や教育委員会等の公開情報をもとに掲載しています。',
   alternates: { canonical: `${SITE_URL}/gakko` },
 };
 
@@ -45,7 +45,10 @@ export default async function GakkoPage({
   searchParams: Promise<{ pref?: string; type?: string }>;
 }) {
   const { pref, type: rawType } = await searchParams;
-  const type: 'gakko' | 'free' = rawType === 'free' ? 'free' : 'gakko';
+  // 2026-10-18: オンラインフリースクールが21件まで増え、フリースクール（地域）タブに
+  // 常に埋め込むと情報量が多すぎたため、「オンラインフリースクール」を独立した
+  // 3つめのタブに分離した。都道府県選択に意味があるのはgakko/freeのみ。
+  const type: 'gakko' | 'free' | 'online' = rawType === 'free' ? 'free' : rawType === 'online' ? 'online' : 'gakko';
   const selected = pref && PREFECTURES.includes(pref) ? pref : null;
   const schools = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
@@ -76,11 +79,18 @@ export default async function GakkoPage({
               className={`chip chip-tag${type === 'free' ? ' active' : ''}`}
               style={{ textDecoration: 'none' }}
             >
-              フリースクール
+              フリースクール（地域で探す）
+            </Link>
+            <Link
+              href="/gakko?type=online"
+              className={`chip chip-tag${type === 'online' ? ' active' : ''}`}
+              style={{ textDecoration: 'none' }}
+            >
+              オンラインフリースクール
             </Link>
           </div>
 
-          {type === 'gakko' ? (
+          {type === 'gakko' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>学びの多様化学校（旧：不登校特例校）とは</div>
               <div className="qtext">
@@ -90,14 +100,30 @@ export default async function GakkoPage({
                 入学には学区・転校手続き・面談など各校ごとの条件があります。気になる学校が見つかったら、まずは学校または教育委員会に直接お問い合わせください。
               </div>
             </div>
-          ) : (
+          )}
+
+          {type === 'free' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>フリースクールとは</div>
+              <div className="answer-label" style={{ fontSize: 14 }}>フリースクール（地域）とは</div>
               <div className="qtext">
-                学校以外の場所で過ごしたり学んだりできる民間の施設です。学びの多様化学校（MEXT指定校）と違い、フリースクールには全国を網羅した公的なリストが存在しません。このページでは、都道府県や市区町村の教育委員会等が公開している一覧をもとに、見つかった範囲で掲載しています。
+                学校以外の場所で過ごしたり学んだりできる、お住まいの地域にある民間の施設です。学びの多様化学校（MEXT指定校）と違い、フリースクールには全国を網羅した公的なリストが存在しません。このページでは、都道府県や市区町村の教育委員会等が公開している一覧をもとに、見つかった範囲で掲載しています。
               </div>
               <div className="muted" style={{ fontSize: 12 }}>
-                都道府県によって、情報が充実している所もあれば、公開されたリストが見つからなかった所もあります。お住まいの地域が「見つかりませんでした」と表示される場合でも、フリースクール自体が無いとは限りません。お近くの教育委員会の相談窓口に直接お問い合わせいただくことをおすすめします。
+                都道府県によって、情報が充実している所もあれば、公開されたリストが見つからなかった所もあります。お住まいの地域が「見つかりませんでした」と表示される場合でも、フリースクール自体が無いとは限りません。お近くの教育委員会の相談窓口に直接お問い合わせいただくことをおすすめします。通える範囲に見つからない場合は、
+                <Link href="/gakko?type=online" style={{ textDecoration: 'underline' }}>オンラインフリースクール</Link>
+                も選択肢になります。
+              </div>
+            </div>
+          )}
+
+          {type === 'online' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>オンラインフリースクールとは</div>
+              <div className="qtext">
+                インターネット経由で参加できる、お住まいの地域を問わず利用できるフリースクール・学習支援サービスです。お住まいの地域に通えるフリースクールが見つからない場合の選択肢になります。都道府県の選択は不要です。
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                件数が多いため、下記で「仲間づくり・居場所のあるタイプ」「学習サポート中心のタイプ」「利用に条件があるタイプ」に分けて掲載しています。
               </div>
             </div>
           )}
@@ -180,15 +206,11 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {/* オンラインフリースクールは居住地を問わず利用できるため、都道府県の選択に
-              関係なく常に案内する（2026-10-18追加）。特に地域のリストが見つからない
-              都道府県を選んだ人にとっての代替選択肢になる。 */}
-          {type === 'free' && (
+          {/* オンラインフリースクールは居住地を問わず利用できるため、独立タブ（type=online）
+              として表示する。以前はフリースクール（地域）タブの中に常時埋め込んでいたが、
+              21件まで増えて情報量が多すぎたため、2026-10-18に分離した。 */}
+          {type === 'online' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>オンラインフリースクール（全国どこからでも利用可）</div>
-              <div className="muted" style={{ fontSize: 12 }}>
-                お住まいの地域にフリースクールが見つからない場合でも、オンラインで利用できる選択肢があります。件数が多いため、性質ごとに分けて掲載しています。
-              </div>
               {/* 件数が21件まで増えたため、性質（仲間づくりのある学校タイプ／学習サポート中心／
                   紹介制で利用に条件がある）で見出しを分けて表示する（2026-10-18）。 */}
               {([
@@ -222,40 +244,39 @@ export default async function GakkoPage({
                   </div>
                 );
               })}
-              <div className="muted" style={{ fontSize: 12 }}>
-                ※ このうち{ONLINE_FREE_SCHOOLS.filter((s) => s.sourceKind === 'government').length}件は教育委員会・市区町村が公開している情報をもとに、残り{ONLINE_FREE_SCHOOLS.filter((s) => s.sourceKind === 'official-site').length}件は運営会社の公式サイト・発表に基づき掲載しています。教育委員会・学校等が認証・あっせんするものではなく、利用前には各団体へ直接お問い合わせください。
+            </div>
+          )}
+
+          {type !== 'online' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
+              {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
+                  （2026-10-18）。チップ自体はクローラーが各都道府県ページを個別に
+                  たどれるリンクとして残している。 */}
+              <PrefectureSelect selected={selected} type={type} />
+              <div className="chip-row chip-row-wrap">
+                {PREFECTURES.map((p) => {
+                  const count = type === 'free' ? freeSchoolCount(p) : gakkoCount(p);
+                  return (
+                    <Link
+                      key={p}
+                      href={prefHref(p)}
+                      className={`chip chip-tag${selected === p ? ' active' : ''}`}
+                      style={{
+                        textDecoration: 'none',
+                        display: 'inline-block',
+                        opacity: count > 0 ? 1 : 0.55,
+                      }}
+                    >
+                      {p}{count > 0 ? `（${count}）` : ''}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
-            {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
-                （2026-10-18）。チップ自体はクローラーが各都道府県ページを個別に
-                たどれるリンクとして残している。 */}
-            <PrefectureSelect selected={selected} type={type} />
-            <div className="chip-row chip-row-wrap">
-              {PREFECTURES.map((p) => {
-                const count = type === 'free' ? freeSchoolCount(p) : gakkoCount(p);
-                return (
-                  <Link
-                    key={p}
-                    href={prefHref(p)}
-                    className={`chip chip-tag${selected === p ? ' active' : ''}`}
-                    style={{
-                      textDecoration: 'none',
-                      display: 'inline-block',
-                      opacity: count > 0 ? 1 : 0.55,
-                    }}
-                  >
-                    {p}{count > 0 ? `（${count}）` : ''}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          {type === 'gakko' ? (
+          {type === 'gakko' && (
             <a
               href={MEXT_SOURCE_URL}
               target="_blank"
@@ -271,7 +292,9 @@ export default async function GakkoPage({
                 文部科学省のページへ ›
               </div>
             </a>
-          ) : (
+          )}
+
+          {type === 'free' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>このページのフリースクール情報について</div>
               <div className="qtext">
@@ -280,10 +303,19 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {type === 'online' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>このページのオンラインフリースクール情報について</div>
+              <div className="qtext">
+                教育委員会・都道府県・市区町村が公開している一覧（{ONLINE_FREE_SCHOOLS.filter((s) => s.sourceKind === 'government').length}件）と、運営会社・団体自身の公式サイト・発表（{ONLINE_FREE_SCHOOLS.filter((s) => s.sourceKind === 'official-site').length}件）をもとに掲載しています。教育委員会・学校等が認証・あっせんするものではなく、全国のサービスを網羅したものでもありません。利用前には各団体へ直接お問い合わせください。
+              </div>
+            </div>
+          )}
+
           <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>進路のことを相談してみませんか？</div>
             <div className="qtext">
-              {type === 'free' ? 'フリースクール' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
             </div>
             <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
               相談するページへ ›

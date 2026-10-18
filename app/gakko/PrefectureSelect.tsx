@@ -15,7 +15,7 @@ export default function PrefectureSelect({
   type = 'gakko',
 }: {
   selected: string | null;
-  type?: 'gakko' | 'free';
+  type?: 'gakko' | 'free' | 'online';
 }) {
   const router = useRouter();
   const typeQuery = type === 'free' ? 'type=free&' : '';
