@@ -635,6 +635,10 @@ h2.pagetitle {
   .home-main-col .home-ranking { order: 2; }
   .home-main-col .home-chips { order: 3; }
   .home-main-col .home-theme-link { order: 4; }
+  /* /gakko（学びの多様化学校）カード。home-theme-linkの直後・DOM順通りに出したいので
+     同じorder値にしている（同じorder同士はDOM順で並ぶ）。class未指定だとorder:0扱いになり
+     検索ボックスより上に飛んでしまう（2026-10-15のコメント参照）ため明示した（2026-10-18）。 */
+  .home-main-col .home-gakko-link { order: 4; }
   .home-main-col .viewtabs { order: 5; }
   .home-main-col .home-list { order: 6; }
   /* タグ一覧はPCではサイド側（.pc-sidebar内）に出すので、
