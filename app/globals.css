@@ -684,14 +684,19 @@ h2.pagetitle {
   }
   .page-with-sidebar > .page-main { flex: 1; min-width: 0; }
 
-  /* PC向けグローバルメニュー本体。ヘッダー内、supervision-noteの直前に
-     独立した行として表示する（2026-10-18）。 */
+  /* PC向けグローバルメニュー本体。最初はヘッダー下部に独立した行として
+     表示していたが、「上から吊り下げられてる感」があるとの指摘（2026-10-18）を
+     受け、ロゴと同じ行（.header-brand-row）に移動した。 */
+  .header-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
   .header-globalnav {
     display: flex;
     flex-wrap: wrap;
     gap: 18px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
     position: relative;
     z-index: 1;
   }

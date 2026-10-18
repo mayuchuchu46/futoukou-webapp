@@ -76,20 +76,35 @@ export default function Header({
               ロゴ横に「相談する」タブ（.header-ask-tab）を一度置いたが、
               「上のピンクの相談するボタンはなくして」との指摘を受けて撤去した
               （2026-10-15）。PCでの「相談する」導線はPCサイド（.sidebar-ask-btn相当）に
-              集約している。 */}
-          <Link
-            href="/"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0,
-              padding: '10px 10px 10px 0',
-              margin: '-10px -10px -10px 0',
-            }}
-          >
-            <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
-            <span className="badge">不登校編</span>
-          </Link>
+              集約している。
+              PC向けグローバルメニューは、独立した行として下（旧supervision-noteの上）に
+              置いたところ「上から吊り下げられてる感」があるとの指摘（2026-10-18）を受け、
+              ロゴと同じ行・ロゴの隣（.header-brand-row、PCでのみflex行になる）に移動した。 */}
+          <div className="header-brand-row">
+            <Link
+              href="/"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0,
+                padding: '10px 10px 10px 0',
+                margin: '-10px -10px -10px 0',
+              }}
+            >
+              <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
+              <span className="badge">不登校編</span>
+            </Link>
+            <nav className="header-globalnav">
+              {GLOBAL_NAV_ITEMS.map((item) => {
+                const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+                return (
+                  <Link key={item.href} href={item.href} className={active ? 'active' : ''}>
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
           {/* サイト全体でh1タグが1つも無かった（ページ見出しは全てh2のpagetitle）ため、
               SEO上の見出し構造を補う目的で、全ページ共通ヘッダーのこのキャッチコピーを
               h1にした（2026-10-14）。全ページで同じテキストになる点は、タグライン的な
@@ -113,16 +128,6 @@ export default function Header({
           </Link>
         </div>
       </div>
-      <nav className="header-globalnav">
-        {GLOBAL_NAV_ITEMS.map((item) => {
-          const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
-          return (
-            <Link key={item.href} href={item.href} className={active ? 'active' : ''}>
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
 
       <span className="supervision-note">
         {supervised ? '専門家監修済み' : '専門家監修：準備中・ベータ版・無料でお試しいただけます'}
