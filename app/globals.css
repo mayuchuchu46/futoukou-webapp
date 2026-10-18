@@ -708,9 +708,15 @@ h2.pagetitle {
   .header-globalnav {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 18px;
     position: relative;
     z-index: 1;
+    /* ロゴ＋バッジのすぐ横に並べたことで、区切りが無く横の要素と地続きに見えて
+       わかりにくいとの指摘（2026-10-18）を受けて、左に薄い縦線を入れて
+       グローバルメニューの開始位置を明示する。 */
+    padding-left: 20px;
+    border-left: 1px solid var(--border);
   }
   .header-globalnav a {
     font-size: 13px;
