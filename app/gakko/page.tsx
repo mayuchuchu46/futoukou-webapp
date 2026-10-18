@@ -255,6 +255,18 @@ export default async function GakkoPage({
                   たどれるリンクとして残している。 */}
               <PrefectureSelect selected={selected} type={type} />
               <div className="chip-row chip-row-wrap">
+                {/* フリースクールタブでは、都道府県の一覧の中に「オンライン」も選択肢として
+                    並べておく。地域で探している途中でそのまま切り替えられるように
+                    （2026-10-18、都道府県チップの外に別タブとして置くより分かりやすいとの指摘）。 */}
+                {type === 'free' && (
+                  <Link
+                    href="/gakko?type=online"
+                    className="chip chip-tag"
+                    style={{ textDecoration: 'none', display: 'inline-block', fontWeight: 700 }}
+                  >
+                    オンライン（全国どこからでも）
+                  </Link>
+                )}
                 {PREFECTURES.map((p) => {
                   const count = type === 'free' ? freeSchoolCount(p) : gakkoCount(p);
                   return (
