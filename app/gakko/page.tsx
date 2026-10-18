@@ -19,6 +19,7 @@ import { FREESCHOOL_SUBSIDIES, getFreeschoolSubsidiesByPrefecture } from '@/lib/
 import { PREFECTURES } from '@/lib/data/prefectures';
 import { getThemeDictionaryData } from '@/lib/themeSummary';
 import PrefectureSelect from './PrefectureSelect';
+import SchoolTypeExplorer from './SchoolTypeExplorer';
 
 // 「学びの多様化学校」（旧：不登校特例校）と「フリースクール（民間施設）」の
 // 全国検索ページ。前者は文部科学省の指定校一覧（MANABI_TAYOUKA_GAKKO）を、
@@ -222,16 +223,9 @@ export default async function GakkoPage({
       ? (rawSchoolType as SchoolTypeFilter)
       : null;
   const schoolsInPref = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
-  // 学校種チップは都道府県選択の前から出すグローバルな絞り込み（下記参照）。選択済みの
-  // 都道府県の一覧にもそのまま適用する。
-  const schools = selectedSchoolType
-    ? schoolsInPref.filter((s) => s.schoolType === selectedSchoolType)
-    : schoolsInPref;
+  // 学校種の絞り込み・結果一覧自体はSchoolTypeExplorer（クライアントコンポーネント）側で
+  // 行うため、ここではschoolTypeQuery（他セクションのhref組み立てに必要）だけ残す。
   const schoolTypeQuery = (st: SchoolTypeFilter | null) => (st ? `school=${encodeURIComponent(st)}` : '');
-  const schoolTypeHref = (st: SchoolTypeFilter | null) => {
-    const params = [selected ? `pref=${encodeURIComponent(selected)}` : '', schoolTypeQuery(st)].filter(Boolean);
-    return params.length ? `/gakko?${params.join('&')}` : '/gakko';
-  };
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
   const coverage = selected ? getFreeSchoolCoverage(selected) : undefined;
   const shienCenters = selected ? EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === selected) : [];
@@ -346,34 +340,12 @@ export default async function GakkoPage({
               続く「都道府県から探す」の直前）に置き、絞り込んでから一覧を見られるように
               した（2026-10-18、「小中高で絞り込みできたらいい」との指摘を受けて）。 */}
           {type === 'gakko' && (
-            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>学校種で絞り込む</div>
-              {/* scroll={false}：デフォルトだとLinkのページ遷移のたびにページ最上部へ
-                  スクロールしてしまい、このカードの位置（結果一覧の直前）を見失って
-                  「選びづらい」と感じる原因になっていた。現在のスクロール位置を保ったまま
-                  絞り込めるようにする（2026-10-18）。 */}
-              <div className="chip-row chip-row-wrap">
-                <Link
-                  href={schoolTypeHref(null)}
-                  scroll={false}
-                  className={`chip chip-tag${!selectedSchoolType ? ' active' : ''}`}
-                  style={{ textDecoration: 'none' }}
-                >
-                  すべて（{MANABI_TAYOUKA_GAKKO.length}）
-                </Link>
-                {SCHOOL_TYPES.map((st) => (
-                  <Link
-                    key={st}
-                    href={schoolTypeHref(st)}
-                    scroll={false}
-                    className={`chip chip-tag${selectedSchoolType === st ? ' active' : ''}`}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    {st}（{MANABI_TAYOUKA_GAKKO.filter((s) => s.schoolType === st).length}）
-                  </Link>
-                ))}
-              </div>
-            </div>
+            <SchoolTypeExplorer
+              allSchools={MANABI_TAYOUKA_GAKKO}
+              schoolsInPref={schoolsInPref}
+              selectedPref={selected}
+              initialSchoolType={selectedSchoolType}
+            />
           )}
 
           {type === 'free' && (
@@ -456,45 +428,11 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {/* 選んだ都道府県の結果は、47都道府県ぶんのチップ一覧より前に出す。以前はチップの
-              下にあり、選んだ直後でも長いチップの壁をスクロールしないと結果が見えなかった
-              （特にスマホで顕著）。選択済みの時はここに結果を先出しし、下の選択UIは
-              「選び直す」ためのものとして後に続ける構成にした（2026-10-18）。 */}
-          {selected && type === 'gakko' && (
-            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>{selected}の学びの多様化学校</div>
-              {schools.length === 0 ? (
-                <div className="muted">
-                  {schoolsInPref.length > 0 && selectedSchoolType ? (
-                    <>
-                      {selected}の学びの多様化学校に「{selectedSchoolType}」はありません。
-                      <Link href={schoolTypeHref(null)} style={{ textDecoration: 'underline' }}>絞り込みを解除する</Link>
-                      と他の学校種が見られます。
-                    </>
-                  ) : (
-                    <>現時点で{selected}には指定校がありません。指定校は年々増えているため、今後追加される可能性があります。下記の文部科学省の最新一覧もあわせてご確認ください。</>
-                  )}
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                  {schools.map((s) => (
-                    <div
-                      key={s.no}
-                      style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
-                    >
-                      <div className="qtext" style={{ fontWeight: 700 }}>
-                        {s.name}
-                        {s.branchName ? `（${s.branchName}）` : ''}
-                      </div>
-                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                        {s.city}・{s.schoolType}・{s.publicPrivate}・{s.type}・{s.designatedYear}指定
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          {/* 選んだ都道府県の学びの多様化学校の結果一覧は、学校種フィルターと合わせて
+              SchoolTypeExplorer（クライアントコンポーネント）側でまとめて描画する
+              （上記、「学校種で絞り込む」直後）。押すたびにページ全体を作り直す
+              「リロードされる感じ」「反応が遅い」との指摘を受け、2026-10-18に
+              Linkによるページ遷移からuseStateによるクライアント側の絞り込みに変更した。 */}
 
           {selected && type === 'free' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
