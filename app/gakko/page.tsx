@@ -6,6 +6,7 @@ import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaGakko';
 import { PREFECTURES } from '@/lib/data/prefectures';
+import PrefectureSelect from './PrefectureSelect';
 
 // 「学びの多様化学校」（旧：不登校特例校）の全国一覧ページ。文部科学省が公表している
 // 指定校リスト（MANABI_TAYOUKA_GAKKO、手動で取り込んだ静的データ）を都道府県で絞り込んで
@@ -35,7 +36,7 @@ export default async function GakkoPage({
 
   return (
     <div className="app-shell">
-      <Header supervised={false} />
+      <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
           <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
@@ -50,29 +51,10 @@ export default async function GakkoPage({
             </div>
           </div>
 
-          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>都道府県から探す</div>
-            <div className="chip-row chip-row-wrap">
-              {PREFECTURES.map((p) => {
-                const count = prefectureCount(p);
-                return (
-                  <Link
-                    key={p}
-                    href={`/gakko?pref=${encodeURIComponent(p)}`}
-                    className={`chip chip-tag${selected === p ? ' active' : ''}`}
-                    style={{
-                      textDecoration: 'none',
-                      display: 'inline-block',
-                      opacity: count > 0 ? 1 : 0.55,
-                    }}
-                  >
-                    {p}{count > 0 ? `（${count}）` : ''}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
+          {/* 選んだ都道府県の結果は、47都道府県ぶんのチップ一覧より前に出す。以前はチップの
+              下にあり、選んだ直後でも長いチップの壁をスクロールしないと結果が見えなかった
+              （特にスマホで顕著）。選択済みの時はここに結果を先出しし、下の選択UIは
+              「選び直す」ためのものとして後に続ける構成にした（2026-10-18）。 */}
           {selected && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>{selected}の学びの多様化学校</div>
@@ -100,6 +82,33 @@ export default async function GakkoPage({
               )}
             </div>
           )}
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
+            {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
+                （2026-10-18）。チップ自体はクローラーが各都道府県ページを個別に
+                たどれるリンクとして残している。 */}
+            <PrefectureSelect selected={selected} />
+            <div className="chip-row chip-row-wrap">
+              {PREFECTURES.map((p) => {
+                const count = prefectureCount(p);
+                return (
+                  <Link
+                    key={p}
+                    href={`/gakko?pref=${encodeURIComponent(p)}`}
+                    className={`chip chip-tag${selected === p ? ' active' : ''}`}
+                    style={{
+                      textDecoration: 'none',
+                      display: 'inline-block',
+                      opacity: count > 0 ? 1 : 0.55,
+                    }}
+                  >
+                    {p}{count > 0 ? `（${count}）` : ''}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
 
           <a
             href={MEXT_SOURCE_URL}

@@ -5,7 +5,19 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import CrisisModal from './CrisisModal';
 
-export default function Header({ supervised }: { supervised: boolean }) {
+export default function Header({
+  supervised,
+  showBack = true,
+}: {
+  supervised: boolean;
+  // ページ本文側に、行き先が明示された「もどる」リンク（.backlink）が既にある場合はtrue。
+  // Header側のrouter.back()な「戻る」とほぼ同じ場所に同じ意味のボタンが2つ並んでしまう
+  // UI上の重複があったため、本文にbacklinkがあるページではHeader側を隠せるようにした
+  // （2026-10-18、「スマホもっと言い出しかたないかな」等の一連のUXレビューを受けて）。
+  // 下部固定ナビ直上の「戻る」（BottomNav、.bottomnav-back）は、長いページでスクロールした
+  // 後にも使える位置的な役割が別にあるため、こちらは引き続きどのページでも出す。
+  showBack?: boolean;
+}) {
   const [crisisOpen, setCrisisOpen] = useState(false);
   // トップページ以外（伴走ノート・マイページ等）のスマホ表示では、「専門家監修：準備中…」
   // 「不登校のご家庭に、次の一手を。」といったトップページ向けの説明文はもう要らない、
@@ -35,7 +47,7 @@ export default function Header({ supervised }: { supervised: boolean }) {
               のは、ページごとに「もどる」の行き先がバラバラ（既存の.backlinkは各ページの
               文脈に応じた固定リンク）なので、ヘッダー側は汎用的な「直前の画面に戻る」に
               した（2026-10-12）。 */}
-          {!isHome && (
+          {!isHome && showBack && (
             <button type="button" className="header-back" onClick={() => router.back()} aria-label="前のページに戻る">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M15 18l-6-6 6-6" />

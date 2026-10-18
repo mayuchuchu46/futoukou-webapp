@@ -37,7 +37,7 @@ export default async function AboutPage() {
 
   return (
     <div className="app-shell">
-      <Header supervised={false} />
+      <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
         <Link href="/mypage" className="backlink">← もどる</Link>

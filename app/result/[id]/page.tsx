@@ -396,7 +396,7 @@ export default async function ResultPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-      <Header supervised={false} />
+      <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
         <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>

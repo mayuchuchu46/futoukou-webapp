@@ -26,7 +26,7 @@ export default function ExpertListClient() {
 
   return (
     <div className="app-shell">
-      <Header supervised={false} />
+      <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
         <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>

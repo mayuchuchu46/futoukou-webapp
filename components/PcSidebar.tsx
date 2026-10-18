@@ -138,32 +138,28 @@ export default function PcSidebar({
         </div>
       )}
 
-      {/* PC（960px以上）のサイドに「お悩み辞典」（/theme・/dictionary/[category]）への
-          導線を追加（2026-10-15、「サイドバナーのほうに、お悩み辞典への誘導できる
-          見せ方の何かをいれたい」との指摘を受けて）。/theme・/dictionary/[category]は
-          これまでアプリ内のどこからもリンクされていなかった孤立ページだったため、
-          ホーム画面の「テーマから探す・お悩み辞典を見る」リンクに続き、常時表示される
-          PCサイドにも入り口を作る。見た目は既存の.home-expert-cardと揃え、
-          新しい見た目を増やさないようにした。 */}
-      <div className="home-expert-card" role="button" tabIndex={0} onClick={() => router.push('/theme')} style={{ cursor: 'pointer' }}>
-        <div style={{ fontSize: 22, flex: '0 0 auto' }} aria-hidden="true">📖</div>
-        <div className="home-expert-body">
-          <div className="home-expert-name">不登校お悩み辞典</div>
-          <div className="home-expert-desc">テーマ別に、実際の相談とよくある傾向をまとめました</div>
-        </div>
-        <span className="expertbanner-cta">›</span>
-      </div>
-
-      {/* 学びの多様化学校（旧：不登校特例校）の都道府県別一覧（/gakko）への導線。
-          上の「不登校お悩み辞典」カードと同じ見た目で、常時表示されるPCサイドにも
-          入り口を作る（2026-10-18、元は進路・学校カテゴリの相談結果ページのみだった）。 */}
-      <div className="home-expert-card" role="button" tabIndex={0} onClick={() => router.push('/gakko')} style={{ cursor: 'pointer' }}>
-        <div style={{ fontSize: 22, flex: '0 0 auto' }} aria-hidden="true">🏫</div>
-        <div className="home-expert-body">
-          <div className="home-expert-name">学びの多様化学校を探す</div>
-          <div className="home-expert-desc">お住まいの都道府県の指定校（旧：不登校特例校）を調べられます</div>
-        </div>
-        <span className="expertbanner-cta">›</span>
+      {/* 「不登校お悩み辞典」（/theme）と「学びの多様化学校を探す」（/gakko）への導線。
+          以前はそれぞれ別カード（アイコン＋見出し＋説明文、1件あたり約70px）で、
+          専門家募集中カード等と合わせてPCサイドが9ブロックまで積み上がり縦に長く
+          なりすぎていた。説明文を省いた1行リストにまとめ、2件で1カードぶんの高さに
+          圧縮した（2026-10-18、「サイドバーの縦の長さ」のUXレビューを受けて）。 */}
+      <div className="card" style={{ padding: 0, overflow: 'hidden', gap: 0 }}>
+        <Link
+          href="/theme"
+          style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '13px 16px', borderBottom: '1px solid var(--border)', textDecoration: 'none', color: 'var(--text)' }}
+        >
+          <span style={{ fontSize: 18 }} aria-hidden="true">📖</span>
+          <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>不登校お悩み辞典</span>
+          <span className="muted">›</span>
+        </Link>
+        <Link
+          href="/gakko"
+          style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '13px 16px', textDecoration: 'none', color: 'var(--text)' }}
+        >
+          <span style={{ fontSize: 18 }} aria-hidden="true">🏫</span>
+          <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>学びの多様化学校を探す</span>
+          <span className="muted">›</span>
+        </Link>
       </div>
 
       {!hideExperts && <ExpertsTeaser experts={experts} className="home-experts-side" />}

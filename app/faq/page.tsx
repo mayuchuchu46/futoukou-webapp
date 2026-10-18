@@ -80,7 +80,7 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
 export default function FaqPage() {
   return (
     <div className="app-shell">
-      <Header supervised={false} />
+      <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
           <Link href="/about" className="backlink">← どうする先生とはに戻る</Link>

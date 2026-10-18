@@ -8,7 +8,7 @@ import BottomNav from '@/components/BottomNav';
 export default function ExpertRecruitPage() {
   return (
     <div className="app-shell">
-      <Header supervised={false} />
+      <Header supervised={false} showBack={false} />
       <div className="main">
         <Link href="/about" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
         <h2 className="pagetitle">専門家募集</h2>
