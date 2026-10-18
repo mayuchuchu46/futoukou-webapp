@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
 import { cacheLife } from 'next/cache';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
@@ -134,16 +133,21 @@ export default async function HomePage() {
     getVerifiedExperts(),
   ]);
 
+  // 上のPromise.allで必要なデータは全てawait済み（HomeClientに渡すpropsは全て解決済み）
+  // なので、HomeClientをSuspenseで包んでも中で実際にsuspendするものは無い。
+  // それにもかかわらずSuspense（fallback={null}）で囲んでいたため、スマホで他ページから
+  // トップに戻る（クライアント側ナビゲーション）際に、このバウンダリがまれに一瞬
+  // fallback（＝何も表示しない＝ヘッダーも含め真っ白）を出してから本来の内容に
+  // 差し替わる現象が起きていた（2026-10-18、「たまにヘッダーが表示されない」との
+  // 報告を受けて不要と判断し削除）。
   return (
-    <Suspense fallback={null}>
-      <HomeClient
-        initialItems={items}
-        initialSupervised={!!guidelines?.supervised}
-        initialCounts={counts}
-        initialTotal={total}
-        initialSidebarBanner={sidebarBanner}
-        initialExperts={experts}
-      />
-    </Suspense>
+    <HomeClient
+      initialItems={items}
+      initialSupervised={!!guidelines?.supervised}
+      initialCounts={counts}
+      initialTotal={total}
+      initialSidebarBanner={sidebarBanner}
+      initialExperts={experts}
+    />
   );
 }
