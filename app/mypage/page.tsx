@@ -65,6 +65,13 @@ export default function MyPage() {
           <span>どうする先生について</span>
           <span className="muted">›</span>
         </Link>
+        {/* 学びの多様化学校（旧：不登校特例校）の都道府県別一覧ページ。これまで進路・学校
+            カテゴリの相談結果ページからしかリンクされていなかったため、BottomNavから常に
+            一タップで来られるマイページにも入り口を追加した（2026-10-18）。 */}
+        <Link href="/gakko" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <span>学びの多様化学校を探す</span>
+          <span className="muted">›</span>
+        </Link>
         <Link href="/expert/login" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <span>専門家として登録・ログイン</span>
           <span className="muted">›</span>

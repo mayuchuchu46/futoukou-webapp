@@ -50,6 +50,20 @@ export default function ThemeClient() {
             </Link>
           ))}
 
+          {/* 学びの多様化学校（旧：不登校特例校）の都道府県別一覧（/gakko）への導線
+              （2026-10-18追加）。カテゴリ一覧の直後に置き、「進路・勉強」「学校との関係」を
+              選ぼうとしている人の目に入りやすい位置にした。 */}
+          <Link href="/gakko" className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 4 }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--sub)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
+              🏫
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 700 }}>学びの多様化学校を探す</div>
+              <div className="muted" style={{ fontSize: 12 }}>都道府県別に指定校（旧：不登校特例校）を調べられます</div>
+            </div>
+            <div className="muted">›</div>
+          </Link>
+
           {/* テーマ（ADHD・起立性調節障害・いじめ…等）別の一覧。実際に投稿が集まっている
               語だけをtag-counts APIが返すので、該当件数が無いテーマは自然に出ない。 */}
           {tags.length > 0 && (

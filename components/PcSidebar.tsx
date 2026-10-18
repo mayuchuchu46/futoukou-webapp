@@ -154,6 +154,18 @@ export default function PcSidebar({
         <span className="expertbanner-cta">›</span>
       </div>
 
+      {/* 学びの多様化学校（旧：不登校特例校）の都道府県別一覧（/gakko）への導線。
+          上の「不登校お悩み辞典」カードと同じ見た目で、常時表示されるPCサイドにも
+          入り口を作る（2026-10-18、元は進路・学校カテゴリの相談結果ページのみだった）。 */}
+      <div className="home-expert-card" role="button" tabIndex={0} onClick={() => router.push('/gakko')} style={{ cursor: 'pointer' }}>
+        <div style={{ fontSize: 22, flex: '0 0 auto' }} aria-hidden="true">🏫</div>
+        <div className="home-expert-body">
+          <div className="home-expert-name">学びの多様化学校を探す</div>
+          <div className="home-expert-desc">お住まいの都道府県の指定校（旧：不登校特例校）を調べられます</div>
+        </div>
+        <span className="expertbanner-cta">›</span>
+      </div>
+
       {!hideExperts && <ExpertsTeaser experts={experts} className="home-experts-side" />}
     </div>
   );
