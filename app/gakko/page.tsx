@@ -632,6 +632,33 @@ export default async function GakkoPage({
               相談するページへ ›
             </div>
           </Link>
+
+          {/* Xシェアボタン */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '12px 0 4px' }}>
+            <div className="muted" style={{ fontSize: 12 }}>このページをシェアする</div>
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent('不登校のお子さんがいるご家庭へ。学びの多様化学校・フリースクール・教育支援センターなどを都道府県から探せます。助成金情報も。')}&url=${encodeURIComponent('https://futoko-dosuru.com/gakko')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                backgroundColor: '#000',
+                color: '#fff',
+                borderRadius: 20,
+                padding: '9px 18px',
+                fontSize: 14,
+                fontWeight: 700,
+                textDecoration: 'none',
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/>
+              </svg>
+              Xでシェアする
+            </a>
+          </div>
         </div>
         <PcSidebar />
       </div>
