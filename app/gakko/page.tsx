@@ -388,19 +388,49 @@ export default async function GakkoPage({
                   <div className="muted" style={{ fontSize: 12 }}>
                     {CORRESPONDENCE_HIGH_SCHOOL_AS_OF}
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                    {tsushinSchools.map((s) => (
-                      <div
-                        key={s.no}
-                        style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
-                      >
-                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                          本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
+                  {/* 115校を1本のリストで出すと探しにくいとの指摘（2026-10-18）を受けて、
+                      本校所在地の都道府県ごとに見出しをつけてグループ化する。すでに
+                      選択済みの場合は1都道府県分だけなのでグループ化しない。 */}
+                  {selected ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                      {tsushinSchools.map((s) => (
+                        <div
+                          key={s.no}
+                          style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                        >
+                          <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                          <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                            本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    PREFECTURES.map((p) => {
+                      const group = tsushinSchools.filter((s) => s.prefecture === p);
+                      if (group.length === 0) return null;
+                      return (
+                        <div key={p} style={{ width: '100%' }}>
+                          <div className="qtext" style={{ fontWeight: 700, fontSize: 13, marginTop: 6 }}>
+                            本校：{p}（{group.length}校）
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 4 }}>
+                            {group.map((s) => (
+                              <div
+                                key={s.no}
+                                style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                              >
+                                <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                                <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                                  {s.municipality ? `${s.municipality}・` : ''}設置者：{s.operator}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
                 </>
               )}
               <a
