@@ -306,6 +306,10 @@ button:active,
   border-radius: 999px;
   line-height: 1.4;
 }
+/* PC用に複製した.supervision-note-pc（補足文の横に表示）は、スマホでは単独行の
+   本体（.supervision-note-mobile）と二重に表示しないよう初期状態では隠し、
+   PC幅（960px以上）でだけ表示に切り替える（2026-10-18）。 */
+.supervision-note-pc { display: none; }
 
 h2.pagetitle {
   font-family: "M PLUS Rounded 1c", sans-serif;
@@ -695,6 +699,30 @@ h2.pagetitle {
     gap: 28px;
   }
   .page-with-sidebar > .page-main { flex: 1; min-width: 0; }
+
+  /* ロゴ行（.header-brand-row）・キャッチコピー（hero-catch）はそれぞれ従来通り
+     単独の行のまま、その下の行で補足文（hero-sub）と「専門家監修：準備中…」
+     バッジ（.supervision-note-pc）だけを横に並べる（2026-10-18、右側に空いて
+     いた余白を埋めたいとの指摘を受けて）。
+     .header-leftのモバイル用デフォルト（flex-direction: column）のままだと
+     flex-wrap:wrapが縦方向に効いてロゴ行が崩れるため、flex-directionを
+     明示的にrowへ上書きする（過去に書き忘れてロゴ位置が崩れたことがあるため
+     要注意）。 */
+  .header-left {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 2px;
+  }
+  .header-back,
+  .header-brand-row,
+  .hero-catch {
+    flex: 1 0 100%;
+  }
+  .supervision-note-pc { display: inline-flex; }
+  .supervision-note-mobile { display: none; }
 
   /* PC向けグローバルメニュー本体。最初はヘッダー下部に独立した行として
      表示していたが、「上から吊り下げられてる感」があるとの指摘（2026-10-18）を
