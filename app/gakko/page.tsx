@@ -187,25 +187,41 @@ export default async function GakkoPage({
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>オンラインフリースクール（全国どこからでも利用可）</div>
               <div className="muted" style={{ fontSize: 12 }}>
-                お住まいの地域にフリースクールが見つからない場合でも、オンラインで利用できる選択肢があります。
+                お住まいの地域にフリースクールが見つからない場合でも、オンラインで利用できる選択肢があります。件数が多いため、性質ごとに分けて掲載しています。
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                {ONLINE_FREE_SCHOOLS.map((s) => (
-                  <a
-                    key={s.name}
-                    href={`/out?to=${encodeURIComponent(s.url)}&id=${encodeURIComponent(s.name)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                      {s.operator}・対象：{s.ageRange}
+              {/* 件数が21件まで増えたため、性質（仲間づくりのある学校タイプ／学習サポート中心／
+                  紹介制で利用に条件がある）で見出しを分けて表示する（2026-10-18）。 */}
+              {([
+                { key: 'community' as const, title: '仲間づくり・居場所のあるオンラインスクール', desc: '学習だけでなく、交流やイベントなど「居場所」としての機能があるタイプです。' },
+                { key: 'tutoring' as const, title: '学習サポート中心（個別指導・家庭教師タイプ）', desc: '交流の場というより、1対1の学習指導が中心のサービスです。' },
+                { key: 'referral' as const, title: '利用に条件があるもの', desc: '自治体等からの紹介がないと利用できず、個人が直接申し込めるわけではないものです。' },
+              ]).map((group) => {
+                const items = ONLINE_FREE_SCHOOLS.filter((s) => s.category === group.key);
+                if (items.length === 0) return null;
+                return (
+                  <div key={group.key} style={{ width: '100%' }}>
+                    <div className="qtext" style={{ fontWeight: 700, fontSize: 13, marginTop: 6 }}>{group.title}</div>
+                    <div className="muted" style={{ fontSize: 12, marginBottom: 6 }}>{group.desc}</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                      {items.map((s) => (
+                        <a
+                          key={s.name}
+                          href={`/out?to=${encodeURIComponent(s.url)}&id=${encodeURIComponent(s.name)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
+                        >
+                          <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                          <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                            {s.operator}・対象：{s.ageRange}
+                          </div>
+                          <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>
+                        </a>
+                      ))}
                     </div>
-                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>
-                  </a>
-                ))}
-              </div>
+                  </div>
+                );
+              })}
               <div className="muted" style={{ fontSize: 12 }}>
                 ※ このうち{ONLINE_FREE_SCHOOLS.filter((s) => s.sourceKind === 'government').length}件は教育委員会・市区町村が公開している情報をもとに、残り{ONLINE_FREE_SCHOOLS.filter((s) => s.sourceKind === 'official-site').length}件は運営会社の公式サイト・発表に基づき掲載しています。教育委員会・学校等が認証・あっせんするものではなく、利用前には各団体へ直接お問い合わせください。
               </div>

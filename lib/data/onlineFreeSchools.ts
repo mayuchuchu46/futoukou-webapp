@@ -12,6 +12,10 @@
 // どちらの場合も「教育委員会・学校等が認証・あっせんするものではない」点は変わらない。
 // 2026年10月に複数回の調査を行い随時追加しているため、各施設のsourceUrlで個別に
 // 確認日・出典を追えるようにしている（一覧全体としての「網羅率」は保証できない）。
+// category: 件数が増えて一覧が見づらくなったため、UI側で見出し分けするための区分。
+//   'community' = 仲間づくり・居場所の機能がある学校・スクールタイプ
+//   'tutoring'  = 個別指導・家庭教師型（交流の場ではなく学習サポートが中心）
+//   'referral'  = 自治体等からの紹介がないと利用できない（個人が直接申し込めない）
 export type OnlineFreeSchool = {
   name: string;
   operator: string;
@@ -21,6 +25,7 @@ export type OnlineFreeSchool = {
   note: string;
   sourceKind: 'government' | 'official-site';
   sourceUrl: string;
+  category: 'community' | 'tutoring' | 'referral';
 };
 
 export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
@@ -33,6 +38,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: 'オンライン上の教室で学習・交流する形式。出席扱い制度の活用支援も行っている。',
     sourceKind: 'government',
     sourceUrl: 'https://www.city.kyoto.lg.jp/kyoiku/cmsfiles/contents/0000332/332077/8_kurasujapan.pdf',
+    category: 'community',
   },
   {
     name: 'N中等部 ネットコース',
@@ -43,6 +49,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '通学キャンパス（N中等部）と同じ学校法人が運営するオンライン専用コース。',
     sourceKind: 'government',
     sourceUrl: 'https://www.city.kyoto.lg.jp/kyoiku/cmsfiles/contents/0000332/332077/8_ncyuutoubu.pdf',
+    category: 'community',
   },
   {
     name: 'オンラインフリースクール シンガク',
@@ -53,6 +60,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '学習塾を母体とするオンラインフリースクール。',
     sourceKind: 'government',
     sourceUrl: 'https://www.city.kyoto.lg.jp/kyoiku/cmsfiles/contents/0000332/332077/8_shingaku.pdf',
+    category: 'community',
   },
   {
     name: 'オンラインフリースクール clulu（クルル）',
@@ -63,6 +71,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '大阪府泉佐野市の「フリースクールキリンのとびら」と同じ団体が運営するオンライン版。',
     sourceKind: 'government',
     sourceUrl: 'https://www.city.kyoto.lg.jp/kyoiku/cmsfiles/contents/0000332/332077/7_clulu.pdf',
+    category: 'community',
   },
   {
     name: 'EMI高等学院・親子キャリアアカデミーちゃんぱす',
@@ -73,6 +82,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '拠点は兵庫県西宮市だが、授業はオンライン中心。',
     sourceKind: 'government',
     sourceUrl: 'https://www.city.kyoto.lg.jp/kyoiku/cmsfiles/contents/0000332/332077/7_emi.pdf',
+    category: 'community',
   },
   {
     name: 'NIJINアカデミー',
@@ -83,6 +93,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: 'メタバース（VR空間）上の「オンライン校舎」に通う形式。学習だけでなく子ども主体のイベント・サークル活動、専門スタッフによるメンタルサポートも行っている。',
     sourceKind: 'government',
     sourceUrl: 'https://www.city.asahikawa.hokkaido.jp/kurashi/218/241/305/d082142_d/fil/NIJIN.pdf',
+    category: 'community',
   },
   {
     name: 'aini school（アイニースクール）',
@@ -93,6 +104,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '学習支援だけでなく、心のケアや仲間づくりに重点を置くオンラインスクール。学校への出席扱いの実績があるとしている（公式サイトによれば2026年2月時点で97%）。政府・教育委員会の一覧には掲載されておらず、運営会社の公式サイトに基づく情報。',
     sourceKind: 'official-site',
     sourceUrl: 'https://ainischool.helloaini.com/',
+    category: 'community',
   },
   {
     name: 'SOZOW SCHOOL 小中等部',
@@ -103,6 +115,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: 'プロジェクト型の学び・メタバースでの交流が特徴とされる。政府・教育委員会の一覧には掲載されておらず、運営会社の発表に基づく情報。',
     sourceKind: 'official-site',
     sourceUrl: 'https://resemom.jp/release/prtimes/20231012/105409.html',
+    category: 'community',
   },
   {
     name: 'すらら',
@@ -113,6 +126,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '厳密には「フリースクール」ではなく自宅学習用のAI教材で、学校の出席扱い制度の活用支援として使われることが多い。他の施設のような交流の場ではない点に注意。政府・教育委員会の一覧には掲載されておらず、運営会社の公式サイトに基づく情報。',
     sourceKind: 'official-site',
     sourceUrl: 'https://surala.jp/',
+    category: 'tutoring',
   },
   {
     name: 'オンラインフリースクール フォレストリンク',
@@ -123,6 +137,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: 'Discord・マインクラフト等を使ったオンラインの居場所づくり。公式サイトが見つからなかったため、リンク先は大阪府の資料（出典）になる。年4回程度、実際に集まる機会もある。',
     sourceKind: 'government',
     sourceUrl: 'https://www.pref.osaka.lg.jp/documents/35606/r8-2freeschool.pdf',
+    category: 'community',
   },
   {
     name: 'For Everyone Study',
@@ -133,6 +148,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '学習支援・コミュニケーション支援・オンラインゲーム交流会等をオンラインで実施。所在地は茨城県石岡市だが活動はオンライン。公式サイトが見つからなかったため、リンク先は茨城県の資料（出典）になる。',
     sourceKind: 'government',
     sourceUrl: 'https://kyoiku.pref.ibaraki.jp/wp-content/uploads/2025/06/freeschool.pdf',
+    category: 'community',
   },
   {
     name: 'ハロハロラボ',
@@ -143,6 +159,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: 'ZOOM・Gather Townを使ったオンラインの居場所・学習支援団体（カリキュラム型の「学校」ではない点に注意）。インターネットがあれば全国どこからでも参加可能。',
     sourceKind: 'government',
     sourceUrl: 'https://www.pref.kanagawa.jp/docs/ch3/cnt/nposupport/npo/07_kinrin/haroharo.html',
+    category: 'community',
   },
   {
     name: 'トライ式中等部',
@@ -153,6 +170,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '対面・オンラインを選択できるほか、自宅訪問支援もある。学校長の判断で出席扱いとなる制度の活用支援を行っている（件数は非公開）。',
     sourceKind: 'official-site',
     sourceUrl: 'https://www.try-gakuin.com/freeschool/',
+    category: 'community',
   },
   {
     name: 'クラーク国際中等部',
@@ -163,6 +181,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: 'オンラインキャンパス「FAMcampus」で全国から参加可能。学校教育法第一条の中学校ではないと公式サイトに明記されており、出席扱いになるかは在籍校の判断次第。',
     sourceKind: 'official-site',
     sourceUrl: 'https://clark-jr.jp/',
+    category: 'community',
   },
   {
     name: '第一学院中等部',
@@ -173,6 +192,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '月1～4回程度の登校とオンラインの相談・学習を組み合わせる形式。「中学校の出席扱いも目指せる」としているが実績数値は非公開。',
     sourceKind: 'official-site',
     sourceUrl: 'https://www.daiichigakuin-jr.jp/',
+    category: 'community',
   },
   {
     name: 'キズキ共育塾',
@@ -183,6 +203,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '完全1対1の個別指導。不登校や発達特性による学び直し・受験サポートが中心で、オンライン授業は全国対応。',
     sourceKind: 'official-site',
     sourceUrl: 'https://kizuki.or.jp/',
+    category: 'tutoring',
   },
   {
     name: 'Branch（ブランチ）',
@@ -193,6 +214,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: 'オンライン版「Branch home+」と東京都内の対面教室「Branch room」がある。東京都の不登校児童生徒向け利用料助成（月額上限2万円）の対象として案内されている。',
     sourceKind: 'official-site',
     sourceUrl: 'https://branchkids.jp/',
+    category: 'community',
   },
   {
     name: 'room-K',
@@ -203,6 +225,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '自治体の教育委員会・学校から紹介を受けた児童生徒のみが対象で、個人が直接申し込むことはできない（2026年10月時点で新規連携自治体の募集も停止中）。利用できるかはお住まいの自治体がカタリバと連携しているかに左右される。',
     sourceKind: 'official-site',
     sourceUrl: 'https://futoko.katariba.online/',
+    category: 'referral',
   },
   {
     name: '家庭教師のユイロ（旧サイル学院）',
@@ -213,6 +236,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '以前は「サイル学院中等部・高等部」というオンライン通信制スクールだったが、sairu.schoolのドメインは現在このサービスに転送されており、家庭教師型の伴走サービスに形態が変わっている。教科学習ではなく生活・自己理解・進路選択を中心に支援し、「不登校・行き渋り・学校が合わない」家庭を対象とすると明記。フリースクールというより個別の家庭教師サービスに近い点に注意。',
     sourceKind: 'official-site',
     sourceUrl: 'https://yuiro.org/',
+    category: 'tutoring',
   },
   {
     name: 'ソウガク オンライン個別指導塾',
@@ -223,6 +247,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '発達障害・グレーゾーンの子ども向けのオンライン個別指導塾。親ブランドの「総合家庭教師ソウガク」は不登校の子ども向け学習指導も行うとしているが、このサービス自体が不登校を主対象とするとは明記されていない。居場所・交流の機能はなく学習指導が中心。',
     sourceKind: 'official-site',
     sourceUrl: 'https://resemom.jp/release/prtimes/20231116/107101.html',
+    category: 'tutoring',
   },
   {
     name: 'WIALIS（ウィアリス）オンラインフリースクール',
@@ -233,5 +258,6 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     note: '3Dバーチャルキャンパスにアバターで登校する形式。教員免許を持つスタッフが在籍。出席扱いは「目指す」支援であり実績数値は非公開。',
     sourceKind: 'official-site',
     sourceUrl: 'https://wialis.co.jp/',
+    category: 'community',
   },
 ];
