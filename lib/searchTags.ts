@@ -95,6 +95,20 @@ export function getThemeSearchWords(word: string): string[] {
   return [word, ...(THEME_SYNONYMS[word] || [])];
 }
 
+// 検索・集計で使うテーマ語（canonical word）と、画面に表示する名称を分けるための
+// 上書きマップ（2026-10-18追加）。「「不登校特例校」に関する実際の相談って書いてるけど、
+// 学びの多様化学校だよね」との指摘を受けて追加。不登校特例校は2026年の制度改称で
+// 「学びの多様化学校」という呼び方が主に使われるようになったが、canonical word自体を
+// 変えるとURL（/dictionary/theme/[word]）・既存のタグ件数集計・サイトマップ等に
+// 影響するため変えず、表示文言だけをこのマップで置き換える。
+const THEME_DISPLAY_LABELS: Record<string, string> = {
+  不登校特例校: '学びの多様化学校',
+};
+
+export function getThemeDisplayLabel(word: string): string {
+  return THEME_DISPLAY_LABELS[word] ?? word;
+}
+
 // 1件の投稿本文（question・answerなど1フィールド分）が、テーマ語またはその同義語の
 // いずれかを含むかどうかを判定する（一覧カード・詳細ページの「関連テーマ」表示で使用）。
 export function matchesThemeText(text: string | null | undefined, word: string): boolean {

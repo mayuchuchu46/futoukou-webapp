@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getThemeDictionaryData } from '@/lib/themeSummary';
+import { getThemeDisplayLabel } from '@/lib/searchTags';
 
 // /gakkoページ唯一のDB問い合わせ（lib/themeSummary.ts）。以前はページ本体（GakkoPage）の
 // 中で直接awaitしていたため、このデータベース往復が終わるまでページ全体（ヘッダー・
@@ -12,10 +13,15 @@ export default async function RelatedConsultations({ themeWord }: { themeWord: s
   const themeData = await getThemeDictionaryData(themeWord);
   if (!themeData || themeData.count === 0) return null;
 
+  // 検索・集計上の語（themeWord、例：不登校特例校）と、画面に出す名称は分けている
+  // （lib/searchTags.ts getThemeDisplayLabel参照）。「「不登校特例校」に関する実際の相談って
+  // 書いてるけど学びの多様化学校だよね」との指摘を受けて追加（2026-10-18）。
+  const displayLabel = getThemeDisplayLabel(themeWord);
+
   return (
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
       <div className="answer-label" style={{ fontSize: 14 }}>
-        「{themeWord}」に関する実際の相談（{themeData.count}件）
+        「{displayLabel}」に関する実際の相談（{themeData.count}件）
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
         {themeData.consultations.slice(0, 5).map((c) => (
@@ -30,7 +36,7 @@ export default async function RelatedConsultations({ themeWord }: { themeWord: s
         ))}
       </div>
       <Link href={`/dictionary/theme/${encodeURIComponent(themeWord)}`} className="btn-secondary">
-        「{themeWord}」の相談をもっと見る
+        「{displayLabel}」の相談をもっと見る
       </Link>
     </div>
   );

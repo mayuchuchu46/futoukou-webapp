@@ -6,6 +6,7 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { isDictionaryTheme, getThemeDictionaryData, DICTIONARY_INDEX_THRESHOLD } from '@/lib/themeSummary';
+import { getThemeDisplayLabel } from '@/lib/searchTags';
 
 // テーマ（lib/searchTags.tsの候補ワード）別「不登校お悩み辞典」ページ。
 // カテゴリ別のapp/dictionary/[category]/page.tsxと同じ仕組みで、実際に寄せられた
@@ -28,8 +29,11 @@ export async function generateMetadata({
   }
 
   const { count } = await getThemeDictionaryData(word);
-  const title = `不登校と「${word}」｜よくあるお悩みと実際の相談 - ${SITE_NAME}`;
-  const description = `不登校の「${word}」に関する、保護者からの実際の相談をまとめました。よくある傾向と、今できる対応のヒントを紹介します。`;
+  // 検索・集計上の語（word、例：不登校特例校）と画面表示の名称は分けている
+  // （lib/searchTags.ts getThemeDisplayLabel参照、2026-10-18追加）。
+  const displayLabel = getThemeDisplayLabel(word);
+  const title = `不登校と「${displayLabel}」｜よくあるお悩みと実際の相談 - ${SITE_NAME}`;
+  const description = `不登校の「${displayLabel}」に関する、保護者からの実際の相談をまとめました。よくある傾向と、今できる対応のヒントを紹介します。`;
   const url = `${SITE_URL}/dictionary/theme/${encodeURIComponent(word)}`;
 
   // カテゴリ辞典ページと同じ閾値・考え方で、件数が少ないうちはnoindexにする。
@@ -63,6 +67,7 @@ export default async function DictionaryThemePage({
   }
 
   const { overview, count, consultations } = await getThemeDictionaryData(word);
+  const displayLabel = getThemeDisplayLabel(word);
 
   return (
     <div className="app-shell">
@@ -73,7 +78,7 @@ export default async function DictionaryThemePage({
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
-              不登校と「{word}」
+              不登校と「{displayLabel}」
             </div>
             {overview ? (
               <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>{overview}</div>
@@ -102,7 +107,7 @@ export default async function DictionaryThemePage({
                 ))}
               </div>
               <Link href={`/?q=${encodeURIComponent(word)}`} className="btn-secondary">
-                「{word}」の相談をすべて見る
+                「{displayLabel}」の相談をすべて見る
               </Link>
             </div>
           )}
