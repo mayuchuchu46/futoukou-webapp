@@ -696,27 +696,6 @@ h2.pagetitle {
   }
   .page-with-sidebar > .page-main { flex: 1; min-width: 0; }
 
-  /* 「不登校のご家庭に、次の一手を。」（hero-catch）の隣に「『どうしたらいい？』に
-     AIと専門家が回答＆伴走」（hero-sub）を並べて表示する（2026-10-18、PCでの指摘を
-     受けて）。.header-leftをflex-wrapにし、ロゴ行（.header-brand-row）だけ
-     flex-basis:100%で単独の行にすることで、残るhero-catch・hero-subの2つだけが
-     その下で横並びになる。header-right（つらいときはこちら等）やsupervision-note
-     （専門家監修バッジ）はここでは変更しない。 */
-  .header-left {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    column-gap: 10px;
-    row-gap: 2px;
-  }
-  .header-back,
-  .header-brand-row {
-    flex: 1 0 100%;
-  }
-  .hero-catch {
-    max-width: none;
-  }
-
   /* PC向けグローバルメニュー本体。最初はヘッダー下部に独立した行として
      表示していたが、「上から吊り下げられてる感」があるとの指摘（2026-10-18）を
      受け、ロゴと同じ行（.header-brand-row）に移動した。 */
