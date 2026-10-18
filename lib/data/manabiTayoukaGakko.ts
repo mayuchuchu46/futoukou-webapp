@@ -7,8 +7,10 @@
 // ために2026-10-18追加。文科省の一覧自体には含まれておらず、各校の公式サイト・
 // 設置自治体の教育委員会ページ等をWeb調査して個別に集めたもの。確実な一次情報が
 // 見つからなかった学校はnullのままにしている（住所・URLを推測で埋めることはしない）。
-// 84校中56校で両方（または一部）を確認できたが、残り28校は分教室型など情報が少ない
-// 学校が多く、継続調査が必要（2026-10-18時点）。
+// 84校中82校でofficialUrl・addressのいずれか（または両方）を確認できた（2026-10-18時点）。
+// 残り2校（no.44 大野城市立みずほ中学校、no.65 東表中学校）は複数回・複数角度で
+// 調査しても公式情報源が見つからず、null のまま。前者は存在自体の確認ができず、
+// 後者は運営法人（学校法人雙星舎）がウェブ上にほぼ情報を持たないため。
 export type ManabiTayoukaGakko = {
   no: number;
   /** 設置形態：本校型・分校型・分教室型・コース指定型 */
@@ -129,8 +131,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "私立",
     "designatedYear": "平成29年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://seino-gakuen.ed.jp",
+    "address": "〒501-0706 岐阜県揖斐郡揖斐川町西津汲481-3"
   },
   {
     "no": 9,
@@ -181,8 +183,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "小・中",
     "publicPrivate": "公立",
     "designatedYear": "令和5年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://www.pref.miyagi.jp/documents/5839/05shiroishiminamityuu2026.pdf",
+    "address": "〒989-0112 宮城県白石市越河平字平合23-1"
   },
   {
     "no": 13,
@@ -194,7 +196,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "小学校",
     "publicPrivate": "私立",
     "designatedYear": "令和5年",
-    "officialUrl": null,
+    "officialUrl": "https://www.city.sendai.jp/shogakuchose/kurashi/manabu/kyoiku/inkai/kakushu/shinse/roripoppu.html",
     "address": null
   },
   {
@@ -207,8 +209,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "私立",
     "designatedYear": "令和6年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://jhs.sanko.ac.jp/",
+    "address": "〒120-0015 東京都足立区足立1丁目13番26号"
   },
   {
     "no": 15,
@@ -324,8 +326,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "小・中",
     "publicPrivate": "私立",
     "designatedYear": "令和7年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://kirin.mori.ac.jp/aboutkirin",
+    "address": "〒247-0022 神奈川県横浜市栄区庄戸3-1-1"
   },
   {
     "no": 24,
@@ -376,8 +378,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "小・中",
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://www.city.toyama.lg.jp/_res/projects/default_project/_page_/001/019/163/r8kosiharu.pdf",
+    "address": "〒931-8414 富山市浜黒崎3301-2"
   },
   {
     "no": 28,
@@ -584,7 +586,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
-    "officialUrl": null,
+    "officialUrl": "https://www.city.shimonoseki.lg.jp/uploaded/attachment/96430.pdf",
     "address": null
   },
   {
@@ -688,7 +690,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "小学校",
     "publicPrivate": "公立",
     "designatedYear": "令和5年",
-    "officialUrl": null,
+    "officialUrl": "https://www.mext.go.jp/content/20240829-mxt_jidou02-000037766_03.pdf",
     "address": null
   },
   {
@@ -701,7 +703,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和5年",
-    "officialUrl": null,
+    "officialUrl": "https://www.mext.go.jp/content/20240829-mxt_jidou02-000037766_03.pdf",
     "address": null
   },
   {
@@ -727,8 +729,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "小・中",
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://edu-kitagata.com/kitagakuen/",
+    "address": "〒501-0431 岐阜県本巣郡北方町北方1367-1"
   },
   {
     "no": 55,
@@ -740,8 +742,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://www.city.takayama.lg.jp/_res/projects/default_project/_page_/001/009/985/127r7miyachu.pdf",
+    "address": "岐阜県高山市一之宮町3072"
   },
   {
     "no": 56,
@@ -753,8 +755,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://www.pref.miyazaki.lg.jp/documents/107038/107038_20260224164426-1.pdf",
+    "address": "延岡市熊野江町2600-2"
   },
   {
     "no": 57,
@@ -766,8 +768,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://tanagura.fcs.ed.jp/tanagura-jh/",
+    "address": "〒963-6131 福島県東白川郡棚倉町大字棚倉字城跡88番地5"
   },
   {
     "no": 58,
@@ -844,8 +846,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://www.city.fuchu.tokyo.jp/kyoiku/kyoiku_sodan/kyouikucenter.html",
+    "address": "東京都府中市清水が丘1丁目3番地"
   },
   {
     "no": 64,
@@ -857,7 +859,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
-    "officialUrl": null,
+    "officialUrl": "https://www.city.mimasaka.lg.jp/soshiki/kyouiku/gakkoukyoiku/8844.html",
     "address": null
   },
   {
@@ -883,8 +885,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://www.city.nasushiobara.tochigi.jp/kosodate_kyoiku/kyoiku/22353.html",
+    "address": "栃木県那須塩原市南郷屋5丁目163番地"
   },
   {
     "no": 67,
@@ -948,8 +950,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://www.pref.kochi.lg.jp/doc/2026082600110/file_contents/file_20268263141534_1.pdf",
+    "address": "高知県吾川郡いの町6032番地3"
   },
   {
     "no": 72,
@@ -974,8 +976,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "中学校",
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
-    "officialUrl": null,
-    "address": null
+    "officialUrl": "https://www.satsuma-net.jp/kosodate_manabi/kyoiku/1/3863.html",
+    "address": "鹿児島県薩摩郡さつま町宮之城屋地391"
   },
   {
     "no": 74,
