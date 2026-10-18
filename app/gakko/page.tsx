@@ -32,9 +32,9 @@ import PrefectureSelect from './PrefectureSelect';
 // データはいずれも公的機関の公開情報で著作権上の問題がなく、更新頻度も低いため、
 // Supabaseにテーブルを作らずアプリ内の静的データとして持つ（「時間をかけたくない」との
 // 方針に合わせた最小実装）。
-const GAKKO_TITLE = `学びの多様化学校・フリースクールを都道府県から探す｜${SITE_NAME}`;
+const GAKKO_TITLE = `学びの多様化学校（旧：不登校特例校）を都道府県から探す｜${SITE_NAME}`;
 const GAKKO_DESCRIPTION =
-  '不登校の子どもに合わせた「学びの多様化学校」（旧：不登校特例校）や、民間の「フリースクール」（地域・オンライン）を探せます。文部科学省や教育委員会等の公開情報をもとに掲載しています。';
+  '不登校の子どもの実態に配慮して、文部科学省から特別な教育課程を組むことを認められた「学びの多様化学校」（旧：不登校特例校）を都道府県から探せます。フリースクールや教育支援センター、助成金情報も掲載。文部科学省や教育委員会等の公開情報をもとにしています。';
 
 export const metadata: Metadata = {
   title: GAKKO_TITLE,
@@ -659,7 +659,7 @@ export default async function GakkoPage({
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '12px 0 4px' }}>
             <div className="muted" style={{ fontSize: 12 }}>このページをシェアする</div>
             <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent('不登校のお子さんがいるご家庭へ。学びの多様化学校・フリースクール・教育支援センターなどを都道府県から探せます。助成金情報も。')}&url=${encodeURIComponent('https://futoko-dosuru.com/gakko')}`}
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent('不登校のお子さんがいるご家庭へ。文部科学省が指定する「学びの多様化学校」（旧：不登校特例校）を都道府県から探せます。フリースクールや助成金情報も。')}&url=${encodeURIComponent('https://futoko-dosuru.com/gakko')}`}
               target="_blank"
               rel="noopener noreferrer"
               style={{
