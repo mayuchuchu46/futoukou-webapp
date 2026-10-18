@@ -4,6 +4,7 @@ import { SITE_URL } from '@/lib/site';
 import { CATS } from '@/lib/categories';
 import { DICTIONARY_INDEX_THRESHOLD } from '@/lib/categorySummary';
 import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
+import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -87,5 +88,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...dictionaryEntries, ...themeEntries, ...consultationEntries];
+  // 学校紹介ページ（/gakko/school/[no]）も、カテゴリ・テーマ辞典と同じ考え方で
+  // 抜け漏れていた（2026-10-18、「SEO的にどう？」との質問を受けて確認したところ発覚）。
+  // officialUrl・addressのどちらも確認できていない学校はページ自体がnoindexになる
+  // （app/gakko/school/[no]/page.tsx参照）ため、同じ条件でここも絞り込む。
+  const schoolEntries: MetadataRoute.Sitemap = MANABI_TAYOUKA_GAKKO.filter(
+    (s) => s.officialUrl || s.address
+  ).map((s) => ({
+    url: `${SITE_URL}/gakko/school/${s.no}`,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
+  return [...staticEntries, ...dictionaryEntries, ...themeEntries, ...schoolEntries, ...consultationEntries];
 }
