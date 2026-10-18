@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { ManabiTayoukaGakko } from '@/lib/data/manabiTayoukaGakko';
 
@@ -101,7 +102,14 @@ export default function SchoolTypeExplorer({
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
               {filteredInPref.map((s) => (
-                <div key={s.no} style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}>
+                // 学校名を押すと1校ごとの紹介ページ（/gakko/school/[no]）へ飛べるように
+                // した（2026-10-18、「学校名を押したらその学校の紹介ページに行くように
+                // できる？」との指摘を受けて追加）。
+                <Link
+                  key={s.no}
+                  href={`/gakko/school/${s.no}`}
+                  style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
+                >
                   <div className="qtext" style={{ fontWeight: 700 }}>
                     {s.name}
                     {s.branchName ? `（${s.branchName}）` : ''}
@@ -109,7 +117,7 @@ export default function SchoolTypeExplorer({
                   <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
                     {s.city}・{s.schoolType}・{s.publicPrivate}・{s.type}・{s.designatedYear}指定
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
