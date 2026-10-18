@@ -19,6 +19,11 @@ import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaG
 // officialUrl・addressのどちらも確認できていない学校はnoindex（/dictionary/theme/[word]
 // のDICTIONARY_INDEX_THRESHOLDと同じ考え方）にし、情報が増え次第自動でインデックス
 // 対象になるようにしている。ページ自体は変わらず閲覧・内部リンクできる。
+//
+// 2026-10-18、「もうちょいその学校の紹介文かける？」との指摘を受けて、84校中51校に
+// lib/data/manabiTayoukaGakko.tsのnoteフィールド（運営法人・愛称・設置場所・開校年月
+// など、Web調査で確認できた固有の事実のみ）を追加し、トップの説明文に差し込んでいる。
+// 推測で紹介文を埋めることはしていない（note自体が無い学校はテンプレ文のみ）。
 export const instant = false;
 
 function findSchool(noParam: string) {
@@ -39,7 +44,8 @@ export async function generateMetadata({
   }
   const fullName = school.branchName ? `${school.name}（${school.branchName}）` : school.name;
   const title = `${fullName}｜学びの多様化学校 - ${SITE_NAME}`;
-  const description = `${school.prefecture}${school.city}にある学びの多様化学校「${fullName}」（${school.schoolType}・${school.publicPrivate}・${school.designatedYear}指定）の情報です。`;
+  const baseDescription = `${school.prefecture}${school.city}にある学びの多様化学校「${fullName}」（${school.schoolType}・${school.publicPrivate}・${school.designatedYear}指定）の情報です。`;
+  const description = school.note ? `${baseDescription}${school.note}` : baseDescription;
   const url = `${SITE_URL}/gakko/school/${school.no}`;
   const hasEnoughInfo = !!(school.officialUrl || school.address);
 
@@ -83,7 +89,8 @@ export default async function GakkoSchoolPage({
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>{fullName}</div>
             <div className="qtext">
-              {school.prefecture}{school.city}にある学びの多様化学校（旧：不登校特例校）です。
+              {school.prefecture}{school.city}にある、{school.publicPrivate}の{school.schoolType}の学びの多様化学校（旧：不登校特例校）です。{school.designatedYear}に指定を受けた、設置形態「{school.type}」の学校です。
+              {school.note && <> {school.note}</>}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
               {[

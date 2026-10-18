@@ -11,6 +11,11 @@
 // 残り2校（no.44 大野城市立みずほ中学校、no.65 東表中学校）は複数回・複数角度で
 // 調査しても公式情報源が見つからず、null のまま。前者は存在自体の確認ができず、
 // 後者は運営法人（学校法人雙星舎）がウェブ上にほぼ情報を持たないため。
+//
+// note（51校で追加、2026-10-18）は、学校紹介ページの説明文をテンプレ的な一文だけで
+// 終わらせず、各校固有の情報を増やすため追加。運営法人名・愛称・設置場所（◯◯内に
+// 設置、等）・開校年月・改称前の名称など、Web調査で実際に確認できた事実のみを記載。
+// 推測や未確認の関連（学校間の親子関係等）は含めていない。
 export type ManabiTayoukaGakko = {
   no: number;
   /** 設置形態：本校型・分校型・分教室型・コース指定型 */
@@ -27,6 +32,8 @@ export type ManabiTayoukaGakko = {
   officialUrl: string | null;
   /** 住所（公式情報源で確認できたもののみ。無ければnull） */
   address: string | null;
+  /** 運営法人・愛称・設置場所・開校年月など、Web調査で確認できた固有の補足情報（無ければnull） */
+  note: string | null;
 };
 
 export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
@@ -41,7 +48,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "平成16年",
     "officialUrl": "https://hachioji-school.ed.jp/takao3g/",
-    "address": "東京都八王子市館町1097-30 〒193-0944"
+    "address": "東京都八王子市館町1097-30 〒193-0944",
+    "note": null
   },
   {
     "no": 2,
@@ -54,7 +62,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "平成16年",
     "officialUrl": "https://cms.edu.city.kyoto.jp/201704/",
-    "address": "京都市中京区姉小路通東洞院東入曇華院前町706-3 〒604-8184"
+    "address": "京都市中京区姉小路通東洞院東入曇華院前町706-3 〒604-8184",
+    "note": null
   },
   {
     "no": 3,
@@ -67,7 +76,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "平成17年",
     "officialUrl": "https://www.seisahighschool.ed.jp/jrh/",
-    "address": "神奈川県横浜市緑区霧が丘6丁目13番地 〒226-0016"
+    "address": "神奈川県横浜市緑区霧が丘6丁目13番地 〒226-0016",
+    "note": "星槎高等学校の中学部として設置されています。"
   },
   {
     "no": 4,
@@ -80,7 +90,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "平成19年",
     "officialUrl": "https://katsushika.shuregakuen.ed.jp/",
-    "address": "東京都葛飾区新小岩3-25-1 〒124-0024"
+    "address": "東京都葛飾区新小岩3-25-1 〒124-0024",
+    "note": "学校法人東京シューレ学園が運営しています。なお、2027年4月に「平井キャンパス」へ移転する予定があると案内されており、所在地が今後変わる可能性があります。"
   },
   {
     "no": 5,
@@ -93,7 +104,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "平成19年",
     "officialUrl": null,
-    "address": "京都市下京区大宮通綾小路下る綾大宮町51-2"
+    "address": "京都市下京区大宮通綾小路下る綾大宮町51-2",
+    "note": null
   },
   {
     "no": 6,
@@ -106,7 +118,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "平成24年",
     "officialUrl": "https://seisa-nagoyajh.ed.jp/",
-    "address": "愛知県名古屋市中村区名駅南4-6-38 〒450-0003"
+    "address": "愛知県名古屋市中村区名駅南4-6-38 〒450-0003",
+    "note": "学校法人国際学園（星槎グループ）が運営しています。"
   },
   {
     "no": 7,
@@ -119,7 +132,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "平成26年",
     "officialUrl": "http://seisa.ed.jp/momiji-jh/",
-    "address": "北海道札幌市厚別区もみじ台北5丁目12-1 〒004-0014"
+    "address": "北海道札幌市厚別区もみじ台北5丁目12-1 〒004-0014",
+    "note": "学校法人国際学園（星槎グループ）が運営しています。"
   },
   {
     "no": 8,
@@ -132,7 +146,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "平成29年",
     "officialUrl": "https://seino-gakuen.ed.jp",
-    "address": "〒501-0706 岐阜県揖斐郡揖斐川町西津汲481-3"
+    "address": "〒501-0706 岐阜県揖斐郡揖斐川町西津汲481-3",
+    "note": "学校法人西濃学園が運営する、西濃学園中学校・高等学校の中学部です。"
   },
   {
     "no": 9,
@@ -145,7 +160,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和2年",
     "officialUrl": "https://edogawa.shuregakuen.ed.jp/",
-    "address": "東京都江戸川区西小岩2-4-1 〒133-0057"
+    "address": "東京都江戸川区西小岩2-4-1 〒133-0057",
+    "note": "学校法人東京シューレ学園が運営しています。"
   },
   {
     "no": 10,
@@ -158,7 +174,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和2年",
     "officialUrl": "https://www.seisahighschool.ed.jp/",
-    "address": "神奈川県横浜市旭区若葉台4丁目35番1号 〒241-0801"
+    "address": "神奈川県横浜市旭区若葉台4丁目35番1号 〒241-0801",
+    "note": "学校法人国際学園（星槎グループ）が運営しています。"
   },
   {
     "no": 11,
@@ -171,7 +188,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和3年",
     "officialUrl": "https://gifu-city.schoolcms.net/soujun-j/",
-    "address": "岐阜県岐阜市金宝町4-1 〒500-8847"
+    "address": "岐阜県岐阜市金宝町4-1 〒500-8847",
+    "note": null
   },
   {
     "no": 12,
@@ -184,7 +202,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和5年",
     "officialUrl": "https://www.pref.miyagi.jp/documents/5839/05shiroishiminamityuu2026.pdf",
-    "address": "〒989-0112 宮城県白石市越河平字平合23-1"
+    "address": "〒989-0112 宮城県白石市越河平字平合23-1",
+    "note": "通称「白石きぼう学園」として知られています。"
   },
   {
     "no": 13,
@@ -197,7 +216,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和5年",
     "officialUrl": "https://www.city.sendai.jp/shogakuchose/kurashi/manabu/kyoiku/inkai/kakushu/shinse/roripoppu.html",
-    "address": null
+    "address": null,
+    "note": null
   },
   {
     "no": 14,
@@ -210,7 +230,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和6年",
     "officialUrl": "https://jhs.sanko.ac.jp/",
-    "address": "〒120-0015 東京都足立区足立1丁目13番26号"
+    "address": "〒120-0015 東京都足立区足立1丁目13番26号",
+    "note": "学校法人三幸学園が運営しています。"
   },
   {
     "no": 15,
@@ -223,7 +244,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和6年",
     "officialUrl": "https://www.ikuno.ed.jp",
-    "address": "兵庫県朝来市生野町栃原28-2"
+    "address": "兵庫県朝来市生野町栃原28-2",
+    "note": "学校法人生野学園が運営しています。"
   },
   {
     "no": 16,
@@ -236,7 +258,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
     "officialUrl": null,
-    "address": "大阪市浪速区日本橋東3-1-23(旧大阪市立日東小学校)"
+    "address": "大阪市浪速区日本橋東3-1-23(旧大阪市立日東小学校)",
+    "note": null
   },
   {
     "no": 17,
@@ -249,7 +272,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
     "officialUrl": "https://tyu.oita-ed.jp/kusu/tayouka/",
-    "address": "大分県玖珠郡玖珠町森3889"
+    "address": "大分県玖珠郡玖珠町森3889",
+    "note": null
   },
   {
     "no": 18,
@@ -262,7 +286,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.kaminoyama.ed.jp/06050001",
-    "address": "山形県上山市阿弥陀地字上原906番1"
+    "address": "山形県上山市阿弥陀地字上原906番1",
+    "note": "通称「上山きらり学園」として知られています。"
   },
   {
     "no": 19,
@@ -275,7 +300,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.pref.mie.lg.jp/TOPICS/m0045300148.htm",
-    "address": "三重県津市柳山津興1239(県立みえ夢学園高等学校敷地内)"
+    "address": "三重県津市柳山津興1239(県立みえ夢学園高等学校敷地内)",
+    "note": null
   },
   {
     "no": 20,
@@ -288,7 +314,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.ikuno.ed.jp",
-    "address": "兵庫県朝来市生野町栃原28-2"
+    "address": "兵庫県朝来市生野町栃原28-2",
+    "note": "学校法人生野学園が運営する、生野学園高等学校（同一キャンパス）の中学部です。"
   },
   {
     "no": 21,
@@ -301,7 +328,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": null,
-    "address": "福岡市早良区百道3丁目10番1号(福岡市教育センター新館2階)"
+    "address": "福岡市早良区百道3丁目10番1号(福岡市教育センター新館2階)",
+    "note": null
   },
   {
     "no": 22,
@@ -314,7 +342,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": null,
-    "address": "宮崎市旭1丁目4番1号(宮崎市教育情報研修センター内)"
+    "address": "宮崎市旭1丁目4番1号(宮崎市教育情報研修センター内)",
+    "note": "宮崎市教育情報研修センター内に設置されています。"
   },
   {
     "no": 23,
@@ -327,7 +356,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和7年",
     "officialUrl": "https://kirin.mori.ac.jp/aboutkirin",
-    "address": "〒247-0022 神奈川県横浜市栄区庄戸3-1-1"
+    "address": "〒247-0022 神奈川県横浜市栄区庄戸3-1-1",
+    "note": "2026年1月に開校した、神奈川県で初めての小中一貫型の学びの多様化学校です。学校法人森学園が運営しています。"
   },
   {
     "no": 24,
@@ -340,7 +370,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": null,
-    "address": "埼玉県さいたま市浦和区岸町6-13-15(さいたま市立教育研究所内・岸町キャンパス)"
+    "address": "埼玉県さいたま市浦和区岸町6-13-15(さいたま市立教育研究所内・岸町キャンパス)",
+    "note": null
   },
   {
     "no": 25,
@@ -353,7 +384,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://shibanishi-yousyun-j-kawaguchi-saitama.edumap.jp/",
-    "address": "埼玉県川口市芝園町3-18"
+    "address": "埼玉県川口市芝園町3-18",
+    "note": "改称前は「川口市立芝西中学校陽春分校」として設置されていました。"
   },
   {
     "no": 26,
@@ -366,7 +398,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": null,
-    "address": "東京都世田谷区北沢4-32-20"
+    "address": "東京都世田谷区北沢4-32-20",
+    "note": null
   },
   {
     "no": 27,
@@ -379,7 +412,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.toyama.lg.jp/_res/projects/default_project/_page_/001/019/163/r8kosiharu.pdf",
-    "address": "〒931-8414 富山市浜黒崎3301-2"
+    "address": "〒931-8414 富山市浜黒崎3301-2",
+    "note": "2026年4月に開校した学校で、富山市立浜黒崎小学校の校舎を活用しています。"
   },
   {
     "no": 28,
@@ -392,7 +426,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://nisshin-jh.aichi-c.ed.jp",
-    "address": "愛知県日進市米野木町三ヶ峯4-18"
+    "address": "愛知県日進市米野木町三ヶ峯4-18",
+    "note": null
   },
   {
     "no": 29,
@@ -405,7 +440,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.ama-net.ed.jp/school/j24/",
-    "address": "兵庫県尼崎市南城内10番地の2"
+    "address": "兵庫県尼崎市南城内10番地の2",
+    "note": "2026年4月に開校した学びの多様化学校です。"
   },
   {
     "no": 30,
@@ -418,7 +454,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.miyakonojo.miyazaki.jp/soshiki/42/84889.html",
-    "address": "宮崎県都城市立野町3764番地1（南九州大学都城キャンパス内 ひばり館2階）"
+    "address": "宮崎県都城市立野町3764番地1（南九州大学都城キャンパス内 ひばり館2階）",
+    "note": "南九州大学都城キャンパス内に設置されており、2026年4月に開校しました。"
   },
   {
     "no": 31,
@@ -431,7 +468,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.pref.kagoshima.jp/ba02/kyoiku-bunka/school/seibi/seibijokyo/documents/5176_20260307155836-1.pdf",
-    "address": "鹿児島県志布志市有明町野井倉1756番地11"
+    "address": "鹿児島県志布志市有明町野井倉1756番地11",
+    "note": null
   },
   {
     "no": 32,
@@ -444,7 +482,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和8年",
     "officialUrl": "https://nagomi-jhs.shizugaku.jp/",
-    "address": "静岡県静岡市駿河区八幡1-1-1（〒422-8076）"
+    "address": "静岡県静岡市駿河区八幡1-1-1（〒422-8076）",
+    "note": "学校法人静岡学園が運営し、2026年4月に開校しました。"
   },
   {
     "no": 33,
@@ -457,7 +496,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和2年",
     "officialUrl": "https://www.city.fussa.tokyo.jp/map/gakko/1021317.html",
-    "address": "東京都福生市牛浜162（福生第三小学校敷地内）"
+    "address": "東京都福生市牛浜162（福生第三小学校敷地内）",
+    "note": "福生市立福生第三小学校の敷地内に設置されています。"
   },
   {
     "no": 34,
@@ -470,7 +510,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
     "officialUrl": "https://www.e-net21.city.omuta.fukuoka.jp/hoshizora/index.html",
-    "address": "福岡県大牟田市大正町5丁目4-16"
+    "address": "福岡県大牟田市大正町5丁目4-16",
+    "note": null
   },
   {
     "no": 35,
@@ -483,7 +524,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.city.kamakura.kanagawa.jp/kisya/data/2024/documents/setsumeikaiflyer.pdf",
-    "address": "神奈川県鎌倉市由比ガ浜三丁目9番"
+    "address": "神奈川県鎌倉市由比ガ浜三丁目9番",
+    "note": null
   },
   {
     "no": 36,
@@ -496,7 +538,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.city.kobe.lg.jp/a33992/hutoukou/manabinotayoukagakkou.html",
-    "address": "兵庫県神戸市中央区橘通3丁目4番3号（男女共同参画センター あすてっぷKOBE 3階）"
+    "address": "兵庫県神戸市中央区橘通3丁目4番3号（男女共同参画センター あすてっぷKOBE 3階）",
+    "note": "愛称は「みらいポート」です。男女共同参画センター「アステップKOBE」内に設置され、2025年4月に開校しました。"
   },
   {
     "no": 37,
@@ -509,7 +552,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.town.umi.lg.jp/site/manabinotayouka",
-    "address": null
+    "address": null,
+    "note": "愛称は「ハピネス分校」です。"
   },
   {
     "no": 38,
@@ -522,7 +566,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.town.umi.lg.jp/site/manabinotayouka",
-    "address": null
+    "address": null,
+    "note": "愛称は「ハピネス分校」です。"
   },
   {
     "no": 39,
@@ -535,7 +580,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.kushiro.lg.jp/kosodatekyouiku/kyouiku/1005512/1016608/1016609.html",
-    "address": "北海道釧路市寿1丁目2番16号（中央小学校内）"
+    "address": "北海道釧路市寿1丁目2番16号（中央小学校内）",
+    "note": "釧路市立中央小学校の校舎内に設置されています。"
   },
   {
     "no": 40,
@@ -548,7 +594,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.ojiya.niigata.jp/soshiki/education/manabinotayouka.html",
-    "address": "新潟県小千谷市上ノ山4-4-2（市民学習センター「楽集館」内）"
+    "address": "新潟県小千谷市上ノ山4-4-2（市民学習センター「楽集館」内）",
+    "note": "生涯学習センター「楽習館」内に設置されており、2026年4月に開校しました。"
   },
   {
     "no": 41,
@@ -561,7 +608,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.joetsu.niigata.jp/uploaded/attachment/273036.pdf",
-    "address": "新潟県上越市大字神宮町2040番地（旧諏訪小学校を改修）"
+    "address": "新潟県上越市大字神宮町2040番地（旧諏訪小学校を改修）",
+    "note": "旧上越市立諏訪小学校の校舎を改修して設置されています。"
   },
   {
     "no": 42,
@@ -574,7 +622,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www2.osaka-c.ed.jp/partner/folder_1/post-78",
-    "address": null
+    "address": null,
+    "note": null
   },
   {
     "no": 43,
@@ -587,7 +636,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.shimonoseki.lg.jp/uploaded/attachment/96430.pdf",
-    "address": null
+    "address": null,
+    "note": "山口県で初めての学びの多様化学校です（2026年4月開校）。"
   },
   {
     "no": 44,
@@ -600,7 +650,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": null,
-    "address": null
+    "address": null,
+    "note": null
   },
   {
     "no": 45,
@@ -613,7 +664,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "平成30年",
     "officialUrl": "https://www.chofu-schools.jp/chofu7/",
-    "address": "東京都調布市菊野台3-27-38（はしうち教室）"
+    "address": "東京都調布市菊野台3-27-38（はしうち教室）",
+    "note": "本校（調布市立第七中学校）とは別の場所にあります。"
   },
   {
     "no": 46,
@@ -626,7 +678,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和3年",
     "officialUrl": "https://www.city.ota.tokyo.jp/kyouiku/gakukyou/futoukou-nayami.html",
-    "address": "東京都大田区池上3-27-6（学びの多様化学校みらい学園中等部）"
+    "address": "東京都大田区池上3-27-6（学びの多様化学校みらい学園中等部）",
+    "note": null
   },
   {
     "no": 47,
@@ -639,7 +692,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和4年",
     "officialUrl": "https://tomiya-tomiyajhs.edumap.jp/",
-    "address": null
+    "address": null,
+    "note": null
   },
   {
     "no": 48,
@@ -652,7 +706,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和4年",
     "officialUrl": "https://www.city.yamato.lg.jp/material/files/group/68/202568102-102_setsumeikai.pdf",
-    "address": "神奈川県大和市柳橋1-17-7（大和市立柳橋小学校敷地内）"
+    "address": "神奈川県大和市柳橋1-17-7（大和市立柳橋小学校敷地内）",
+    "note": "大和市立柳橋小学校の敷地内に設置されています。"
   },
   {
     "no": 49,
@@ -665,7 +720,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和4年",
     "officialUrl": "http://www.niji.or.jp/school/takase-s/",
-    "address": "香川県三豊市高瀬町下勝間2725-1"
+    "address": "香川県三豊市高瀬町下勝間2725-1",
+    "note": "表示している所在地は本校（高瀬中学校）のものです。分教室自体の所在地は確認できていません。"
   },
   {
     "no": 50,
@@ -678,7 +734,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和4年",
     "officialUrl": "https://www.city.setagaya.lg.jp/01300/1395.html",
-    "address": "東京都世田谷区弦巻3-16-8（教育センター（教育会館）2階）"
+    "address": "東京都世田谷区弦巻3-16-8（教育センター（教育会館）2階）",
+    "note": "愛称は「ねいろ」です。2022年4月に世田谷区教育センター内に開設されました。"
   },
   {
     "no": 51,
@@ -691,7 +748,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和5年",
     "officialUrl": "https://www.mext.go.jp/content/20240829-mxt_jidou02-000037766_03.pdf",
-    "address": null
+    "address": null,
+    "note": "愛称は「ASU」です。2004年頃から構造改革特区制度のもとで運営されてきた分教室です。"
   },
   {
     "no": 52,
@@ -704,7 +762,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和5年",
     "officialUrl": "https://www.mext.go.jp/content/20240829-mxt_jidou02-000037766_03.pdf",
-    "address": null
+    "address": null,
+    "note": "愛称は「ASU」です。2004年頃から構造改革特区制度のもとで運営されてきた分教室です。"
   },
   {
     "no": 53,
@@ -717,7 +776,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
     "officialUrl": "https://www.city.ota.tokyo.jp/kyouiku/gakukyou/futoukou-nayami.html",
-    "address": "東京都大田区大森東4-24-6（みらい学園初等部）"
+    "address": "東京都大田区大森東4-24-6（みらい学園初等部）",
+    "note": null
   },
   {
     "no": 54,
@@ -730,7 +790,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
     "officialUrl": "https://edu-kitagata.com/kitagakuen/",
-    "address": "〒501-0431 岐阜県本巣郡北方町北方1367-1"
+    "address": "〒501-0431 岐阜県本巣郡北方町北方1367-1",
+    "note": "愛称は「オンリー1」です。"
   },
   {
     "no": 55,
@@ -743,7 +804,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
     "officialUrl": "https://www.city.takayama.lg.jp/_res/projects/default_project/_page_/001/009/985/127r7miyachu.pdf",
-    "address": "岐阜県高山市一之宮町3072"
+    "address": "岐阜県高山市一之宮町3072",
+    "note": "愛称は「にじ色」です。"
   },
   {
     "no": 56,
@@ -756,7 +818,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和6年",
     "officialUrl": "https://www.pref.miyazaki.lg.jp/documents/107038/107038_20260224164426-1.pdf",
-    "address": "延岡市熊野江町2600-2"
+    "address": "延岡市熊野江町2600-2",
+    "note": "旧延岡市立熊野江小学校の校舎を活用して設置されています。"
   },
   {
     "no": 57,
@@ -769,7 +832,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://tanagura.fcs.ed.jp/tanagura-jh/",
-    "address": "〒963-6131 福島県東白川郡棚倉町大字棚倉字城跡88番地5"
+    "address": "〒963-6131 福島県東白川郡棚倉町大字棚倉字城跡88番地5",
+    "note": null
   },
   {
     "no": 58,
@@ -782,7 +846,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.lilyvale.ed.jp/",
-    "address": "茨城県水戸市藤が原3丁目1117-1288"
+    "address": "茨城県水戸市藤が原3丁目1117-1288",
+    "note": null
   },
   {
     "no": 59,
@@ -795,7 +860,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.pref.chiba.lg.jp/kyouiku/soumu/iinkai/houkoku/documents/manabinotayouka.pdf",
-    "address": null
+    "address": null,
+    "note": null
   },
   {
     "no": 60,
@@ -808,7 +874,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.city.urayasu.lg.jp/_res/projects/default_project/_page_/001/045/609/55-2.pdf",
-    "address": null
+    "address": null,
+    "note": "愛称は「UMI」です。2025年4月に開校しました。"
   },
   {
     "no": 61,
@@ -821,7 +888,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.city.minato.tokyo.jp/documents/158834/minatoschool.pdf",
-    "address": "東京都港区虎ノ門3丁目6番9号（港区立教育センター4階）"
+    "address": "東京都港区虎ノ門3丁目6番9号（港区立教育センター4階）",
+    "note": "通称「みなとSchool」として、港区立教育センター4階に設置されています。"
   },
   {
     "no": 62,
@@ -834,7 +902,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.city.machida.tokyo.jp/shisei/koho/faxrelease/2025/202507.files/5.pdf",
-    "address": null
+    "address": null,
+    "note": "愛称は「ゆめのき」です。町田市教育センター内（本校とは別の建物）に設置されており、2025年4月に開校しました。"
   },
   {
     "no": 63,
@@ -847,7 +916,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.city.fuchu.tokyo.jp/kyoiku/kyoiku_sodan/kyouikucenter.html",
-    "address": "東京都府中市清水が丘1丁目3番地"
+    "address": "東京都府中市清水が丘1丁目3番地",
+    "note": "愛称は「かがやき」です。府中市立教育センター内に設置されています。"
   },
   {
     "no": 64,
@@ -860,7 +930,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.city.mimasaka.lg.jp/soshiki/kyouiku/gakkoukyoiku/8844.html",
-    "address": null
+    "address": null,
+    "note": "愛称は「樸学園」です。美作市作東総合支所の1階に設置されています。"
   },
   {
     "no": 65,
@@ -873,7 +944,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和7年",
     "officialUrl": null,
-    "address": null
+    "address": null,
+    "note": null
   },
   {
     "no": 66,
@@ -886,7 +958,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.nasushiobara.tochigi.jp/kosodate_kyoiku/kyoiku/22353.html",
-    "address": "栃木県那須塩原市南郷屋5丁目163番地"
+    "address": "栃木県那須塩原市南郷屋5丁目163番地",
+    "note": "愛称は「プリズム」です。2026年4月に開校しました。"
   },
   {
     "no": 67,
@@ -899,7 +972,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.shizuoka.lg.jp/documents/58607/manabino.pdf",
-    "address": "静岡市葵区駒形通二丁目4-47（新通小学校内東校舎3階、4階）"
+    "address": "静岡市葵区駒形通二丁目4-47（新通小学校内東校舎3階、4階）",
+    "note": "静岡県内で初めての学びの多様化学校です。2026年4月に静岡市立新通小学校東棟の3・4階に開校しました。"
   },
   {
     "no": 68,
@@ -912,7 +986,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.nagahama.lg.jp/cmsfiles/contents/0000016/16174/leaflet2026.pdf",
-    "address": "〒526-0244 滋賀県長浜市内保町2682"
+    "address": "〒526-0244 滋賀県長浜市内保町2682",
+    "note": "愛称は「よつば」です。本校から約150mの場所にあり、2026年4月に開校しました。"
   },
   {
     "no": 69,
@@ -925,7 +1000,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.city.kochi.kochi.jp/uploaded/attachment/172515.pdf",
-    "address": "高知市桟橋通二丁目1-50（潮江市民図書館4階）"
+    "address": "高知市桟橋通二丁目1-50（潮江市民図書館4階）",
+    "note": "愛称は「SOLA」です。高知市立潮江市民図書館の4階に設置されており、2026年4月に開校しました。"
   },
   {
     "no": 70,
@@ -938,7 +1014,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.pref.kochi.lg.jp/doc/2026082600110/file_contents/file_20268263141534_1.pdf",
-    "address": "高知県吾川郡いの町6032番地3"
+    "address": "高知県吾川郡いの町6032番地3",
+    "note": "愛称は「きぼう」です。"
   },
   {
     "no": 71,
@@ -951,7 +1028,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.pref.kochi.lg.jp/doc/2026082600110/file_contents/file_20268263141534_1.pdf",
-    "address": "高知県吾川郡いの町6032番地3"
+    "address": "高知県吾川郡いの町6032番地3",
+    "note": "愛称は「きぼう」です。"
   },
   {
     "no": 72,
@@ -964,7 +1042,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": null,
-    "address": "長崎県長崎市魚の町5番1号（長崎市民会館2階、「のぞみ教室」）"
+    "address": "長崎県長崎市魚の町5番1号（長崎市民会館2階、「のぞみ教室」）",
+    "note": "分教室「のぞみ教室」は長崎市民会館2階に設置されています。"
   },
   {
     "no": 73,
@@ -977,7 +1056,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.satsuma-net.jp/kosodate_manabi/kyoiku/1/3863.html",
-    "address": "鹿児島県薩摩郡さつま町宮之城屋地391"
+    "address": "鹿児島県薩摩郡さつま町宮之城屋地391",
+    "note": "表示している所在地は本校（宮之城中学校）のものです。分教室自体の所在地・名称は確認できていません。"
   },
   {
     "no": 74,
@@ -990,7 +1070,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "平成18年",
     "officialUrl": "https://kjh.ed.jp/",
-    "address": "鹿児島県日置市伊集院町清藤1938番地"
+    "address": "鹿児島県日置市伊集院町清藤1938番地",
+    "note": "学校法人日章学園が運営しています。現在の学校公式サイトでは「ドリームコース」という名称は確認できず、コース名が変更されている可能性があります。"
   },
   {
     "no": 75,
@@ -1003,7 +1084,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "平成20年",
     "officialUrl": "https://www.n-gaku.jp/",
-    "address": "東京都国立市富士見台2-36-2"
+    "address": "東京都国立市富士見台2-36-2",
+    "note": null
   },
   {
     "no": 76,
@@ -1016,7 +1098,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和6年",
     "officialUrl": "https://www.seika-h.ed.jp/",
-    "address": "大阪府堺市中区辻之1517"
+    "address": "大阪府堺市中区辻之1517",
+    "note": null
   },
   {
     "no": 77,
@@ -1029,7 +1112,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和6年",
     "officialUrl": "https://www.mimasaka.ed.jp/",
-    "address": "岡山県津山市山北500"
+    "address": "岡山県津山市山北500",
+    "note": null
   },
   {
     "no": 78,
@@ -1042,7 +1126,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和7年",
     "officialUrl": "https://seisa.ed.jp/sapporo/",
-    "address": "北海道札幌市厚別区もみじ台北5丁目12-1"
+    "address": "北海道札幌市厚別区もみじ台北5丁目12-1",
+    "note": "学校法人国際学園（星槎グループ）が運営する通信制高校です。"
   },
   {
     "no": 79,
@@ -1055,7 +1140,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和7年",
     "officialUrl": "http://www.akitashuei.net/",
-    "address": "秋田県大仙市大曲諏訪町1-1-30"
+    "address": "秋田県大仙市大曲諏訪町1-1-30",
+    "note": null
   },
   {
     "no": 80,
@@ -1068,7 +1154,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和7年",
     "officialUrl": "https://www.f-kaisei.ed.jp/senior/",
-    "address": "福岡県福岡市南区老司5-29-3"
+    "address": "福岡県福岡市南区老司5-29-3",
+    "note": null
   },
   {
     "no": 81,
@@ -1081,7 +1168,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和7年",
     "officialUrl": "https://ogori.fku.ed.jp/",
-    "address": null
+    "address": null,
+    "note": null
   },
   {
     "no": 82,
@@ -1094,7 +1182,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和7年",
     "officialUrl": "https://keisei-h.jp/",
-    "address": "福岡県北九州市小倉北区皿山町15-1"
+    "address": "福岡県北九州市小倉北区皿山町15-1",
+    "note": null
   },
   {
     "no": 83,
@@ -1107,7 +1196,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和8年",
     "officialUrl": "https://www.toogakuen.ac.jp/",
-    "address": "青森県青森市勝田2-11-1"
+    "address": "青森県青森市勝田2-11-1",
+    "note": null
   },
   {
     "no": 84,
@@ -1120,7 +1210,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "私立",
     "designatedYear": "令和8年",
     "officialUrl": null,
-    "address": "島根県江津市渡津町1904-1"
+    "address": "島根県江津市渡津町1904-1",
+    "note": null
   }
 ];
 
