@@ -69,7 +69,7 @@ export default function MyPage() {
             カテゴリの相談結果ページからしかリンクされていなかったため、BottomNavから常に
             一タップで来られるマイページにも入り口を追加した（2026-10-18）。 */}
         <Link href="/gakko" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <span>学びの多様化学校を探す</span>
+          <span>学校・フリースクールを探す</span>
           <span className="muted">›</span>
         </Link>
         <Link href="/expert/login" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

@@ -7,8 +7,18 @@ import { PREFECTURES } from '@/lib/data/prefectures';
 // 何行もスクロールする必要があった（2026-10-18、UXレビューで指摘）。チップ自体は
 // クローラーが各都道府県ページをたどれるリンクとして残しつつ、すぐ下の一覧に
 // 飛べるセレクトボックスを追加して、スクロールなしで選べる経路も用意した。
-export default function PrefectureSelect({ selected }: { selected: string | null }) {
+//
+// 「フリースクール」タブ追加（2026-10-18）にあわせて、どちらのタブで選んでも
+// 同じタブのまま都道府県だけ切り替わるよう type を保持してナビゲートする。
+export default function PrefectureSelect({
+  selected,
+  type = 'gakko',
+}: {
+  selected: string | null;
+  type?: 'gakko' | 'free';
+}) {
   const router = useRouter();
+  const typeQuery = type === 'free' ? 'type=free&' : '';
 
   return (
     <select
@@ -16,7 +26,7 @@ export default function PrefectureSelect({ selected }: { selected: string | null
       value={selected || ''}
       onChange={(e) => {
         const pref = e.target.value;
-        router.push(pref ? `/gakko?pref=${encodeURIComponent(pref)}` : '/gakko');
+        router.push(pref ? `/gakko?${typeQuery}pref=${encodeURIComponent(pref)}` : `/gakko${type === 'free' ? '?type=free' : ''}`);
       }}
     >
       <option value="">都道府県を選択…</option>

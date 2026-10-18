@@ -344,14 +344,14 @@ export default function HomeClient({
                   🏫
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700 }}>学びの多様化学校を探す</div>
-                  <div className="muted" style={{ fontSize: 12 }}>都道府県別に指定校（旧：不登校特例校）を調べられます</div>
+                  <div style={{ fontWeight: 700 }}>学校・フリースクールを探す</div>
+                  <div className="muted" style={{ fontSize: 12 }}>都道府県別に学びの多様化学校（旧：不登校特例校）やフリースクールを調べられます</div>
                 </div>
                 <div className="muted">›</div>
               </Link>
             ) : (
               <Link href="/gakko" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
-                学びの多様化学校（旧：不登校特例校）を探す →
+                学びの多様化学校・フリースクールを探す →
               </Link>
             )}
 

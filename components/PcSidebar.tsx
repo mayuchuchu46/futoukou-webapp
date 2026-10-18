@@ -157,7 +157,7 @@ export default function PcSidebar({
           style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '13px 16px', textDecoration: 'none', color: 'var(--text)' }}
         >
           <span style={{ fontSize: 18 }} aria-hidden="true">🏫</span>
-          <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>学びの多様化学校を探す</span>
+          <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>学校・フリースクールを探す</span>
           <span className="muted">›</span>
         </Link>
       </div>
