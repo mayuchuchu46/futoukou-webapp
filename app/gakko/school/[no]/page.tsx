@@ -203,7 +203,15 @@ export default async function GakkoSchoolPage({
             <div className="qtext">
               この学校が今のお子さんの状況に合うかどうかも含め、どうする先生が一緒に考えます。登録不要・匿名で利用できます。
             </div>
-            <Link href="/ask" className="btn-primary sidebar-ask-btn-pink" style={{ textDecoration: 'none', width: '100%' }}>
+            {/* 「相談するに遷移したら学校名のテキスト入ってる状態が良くない？」との
+                指摘を受けて、学校名を相談文の下書きとして渡すようにした（2026-10-18）。
+                /ask側（app/ask/page.tsx）でprefillクエリを読み、既存の下書きが無い
+                ときだけテキストエリアに入れる。 */}
+            <Link
+              href={`/ask?prefill=${encodeURIComponent(`${fullName}について相談したいです。`)}`}
+              className="btn-primary sidebar-ask-btn-pink"
+              style={{ textDecoration: 'none', width: '100%' }}
+            >
               相談する →
             </Link>
           </div>

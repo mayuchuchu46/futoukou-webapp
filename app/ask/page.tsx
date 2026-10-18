@@ -49,6 +49,11 @@ function AskPageContent() {
   // 伴走ノート（/notebook）の子ども切り替えや、お子さんのプロフィール画面から
   // 「この子について相談する」で来た場合に、あらかじめ選択済みにする（2026-10-16追加）。
   const childIdParam = searchParams.get('child');
+  // 学校紹介ページ（/gakko/school/[no]）の「相談する」ボタンから来た場合に、
+  // 学校名を相談文にあらかじめ入れておく（2026-10-18、「相談するに遷移したら
+  // 学校名のテキスト入ってる状態が良くない？」との指摘を受けて追加）。
+  // 下書き（getAskDraft）に既に文章がある場合は上書きしない。
+  const prefillParam = searchParams.get('prefill');
   // 以前はCATEGORY_KEYS[0]（＝オブジェクトの先頭に書かれているだけの「身体的要因」）が
   // 何もしなくても選択済みになっていた。意図した選択ではないのに、選ばずに送信すると
   // 違うカテゴリで投稿・回答生成されてしまうため、未選択（''）を初期値にし、
@@ -100,6 +105,9 @@ function AskPageContent() {
       setGrade(draft.grade || '');
       setGender(draft.gender || '');
       if (draft.child_id) setSelectedChildId(draft.child_id);
+      if (!draft.text && prefillParam) setText(prefillParam);
+    } else if (prefillParam) {
+      setText(prefillParam);
     }
     setDraftLoaded(true);
   }, []);
