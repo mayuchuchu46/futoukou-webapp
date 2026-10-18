@@ -132,25 +132,7 @@ button:active,
   opacity: 0.85;
   z-index: 0;
 }
-/* 「ヘッダーが消えたり出たりする」との報告（2026-10-18）への対策として、
-   以前.header自体にtransform: translateZ(0)を付けたところ、account-tabや
-   CrisisModalのオーバーレイ（.header内だがheader-rowの外、position:fixed）の
-   固定基準がヘッダー自身に変わってしまう副作用でスマホ表示が壊れた。
-   account-tab・CrisisModalはheader-rowの中ではなく外（.headerの子・header-rowの
-   兄弟要素）にあるため、ここではheader-row自体にだけ同じ指定を付け、
-   position:fixedの子要素を持たないheader-row単体を独立したコンポジットレイヤーに
-   することで、同じ副作用を避けつつiOS Safariでの再描画漏れ（内容が消えたまま
-   戻らない）への対策を試みる。それでも再発する場合は原因を再調査する。 */
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
-  z-index: 1;
-  gap: 10px;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
+.header-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; gap: 10px; }
 .header-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; }
 /* account-tab（画面右上に常時position: fixedで固定表示される「ログイン／アカウント」タブ、
    高さ約35px）と、.header-rightの「つらいときはこちら」が同じ右上の位置に重なってしまう
