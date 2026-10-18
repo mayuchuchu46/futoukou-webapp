@@ -24,6 +24,14 @@ import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaG
 // lib/data/manabiTayoukaGakko.tsのnoteフィールド（運営法人・愛称・設置場所・開校年月
 // など、Web調査で確認できた固有の事実のみ）を追加し、トップの説明文に差し込んでいる。
 // 推測で紹介文を埋めることはしていない（note自体が無い学校はテンプレ文のみ）。
+//
+// 2026-10-18、「SEO的にどう？」との質問を受けて確認し、見つかった漏れを修正：
+// (1) サイトマップ（app/sitemap.ts）に82校分のURLが1つも入っていなかった→追加。
+// (2) openGraph/twitterにimagesを明示していなかったため、SNSシェア時に画像が
+//     付かない状態だった→サイト共通画像（/og-image.png）を明示。学校ごとの写真は
+//     無い（実在校を誤って表す画像は載せない方針）ため、個別の写真は使っていない。
+// (3) 構造化データ（schema.org/School）が無かった→officialUrl・addressの
+//     どちらかが確認できている学校（＝index対象の学校）にのみ付与。
 export const instant = false;
 
 function findSchool(noParam: string) {
@@ -48,14 +56,28 @@ export async function generateMetadata({
   const description = school.note ? `${baseDescription}${school.note}` : baseDescription;
   const url = `${SITE_URL}/gakko/school/${school.no}`;
   const hasEnoughInfo = !!(school.officialUrl || school.address);
+  // openGraph・twitterにimagesを明示しないと（親レイアウトのog-image.pngが自動で
+  // 引き継がれず）SNSシェア時に画像無しになる、という/gakkoページと同じ理由で、
+  // 共有用のサイト共通画像を明示的に指定する（2026-10-18、「SEO的にどう？」との
+  // 質問を受けて確認したところ発覚）。学校ごとの写真は無い（実在校を誤って表す
+  // 画像は載せない方針）ため、サイト共通画像のままにしている。
+  const image = '/og-image.png';
 
   return {
     title,
     description,
     alternates: { canonical: url },
     robots: hasEnoughInfo ? { index: true, follow: true } : { index: false, follow: true },
-    openGraph: { title, description, url, siteName: SITE_NAME, type: 'article', locale: 'ja_JP' },
-    twitter: { card: 'summary', title, description },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      type: 'article',
+      locale: 'ja_JP',
+      images: [{ url: image, width: 1200, height: 630, alt: title }],
+    },
+    twitter: { card: 'summary_large_image', title, description, images: [image] },
   };
 }
 
@@ -79,9 +101,35 @@ export default async function GakkoSchoolPage({
   // Googleマップに渡す検索語。確認済みの住所があれば最優先で使い、無ければ学校名＋
   // 市区町村でマップ検索する（架空の住所を作ることはしない）。
   const mapQuery = school.address || `${fullName} ${school.prefecture}${school.city}`;
+  const schoolUrl = `${SITE_URL}/gakko/school/${school.no}`;
+  // 構造化データ（schema.org/School）。app/result/[id]/page.tsxのQAPage用jsonLdと
+  // 同じ方式（<script type="application/ld+json">）。「SEO的にどう？」との質問を
+  // 受けて追加（2026-10-18）。officialUrl・addressのどちらも確認できていない学校
+  // （ページ自体がnoindexになっている）は、確かな情報が少ないため出力しない。
+  const jsonLd =
+    school.officialUrl || school.address
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'School',
+          name: fullName,
+          ...(school.branchName ? { alternateName: school.name } : {}),
+          ...(school.officialUrl ? { url: school.officialUrl } : {}),
+          ...(school.address
+            ? { address: { '@type': 'PostalAddress', addressCountry: 'JP', streetAddress: school.address } }
+            : { address: { '@type': 'PostalAddress', addressCountry: 'JP', addressRegion: school.prefecture, addressLocality: school.city } }),
+          mainEntityOfPage: schoolUrl,
+        }
+      : null;
 
   return (
     <div className="app-shell">
+      {jsonLd && (
+        // eslint-disable-next-line react/no-danger
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
