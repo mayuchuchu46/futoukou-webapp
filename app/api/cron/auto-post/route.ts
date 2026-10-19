@@ -17,6 +17,18 @@ import { buildAutoSeedQuestionPrompt } from '@/lib/autoSeedConsultation';
 // 設定し、Authorization: Bearer <CRON_SECRET> ヘッダーで照合する
 // （Vercel公式ドキュメント推奨の方式。cron設定からの呼び出しにはVercelが自動で
 // このヘッダーを付与する）。CRON_SECRET未設定の場合は安全側に倒して常に拒否する。
+//
+// **2026-10-19、vercel.jsonのcron設定を空にして停止した。**
+// 立ち上げ当初（投稿ゼロ）はホームが寂しく見える対策として妥当だったが、実際の相談が
+// 91件まで増えた現在、このまま続けると「AI生成の作り話」が「実在の保護者の相談」として
+// 公開画面（みんなの相談・dictionaryページ・JSON-LD構造化データ）に実投稿と見分けのつかない
+// 形で混ざり続け、サイトの差別化（実在の相談が土台）の説得力を下げる・Googleのscaled
+// content abuseに該当するリスクがあるとの指摘を受けて停止した。このroute.ts自体は
+// 将来また必要になった場合のために残してあるが、呼び出されることはない
+// （vercel.jsonのcrons配列が空のため、Vercelはこのエンドポイントを自動実行しない）。
+// 過去に投稿済みのauto-seed分（author_id='auto-seed'）は、dictionary各カテゴリの
+// `DICTIONARY_INDEX_THRESHOLD`判定件数にどれだけ含まれているか未確認のため、
+// 削除するかどうかは内訳確認後に別途判断する。
 export async function GET(req: NextRequest) {
   const expected = process.env.CRON_SECRET;
   if (!expected) {
