@@ -11,9 +11,10 @@ import Footer from '@/components/Footer';
 // app/terms/page.tsx「2. ベータ版について」のとおりまだ無料のベータ公開中で、
 // 実際の課金導線（Stripe決済）は専門家監修・専門家登録が整うまで有効化していない
 // （claude/futoukou-monetization-plan.md「課題1」参照）。
-// このページは、有料機能を実際に開始する時点で適用される予定の価格・支払条件を
-// あらかじめ明記したもの（lib/config.tsのMEMBERSHIP_PRICE_JPY等、コード上の設定値と一致させている）。
-// 有料化のタイミングで価格体系に変更があれば、このページも合わせて更新する必要がある。
+// このページは、有料機能を実際に開始する時点で適用される予定の運営者情報・支払条件を
+// あらかじめ明記したもの。価格（lib/config.tsのMEMBERSHIP_PRICE_JPY等）はまだ確定ではなく
+// 検討中のため、このページには記載しない（2026-10-19、「価格体系はまだ確定だから記載しないで」
+// との指摘を受けて削除）。価格が確定し、有料サービスの提供を開始する際に、このページへ追記する。
 export default function TokushohoPage() {
   return (
     <div className="app-shell">
@@ -61,9 +62,7 @@ export default function TokushohoPage() {
           <div>
             <div style={{ fontWeight: 700, fontSize: 13 }}>販売価格</div>
             <div className="qtext">
-              ・読み放題会員（月額サブスクリプション）：800円（税込）<br />
-              ・専門家への質問（都度払い・1回）：600円（税込）<br />
-              ・専門家への質問チケット（6回パック）：3,000円（税込）
+              現在検討中のため未定です。価格が確定し、有料サービスの提供を開始する際に本ページへ掲載します。
             </div>
           </div>
 
@@ -84,8 +83,7 @@ export default function TokushohoPage() {
           <div>
             <div style={{ fontWeight: 700, fontSize: 13 }}>お支払時期</div>
             <div className="qtext">
-              ・読み放題会員：お申し込み時、以降は毎月の更新日に自動で決済されます。<br />
-              ・専門家への質問（都度払い・チケット）：お申し込み時に決済されます。
+              読み放題会員（月額サブスクリプション）はお申し込み時、以降は毎月の更新日に自動で決済されます。専門家への質問（都度払い・チケット）はお申し込み時に決済されます。
             </div>
           </div>
 
