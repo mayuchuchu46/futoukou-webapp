@@ -350,6 +350,34 @@ h2.pagetitle {
   gap: 4px;
 }
 
+/* サイト全体フッター（コピーライト＋利用規約/プライバシー/特商法リンク、2026-10-19追加）。
+   BottomNav（下部固定タブバー）と重ならないよう、下に少し余白を確保する。 */
+.site-footer {
+  margin-top: 24px;
+  padding: 16px 4px 84px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.site-footer-links a {
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: underline;
+}
+.site-footer-copyright {
+  color: var(--muted);
+  font-size: 11px;
+}
+
 .ranking { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; margin: 0; }
 .ranking-title { font-family: "M PLUS Rounded 1c", sans-serif; font-size: 14px; font-weight: 800; color: var(--main); margin-bottom: 4px; }
 /* スマホのファーストビューで実際の相談カードまで早く辿り着けるよう、

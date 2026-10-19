@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import Footer from '@/components/Footer';
 import PcSidebar from '@/components/PcSidebar';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { CATS } from '@/lib/categories';
@@ -178,6 +179,7 @@ export default async function AboutPage() {
         </div>
         <PcSidebar />
       </div>
+      <Footer />
       <BottomNav />
     </div>
   );

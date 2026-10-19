@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import Footer from '@/components/Footer';
 
 export default function TermsPage() {
   return (
@@ -55,6 +56,7 @@ export default function TermsPage() {
         </div>
         <Link href="/privacy" className="backlink" style={{ margin: '14px 0' }}>プライバシーポリシーを見る →</Link>
       </div>
+      <Footer />
       {/* 相談ページ（/ask）など他のページからリンクで開いた後、戻る手段が無かったため
           BottomNavを追加。これによりヘッダー上部（.header-back）と固定ナビ直上
           （.bottomnav-back）の両方に「戻る」が出る（2026-10-13）。 */}

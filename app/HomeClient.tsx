@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import Footer from '@/components/Footer';
 import ConsultationCard from '@/components/ConsultationCard';
 import EyeIcon from '@/components/EyeIcon';
 import TagChips from '@/components/TagChips';
@@ -430,6 +431,10 @@ export default function HomeClient({
           <PcSidebar hideRanking expertCount={showExtras ? expertCount : undefined} />
         </div>
       </div>
+
+      {/* コピーライト・特商法等への導線（2026-10-19追加）。固定下部タブバー
+          （BottomNav）と重ならないよう、Footer側で下に余白を確保している。 */}
+      <Footer />
 
       <BottomNav />
     </div>
