@@ -6,8 +6,14 @@ import Link from 'next/link';
 // （「サイトの下にコピーライトとかないけど大丈夫？」との指摘を受けて対応）。
 // 主要な静的ページ・ホーム画面にのみ設置する（全ページへの設置はBottomNav
 // （固定の下部タブバー）と干渉するため見送り、2026-10-19）。
+//
+// コピーライトの年は、コンポーネント本体（レンダー関数）の中でnew Date()を呼ぶと、
+// Next.js 16のCache Components機能が「レンダー中に変わりうる値」として静的プリレンダー時に
+// エラーにする（/privacy等のビルドが失敗した。2026-10-19発覚）。モジュール読み込み時
+// （ビルド時）に1回だけ評価される場所に移すことで回避している。
+const currentYear = new Date().getFullYear();
+
 export default function Footer() {
-  const year = new Date().getFullYear();
   return (
     <footer className="site-footer">
       <nav className="site-footer-links">
@@ -15,7 +21,7 @@ export default function Footer() {
         <Link href="/privacy">プライバシーポリシー</Link>
         <Link href="/tokushoho">特定商取引法に基づく表記</Link>
       </nav>
-      <div className="site-footer-copyright">© {year} manapri</div>
+      <div className="site-footer-copyright">© {currentYear} manapri</div>
     </footer>
   );
 }
