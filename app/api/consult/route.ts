@@ -83,6 +83,14 @@ export async function POST(req: NextRequest) {
       model: 'claude-sonnet-5',
       max_tokens: 600,
       messages: [{ role: 'user', content: prompt }],
+      // 「通信制高校は全国にいくつあるか」のような最新情報が必要な質問に、AIが
+      // 断定を避けて検索を促すだけの回答しかできていなかったことへの対応
+      // （2026-10-21追加）。AIが必要と判断した時だけ検索する仕組みなので、
+      // 検索しない相談に追加コストはかからない。1相談あたり最大2回まで
+      // （max_uses: 2）に制限し、全体のAI相談レート制限（1日300回）と
+      // 掛け合わせた最悪コストを1日$6程度に抑えている。
+      // 事前にAnthropicコンソール側で組織としてWeb検索を有効化しておく必要がある。
+      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2 }],
     });
     // 応答の先頭ブロックが常にtextとは限らない（拡張思考ブロック等が
     // 先に来るケースがある）ため、content配列からtextブロックを探す。
