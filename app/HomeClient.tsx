@@ -15,6 +15,7 @@ import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
+import { getThemeDisplayLabel } from '@/lib/searchTags';
 
 function isExpertAnswered(item: Consultation) {
   return item.request_type === 'expert' && item.expert_status === 'answered';
@@ -288,7 +289,12 @@ export default function HomeClient({
             <input
               className="input home-search"
               placeholder="キーワードで検索…"
-              value={q}
+              /* 検索自体はcanonical word（q、例：不登校特例校）のまま行うが、
+                 画面に見せる文言だけはTagChipsと同じgetThemeDisplayLabelで
+                 新名称に置き換える（2026-10-20、「#学びの多様化学校」タグから
+                 遷移した検索ボックスに古い名称「不登校特例校」がそのまま表示
+                 されてしまう、との指摘を受けて修正）。 */
+              value={getThemeDisplayLabel(q)}
               onChange={(e) => setQ(e.target.value)}
             />
 
