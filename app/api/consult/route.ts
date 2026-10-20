@@ -81,7 +81,12 @@ export async function POST(req: NextRequest) {
   try {
     const msg = await anthropic.messages.create({
       model: 'claude-sonnet-5',
-      max_tokens: 600,
+      // web_search有効化後は、検索結果のテキストも含めて出力トークン予算を
+      // 消費するため、600では最終的な回答本文を書く余裕が足りなくなることが
+      // あった（2026-10-21、実機テストで回答が「〜によると、」で切れる不具合が
+      // 発覚し調査・修正）。上限を上げても課金は実際に使った分だけなので、
+      // 安全マージンとして増やす。
+      max_tokens: 1500,
       messages: [{ role: 'user', content: prompt }],
       // 「通信制高校は全国にいくつあるか」のような最新情報が必要な質問に、AIが
       // 断定を避けて検索を促すだけの回答しかできていなかったことへの対応
@@ -92,12 +97,16 @@ export async function POST(req: NextRequest) {
       // 事前にAnthropicコンソール側で組織としてWeb検索を有効化しておく必要がある。
       tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2 }],
     });
-    // 応答の先頭ブロックが常にtextとは限らない（拡張思考ブロック等が
-    // 先に来るケースがある）ため、content配列からtextブロックを探す。
-    const textBlock = msg.content.find(
+    // web_search有効化後は、content配列が「text(検索前の書き出し) →
+    // server_tool_use → web_search_tool_result → text(検索結果を踏まえた続き)」
+    // のように複数のtextブロックに分かれて返ってくることがある。最初の
+    // textブロックだけを使うと、検索を挟む直前の書きかけの文章
+    // （例：「〜によると、」で終わる）だけが回答になってしまうため、
+    // 全てのtextブロックを結合する（2026-10-21、実機テストで発覚・修正）。
+    const textBlocks = msg.content.filter(
       (b): b is Extract<typeof b, { type: 'text' }> => b.type === 'text'
     );
-    answer = textBlock ? textBlock.text.trim() : '';
+    answer = textBlocks.map((b) => b.text).join('').trim();
     if (!answer) {
       throw new Error(
         `empty response (stop_reason=${msg.stop_reason}, blocks=${msg.content.map((b) => b.type).join(',')})`
