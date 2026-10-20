@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { CATS } from '@/lib/categories';
+import { getThemeDisplayLabel } from '@/lib/searchTags';
 
 type TagCount = { word: string; count: number };
 
@@ -76,7 +77,10 @@ export default function ThemeClient() {
                   className="card"
                   style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}
                 >
-                  <div style={{ fontWeight: 700, flex: 1 }}>{word}</div>
+                  {/* wordはtag-counts APIが返すcanonical word（例：不登校特例校）。
+                      TagChips等と同じくgetThemeDisplayLabelで画面表示名だけ
+                      置き換える（2026-10-20、/theme一覧にも同じ修正漏れがあった）。 */}
+                  <div style={{ fontWeight: 700, flex: 1 }}>{getThemeDisplayLabel(word)}</div>
                   <div className="muted">{count}件</div>
                 </Link>
               ))}
