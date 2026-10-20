@@ -170,6 +170,10 @@ export default async function ResultPage({
     .from('consultations')
     .select('id, question, answer')
     .eq('parent_id', item.id)
+    // 元の相談本体の取得（getConsultation）と同じく、管理画面で非表示にした行は
+    // 除外する（2026-10-21、ここにだけ.eq('hidden', false)が抜けており、非表示に
+    // したはずの返信がページには表示され続けてしまう不具合があった）。
+    .eq('hidden', false)
     .order('created_at', { ascending: true });
   const followups = (followupRows || []) as { id: string; question: string; answer: string }[];
 
