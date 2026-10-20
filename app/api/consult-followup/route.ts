@@ -72,13 +72,23 @@ export async function POST(req: NextRequest) {
   try {
     const msg = await anthropic.messages.create({
       model: 'claude-sonnet-5',
-      max_tokens: 600,
+      // app/api/consult/route.tsと同じ理由でmax_tokensを増やしている
+      // （検索結果のテキストも出力トークン予算に含まれるため）。
+      max_tokens: 1500,
       messages: [{ role: 'user', content: prompt }],
+      // 返信（ラリー）には元々web_searchが付いておらず、最新情報が必要な
+      // 深掘り質問（例：「学びの多様化学校も民間あるよね？」）にAIの古い・不正確な
+      // 知識のまま断定で答えてしまう問題があったため、/api/consultと同じ設定で追加
+      // （2026-10-21）。レート制限（1日10回等）は最初の相談と合算でそのまま効くため、
+      // 追加コストの上限（最悪ケースで1日$6程度）は変わらない。
+      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2 }],
     });
-    const textBlock = msg.content.find(
+    // app/api/consult/route.tsと同じ理由で、全textブロックを結合する
+    // （検索を挟む場合、content配列に複数のtextブロックが含まれることがあるため）。
+    const textBlocks = msg.content.filter(
       (b): b is Extract<typeof b, { type: 'text' }> => b.type === 'text'
     );
-    answer = textBlock ? textBlock.text.trim() : '';
+    answer = textBlocks.map((b) => b.text).join('').trim();
     if (!answer) {
       throw new Error(
         `empty response (stop_reason=${msg.stop_reason}, blocks=${msg.content.map((b) => b.type).join(',')})`
