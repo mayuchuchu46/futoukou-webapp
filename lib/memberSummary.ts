@@ -87,52 +87,63 @@ async function getOrGenerateSummary(scope: SummaryScope): Promise<MemberSummary 
   const supabase = getSupabaseAdmin();
   const { table, idColumn, consultationColumn, dailyAnswerColumn } = scopeConfig(scope);
 
-  const { count } = await supabase
-    .from('consultations')
-    .select('id', { count: 'exact', head: true })
-    .eq(consultationColumn, scope.id);
+  // キャッシュ取得・daily_answers取得・crisis判定用直近クエリを並列で投げる
+  // （以前は4本直列だったが、互いに依存がないため Promise.all で同時発行して
+  //   合計待ち時間を短縮した。2026-10-22）。
+  // consultationCountが0件なら即returnするが、その場合でも他のクエリが無駄に
+  // 走るだけで副作用はない。
+  const DAILY_ANSWER_LIMIT = 20;
+  const RECENT_CRISIS_WINDOW = 3;
+
+  const [
+    { count },
+    { data: cached },
+    { data: dailyAnswerRows, count: dailyAnswerTotal },
+    { data: recentRows },
+  ] = await Promise.all([
+    supabase
+      .from('consultations')
+      .select('id', { count: 'exact', head: true })
+      .eq(consultationColumn, scope.id),
+    // 列名を明示して select すると、その列がDB側にまだ存在しない場合（マイグレーション
+    // 未実行のタイミング）にクエリ全体がエラーになり、既存のキャッシュ内容ごと読めなく
+    // なってしまう（2026-10-16、daily_answer_count列追加時に実際に発生した不具合）。
+    // select('*') なら実際に存在する列だけが返るため、未知の列が増えても古いDBのままでも
+    // 安全に動く。
+    supabase.from(table).select('*').eq(idColumn, scope.id).single(),
+    // 「みんなのデータ」（daily_answers）の回答も伴走ノートに取り込む（2026-10-16追加。
+    // 「メモするほど伴走ノートが充実する」という要望）。直近20件を新しい順で取得し、
+    // 件数をキャッシュ再生成の判定にも使う（相談件数が変わらなくても、新しい日々の
+    // 回答が増えていれば再生成する）。
+    supabase
+      .from('daily_answers')
+      .select('answer_date, question_slug, value', { count: 'exact' })
+      .eq(dailyAnswerColumn, scope.id)
+      .order('answer_date', { ascending: false })
+      .limit(DAILY_ANSWER_LIMIT),
+    // 「一度希死念慮系の相談をしたら、ずっと同じ内容（専門窓口案内だけ）が表示されて
+    // 更新されない」との指摘を受けて追加（2026-10-16）。直近（新しい順で先頭）3件の中に
+    // crisis_detectedがあるかどうかだけで判定する。古い相談（4件目以降）にcrisis_detectedが
+    // 残っていても、直近が落ち着いていれば通常の内容に戻る（詳細はlib/prompt.ts
+    // buildSummaryPromptのコメント参照）。件数が変わっていなくても、このフラグが前回
+    // キャッシュ時と変わっていれば再生成の対象にする（例：crisis_detectedな相談が直近
+    // 3件から外れた＝新しい相談を増やさずページを開き直しただけでも、古い専門窓口案内の
+    // ままにしない）。
+    supabase
+      .from('consultations')
+      .select('crisis_detected')
+      .eq(consultationColumn, scope.id)
+      .order('created_at', { ascending: false })
+      .limit(RECENT_CRISIS_WINDOW),
+  ]);
 
   const consultationCount = count || 0;
   if (consultationCount === 0) return null;
 
-  // 列名を明示して select すると、その列がDB側にまだ存在しない場合（マイグレーション
-  // 未実行のタイミング）にクエリ全体がエラーになり、既存のキャッシュ内容ごと読めなく
-  // なってしまう（2026-10-16、daily_answer_count列追加時に実際に発生した不具合）。
-  // select('*') なら実際に存在する列だけが返るため、未知の列が増えても古いDBのままでも
-  // 安全に動く。
-  const { data: cached } = await supabase.from(table).select('*').eq(idColumn, scope.id).single();
-
-  // 「みんなのデータ」（daily_answers）の回答も伴走ノートに取り込む（2026-10-16追加。
-  // 「メモするほど伴走ノートが充実する」という要望）。直近20件を新しい順で取得し、
-  // 件数をキャッシュ再生成の判定にも使う（相談件数が変わらなくても、新しい日々の
-  // 回答が増えていれば再生成する）。
-  const DAILY_ANSWER_LIMIT = 20;
-  const { data: dailyAnswerRows, count: dailyAnswerTotal } = await supabase
-    .from('daily_answers')
-    .select('answer_date, question_slug, value', { count: 'exact' })
-    .eq(dailyAnswerColumn, scope.id)
-    .order('answer_date', { ascending: false })
-    .limit(DAILY_ANSWER_LIMIT);
   const dailyAnswerCount = dailyAnswerTotal || 0;
   const dailyAnswerLines = (dailyAnswerRows || [])
     .map(formatDailyAnswerLine)
     .filter((l): l is string => !!l);
-
-  // 「一度希死念慮系の相談をしたら、ずっと同じ内容（専門窓口案内だけ）が表示されて
-  // 更新されない」との指摘を受けて追加（2026-10-16）。直近（新しい順で先頭）3件の中に
-  // crisis_detectedがあるかどうかだけで判定する。古い相談（4件目以降）にcrisis_detectedが
-  // 残っていても、直近が落ち着いていれば通常の内容に戻る（詳細はlib/prompt.ts
-  // buildSummaryPromptのコメント参照）。件数が変わっていなくても、このフラグが前回
-  // キャッシュ時と変わっていれば再生成の対象にする（例：crisis_detectedな相談が直近
-  // 3件から外れた＝新しい相談を増やさずページを開き直しただけでも、古い専門窓口案内の
-  // ままにしない）。
-  const RECENT_CRISIS_WINDOW = 3;
-  const { data: recentRows } = await supabase
-    .from('consultations')
-    .select('crisis_detected')
-    .eq(consultationColumn, scope.id)
-    .order('created_at', { ascending: false })
-    .limit(RECENT_CRISIS_WINDOW);
   const forceCrisisOverride = (recentRows || []).some((r) => r.crisis_detected);
 
   if (
