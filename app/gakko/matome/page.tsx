@@ -369,19 +369,10 @@ export default async function GakkoMatomePage({
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
+            {/* 以前はこの下にPREFECTURES全47件のチップ一覧も並べていたが、プルダウンと
+                内容が完全に重複しており冗長なため削除した（2026-10-22、「ここはプルダウン
+                だけでいいかも」との指摘を受けて）。 */}
             <MatomePrefectureSelect selected={selected} />
-            <div className="chip-row chip-row-wrap">
-              {PREFECTURES.map((p) => (
-                <Link
-                  key={p}
-                  href={`/gakko/matome?pref=${encodeURIComponent(p)}`}
-                  className={`chip chip-tag${selected === p ? ' active' : ''}`}
-                  style={{ textDecoration: 'none', display: 'inline-block' }}
-                >
-                  {p}
-                </Link>
-              ))}
-            </div>
           </div>
 
           <MatomeTypeFilter sections={sections} />
