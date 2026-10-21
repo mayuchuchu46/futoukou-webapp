@@ -123,6 +123,12 @@ button:active,
   flex-direction: column;
   gap: 10px;
   position: relative;
+  /* iOS Safariのラバーバンド（上端を引き下げる）時にヘッダー本体が消えて戻らない
+     不具合への対策。.account-tabと同様にGPU合成レイヤーに昇格させて再描画漏れを防ぐ
+     （2026-10-21）。 */
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   /* 以前はoverflow: hiddenで.header-accent（装飾画像、現在は未使用）を切り取っていたが、
      PCのグローバルメニュー（プルダウン）パネルが.header内の絶対配置のため、
      .headerの高さを超える分がここで切れて操作できなくなっていた
