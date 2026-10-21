@@ -165,11 +165,11 @@ export default async function TsushinSchoolPage({
                 「相談するボタンはいつもピンクがいい」との方針により、下部のCTAカードと
                 同じsidebar-ask-btn-pinkに統一した。 */}
             <Link
-              href={`/ask?prefill=${encodeURIComponent(`${school.name}について相談したいです。`)}`}
+              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。`)}`}
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
-              この学校について相談する ›
+              うちの子に合うか確かめる →
             </Link>
 
             <a
@@ -215,17 +215,17 @@ export default async function TsushinSchoolPage({
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
-              {school.name}が合うか、相談してみませんか？
+              うちの子に合うか、確かめてみませんか？
             </div>
             <div className="qtext">
-              この学校が今のお子さんの状況に合うかどうかも含め、どうする先生が一緒に考えます。登録不要・匿名で利用できます。
+              子どもの状況を話すだけで、どうする先生がこの学校との相性を一緒に考えます。登録不要・匿名で使えます。
             </div>
             <Link
-              href={`/ask?prefill=${encodeURIComponent(`${school.name}について相談したいです。`)}`}
+              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。`)}`}
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
-              相談する →
+              相性を確かめる →
             </Link>
           </div>
 

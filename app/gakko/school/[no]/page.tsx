@@ -228,11 +228,11 @@ export default async function GakkoSchoolPage({
                 同じsidebar-ask-btn-pinkに統一した（このページ内で相談への導線は常に
                 同じ色＝ピンクで一目で分かるようにする）。 */}
             <Link
-              href={`/ask?prefill=${encodeURIComponent(`${fullName}について相談したいです。`)}`}
+              href={`/ask?prefill=${encodeURIComponent(`「${fullName}」がうちの子に合うかどうか知りたいです。`)}`}
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
-              この学校について相談する ›
+              うちの子に合うか確かめる →
             </Link>
 
             {school.officialUrl && (
@@ -302,21 +302,17 @@ export default async function GakkoSchoolPage({
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
-              {fullName}が合うか、相談してみませんか？
+              うちの子に合うか、確かめてみませんか？
             </div>
             <div className="qtext">
-              この学校が今のお子さんの状況に合うかどうかも含め、どうする先生が一緒に考えます。登録不要・匿名で利用できます。
+              子どもの状況を話すだけで、どうする先生がこの学校との相性を一緒に考えます。登録不要・匿名で使えます。
             </div>
-            {/* 「相談するに遷移したら学校名のテキスト入ってる状態が良くない？」との
-                指摘を受けて、学校名を相談文の下書きとして渡すようにした（2026-10-18）。
-                /ask側（app/ask/page.tsx）でprefillクエリを読み、既存の下書きが無い
-                ときだけテキストエリアに入れる。 */}
             <Link
-              href={`/ask?prefill=${encodeURIComponent(`${fullName}について相談したいです。`)}`}
+              href={`/ask?prefill=${encodeURIComponent(`「${fullName}」がうちの子に合うかどうか知りたいです。`)}`}
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
-              相談する →
+              相性を確かめる →
             </Link>
           </div>
 
