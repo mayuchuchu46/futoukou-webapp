@@ -319,6 +319,12 @@ export default async function GakkoMatomePage({
             💻 オンラインフリースクール（全国どこからでも・{ONLINE_FREE_SCHOOLS.length}件）
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {/* 以前は1件ずつ名前・運営元・対象年齢・備考を3行がかりで表示しており、
+                全21件が常に展開されるこのセクションだけページの縦幅を大きく占有して
+                しまっていた（都道府県選択が要らず絞り込まれないため）。学校名だけの
+                チップ一覧に変え、詳細は個別ページ（/gakko/online/[no]）で見てもらう
+                形にして大幅にコンパクト化した（2026-10-22、「高さの幅とりすぎてる」
+                との指摘を受けて）。 */}
             {ONLINE_GROUPS.map((group) => {
               const items = ONLINE_FREE_SCHOOLS.filter((s) => s.category === group.key);
               if (items.length === 0) return null;
@@ -326,18 +332,15 @@ export default async function GakkoMatomePage({
                 <div key={group.key}>
                   <div className="qtext" style={{ fontWeight: 700, fontSize: 13 }}>{group.title}</div>
                   <div className="muted" style={{ fontSize: 12, marginBottom: 6 }}>{group.desc}</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div className="chip-row chip-row-wrap">
                     {items.map((s) => (
                       <Link
                         key={s.no}
                         href={`/gakko/online/${s.no}`}
-                        style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                        className="chip chip-tag"
+                        style={{ textDecoration: 'none', display: 'inline-block' }}
                       >
-                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                          {s.operator}・対象：{s.ageRange}
-                        </div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>
+                        {s.name}
                       </Link>
                     ))}
                   </div>
