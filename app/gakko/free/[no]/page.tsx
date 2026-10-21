@@ -35,9 +35,14 @@ export async function generateMetadata({
     return { title: `ページが見つかりません | ${SITE_NAME}` };
   }
   const title = `${school.name}｜フリースクール - ${SITE_NAME}`;
-  const description = `${school.prefecture}${school.city}にあるフリースクール「${school.name}」の情報です。`;
+  const baseDescription = `${school.prefecture}${school.city}にあるフリースクール「${school.name}」の情報です。`;
+  const description = school.note ? `${baseDescription}${school.note}` : baseDescription;
   const url = `${SITE_URL}/gakko/free/${school.no}`;
-  const hasEnoughInfo = !!school.address;
+  // 2026-10-21、officialUrl・noteを追加したが、generateMetadataのhasEnoughInfoに
+  // officialUrlを反映していなかったため、公式サイト・紹介文が確認できている施設でも
+  // ページがnoindexのままになっていた（学びの多様化学校のhasEnoughInfo判定と
+  // 同じ考え方に合わせる）。
+  const hasEnoughInfo = !!(school.address || school.officialUrl);
 
   return {
     title,
@@ -89,6 +94,7 @@ export default async function FreeSchoolPage({
             <div className="answer-label" style={{ fontSize: 14 }}>{school.name}</div>
             <div className="qtext">
               {school.prefecture}{school.city}にあるフリースクール（民間施設）です。
+              {school.note && <> {school.note}</>}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
               {[
@@ -128,6 +134,22 @@ export default async function FreeSchoolPage({
               </div>
             </div>
 
+            {/* 公式サイトURL（lib/data/freeSchools.tsのofficialUrl、Web調査で確認できた
+                施設のみ）。フリースクールは非営利・NPO運営が多くアフィリエイトの懸念が
+                薄いため、通信制高校（app/gakko/tsushin/[no]/page.tsx）の/out経由とは異なり、
+                学びの多様化学校と同じ「中立な直リンク」方針で通常の<a>タグを使う
+                （2026-10-21追加）。 */}
+            {school.officialUrl && (
+              <a
+                href={school.officialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary"
+                style={{ width: '100%', textAlign: 'center' }}
+              >
+                施設の公式サイトを見る ›
+              </a>
+            )}
             <a
               className="share-btn"
               style={{ width: '100%' }}
