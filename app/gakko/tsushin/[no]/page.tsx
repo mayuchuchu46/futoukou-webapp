@@ -161,14 +161,13 @@ export default async function TsushinSchoolPage({
 
             {/* 相談CTAはこのカードの下部（情報カードの外）にもあるが、情報カードの中で
                 すでに検討材料が揃った人向けに、もっと早い位置にもCTAを置く（2026-10-22、
-                離脱対策の一環）。最初はmutedの文字リンクにしていたが、周辺の補足リンク
-                （Googleマップ等）と同じ見た目で埋もれてしまい機能しないとの判断から、
-                公式サイトと同じbtn-secondaryに上げた。下のbtn-primaryの大きいCTAカードとは
-                強さを分け、押し付け感を出さないようにする。 */}
+                離脱対策の一環）。最初はmutedの文字リンク→btn-secondaryと試したが、
+                「相談するボタンはいつもピンクがいい」との方針により、下部のCTAカードと
+                同じsidebar-ask-btn-pinkに統一した。 */}
             <Link
               href={`/ask?prefill=${encodeURIComponent(`${school.name}について相談したいです。`)}`}
-              className="btn-secondary"
-              style={{ width: '100%', textAlign: 'center' }}
+              className="btn-primary sidebar-ask-btn-pink"
+              style={{ textDecoration: 'none', width: '100%' }}
             >
               この学校について相談する ›
             </Link>
