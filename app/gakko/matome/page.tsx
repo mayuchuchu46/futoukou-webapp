@@ -47,6 +47,13 @@ const ONLINE_GROUPS = [
   { key: 'referral' as const, title: '利用に条件があるもの', desc: '自治体等からの紹介がないと利用できず、個人が直接申し込めるわけではないものです。' },
 ];
 
+// オンラインフリースクールのまとめページ内プレビューは、1グループあたりこの件数まで
+// しかチップ表示しない（超過分は「ほかN件」リンクで/gakko?type=onlineへ誘導）。
+// 都道府県による絞り込みが効かずここだけ件数が増え続けていく一方なので、今後
+// 掲載数が増えてもこのページの縦幅が際限なく伸びないよう上限を設けている
+// （2026-10-22追加）。
+const ONLINE_PREVIEW_LIMIT = 6;
+
 export async function generateMetadata(): Promise<Metadata> {
   const url = `${SITE_URL}/gakko/matome`;
   return {
@@ -314,26 +321,30 @@ export default async function GakkoMatomePage({
       label: 'オンラインフリースクール',
       count: ONLINE_FREE_SCHOOLS.length,
       node: (
-        <details className="card" style={{ padding: 0 }} open>
+        // 他のカテゴリ（学びの多様化学校・フリースクール等）は都道府県を選ぶまでは
+        // 中身を「都道府県を選んでください」の一文だけにして縦幅を抑えているが、
+        // オンラインフリースクールは全国対応で都道府県による絞り込みが効かないため、
+        // 同じ仕組みが使えない。かわりにこのカード自体を閉じた状態から始める（件数は
+        // 常にsummaryに出るので一覧性は保ったまま）のと、開いたときも1グループ
+        // あたり{ONLINE_PREVIEW_LIMIT}件までのチップ表示＋「もっと見る」導線にして、
+        // 今後件数が増えていっても縦幅が青天井に伸びないようにした（2026-10-22、
+        // 「いまいち」「数が増えていくことも考えてUI設計したい」との指摘を受けて設計し直し）。
+        <details className="card" style={{ padding: 0 }}>
           <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
             💻 オンラインフリースクール（全国どこからでも・{ONLINE_FREE_SCHOOLS.length}件）
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {/* 以前は1件ずつ名前・運営元・対象年齢・備考を3行がかりで表示しており、
-                全21件が常に展開されるこのセクションだけページの縦幅を大きく占有して
-                しまっていた（都道府県選択が要らず絞り込まれないため）。学校名だけの
-                チップ一覧に変え、詳細は個別ページ（/gakko/online/[no]）で見てもらう
-                形にして大幅にコンパクト化した（2026-10-22、「高さの幅とりすぎてる」
-                との指摘を受けて）。 */}
             {ONLINE_GROUPS.map((group) => {
               const items = ONLINE_FREE_SCHOOLS.filter((s) => s.category === group.key);
               if (items.length === 0) return null;
+              const shown = items.slice(0, ONLINE_PREVIEW_LIMIT);
+              const hiddenCount = items.length - shown.length;
               return (
                 <div key={group.key}>
                   <div className="qtext" style={{ fontWeight: 700, fontSize: 13 }}>{group.title}</div>
                   <div className="muted" style={{ fontSize: 12, marginBottom: 6 }}>{group.desc}</div>
                   <div className="chip-row chip-row-wrap">
-                    {items.map((s) => (
+                    {shown.map((s) => (
                       <Link
                         key={s.no}
                         href={`/gakko/online/${s.no}`}
@@ -343,6 +354,15 @@ export default async function GakkoMatomePage({
                         {s.name}
                       </Link>
                     ))}
+                    {hiddenCount > 0 && (
+                      <Link
+                        href="/gakko?type=online"
+                        className="chip chip-tag"
+                        style={{ textDecoration: 'none', display: 'inline-block' }}
+                      >
+                        ほか{hiddenCount}件 ›
+                      </Link>
+                    )}
                   </div>
                 </div>
               );
