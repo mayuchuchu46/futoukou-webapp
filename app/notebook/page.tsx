@@ -44,7 +44,7 @@ export default function NotebookPage() {
             遅い」との指摘を受けて修正）。 */}
         <ConsultationSummaryCard ownCount={ownCount} />
 
-        <Link href="/mypage" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Link href="/account" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>これまで投稿した相談を見る</span>
           <span className="muted">›</span>
         </Link>

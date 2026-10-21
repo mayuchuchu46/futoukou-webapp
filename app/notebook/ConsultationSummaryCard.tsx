@@ -59,9 +59,10 @@ const PREVIEW_ENTRIES = [
 // リニューアルで追加）。
 function NotebookHead({ count, childId }: { count: number; childId?: string | null }) {
   const dots = Array.from({ length: 5 }, (_, i) => i < Math.min(count, 5));
-  // 子どもプロフィールを選んで見ている場合、マイページ側もその子の相談だけに
-  // 絞って見せる（2026-10-16、lib/consultations.ts childId絞り込み参照）。
-  const mypageHref = childId ? `/mypage?child=${childId}` : '/mypage';
+  // 子どもプロフィールを選んで見ている場合、アカウントページ側もその子の相談だけに
+  // 絞って見せる（2026-10-16、lib/consultations.ts childId絞り込み参照。2026-10-21、
+  // マイページ統合に伴いリンク先を/accountに変更）。
+  const mypageHref = childId ? `/account?child=${childId}` : '/account';
   return (
     <div className="notebook-head">
       <div className="notebook-head-text">

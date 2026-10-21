@@ -21,7 +21,8 @@ const ITEMS = [
   // 「みんなのデータ」タブ（2026-10-16追加）。「日常の中でふと気づいた時にメモする」流れに
   // 合うよう、伴走ノートの中に埋め込むのではなく常時アクセスできる独立タブにした。
   { href: '/today', label: 'みんなのデータ', icon: '/assets/icon_comment.png' },
-  { href: '/mypage', label: 'マイページ', icon: '/assets/icon_bookmark.png' },
+  // 2026-10-21、マイページを/accountに統合したため遷移先を変更（ラベルは維持）。
+  { href: '/account', label: 'マイページ', icon: '/assets/icon_bookmark.png' },
 ];
 
 // ある程度スクロールしたら、フッター付近にページ先頭へ戻るボタンを出す。

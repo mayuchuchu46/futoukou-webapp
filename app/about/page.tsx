@@ -41,7 +41,7 @@ export default async function AboutPage() {
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-        <Link href="/mypage" className="backlink">← もどる</Link>
+        <Link href="/account" className="backlink">← もどる</Link>
 
         <div className="card" style={{ alignItems: 'center', textAlign: 'center', gap: 10 }}>
           <img
