@@ -5,6 +5,7 @@ import { CATS } from '@/lib/categories';
 import { DICTIONARY_INDEX_THRESHOLD } from '@/lib/categorySummary';
 import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
 import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
+import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -100,5 +101,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.3,
   }));
 
-  return [...staticEntries, ...dictionaryEntries, ...themeEntries, ...schoolEntries, ...consultationEntries];
+  // フリースクール紹介ページ（/gakko/free/[no]）も同じ考え方で追加（2026-10-21、
+  // 「学びの多様化学校と同じ仕組みでフリースクールも詳細ページにつなげたい」との
+  // 要望を受けて追加）。住所が確認できている施設のみindex対象
+  // （app/gakko/free/[no]/page.tsx参照）。通信制高校（/gakko/tsushin/[no]）は
+  // 確認できている情報が少なく当面すべてnoindexのため、ここには含めない。
+  const freeSchoolEntries: MetadataRoute.Sitemap = FREE_SCHOOLS.filter((s) => s.address).map((s) => ({
+    url: `${SITE_URL}/gakko/free/${s.no}`,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
+  return [...staticEntries, ...dictionaryEntries, ...themeEntries, ...schoolEntries, ...freeSchoolEntries, ...consultationEntries];
 }

@@ -462,9 +462,10 @@ export default async function GakkoPage({
                   )}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
                     {freeSchools.map((s) => (
-                      <div
+                      <Link
                         key={s.no}
-                        style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                        href={`/gakko/free/${s.no}`}
+                        style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
                       >
                         <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
                         <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
@@ -473,7 +474,7 @@ export default async function GakkoPage({
                           {s.contact ? `・${s.contact}` : ''}
                           {s.ageRange && s.ageRange !== '記載なし' ? `・対象：${s.ageRange}` : ''}
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                   <a
@@ -594,15 +595,16 @@ export default async function GakkoPage({
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
                     {tsushinSchools.map((s) => (
-                      <div
+                      <Link
                         key={s.no}
-                        style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                        href={`/gakko/tsushin/${s.no}`}
+                        style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
                       >
                         <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
                         <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
                           本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 </>
