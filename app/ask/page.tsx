@@ -128,6 +128,14 @@ function AskPageContent() {
       if (prefillParam && (!draft.text || draftIsUntouchedPrefill)) {
         setText(prefillParam);
         prefillTextRef.current = prefillParam;
+      } else if (!prefillParam && draftIsUntouchedPrefill) {
+        // 学校紹介ページ等のprefillを一度も手を加えずに離脱した場合、その下書きは
+        // 「ユーザーが書いた内容」ではないため、普通に（prefillなしで）/askに来た
+        // 時にまで復元してしまうと、ボトムナビの「相談する」を押すたびに前回見た
+        // 学校名が入ったままになってしまう（2026-10-22、「普通に相談するボタン押すと
+        // これ出る」との報告を受けて修正）。この場合は空欄から始める。
+        setText('');
+        prefillTextRef.current = undefined;
       } else {
         setText(draft.text || '');
         prefillTextRef.current = draft.prefillText;
