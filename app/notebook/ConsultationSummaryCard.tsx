@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Child } from '@/lib/types';
 
@@ -162,6 +162,11 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
   // 返すだけなので、ログイン状態を気にせず取得してよい。
   const [childrenList, setChildrenList] = useState<Child[] | null>(null);
   const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
+  // ログイン済みで相談0件のとき、匿名投稿した相談をこの会員に紐付けてノートを作る
+  // 試みを一度だけ行う（2026-10-22追加。相談投稿時に未ログインだった場合、
+  // consultations.member_idがNULLのためgetOrGenerateMemberSummaryが0件を返してしまう
+  // 問題への対処。詳細はapp/api/account/link-uid/route.tsのコメント参照）。
+  const linkAttempted = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -180,15 +185,49 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
 
   useEffect(() => {
     let cancelled = false;
-    const qs = selectedChildId ? `?child_id=${encodeURIComponent(selectedChildId)}` : '';
-    fetch(`/api/member-summary${qs}`)
-      .then((r) => r.json())
-      .then((d) => {
+
+    async function load() {
+      try {
+        const qs = selectedChildId ? `?child_id=${encodeURIComponent(selectedChildId)}` : '';
+        const r = await fetch(`/api/member-summary${qs}`);
+        const d: SummaryResponse = await r.json();
+        if (cancelled) return;
+
+        // ログイン済みで相談0件（かつ子ども別表示でない）場合、匿名投稿した相談を
+        // この会員に紐付けて再取得を試みる（一度だけ）。
+        // 相談投稿時にログインしていなかった場合にmember_idがNULLのままになるバグへの
+        // 対処（2026-10-22追加）。
+        if (d.loggedIn && d.count === 0 && !selectedChildId && !linkAttempted.current) {
+          linkAttempted.current = true;
+          const uid = typeof window !== 'undefined' ? localStorage.getItem('dsk_uid') : null;
+          if (uid) {
+            try {
+              const linkRes = await fetch('/api/account/link-uid', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uid }),
+              });
+              const linkData = await linkRes.json();
+              if (linkData.linked > 0 && !cancelled) {
+                // 紐付けた相談があったのでノートを再取得
+                const refetch = await fetch('/api/member-summary');
+                const refreshed: SummaryResponse = await refetch.json();
+                if (!cancelled) setData(refreshed);
+                return;
+              }
+            } catch {
+              // 紐付け失敗は無視（元の結果をそのまま表示）
+            }
+          }
+        }
+
         if (!cancelled) setData(d);
-      })
-      .catch(() => {
+      } catch {
         if (!cancelled) setData({ loggedIn: false, active: false, count: 0, summary: null });
-      });
+      }
+    }
+
+    load();
     return () => {
       cancelled = true;
     };

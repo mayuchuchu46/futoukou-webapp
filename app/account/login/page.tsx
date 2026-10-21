@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import { getUid } from '@/lib/uid';
 
 export default function AccountLoginPage() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function AccountLoginPage() {
     const res = await fetch('/api/account/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, uid: getUid() }),
     });
     const data = await res.json();
     setLoading(false);

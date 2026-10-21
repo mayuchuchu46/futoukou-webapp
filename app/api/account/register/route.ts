@@ -4,7 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { MEMBER_COOKIE_NAME, MEMBER_COOKIE_MAX_AGE } from '@/lib/memberAuth';
 
 export async function POST(req: NextRequest) {
-  const { email, password, name, newsletterOptIn } = await req.json();
+  const { email, password, name, newsletterOptIn, uid } = await req.json();
   if (!email || !password) {
     return NextResponse.json({ error: 'メールアドレスとパスワードを入力してください' }, { status: 400 });
   }
@@ -30,6 +30,15 @@ export async function POST(req: NextRequest) {
 
   if (error || !member) {
     return NextResponse.json({ error: error?.message || '登録に失敗しました' }, { status: 500 });
+  }
+
+  // 会員登録前に匿名（dsk_uid）で投稿した相談を、この会員アカウントに紐付ける。
+  if (uid && typeof uid === 'string' && uid.startsWith('u_')) {
+    await supabase
+      .from('consultations')
+      .update({ member_id: member.id })
+      .eq('author_id', uid)
+      .is('member_id', null);
   }
 
   const res = NextResponse.json({ ok: true });
