@@ -189,31 +189,6 @@ export default async function TsushinSchoolPage({
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>
-            <div className="qtext">
-              このページの情報は、東京都生活文化局が公開している一覧（{CORRESPONDENCE_HIGH_SCHOOL_AS_OF}）をもとにしています。キャンパス（校舎）の所在地・学費・カリキュラム等の詳しい情報は含まれていないため、気になる学校が見つかったら学校の公式サイトで直接ご確認ください。
-            </div>
-            <a
-              href={searchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="muted"
-              style={{ fontSize: 12, textDecoration: 'underline' }}
-            >
-              「{school.name}」をWebで調べる ›
-            </a>
-            <a
-              href={CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="muted"
-              style={{ fontSize: 12, textDecoration: 'underline' }}
-            >
-              出典を見る ›
-            </a>
-          </div>
-
-          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
               うちの子に合うか、確かめてみませんか？
             </div>
@@ -242,6 +217,31 @@ export default async function TsushinSchoolPage({
               meta: `${s.prefecture}${s.municipality}`,
             }))}
           />
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>
+            <div className="qtext">
+              このページの情報は、東京都生活文化局が公開している一覧（{CORRESPONDENCE_HIGH_SCHOOL_AS_OF}）をもとにしています。キャンパス（校舎）の所在地・学費・カリキュラム等の詳しい情報は含まれていないため、気になる学校が見つかったら学校の公式サイトで直接ご確認ください。
+            </div>
+            <a
+              href={searchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="muted"
+              style={{ fontSize: 12, textDecoration: 'underline' }}
+            >
+              「{school.name}」をWebで調べる ›
+            </a>
+            <a
+              href={CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="muted"
+              style={{ fontSize: 12, textDecoration: 'underline' }}
+            >
+              出典を見る ›
+            </a>
+          </div>
         </div>
         <PcSidebar />
       </div>

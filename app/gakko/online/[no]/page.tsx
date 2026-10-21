@@ -159,31 +159,6 @@ export default async function OnlineSchoolPage({
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>
-            <div className="qtext">
-              このページの情報は、教育委員会等の公開資料または運営会社・団体自身の公式サイトをもとにしています（上記の出典欄参照）。出席扱いの実績・学費等の詳しい情報は含まれていないため、気になる場合は公式サイトで直接ご確認ください。
-            </div>
-            <a
-              href={searchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="muted"
-              style={{ fontSize: 12, textDecoration: 'underline' }}
-            >
-              「{school.name}」をWebで調べる ›
-            </a>
-            <a
-              href={school.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="muted"
-              style={{ fontSize: 12, textDecoration: 'underline' }}
-            >
-              出典を見る ›
-            </a>
-          </div>
-
-          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
               うちの子に合うか、確かめてみませんか？
             </div>
@@ -211,6 +186,31 @@ export default async function OnlineSchoolPage({
               meta: CATEGORY_LABEL[s.category],
             }))}
           />
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>
+            <div className="qtext">
+              このページの情報は、教育委員会等の公開資料または運営会社・団体自身の公式サイトをもとにしています（上記の出典欄参照）。出席扱いの実績・学費等の詳しい情報は含まれていないため、気になる場合は公式サイトで直接ご確認ください。
+            </div>
+            <a
+              href={searchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="muted"
+              style={{ fontSize: 12, textDecoration: 'underline' }}
+            >
+              「{school.name}」をWebで調べる ›
+            </a>
+            <a
+              href={school.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="muted"
+              style={{ fontSize: 12, textDecoration: 'underline' }}
+            >
+              出典を見る ›
+            </a>
+          </div>
         </div>
         <PcSidebar />
       </div>

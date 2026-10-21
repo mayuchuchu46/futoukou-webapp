@@ -274,33 +274,6 @@ export default async function GakkoSchoolPage({
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>
-            <div className="qtext">
-              {school.officialUrl || school.address
-                ? 'このページの情報は、文部科学省が公表している指定校一覧と、各校・設置自治体の公式サイト等をもとにしています。学区や転入条件などの詳しい情報は含まれていないため、気になる場合は学校または教育委員会に直接お問い合わせください。'
-                : 'このページの情報は、文部科学省が公表している指定校一覧をもとにしています。住所・公式サイトなどの詳しい情報はまだ確認できていないため、気になる学校が見つかったら学校名で検索するか、下記の文部科学省の一覧・学校または教育委員会に直接お問い合わせください。'}
-            </div>
-            <a
-              href={searchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="muted"
-              style={{ fontSize: 12, textDecoration: 'underline' }}
-            >
-              「{fullName}」をWebで調べる ›
-            </a>
-            <a
-              href={MEXT_SOURCE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="muted"
-              style={{ fontSize: 12, textDecoration: 'underline' }}
-            >
-              文部科学省の最新の指定校一覧を見る ›
-            </a>
-          </div>
-
-          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
               うちの子に合うか、確かめてみませんか？
             </div>
@@ -341,6 +314,33 @@ export default async function GakkoSchoolPage({
               meta: `${s.prefecture}${s.city}`,
             }))}
           />
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>
+            <div className="qtext">
+              {school.officialUrl || school.address
+                ? 'このページの情報は、文部科学省が公表している指定校一覧と、各校・設置自治体の公式サイト等をもとにしています。学区や転入条件などの詳しい情報は含まれていないため、気になる場合は学校または教育委員会に直接お問い合わせください。'
+                : 'このページの情報は、文部科学省が公表している指定校一覧をもとにしています。住所・公式サイトなどの詳しい情報はまだ確認できていないため、気になる学校が見つかったら学校名で検索するか、下記の文部科学省の一覧・学校または教育委員会に直接お問い合わせください。'}
+            </div>
+            <a
+              href={searchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="muted"
+              style={{ fontSize: 12, textDecoration: 'underline' }}
+            >
+              「{fullName}」をWebで調べる ›
+            </a>
+            <a
+              href={MEXT_SOURCE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="muted"
+              style={{ fontSize: 12, textDecoration: 'underline' }}
+            >
+              文部科学省の最新の指定校一覧を見る ›
+            </a>
+          </div>
         </div>
         <PcSidebar />
       </div>
