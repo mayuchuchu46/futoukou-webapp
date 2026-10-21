@@ -3,6 +3,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildFollowupPrompt } from '@/lib/prompt';
 import { findMentionedSchool, buildSchoolFactsBlock } from '@/lib/schoolFacts';
+import { findMentionedInstitutions, buildInstitutionFactsBlock } from '@/lib/institutionFacts';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -54,6 +55,15 @@ export async function POST(req: NextRequest) {
   const mentionedSchool = findMentionedSchool([parent.question, text]);
   const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
 
+  // 返信（ラリー）では、今回の発言単体ではなく元の相談も含めた会話全体から
+  // 制度・施設への言及を検出する（lib/institutionFacts.ts参照、2026-10-21追加。
+  // 「学びの多様化学校が合うタイプと合わないタイプ」という親の相談への返信
+  // 「フリースクールとどう違う？」のように、今回の発言だけでは何の制度の話か
+  // 分からないケースがあるため）。
+  const mentionedInstitutions = findMentionedInstitutions([parent.question, parent.answer, text]);
+  const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
+  const factsBlock = [schoolFactsBlock, institutionFactsBlock].filter(Boolean).join('\n');
+
   const prompt = buildFollowupPrompt(
     parent.category,
     parent.question,
@@ -63,7 +73,7 @@ export async function POST(req: NextRequest) {
     parent.grade,
     parent.gender,
     !!guidelines?.supervised,
-    schoolFactsBlock
+    factsBlock || undefined
   );
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

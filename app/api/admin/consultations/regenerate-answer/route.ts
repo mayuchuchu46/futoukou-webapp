@@ -4,6 +4,7 @@ import { isAdmin } from '@/lib/adminAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildPrompt, buildFollowupPrompt } from '@/lib/prompt';
 import { findMentionedSchool, buildSchoolFactsBlock } from '@/lib/schoolFacts';
+import { findMentionedInstitutions, buildInstitutionFactsBlock } from '@/lib/institutionFacts';
 
 // 無料AI相談（request_type='ai'）のAI回答を、現在のプロンプト設定（文字数の目安など）で
 // 作り直すための管理者向けエンドポイント。プロンプトを調整したあと、既存の投稿
@@ -58,6 +59,9 @@ export async function POST(req: NextRequest) {
     }
     const mentionedSchool = findMentionedSchool([parent.question, row.question]);
     const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
+    const mentionedInstitutions = findMentionedInstitutions([parent.question, parent.answer, row.question]);
+    const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
+    const factsBlock = [schoolFactsBlock, institutionFactsBlock].filter(Boolean).join('\n');
     prompt = buildFollowupPrompt(
       row.category,
       parent.question,
@@ -67,13 +71,17 @@ export async function POST(req: NextRequest) {
       row.grade || null,
       row.gender || null,
       !!guidelines?.supervised,
-      schoolFactsBlock
+      factsBlock || undefined
     );
   } else {
     // 既存の相談文に学校名が含まれていれば、再生成時もサイト側の確認済み情報を渡す
-    // （lib/schoolFacts.ts参照、2026-10-18追加）。
+    // （lib/schoolFacts.ts参照、2026-10-18追加）。制度・施設レベルの言及も同様に渡す
+    // （lib/institutionFacts.ts参照、2026-10-21追加）。
     const mentionedSchool = findMentionedSchool([row.question]);
     const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
+    const mentionedInstitutions = findMentionedInstitutions([row.question]);
+    const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
+    const factsBlock = [schoolFactsBlock, institutionFactsBlock].filter(Boolean).join('\n');
     prompt = buildPrompt(
       row.category,
       row.question,
@@ -83,7 +91,7 @@ export async function POST(req: NextRequest) {
       !!guidelines?.supervised,
       undefined,
       undefined,
-      schoolFactsBlock
+      factsBlock || undefined
     );
   }
 
