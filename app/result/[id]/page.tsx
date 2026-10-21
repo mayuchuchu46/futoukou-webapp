@@ -25,6 +25,7 @@ import AskAgainBlock from './AskAgainBlock';
 import TagChips from '@/components/TagChips';
 import { SEARCH_TAG_CANDIDATES, matchesThemeText, getThemeDisplayLabel } from '@/lib/searchTags';
 import { findMentionedSchool } from '@/lib/schoolFacts';
+import { findMentionedFreeSchool, findMentionedCorrespondenceSchool } from '@/lib/facilityLinkMatch';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -361,6 +362,52 @@ export default async function ResultPage({
     </Link>
   );
 
+  // 上と同じ考え方を、フリースクール一覧（freeSchools.ts）・通信制高校一覧
+  // （correspondenceHighSchools.ts）にも広げたもの（2026-10-21追加）。きっかけ：
+  // 「学校法人角川ドワンゴ学園N中等部秋葉原キャンパスについて相談したいです」という
+  // 相談で、同校はfreeSchools.ts側のデータだったため、学びの多様化学校専用の
+  // mentionedSchoolでは検出できず、詳細ページへのリンクが出ていなかった。
+  // 学びの多様化学校の判定で既に一致している場合は、同じ相談に複数の案内カードを
+  // 並べて出す必要はないため判定自体をスキップする。
+  const mentionedFreeSchool = !mentionedSchool
+    ? findMentionedFreeSchool([item.question, answerTextForJsonLd])
+    : null;
+  const freeSchoolDetailBlock = mentionedFreeSchool && (
+    <Link href={`/gakko/free/${mentionedFreeSchool.no}`} className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>
+        {mentionedFreeSchool.name}の詳細情報
+      </div>
+      <div className="qtext">
+        所在地など、このサイトで確認できている情報をまとめています。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        施設の詳細を見る ›
+      </div>
+    </Link>
+  );
+
+  const mentionedTsushinSchool =
+    !mentionedSchool && !mentionedFreeSchool
+      ? findMentionedCorrespondenceSchool([item.question, answerTextForJsonLd])
+      : null;
+  const tsushinDetailBlock = mentionedTsushinSchool && (
+    <Link href={`/gakko/tsushin/${mentionedTsushinSchool.no}`} className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>
+        {mentionedTsushinSchool.name}の詳細情報
+      </div>
+      <div className="qtext">
+        本校所在地・設置者など、このサイトで確認できている情報をまとめています。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        学校の詳細を見る ›
+      </div>
+    </Link>
+  );
+
+  // 学びの多様化学校・フリースクール・通信制高校のどれかが一致していれば、それを
+  // gakkoBlock（都道府県一覧への汎用案内）より優先して出す。
+  const anySchoolDetailBlock = schoolDetailBlock || freeSchoolDetailBlock || tsushinDetailBlock;
+
   // lib/prompt.tsの安全上書き（希死念慮・自傷等を検知した場合、具体的な助言をせず
   // ホットライン案内のみを返す指示）が発動した回答かどうか。consultations.crisis_detected
   // （app/api/consult/route.tsで保存）を正とし、その列の追加前に投稿された古い行のために
@@ -470,7 +517,7 @@ export default async function ResultPage({
             <Suspense fallback={null}>
               <ResultClient id={id} initialItem={item} />
             </Suspense>
-            {schoolDetailBlock || gakkoBlock}
+            {anySchoolDetailBlock || gakkoBlock}
             {shareButtons}
             {askAgainBlock}
           </>
@@ -517,7 +564,7 @@ export default async function ResultPage({
               <FollowupThread parentId={item.id} authorId={item.author_id} initialFollowups={followups} />
             )}
 
-            {!isCrisis && (schoolDetailBlock || gakkoBlock)}
+            {!isCrisis && (anySchoolDetailBlock || gakkoBlock)}
 
             {isCrisis ? (
               // 希死念慮・自傷等の安全上書きが発動した相談専用の案内カード。以前は回答カード下の
