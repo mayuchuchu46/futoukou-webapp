@@ -54,13 +54,27 @@ export default function Header({
   // （前者5つ・後者10個）ことに合わせてプルダウン式にした（2026-10-18）。
   type NavItem =
     | { type: 'link'; href: string; label: string }
-    | { type: 'dropdown'; key: string; label: string; basePath: string; items: { href: string; label: string }[] };
+    | {
+        type: 'dropdown';
+        key: string;
+        label: string;
+        basePath: string;
+        // ラベル文字自体をクリックした時の遷移先。省略時はbasePathと同じ
+        // （/theme等は引き続きbasePathのまま）。gakkoだけは、「学びの場を探す」を
+        // 押すと件数の少ない学びの多様化学校（全国約84校、都道府県によっては0件）に
+        // 直接飛んでしまい「該当なし」に当たりやすいとの指摘を受け、47都道府県どこでも
+        // 情報があり件数も最も多いフリースクール（地域）に変更した（2026-10-21）。
+        // プルダウン内の「学びの多様化学校」自体への導線はitemsにそのまま残っている。
+        labelHref?: string;
+        items: { href: string; label: string }[];
+      };
   const GLOBAL_NAV_ITEMS: NavItem[] = [
     {
       type: 'dropdown',
       key: 'gakko',
       label: '学びの場を探す',
       basePath: '/gakko',
+      labelHref: '/gakko?type=free',
       items: [
         { href: '/gakko', label: '学びの多様化学校' },
         { href: '/gakko?type=free', label: 'フリースクール（地域）' },
@@ -161,7 +175,7 @@ export default function Header({
                     {/* ラベル文字自体もリンクにし、プルダウンを開かず直接basePathに
                         遷移できるようにした（2026-10-18、「テキストも押せるといいな」
                         との指摘を受けて）。 */}
-                    <Link href={item.basePath} className={active ? 'active' : ''} onClick={() => setOpenNav(null)}>
+                    <Link href={item.labelHref ?? item.basePath} className={active ? 'active' : ''} onClick={() => setOpenNav(null)}>
                       {item.label}
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M6 9l6 6 6-6" />
