@@ -7,6 +7,18 @@
 // このデータは全国を網羅していない。各都道府県の網羅状況は freeschoolCoverage.ts を参照。
 //
 // 住所・連絡先が空の施設は、出典資料そのものに記載がなかったもの（推測で埋めていない）。
+//
+// officialUrl・note（2026-10-21追加）は、学びの多様化学校（manabiTayoukaGakko.ts）と
+// 同じ考え方で、詳細ページ（app/gakko/free/[no]/page.tsx）の内容を充実させるために
+// Web調査で追加した任意項目。「東京都の施設でまず試す」方針のもと、都道府県教育委員会の
+// 一覧PDFだけでは分からない運営団体・対象年齢・活動内容等を、各施設の公式サイトや
+// 信頼できる報道・紹介記事で確認できた範囲でnoteに記載している。確認できなかった施設には
+// 付けていない（推測で埋めていない。address・contactと同じ方針）。同一法人が複数キャンパスを
+// 持つ場合（N中等部・キズキ共育塾・東京シューレ等）、officialUrlは法人全体の公式サイトを指す
+// （キャンパス固有のページが見つからない場合も法人サイトを掲載）。フリースクールは非営利・
+// 公的紹介中心でアフィリエイトの心配がほぼ無いため、学びの多様化学校の詳細ページと同じく
+// officialUrlは直接<a>タグでリンクする方針（通信制高校はこれと異なり/out経由。
+// lib/data/correspondenceHighSchools.tsのコメント参照）。
 export type FreeSchool = {
   no: number;
   name: string;
@@ -17,6 +29,8 @@ export type FreeSchool = {
   ageRange: string;
   sourceUrl: string;
   asOf: string;
+  officialUrl?: string;
+  note?: string;
 };
 
 export const FREE_SCHOOLS: FreeSchool[] = [
@@ -158,30 +172,30 @@ export const FREE_SCHOOLS: FreeSchool[] = [
   { no: 136, name: 'Little Baobab', prefecture: '千葉県', city: '四街道市', address: '千葉県四街道市千代田1丁目40-12', contact: '043-216-5894', ageRange: '', sourceUrl: 'https://www.city.chiba.jp/kyoiku/gakkokyoiku/kyoikushien/freeschool_info.html', asOf: '2026-09-07時点' },
   { no: 137, name: 'フリースクールネモ習志野', prefecture: '千葉県', city: '習志野市', address: '千葉県習志野市本大久保3-8-14-401', contact: '047-411-5159', ageRange: '', sourceUrl: 'https://www.city.chiba.jp/kyoiku/gakkokyoiku/kyoikushien/freeschool_info.html', asOf: '2026-09-07時点' },
   { no: 138, name: 'ワイズアカデミー成田キャンパス', prefecture: '千葉県', city: '成田市', address: '千葉県成田市花崎町828-11 スカイタウン成田3階', contact: '0476-24-7641', ageRange: '', sourceUrl: 'https://www.city.chiba.jp/kyoiku/gakkokyoiku/kyoikushien/freeschool_info.html', asOf: '2026-09-07時点' },
-  { no: 139, name: 'Branch room', prefecture: '東京都', city: '渋谷区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
+  { no: 139, name: 'Branch room', prefecture: '東京都', city: '渋谷区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://branchkids.jp/', note: '渋谷区代官山にある教室。発達障害・不登校の子どもを対象に、スタッフと1対1で「好きなこと」に取り組むプログラム（1回1.5時間）を行う。2025年6月から高校生まで利用可能になった。' },
   { no: 140, name: 'DE-SCHOOL', prefecture: '東京都', city: '新宿区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 141, name: 'GIFT School', prefecture: '東京都', city: '港区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
+  { no: 141, name: 'GIFT School', prefecture: '東京都', city: '港区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://gift-ed.org/', note: '2021年開設。港区北青山（表参道）にあり、未就学児〜中学生を対象に、教科書を使わないプロジェクト型学習や料理・登山・キャンプなどの体験活動を行う。' },
   { no: 142, name: 'NPOフリースクール僕んち', prefecture: '東京都', city: '世田谷区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 143, name: 'NPO法人翔和学園', prefecture: '東京都', city: '中野区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 144, name: 'NPO法人フリースクール多摩川', prefecture: '東京都', city: '府中市', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
+  { no: 143, name: 'NPO法人翔和学園', prefecture: '東京都', city: '中野区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', note: '発達障害やギフテッドなど特性のある若者を対象に、木工・プログラミング・ロケット制作・料理・動画制作など「好きなこと」への取り組みを通じた支援を行うNPO法人。' },
+  { no: 144, name: 'NPO法人フリースクール多摩川', prefecture: '東京都', city: '府中市', address: '府中市府中町2-18-17', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://huritama.wixsite.com/huritama', note: '特定非営利活動法人。不登校・行き渋り・発達障がい等の子どもを対象に、学校外で安心して過ごしながら社会性や知識を育む支援を行う。' },
   { no: 145, name: 'NPO法人フリースペースロビンソン', prefecture: '東京都', city: '青梅市', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
   { no: 146, name: 'イエナスクールゆめまる', prefecture: '東京都', city: '八王子市', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
   { no: 147, name: 'エルムアカデミー', prefecture: '東京都', city: '品川区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 148, name: 'おおぞら高等学院東京キャンパス', prefecture: '東京都', city: '新宿区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 149, name: '学校法人角川ドワンゴ学園N中等部秋葉原キャンパス', prefecture: '東京都', city: '千代田区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 150, name: '学校法人角川ドワンゴ学園N中等部池袋キャンパス', prefecture: '東京都', city: '豊島区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 151, name: '学校法人角川ドワンゴ学園N中等部新宿キャンパス', prefecture: '東京都', city: '渋谷区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 152, name: '学校法人角川ドワンゴ学園N中等部町田キャンパス', prefecture: '東京都', city: '町田市', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 153, name: 'キズキ共育塾吉祥寺校', prefecture: '東京都', city: '武蔵野市', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 154, name: 'キズキ共育塾代々木校', prefecture: '東京都', city: '渋谷区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
+  { no: 148, name: 'おおぞら高等学院東京キャンパス', prefecture: '東京都', city: '新宿区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://www.ktc-school.com/campus/shinjuku/' },
+  { no: 149, name: '学校法人角川ドワンゴ学園N中等部秋葉原キャンパス', prefecture: '東京都', city: '千代田区', address: '千代田区神田東松下町14番 東信神田THビル2階', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://n-jr.jp/', note: '学校法人角川ドワンゴ学園が運営する中等部。2019年4月開校。探究学習・基礎学習（国語・数学・英語）・プログラミング学習を柱に、N高等学校と連携した6年一貫教育を行う。' },
+  { no: 150, name: '学校法人角川ドワンゴ学園N中等部池袋キャンパス', prefecture: '東京都', city: '豊島区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://n-jr.jp/', note: '学校法人角川ドワンゴ学園が運営する中等部（運営法人・カリキュラムは他キャンパスと共通。詳細はno.149の秋葉原キャンパス参照）。' },
+  { no: 151, name: '学校法人角川ドワンゴ学園N中等部新宿キャンパス', prefecture: '東京都', city: '渋谷区', address: '渋谷区代々木4-29-3 西参道梅村ビル2階', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://n-jr.jp/', note: '学校法人角川ドワンゴ学園が運営する中等部。2019年4月開校（最初に開校したキャンパスの一つ）。' },
+  { no: 152, name: '学校法人角川ドワンゴ学園N中等部町田キャンパス', prefecture: '東京都', city: '町田市', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://n-jr.jp/', note: '学校法人角川ドワンゴ学園が運営する中等部（運営法人・カリキュラムは他キャンパスと共通。詳細はno.149の秋葉原キャンパス参照）。' },
+  { no: 153, name: 'キズキ共育塾吉祥寺校', prefecture: '東京都', city: '武蔵野市', address: '武蔵野市吉祥寺東町2-18-16 中田ビル1F', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://kizuki.or.jp/', note: '小学生〜高校生・浪人生を対象に1対1の個別指導・オンライン指導を行い、受験対策に加え不登校の生徒にも対応する。' },
+  { no: 154, name: 'キズキ共育塾代々木校', prefecture: '東京都', city: '渋谷区', address: '渋谷区千駄ヶ谷5-29-7 ドルミ御苑202号', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://kizuki.or.jp/', note: '小学生〜高校生・浪人生を対象に1対1の個別指導・オンライン指導を行い、受験対策に加え不登校の生徒にも対応する（内容はno.153の吉祥寺校と共通）。' },
   { no: 155, name: '東京未来大学こどもみらい園', prefecture: '東京都', city: '足立区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
   { no: 156, name: '東京未来大学みらいフリースクール', prefecture: '東京都', city: '足立区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 157, name: '特定非営利活動法人東京コミュニティスクール', prefecture: '東京都', city: '中野区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 158, name: 'トライ式中等部渋谷キャンパス', prefecture: '東京都', city: '渋谷区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 159, name: 'ヒロック初等部', prefecture: '東京都', city: '世田谷区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 160, name: 'フリースクール東京シューレ王子', prefecture: '東京都', city: '北区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 161, name: 'フリースクール東京シューレ大田', prefecture: '東京都', city: '大田区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
-  { no: 162, name: 'フリースクール東京シューレ新宿', prefecture: '東京都', city: '新宿区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
+  { no: 157, name: '特定非営利活動法人東京コミュニティスクール', prefecture: '東京都', city: '中野区', address: '中野区中野1-62-10', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://tokyocs.org/' },
+  { no: 158, name: 'トライ式中等部渋谷キャンパス', prefecture: '東京都', city: '渋谷区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', note: '不登校の中学生を対象とした1対1指導の「トライ式中等部」の一拠点。在籍校での出席扱いを目指す学習状況報告、高校受験対策、同世代交流イベントなどを行う（内容は他キャンパスと共通）。' },
+  { no: 159, name: 'ヒロック初等部', prefecture: '東京都', city: '世田谷区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://www.hillock-primary.com', note: '運営はNPO法人ソダチバ・プロジェクト（代表理事：堺谷武志、2019年1月設立）。「探究＆教科」を軸に自由進度学習・マイプロジェクト・テーマ学習を行う。' },
+  { no: 160, name: 'フリースクール東京シューレ王子', prefecture: '東京都', city: '北区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://www.shure.or.jp/', note: 'NPO法人東京シューレが運営。異年齢の子ども・若者が共に過ごし育ちあう学びの場として、高校コース（高卒資格取得支援）、親の会・電話相談、文化祭・音楽祭などの活動も行う。' },
+  { no: 161, name: 'フリースクール東京シューレ大田', prefecture: '東京都', city: '大田区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://www.shure.or.jp/', note: 'NPO法人東京シューレが運営する拠点の一つ（運営法人・活動内容はno.160の王子シューレと共通）。' },
+  { no: 162, name: 'フリースクール東京シューレ新宿', prefecture: '東京都', city: '新宿区', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度', officialUrl: 'https://www.shure.or.jp/' },
   { no: 163, name: 'フリースペースコスモ', prefecture: '東京都', city: '三鷹市', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
   { no: 164, name: '明蓬館高等学校東京・国立SNEC', prefecture: '東京都', city: '国立市', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/03_98', asOf: '令和4年度' },
   { no: 165, name: 'フリースクールSAGA', prefecture: '佐賀県', city: '佐賀市', address: '佐賀市八丁畷8-1 佐賀総合庁舎2階', contact: '0952-33-2220', ageRange: '小・中（発達障害の児童生徒）', sourceUrl: 'https://www.education.saga.jp/hp/shiroishi-j/wp-content/uploads/sites/221/2024/04/0426.佐賀県内のフリースクール.pdf', asOf: '記載なし' },
