@@ -6,6 +6,8 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { ONLINE_FREE_SCHOOLS, OnlineFreeSchool } from '@/lib/data/onlineFreeSchools';
+import { findSimilarOnlineFreeSchools } from '@/lib/similarSchools';
+import RelatedListingsCard from '@/components/RelatedListingsCard';
 
 // オンラインフリースクール、1校ごとの紹介ページ（2026-10-21追加）。
 //
@@ -180,6 +182,19 @@ export default async function OnlineSchoolPage({
               相談する →
             </Link>
           </div>
+
+          {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との
+              要望を受けて追加（2026-10-21）。都道府県の概念が無いため、唯一の分類項目
+              であるcategory（種類）が同じ施設を挙げる（lib/similarSchools.ts参照）。 */}
+          <RelatedListingsCard
+            title="他のオンラインフリースクールも見てみませんか"
+            items={findSimilarOnlineFreeSchools(ONLINE_FREE_SCHOOLS, school).map((s) => ({
+              key: s.no,
+              href: `/gakko/online/${s.no}`,
+              name: s.name,
+              meta: CATEGORY_LABEL[s.category],
+            }))}
+          />
         </div>
         <PcSidebar />
       </div>

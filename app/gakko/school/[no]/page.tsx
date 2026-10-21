@@ -7,6 +7,8 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaGakko';
+import { findSimilarManabiSchools } from '@/lib/similarSchools';
+import RelatedListingsCard from '@/components/RelatedListingsCard';
 import SchoolConsultations from './SchoolConsultations';
 
 // 学びの多様化学校、1校ごとの紹介ページ。一覧（/gakko）の学校名を押すとここに来る
@@ -297,6 +299,20 @@ export default async function GakkoSchoolPage({
           <Suspense fallback={null}>
             <SchoolConsultations schoolName={school.name} branchName={school.branchName} />
           </Suspense>
+
+          {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との
+              要望を受けて追加（2026-10-21）。同じ都道府県を優先し、足りなければ
+              同じ学校種を全国から補う（lib/similarSchools.ts参照）。静的データのみで
+              計算できるためDB問い合わせは不要。 */}
+          <RelatedListingsCard
+            title="他の学びの多様化学校も見てみませんか"
+            items={findSimilarManabiSchools(MANABI_TAYOUKA_GAKKO, school).map((s) => ({
+              key: s.no,
+              href: `/gakko/school/${s.no}`,
+              name: s.branchName ? `${s.name}（${s.branchName}）` : s.name,
+              meta: `${s.prefecture}${s.city}`,
+            }))}
+          />
         </div>
         <PcSidebar />
       </div>

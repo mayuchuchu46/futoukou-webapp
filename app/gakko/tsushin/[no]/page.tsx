@@ -10,6 +10,8 @@ import {
   CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL,
   CORRESPONDENCE_HIGH_SCHOOL_AS_OF,
 } from '@/lib/data/correspondenceHighSchools';
+import { findSimilarCorrespondenceHighSchools } from '@/lib/similarSchools';
+import RelatedListingsCard from '@/components/RelatedListingsCard';
 
 // 通信制高校（広域）、1校ごとの紹介ページ（2026-10-21、「学びの多様化学校と同じ仕組みで
 // 通信制高校も詳細ページにつなげたい」との要望を受けて、app/gakko/school/[no]/page.tsxと
@@ -206,6 +208,20 @@ export default async function TsushinSchoolPage({
               相談する →
             </Link>
           </div>
+
+          {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との
+              要望を受けて追加（2026-10-21）。本校所在地の都道府県が同じ学校を優先し、
+              足りなければ同じ設置者（学校法人・企業）の他校を補う（lib/similarSchools.ts
+              参照）。 */}
+          <RelatedListingsCard
+            title="他の通信制高校も見てみませんか"
+            items={findSimilarCorrespondenceHighSchools(CORRESPONDENCE_HIGH_SCHOOLS, school).map((s) => ({
+              key: s.no,
+              href: `/gakko/tsushin/${s.no}`,
+              name: s.name,
+              meta: `${s.prefecture}${s.municipality}`,
+            }))}
+          />
         </div>
         <PcSidebar />
       </div>
