@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
+import RelatedConsultations from '../RelatedConsultations';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
@@ -14,21 +16,36 @@ import { getEducationSupportCoverage } from '@/lib/data/educationSupportCoverage
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
 import { getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
 import MatomePrefectureSelect from './MatomePrefectureSelect';
+import MatomeTypeFilter, { MatomeSection } from './MatomeTypeFilter';
 
 // 「学校以外の学びの場・居場所」を都道府県で1回選べば、6カテゴリすべての該当件数・
 // 一覧をその場で見られるまとめページ（2026-10-21追加）。
 //
-// 最初はカテゴリの説明と各タブへのリンクだけを並べたページとして作ったが、
-// 「こんな感じより、ここに来たら一括で探せるUIがいい」との指摘を受けて、
-// 都道府県を選ぶと6カテゴリ分の一覧がこのページの中に全部表示される形に変更した。
-// 各カテゴリの詳しい一覧・絞り込み（学校種など）は/gakkoの各タブ側に残し、
-// このページは「全部をまとめて見る」入口として位置づけている。
+// 変遷：
+// 1. 最初はカテゴリの説明と各タブへのリンクだけを並べたページだった。
+// 2. 「一括で探せるUIがいい」との指摘を受け、都道府県を選ぶと6カテゴリ分の
+//    一覧がこのページの中に全部表示される形に変更した。
+// 3. 「種類で探すのもあるといい」との指摘を受け、各タブへ飛ぶリンク一覧
+//    （「種類で探す」カード）を追加した。
+// 4. 「オンラインフリースクールだけ一覧なのもどうなんだろ、もっと最適な
+//    プロのUIを」との指摘を受け、(3)のリンク一覧（押すとページ遷移する点が
+//    (2)の「その場で全部見られる」と挙動が揃っていなかった）を撤去し、
+//    代わりにその場でカテゴリの表示・非表示を切り替えられる「種類で絞り込む」
+//    チップ（MatomeTypeFilter、クライアント側トグル）に統合した。オンライン
+//    フリースクールも、本来の/gakko?type=onlineタブと同じ3分類（仲間づくり・
+//    学習サポート中心・紹介制）で見出し分けして表示するようにした。
 //
-// オンラインフリースクールだけは居住地を問わず利用できるため、都道府県の選択に
-// 関係なく常に表示する（/gakkoのtype=online・type=freeと同じ考え方）。
+// 各カテゴリのさらに詳しい絞り込み（学校種など）は/gakkoの各タブ側に残し、
+// このページは「全部をまとめて見る」専用の入口として位置づけている。
 const PAGE_TITLE = `学校以外の学びの場・居場所を都道府県からまとめて探す｜${SITE_NAME}`;
 const PAGE_DESCRIPTION =
   '不登校のお子さんが学校以外に過ごせる場所・学べる場所（学びの多様化学校・フリースクール・教育支援センター・通信制高校・助成金制度・オンラインフリースクール）を、都道府県を選ぶだけでまとめて一覧できます。';
+
+const ONLINE_GROUPS = [
+  { key: 'community' as const, title: '仲間づくり・居場所のあるタイプ', desc: '学習だけでなく、交流やイベントなど「居場所」としての機能があるタイプです。' },
+  { key: 'tutoring' as const, title: '学習サポート中心（個別指導・家庭教師タイプ）', desc: '交流の場というより、1対1の学習指導が中心のサービスです。' },
+  { key: 'referral' as const, title: '利用に条件があるもの', desc: '自治体等からの紹介がないと利用できず、個人が直接申し込めるわけではないものです。' },
+];
 
 export async function generateMetadata(): Promise<Metadata> {
   const url = `${SITE_URL}/gakko/matome`;
@@ -51,6 +68,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// 都道府県が未選択の時に、場所に依存するカテゴリ（学びの多様化学校・フリースクール・
+// 教育支援センター・通信制高校・助成金）の中身に出す案内。オンラインフリースクールだけは
+// 居住地を問わないため、この案内の対象外（常に実データを表示）。
+function SelectPrefecturePrompt() {
+  return <div className="muted">都道府県を選ぶと、ここに一覧が表示されます。</div>;
+}
+
 export default async function GakkoMatomePage({
   searchParams,
 }: {
@@ -67,6 +91,238 @@ export default async function GakkoMatomePage({
   const tsushinSchools = selected ? CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === selected) : [];
   const joseiSubsidies = selected ? getFreeschoolSubsidiesByPrefecture(selected) : [];
 
+  const sections: MatomeSection[] = [
+    {
+      key: 'gakko',
+      icon: '🏫',
+      label: '学びの多様化学校',
+      count: gakkoSchools.length,
+      node: (
+        <details className="card" style={{ padding: 0 }} open>
+          <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
+            🏫 学びの多様化学校（{gakkoSchools.length}件）
+          </summary>
+          <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {!selected ? (
+              <SelectPrefecturePrompt />
+            ) : gakkoSchools.length === 0 ? (
+              <div className="muted">{selected}に文部科学省指定の学びの多様化学校は見つかりませんでした。</div>
+            ) : (
+              gakkoSchools.map((s) => (
+                <Link
+                  key={s.no}
+                  href={`/gakko/school/${s.no}`}
+                  style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="qtext" style={{ fontWeight: 700 }}>
+                    {s.name}{s.branchName ? `（${s.branchName}）` : ''}
+                  </div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                    {s.city}・{s.schoolType}・{s.publicPrivate}
+                  </div>
+                </Link>
+              ))
+            )}
+            {selected && (
+              <Link href={`/gakko?pref=${encodeURIComponent(selected)}`} className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+                学校種（小学校／中学校／高等学校）で絞り込む ›
+              </Link>
+            )}
+          </div>
+        </details>
+      ),
+    },
+    {
+      key: 'free',
+      icon: '🏠',
+      label: 'フリースクール',
+      count: freeSchools.length,
+      node: (
+        <details className="card" style={{ padding: 0 }} open>
+          <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
+            🏠 フリースクール（地域）（{freeSchools.length}件）
+          </summary>
+          <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {!selected ? (
+              <SelectPrefecturePrompt />
+            ) : freeCoverage?.tier === 'none' || freeCoverage?.tier === 'unprocessed' ? (
+              <div className="muted">
+                {selected}については、{freeCoverage.note}フリースクールが無いという意味ではなく、公開された一覧が見つからなかったということです。
+              </div>
+            ) : freeSchools.length === 0 ? (
+              <div className="muted">掲載できる情報が見つかりませんでした。</div>
+            ) : (
+              freeSchools.map((s) => (
+                <Link
+                  key={s.no}
+                  href={`/gakko/free/${s.no}`}
+                  style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                    {s.city}
+                    {s.address ? `・${s.address}` : ''}
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        </details>
+      ),
+    },
+    {
+      key: 'shien',
+      icon: '🧑‍🏫',
+      label: '教育支援センター',
+      count: shienCenters.length,
+      node: (
+        <details className="card" style={{ padding: 0 }} open>
+          <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
+            🧑‍🏫 教育支援センター（{shienCenters.length}件）
+          </summary>
+          <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {!selected ? (
+              <SelectPrefecturePrompt />
+            ) : shienCoverage?.tier === 'none' || !shienCoverage ? (
+              <div className="muted">
+                {selected}については、{shienCoverage?.note ?? '都道府県単位でまとめた一覧は見つかりませんでした。'}教育支援センターが無いという意味ではなく、公開情報が見つからなかったということです。お住まいの市区町村にはほぼ必ず設置されています。
+              </div>
+            ) : shienCenters.length === 0 ? (
+              <div className="muted">掲載できる情報が見つかりませんでした。</div>
+            ) : (
+              shienCenters.map((s, i) => (
+                <div key={`${s.city}-${s.name}-${i}`} style={{ borderTop: '1px solid var(--border)', paddingTop: 10 }}>
+                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                    {s.city}
+                    {s.address ? `・${s.address}` : ''}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </details>
+      ),
+    },
+    {
+      key: 'tsushin',
+      icon: '📮',
+      label: '通信制高校',
+      count: tsushinSchools.length,
+      node: (
+        <details className="card" style={{ padding: 0 }} open>
+          <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
+            📮 通信制高校（広域）（{selected ? `本校が${selected}：` : ''}{tsushinSchools.length}件）
+          </summary>
+          <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {!selected ? (
+              <SelectPrefecturePrompt />
+            ) : (
+              <>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  「広域」通信制高校は本校の都道府県以外からも入学できます。
+                </div>
+                {tsushinSchools.length === 0 ? (
+                  <div className="muted">本校が{selected}にある学校は見つかりませんでした。他の都道府県の学校も入学できる場合があります。</div>
+                ) : (
+                  tsushinSchools.map((s) => (
+                    <Link
+                      key={s.no}
+                      href={`/gakko/tsushin/${s.no}`}
+                      style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>設置者：{s.operator}</div>
+                    </Link>
+                  ))
+                )}
+              </>
+            )}
+          </div>
+        </details>
+      ),
+    },
+    {
+      key: 'josei',
+      icon: '💴',
+      label: '助成金・支援制度',
+      count: joseiSubsidies.length,
+      node: (
+        <details className="card" style={{ padding: 0 }} open>
+          <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
+            💴 {selected ? `${selected}の助成金・支援制度` : '助成金・支援制度'}（{joseiSubsidies.length}件）
+          </summary>
+          <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {!selected ? (
+              <SelectPrefecturePrompt />
+            ) : (
+              <>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  通信制高校の学費は国の「高等学校等就学支援金」が対象です（全国統一の制度のため一覧には含みません）。下記はフリースクール等の利用料を独自に助成する自治体の制度です。
+                </div>
+                {joseiSubsidies.length === 0 ? (
+                  <div className="muted">{selected}については、Web検索で確認できる利用料助成制度が見つかりませんでした。制度が無いという意味ではありません。</div>
+                ) : (
+                  joseiSubsidies.map((s, i) => (
+                    <div key={`${s.entity}-${s.name}-${i}`} style={{ borderTop: '1px solid var(--border)', paddingTop: 10 }}>
+                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                        実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
+                      </div>
+                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
+                    </div>
+                  ))
+                )}
+              </>
+            )}
+          </div>
+        </details>
+      ),
+    },
+    {
+      key: 'online',
+      icon: '💻',
+      label: 'オンラインフリースクール',
+      count: ONLINE_FREE_SCHOOLS.length,
+      node: (
+        <details className="card" style={{ padding: 0 }} open>
+          <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
+            💻 オンラインフリースクール（全国どこからでも・{ONLINE_FREE_SCHOOLS.length}件）
+          </summary>
+          <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {ONLINE_GROUPS.map((group) => {
+              const items = ONLINE_FREE_SCHOOLS.filter((s) => s.category === group.key);
+              if (items.length === 0) return null;
+              return (
+                <div key={group.key}>
+                  <div className="qtext" style={{ fontWeight: 700, fontSize: 13 }}>{group.title}</div>
+                  <div className="muted" style={{ fontSize: 12, marginBottom: 6 }}>{group.desc}</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {items.map((s) => (
+                      <a
+                        key={s.name}
+                        href={`/out?to=${encodeURIComponent(s.url)}&id=${encodeURIComponent(s.name)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                      >
+                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                          {s.operator}・対象：{s.ageRange}
+                        </div>
+                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </details>
+      ),
+    },
+  ];
+
   return (
     <div className="app-shell">
       <Header supervised={false} showBack={false} />
@@ -77,46 +333,8 @@ export default async function GakkoMatomePage({
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びの場・居場所まとめ</div>
             <div className="qtext">
-              都道府県を選ぶと、学びの多様化学校・フリースクール・教育支援センター・通信制高校・助成金制度を一度にまとめて確認できます（オンラインフリースクールは居住地を問わないため常に表示しています）。
+              都道府県を選ぶと、学びの多様化学校・フリースクール・教育支援センター・通信制高校・助成金制度を一度にまとめて確認できます。下の「種類で絞り込む」チップで、見たいものだけに絞ることもできます。オンラインフリースクールは居住地を問わないため、都道府県の選択に関係なく表示されます。
             </div>
-          </div>
-
-          {/* 都道府県で探す（下記）とは別に、最初から見たい種類が決まっている人向けの
-              入口（2026-10-21、「種類で探すとかもあるといい」との指摘を受けて追加）。
-              押すと/gakkoの該当タブに飛び、そのタブ側で都道府県を選べる。 */}
-          <div className="card" style={{ padding: 0, overflow: 'hidden', gap: 0 }}>
-            <div style={{ padding: '13px 16px 0', fontWeight: 700, fontSize: 14 }}>種類で探す</div>
-            {([
-              { href: '/gakko', icon: '🏫', label: '学びの多様化学校', note: '文科省指定・全国約84校' },
-              { href: '/gakko?type=free', icon: '🏠', label: 'フリースクール（地域）', note: '民間施設・都道府県ごとに掲載' },
-              { href: '/gakko?type=shien', icon: '🧑‍🏫', label: '教育支援センター', note: '公的・無料・全国約1,873か所' },
-              { href: '/gakko?type=online', icon: '💻', label: 'オンラインフリースクール', note: '居住地を問わず利用できる' },
-              { href: '/gakko?type=tsushin', icon: '📮', label: '通信制高校（広域）', note: '本人のペースで学べる高校' },
-              { href: '/gakko?type=josei', icon: '💴', label: '助成金・支援制度', note: '利用料助成・就学支援金' },
-            ] as const).map((item, i, arr) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  padding: '13px 16px',
-                  marginTop: i === 0 ? 10 : 0,
-                  borderTop: '1px solid var(--border)',
-                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
-                  textDecoration: 'none',
-                  color: 'var(--text)',
-                }}
-              >
-                <span style={{ fontSize: 18 }} aria-hidden="true">{item.icon}</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, fontSize: 14 }}>{item.label}</div>
-                  <div className="muted" style={{ fontSize: 12 }}>{item.note}</div>
-                </div>
-                <span className="muted">›</span>
-              </Link>
-            ))}
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
@@ -136,160 +354,16 @@ export default async function GakkoMatomePage({
             </div>
           </div>
 
-          {selected && (
-            <>
-              <details className="card" style={{ padding: 0 }} open>
-                <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-                  🏫 学びの多様化学校（{gakkoSchools.length}件）
-                </summary>
-                <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {gakkoSchools.length === 0 ? (
-                    <div className="muted">{selected}に文部科学省指定の学びの多様化学校は見つかりませんでした。</div>
-                  ) : (
-                    gakkoSchools.map((s) => (
-                      <Link
-                        key={s.no}
-                        href={`/gakko/school/${s.no}`}
-                        style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
-                      >
-                        <div className="qtext" style={{ fontWeight: 700 }}>
-                          {s.name}{s.branchName ? `（${s.branchName}）` : ''}
-                        </div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                          {s.city}・{s.schoolType}・{s.publicPrivate}
-                        </div>
-                      </Link>
-                    ))
-                  )}
-                </div>
-              </details>
+          <MatomeTypeFilter sections={sections} />
 
-              <details className="card" style={{ padding: 0 }} open>
-                <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-                  🏠 フリースクール（地域）（{freeSchools.length}件）
-                </summary>
-                <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {freeCoverage?.tier === 'none' || freeCoverage?.tier === 'unprocessed' ? (
-                    <div className="muted">
-                      {selected}については、{freeCoverage.note}フリースクールが無いという意味ではなく、公開された一覧が見つからなかったということです。
-                    </div>
-                  ) : freeSchools.length === 0 ? (
-                    <div className="muted">掲載できる情報が見つかりませんでした。</div>
-                  ) : (
-                    freeSchools.map((s) => (
-                      <Link
-                        key={s.no}
-                        href={`/gakko/free/${s.no}`}
-                        style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
-                      >
-                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                          {s.city}
-                          {s.address ? `・${s.address}` : ''}
-                        </div>
-                      </Link>
-                    ))
-                  )}
-                </div>
-              </details>
-
-              <details className="card" style={{ padding: 0 }} open>
-                <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-                  🧑‍🏫 教育支援センター（{shienCenters.length}件）
-                </summary>
-                <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {shienCoverage?.tier === 'none' || !shienCoverage ? (
-                    <div className="muted">
-                      {selected}については、{shienCoverage?.note ?? '都道府県単位でまとめた一覧は見つかりませんでした。'}教育支援センターが無いという意味ではなく、公開情報が見つからなかったということです。お住まいの市区町村にはほぼ必ず設置されています。
-                    </div>
-                  ) : shienCenters.length === 0 ? (
-                    <div className="muted">掲載できる情報が見つかりませんでした。</div>
-                  ) : (
-                    shienCenters.map((s, i) => (
-                      <div key={`${s.city}-${s.name}-${i}`} style={{ borderTop: '1px solid var(--border)', paddingTop: 10 }}>
-                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                          {s.city}
-                          {s.address ? `・${s.address}` : ''}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </details>
-
-              <details className="card" style={{ padding: 0 }} open>
-                <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-                  📮 通信制高校（広域）（本校が{selected}：{tsushinSchools.length}件）
-                </summary>
-                <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    「広域」通信制高校は本校の都道府県以外からも入学できます。
-                  </div>
-                  {tsushinSchools.length === 0 ? (
-                    <div className="muted">本校が{selected}にある学校は見つかりませんでした。他の都道府県の学校も入学できる場合があります。</div>
-                  ) : (
-                    tsushinSchools.map((s) => (
-                      <Link
-                        key={s.no}
-                        href={`/gakko/tsushin/${s.no}`}
-                        style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
-                      >
-                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>設置者：{s.operator}</div>
-                      </Link>
-                    ))
-                  )}
-                </div>
-              </details>
-
-              <details className="card" style={{ padding: 0 }} open>
-                <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-                  💴 {selected}の助成金・支援制度（{joseiSubsidies.length}件）
-                </summary>
-                <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    通信制高校の学費は国の「高等学校等就学支援金」が対象です（全国統一の制度のため一覧には含みません）。下記はフリースクール等の利用料を独自に助成する自治体の制度です。
-                  </div>
-                  {joseiSubsidies.length === 0 ? (
-                    <div className="muted">{selected}については、Web検索で確認できる利用料助成制度が見つかりませんでした。制度が無いという意味ではありません。</div>
-                  ) : (
-                    joseiSubsidies.map((s, i) => (
-                      <div key={`${s.entity}-${s.name}-${i}`} style={{ borderTop: '1px solid var(--border)', paddingTop: 10 }}>
-                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                          実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
-                        </div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </details>
-            </>
-          )}
-
-          <details className="card" style={{ padding: 0 }} open={!selected}>
-            <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-              💻 オンラインフリースクール（全国どこからでも・{ONLINE_FREE_SCHOOLS.length}件）
-            </summary>
-            <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {ONLINE_FREE_SCHOOLS.map((s, i) => (
-                <a
-                  key={`${s.name}-${i}`}
-                  href={`/out?to=${encodeURIComponent(s.url)}&id=${encodeURIComponent(s.name)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
-                >
-                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                    {s.operator}・対象：{s.ageRange}
-                  </div>
-                </a>
-              ))}
-            </div>
-          </details>
+          {/* 「学び場についての質問と回答を出したい」との指摘を受けて追加（2026-10-21）。
+              lib/searchTags.tsに追加した包括的なテーマ語「学びの場」（フリースクール・
+              通信制高校・学びの多様化学校・教育支援センターいずれかに触れる投稿を同義語
+              機構で拾う）を使い、/gakkoの各タブと同じ仕組み（RelatedConsultations）で
+              実際の相談を表示する。 */}
+          <Suspense fallback={null}>
+            <RelatedConsultations themeWord="学びの場" />
+          </Suspense>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>どれが合うか迷ったら</div>
