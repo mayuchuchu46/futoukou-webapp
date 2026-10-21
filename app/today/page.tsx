@@ -482,13 +482,11 @@ export default function TodayPage() {
               側で絞り込み済み）。質問ごとの集計を見る条件は「回答済みであること」
               （会員登録は問わない。2026-10-17、今日の質問カードと同じ変更）。 */}
           {history && history.length > 0 && (
-            <details className="card" style={{ padding: 0 }}>
-              <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-                過去の質問一覧を見る（{history.length}問）
-              </summary>
-              <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <div style={{ fontWeight: 700, fontSize: 14, padding: '4px 0' }}>過去の質問（{history.length}問）</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {history.map((q) => (
-                  <div key={q.slug} style={{ borderTop: '1px solid var(--border)', paddingTop: 12 }}>
+                  <div key={q.slug} className="card" style={{ gap: 8 }}>
                     <div className="qtext" style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>{q.text}</div>
                     {q.myAnswer === null ? (
                       // 未回答（2026-10-17追加）。「過去の質問にも同じように回答を促したい、
@@ -625,7 +623,7 @@ export default function TodayPage() {
                 ))}
                 {historyError && <div className="muted" style={{ color: '#C0392B', fontSize: 12 }}>{historyError}</div>}
               </div>
-            </details>
+            </div>
           )}
 
           {loggedIn && (
