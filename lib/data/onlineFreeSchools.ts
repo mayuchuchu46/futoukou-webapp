@@ -17,6 +17,9 @@
 //   'tutoring'  = 個別指導・家庭教師型（交流の場ではなく学習サポートが中心）
 //   'referral'  = 自治体等からの紹介がないと利用できない（個人が直接申し込めない）
 export type OnlineFreeSchool = {
+  // 1校ごとの紹介ページ（app/gakko/online/[no]/page.tsx、2026-10-21追加）用の連番。
+  // 配列の並び順＝掲載順をそのまま番号にしているだけで、公的な整理番号等ではない。
+  no: number;
   name: string;
   operator: string;
   ageRange: string;
@@ -30,6 +33,7 @@ export type OnlineFreeSchool = {
 
 export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
   {
+    no: 1,
     name: 'クラスジャパン小中学園',
     operator: '一般社団法人クラスジャパンプロジェクト',
     ageRange: '小学1年生～高校3年生',
@@ -41,6 +45,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 2,
     name: 'N中等部 ネットコース',
     operator: '学校法人角川ドワンゴ学園',
     ageRange: '中学生',
@@ -52,6 +57,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 3,
     name: 'オンラインフリースクール シンガク',
     operator: '株式会社成基',
     ageRange: '小学4年生～中学3年生',
@@ -63,6 +69,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 4,
     name: 'オンラインフリースクール clulu（クルル）',
     operator: 'NPO法人キリンこども応援団',
     ageRange: '小学4年生～中学3年生',
@@ -74,6 +81,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 5,
     name: 'EMI高等学院・親子キャリアアカデミーちゃんぱす',
     operator: '運営者：山中恵美子（運営法人の記載なし）',
     ageRange: '小学1年生～高校3年生',
@@ -85,6 +93,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 6,
     name: 'NIJINアカデミー',
     operator: '株式会社NIJIN',
     ageRange: '小学1年生～小学5年生、中学1年生～中学3年生',
@@ -96,6 +105,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 7,
     name: 'aini school（アイニースクール）',
     operator: '株式会社ロコタビ',
     ageRange: '小学1年生～中学3年生',
@@ -107,6 +117,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 8,
     name: 'SOZOW SCHOOL 小中等部',
     operator: 'SOZOW株式会社',
     ageRange: '小学4年生～中学3年生（高等部は別途あり）',
@@ -118,6 +129,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 9,
     name: 'すらら',
     operator: '株式会社すららネット',
     ageRange: '小学生～高校生（無学年式）',
@@ -129,6 +141,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'tutoring',
   },
   {
+    no: 10,
     name: 'オンラインフリースクール フォレストリンク',
     operator: '個人運営（代表：浜 直也）',
     ageRange: '小学1年生～中学3年生',
@@ -140,6 +153,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 11,
     name: 'For Everyone Study',
     operator: '個人運営（代表：植竹智央）',
     ageRange: '小学生・中学生・高校生',
@@ -151,6 +165,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 12,
     name: 'ハロハロラボ',
     operator: 'NPO法人ハロハロラボ',
     ageRange: '6歳～15歳（学習支援は6歳～12歳）',
@@ -162,6 +177,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 13,
     name: 'トライ式中等部',
     operator: '株式会社トライグループ',
     ageRange: '小学5年生～中学3年生（出願時点で中学在学中であることが条件）',
@@ -173,6 +189,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 14,
     name: 'クラーク国際中等部',
     operator: 'クラーク記念国際高等学校と連携（運営法人名は公式サイトに明記なし）',
     ageRange: '小学6年生～中学3年生',
@@ -184,6 +201,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 15,
     name: '第一学院中等部',
     operator: 'ウィザスグループ',
     ageRange: '中学生年代（学年の明記なし）',
@@ -195,6 +213,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 16,
     name: 'キズキ共育塾',
     operator: '株式会社キズキ',
     ageRange: '小学生～社会人（オンライン校では中学生も対象）',
@@ -206,6 +225,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'tutoring',
   },
   {
+    no: 17,
     name: 'Branch（ブランチ）',
     operator: '運営会社名は公式サイトに明記なし（代表：中里祐次）',
     ageRange: '小学生～高校生',
@@ -217,6 +237,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'community',
   },
   {
+    no: 18,
     name: 'room-K',
     operator: 'NPO法人カタリバ',
     ageRange: '小学生・中学生（連携自治体の教育委員会・学校からの紹介が必要）',
@@ -228,6 +249,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'referral',
   },
   {
+    no: 19,
     name: '家庭教師のユイロ（旧サイル学院）',
     operator: '運営会社名は公式サイトに明記なし（旧サイル学院中等部・高等部の運営は株式会社サイルビジネス学院）',
     ageRange: '小学生～大学生',
@@ -239,6 +261,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'tutoring',
   },
   {
+    no: 20,
     name: 'ソウガク オンライン個別指導塾',
     operator: 'ソウガク合同会社',
     ageRange: '小学生・中学生（発達障害・グレーゾーンの子ども向け）',
@@ -250,6 +273,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     category: 'tutoring',
   },
   {
+    no: 21,
     name: 'WIALIS（ウィアリス）オンラインフリースクール',
     operator: '株式会社WIALIS',
     ageRange: '中学生（小学校高学年は要相談）',

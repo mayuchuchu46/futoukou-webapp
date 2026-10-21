@@ -7,6 +7,7 @@ import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
 import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
+import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -129,12 +130,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.3,
   }));
 
+  // オンラインフリースクール紹介ページ（/gakko/online/[no]）。情報は元々すべて確認済みの
+  // ため、他カテゴリと異なりofficialUrl等の確認状況によるフィルターは不要（2026-10-21、
+  // 「オンラインもまず内部ページで循環させたい」との指摘を受けて紹介ページを追加した際に
+  // 合わせて追加）。
+  const onlineSchoolEntries: MetadataRoute.Sitemap = ONLINE_FREE_SCHOOLS.map((s) => ({
+    url: `${SITE_URL}/gakko/online/${s.no}`,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
   return [
     ...staticEntries,
     ...dictionaryEntries,
     ...themeEntries,
     ...schoolEntries,
     ...freeSchoolEntries,
+    ...onlineSchoolEntries,
     ...tsushinSchoolEntries,
     ...consultationEntries,
   ];

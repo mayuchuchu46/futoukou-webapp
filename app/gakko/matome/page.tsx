@@ -14,7 +14,7 @@ import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
 import { getEducationSupportCoverage } from '@/lib/data/educationSupportCoverage';
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
-import { getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
+import { FREESCHOOL_SUBSIDIES, getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
 import MatomePrefectureSelect from './MatomePrefectureSelect';
 import MatomeTypeFilter, { MatomeSection } from './MatomeTypeFilter';
 
@@ -71,8 +71,12 @@ export async function generateMetadata(): Promise<Metadata> {
 // 都道府県が未選択の時に、場所に依存するカテゴリ（学びの多様化学校・フリースクール・
 // 教育支援センター・通信制高校・助成金）の中身に出す案内。オンラインフリースクールだけは
 // 居住地を問わないため、この案内の対象外（常に実データを表示）。
-function SelectPrefecturePrompt() {
-  return <div className="muted">都道府県を選ぶと、ここに一覧が表示されます。</div>;
+function SelectPrefecturePrompt({ nationwideNote }: { nationwideNote: string }) {
+  return (
+    <div className="muted">
+      {nationwideNote}都道府県を選ぶと、その都道府県に絞った一覧が表示されます。
+    </div>
+  );
 }
 
 export default async function GakkoMatomePage({
@@ -91,20 +95,30 @@ export default async function GakkoMatomePage({
   const tsushinSchools = selected ? CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === selected) : [];
   const joseiSubsidies = selected ? getFreeschoolSubsidiesByPrefecture(selected) : [];
 
+  // 都道府県未選択時は「0件」ではなく全国の総数を表示する（2026-10-21、「デフォルトは
+  // 全国表示で数入れて、そこから県別に絞り込みの流れが良くない？」との指摘を受けて対応。
+  // 以前は未選択時、絞り込み結果の空配列の長さ＝0件がそのまま表示されてしまい、実際には
+  // データがあるのに「0件」と誤解を招く表示になっていた）。
+  const gakkoCountDisplay = selected ? gakkoSchools.length : MANABI_TAYOUKA_GAKKO.length;
+  const freeCountDisplay = selected ? freeSchools.length : FREE_SCHOOLS.length;
+  const shienCountDisplay = selected ? shienCenters.length : EDUCATION_SUPPORT_CENTERS.length;
+  const tsushinCountDisplay = selected ? tsushinSchools.length : CORRESPONDENCE_HIGH_SCHOOLS.length;
+  const joseiCountDisplay = selected ? joseiSubsidies.length : FREESCHOOL_SUBSIDIES.length;
+
   const sections: MatomeSection[] = [
     {
       key: 'gakko',
       icon: '🏫',
       label: '学びの多様化学校',
-      count: gakkoSchools.length,
+      count: gakkoCountDisplay,
       node: (
         <details className="card" style={{ padding: 0 }} open>
           <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-            🏫 学びの多様化学校（{gakkoSchools.length}件）
+            🏫 学びの多様化学校（{selected ? `${gakkoCountDisplay}件` : `全国${gakkoCountDisplay}件`}）
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt />
+              <SelectPrefecturePrompt nationwideNote={`全国に${gakkoCountDisplay}校あります。`} />
             ) : gakkoSchools.length === 0 ? (
               <div className="muted">{selected}に文部科学省指定の学びの多様化学校は見つかりませんでした。</div>
             ) : (
@@ -136,15 +150,15 @@ export default async function GakkoMatomePage({
       key: 'free',
       icon: '🏠',
       label: 'フリースクール',
-      count: freeSchools.length,
+      count: freeCountDisplay,
       node: (
         <details className="card" style={{ padding: 0 }} open>
           <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-            🏠 フリースクール（地域）（{freeSchools.length}件）
+            🏠 フリースクール（地域）（{selected ? `${freeCountDisplay}件` : `全国${freeCountDisplay}件`}）
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt />
+              <SelectPrefecturePrompt nationwideNote={`全国に${freeCountDisplay}件掲載しています。`} />
             ) : freeCoverage?.tier === 'none' || freeCoverage?.tier === 'unprocessed' ? (
               <div className="muted">
                 {selected}については、{freeCoverage.note}フリースクールが無いという意味ではなく、公開された一覧が見つからなかったということです。
@@ -174,15 +188,15 @@ export default async function GakkoMatomePage({
       key: 'shien',
       icon: '🧑‍🏫',
       label: '教育支援センター',
-      count: shienCenters.length,
+      count: shienCountDisplay,
       node: (
         <details className="card" style={{ padding: 0 }} open>
           <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-            🧑‍🏫 教育支援センター（{shienCenters.length}件）
+            🧑‍🏫 教育支援センター（{selected ? `${shienCountDisplay}件` : `全国${shienCountDisplay}件`}）
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt />
+              <SelectPrefecturePrompt nationwideNote={`掲載できている分だけで全国に${shienCountDisplay}件あります（全国約1,873か所のうち一部）。`} />
             ) : shienCoverage?.tier === 'none' || !shienCoverage ? (
               <div className="muted">
                 {selected}については、{shienCoverage?.note ?? '都道府県単位でまとめた一覧は見つかりませんでした。'}教育支援センターが無いという意味ではなく、公開情報が見つからなかったということです。お住まいの市区町村にはほぼ必ず設置されています。
@@ -208,15 +222,15 @@ export default async function GakkoMatomePage({
       key: 'tsushin',
       icon: '📮',
       label: '通信制高校',
-      count: tsushinSchools.length,
+      count: tsushinCountDisplay,
       node: (
         <details className="card" style={{ padding: 0 }} open>
           <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-            📮 通信制高校（広域）（{selected ? `本校が${selected}：` : ''}{tsushinSchools.length}件）
+            📮 通信制高校（広域）（{selected ? `本校が${selected}：${tsushinCountDisplay}件` : `全国${tsushinCountDisplay}件`}）
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt />
+              <SelectPrefecturePrompt nationwideNote={`全国に${tsushinCountDisplay}校あります。`} />
             ) : (
               <>
                 <div className="muted" style={{ fontSize: 12 }}>
@@ -246,15 +260,15 @@ export default async function GakkoMatomePage({
       key: 'josei',
       icon: '💴',
       label: '助成金・支援制度',
-      count: joseiSubsidies.length,
+      count: joseiCountDisplay,
       node: (
         <details className="card" style={{ padding: 0 }} open>
           <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-            💴 {selected ? `${selected}の助成金・支援制度` : '助成金・支援制度'}（{joseiSubsidies.length}件）
+            💴 {selected ? `${selected}の助成金・支援制度` : '助成金・支援制度'}（{selected ? `${joseiCountDisplay}件` : `全国${joseiCountDisplay}件`}）
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt />
+              <SelectPrefecturePrompt nationwideNote={`確認できている制度は全国に${joseiCountDisplay}件あります。`} />
             ) : (
               <>
                 <div className="muted" style={{ fontSize: 12 }}>
@@ -299,11 +313,9 @@ export default async function GakkoMatomePage({
                   <div className="muted" style={{ fontSize: 12, marginBottom: 6 }}>{group.desc}</div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {items.map((s) => (
-                      <a
-                        key={s.name}
-                        href={`/out?to=${encodeURIComponent(s.url)}&id=${encodeURIComponent(s.name)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        key={s.no}
+                        href={`/gakko/online/${s.no}`}
                         style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
                       >
                         <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
@@ -311,7 +323,7 @@ export default async function GakkoMatomePage({
                           {s.operator}・対象：{s.ageRange}
                         </div>
                         <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>

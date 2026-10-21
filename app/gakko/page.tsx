@@ -558,12 +558,14 @@ export default async function GakkoPage({
                     <div className="qtext" style={{ fontWeight: 700, fontSize: 13, marginTop: 6 }}>{group.title}</div>
                     <div className="muted" style={{ fontSize: 12, marginBottom: 6 }}>{group.desc}</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                      {/* 2026-10-21、「オンラインもまず内部ページで循環させたい」との指摘を
+                          受けて、他カテゴリ（学びの多様化学校・フリースクール・通信制高校）と
+                          同じく、先に1校ごとの紹介ページ（/gakko/online/[no]）を経由する
+                          ようにした（以前はここから直接/out経由で外部サイトに出ていた）。 */}
                       {items.map((s) => (
-                        <a
-                          key={s.name}
-                          href={`/out?to=${encodeURIComponent(s.url)}&id=${encodeURIComponent(s.name)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          key={s.no}
+                          href={`/gakko/online/${s.no}`}
                           style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
                         >
                           <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
@@ -571,7 +573,7 @@ export default async function GakkoPage({
                             {s.operator}・対象：{s.ageRange}
                           </div>
                           <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>
