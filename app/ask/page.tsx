@@ -301,9 +301,13 @@ function AskPageContent() {
           ? e.message
           : 'エラーが発生しました'
       );
-      setSubmitting(false);
     } finally {
       clearTimeout(timeoutId);
+      // setSubmitting(false)をcatchではなくfinallyに移動（2026-10-22）。
+      // 以前はcatchにしか書いていなかったため、router.push()後に何らかの例外が
+      // 起きるなど想定外のパスを通った場合にfinallyしか実行されず、
+      // submittingがtrueのまま固まる（ボタンが永久に押せない）症状の原因になっていた。
+      setSubmitting(false);
     }
   }
 
@@ -357,9 +361,10 @@ function AskPageContent() {
           ? e.message
           : 'エラーが発生しました'
       );
-      setExpertSubmitting(false);
     } finally {
       clearTimeout(timeoutId);
+      // submit()と同じ理由でfinallyに移動（2026-10-22）。
+      setExpertSubmitting(false);
     }
   }
 
