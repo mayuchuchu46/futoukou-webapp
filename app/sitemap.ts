@@ -6,6 +6,7 @@ import { DICTIONARY_INDEX_THRESHOLD } from '@/lib/categorySummary';
 import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
 import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
+import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -105,14 +106,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 「学びの多様化学校と同じ仕組みでフリースクールも詳細ページにつなげたい」との
   // 要望を受けて追加）。住所または公式サイトURLが確認できている施設のみindex対象
   // （app/gakko/free/[no]/page.tsxのhasEnoughInfoと同じ条件に合わせる。officialUrlだけ
-  // 確認できた施設がここから漏れていたため2026-10-21に修正）。通信制高校
-  // （/gakko/tsushin/[no]）は確認できている情報が少なく当面すべてnoindexのため、
-  // ここには含めない。
+  // 確認できた施設がここから漏れていたため2026-10-21に修正）。
   const freeSchoolEntries: MetadataRoute.Sitemap = FREE_SCHOOLS.filter((s) => s.address || s.officialUrl).map((s) => ({
     url: `${SITE_URL}/gakko/free/${s.no}`,
     changeFrequency: 'monthly',
     priority: 0.3,
   }));
 
-  return [...staticEntries, ...dictionaryEntries, ...themeEntries, ...schoolEntries, ...freeSchoolEntries, ...consultationEntries];
+  // 通信制高校紹介ページ（/gakko/tsushin/[no]）。公式サイトURLを調査・追加した
+  // ため、officialUrlが確認できている学校のみindex対象とする（app/gakko/tsushin/
+  // [no]/page.tsxのhasEnoughInfoと同じ条件。2026-10-21、全校officialUrl調査完了に
+  // 合わせて追加。それまでは確認できている情報が少なく全校noindexだった）。
+  const tsushinSchoolEntries: MetadataRoute.Sitemap = CORRESPONDENCE_HIGH_SCHOOLS.filter(
+    (s) => s.officialUrl
+  ).map((s) => ({
+    url: `${SITE_URL}/gakko/tsushin/${s.no}`,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
+  return [
+    ...staticEntries,
+    ...dictionaryEntries,
+    ...themeEntries,
+    ...schoolEntries,
+    ...freeSchoolEntries,
+    ...tsushinSchoolEntries,
+    ...consultationEntries,
+  ];
 }

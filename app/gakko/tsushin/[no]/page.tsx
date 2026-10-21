@@ -16,10 +16,12 @@ import {
 // 同じ考え方で追加）。
 //
 // このデータ（correspondenceHighSchools.ts）には本校所在地（所轄庁）の都道府県・
-// 市区町村と設置者名しか無く、各校の公式サイトURL・住所・キャンパス所在地は含まれて
-// いない（lib/data/correspondenceHighSchools.tsのコメント参照）。確認できている
-// 情報が少ないため、このページは当面すべてnoindexとし、確認できた情報が増えた場合に
-// 個別に見直す（app/gakko/school/[no]/page.tsxと同じ、情報量に応じたindex方針）。
+// 市区町村と設置者名しか無く、各校のキャンパス所在地等は含まれていない
+// （lib/data/correspondenceHighSchools.tsのコメント参照）。公式サイトURLを
+// Web調査で確認できた学校のみindexし、未確認の学校はnoindexとする
+// （app/gakko/school/[no]/page.tsxと同じ、情報量に応じたindex方針。2026-10-21、
+// 全115校の公式サイトURL調査完了に合わせて見直し。それまでは確認できている
+// 情報が少なく全校noindexだった）。
 export const instant = false;
 
 function findSchool(noParam: string) {
@@ -46,8 +48,8 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: url },
-    // 確認できている情報が少ないため当面noindex（上記コメント参照）。
-    robots: { index: false, follow: true },
+    // 公式サイトURLが確認できている学校のみindex（上記コメント参照）。
+    robots: { index: !!school.officialUrl, follow: true },
     openGraph: {
       title,
       description,
