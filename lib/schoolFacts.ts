@@ -60,10 +60,10 @@ export function findMentionedSchool(texts: (string | null | undefined)[]): Manab
   return best;
 }
 
-// AIに渡す「確認済みの学校情報」ブロック。ここに書かれていない項目は「知らない」ことを
-// AI自身に明示させ、断定・推測をさせないことが目的（note等が無い学校では、この一言だけが
-// 付く形になる）。
-export function buildSchoolFactsBlock(school: ManabiTayoukaGakko): string {
+// 確認済みの学校情報を箇条書きの行にしたもの。buildSchoolFactsBlock（相談プロンプト用）と
+// lib/schoolFit.tsの学校相性メモプロンプトの両方から使う共通部分（2026-10-22、相性メモ
+// 機能の追加に合わせて切り出し）。
+export function buildSchoolFactsLines(school: ManabiTayoukaGakko): string[] {
   const facts: string[] = [
     `学校名：${school.name}${school.branchName ? `（${school.branchName}）` : ''}`,
     `所在地：${school.prefecture}${school.city}`,
@@ -74,6 +74,14 @@ export function buildSchoolFactsBlock(school: ManabiTayoukaGakko): string {
   ];
   if (school.address) facts.push(`住所：${school.address}`);
   if (school.note) facts.push(`その他の確認済み情報：${school.note}`);
+  return facts;
+}
+
+// AIに渡す「確認済みの学校情報」ブロック。ここに書かれていない項目は「知らない」ことを
+// AI自身に明示させ、断定・推測をさせないことが目的（note等が無い学校では、この一言だけが
+// 付く形になる）。
+export function buildSchoolFactsBlock(school: ManabiTayoukaGakko): string {
+  const facts = buildSchoolFactsLines(school);
 
   return `
 相談文に、当サイトが情報を持っている学校「${school.name}」が含まれているようです。

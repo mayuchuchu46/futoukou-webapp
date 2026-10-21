@@ -275,6 +275,48 @@ ${
 {"status_summary": "…", "advice": "…", "phrasing_suggestion": "…", "environment_suggestion": "…", "school_fit_points": "…"}`;
 }
 
+// 学校ごとの「相性メモ」用プロンプト（lib/schoolFit.ts参照、2026-10-22追加）。
+// 「相談を重ねるほど、この学校が合うかわかってくると良くない？」との要望を受けて追加。
+// buildSummaryPromptと同じ会員・子どもの相談履歴を材料にしつつ、特定の1校（確認済みの
+// 学校情報）に絞って「今分かっている範囲での相性」を整理させる。学校側の確認済み情報に
+// 無い項目を推測で作らないこと、断定しないことは、lib/schoolFacts.tsのbuildSchoolFactsBlock
+// と同じ方針。
+const SCHOOL_FIT_QA_MAX_CHARS = 150;
+const MAX_SCHOOL_FIT_HISTORY_ITEMS = 10;
+
+export function buildSchoolFitPrompt(schoolFactsLines: string[], history: SummaryConsultation[]): string {
+  const recent = history.slice(0, MAX_SCHOOL_FIT_HISTORY_ITEMS);
+  const trim = (s: string) =>
+    s.length > SCHOOL_FIT_QA_MAX_CHARS ? s.slice(0, SCHOOL_FIT_QA_MAX_CHARS) + '…' : s;
+  const lines = recent.map((h) => {
+    const label = CATS[h.category]?.label || h.category;
+    const date = h.created_at ? h.created_at.slice(0, 10) : '';
+    const answerPart = h.answer ? `／回答：${trim(h.answer)}` : '';
+    return `- （${date}・${label}）相談：${trim(h.question)}${answerPart}`;
+  });
+
+  return `あなたは「どうする先生」という、不登校の子を持つ保護者向けAI相談キャラクターです。
+以下は、ある保護者がこれまでにした相談（質問と回答）の履歴と、保護者が気になっている学校について
+当サイトが確認できている情報です。この履歴から読み取れるお子さんの状況・ニーズと、学校の確認済み
+情報を踏まえて、「この学校が今のお子さんに合いそうかどうか」について、今分かっている範囲での
+メモを日本語150字程度で書いてください。
+
+ルール：
+- 「合う」「合わない」と断定しない。あくまで「〜という点は合いそうです」「〜の点はまだ分からない」
+  のように、今分かっている範囲の整理にとどめる
+- 学校の確認済み情報に無い項目（例：実際の校風・本人との相性）を推測で作り出さない。確認できない
+  点は、素直に「その点はまだ判断できない」という趣旨で書く
+- 相談履歴の件数が少ない場合（3件未満）は、まだ判断材料が少ないことを自然に文章に織り込む
+- 断定的な医学的・心理学的診断はしない
+- 出力は本文のみ。前置き・署名は不要
+
+【気になっている学校の確認済み情報】
+${schoolFactsLines.map((f) => '- ' + f).join('\n')}
+
+【これまでの相談履歴（新しい順）】
+${lines.join('\n')}`;
+}
+
 // カテゴリ別「お悩み辞典」ページ（/dictionary/[category]）の冒頭解説文用（2026-10-15追加）。
 // member向けのサマリーと違い、特定の1人の状況整理ではなく、そのカテゴリに実際に
 // 寄せられた複数の相談から見える「よくある傾向」を一般化して説明する文章を作る。

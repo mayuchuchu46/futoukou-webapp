@@ -10,6 +10,7 @@ import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaG
 import { findSimilarManabiSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import SchoolConsultations from './SchoolConsultations';
+import SchoolFitCard from './SchoolFitCard';
 
 // 学びの多様化学校、1校ごとの紹介ページ。一覧（/gakko）の学校名を押すとここに来る
 // （2026-10-18、「学校名を押したらその学校の紹介ページに行くようにできる？」との
@@ -292,6 +293,11 @@ export default async function GakkoSchoolPage({
               相談する →
             </Link>
           </div>
+
+          {/* 「相談するごとに、この学校が合うか分かってくると良くない？」との要望を
+              受けて追加（2026-10-22）。会員登録済みの人だけが対象で、未ログインの間は
+              何も表示しない（SchoolFitCard.tsx冒頭のコメント参照）。 */}
+          <SchoolFitCard schoolNo={school.no} schoolName={fullName} />
 
           {/* この学校名を含む実際の相談（2026-10-18追加、「北沢学園についての相談を
               この学校のページに載せたい」との要望を受けて）。DB問い合わせがページ全体の

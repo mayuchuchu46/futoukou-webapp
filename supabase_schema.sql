@@ -356,6 +356,27 @@
 -- まずは見学だけできる学校を1校、一緒に探してみましょう。'
 -- where category = 'course' and author_id = 'seed'
 --   and question = '中3の娘が不登校のまま進路を決める時期になりました。高校に行くのか、通信制にするのか、本人も決められずにいます。';
+-- 学校ごとの「相性メモ」機能（学校詳細ページで、会員の相談履歴の蓄積から「今のお子さんに
+-- 合いそうかどうか」を整理する）を追加した場合（2026-10-22追加）、既存DBでは次を実行して
+-- ください。
+-- create table if not exists member_school_fit_notes (
+--   member_id uuid not null references members(id),
+--   school_no int not null,
+--   fit_note text not null default '',
+--   consultation_count int not null default 0,
+--   generated_at timestamptz not null default now(),
+--   primary key (member_id, school_no)
+-- );
+-- alter table member_school_fit_notes enable row level security;
+-- create table if not exists child_school_fit_notes (
+--   child_id uuid not null references children(id) on delete cascade,
+--   school_no int not null,
+--   fit_note text not null default '',
+--   consultation_count int not null default 0,
+--   generated_at timestamptz not null default now(),
+--   primary key (child_id, school_no)
+-- );
+-- alter table child_school_fit_notes enable row level security;
 
 create extension if not exists "pgcrypto";
 
@@ -621,6 +642,31 @@ create table if not exists child_summaries (
   generated_at timestamptz not null default now()
 );
 alter table child_summaries enable row level security;
+
+-- 学校ごとの「相性メモ」（2026-10-22追加）。「この学校がうちの子に合うか合わないかって、
+-- 相談するごとにわかってくると良くない？」との要望を受けて追加。member_summaries/
+-- child_summariesと同じキャッシュの考え方で、見ている学校（school_no、lib/data/
+-- manabiTayoukaGakko.tsのno）ごとに相性メモを分けて持てるようにしたもの。会員登録済みの
+-- 人のみ対象（lib/schoolFit.ts参照）。
+create table if not exists member_school_fit_notes (
+  member_id uuid not null references members(id),
+  school_no int not null,
+  fit_note text not null default '',
+  consultation_count int not null default 0,
+  generated_at timestamptz not null default now(),
+  primary key (member_id, school_no)
+);
+alter table member_school_fit_notes enable row level security;
+
+create table if not exists child_school_fit_notes (
+  child_id uuid not null references children(id) on delete cascade,
+  school_no int not null,
+  fit_note text not null default '',
+  consultation_count int not null default 0,
+  generated_at timestamptz not null default now(),
+  primary key (child_id, school_no)
+);
+alter table child_school_fit_notes enable row level security;
 
 -- カテゴリ別「お悩み辞典」ページ（/dictionary/[category]）のAI解説文キャッシュ。
 -- 投稿が少ない段階で薄い内容のままインデックスされないよう、ページ側で

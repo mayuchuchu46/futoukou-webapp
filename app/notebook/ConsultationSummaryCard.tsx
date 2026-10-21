@@ -18,14 +18,17 @@ type SummaryResponse = {
   } | null;
 };
 
-// 学校ごとの相性診断（実在の学校名・制度名を使った具体的な提案）は、学校データが
-// 整うまでのカミングソーン扱い。今出しているのはあくまで一般的な着眼点の提案
-// （school_fit_points）で、実在の学校名は一切出さない暫定版（2026-10-12）。
+// 学校ごとの相性診断（実在の学校名を使った具体的な提案）は、学校データが整うまでの
+// カミングソーン扱いだった（2026-10-12）が、2026-10-22に学びの多様化学校の詳細ページ
+// （/gakko/school/[no]、SchoolFitCard.tsx）で先行して実装した。ここ（伴走ノート）で
+// 出しているのは引き続き、実在の学校名を出さない一般的な着眼点の提案（school_fit_points）
+// のまま（まだ全ての学校種をカバーしていないため、ノート側に全面展開するのはこの先の
+// 課題）。「準備中」のままにせず、今どこで見られるかを案内する。
 function SchoolMatchComingSoon() {
   return (
     <div className="muted" style={{ fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
-      <span className="comingsoon-badge">準備中</span>
-      学校ごとの相性診断（実際の学校・フリースクールのデータを使った具体的な提案）は準備中です
+      <span className="comingsoon-badge">一部対応</span>
+      学校ごとの相性メモは、気になる学校（学びの多様化学校）の詳細ページで見られます
     </div>
   );
 }
