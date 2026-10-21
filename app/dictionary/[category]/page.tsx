@@ -118,10 +118,10 @@ export default async function DictionaryCategoryPage({
           {(category === 'course' || category === 'school') && (
             // 「進路・勉強」「学校との関係」のお悩み辞典ページから、学びの多様化学校
             // （旧：不登校特例校）の都道府県別一覧（/gakko）へリンク（2026-10-18追加）。
-            <Link href="/gakko" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>「学びの多様化学校」という選択肢もあります</div>
+            <Link href="/gakko/matome" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びの場という選択肢もあります</div>
               <div className="qtext">
-                不登校の子どもに合わせた特別な教育課程を組める学校が、文部科学省の指定で全国に84校あります。お住まいの都道府県の指定校を調べられます。
+                文部科学省指定の「学びの多様化学校」（全国約84校）のほか、フリースクール・教育支援センター・通信制高校など、お住まいの都道府県で選べる学びの場・居場所をまとめて調べられます。
               </div>
               <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
                 都道府県から探す ›

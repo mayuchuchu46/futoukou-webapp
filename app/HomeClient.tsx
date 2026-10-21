@@ -333,7 +333,7 @@ export default function HomeClient({
                 消すのではなく、/theme同様の軽いリンクとして残すことにした（2026-10-18）。 */}
             {category === 'course' || category === 'school' ? (
               <Link
-                href="/gakko"
+                href="/gakko/matome"
                 className="card home-gakko-link"
                 style={{ flexDirection: 'row', alignItems: 'center', gap: 14, margin: '0 0 10px' }}
               >
@@ -360,7 +360,7 @@ export default function HomeClient({
                 <div className="muted">›</div>
               </Link>
             ) : (
-              <Link href="/gakko" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
+              <Link href="/gakko/matome" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
                 学びの多様化学校・フリースクールを探す →
               </Link>
             )}

@@ -54,7 +54,7 @@ export default function ThemeClient() {
           {/* 学びの多様化学校（旧：不登校特例校）の都道府県別一覧（/gakko）への導線
               （2026-10-18追加）。カテゴリ一覧の直後に置き、「進路・勉強」「学校との関係」を
               選ぼうとしている人の目に入りやすい位置にした。 */}
-          <Link href="/gakko" className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 4 }}>
+          <Link href="/gakko/matome" className="card" style={{ flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 4 }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--sub)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
               🏫
             </div>

@@ -330,10 +330,10 @@ export default async function ResultPage({
   // 居住都道府県が分からないため、都道府県選択は/gakko側で利用者自身に行ってもらう
   // 最小実装（Supabaseにテーブルは作らず、文科省公表データを静的に保持）。
   const gakkoBlock = (item.category === 'course' || item.category === 'school') && (
-    <Link href="/gakko" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-      <div className="answer-label" style={{ fontSize: 14 }}>「学びの多様化学校」という選択肢もあります</div>
+    <Link href="/gakko/matome" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びの場という選択肢もあります</div>
       <div className="qtext">
-        不登校の子どもに合わせた特別な教育課程を組める学校が、文部科学省の指定で全国に84校あります。お住まいの都道府県の指定校を調べられます。
+        文部科学省指定の「学びの多様化学校」（全国約84校）のほか、フリースクール・教育支援センター・通信制高校など、お住まいの都道府県で選べる学びの場・居場所をまとめて調べられます。
       </div>
       <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
         都道府県から探す ›
