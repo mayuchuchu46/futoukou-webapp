@@ -36,11 +36,16 @@ export default async function Image({ params }: { params: Promise<{ no: string }
 
   const name = school?.name || '';
   const location = school ? `${school.prefecture}${school.city}` : '';
+  // noteがある施設（Web調査で確認できた紹介文、lib/data/freeSchools.ts参照）は、
+  // カードの空白が目立ち文字も少なく見えるとの指摘を受けて、OGP画像にも抜粋を
+  // 載せるようにした（2026-10-21追加）。長すぎると画像からはみ出すため60文字で切る。
+  const noteExcerpt =
+    school?.note && school.note.length > 60 ? `${school.note.slice(0, 60)}…` : school?.note || '';
 
   const logoData = await readFile(join(process.cwd(), 'public/assets/sensei_logo.png'), 'base64');
   const logoSrc = `data:image/png;base64,${logoData}`;
 
-  const fontData = await loadGoogleFont(`どうする先生不登校編フリースクール${name}${location}`);
+  const fontData = await loadGoogleFont(`どうする先生不登校編フリースクール${name}${location}${noteExcerpt}`);
 
   return new ImageResponse(
     (
@@ -74,7 +79,7 @@ export default async function Image({ params }: { params: Promise<{ no: string }
           <div
             style={{
               display: 'flex',
-              fontSize: name.length > 20 ? 56 : 66,
+              fontSize: name.length > 20 ? 48 : 60,
               fontWeight: 800,
               lineHeight: 1.4,
               color: '#2B2B28',
@@ -83,7 +88,12 @@ export default async function Image({ params }: { params: Promise<{ no: string }
             {name || '施設紹介'}
           </div>
           {location && (
-            <div style={{ display: 'flex', fontSize: 34, fontWeight: 700, color: '#6B6B63' }}>{location}</div>
+            <div style={{ display: 'flex', fontSize: 32, fontWeight: 700, color: '#6B6B63' }}>{location}</div>
+          )}
+          {noteExcerpt && (
+            <div style={{ display: 'flex', fontSize: 26, fontWeight: 500, lineHeight: 1.6, color: '#555048' }}>
+              {noteExcerpt}
+            </div>
           )}
         </div>
 

@@ -36,11 +36,14 @@ export default async function Image({ params }: { params: Promise<{ no: string }
 
   const name = school?.name || '';
   const location = school ? `本校：${school.prefecture}${school.municipality}` : '';
+  // フリースクール版（app/gakko/free/[no]/opengraph-image.tsx）と合わせて、文字量が
+  // 少なく空白が目立つとの指摘を受け、設置者（学校法人名等）も1行追加した（2026-10-21）。
+  const operatorLine = school?.operator ? `設置者：${school.operator}` : '';
 
   const logoData = await readFile(join(process.cwd(), 'public/assets/sensei_logo.png'), 'base64');
   const logoSrc = `data:image/png;base64,${logoData}`;
 
-  const fontData = await loadGoogleFont(`どうする先生不登校編通信制高校本校${name}${location}`);
+  const fontData = await loadGoogleFont(`どうする先生不登校編通信制高校本校設置者${name}${location}${operatorLine}`);
 
   return new ImageResponse(
     (
@@ -74,7 +77,7 @@ export default async function Image({ params }: { params: Promise<{ no: string }
           <div
             style={{
               display: 'flex',
-              fontSize: name.length > 20 ? 56 : 66,
+              fontSize: name.length > 20 ? 48 : 60,
               fontWeight: 800,
               lineHeight: 1.4,
               color: '#2B2B28',
@@ -83,7 +86,10 @@ export default async function Image({ params }: { params: Promise<{ no: string }
             {name || '学校紹介'}
           </div>
           {location && (
-            <div style={{ display: 'flex', fontSize: 34, fontWeight: 700, color: '#6B6B63' }}>{location}</div>
+            <div style={{ display: 'flex', fontSize: 32, fontWeight: 700, color: '#6B6B63' }}>{location}</div>
+          )}
+          {operatorLine && (
+            <div style={{ display: 'flex', fontSize: 28, fontWeight: 600, color: '#6B6B63' }}>{operatorLine}</div>
           )}
         </div>
 
