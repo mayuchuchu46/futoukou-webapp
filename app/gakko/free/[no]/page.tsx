@@ -148,7 +148,9 @@ export default async function FreeSchoolPage({
                 「相談するボタンはいつもピンクがいい」との方針により、下部のCTAカードと
                 同じsidebar-ask-btn-pinkに統一した。 */}
             <Link
-              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。`)}`}
+              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
+
+子どもの特徴：（性格・好き嫌い・困りごとなど、思いつくまま書いてください）`)}`}
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
@@ -196,7 +198,9 @@ export default async function FreeSchoolPage({
               この施設が今のお子さんの状況に合うかどうかも含め、どうする先生が一緒に考えます。登録不要・匿名で利用できます。
             </div>
             <Link
-              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。`)}`}
+              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
+
+子どもの特徴：（性格・好き嫌い・困りごとなど、思いつくまま書いてください）`)}`}
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
