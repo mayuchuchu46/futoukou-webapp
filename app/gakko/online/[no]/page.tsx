@@ -9,6 +9,8 @@ import { ONLINE_FREE_SCHOOLS, OnlineFreeSchool } from '@/lib/data/onlineFreeScho
 import { findSimilarOnlineFreeSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
+import FacilityConsultations from '@/components/FacilityConsultations';
+import { Suspense } from 'react';
 
 // オンラインフリースクール、1校ごとの紹介ページ（2026-10-21追加）。
 //
@@ -177,6 +179,11 @@ export default async function OnlineSchoolPage({
               相性を確かめる →
             </Link>
           </div>
+
+          {/* この施設名を含む実際の相談（2026-10-22追加）。 */}
+          <Suspense fallback={null}>
+            <FacilityConsultations name={school.name} label="この学校についての相談" />
+          </Suspense>
 
           {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との
               要望を受けて追加（2026-10-21）。都道府県の概念が無いため、唯一の分類項目

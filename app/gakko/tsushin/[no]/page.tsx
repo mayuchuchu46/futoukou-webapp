@@ -13,6 +13,8 @@ import {
 import { findSimilarCorrespondenceHighSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
+import FacilityConsultations from '@/components/FacilityConsultations';
+import { Suspense } from 'react';
 
 // 通信制高校（広域）、1校ごとの紹介ページ（2026-10-21、「学びの多様化学校と同じ仕組みで
 // 通信制高校も詳細ページにつなげたい」との要望を受けて、app/gakko/school/[no]/page.tsxと
@@ -207,6 +209,11 @@ export default async function TsushinSchoolPage({
               相性を確かめる →
             </Link>
           </div>
+
+          {/* この学校名を含む実際の相談（2026-10-22追加）。 */}
+          <Suspense fallback={null}>
+            <FacilityConsultations name={school.name} label="この学校についての相談" />
+          </Suspense>
 
           {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との
               要望を受けて追加（2026-10-21）。本校所在地の都道府県が同じ学校を優先し、
