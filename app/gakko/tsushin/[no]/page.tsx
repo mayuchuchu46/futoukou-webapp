@@ -107,6 +107,24 @@ export default async function TsushinSchoolPage({
                 </div>
               ))}
             </div>
+            {/* 公式サイトURL（lib/data/correspondenceHighSchools.tsのofficialUrl、Web調査で
+                確認できた学校のみ）。通信制高校は私立運営が多く、資料請求等のアフィリエイト
+                プログラムを持つ学校があるため、学びの多様化学校・フリースクールの詳細ページ
+                （中立な直リンク）とは異なり、app/out/route.ts経由でリンクする（将来
+                アフィリエイトタグ・クリック計測を付けたくなっても、このページ側は
+                書き換え不要にするための下準備。2026-10-21追加、現時点ではURLデータが
+                無いためこのボタン自体はまだどの学校にも表示されない）。 */}
+            {school.officialUrl && (
+              <a
+                href={`/out?to=${encodeURIComponent(school.officialUrl)}&id=tsushin-${school.no}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary"
+                style={{ width: '100%', textAlign: 'center' }}
+              >
+                学校の公式サイトを見る ›
+              </a>
+            )}
             <div style={{ width: '100%' }}>
               <iframe
                 src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=14&output=embed`}

@@ -23,6 +23,13 @@ export type CorrespondenceHighSchool = {
   municipality: string; // 所轄庁に市町村名が記載されている場合のみ（なければ空文字）
   name: string;
   operator: string; // 設置者名（学校法人・株式会社等）
+  // 公式サイトURL（Web調査で確認できた学校のみ、任意。2026-10-21追加）。
+  // 通信制高校は私立（学校法人・株式会社運営）が多く、資料請求等のアフィリエイト
+  // プログラムを持つ学校が少なくないため、ここにURLを入れても詳細ページ側では
+  // 直接<a>タグにはせず、app/out/route.ts（中継ルート）経由でリンクする。中立な
+  // 直リンクのままでよいフリースクール・学びの多様化学校（公立中心・非営利中心）とは
+  // 方針を分けている。
+  officialUrl?: string;
 };
 
 export const CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL =
