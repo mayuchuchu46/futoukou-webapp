@@ -117,6 +117,17 @@ export default async function OnlineSchoolPage({
               </div>
             )}
 
+            {/* 相談CTAはこのカードの下部（情報カードの外）にもあるが、情報カードの中で
+                すでに検討材料が揃った人向けに、もっと早い位置にも軽い導線を置く
+                （2026-10-22、離脱対策の一環。下の大きいCTAカードは削除せず残す）。 */}
+            <Link
+              href={`/ask?prefill=${encodeURIComponent(`${school.name}について相談したいです。`)}`}
+              className="muted"
+              style={{ fontSize: 13, textDecoration: 'underline' }}
+            >
+              この学校について相談する ›
+            </Link>
+
             <a
               href={`/out?to=${encodeURIComponent(school.url)}&id=online-${school.no}`}
               target="_blank"

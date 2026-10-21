@@ -94,6 +94,11 @@ export default async function TsushinSchoolPage({
             <Link href="/gakko?type=tsushin" className="backlink">
               通信制高校トップへ
             </Link>
+            {/* 通信制高校だけでなく、同じ都道府県（本校所在地）の学びの多様化学校・
+                フリースクール等も含めて回遊してもらえるよう追加（2026-10-22、離脱対策の一環）。 */}
+            <Link href={`/gakko/matome?pref=${encodeURIComponent(school.prefecture)}`} className="backlink">
+              {school.prefecture}の学び場をまとめて見る
+            </Link>
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
@@ -153,6 +158,17 @@ export default async function TsushinSchoolPage({
                 </a>
               </div>
             </div>
+
+            {/* 相談CTAはこのカードの下部（情報カードの外）にもあるが、情報カードの中で
+                すでに検討材料が揃った人向けに、もっと早い位置にも軽い導線を置く
+                （2026-10-22、離脱対策の一環。下の大きいCTAカードは削除せず残す）。 */}
+            <Link
+              href={`/ask?prefill=${encodeURIComponent(`${school.name}について相談したいです。`)}`}
+              className="muted"
+              style={{ fontSize: 13, textDecoration: 'underline' }}
+            >
+              この学校について相談する ›
+            </Link>
 
             <a
               className="share-btn"
