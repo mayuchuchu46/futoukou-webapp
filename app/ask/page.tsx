@@ -97,6 +97,10 @@ function AskPageContent() {
   // 「ボタンから入れただけでまだ手を加えていない状態」か「ユーザーが実際に書いた
   // 下書き」かを区別する（2026-10-18追加、下のeffect内コメント参照）。
   const prefillTextRef = useRef<string | undefined>(undefined);
+  // 直近に適用したprefillParamの値（まだ何も適用していない最初のレンダリングでの値で
+  // 初期化する。useRefの初期値はマウント時の1回しか使われないため、これだけで
+  // 「初回マウント時のprefillParam」を安全に固定できる）。
+  const lastSeenPrefillRef = useRef<string | null>(prefillParam);
 
   // 離脱してタブを閉じても、書いた内容が消えないようにする下書き保存。
   // マウント時に一度だけ復元し（draftLoadedが立つまでは保存側のeffectを動かさない
@@ -134,6 +138,27 @@ function AskPageContent() {
     }
     setDraftLoaded(true);
   }, []);
+
+  // 上のeffectは「マウント時に1回だけ」しか実行されない。しかし、ある学校の紹介
+  // ページから「相談する」で/askに来たあと、別の学校の紹介ページに移動してまた
+  // 「相談する」を押した場合、Next.jsのルーターキャッシュにより/askページの
+  // コンポーネント自体は再マウントされず、useSearchParams()から読んだprefillParamの
+  // 値だけが新しくなる（prefillParam自体は再計算されるため、このeffectの依存配列には
+  // 載せられる）。そのため、prefillParamの値が変わるたびに動く別のeffectを用意し、
+  // 「前回のprefillのまま手を加えていない」場合にだけ新しいprefillで上書きする
+  // （2026-10-21、「東京みらい中学校のページから相談するを押したら、別の学校（リリー
+  // ベール小学校）のテキストが出てきた」との報告を受けて追加。他の学校・フリースクール
+  // でも同様に起きるとのこと）。
+  useEffect(() => {
+    if (!draftLoaded) return;
+    if (!prefillParam) return;
+    if (lastSeenPrefillRef.current === prefillParam) return;
+    if (!text || text === prefillTextRef.current) {
+      setText(prefillParam);
+      prefillTextRef.current = prefillParam;
+    }
+    lastSeenPrefillRef.current = prefillParam;
+  }, [draftLoaded, prefillParam]);
 
   useEffect(() => {
     if (!draftLoaded) return;
