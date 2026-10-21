@@ -142,6 +142,9 @@ export default async function GakkoMatomePage({
                 学校種（小学校／中学校／高等学校）で絞り込む ›
               </Link>
             )}
+            <Link href="/gakko" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              学びの多様化学校のページへ ›
+            </Link>
           </div>
         </details>
       ),
@@ -180,6 +183,9 @@ export default async function GakkoMatomePage({
                 </Link>
               ))
             )}
+            <Link href="/gakko?type=free" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              フリースクール（地域）のページへ ›
+            </Link>
           </div>
         </details>
       ),
@@ -214,6 +220,9 @@ export default async function GakkoMatomePage({
                 </div>
               ))
             )}
+            <Link href="/gakko?type=shien" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              教育支援センターのページへ ›
+            </Link>
           </div>
         </details>
       ),
@@ -252,6 +261,9 @@ export default async function GakkoMatomePage({
                 )}
               </>
             )}
+            <Link href="/gakko?type=tsushin" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              通信制高校（広域）のページへ ›
+            </Link>
           </div>
         </details>
       ),
@@ -289,6 +301,9 @@ export default async function GakkoMatomePage({
                 )}
               </>
             )}
+            <Link href="/gakko?type=josei" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              助成金・支援制度のページへ ›
+            </Link>
           </div>
         </details>
       ),
@@ -329,6 +344,9 @@ export default async function GakkoMatomePage({
                 </div>
               );
             })}
+            <Link href="/gakko?type=online" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              オンラインフリースクールのページへ ›
+            </Link>
           </div>
         </details>
       ),
