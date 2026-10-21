@@ -22,6 +22,7 @@ import AiUsageUpsell from './AiUsageUpsell';
 import SaveConsultationPrompt from './SaveConsultationPrompt';
 import FollowupThread from './FollowupThread';
 import AskAgainBlock from './AskAgainBlock';
+import AskSimilarBlock from './AskSimilarBlock';
 import TagChips from '@/components/TagChips';
 import { SEARCH_TAG_CANDIDATES, matchesThemeText, getThemeDisplayLabel } from '@/lib/searchTags';
 import { findMentionedSchool } from '@/lib/schoolFacts';
@@ -562,6 +563,13 @@ export default async function ResultPage({
 
             {!isCrisis && (
               <FollowupThread parentId={item.id} authorId={item.author_id} initialFollowups={followups} />
+            )}
+
+            {/* 投稿者本人以外には「自分の状況で相談してみる」ボタンを出す（2026-10-22追加）。
+                AIがありきたりの回答しか出せない場合でも、自分の子の特徴を追加して
+                相談するよう促す導線。FollowupThread（本人向け）と対になる位置に置く。 */}
+            {!isCrisis && (
+              <AskSimilarBlock authorId={item.author_id} question={item.question} />
             )}
 
             {!isCrisis && (anySchoolDetailBlock || gakkoBlock)}
