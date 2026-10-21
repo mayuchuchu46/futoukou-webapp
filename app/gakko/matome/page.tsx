@@ -390,6 +390,20 @@ export default async function GakkoMatomePage({
             </div>
           </div>
 
+          {/* 学校詳細ページで保存したお気に入りの一覧への入口（2026-10-22追加）。
+              各詳細ページ（/gakko/school等）の保存ボタンで貯めたものをここから見返せる。 */}
+          <Link
+            href="/gakko/favorites"
+            className="card"
+            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span aria-hidden style={{ fontSize: 16 }}>★</span>
+              保存したお気に入りを見る
+            </span>
+            <span className="muted">›</span>
+          </Link>
+
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
             {/* 以前はこの下にPREFECTURES全47件のチップ一覧も並べていたが、プルダウンと

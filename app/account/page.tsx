@@ -64,6 +64,11 @@ export default function AccountPage() {
             <span>学校・フリースクールを探す</span>
             <span className="muted">›</span>
           </Link>
+          {/* 学校詳細ページで保存したお気に入りの一覧（2026-10-22追加、lib/favorites.ts）。 */}
+          <Link href="/gakko/favorites" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <span>お気に入りの学校・フリースクール</span>
+            <span className="muted">›</span>
+          </Link>
           <Link href="/expert/login" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <span>専門家として登録・ログイン</span>
             <span className="muted">›</span>

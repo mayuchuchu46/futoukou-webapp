@@ -9,6 +9,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaGakko';
 import { findSimilarManabiSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import FavoriteButton from '@/components/FavoriteButton';
 import SchoolConsultations from './SchoolConsultations';
 import SchoolFitCard from './SchoolFitCard';
 
@@ -226,6 +227,12 @@ export default async function GakkoSchoolPage({
                 学校の公式サイトを見る ›
               </a>
             )}
+            {/* お気に入り保存ボタン（2026-10-22追加）。オーガニック検索から各学校の
+                詳細ページに来た訪問者がそのまま離脱してしまうのを防ぐ導線のひとつ。
+                lib/favorites.tsにlocalStorageだけで保存し、/gakko/favoritesで
+                一覧を見返せる（ログイン不要）。 */}
+            <FavoriteButton type="school" no={school.no} name={fullName} meta={`${school.prefecture}${school.city}`} />
+
             {/* このページ自体をシェアできるボタン（2026-10-19、「各学校の詳細ページも
                 シェアできるボタンほしい」との要望を受けて追加）。/result/[id]のシェア
                 ボタンと同じ.share-btnクラスを使い、学校名＋このページのURLをXで

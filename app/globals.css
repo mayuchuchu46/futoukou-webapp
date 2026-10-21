@@ -1286,6 +1286,35 @@ a.card:hover {
 .share-btn-line { background: #06C755; }
 .share-btn-line .share-btn-icon { font-weight: 800; font-size: 16px; }
 
+/* 学校詳細ページの「お気に入り保存」ボタン（2026-10-22追加、components/FavoriteButton.tsx）。
+   .btn-secondary同様の白背景+枠線だが、保存済み状態でオレンジに切り替わるのが分かりやすいよう
+   星アイコンの色・枠線色だけ独自に変える。button要素なのでfont-family等も明示しておく。 */
+.fav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+.fav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.fav-btn[aria-pressed='true'] {
+  color: #B45309;
+  border-color: #F59E0B;
+  background: #FFFBEB;
+}
+.fav-btn-icon { flex: 0 0 auto; font-size: 16px; line-height: 1; }
+
 .genderrow { display: flex; gap: 8px; }
 .genderbtn {
   flex: 1;

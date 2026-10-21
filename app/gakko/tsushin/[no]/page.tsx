@@ -12,6 +12,7 @@ import {
 } from '@/lib/data/correspondenceHighSchools';
 import { findSimilarCorrespondenceHighSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import FavoriteButton from '@/components/FavoriteButton';
 
 // 通信制高校（広域）、1校ごとの紹介ページ（2026-10-21、「学びの多様化学校と同じ仕組みで
 // 通信制高校も詳細ページにつなげたい」との要望を受けて、app/gakko/school/[no]/page.tsxと
@@ -129,6 +130,7 @@ export default async function TsushinSchoolPage({
                 学校の公式サイトを見る ›
               </a>
             )}
+            <FavoriteButton type="tsushin" no={school.no} name={school.name} meta={`${school.prefecture}${school.municipality}`} />
             <div style={{ width: '100%' }}>
               <iframe
                 src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=14&output=embed`}

@@ -8,6 +8,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { ONLINE_FREE_SCHOOLS, OnlineFreeSchool } from '@/lib/data/onlineFreeSchools';
 import { findSimilarOnlineFreeSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import FavoriteButton from '@/components/FavoriteButton';
 
 // オンラインフリースクール、1校ごとの紹介ページ（2026-10-21追加）。
 //
@@ -125,6 +126,8 @@ export default async function OnlineSchoolPage({
             >
               公式サイトを見る ›
             </a>
+
+            <FavoriteButton type="online" no={school.no} name={school.name} meta={CATEGORY_LABEL[school.category]} />
 
             <a
               className="share-btn"

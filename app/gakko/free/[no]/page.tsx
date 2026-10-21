@@ -8,6 +8,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { findSimilarFreeSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import FavoriteButton from '@/components/FavoriteButton';
 
 // フリースクール（地域）、1件ごとの紹介ページ。一覧（/gakko?type=free）の施設名を
 // 押すとここに来る（2026-10-21、「学びの多様化学校と同じ仕組みでフリースクールも
@@ -152,6 +153,7 @@ export default async function FreeSchoolPage({
                 施設の公式サイトを見る ›
               </a>
             )}
+            <FavoriteButton type="free" no={school.no} name={school.name} meta={`${school.prefecture}${school.city}`} />
             <a
               className="share-btn"
               style={{ width: '100%' }}
