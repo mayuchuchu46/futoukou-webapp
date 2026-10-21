@@ -316,7 +316,7 @@ export default async function GakkoPage({
                 通信制高校（広域）
               </Link>
               <Link
-                href={selected ? `/gakko?type=josei&pref=${encodeURIComponent(selected)}` : '/gakko?type=josei'}
+                href="/gakko?type=josei"
                 className={`chip chip-tag${type === 'josei' ? ' active' : ''}`}
                 style={{ textDecoration: 'none' }}
               >
@@ -396,14 +396,18 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {type === 'tsushin' && (
+          {/* 都道府県を選んだ後の画面では、この説明より下記の助成金情報の方が有用なため、
+              未選択（タブの最初の画面）のときだけ表示する（2026-10-21、「神奈川の選択の
+              ところに通信制高校とはを入れなくていい、むしろ神奈川の助成金情報を入れたい」
+              との指摘を受けて変更。学びの多様化学校タブの説明文と同じ考え方）。 */}
+          {type === 'tsushin' && !selected && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>通信制高校（広域）とは</div>
               <div className="qtext">
                 レポート提出やスクーリング（面接指導）を中心に学び、高校卒業資格を取得できる正式な高等学校です。「広域」通信制高校は本校の都道府県以外からも入学できるため、お住まいの地域にかかわらず選択肢になります。全日制と違い、本人のペースに合わせて通学頻度や学び方を選べる学校が多いです。
               </div>
               <div className="muted" style={{ fontSize: 12 }}>
-                学費・カリキュラム・通学（キャンパス／サポート校）の有無は学校ごとに大きく異なります。このリストには個別のキャンパス所在地や公式サイトURLは含まれていないため、気になる学校が見つかったら学校名で検索し、公式サイトで必ず確認してください。
+                学費・カリキュラム・通学（キャンパス／サポート校）の有無は学校ごとに大きく異なります。このリストには個別のキャンパス所在地は含まれていないため（公式サイトURLは確認できた学校のみ各校の詳細ページに掲載しています）、気になる学校が見つかったら公式サイトで必ず確認してください。
               </div>
             </div>
           )}
@@ -621,12 +625,19 @@ export default async function GakkoPage({
             </div>
           )}
 
-          {selected && type === 'josei' && (
+          {/* 助成金・支援制度タブからは2026-10-21に撤去（都道府県ごとの一覧は「助成金TOP
+              だけでいいよ」との指摘を受けてトップの説明カードのみに縮小）。代わりに、
+              通信制高校タブの都道府県選択時にここで表示する（「神奈川の通信制高校ページに
+              神奈川の助成金情報を入れたい」との指摘を受けて移設）。 */}
+          {selected && type === 'tsushin' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>{selected}の利用料助成制度</div>
+              <div className="answer-label" style={{ fontSize: 14 }}>{selected}の助成金・支援制度</div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                通信制高校の学費については、世帯の状況に応じて授業料の一部または全部を支援する、国の「高等学校等就学支援金」が対象になります（全国統一の制度のため、ここでは都道府県ごとの一覧は出ません）。下記は{selected}内でWeb検索で確認できた、フリースクール等（民間施設）の利用料を独自に助成する自治体の制度一覧です。通信制高校そのものを対象にした制度ではありませんが、フリースクール等を併用される場合の参考情報として掲載しています。
+              </div>
               {joseiSubsidies.length === 0 ? (
                 <div className="muted">
-                  {selected}については、Web検索で確認できる利用料助成制度が見つかりませんでした。制度が無いという意味ではなく、見つからなかったということです。お住まいの市区町村教育委員会に直接お問い合わせください。
+                  {selected}については、Web検索で確認できるフリースクール等の利用料助成制度が見つかりませんでした。制度が無いという意味ではなく、見つからなかったということです。お住まいの市区町村教育委員会に直接お問い合わせください。
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
@@ -658,8 +669,9 @@ export default async function GakkoPage({
           )}
 
           {/* gakkoタブは2026-10-19からSchoolTypeExplorer内で都道府県の絞り込み自体を
-              行うため、この共通カードはgakko以外のタブでのみ使う。 */}
-          {(type === 'free' || type === 'shien' || type === 'tsushin' || type === 'josei') && (
+              行うため、この共通カードはgakko以外のタブでのみ使う。joseiタブは2026-10-21に
+              都道府県の絞り込み自体を撤去したため対象外（上記コメント参照）。 */}
+          {(type === 'free' || type === 'shien' || type === 'tsushin') && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
               {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
