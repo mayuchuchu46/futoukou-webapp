@@ -81,6 +81,44 @@ export default async function GakkoMatomePage({
             </div>
           </div>
 
+          {/* 都道府県で探す（下記）とは別に、最初から見たい種類が決まっている人向けの
+              入口（2026-10-21、「種類で探すとかもあるといい」との指摘を受けて追加）。
+              押すと/gakkoの該当タブに飛び、そのタブ側で都道府県を選べる。 */}
+          <div className="card" style={{ padding: 0, overflow: 'hidden', gap: 0 }}>
+            <div style={{ padding: '13px 16px 0', fontWeight: 700, fontSize: 14 }}>種類で探す</div>
+            {([
+              { href: '/gakko', icon: '🏫', label: '学びの多様化学校', note: '文科省指定・全国約84校' },
+              { href: '/gakko?type=free', icon: '🏠', label: 'フリースクール（地域）', note: '民間施設・都道府県ごとに掲載' },
+              { href: '/gakko?type=shien', icon: '🧑‍🏫', label: '教育支援センター', note: '公的・無料・全国約1,873か所' },
+              { href: '/gakko?type=online', icon: '💻', label: 'オンラインフリースクール', note: '居住地を問わず利用できる' },
+              { href: '/gakko?type=tsushin', icon: '📮', label: '通信制高校（広域）', note: '本人のペースで学べる高校' },
+              { href: '/gakko?type=josei', icon: '💴', label: '助成金・支援制度', note: '利用料助成・就学支援金' },
+            ] as const).map((item, i, arr) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  padding: '13px 16px',
+                  marginTop: i === 0 ? 10 : 0,
+                  borderTop: '1px solid var(--border)',
+                  borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
+                  textDecoration: 'none',
+                  color: 'var(--text)',
+                }}
+              >
+                <span style={{ fontSize: 18 }} aria-hidden="true">{item.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>{item.label}</div>
+                  <div className="muted" style={{ fontSize: 12 }}>{item.note}</div>
+                </div>
+                <span className="muted">›</span>
+              </Link>
+            ))}
+          </div>
+
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
             <MatomePrefectureSelect selected={selected} />
