@@ -149,7 +149,7 @@ export default async function GakkoSchoolPage({
             </Link>
             {/* 学びの多様化学校だけでなく、同じ都道府県のフリースクール・通信制高校等も
                 含めて回遊してもらえるよう追加（2026-10-22、離脱対策の一環）。 */}
-            <Link href={`/gakko/matome?pref=${encodeURIComponent(school.prefecture)}`} className="btn-secondary backlink--forward">
+            <Link href={`/gakko/matome?pref=${encodeURIComponent(school.prefecture)}`} className="backlink--forward">
               {school.prefecture}の学び場をまとめて見る
             </Link>
           </div>
