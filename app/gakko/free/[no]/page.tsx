@@ -143,12 +143,15 @@ export default async function FreeSchoolPage({
             </div>
 
             {/* 相談CTAはこのカードの下部（情報カードの外）にもあるが、情報カードの中で
-                すでに検討材料が揃った人向けに、もっと早い位置にも軽い導線を置く
-                （2026-10-22、離脱対策の一環。下の大きいCTAカードは削除せず残す）。 */}
+                すでに検討材料が揃った人向けに、もっと早い位置にもCTAを置く（2026-10-22、
+                離脱対策の一環）。最初はmutedの文字リンクにしていたが、周辺の補足リンク
+                （Googleマップ等）と同じ見た目で埋もれてしまい機能しないとの判断から、
+                公式サイトと同じbtn-secondaryに上げた。下のbtn-primaryの大きいCTAカードとは
+                強さを分け、押し付け感を出さないようにする。 */}
             <Link
               href={`/ask?prefill=${encodeURIComponent(`${school.name}について相談したいです。`)}`}
-              className="muted"
-              style={{ fontSize: 13, textDecoration: 'underline' }}
+              className="btn-secondary"
+              style={{ width: '100%', textAlign: 'center' }}
             >
               この施設について相談する ›
             </Link>
