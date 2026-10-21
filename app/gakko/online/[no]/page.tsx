@@ -86,7 +86,7 @@ export default async function OnlineSchoolPage({
         <div className="page-main">
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '14px 0' }}>
             <Link href="/gakko?type=online" className="backlink">
-              ← オンラインフリースクールの一覧へもどる
+              ‹ オンラインフリースクールの一覧へもどる
             </Link>
           </div>
 

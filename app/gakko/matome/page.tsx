@@ -381,7 +381,7 @@ export default async function GakkoMatomePage({
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
+          <Link href="/" className="backlink" style={{ margin: '14px 0' }}>‹ もどる</Link>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びの場・居場所まとめ</div>

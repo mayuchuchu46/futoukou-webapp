@@ -89,7 +89,7 @@ export default async function TsushinSchoolPage({
         <div className="page-main">
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '14px 0' }}>
             <Link href={`/gakko?type=tsushin&pref=${encodeURIComponent(school.prefecture)}`} className="backlink">
-              ← {school.prefecture}の一覧へもどる
+              ‹ {school.prefecture}の一覧へもどる
             </Link>
             <Link href="/gakko?type=tsushin" className="backlink">
               通信制高校トップへ

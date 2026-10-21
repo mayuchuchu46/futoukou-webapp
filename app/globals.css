@@ -342,30 +342,41 @@ h2.pagetitle {
   padding: 40px 10px;
   line-height: 1.7;
 }
+/* 戻る系ナビリンク：背景なしのテキストリンク風でミニマルに */
 .backlink {
-  padding: 6px 12px;
-  background: var(--sub);
+  padding: 4px 2px;
+  background: none;
   border: none;
-  border-radius: 10px;
-  color: #1F4A3C;
+  border-radius: 0;
+  color: var(--muted);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  transition: box-shadow 0.12s ease, filter 0.12s ease;
+  gap: 3px;
+  text-decoration: none;
+  transition: color 0.12s ease;
 }
 .backlink:hover {
-  filter: brightness(0.97);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: var(--main);
 }
-/* 「まとめて見る」など前に進む導線。btn-secondaryベースだがbacklinkと同じコンパクトサイズにする。 */
+/* 「まとめて見る」など前に進む導線：塗りつぶしの小チップで戻る系と区別 */
 .backlink--forward {
-  padding: 6px 12px;
+  padding: 5px 11px;
+  background: var(--main);
+  color: #fff !important;
   font-size: 12px;
+  font-weight: 700;
+  border-radius: 20px;
+  border: none;
   display: inline-flex;
   align-items: center;
+  transition: filter 0.12s ease, box-shadow 0.12s ease;
+}
+.backlink--forward:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 /* サイト全体フッター（コピーライト＋利用規約/プライバシー/特商法リンク、2026-10-19追加）。

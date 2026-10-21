@@ -257,7 +257,7 @@ export default async function GakkoPage({
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
+          <Link href="/" className="backlink" style={{ margin: '14px 0' }}>‹ もどる</Link>
 
           {/* タブ冒頭のトップバナー（PAGE_CONTENT[type].heroBanner参照）。チャッピー
               （ChatGPT）に描いてもらった画像の上下の白い余白をタイトにクロップして使用
