@@ -8,6 +8,7 @@ import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
+import { PREFECTURES } from '@/lib/data/prefectures';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -30,6 +31,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // canonicalが常に/gakko自体を指すため個別にはインデックスされない設計だが、
     // このページは独立したcanonicalを持つため別途追加している）。
     { url: `${SITE_URL}/gakko/matome`, changeFrequency: 'monthly', priority: 0.4 },
+    // 都道府県別まとめページ（?pref=XXX）。クエリパラメータ形式だがGoogleはインデックス
+    // するため、実データがある都道府県（学びの多様化学校・フリースクール・通信制高校の
+    // どれか1件以上ある）のみsitemapに追加（2026-10-22追加）。
+    ...PREFECTURES.filter((pref) =>
+      MANABI_TAYOUKA_GAKKO.some((s) => s.prefecture === pref) ||
+      FREE_SCHOOLS.some((s) => s.prefecture === pref) ||
+      CORRESPONDENCE_HIGH_SCHOOLS.some((s) => s.prefecture === pref)
+    ).map((pref) => ({
+      url: `${SITE_URL}/gakko/matome?pref=${encodeURIComponent(pref)}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
+    })),
     { url: `${SITE_URL}/terms`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${SITE_URL}/privacy`, changeFrequency: 'yearly', priority: 0.2 },
   ];

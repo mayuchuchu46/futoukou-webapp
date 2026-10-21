@@ -81,8 +81,34 @@ export default async function FreeSchoolPage({
   const mapQuery = school.address || `${school.name} ${school.prefecture}${school.city}`;
   const schoolUrl = `${SITE_URL}/gakko/free/${school.no}`;
 
+  // 構造化データ（schema.org/EducationalOrganization）。住所または公式サイトが
+  // 確認できている施設のみ出力（noindexページには出力しない、schoolページと同じ方針）。
+  const jsonLd = (school.address || school.officialUrl)
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'EducationalOrganization',
+        name: school.name,
+        ...(school.officialUrl ? { url: school.officialUrl } : {}),
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'JP',
+          ...(school.address
+            ? { streetAddress: school.address }
+            : { addressRegion: school.prefecture, addressLocality: school.city }),
+        },
+        mainEntityOfPage: schoolUrl,
+      }
+    : null;
+
   return (
     <div className="app-shell">
+      {jsonLd && (
+        // eslint-disable-next-line react/no-danger
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">

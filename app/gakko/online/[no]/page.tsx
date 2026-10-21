@@ -81,8 +81,23 @@ export default async function OnlineSchoolPage({
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(school.name)}`;
   const schoolUrl = `${SITE_URL}/gakko/online/${school.no}`;
 
+  // 構造化データ（schema.org/EducationalOrganization）。全件index対象のため全件出力。
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'EducationalOrganization',
+    name: school.name,
+    url: school.url,
+    description: `居住地を問わず利用できるオンラインフリースクール（${CATEGORY_LABEL[school.category]}）。運営：${school.operator}、対象：${school.ageRange}`,
+    mainEntityOfPage: schoolUrl,
+  };
+
   return (
     <div className="app-shell">
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">

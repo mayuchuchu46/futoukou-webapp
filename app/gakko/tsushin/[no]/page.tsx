@@ -84,8 +84,33 @@ export default async function TsushinSchoolPage({
   const mapQuery = `${school.name} ${school.prefecture}${school.municipality}`;
   const schoolUrl = `${SITE_URL}/gakko/tsushin/${school.no}`;
 
+  // 構造化データ（schema.org/School）。公式サイトURLが確認できている学校のみ出力
+  // （noindexページには出力しない、他カテゴリのschoolページと同じ方針）。
+  const jsonLd = school.officialUrl
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'School',
+        name: school.name,
+        url: school.officialUrl,
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'JP',
+          addressRegion: school.prefecture,
+          addressLocality: school.municipality,
+        },
+        mainEntityOfPage: schoolUrl,
+      }
+    : null;
+
   return (
     <div className="app-shell">
+      {jsonLd && (
+        // eslint-disable-next-line react/no-danger
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
