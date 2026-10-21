@@ -94,7 +94,7 @@ export default async function FreeSchoolPage({
               {[
                 { label: '所在地', value: school.address || `${school.prefecture}${school.city}` },
                 { label: '連絡先', value: school.contact || '記載なし' },
-                { label: '対象', value: school.ageRange },
+                { label: '対象', value: school.ageRange || '記載なし' },
                 { label: '出典の時点', value: school.asOf },
               ].map((row) => (
                 <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
