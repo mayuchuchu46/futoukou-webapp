@@ -61,10 +61,10 @@ export default function Header({
         basePath: string;
         // ラベル文字自体をクリックした時の遷移先。省略時はbasePathと同じ
         // （/theme等は引き続きbasePathのまま）。gakkoだけは、「学びの場を探す」を
-        // 押すと件数の少ない学びの多様化学校（全国約84校、都道府県によっては0件）に
-        // 直接飛んでしまい「該当なし」に当たりやすいとの指摘を受け、47都道府県どこでも
-        // 情報があり件数も最も多いフリースクール（地域）に変更した（2026-10-21）。
-        // プルダウン内の「学びの多様化学校」自体への導線はitemsにそのまま残っている。
+        // 押すと特定のカテゴリ（学びの多様化学校／フリースクール等）に決め打ちで
+        // 飛んでしまい、別の種類を探している人に合わないとの指摘を受け、6カテゴリを
+        // 並べて比較できる独立のまとめページ（/gakko/matome）に変更した（2026-10-21）。
+        // プルダウン内の各カテゴリへの導線はitemsにそのまま残っている。
         labelHref?: string;
         items: { href: string; label: string }[];
       };
@@ -74,7 +74,7 @@ export default function Header({
       key: 'gakko',
       label: '学びの場を探す',
       basePath: '/gakko',
-      labelHref: '/gakko?type=free',
+      labelHref: '/gakko/matome',
       items: [
         { href: '/gakko', label: '学びの多様化学校' },
         { href: '/gakko?type=free', label: 'フリースクール（地域）' },

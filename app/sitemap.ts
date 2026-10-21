@@ -25,6 +25,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/expertlist`, changeFrequency: 'weekly', priority: 0.4 },
     // 学びの多様化学校（旧：不登校特例校）の都道府県別一覧ページ（2026-10-18追加）。
     { url: `${SITE_URL}/gakko`, changeFrequency: 'monthly', priority: 0.4 },
+    // 学校以外の学びの場・居場所のまとめページ（2026-10-21追加。/gakkoの各タブは
+    // canonicalが常に/gakko自体を指すため個別にはインデックスされない設計だが、
+    // このページは独立したcanonicalを持つため別途追加している）。
+    { url: `${SITE_URL}/gakko/matome`, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${SITE_URL}/terms`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${SITE_URL}/privacy`, changeFrequency: 'yearly', priority: 0.2 },
   ];

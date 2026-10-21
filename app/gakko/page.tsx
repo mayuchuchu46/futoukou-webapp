@@ -82,7 +82,9 @@ type GakkoPageContent = {
   heroBanner?: { src: string; alt: string };
 };
 
-const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
+// app/gakko/matome/page.tsx（学校以外の学びの場・居場所まとめページ、2026-10-21追加）
+// から、各カテゴリの説明文を再利用するためexportしている。
+export const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
   gakko: {
     title: `学びの多様化学校（旧：不登校特例校）を都道府県から探す｜${SITE_NAME}`,
     description:
