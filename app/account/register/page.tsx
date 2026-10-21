@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { getUid } from '@/lib/uid';
+import { pushLocalFavoritesToServer } from '@/lib/favoritesSync';
 
 function RegisterForm() {
   const router = useRouter();
@@ -41,6 +42,9 @@ function RegisterForm() {
       setError(data.error || 'エラーが発生しました');
       return;
     }
+    // 未ログイン時代にこの端末で保存していたお気に入り（lib/favorites.ts）を
+    // 会員アカウントへ引き継ぐ（2026-10-22追加）。失敗しても登録自体は進める。
+    pushLocalFavoritesToServer();
     router.push(next);
     router.refresh();
   }

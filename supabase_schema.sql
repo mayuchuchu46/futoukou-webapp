@@ -377,6 +377,21 @@
 --   primary key (child_id, school_no)
 -- );
 -- alter table child_school_fit_notes enable row level security;
+-- 学校詳細ページの「お気に入り保存」機能を、未ログイン時のlocalStorageだけでなく
+-- 会員アカウントにも紐づけて他端末でも見られるようにした場合（2026-10-22追加）、
+-- 既存DBでは次を実行してください。
+-- create table if not exists favorites (
+--   id uuid primary key default gen_random_uuid(),
+--   member_id uuid not null references members(id) on delete cascade,
+--   type text not null,
+--   no int not null,
+--   name text not null,
+--   meta text,
+--   created_at timestamptz not null default now(),
+--   unique (member_id, type, no)
+-- );
+-- alter table favorites enable row level security;
+-- create index if not exists favorites_member_id_idx on favorites (member_id);
 
 create extension if not exists "pgcrypto";
 
@@ -465,6 +480,26 @@ create table if not exists children (
 alter table children enable row level security;
 
 create index if not exists children_member_id_idx on children (member_id);
+
+-- 学校詳細ページ（学びの多様化学校・フリースクール・通信制高校・オンライン
+-- フリースクール）の「お気に入り保存」機能（2026-10-22追加）。未ログイン時は
+-- ブラウザのlocalStorage（dsk_favorites、lib/favorites.ts）だけに保存されるが、
+-- 会員登録・ログイン時にこのテーブルへ引き継ぎ、他の端末でも見られるようにする
+-- （app/api/favorites/route.ts参照）。type+noは学校の種類（school/free/tsushin/online）
+-- と各データ内の番号の組で、1件の学校・施設を指す。
+create table if not exists favorites (
+  id uuid primary key default gen_random_uuid(),
+  member_id uuid not null references members(id) on delete cascade,
+  type text not null,
+  no int not null,
+  name text not null, -- 一覧表示用に保存時点の学校名をそのまま持たせる（データ側の名称が変わっても表示は保存時点のまま）
+  meta text, -- 一覧表示用の補足（都道府県+市区町村等、カテゴリごとに内容が変わる）
+  created_at timestamptz not null default now(),
+  unique (member_id, type, no)
+);
+alter table favorites enable row level security;
+
+create index if not exists favorites_member_id_idx on favorites (member_id);
 
 -- 「みんなのデータ」機能（2026-10-16追加）。日替わりの簡単なアンケート（起床時間・
 -- 朝ごはん等、lib/dailyQuestions.ts参照）に答える。answer_dateは「最後に答えた（更新

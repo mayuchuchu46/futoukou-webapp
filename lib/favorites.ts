@@ -69,3 +69,11 @@ export function removeFavorite(type: FavoriteType, no: number) {
   const key = favoriteKey(type, no);
   saveFavorites(getFavorites().filter((f) => favoriteKey(f.type, f.no) !== key));
 }
+
+// サーバー側（会員アカウントに紐づくfavoritesテーブル、app/api/favorites/route.ts）の
+// 最新状態でこの端末のlocalStorageを上書きする。ログイン中は複数端末で保存できるため、
+// この端末のlocalStorageだけでは他端末での保存状況が分からない（2026-10-22追加、
+// lib/favoritesSync.ts参照）。
+export function replaceFavorites(items: FavoriteItem[]) {
+  saveFavorites(items);
+}
