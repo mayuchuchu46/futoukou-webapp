@@ -53,9 +53,8 @@ export default function PcSidebar({
       .then((r) => r.json())
       .then((d) => {
         const items: Consultation[] = d.consultations || [];
-        // .rank-listがスクロール領域になっているので、10件まで取得してスクロールで
-        // 10位まで見られるようにする（HomeClient.tsxのランキングと合わせた。2026-10-12）。
-        setRanking([...items].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 10));
+        // 3件固定表示。枠内スクロール廃止（2026-10-21、HomeClient.tsxと合わせた）。
+        setRanking([...items].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 3));
       })
       .catch(() => {});
   }, [isDesktop, hideRanking]);

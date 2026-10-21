@@ -163,9 +163,8 @@ export default function HomeClient({
   }, [loadMoreEl, items.length]);
 
   const expertCount = allItems.filter(isExpertAnswered).length;
-  // ランキングは10件まで取得する。.rank-listが高さ固定のスクロール領域になっている
-  // ため、スマホのファーストビューを圧迫せず（表示自体は最初の数件ぶんの高さのまま）、
-  // スクロールすれば10位まで見られる（2026-10-12、5件までに抑えていたのを10件に拡大）。
+  // ランキングは3件固定表示。.rank-listの枠内スクロールを廃止し（2026-10-21）、
+  // ページスクロールとの干渉ストレスを解消した。
   // 同一 author_id の投稿は閲覧数が最も多い1件のみをランキングに含める。
   // 相談件数が少ない段階で同一ユーザーの投稿がワンツーを占めるのを防ぐため。
   const ranking = (() => {
@@ -177,7 +176,7 @@ export default function HomeClient({
         seen.add(item.author_id);
         deduped.push(item);
       }
-      if (deduped.length >= 10) break;
+      if (deduped.length >= 3) break;
     }
     return deduped;
   })();
