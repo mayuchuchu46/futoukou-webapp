@@ -171,17 +171,20 @@ export async function GET(req: NextRequest) {
     const result = await postTweet(tweetText);
     tweetId = result.id;
   } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : String(err) },
-      { status: 500 },
-    );
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('[post-to-x] postTweet failed:', message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 
   // posted_to_x に投稿日時を記録（カラムが無い場合はエラーになるが投稿自体は成功済み）
-  await supabase
+  const { error: updateError } = await supabase
     .from('consultations')
     .update({ posted_to_x: new Date().toISOString() })
     .eq('id', pick.id);
+
+  if (updateError) {
+    console.error('[post-to-x] posted_to_x update failed:', updateError.message);
+  }
 
   return NextResponse.json({
     ok: true,
