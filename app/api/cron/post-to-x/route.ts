@@ -15,9 +15,9 @@ import crypto from 'crypto';
 // ハッシュタグ：#不登校 #どうする先生
 //
 // 【重複防止】
-// posted_to_x カラム（booleanまたはtimestamp）でマーク。
+// posted_to_x カラム（timestamptz）でマーク。
+// null = 未投稿、日時 = 投稿済み。
 // 未投稿の中からランダムに1件選ぶ。
-// posted_to_x カラムが無い場合は、最近30日以内に投稿された相談の中から選ぶ。
 //
 // 【認証】
 // auto-post同様、CRON_SECRETで認証する。
@@ -128,17 +128,16 @@ export async function GET(req: NextRequest) {
 
   const supabase = getSupabaseAdmin();
 
-  // posted_to_x カラムが false（または null）の相談をランダムに1件取得。
+  // posted_to_x カラムが null（未投稿）の相談をランダムに1件取得。
+  // posted_to_x は timestamptz 型のため、投稿済みは日時が入り、未投稿は null。
   // ルートの相談のみ（parent_id is null）、非表示は除外。
-  // 質問本文が短すぎるもの（10文字未満）も除外して投稿の品質を保つ。
   const { data: candidates, error } = await supabase
     .from('consultations')
     .select('id, question, created_at')
     .eq('hidden', false)
     .is('parent_id', null)
     .not('author_id', 'in', '("auto-seed","seed")')
-    .or('posted_to_x.is.null,posted_to_x.eq.false')
-    .gte('question.length', 10) // postgrestでは直接使えないが念のため
+    .is('posted_to_x', null)
     .order('created_at', { ascending: false })
     .limit(50);
 
