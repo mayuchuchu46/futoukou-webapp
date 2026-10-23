@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildPrompt, buildOneLinerPrompt, PastConsultation } from '@/lib/prompt';
+import { generateConsultAnswer } from '@/lib/aiAnswer';
 import { findMentionedSchool, buildSchoolFactsBlock } from '@/lib/schoolFacts';
 import { findMentionedInstitutions, buildInstitutionFactsBlock } from '@/lib/institutionFacts';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
@@ -87,39 +88,12 @@ export async function POST(req: NextRequest) {
 
   let answer: string;
   try {
-    const msg = await anthropic.messages.create({
-      model: 'claude-sonnet-5',
-      // web_search有効化後は、検索結果のテキストも含めて出力トークン予算を
-      // 消費するため、600では最終的な回答本文を書く余裕が足りなくなることが
-      // あった（2026-10-21、実機テストで回答が「〜によると、」で切れる不具合が
-      // 発覚し調査・修正）。上限を上げても課金は実際に使った分だけなので、
-      // 安全マージンとして増やす。
-      max_tokens: 1500,
-      messages: [{ role: 'user', content: prompt }],
-      // 「通信制高校は全国にいくつあるか」のような最新情報が必要な質問に、AIが
-      // 断定を避けて検索を促すだけの回答しかできていなかったことへの対応
-      // （2026-10-21追加）。AIが必要と判断した時だけ検索する仕組みなので、
-      // 検索しない相談に追加コストはかからない。1相談あたり最大2回まで
-      // （max_uses: 2）に制限し、全体のAI相談レート制限（1日300回）と
-      // 掛け合わせた最悪コストを1日$6程度に抑えている。
-      // 事前にAnthropicコンソール側で組織としてWeb検索を有効化しておく必要がある。
-      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2 }],
-    });
-    // web_search有効化後は、content配列が「text(検索前の書き出し) →
-    // server_tool_use → web_search_tool_result → text(検索結果を踏まえた続き)」
-    // のように複数のtextブロックに分かれて返ってくることがある。最初の
-    // textブロックだけを使うと、検索を挟む直前の書きかけの文章
-    // （例：「〜によると、」で終わる）だけが回答になってしまうため、
-    // 全てのtextブロックを結合する（2026-10-21、実機テストで発覚・修正）。
-    const textBlocks = msg.content.filter(
-      (b): b is Extract<typeof b, { type: 'text' }> => b.type === 'text'
-    );
-    answer = textBlocks.map((b) => b.text).join('').trim();
-    if (!answer) {
-      throw new Error(
-        `empty response (stop_reason=${msg.stop_reason}, blocks=${msg.content.map((b) => b.type).join(',')})`
-      );
-    }
+    // web_search有効化後の出力トークン予算切れ対策（検索結果の分だけ予算を消費し、
+    // 回答本文が尻切れになる不具合）はlib/aiAnswer.tsに集約している
+    // （2026-10-21に600→1500へ増やして対応したが、2026-10-24に「ヒロック初等部」等の
+    // 静的データに載っていない学校名で、検索が長引くとそれでも尻切れになる事例が
+    // 発覚したため、検索なしでの再試行を追加）。
+    answer = await generateConsultAnswer(anthropic, prompt);
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'unknown error';
     return NextResponse.json({ error: 'AI回答の生成に失敗しました: ' + message }, { status: 502 });
