@@ -7,19 +7,21 @@ import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
-import { FREE_SCHOOL_COVERAGE, getFreeSchoolCoverage } from '@/lib/data/freeschoolCoverage';
+import { FREE_SCHOOL_COVERAGE } from '@/lib/data/freeschoolCoverage';
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
-import { EDUCATION_SUPPORT_COVERAGE, getEducationSupportCoverage } from '@/lib/data/educationSupportCoverage';
+import { EDUCATION_SUPPORT_COVERAGE } from '@/lib/data/educationSupportCoverage';
 import {
   CORRESPONDENCE_HIGH_SCHOOLS,
   CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL,
   CORRESPONDENCE_HIGH_SCHOOL_AS_OF,
 } from '@/lib/data/correspondenceHighSchools';
-import { FREESCHOOL_SUBSIDIES, getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
+import { FREESCHOOL_SUBSIDIES } from '@/lib/data/freeschoolSubsidies';
 import { PREFECTURES } from '@/lib/data/prefectures';
-import PrefectureSelect from './PrefectureSelect';
 import SchoolTypeExplorer from './SchoolTypeExplorer';
+import FreeSchoolExplorer from './FreeSchoolExplorer';
+import ShienExplorer from './ShienExplorer';
+import TsushinExplorer from './TsushinExplorer';
 import RelatedConsultations from './RelatedConsultations';
 
 // 「学びの多様化学校」（旧：不登校特例校）と「フリースクール（民間施設）」の
@@ -179,22 +181,6 @@ function gakkoCount(pref: string, schoolType: SchoolTypeFilter | null = null) {
   return MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === pref && (!schoolType || s.schoolType === schoolType)).length;
 }
 
-function freeSchoolCount(pref: string) {
-  return FREE_SCHOOLS.filter((s) => s.prefecture === pref).length;
-}
-
-function shienCount(pref: string) {
-  return EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === pref).length;
-}
-
-function tsushinCount(pref: string) {
-  return CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === pref).length;
-}
-
-function joseiCount(pref: string) {
-  return FREESCHOOL_SUBSIDIES.filter((s) => s.prefecture === pref).length;
-}
-
 export default async function GakkoPage({
   searchParams,
 }: {
@@ -228,30 +214,6 @@ export default async function GakkoPage({
   // gakkoタブの絞り込み・結果一覧（都道府県・学校種とも）はSchoolTypeExplorer
   // （クライアントコンポーネント）側で行うため、ここではschoolTypeQuery
   // （他タブのhref組み立てに必要）だけ残す。
-  const schoolTypeQuery = (st: SchoolTypeFilter | null) => (st ? `school=${encodeURIComponent(st)}` : '');
-  const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
-  const coverage = selected ? getFreeSchoolCoverage(selected) : undefined;
-  const shienCenters = selected ? EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === selected) : [];
-  const shienCoverage = selected ? getEducationSupportCoverage(selected) : undefined;
-  const tsushinSchools = selected
-    ? CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === selected)
-    : CORRESPONDENCE_HIGH_SCHOOLS;
-  const joseiSubsidies = selected ? getFreeschoolSubsidiesByPrefecture(selected) : [];
-  const typeQueryPrefix =
-    type === 'free'
-      ? 'type=free&'
-      : type === 'shien'
-        ? 'type=shien&'
-        : type === 'tsushin'
-          ? 'type=tsushin&'
-          : type === 'josei'
-            ? 'type=josei&'
-            : '';
-  const prefHref = (p: string) => {
-    const schoolParam = type === 'gakko' ? schoolTypeQuery(selectedSchoolType) : '';
-    return `/gakko?${typeQueryPrefix}pref=${encodeURIComponent(p)}${schoolParam ? `&${schoolParam}` : ''}`;
-  };
-
   return (
     <div className="app-shell">
       <Header supervised={false} showBack={false} />
@@ -448,95 +410,16 @@ export default async function GakkoPage({
               「リロードされる感じ」「反応が遅い」との指摘を受け、2026-10-18に
               Linkによるページ遷移からuseStateによるクライアント側の絞り込みに変更した。 */}
 
-          {selected && type === 'free' && (
-            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>{selected}のフリースクール</div>
-              {coverage?.tier === 'none' || coverage?.tier === 'unprocessed' ? (
-                <div className="muted">
-                  {selected}については、{coverage.note}フリースクールが無いという意味ではなく、公開された一覧が見つからなかったということです。お近くの教育委員会やスクールカウンセラーに直接お問い合わせください。
-                </div>
-              ) : freeSchools.length === 0 ? (
-                <div className="muted">掲載できる情報が見つかりませんでした。</div>
-              ) : (
-                <>
-                  {coverage && (
-                    <div className="muted" style={{ fontSize: 12 }}>
-                      ※ {coverage.note} すべてのフリースクールを網羅したものではありません。
-                    </div>
-                  )}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                    {freeSchools.map((s) => (
-                      <Link
-                        key={s.no}
-                        href={`/gakko/free/${s.no}`}
-                        style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
-                      >
-                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                          {s.city}
-                          {s.address ? `・${s.address}` : ''}
-                          {s.contact ? `・${s.contact}` : ''}
-                          {s.ageRange && s.ageRange !== '記載なし' ? `・対象：${s.ageRange}` : ''}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                  <a
-                    href={freeSchools[0].sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="muted"
-                    style={{ fontSize: 12, textDecoration: 'underline' }}
-                  >
-                    出典を見る ›
-                  </a>
-                </>
-              )}
-            </div>
+          {/* フリースクールタブの都道府県絞り込み＋結果一覧は、学びの多様化学校タブと同じ
+              理由（押すたびにページが作り直される「反応が遅い」との指摘、2026-10-24）で
+              FreeSchoolExplorer（クライアントコンポーネント）に統合した。 */}
+          {type === 'free' && (
+            <FreeSchoolExplorer allSchools={FREE_SCHOOLS} initialPref={selected} />
           )}
 
-          {selected && type === 'shien' && (
-            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>{selected}の教育支援センター</div>
-              {shienCoverage?.tier === 'none' || !shienCoverage ? (
-                <div className="muted">
-                  {selected}については、{shienCoverage?.note ?? '都道府県単位でまとめた一覧は見つかりませんでした。'}教育支援センターが無いという意味ではなく、都道府県単位で一覧化した公開情報が見つからなかったということです。お住まいの市区町村にはほぼ必ず設置されているため、お子さんの学校またはお住まいの教育委員会に直接お問い合わせください。
-                </div>
-              ) : shienCenters.length === 0 ? (
-                <div className="muted">掲載できる情報が見つかりませんでした。</div>
-              ) : (
-                <>
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    ※ {shienCoverage.note} すべての施設・自治体を網羅したものではありません。
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                    {shienCenters.map((s, i) => (
-                      <div
-                        key={`${s.city}-${s.name}-${i}`}
-                        style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
-                      >
-                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                          {s.city}
-                          {s.address ? `・${s.address}` : ''}
-                          {s.contact ? `・${s.contact}` : ''}
-                        </div>
-                        {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>}
-                      </div>
-                    ))}
-                  </div>
-                  <a
-                    href={shienCenters[0].sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="muted"
-                    style={{ fontSize: 12, textDecoration: 'underline' }}
-                  >
-                    出典を見る ›
-                  </a>
-                </>
-              )}
-            </div>
+          {/* 教育支援センタータブも同様にShienExplorerへ統合（2026-10-24）。 */}
+          {type === 'shien' && (
+            <ShienExplorer allCenters={EDUCATION_SUPPORT_CENTERS} initialPref={selected} />
           )}
 
           {/* オンラインフリースクールは居住地を問わず利用できるため、独立タブ（type=online）
@@ -586,141 +469,10 @@ export default async function GakkoPage({
               「本校所在地」の都道府県を選んでから一覧を見る形にする（2026-10-18、未選択時は
               一覧を出さずチップ選択を促す。以前は未選択時に全115校を表示していたが、
               わかりにくいとの指摘で変更）。 */}
-          {selected && type === 'tsushin' && (
-            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>本校が{selected}にある通信制高校</div>
-              <div className="muted" style={{ fontSize: 12 }}>
-                「広域」の通信制高校は本校の都道府県以外からも入学できます。{selected}の学校が見つからない、または少ない場合も、他の都道府県の学校が選択肢になります。
-              </div>
-              {tsushinSchools.length === 0 ? (
-                <div className="muted">{selected}に本校がある学校は見つかりませんでした。上記の通り、他の都道府県の学校も入学できる場合があります。</div>
-              ) : (
-                <>
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    {CORRESPONDENCE_HIGH_SCHOOL_AS_OF}
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                    {tsushinSchools.map((s) => (
-                      <Link
-                        key={s.no}
-                        href={`/gakko/tsushin/${s.no}`}
-                        style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
-                      >
-                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                          本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </>
-              )}
-              <a
-                href={CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="muted"
-                style={{ fontSize: 12, textDecoration: 'underline' }}
-              >
-                出典を見る ›
-              </a>
-            </div>
-          )}
-
-          {/* 助成金・支援制度タブからは2026-10-21に撤去（都道府県ごとの一覧は「助成金TOP
-              だけでいいよ」との指摘を受けてトップの説明カードのみに縮小）。代わりに、
-              通信制高校タブの都道府県選択時にここで表示する（「神奈川の通信制高校ページに
-              神奈川の助成金情報を入れたい」との指摘を受けて移設）。 */}
-          {selected && type === 'tsushin' && (
-            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>{selected}の助成金・支援制度</div>
-              <div className="muted" style={{ fontSize: 12 }}>
-                通信制高校の学費については、世帯の状況に応じて授業料の一部または全部を支援する、国の「高等学校等就学支援金」が対象になります（全国統一の制度のため、ここでは都道府県ごとの一覧は出ません）。下記は{selected}内でWeb検索で確認できた、フリースクール等（民間施設）の利用料を独自に助成する自治体の制度一覧です。通信制高校そのものを対象にした制度ではありませんが、フリースクール等を併用される場合の参考情報として掲載しています。
-              </div>
-              {joseiSubsidies.length === 0 ? (
-                <div className="muted">
-                  {selected}については、Web検索で確認できるフリースクール等の利用料助成制度が見つかりませんでした。制度が無いという意味ではなく、見つからなかったということです。お住まいの市区町村教育委員会に直接お問い合わせください。
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                  {joseiSubsidies.map((s, i) => (
-                    <div
-                      key={`${s.entity}-${s.name}-${i}`}
-                      style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
-                    >
-                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                        実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
-                      </div>
-                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
-                      {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>※ {s.note}</div>}
-                      <a
-                        href={s.sourceUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="muted"
-                        style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
-                      >
-                        出典を見る ›
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* gakkoタブは2026-10-19からSchoolTypeExplorer内で都道府県の絞り込み自体を
-              行うため、この共通カードはgakko以外のタブでのみ使う。joseiタブは2026-10-21に
-              都道府県の絞り込み自体を撤去したため対象外（上記コメント参照）。 */}
-          {(type === 'free' || type === 'shien' || type === 'tsushin') && (
-            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-              <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
-              {/* チップの壁をスクロールしなくても選べるよう、セレクトボックスも用意
-                  （2026-10-18）。チップ自体はクローラーが各都道府県ページを個別に
-                  たどれるリンクとして残している。 */}
-              <PrefectureSelect selected={selected} type={type} schoolType={selectedSchoolType} />
-              <div className="chip-row chip-row-wrap">
-                {/* フリースクールタブでは、都道府県の一覧の中に「オンライン」も選択肢として
-                    並べておく。地域で探している途中でそのまま切り替えられるように
-                    （2026-10-18、都道府県チップの外に別タブとして置くより分かりやすいとの指摘）。 */}
-                {type === 'free' && (
-                  <Link
-                    href="/gakko?type=online"
-                    className="chip chip-tag"
-                    style={{ textDecoration: 'none', display: 'inline-block', fontWeight: 700 }}
-                  >
-                    オンライン（全国どこからでも）
-                  </Link>
-                )}
-                {PREFECTURES.map((p) => {
-                  const count =
-                    type === 'free'
-                      ? freeSchoolCount(p)
-                      : type === 'shien'
-                        ? shienCount(p)
-                        : type === 'tsushin'
-                          ? tsushinCount(p)
-                          : type === 'josei'
-                            ? joseiCount(p)
-                            : gakkoCount(p, selectedSchoolType);
-                  return (
-                    <Link
-                      key={p}
-                      href={prefHref(p)}
-                      className={`chip chip-tag${selected === p ? ' active' : ''}`}
-                      style={{
-                        textDecoration: 'none',
-                        display: 'inline-block',
-                        opacity: count > 0 ? 1 : 0.55,
-                      }}
-                    >
-                      {p}{count > 0 ? `（${count}）` : ''}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
+          {/* 通信制高校タブ（結果一覧＋都道府県選択時の助成金情報）も同じ理由で
+              TsushinExplorerへ統合（2026-10-24）。 */}
+          {type === 'tsushin' && (
+            <TsushinExplorer allSchools={CORRESPONDENCE_HIGH_SCHOOLS} initialPref={selected} />
           )}
 
           {type === 'gakko' && (

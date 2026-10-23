@@ -1,0 +1,153 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Link from 'next/link';
+import type { CorrespondenceHighSchool } from '@/lib/data/correspondenceHighSchools';
+import { CORRESPONDENCE_HIGH_SCHOOL_AS_OF, CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL } from '@/lib/data/correspondenceHighSchools';
+import { getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
+import { PREFECTURES } from '@/lib/data/prefectures';
+
+// 通信制高校（広域）タブの都道府県絞り込み＋結果一覧（＋選択時の助成金情報）。
+// FreeSchoolExplorer.tsx／ShienExplorer.tsxと同じ理由（2026-10-24）で、useStateに
+// よるその場更新に変更した。
+export default function TsushinExplorer({
+  allSchools,
+  initialPref,
+}: {
+  allSchools: CorrespondenceHighSchool[];
+  initialPref: string | null;
+}) {
+  const router = useRouter();
+  const [pref, setPref] = useState<string | null>(initialPref);
+
+  function selectPref(p: string | null) {
+    setPref(p);
+    const href = p ? `/gakko?type=tsushin&pref=${encodeURIComponent(p)}` : '/gakko?type=tsushin';
+    router.replace(href, { scroll: false });
+  }
+
+  const schools = pref ? allSchools.filter((s) => s.prefecture === pref) : allSchools;
+  const joseiSubsidies = pref ? getFreeschoolSubsidiesByPrefecture(pref) : [];
+
+  return (
+    <>
+      {pref && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>本校が{pref}にある通信制高校</div>
+          <div className="muted" style={{ fontSize: 12 }}>
+            「広域」の通信制高校は本校の都道府県以外からも入学できます。{pref}の学校が見つからない、または少ない場合も、他の都道府県の学校が選択肢になります。
+          </div>
+          {schools.length === 0 ? (
+            <div className="muted">{pref}に本校がある学校は見つかりませんでした。上記の通り、他の都道府県の学校も入学できる場合があります。</div>
+          ) : (
+            <>
+              <div className="muted" style={{ fontSize: 12 }}>
+                {CORRESPONDENCE_HIGH_SCHOOL_AS_OF}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                {schools.map((s) => (
+                  <Link
+                    key={s.no}
+                    href={`/gakko/tsushin/${s.no}`}
+                    style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                      本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
+          <a
+            href={CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="muted"
+            style={{ fontSize: 12, textDecoration: 'underline' }}
+          >
+            出典を見る ›
+          </a>
+        </div>
+      )}
+
+      {pref && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>{pref}の助成金・支援制度</div>
+          <div className="muted" style={{ fontSize: 12 }}>
+            通信制高校の学費については、世帯の状況に応じて授業料の一部または全部を支援する、国の「高等学校等就学支援金」が対象になります（全国統一の制度のため、ここでは都道府県ごとの一覧は出ません）。下記は{pref}内でWeb検索で確認できた、フリースクール等（民間施設）の利用料を独自に助成する自治体の制度一覧です。通信制高校そのものを対象にした制度ではありませんが、フリースクール等を併用される場合の参考情報として掲載しています。
+          </div>
+          {joseiSubsidies.length === 0 ? (
+            <div className="muted">
+              {pref}については、Web検索で確認できるフリースクール等の利用料助成制度が見つかりませんでした。制度が無いという意味ではなく、見つからなかったということです。お住まいの市区町村教育委員会に直接お問い合わせください。
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+              {joseiSubsidies.map((s, i) => (
+                <div
+                  key={`${s.entity}-${s.name}-${i}`}
+                  style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                >
+                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                    実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
+                  </div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
+                  {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>※ {s.note}</div>}
+                  <a
+                    href={s.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="muted"
+                    style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
+                  >
+                    出典を見る ›
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
+        <select
+          className="input"
+          value={pref || ''}
+          onChange={(e) => selectPref(e.target.value || null)}
+        >
+          <option value="">都道府県を選択…</option>
+          {PREFECTURES.map((p) => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
+        <div className="chip-row chip-row-wrap">
+          {PREFECTURES.map((p) => {
+            const count = allSchools.filter((s) => s.prefecture === p).length;
+            return (
+              <Link
+                key={p}
+                href={`/gakko?type=tsushin&pref=${encodeURIComponent(p)}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  selectPref(p);
+                }}
+                className={`chip chip-tag${pref === p ? ' active' : ''}`}
+                style={{
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                  opacity: count > 0 ? 1 : 0.55,
+                }}
+              >
+                {p}{count > 0 ? `（${count}）` : ''}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+}
