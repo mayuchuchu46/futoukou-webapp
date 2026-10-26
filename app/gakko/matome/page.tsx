@@ -99,7 +99,19 @@ export default async function GakkoMatomePage({
   const freeCoverage = selected ? getFreeSchoolCoverage(selected) : undefined;
   const shienCenters = selected ? EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === selected) : [];
   const shienCoverage = selected ? getEducationSupportCoverage(selected) : undefined;
-  const tsushinSchools = selected ? CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === selected) : [];
+  // このデータの出典（東京都生活文化局の資料）自体が「通信教育を行う区域に東京都を含む」
+  // 学校の一覧、つまり掲載校は全校すでに東京都在住者を対象にしている。そのため、東京都が
+  // 選ばれた場合は本校所在地で絞り込む意味がなく（本校が東京都以外でも東京都在住者は
+  // 入学できる、というのがこのリストの掲載条件そのもののため）、他県のような「本校が
+  // 東京都にある学校」という絞り込みをすると、本校が東京都認可（＝このリストの対象外）の
+  // 学校だけが漏れて常に0件になってしまう（2026-10-27、「東京都で検索して0件はおかしい」
+  // との指摘を受けて対応）。東京都選択時は絞り込まず全校を対象にする。
+  const tsushinSchools =
+    selected === '東京都'
+      ? CORRESPONDENCE_HIGH_SCHOOLS
+      : selected
+      ? CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === selected)
+      : [];
   const joseiSubsidies = selected ? getFreeschoolSubsidiesByPrefecture(selected) : [];
 
   // 都道府県未選択時は「0件」ではなく全国の総数を表示する（2026-10-21、「デフォルトは
@@ -242,7 +254,7 @@ export default async function GakkoMatomePage({
       node: (
         <details className="card" style={{ padding: 0 }} open>
           <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-            📮 通信制高校（広域）（{selected ? `本校が${selected}：${tsushinCountDisplay}件` : `全国${tsushinCountDisplay}件`}）
+            📮 通信制高校（広域）（{selected ? (selected === '東京都' ? `入学できる学校：${tsushinCountDisplay}件` : `本校が${selected}：${tsushinCountDisplay}件`) : `全国${tsushinCountDisplay}件`}）
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
@@ -250,21 +262,14 @@ export default async function GakkoMatomePage({
             ) : (
               <>
                 <div className="muted" style={{ fontSize: 12 }}>
-                  「広域」通信制高校は本校の都道府県以外からも入学できます。
+                  {selected === '東京都'
+                    ? // このデータの出典自体が「通信教育を行う区域に東京都を含む」学校の一覧のため、
+                      // 掲載校は全校すでに東京都在住者が入学対象（本校の所在地は問わない）。
+                      'このデータに載っている学校は、本校の所在地にかかわらず、すべて東京都にお住まいの方が入学の対象になっている「広域」通信制高校です。'
+                    : '「広域」通信制高校は本校の都道府県以外からも入学できます。'}
                 </div>
                 {tsushinSchools.length === 0 ? (
-                  selected === '東京都' ? (
-                    // このデータの出典（東京都生活文化局の助成金制度資料）は、東京都「以外」に
-                    // 本校がある＝東京都認可外の通信制高校を対象にした一覧のため、東京都が
-                    // 認可した（本校が東京都内にある）通信制高校は構造的にこのリストに含まれない
-                    // （2026-10-27、「東京都の通信制の情報がない」との指摘を受けて、他県同様の
-                    // 「見つかりませんでした」という表示だと誤解を招くため分けた）。
-                    <div className="muted">
-                      このデータの出典は、東京都「以外」に本校がある通信制高校（東京都認可外）を対象にした東京都の助成金制度の一覧のため、東京都が認可した（本校が東京都内にある）通信制高校はこのリストに含まれていません。東京都内に本校がある通信制高校が無いという意味ではありません。
-                    </div>
-                  ) : (
-                    <div className="muted">本校が{selected}にある学校は見つかりませんでした。他の都道府県の学校も入学できる場合があります。</div>
-                  )
+                  <div className="muted">本校が{selected}にある学校は見つかりませんでした。他の都道府県の学校も入学できる場合があります。</div>
                 ) : (
                   tsushinSchools.map((s) => (
                     <Link
@@ -273,7 +278,9 @@ export default async function GakkoMatomePage({
                       style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
                     >
                       <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>設置者：{s.operator}</div>
+                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                        {selected === '東京都' ? `本校：${s.prefecture}${s.municipality}・` : ''}設置者：{s.operator}
+                      </div>
                     </Link>
                   ))
                 )}

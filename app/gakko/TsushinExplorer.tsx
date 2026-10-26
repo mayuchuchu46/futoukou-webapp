@@ -27,26 +27,27 @@ export default function TsushinExplorer({
     router.replace(href, { scroll: false });
   }
 
-  const schools = pref ? allSchools.filter((s) => s.prefecture === pref) : allSchools;
+  // app/gakko/matome/page.tsxの同じ分岐と同じ理由（2026-10-27）：このデータの出典自体が
+  // 「通信教育を行う区域に東京都を含む」学校の一覧のため、東京都が選ばれた場合は
+  // 本校所在地で絞り込まず全校を対象にする。
+  const schools =
+    pref === '東京都' ? allSchools : pref ? allSchools.filter((s) => s.prefecture === pref) : allSchools;
   const joseiSubsidies = pref ? getFreeschoolSubsidiesByPrefecture(pref) : [];
 
   return (
     <>
       {pref && (
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>本校が{pref}にある通信制高校</div>
+          <div className="answer-label" style={{ fontSize: 14 }}>
+            {pref === '東京都' ? `${pref}にお住まいの方が入学できる通信制高校` : `本校が${pref}にある通信制高校`}
+          </div>
           <div className="muted" style={{ fontSize: 12 }}>
-            「広域」の通信制高校は本校の都道府県以外からも入学できます。{pref}の学校が見つからない、または少ない場合も、他の都道府県の学校が選択肢になります。
+            {pref === '東京都'
+              ? 'このデータに載っている学校は、本校の所在地にかかわらず、すべて東京都にお住まいの方が入学の対象になっている「広域」通信制高校です。'
+              : `「広域」の通信制高校は本校の都道府県以外からも入学できます。${pref}の学校が見つからない、または少ない場合も、他の都道府県の学校が選択肢になります。`}
           </div>
           {schools.length === 0 ? (
-            pref === '東京都' ? (
-              // app/gakko/matome/page.tsxの同じ分岐と同じ理由（2026-10-27追加）。
-              <div className="muted">
-                このデータの出典は、東京都「以外」に本校がある通信制高校（東京都認可外）を対象にした東京都の助成金制度の一覧のため、東京都が認可した（本校が東京都内にある）通信制高校はこのリストに含まれていません。東京都内に本校がある通信制高校が無いという意味ではありません。
-              </div>
-            ) : (
-              <div className="muted">{pref}に本校がある学校は見つかりませんでした。上記の通り、他の都道府県の学校も入学できる場合があります。</div>
-            )
+            <div className="muted">{pref}に本校がある学校は見つかりませんでした。上記の通り、他の都道府県の学校も入学できる場合があります。</div>
           ) : (
             <>
               <div className="muted" style={{ fontSize: 12 }}>
@@ -133,7 +134,10 @@ export default function TsushinExplorer({
         </select>
         <div className="chip-row chip-row-wrap">
           {PREFECTURES.map((p) => {
-            const count = allSchools.filter((s) => s.prefecture === p).length;
+            // 上のschools算出と同じ理由で、東京都だけ全校を対象とした件数にする
+            // （本校所在地で数えると常に0件になり、チップが「選択肢なし」に見えて
+            // しまうため）。
+            const count = p === '東京都' ? allSchools.length : allSchools.filter((s) => s.prefecture === p).length;
             return (
               <Link
                 key={p}
