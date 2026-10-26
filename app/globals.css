@@ -145,7 +145,22 @@ button:active,
   opacity: 0.85;
   z-index: 0;
 }
-.header-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; gap: 10px; }
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+  gap: 10px;
+  /* 「スクロールすると一瞬だけ上のヘッダー（ロゴ・キャッチコピー等）が見える」との
+     報告（2026-10-26）。.supervision-note（.header-rowの外、.header直下）は問題なく
+     描画され続けていたことから、iOS Safariのラバーバンド時再描画漏れが.header本体
+     だけでなく.header-row単位でも起きていたと判断。2026-10-21の.header側のGPU合成
+     レイヤー昇格だけでは足りなかったため、.header-row自体にも同じ対策を追加した。 */
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
 .header-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; }
 /* account-tab（画面右上に常時position: fixedで固定表示される「ログイン／アカウント」タブ、
    高さ約35px）と、.header-rightの「つらいときはこちら」が同じ右上の位置に重なってしまう
