@@ -157,9 +157,23 @@ function AskPageContent() {
   // （2026-10-21、「東京みらい中学校のページから相談するを押したら、別の学校（リリー
   // ベール小学校）のテキストが出てきた」との報告を受けて追加。他の学校・フリースクール
   // でも同様に起きるとのこと）。
+  //
+  // 同じ理由で、「学校ページ→相談する」の後にボトムナビの「相談する」（prefillなし）を
+  // 押した場合も、/askページ自体は再マウントされずprefillParamだけがnullに変わる。
+  // 上のマウント時だけのeffect（prefillParamが無い場合に未入力の下書きを空へ戻す処理）が
+  // この遷移では動かないため、ここでも同じ判定を行う（2026-10-26、「リリーベール小学校
+  // について相談したいです。がまだ出てくる」との報告を受けて追加。前回の修正
+  // （2026-10-22）はマウント時のケースしか直していなかった）。
   useEffect(() => {
     if (!draftLoaded) return;
-    if (!prefillParam) return;
+    if (!prefillParam) {
+      if (lastSeenPrefillRef.current && text === prefillTextRef.current) {
+        setText('');
+        prefillTextRef.current = undefined;
+      }
+      lastSeenPrefillRef.current = null;
+      return;
+    }
     if (lastSeenPrefillRef.current === prefillParam) return;
     if (!text || text === prefillTextRef.current) {
       setText(prefillParam);
