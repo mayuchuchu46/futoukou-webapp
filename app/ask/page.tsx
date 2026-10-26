@@ -70,7 +70,6 @@ function AskPageContent() {
   const [submitting, setSubmitting] = useState(false);
   const [expertSubmitting, setExpertSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [needsTerms, setNeedsTerms] = useState(false);
   const [expertAvailable, setExpertAvailable] = useState(false);
   const [memberActive, setMemberActive] = useState(false);
   const [freeQuestionAvailable, setFreeQuestionAvailable] = useState(false);
@@ -232,7 +231,6 @@ function AskPageContent() {
   }, [text, draftLoaded]);
 
   useEffect(() => {
-    setNeedsTerms(!hasAgreedTerms());
     fetch('/api/experts/available')
       .then((r) => r.json())
       .then((d) => setExpertAvailable(!!d.available))
@@ -283,8 +281,26 @@ function AskPageContent() {
       .catch(() => setRequestedExpert(null));
   }, [expertIdParam]);
 
+  // 以前は相談を書き始める前に「ご利用前の確認」という独立した画面を必ず一度表示し、
+  // 「同意して相談をはじめる」を押すまで入力欄自体を出さない作りだった。この画面が
+  // 離脱の原因になっているとの判断で廃止し（2026-10-26）、免責文は下の送信ボタン
+  // 付近に表示するだけにした。一方、利用規約・プライバシーポリシーへの同意を取得
+  // した記録（consentsテーブル、/api/consent）自体は残す方針のため、「実際に送信した
+  // 時点で同意したとみなす」（/account/registerの「ご登録により…同意したものと
+  // みなします」と同じ考え方）形に変え、まだ記録していなければ送信のたびに記録する。
+  function ensureConsentRecorded() {
+    if (hasAgreedTerms()) return;
+    setAgreedTerms();
+    fetch('/api/consent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ author_id: getUid() }),
+    }).catch(() => {});
+  }
+
   async function submit() {
     if (!text.trim() || !category) return;
+    ensureConsentRecorded();
     setSubmitting(true);
     setError('');
     // AIの回答生成が通常より時間がかかった場合（AI側の混雑・サーバー関数のタイムアウト等）に、
@@ -343,6 +359,7 @@ function AskPageContent() {
 
   async function submitToExpert() {
     if (!text.trim() || !category) return;
+    ensureConsentRecorded();
     setExpertSubmitting(true);
     setError('');
     // submit()と同じ理由（ハングしたまま固まる不具合対策）でタイムアウトを設ける（2026-10-18）。
@@ -396,47 +413,6 @@ function AskPageContent() {
       // submit()と同じ理由でfinallyに移動（2026-10-22）。
       setExpertSubmitting(false);
     }
-  }
-
-  if (needsTerms) {
-    return (
-        <div className="page-main">
-          <h2 className="pagetitle">ご利用前の確認</h2>
-          <div className="card">
-            <div className="qtext">
-              このアプリの回答はAIによる一般的な情報提供であり、医療的・心理的な診断ではありません。
-              重大な判断の際は、専門機関（学校・医療機関・公的な相談窓口）に相談してください。
-              {/* 「同意して相談をはじめる」ボタンを目立たせたいとの要望を受けて、各リンクは
-                  個別のボタン・行として並べず、案内文中のテキストリンクに統合した（2026-10-13）。
-                  グローバルCSSでaタグの下線・色付けが解除されているため、リンクだとわかるよう
-                  下線＋ブランドカラーをここで明示している。別タブ（target="_blank"）で開くと
-                  このページへ戻る導線が無かったため同タブ遷移に変更し、遷移先（/terms・/privacy・
-                  /support）側にヘッダー上部・固定ナビ直上の「戻る」を用意した（同日、追加指摘を受けて）。 */}
-              詳しくは
-              <a href="/terms" style={{ color: 'var(--main)', textDecoration: 'underline' }}>利用規約</a>
-              ・
-              <a href="/privacy" style={{ color: 'var(--main)', textDecoration: 'underline' }}>プライバシーポリシー</a>
-              ・
-              <a href="/support" style={{ color: 'var(--main)', textDecoration: 'underline' }}>相談窓口の一覧</a>
-              をご確認ください。
-            </div>
-          </div>
-          <button
-            className="btn-primary"
-            onClick={() => {
-              setAgreedTerms();
-              setNeedsTerms(false);
-              fetch('/api/consent', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ author_id: getUid() }),
-              }).catch(() => {});
-            }}
-          >
-            同意して相談をはじめる
-          </button>
-        </div>
-    );
   }
 
   return (
@@ -550,6 +526,21 @@ function AskPageContent() {
         </div>
 
         {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
+
+        {/* 以前はここに来る前に「ご利用前の確認」という別画面を必ず表示し、同意しないと
+            入力欄自体を出さない作りだったが、離脱の原因になるとの判断で廃止した
+            （2026-10-26）。免責文はここに縮小して残し、同意の記録（consentsテーブル）は
+            実際に送信した時点でensureConsentRecorded()が取るようにした
+            （/account/registerの「ご登録により…同意したものとみなします」と同じ考え方）。 */}
+        <div className="muted" style={{ fontSize: 12 }}>
+          回答はAIによる一般的な情報提供で、医療的・心理的な診断ではありません。重大な判断の際は専門機関にご相談ください。送信により
+          <a href="/terms" style={{ color: 'var(--main)', textDecoration: 'underline' }}>利用規約</a>
+          ・
+          <a href="/privacy" style={{ color: 'var(--main)', textDecoration: 'underline' }}>プライバシーポリシー</a>
+          に同意したものとみなします（
+          <a href="/support" style={{ color: 'var(--main)', textDecoration: 'underline' }}>相談窓口の一覧</a>
+          ）。
+        </div>
 
         <button className="btn-primary" disabled={!text.trim() || !category || submitting || expertSubmitting} onClick={submit}>
           {submitting ? 'どうする先生が考えています…' : 'どうする先生に相談する（無料・AIが回答）'}
