@@ -124,7 +124,23 @@ function AskPageContent() {
       // ままになってしまっていた。「下書きが無い」か「前回もprefillのまま手を加えて
       // いない」場合は、新しいprefillParamを優先する。ユーザーが実際に書いた下書きは
       // （prefillTextと異なる＝手を加えた状態として）引き続き保護する。
-      const draftIsUntouchedPrefill = !!draft.text && draft.text === draft.prefillText;
+      //
+      // 2026-10-26、上記の修正後も「リリーベール小学校（リリーガーデン）について
+      // 相談したいです。」が出続けるとの報告を受けて実機で再現・調査したところ、
+      // prefillTextを記録する仕組み自体を追加した2026-10-18より前に保存された
+      // 下書き（この端末に残っていた古いデータ）はprefillTextフィールドが無く、
+      // draft.text === draft.prefillText（undefined）が常にfalseになるため、
+      // 本当は「一度も手を加えていないprefillの残骸」であっても「ユーザーが実際に
+      // 書いた下書き」として永久に保護されてしまっていた（本来のバグ原因はここで、
+      // 2026-10-22の修正はこのケースをカバーしていなかった）。prefillTextが無い
+      // 古い形式の下書きは、当時の全ページ共通のprefill文言（「○○について相談
+      // したいです。」、1行・短文）と一致する場合に限り、同じく「手を加えていない
+      // prefillの残骸」として扱う。実際に長文で書かれた本物の下書きまで誤って
+      // 消してしまわないよう、条件はできるだけ絞っている。
+      const LEGACY_PREFILL_PATTERN = /^[^\n]{1,60}について相談したいです。$/;
+      const draftIsUntouchedPrefill =
+        !!draft.text &&
+        (draft.text === draft.prefillText || (draft.prefillText === undefined && LEGACY_PREFILL_PATTERN.test(draft.text)));
       if (prefillParam && (!draft.text || draftIsUntouchedPrefill)) {
         setText(prefillParam);
         prefillTextRef.current = prefillParam;
