@@ -559,6 +559,29 @@ export default async function ResultPage({
                   もご活用ください。
                 </div>
               )}
+              {/* 学校名が出てくる相談では、lib/schoolFacts.tsのbuildSchoolFactsBlockが
+                  web検索ツールでの校風・教育方針の調査も指示するようになった（2026-10-26）。
+                  検索結果は当サイトが事前に確認・裏取りしたものではなく、移転・制度変更等で
+                  最新の状況と異なる可能性があるため、app/support/page.tsx等と同じ文言の
+                  パターンで、学校の公式サイトでの確認を促す注記を添える。 */}
+              {!isCrisis && mentionedSchool && (
+                <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
+                  学校に関する情報は公開情報をもとにしたもので、最新の状況と異なる場合があります。最新情報は
+                  {mentionedSchool.officialUrl ? (
+                    <a
+                      href={mentionedSchool.officialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}
+                    >
+                      学校の公式サイト
+                    </a>
+                  ) : (
+                    '学校の公式サイト等'
+                  )}
+                  でご確認ください。
+                </div>
+              )}
             </div>
 
             {!isCrisis && (
