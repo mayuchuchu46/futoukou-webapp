@@ -566,7 +566,7 @@ export default async function ResultPage({
                   パターンで、学校の公式サイトでの確認を促す注記を添える。 */}
               {!isCrisis && mentionedSchool && (
                 <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
-                  学校に関する情報は公開情報をもとにしたもので、最新の状況と異なる場合があります。最新情報は
+                  学校に関する情報は公開情報をもとにしたもので、最新の状況と異なる場合があります。最新の正確な情報は
                   {mentionedSchool.officialUrl ? (
                     <a
                       href={mentionedSchool.officialUrl}
