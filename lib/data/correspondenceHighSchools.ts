@@ -104,7 +104,7 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 55, prefecture: '福井県', municipality: '', name: 'AOIKE高等学校', operator: '学校法人青池学園', officialUrl: 'https://aoike-highschool.jp/' },
   { no: 56, prefecture: '山梨県', municipality: '', name: '日本航空高等学校', operator: '学校法人日本航空学園', officialUrl: 'https://www.jaaw-hs.net/' , campuses: [{ prefecture: '北海道', municipality: '千歳市' }, { prefecture: '石川県', municipality: '輪島市' }], campusesIncomplete: true },
   { no: 57, prefecture: '山梨県', municipality: '甲府市', name: '駿台甲府高等学校', operator: '学校法人駿台甲府学園', officialUrl: 'https://www.sundai-kofu.ed.jp/', campuses: [] },
-  { no: 58, prefecture: '山梨県', municipality: '北杜市', name: '自然学園高等学校', operator: '学校法人自然学園', officialUrl: 'https://shizengakuen.ed.jp/' },
+  { no: 58, prefecture: '山梨県', municipality: '北杜市', name: '自然学園高等学校', operator: '学校法人自然学園', officialUrl: 'https://shizengakuen.ed.jp/', campuses: [{ prefecture: '山梨県', municipality: '甲府市' }, { prefecture: '神奈川県', municipality: '相模原市中央区' }, { prefecture: '山梨県', municipality: '大月市' }] },
   { no: 59, prefecture: '山梨県', municipality: '甲府市', name: '甲斐清和高等学校', operator: '学校法人伊藤学園', officialUrl: 'https://seika.ito-gakuen.ed.jp/', campuses: [] },
   { no: 60, prefecture: '山梨県', municipality: '甲府市', name: '山梨学院高等学校', operator: '学校法人C2C Global Education Japan', officialUrl: 'https://www.yghs.ed.jp/', campuses: [] },
   { no: 61, prefecture: '山梨県', municipality: '甲府市', name: '山梨英和高等学校', operator: '学校法人山梨英和学院', officialUrl: 'https://www.yamanashi-eiwa.ac.jp/jsh', campuses: [] },
