@@ -234,7 +234,7 @@ export default async function TsushinSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `不登校の子の進路を考えている方へ。通信制高校「${school.name}」（本校：${school.prefecture}${school.municipality}）の情報を見つけました。`,
+                text: `不登校の進路に。通信制高校「${school.name}」（本校：${school.prefecture}${school.municipality}）`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,通信制高校',
               })}`}

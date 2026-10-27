@@ -206,7 +206,7 @@ export default async function FreeSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `不登校の子の居場所を探している方へ。「${school.name}」（フリースクール・${school.prefecture}${school.city}）の情報を見つけました。`,
+                text: `不登校の居場所に。フリースクール「${school.name}」（${school.prefecture}${school.city}）`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,フリースクール',
               })}`}

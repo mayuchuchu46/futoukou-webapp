@@ -165,7 +165,7 @@ export default async function OnlineSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `不登校の子が自宅から参加できる「${school.name}」（オンラインフリースクール）の情報を見つけました。`,
+                text: `不登校でも自宅から参加できる。オンラインフリースクール「${school.name}」`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,オンラインフリースクール',
               })}`}
