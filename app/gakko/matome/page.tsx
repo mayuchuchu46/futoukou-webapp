@@ -106,11 +106,17 @@ export default async function GakkoMatomePage({
   // 東京都にある学校」という絞り込みをすると、本校が東京都認可（＝このリストの対象外）の
   // 学校だけが漏れて常に0件になってしまう（2026-10-27、「東京都で検索して0件はおかしい」
   // との指摘を受けて対応）。東京都選択時は絞り込まず全校を対象にする。
+  // 東京都以外は、本校所在地が一致する学校に加えて、campuses（キャンパス・学習センター）に
+  // その都道府県が含まれる学校も対象にする（2026-10-27追加、app/gakko/TsushinExplorer.tsx
+  // と同じ理由。本校所在地だけで絞り込むと、実際にその都道府県にキャンパスがある学校を
+  // 取りこぼすため）。
   const tsushinSchools =
     selected === '東京都'
       ? CORRESPONDENCE_HIGH_SCHOOLS
       : selected
-      ? CORRESPONDENCE_HIGH_SCHOOLS.filter((s) => s.prefecture === selected)
+      ? CORRESPONDENCE_HIGH_SCHOOLS.filter(
+          (s) => s.prefecture === selected || s.campuses?.some((c) => c.prefecture === selected)
+        )
       : [];
   const joseiSubsidies = selected ? getFreeschoolSubsidiesByPrefecture(selected) : [];
 
@@ -254,7 +260,7 @@ export default async function GakkoMatomePage({
       node: (
         <details className="card" style={{ padding: 0 }} open>
           <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-            📮 通信制高校（広域）（{selected ? (selected === '東京都' ? `入学できる学校：${tsushinCountDisplay}件` : `本校が${selected}：${tsushinCountDisplay}件`) : `全国${tsushinCountDisplay}件`}）
+            📮 通信制高校（広域）（{selected ? (selected === '東京都' ? `入学できる学校：${tsushinCountDisplay}件` : `${selected}の学校・キャンパス：${tsushinCountDisplay}件`) : `全国${tsushinCountDisplay}件`}）
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
@@ -269,20 +275,24 @@ export default async function GakkoMatomePage({
                     : '「広域」通信制高校は本校の都道府県以外からも入学できます。'}
                 </div>
                 {tsushinSchools.length === 0 ? (
-                  <div className="muted">本校が{selected}にある学校は見つかりませんでした。他の都道府県の学校も入学できる場合があります。</div>
+                  <div className="muted">{selected}に本校・キャンパスがある学校は見つかりませんでした。他の都道府県の学校も入学できる場合があります。</div>
                 ) : (
-                  tsushinSchools.map((s) => (
-                    <Link
-                      key={s.no}
-                      href={`/gakko/tsushin/${s.no}`}
-                      style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
-                    >
-                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                        {selected === '東京都' ? `本校：${s.prefecture}${s.municipality}・` : ''}設置者：{s.operator}
-                      </div>
-                    </Link>
-                  ))
+                  tsushinSchools.map((s) => {
+                    const isCampusOnly = selected !== '東京都' && s.prefecture !== selected;
+                    return (
+                      <Link
+                        key={s.no}
+                        href={`/gakko/tsushin/${s.no}`}
+                        style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                      >
+                        <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                          {selected === '東京都' ? `本校：${s.prefecture}${s.municipality}・` : ''}設置者：{s.operator}
+                          {isCampusOnly && <>　※本校は{s.prefecture}ですが、{selected}にキャンパス・学習センターがあります</>}
+                        </div>
+                      </Link>
+                    );
+                  })
                 )}
               </>
             )}

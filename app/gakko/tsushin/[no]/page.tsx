@@ -21,8 +21,10 @@ import { Suspense } from 'react';
 // 同じ考え方で追加）。
 //
 // このデータ（correspondenceHighSchools.ts）には本校所在地（所轄庁）の都道府県・
-// 市区町村と設置者名しか無く、各校のキャンパス所在地等は含まれていない
-// （lib/data/correspondenceHighSchools.tsのコメント参照）。公式サイトURLを
+// 市区町村と設置者名のほか、2026-10-27以降は一部の学校についてWeb調査で確認できた
+// キャンパス・学習センター所在地（campuses）も含む（確認できなかった学校も多数あり、
+// その場合はcampusesが無い＝未確認という意味。lib/data/correspondenceHighSchools.ts
+// のコメント参照）。公式サイトURLを
 // Web調査で確認できた学校のみindexし、未確認の学校はnoindexとする
 // （app/gakko/school/[no]/page.tsxと同じ、情報量に応じたindex方針。2026-10-21、
 // 全115校の公式サイトURL調査完了に合わせて見直し。それまでは確認できている
@@ -163,6 +165,33 @@ export default async function TsushinSchoolPage({
               </a>
             )}
             <FavoriteButton type="tsushin" no={school.no} name={school.name} meta={`${school.prefecture}${school.municipality}`} />
+            {/* 本校以外のキャンパス・学習センター等（lib/data/correspondenceHighSchools.tsの
+                campuses、2026-10-27追加）。確認できた学校のみ表示し、campusesが無い学校
+                （調査中・未確認）には何も表示しない。 */}
+            {school.campuses && school.campuses.length > 0 && (
+              <div style={{ width: '100%' }}>
+                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
+                  本校以外のキャンパス・学習センター（確認できたもの）
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {school.campuses.map((c, i) => (
+                    <span
+                      key={`${c.prefecture}-${c.municipality || ''}-${i}`}
+                      className="chip chip-tag"
+                      style={{ fontSize: 12 }}
+                    >
+                      {c.prefecture}{c.municipality || ''}
+                    </span>
+                  ))}
+                </div>
+                <div className="muted" style={{ fontSize: 11, marginTop: 4 }}>
+                  {school.campusesIncomplete
+                    ? 'Web上で確認できた一部のみです。実際にはさらに多くのキャンパスがある可能性があります。'
+                    : 'Web上の公開資料で確認できた拠点です。'}
+                  　最新情報は学校の公式サイトでご確認ください。
+                </div>
+              </div>
+            )}
             <div style={{ width: '100%' }}>
               <iframe
                 src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=14&output=embed`}
@@ -257,7 +286,7 @@ export default async function TsushinSchoolPage({
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>
             <div className="qtext">
-              このページの情報は、東京都生活文化局が公開している一覧（{CORRESPONDENCE_HIGH_SCHOOL_AS_OF}）をもとにしています。キャンパス（校舎）の所在地・学費・カリキュラム等の詳しい情報は含まれていないため、気になる学校が見つかったら学校の公式サイトで直接ご確認ください。
+              このページの本校所在地・設置者の情報は、東京都生活文化局が公開している一覧（{CORRESPONDENCE_HIGH_SCHOOL_AS_OF}）をもとにしています。キャンパス（校舎）所在地はWeb上の公開資料で別途確認したものですが、学費・カリキュラム等の詳しい情報は含まれていないため、気になる学校が見つかったら学校の公式サイトで直接ご確認ください。
             </div>
             <a
               href={searchUrl}

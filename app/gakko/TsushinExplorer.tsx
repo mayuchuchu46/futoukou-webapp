@@ -30,8 +30,20 @@ export default function TsushinExplorer({
   // app/gakko/matome/page.tsxの同じ分岐と同じ理由（2026-10-27）：このデータの出典自体が
   // 「通信教育を行う区域に東京都を含む」学校の一覧のため、東京都が選ばれた場合は
   // 本校所在地で絞り込まず全校を対象にする。
+  // 東京都以外は、本校所在地が一致する学校に加えて、campuses（キャンパス・学習センター）
+  // にその都道府県が含まれる学校も対象にする（2026-10-27追加。本校所在地だけで絞り込むと、
+  // 実際にその都道府県にキャンパスがある学校を取りこぼすため）。
   const schools =
-    pref === '東京都' ? allSchools : pref ? allSchools.filter((s) => s.prefecture === pref) : allSchools;
+    pref === '東京都'
+      ? allSchools
+      : pref
+      ? allSchools.filter((s) => s.prefecture === pref || s.campuses?.some((c) => c.prefecture === pref))
+      : allSchools;
+  const campusOnlySchoolNos = new Set(
+    pref && pref !== '東京都'
+      ? schools.filter((s) => s.prefecture !== pref).map((s) => s.no)
+      : []
+  );
   const joseiSubsidies = pref ? getFreeschoolSubsidiesByPrefecture(pref) : [];
 
   return (
@@ -63,6 +75,9 @@ export default function TsushinExplorer({
                     <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
                     <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
                       本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
+                      {campusOnlySchoolNos.has(s.no) && pref && (
+                        <>　※本校は{s.prefecture}ですが、{pref}にキャンパス・学習センターがあります</>
+                      )}
                     </div>
                   </Link>
                 ))}
@@ -136,8 +151,11 @@ export default function TsushinExplorer({
           {PREFECTURES.map((p) => {
             // 上のschools算出と同じ理由で、東京都だけ全校を対象とした件数にする
             // （本校所在地で数えると常に0件になり、チップが「選択肢なし」に見えて
-            // しまうため）。
-            const count = p === '東京都' ? allSchools.length : allSchools.filter((s) => s.prefecture === p).length;
+            // しまうため）。東京都以外は本校所在地＋campusesの一致件数（上のschools算出と同じ条件）。
+            const count =
+              p === '東京都'
+                ? allSchools.length
+                : allSchools.filter((s) => s.prefecture === p || s.campuses?.some((c) => c.prefecture === p)).length;
             return (
               <Link
                 key={p}
