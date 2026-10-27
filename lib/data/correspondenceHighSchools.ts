@@ -75,7 +75,7 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 26, prefecture: '埼玉県', municipality: '', name: '志学会高等学校', operator: '学校法人志学会学院', officialUrl: 'https://shigakukai.ed.jp/' , campuses: [{ prefecture: '埼玉県', municipality: 'さいたま市岩槻区' }], campusesIncomplete: true },
   { no: 27, prefecture: '埼玉県', municipality: '', name: '松栄学園高等学校', operator: '学校法人松山学園' },
   { no: 28, prefecture: '埼玉県', municipality: '入間郡越生町', name: '清和学園高等学校', operator: '学校法人一川学園', officialUrl: 'https://www.sgh.ed.jp/', campuses: [] },
-  { no: 29, prefecture: '埼玉県', municipality: '', name: '大川学園高等学校', operator: '学校法人大川学園', officialUrl: 'https://www.ohkawa.ac.jp/' },
+  { no: 29, prefecture: '埼玉県', municipality: '飯能市', name: '大川学園高等学校', operator: '学校法人大川学園', officialUrl: 'https://www.ohkawa.ac.jp/', campuses: [] },
   { no: 30, prefecture: '埼玉県', municipality: '', name: '開智高等学校', operator: '学校法人開智学園', officialUrl: 'https://koutoubu.kaichigakuen.ed.jp/' },
   { no: 31, prefecture: '埼玉県', municipality: '', name: '霞ヶ関高等学校', operator: '学校法人山口学院', officialUrl: 'https://kasumigaseki.ed.jp/' , campuses: [] },
   { no: 32, prefecture: '埼玉県', municipality: '', name: '国際学院高等学校', operator: '学校法人国際学院', officialUrl: 'https://cr.kgef.ac.jp/' , campuses: [] },
