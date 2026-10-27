@@ -41,7 +41,7 @@ const INSTITUTION_FACTS: Record<InstitutionKey, string[]> = {
   ],
   通信制高校: [
     '法律上の正式な「高等学校」。卒業すれば通常の高卒資格が得られる',
-    '公立・私立どちらにも存在する。学校数の最新の数字は変わりうるため、断定が必要な場合はweb検索で確認すること（根拠なく具体的な数字を言い切らない）',
+    '公立・私立どちらにも存在する。学校数の最新の数字は変わりうるため、確認済みの具体的な数字を持っていない場合は言い切らず、「公立・私立どちらにもある」という傾向にとどめること',
     'スクーリング（登校）の頻度・学費・サポート体制は学校ごとに大きく異なる',
   ],
   教育支援センター: [
@@ -57,8 +57,10 @@ export function findMentionedInstitutions(texts: (string | null | undefined)[]):
 }
 
 // AIに渡す「確認済みの制度・施設情報」ブロック。lib/schoolFacts.tsのbuildSchoolFactsBlockと
-// 同じ考え方で、ここに書かれていない項目（最新の学校数など）は断定させず、必要なら
-// web_searchで確認するよう促す。
+// 同じ考え方で、ここに書かれていない項目（最新の学校数など）は断定させない
+// （2026-10-28：web_searchツール自体をコスト対策でaiAnswer.tsから撤去したため、「必要なら
+// web_searchで確認する」という以前の指示は削除し、確認できないことは確認できないと
+// 答える方針に統一した）。
 export function buildInstitutionFactsBlock(keys: InstitutionKey[]): string {
   if (keys.length === 0) return '';
 
@@ -70,6 +72,6 @@ export function buildInstitutionFactsBlock(keys: InstitutionKey[]): string {
   return `
 相談文に、以下の制度・施設についての言及があるようです。それぞれ確認できている事実を示します。
 - 比較・説明の際は、ここに書かれている事実を優先し、特にここで明示的に否定している断定（例：「公立の学校」と言い切ること）はしないこと
-- ここに書かれていない具体的な数字・最新情報（学校数など）が必要な場合は、憶測で断定せず、必要であればweb_searchツールで確認すること
+- ここに書かれていない具体的な数字・最新情報（学校数など）は、確認済みの情報を持っていないため、憶測で断定しないこと
 ${sections.join('\n\n')}`;
 }

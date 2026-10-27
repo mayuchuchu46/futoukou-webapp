@@ -88,11 +88,10 @@ export async function POST(req: NextRequest) {
 
   let answer: string;
   try {
-    // web_search有効化後の出力トークン予算切れ対策（検索結果の分だけ予算を消費し、
-    // 回答本文が尻切れになる不具合）はlib/aiAnswer.tsに集約している
-    // （2026-10-21に600→1500へ増やして対応したが、2026-10-24に「ヒロック初等部」等の
-    // 静的データに載っていない学校名で、検索が長引くとそれでも尻切れになる事例が
-    // 発覚したため、検索なしでの再試行を追加）。
+    // 回答生成の共通処理はlib/aiAnswer.tsに集約している。2026-10-21に追加したweb_search
+    // ツールはコスト対策で2026-10-28に撤去済み（検索結果が入力トークンとして課金され
+    // コストが増加したため）。それに伴い発生していた「検索に予算を取られて回答本文が
+    // 尻切れになる」不具合も解消済みで、以前あった検索なし再試行ロジックは不要になった。
     answer = await generateConsultAnswer(anthropic, prompt);
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'unknown error';
