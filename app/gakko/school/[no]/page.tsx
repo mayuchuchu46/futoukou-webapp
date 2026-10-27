@@ -263,7 +263,7 @@ export default async function GakkoSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `${fullName}（${school.prefecture}${school.city}）`,
+                text: `不登校の子の学び場を探している方へ。「${fullName}」（${school.prefecture}${school.city}）の情報を見つけました。`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,学びの多様化学校',
               })}`}
