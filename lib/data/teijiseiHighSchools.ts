@@ -495,4 +495,93 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 349, prefecture: '京都府', municipality: '南丹市美山町', name: '京都府立北桑田高等学校　美山分校（昼間定時制）', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'attached', parts: '昼間', note: '家政科・農業科。月～木登校、金曜は就業日とし4年間かけて学ぶ' },
   { no: 350, prefecture: '京都府', municipality: '綾部市', name: '京都府立綾部高等学校　由良川キャンパス（東分校）夜間定時制', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'attached', parts: '夜間', note: '普通科。少人数・ティームティーチングによる個別支援' },
   { no: 351, prefecture: '京都府', municipality: '舞鶴市', name: '京都府立東舞鶴高等学校　浮島分校（夜間定時制）', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'attached', parts: '夜間' },
+
+  // ===== 兵庫県（19校） =====
+  // 出典: https://www.hyogo-c.ed.jp/~koko-bo/H30senbatu/H30tabusei.pdf（多部制単位制4校）
+  //       令和6年7月 兵庫県議会文教常任委員会資料 https://web.pref.hyogo.lg.jp/gikai/iinkai/index/joniniinkai/bunkyo/documents/06bunshiryo060716.pdf（定時制設置校19校の確認）
+  //       各校公式サイト・PDF
+  // schoolCategory・curriculumType が資料で確認できなかった学校は、該当フィールドを省略（noteに経緯を記載）
+  { no: 352, prefecture: '兵庫県', municipality: '西宮市', name: '兵庫県立西宮香風高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', schoolCategory: 'standalone', parts: '三部制', curriculumType: '単位制', note: '普通科。多部制単位制。' },
+  { no: 353, prefecture: '兵庫県', municipality: '伊丹市', name: '兵庫県立阪神昆陽高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', schoolCategory: 'standalone', parts: '三部制', curriculumType: '単位制', note: '普通科。多部制単位制。' },
+  { no: 354, prefecture: '兵庫県', municipality: '西脇市', name: '兵庫県立西脇北高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', schoolCategory: 'standalone', parts: '三部制', curriculumType: '単位制', note: '普通科。多部制単位制。' },
+  { no: 355, prefecture: '兵庫県', municipality: '姫路市', name: '兵庫県立飾磨工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', schoolCategory: 'standalone', parts: '三部制', curriculumType: '単位制', note: '工業科。多部制単位制。' },
+  { no: 356, prefecture: '兵庫県', municipality: '神戸市長田区', name: '兵庫県立湊川高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '普通科。夜間定時制。学年制/単位制は資料に明記なし。' },
+  { no: 357, prefecture: '兵庫県', municipality: '三田市', name: '兵庫県立有馬高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '普通科。夜間定時制課程。学年制/単位制は資料に明記なし。' },
+  { no: 358, prefecture: '兵庫県', municipality: '明石市', name: '兵庫県立錦城高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '定時制。学年制/単位制は資料に明記なし。' },
+  { no: 359, prefecture: '兵庫県', municipality: '加古川市', name: '兵庫県立農業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '定時制課程。学年制/単位制は資料に明記なし。' },
+  { no: 360, prefecture: '兵庫県', municipality: '高砂市', name: '兵庫県立松陽高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '定時制課程。学年制/単位制は資料に明記なし。' },
+  { no: 361, prefecture: '兵庫県', municipality: '赤穂市', name: '兵庫県立赤穂高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '定時制課程。学年制と推察されるが資料に明記なし。' },
+  { no: 362, prefecture: '兵庫県', municipality: '豊岡市', name: '兵庫県立豊岡高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '定時制課程。学年制/単位制は資料に明記なし。' },
+  { no: 363, prefecture: '兵庫県', municipality: '洲本市', name: '兵庫県立洲本高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '定時制の課程。学年制/単位制は資料に明記なし。' },
+  { no: 364, prefecture: '兵庫県', name: '兵庫県立姫路北高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', curriculumType: '単位制', note: '普通科。夜間定時制・単位制（県議会資料で確認）。所在市区町村は公式資料で確認できず。' },
+  { no: 365, prefecture: '兵庫県', municipality: '神戸市兵庫区', name: '兵庫県立神戸工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '工業科。定時制。学年制/単位制は資料に明記なし。' },
+  { no: 366, prefecture: '兵庫県', municipality: '尼崎市', name: '兵庫県立神崎工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '工業科。定時制。学年制/単位制は資料に明記なし。' },
+  { no: 367, prefecture: '兵庫県', name: '兵庫県立小野工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '工業科（機械科）。定時制。所在市区町村は公式資料で確認できず。' },
+  { no: 368, prefecture: '兵庫県', municipality: '相生市', name: '兵庫県立相生産業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '工業科。定時制課程。学年制/単位制は資料に明記なし。' },
+  { no: 369, prefecture: '兵庫県', municipality: '神戸市長田区', name: '兵庫県立長田商業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '商業科。定時制課程。学年制/単位制は資料に明記なし。' },
+  { no: 370, prefecture: '兵庫県', municipality: 'たつの市', name: '兵庫県立龍野北高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '商業科。定時制。学年制/単位制は資料に明記なし。' },
+
+  // ===== 三重県（11校） =====
+  // 出典: 三重県教育委員会（各校リンク一覧 https://www.pref.mie.lg.jp/SEISHI/HP/p0013700012.htm）、
+  //       ベネッセ学校情報（czemi.benesse.ne.jp）、school.js88.com、minkou.jp 等
+  { no: 371, prefecture: '三重県', municipality: '桑名市', name: '三重県立桑名高等学校', publicPrivate: '公立', operator: '三重県教育委員会', note: '定時制の学科名・部制・単位制/学年制の区別は公式サイトで未確認' },
+  { no: 372, prefecture: '三重県', municipality: '四日市市', name: '三重県立四日市工業高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制学科は機械交通工学科・住システム工学科（いずれも単位制）。部制の記載なし' },
+  { no: 373, prefecture: '三重県', municipality: '四日市市', name: '三重県立北星高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '夜間部', curriculumType: '単位制', note: '定時制普通科（夜間部・単位制）のほか情報ビジネス科（単位制）、普通科（昼間部）の募集も記載あり（出典に記述の食い違いあり、要公式サイト確認）' },
+  { no: 374, prefecture: '三重県', municipality: '鈴鹿市', name: '三重県立飯野高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
+  { no: 375, prefecture: '三重県', municipality: '津市', name: '三重県立みえ夢学園高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '三部制（昼間部＝午前部・午後部、夜間部）', curriculumType: '単位制', note: '総合学科' },
+  { no: 376, prefecture: '三重県', municipality: '伊賀市', name: '三重県立上野高等学校', publicPrivate: '公立', operator: '三重県教育委員会', note: '定時制の学科・部制・単位制/学年制は未確認' },
+  { no: 377, prefecture: '三重県', municipality: '名張市', name: '三重県立名張高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
+  { no: 378, prefecture: '三重県', municipality: '松阪市', name: '三重県立松阪工業高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
+  { no: 379, prefecture: '三重県', municipality: '伊勢市', name: '三重県立伊勢まなび高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '三部制（昼間部＝午前部・午後部、夜間部）', curriculumType: '単位制', note: '定時制学科はものづくり工学科（単位制）' },
+  { no: 380, prefecture: '三重県', municipality: '尾鷲市', name: '三重県立尾鷲高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
+  { no: 381, prefecture: '三重県', municipality: '熊野市', name: '三重県立熊野青藍高等学校（木本校舎）', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
+
+  // ===== 滋賀県（5校） =====
+  // 出典: 滋賀県教育委員会 確定出願状況資料（平成30・31年度）、各校公式サイト、school.js88.com、minkou.jp
+  { no: 382, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立大津清陵高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', curriculumType: '単位制', note: '普通科。昼間部・通信部は大平1丁目14-1、夜間部は大津市中心部（JR膳所駅付近）。' },
+  { no: 383, prefecture: '滋賀県', municipality: '東近江市', name: '滋賀県立能登川高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', note: '普通科。' },
+  { no: 384, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立瀬田工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '定時制学科は機械・電気科。部制・単位制/学年制は未確認' },
+  { no: 385, prefecture: '滋賀県', municipality: '彦根市', name: '滋賀県立彦根工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '定時制学科は機械科。部制・単位制/学年制は未確認' },
+  { no: 386, prefecture: '滋賀県', municipality: '長浜市', name: '滋賀県立長浜北星高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '総合学科。部制・単位制/学年制は未確認' },
+
+  // ===== 大阪府（19校） =====
+  // 出典: 大阪府公立高等学校入学者選抜実施要項（別表）https://www.pref.osaka.lg.jp/documents/129117/r9_jisshiko.pdf
+  //       守口市教育委員会転載資料 https://www.city.moriguchi.osaka.jp/material/files/group/38/r5jissikou.pdf
+  //       大阪府教育便覧 https://www.pref.osaka.lg.jp/documents/35533/r8_handbook.pdf
+  // 注: エンパワメントスクール（淀川清流・成城・長吉・箕面東・布施北・和泉総合等）は全日制総合学科であり定時制ではない（要項で確認）。
+  //     成城・和泉総合は全日制エンパワメントスクールと別に定時制総合学科も設置しているため、下記に掲載。
+  { no: 387, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '普通科', name: '大阪府立大手前高等学校', note: '定時制の課程' },
+  { no: 388, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '普通科', name: '大阪府立桃谷高等学校', note: '定時制の課程（一般・秋季入学者選抜の両方で実施）。通信制の課程も併置' },
+  { no: 389, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '普通科', name: '大阪府立桜塚高等学校', note: '定時制の課程。学区: 豊能地区' },
+  { no: 390, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '普通科', name: '大阪府立春日丘高等学校', note: '定時制の課程' },
+  { no: 391, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '普通科', name: '大阪府立寝屋川高等学校', note: '定時制の課程。学区: 北河内地区' },
+  { no: 392, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '普通科', name: '大阪府立布施高等学校', note: '定時制の課程。学区: 中河内地区' },
+  { no: 393, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '普通科', name: '大阪府立三国丘高等学校', note: '定時制の課程' },
+  { no: 394, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立都島工業高等学校', note: '定時制総合学科（全日制は工業系専門学科）' },
+  { no: 395, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立西野田工科高等学校', note: '定時制総合学科。令和8年度入学者選抜で生徒募集を行っていない旨の記載あり（教育便覧）。募集停止・統廃合の可能性、要確認。' },
+  { no: 396, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立今宮工科高等学校', note: '定時制総合学科' },
+  { no: 397, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立工芸高等学校', note: '定時制総合学科' },
+  { no: 398, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立茨木工科高等学校', note: '定時制総合学科' },
+  { no: 399, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立藤井寺工科高等学校', note: '定時制総合学科' },
+  { no: 400, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立堺工科高等学校', note: '定時制総合学科' },
+  { no: 401, prefecture: '大阪府', municipality: '泉佐野市', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立佐野工科高等学校', officialUrl: 'https://www.osaka-c.ed.jp/sano-t-p/', note: '定時制総合学科' },
+  { no: 402, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立成城高等学校', note: '定時制総合学科。同校は全日制で総合学科（エンパワメントスクール）も設置' },
+  { no: 403, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立和泉総合高等学校', note: '定時制総合学科。同校は全日制で総合学科（エンパワメントスクール）も設置' },
+  { no: 404, prefecture: '大阪府', municipality: '堺市', publicPrivate: '公立', operator: '堺市教育委員会', schoolCategory: 'attached', curriculumType: '工業に関する学科／マネジメント創造科', name: '堺市立堺高等学校', note: '定時制。学科は工業に関する学科とマネジメント創造科の2系統' },
+  { no: 405, prefecture: '大阪府', municipality: '岸和田市', publicPrivate: '公立', operator: '岸和田市教育委員会', schoolCategory: 'attached', curriculumType: '商業科', name: '岸和田市立産業高等学校', note: '定時制' },
+
+  // ===== 奈良県（3校） =====
+  // 出典: 奈良県教育委員会 https://www.pref.nara.jp/secure/296921/0_Koukou_r6_Mokuji.pdf、
+  //       五條市公式資料 https://www.pref.nara.jp/secure/263408/gojoshi.pdf
+  // 山辺高等学校は目次上「定時制課程」とされるが、学校公式資料では「通信制課程」としか記載されず矛盾があるため、今回は含めない。
+  { no: 406, prefecture: '奈良県', municipality: '奈良市', name: '奈良県立奈良商工高等学校', publicPrivate: '公立', operator: '奈良県教育委員会', officialUrl: 'https://www.pref.nara.jp/secure/296921/0_Koukou_r6_Mokuji.pdf', note: '所在地は全日制と同一住所（奈良市柏木町248）。部制・単位制/学年制の記載は確認できず。' },
+  { no: 407, prefecture: '奈良県', municipality: '橿原市', name: '奈良県立畝傍高等学校', publicPrivate: '公立', operator: '奈良県教育委員会', officialUrl: 'https://www.pref.nara.jp/secure/296921/0_Koukou_r6_Mokuji.pdf', note: '所在地は全日制と同一住所（橿原市八木町3-13-2）。部制・単位制/学年制の記載は確認できず。' },
+  { no: 408, prefecture: '奈良県', municipality: '五條市', name: '五條市立西吉野農業高等学校', publicPrivate: '公立', operator: '五條市教育委員会', parts: '昼間部', officialUrl: 'https://www.pref.nara.jp/secure/263408/gojoshi.pdf', note: '単科（農業科）、修業年限4年。令和3年4月、県立五條高等学校賀名生分校を継承して開校。' },
+
+  // ===== 和歌山県（3校） =====
+  // 出典: 和歌山県教育委員会 令和7・8年度入学者選抜実施状況（07jokyo.pdf, 08jukenjoukyou.pdf）、再編整備計画資料
+  // 粉河高校定時制課程は令和5年度末、海南高校定時制課程は令和6年度末にそれぞれ閉課済みのため、現存校には含めない。
+  { no: 409, prefecture: '和歌山県', municipality: '御坊市', name: '和歌山県立日高高等学校', publicPrivate: '公立', operator: '和歌山県教育委員会', officialUrl: 'https://www.hidaka-h.wakayama-c.ed.jp/tei/data/gakkoannai.pdf', note: '住所は御坊市島45番地。修業年限は4修制・3修制の2種類があり単位修得が卒業要件とされるが「単位制」の呼称自体は確認できず。部制の記載なし。' },
+  { no: 410, prefecture: '和歌山県', name: '和歌山県立耐久高等学校', publicPrivate: '公立', operator: '和歌山県教育委員会', officialUrl: 'https://www.taikyu-h.wakayama-c.ed.jp/schoolpolicy/schoolpolicy.pdf', note: '令和7年度入学者選抜実施状況でも定時制課程が確認できる。市区町村・単位制/学年制・部制は公式資料で確認できず省略。' },
+  { no: 411, prefecture: '和歌山県', name: '和歌山県立新宮高等学校', publicPrivate: '公立', operator: '和歌山県教育委員会', officialUrl: 'https://www.pref.wakayama.lg.jp/prefg/500200/d00216812_d/fil/07jokyo.pdf', note: '始業時間は18:00（新宮高等学校定時制生徒心得より）。市区町村・単位制/学年制・部制は公式資料で確認できず省略。' },
 ];
