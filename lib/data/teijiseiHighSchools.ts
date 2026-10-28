@@ -240,4 +240,34 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 154, prefecture: '福島県', municipality: '会津若松市', name: '会津第二高等学校', publicPrivate: '公立', operator: '福島県教育委員会', schoolCategory: 'standalone', parts: '夜間', officialUrl: 'https://aizu2-h.fcs.ed.jp/', note: '定時制普通科（夜間）。在籍校での修得単位数に応じた編入学年の募集あり。' },
   { no: 155, prefecture: '福島県', municipality: 'いわき市', name: 'いわき翠の杜高等学校', publicPrivate: '公立', operator: '福島県教育委員会', schoolCategory: 'standalone', parts: '夜間主コース・昼間主コース', curriculumType: '単位制', officialUrl: 'https://iwakimidorinomori-h.fcs.ed.jp/', note: '定時制普通科。募集要項に「単位制による」と明記。' },
   { no: 156, prefecture: '福島県', municipality: '福島市', name: '福島工業高等学校', publicPrivate: '公立', operator: '福島県教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'https://fukushima-th.fcs.ed.jp/', note: '定時制（夜間）工業科。修業年限4年だが3年修了制を選択可能。2年次から機械コース・建築コースに分かれる。' },
+
+  // ===== 岩手県（9校） =====
+  // 出典: 令和7年度岩手県立高等学校入学者選抜実施一覧表 https://www.pref.iwate.jp/_res/projects/default_project/_page_/001/069/076/ichiranhyou.pdf
+  //       各校公式サイト（www2.iwate-ed.jp ドメイン）の募集要項PDF
+  { no: 157, prefecture: '岩手県', municipality: '盛岡市', name: '岩手県立杜陵高等学校', publicPrivate: '公立', operator: '岩手県教育委員会', schoolCategory: 'standalone', parts: '3部制（1部・2部・3部）', officialUrl: 'https://www2.iwate-ed.jp/tor-h/', note: '定時制専門校（通信制も併置）' },
+  { no: 158, prefecture: '岩手県', municipality: '奥州市', name: '岩手県立杜陵高等学校奥州校', publicPrivate: '公立', operator: '岩手県教育委員会', schoolCategory: 'attached', parts: '2部制（昼間部・夜間部）', curriculumType: '単位制（年次制）', officialUrl: 'https://www2.iwate-ed.jp/osh-h/', note: '岩手県立杜陵高等学校の校舎（分校）' },
+  { no: 159, prefecture: '岩手県', municipality: '盛岡市', name: '岩手県立盛岡工業高等学校', publicPrivate: '公立', operator: '岩手県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www2.iwate-ed.jp/mot-h/', note: '定時制課程（工業科）に「4年卒業コース」「3年卒業コース」の記載あり' },
+  { no: 160, prefecture: '岩手県', municipality: '一関市', name: '岩手県立一関第一高等学校', publicPrivate: '公立', operator: '岩手県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www2.iwate-ed.jp/ic1-h/', note: '定時制課程は4年制' },
+  { no: 161, prefecture: '岩手県', municipality: '大船渡市', name: '岩手県立大船渡高等学校', publicPrivate: '公立', operator: '岩手県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www2.iwate-ed.jp/ofu-h/' },
+  { no: 162, prefecture: '岩手県', municipality: '釜石市', name: '岩手県立釜石高等学校', publicPrivate: '公立', operator: '岩手県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www2.iwate-ed.jp/kas-h/' },
+  { no: 163, prefecture: '岩手県', municipality: '宮古市', name: '岩手県立宮古高等学校', publicPrivate: '公立', operator: '岩手県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www2.iwate-ed.jp/myh-h/' },
+  { no: 164, prefecture: '岩手県', municipality: '久慈市', name: '岩手県立久慈高等学校長内校', publicPrivate: '公立', operator: '岩手県教育委員会', schoolCategory: 'attached', parts: '2部制（昼間部・夜間部）', officialUrl: 'https://www2.iwate-ed.jp/kuo-h/', note: '入学者選抜一覧表では「久慈長内」と表記' },
+  { no: 165, prefecture: '岩手県', municipality: '二戸市', name: '岩手県立福岡高等学校', publicPrivate: '公立', operator: '岩手県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www2.iwate-ed.jp/fuk-h/' },
+
+  // ===== 宮城県（12校） =====
+  // 出典: https://www.pref.miyagi.jp/site/kyouiku/koukou.html（県立・市立高校一覧）
+  //       県立各校「スクール・ポリシー」PDF（pref.miyagi.jp/documents/65121/b01〜b11.pdf）
+  //       仙台市立「スクール・ポリシー」PDF（city.sendai.jp）
+  { no: 166, prefecture: '宮城県', municipality: '刈田郡七ヶ宿町', name: '宮城県白石高等学校　七ケ宿校', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'attached', officialUrl: 'https://sitika.myswan.ed.jp/', note: '昼間定時制。普通科。3年で卒業できる「3修制」。小規模校、習熟度別学習・学び直し支援あり。' },
+  { no: 167, prefecture: '宮城県', municipality: '仙台市青葉区', name: '宮城県第二工業高等学校', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'standalone', officialUrl: 'https://m2k.myswan.ed.jp/', note: '4年間の夜間定時制課程。電子機械科・電気科。電気科は第三種電気主任技術者認定校。' },
+  { no: 168, prefecture: '宮城県', municipality: '岩沼市', name: '宮城県名取高等学校　定時制', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'attached', officialUrl: 'https://natori-2h.myswan.ed.jp/', note: '夜間4年制の普通科。組織的な教育相談、完全給食制あり。' },
+  { no: 169, prefecture: '宮城県', municipality: '多賀城市', name: '宮城県貞山高等学校', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'standalone', parts: '昼間部・夜間部（二部制）', curriculumType: '単位制', officialUrl: 'https://teizan.myswan.ed.jp/', note: '昼夜間二部制・単位制の普通科。昼間部・夜間部間の併修課程あり。3年での卒業可能。' },
+  { no: 170, prefecture: '宮城県', municipality: '大崎市', name: '宮城県古川工業高等学校　定時制', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'attached', officialUrl: 'https://furuk2-h.myswan.ed.jp/', note: '夜間定時制。機械科・電気科。4年間で80単位修得、4年次に課題研究。' },
+  { no: 171, prefecture: '宮城県', municipality: '大崎市', name: '宮城県田尻さくら高等学校', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部・Ⅱ部', curriculumType: '単位制の多部制定時制', officialUrl: 'https://tajiri-hs.myswan.ed.jp/', note: '普通科にⅠ部・Ⅱ部。選択履修制度による「自分の時間割」。少人数授業によるきめ細かな支援。' },
+  { no: 172, prefecture: '宮城県', municipality: '登米市', name: '宮城県佐沼高等学校　定時制', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'attached', officialUrl: 'https://sanuma-teiji.myswan.ed.jp/', note: '普通科。「働きながら学ぶ定時制」。' },
+  { no: 173, prefecture: '宮城県', municipality: '東松島市', name: '宮城県東松島高等学校', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部・Ⅱ部・Ⅲ部（各部定員40人）', curriculumType: '三部制・単位制', officialUrl: 'https://higashi-matsushima.myswan.ed.jp/', note: '普通科。200を超える授業講座、習熟度別・少人数授業、ICT活用、芸術・福祉科目重視。' },
+  { no: 174, prefecture: '宮城県', municipality: '石巻市', name: '宮城県石巻北高等学校　飯野川校', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'attached', officialUrl: 'https://i13-hama.myswan.ed.jp/', note: '普通科。各年次1クラス計4クラスの小規模校。国語・数学・英語で習熟度別授業、学び直し担当教員配置。' },
+  { no: 175, prefecture: '宮城県', municipality: '気仙沼市', name: '宮城県気仙沼高等学校　定時制', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kesennuma-teiji.myswan.ed.jp/', note: '普通科。三年修業制・定通併修制あり。「学び直し」授業、ICT活用。' },
+  { no: 176, prefecture: '宮城県', municipality: '仙台市宮城野区', name: '仙台市立仙台工業高等学校（定時制課程）', publicPrivate: '公立', operator: '仙台市教育委員会', schoolCategory: 'attached', officialUrl: 'https://sendai-c.ed.jp/~sen2kou/', note: '建築土木科・機械システム科。全日制課程と施設・設備を共用。' },
+  { no: 177, prefecture: '宮城県', municipality: '仙台市宮城野区', name: '仙台市立仙台大志高等学校', publicPrivate: '公立', operator: '仙台市教育委員会', schoolCategory: 'standalone', note: '普通科。進路目標や生活スタイルに応じて生徒自身が時間割を作成する制度あり。習熟度別授業あり。' },
 ];
