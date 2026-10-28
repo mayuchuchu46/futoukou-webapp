@@ -12,7 +12,13 @@ export const CATS: Record<string, { label: string; short: string; cls: string; i
   school: { label: '学校との関係', short: '学校との関係', cls: 'cat-school', icon: '/assets/icon_book.png' },
   will: { label: '本人の意思', short: '本人の意思', cls: 'cat-will', icon: '/assets/icon_bird.png' },
   approach: { label: '関わり方', short: '関わり方', cls: 'cat-approach', icon: '/assets/icon_bell.png' },
-  course: { label: '進路・勉強', short: '進路・勉強', cls: 'cat-course', icon: '/assets/icon_cap.png' },
+  // 元は「進路・勉強」。学校・フリースクール紹介ページの「うちの子に合うか確かめる」
+  // ボタン（app/gakko内の各詳細ページ）から来る「〇〇という学校がうちの子に合うか」
+  // 系の相談は、学校との関係（school＝今通っている学校との関係）でも本人の意思（will）
+  // でもなく、本来ここ（course）に分類されるべき内容だが、「進路・勉強」という名前からは
+  // 「学校選び」の相談だと連想しにくく、AIの自動判定・ユーザーの手動選択の両方で
+  // 紛れやすいとの指摘を受けて改名した（2026-10-28）。
+  course: { label: '進路・学校選び', short: '進路・学校選び', cls: 'cat-course', icon: '/assets/icon_cap.png' },
   // 専用アイコン未用意のため、暫定でicon_book.pngを流用（要差し替え）。Artifact側は絵文字🧩で代用中。
   dev: { label: '発達のこと', short: '発達', cls: 'cat-dev', icon: '/assets/icon_book.png' },
   // 専用アイコン未用意のため、暫定でicon_book.pngを流用（要差し替え）。Artifact側は絵文字🏡で代用中。
@@ -34,7 +40,7 @@ export const CATEGORY_EXAMPLES: Record<Category, string> = {
   school: '例：担任の先生と合わないようで、学校に行きたがらなくなりました…',
   will: '例：「もう学校には行かない」と、本人が自分の意思で言うようになりました…',
   approach: '例：登校を渋る子に、どこまで無理に行かせるべきか声のかけ方に悩んでいます…',
-  course: '例：高校に行くかどうか本人も決めきれず、進路の話をするとふさぎこんでしまいます…',
+  course: '例：フリースクールや通信制高校など、今検討している学校がうちの子に合うか知りたいです。本人もなかなか決めきれずにいます…',
   dev: '例：発達障害の診断を受けている子が、学校の環境に慣れず行きたがらなくなりました…',
   home: '例：子どもの不登校への対応方針が夫婦で合わず、家庭内でどう関わるか揉めています…',
   daily: '例：昼夜逆転してしまい、ゲームばかりで生活リズムが乱れています…',
