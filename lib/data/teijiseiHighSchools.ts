@@ -270,4 +270,67 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 175, prefecture: '宮城県', municipality: '気仙沼市', name: '宮城県気仙沼高等学校　定時制', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kesennuma-teiji.myswan.ed.jp/', note: '普通科。三年修業制・定通併修制あり。「学び直し」授業、ICT活用。' },
   { no: 176, prefecture: '宮城県', municipality: '仙台市宮城野区', name: '仙台市立仙台工業高等学校（定時制課程）', publicPrivate: '公立', operator: '仙台市教育委員会', schoolCategory: 'attached', officialUrl: 'https://sendai-c.ed.jp/~sen2kou/', note: '建築土木科・機械システム科。全日制課程と施設・設備を共用。' },
   { no: 177, prefecture: '宮城県', municipality: '仙台市宮城野区', name: '仙台市立仙台大志高等学校', publicPrivate: '公立', operator: '仙台市教育委員会', schoolCategory: 'standalone', note: '普通科。進路目標や生活スタイルに応じて生徒自身が時間割を作成する制度あり。習熟度別授業あり。' },
+
+  // ===== 北海道（40校） =====
+  // 出典: 北海道教育委員会「定時制・通信制課程のある高校」一覧 https://www.dokyoi.pref.hokkaido.lg.jp/hk/kki/teiji.html（全道一覧の一次ソース）
+  //       各校公式サイト
+  // 大半の校で部制・単位制/学年制は公式サイトから確認できず省略している。市区町村は校名に地名を
+  // 含むもの・公式サイトの住所記載があるものに限り記載（校名からの推測であることをnoteに明記したものを含む）。
+  { no: 178, prefecture: '北海道', municipality: '岩見沢市', name: '北海道岩見沢東高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.iwamizawahigashi.hokkaido-c.ed.jp/' },
+  { no: 179, prefecture: '北海道', municipality: '滝川市', name: '北海道滝川高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.takikawa.hokkaido-c.ed.jp/' },
+  { no: 180, prefecture: '北海道', municipality: '札幌市', name: '北海道札幌東高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.sapporohigashi.hokkaido-c.ed.jp/teiji' },
+  { no: 181, prefecture: '北海道', municipality: '札幌市', name: '北海道札幌南高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.sapporominami.hokkaido-c.ed.jp/' },
+  { no: 182, prefecture: '北海道', municipality: '札幌市', name: '北海道札幌月寒高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.sapporotsukisamu.hokkaido-c.ed.jp/' },
+  { no: 183, prefecture: '北海道', municipality: '札幌市', name: '北海道札幌琴似工業高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.sapporokotonikougyou.hokkaido-c.ed.jp/' },
+  { no: 184, prefecture: '北海道', municipality: '江別市', name: '北海道江別高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.ebetsu.hokkaido-c.ed.jp' },
+  { no: 185, prefecture: '北海道', municipality: '恵庭市', name: '北海道恵庭南高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'http://www.eniwaminami.hokkaido-c.ed.jp/', note: '定時制課程（夜間）普通科' },
+  { no: 186, prefecture: '北海道', municipality: '札幌市', name: '北海道札幌西高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.sapporonishi.hokkaido-c.ed.jp/' },
+  { no: 187, prefecture: '北海道', municipality: '札幌市', name: '北海道札幌北高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', parts: '夜間定時制', nickname: '北定（キタテイ）', officialUrl: 'http://www.sapporokita.hokkaido-c.ed.jp/teiji/', note: '修業年限4年' },
+  { no: 188, prefecture: '北海道', municipality: '札幌市', name: '北海道札幌工業高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.sakko.hokkaido-c.ed.jp/parttime/pindex.html' },
+  { no: 189, prefecture: '北海道', municipality: '札幌市', name: '北海道有朋高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'standalone', parts: '3部制（Ⅰ部・Ⅱ部・Ⅲ部）', curriculumType: '単位制（完全単位制・無学年制）', officialUrl: 'http://www.yuho.hokkaido-c.ed.jp/', note: '定時制と通信制の両課程を設置' },
+  { no: 190, prefecture: '北海道', municipality: '千歳市', name: '北海道千歳高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.chitose.hokkaido-c.ed.jp/menu/teiji/teiji1.html', note: '定時制課程普通科、募集40名（令和8年度）' },
+  { no: 191, prefecture: '北海道', municipality: '札幌市', name: '市立札幌大通高等学校', publicPrivate: '公立', operator: '札幌市教育委員会', schoolCategory: 'standalone', parts: '3部制（午前部・午後部・夜間部）', curriculumType: '単位制', officialUrl: 'http://www.odori-h.sapporo-c.ed.jp/index.html' },
+  { no: 192, prefecture: '北海道', municipality: '小樽市', name: '北海道小樽潮陵高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.otaruchouryou.hokkaido-c.ed.jp/?page_id=18', note: '普通科定時制課程' },
+  { no: 193, prefecture: '北海道', municipality: 'ニセコ町', name: '北海道ニセコ高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'https://niseko-highschool.jp/', note: '市区町村は校名からの判断（公式サイト本文での住所の直接確認はできていない）' },
+  { no: 194, prefecture: '北海道', municipality: '留寿都村', name: '北海道留寿都高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.phoenix-c.or.jp/~rusutu1/', note: '市区町村は校名からの判断（公式サイト本文での住所の直接確認はできていない）' },
+  { no: 195, prefecture: '北海道', municipality: '小樽市', name: '北海道小樽未来創造高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'standalone', curriculumType: '単位制', officialUrl: 'http://www.miraisouzou.hokkaido-c.ed.jp/', note: '公式サイトに「道内唯一の単位制専門高校」と記載' },
+  { no: 196, prefecture: '北海道', municipality: '真狩村', name: '北海道真狩高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.makkari-koukou.server-shared.com/', note: '市区町村は校名からの判断（公式サイト本文での住所の直接確認はできていない）' },
+  { no: 197, prefecture: '北海道', municipality: '室蘭市', name: '北海道室蘭栄高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.muroransakae.hokkaido-c.ed.jp/bank/page/top0.html' },
+  { no: 198, prefecture: '北海道', municipality: '苫小牧市', name: '北海道苫小牧工業高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.tomakou.hokkaido-c.ed.jp/' },
+  { no: 199, prefecture: '北海道', municipality: '苫小牧市', name: '北海道苫小牧東高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.tomahigashi.hokkaido-c.ed.jp/teiji/index02.html' },
+  { no: 200, prefecture: '北海道', name: '北海道日高高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.hokkaido-hidaka-hs.jp/htdocs/', note: '所在市町村は公式ソースで確認できず省略' },
+  { no: 201, prefecture: '北海道', municipality: '函館市', name: '北海道函館中部高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.kanchu.hokkaido-c.ed.jp/' },
+  { no: 202, prefecture: '北海道', municipality: '函館市', name: '北海道函館工業高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.kanko.hokkaido-c.ed.jp/' },
+  { no: 203, prefecture: '北海道', municipality: '函館市', name: '北海道函館商業高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.hakodateshougyou.hokkaido-c.ed.jp/' },
+  { no: 204, prefecture: '北海道', municipality: '旭川市', name: '北海道旭川東高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.ah.hokkaido-c.ed.jp/teiji/', note: '定時制課程' },
+  { no: 205, prefecture: '北海道', municipality: '旭川市', name: '北海道旭川商業高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.kyokusyo.hokkaido-c.ed.jp/teijihp/top/top_school.html' },
+  { no: 206, prefecture: '北海道', municipality: '士別市', name: '北海道士別東高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://academic1.plala.or.jp/seh/', note: '市区町村は校名からの判断（公式サイト本文での住所の直接確認はできていない）' },
+  { no: 207, prefecture: '北海道', municipality: '旭川市', name: '北海道旭川北高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.asahikawakita.hokkaido-c.ed.jp/kitapage/kitateijihomepage1/framepage.htm' },
+  { no: 208, prefecture: '北海道', municipality: '旭川市', name: '北海道旭川工業高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://kyokko.ed.jp/' },
+  { no: 209, prefecture: '北海道', municipality: '幌加内町', name: '北海道幌加内高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.infosnow.ne.jp/horokanai/', note: '市区町村は校名からの判断（公式サイト本文での住所の直接確認はできていない）' },
+  { no: 210, prefecture: '北海道', name: '北海道天売高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.teuri.ed.jp/index.html', note: '天売島に所在するが行政区分（市町村）は公式ソースで確認できず省略' },
+  { no: 211, prefecture: '北海道', municipality: '稚内市', name: '北海道稚内高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.chikou.hokkaido-c.ed.jp/', note: '定時制課程' },
+  { no: 212, prefecture: '北海道', municipality: '北見市', name: '北海道北見北斗高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.kitamihokuto.hokkaido-c.ed.jp/' },
+  { no: 213, prefecture: '北海道', municipality: '遠軽町', name: '北海道遠軽高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.engaru.hokkaido-c.ed.jp/' },
+  { no: 214, prefecture: '北海道', municipality: '網走市', name: '北海道網走南ケ丘高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.abanan.hokkaido-c.ed.jp/' },
+  { no: 215, prefecture: '北海道', municipality: '帯広市', name: '北海道帯広柏葉高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.obihirohakuyou.hokkaido-c.ed.jp/' },
+  { no: 216, prefecture: '北海道', municipality: '釧路市', name: '北海道釧路湖陵高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.koryo946.hokkaido-c.ed.jp/?page_id=22', note: '普通科' },
+  { no: 217, prefecture: '北海道', municipality: '釧路市', name: '北海道釧路工業高等学校', publicPrivate: '公立', operator: '北海道教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.kushiro-th.hokkaido-c.ed.jp/' },
+
+  // ===== 青森県（6校） =====
+  // 出典: https://www.pref.aomori.lg.jp/soshiki/kyoiku/e-gakyo/files/R8teiji_saibojinnin.pdf 他、各校公式サイト
+  { no: 218, prefecture: '青森県', municipality: '青森市', name: '青森県立北斗高等学校', publicPrivate: '公立', operator: '青森県教育委員会', schoolCategory: 'standalone', parts: '午前部・午後部・夜間部（3部制）', curriculumType: '単位制', officialUrl: 'https://www.hokuto-h.asn.ed.jp/', note: '普通科。定時制と通信制を設置する独立校' },
+  { no: 219, prefecture: '青森県', municipality: '平川市', name: '青森県立尾上総合高等学校', publicPrivate: '公立', operator: '青森県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部（昼間）・Ⅱ部（昼間）・Ⅲ部（夜間）の3部制', curriculumType: '単位制', officialUrl: 'https://www.onoe-ih.asn.ed.jp/', note: '総合学科' },
+  { no: 220, prefecture: '青森県', municipality: '八戸市', name: '青森県立八戸中央高等学校', publicPrivate: '公立', operator: '青森県教育委員会', schoolCategory: 'standalone', parts: '午前部・午後部・夜間部（3部制）', curriculumType: '単位制', officialUrl: 'https://www.hachinohechuo-h.asn.ed.jp/', note: '普通科。原級留置なし' },
+  { no: 221, prefecture: '青森県', municipality: '五所川原市', name: '青森県立五所川原高等学校', publicPrivate: '公立', operator: '青森県教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'https://www.goshogawara-h.asn.ed.jp/' },
+  { no: 222, prefecture: '青森県', municipality: '三沢市', name: '青森県立三沢高等学校', publicPrivate: '公立', operator: '青森県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.misawa-h.asn.ed.jp/', note: '全日制（普通科）に併置' },
+  { no: 223, prefecture: '青森県', municipality: 'むつ市', name: '青森県立田名部高等学校', publicPrivate: '公立', operator: '青森県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.tanabu-h.asn.ed.jp/', note: '全日制普通科単位制に併置。定時制は1学級40名（R7入学）' },
+
+  // ===== 山形県（5校） =====
+  // 出典: https://www.pref.yamagata.jp/documents/42443/r08jisshikouichiran.pdf（県立高校一覧表）他
+  { no: 224, prefecture: '山形県', municipality: '山形市', name: '山形県立霞城学園高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部（午前）・Ⅱ部（午後）・Ⅲ部（夜間）の3部制', curriculumType: '単位制', note: '普通科（定時制）。通信制（普通科・服飾科）も併設。全日制は置かず独立校。霞城セントラル内に所在' },
+  { no: 225, prefecture: '山形県', municipality: '新庄市', name: '山形県立新庄志誠館高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '夜間', note: '普通科。全日制に併置。「最北地区唯一の定時制の課程」。2026年4月、新庄北高校と新庄南高校の統合で開校' },
+  { no: 226, prefecture: '山形県', municipality: '米沢市', name: '山形県立米沢鶴城高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '午前', note: '総合学科。全日制（工業科・商業科）に併置。「置賜地区唯一の定時制高校」' },
+  { no: 227, prefecture: '山形県', municipality: '東田川郡庄内町', name: '山形県立庄内総合高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '昼間', note: '総合学科。全日制・通信制と一体的に運営' },
+  { no: 228, prefecture: '山形県', municipality: '酒田市', name: '山形県立酒田西高等学校（定時制）', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', note: '全日制とは別校舎。2012年に酒田商業高校の定時制が統合移管' },
 ];
