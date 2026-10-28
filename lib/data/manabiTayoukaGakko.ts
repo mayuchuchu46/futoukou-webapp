@@ -38,6 +38,16 @@ export type ManabiTayoukaGakko = {
   address: string | null;
   /** 運営法人・愛称・設置場所・開校年月など、Web調査で確認できた固有の補足情報（無ければnull） */
   note: string | null;
+  // スクールカウンセラー・公認心理師・学校心理士・精神保健福祉士・スクールソーシャルワーカー
+  // といった専門職の常駐・配置が、公式サイト・学校案内等の一次情報に明記されている場合のみ
+  // trueにする（correspondenceHighSchools.tsのhasDedicatedMentalCareStaffと同じ基準。
+  // 2026-10-29追加）。「少人数制で手厚くサポート」「心理・社会福祉専門職等のアドバイザー」
+  // のような専門職名を明示しない一般的な表現だけではtrueにしない。推測で立てない。
+  // 現時点では、私立の中学校（または小・中）10校（no.3,4,6,7,8,14,20,23,32,65）のみを
+  // 一次情報で確認した：no.3・6・7・8・14はtrue、no.4・20・23・32は専門職の明記が見つからず
+  // 未確認（フィールド省略）、no.65は公式情報源自体が見つからずnoteと同様に未調査。
+  // 私立以外（公立）および私立の高等学校・小学校は未調査。
+  hasDedicatedMentalCareStaff?: boolean;
 };
 
 export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
@@ -81,7 +91,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "平成17年",
     "officialUrl": "https://www.seisahighschool.ed.jp/jrh/",
     "address": "神奈川県横浜市緑区霧が丘6丁目13番地 〒226-0016",
-    "note": "星槎高等学校の中学部として設置されています。"
+    "note": "星槎高等学校の中学部として設置されています。",
+    "hasDedicatedMentalCareStaff": true
   },
   {
     "no": 4,
@@ -123,7 +134,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "平成24年",
     "officialUrl": "https://seisa-nagoyajh.ed.jp/",
     "address": "愛知県名古屋市中村区名駅南4-6-38 〒450-0003",
-    "note": "学校法人国際学園（星槎グループ）が運営しています。文部科学省資料によれば、多様な個性が生かされる教育を目指し、合理的配慮のデータベース作成やユニバーサルデザイン教育を実践しています。困難さを訓練・改善する発想ではなく、認知特性を生かして力を引き出す学び方を重視しており、不登校と発達障害の関連が深い生徒、二次的障害として不登校になっている生徒、自己肯定感が低い生徒、場面緘黙など多様な特性をもつ生徒を対象として想定しています。"
+    "note": "学校法人国際学園（星槎グループ）が運営しています。文部科学省資料によれば、多様な個性が生かされる教育を目指し、合理的配慮のデータベース作成やユニバーサルデザイン教育を実践しています。困難さを訓練・改善する発想ではなく、認知特性を生かして力を引き出す学び方を重視しており、不登校と発達障害の関連が深い生徒、二次的障害として不登校になっている生徒、自己肯定感が低い生徒、場面緘黙など多様な特性をもつ生徒を対象として想定しています。",
+    "hasDedicatedMentalCareStaff": true
   },
   {
     "no": 7,
@@ -137,7 +149,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "平成26年",
     "officialUrl": "http://seisa.ed.jp/momiji-jh/",
     "address": "北海道札幌市厚別区もみじ台北5丁目12-1 〒004-0014",
-    "note": "学校法人国際学園（星槎グループ）が運営しています。"
+    "note": "学校法人国際学園（星槎グループ）が運営しています。",
+    "hasDedicatedMentalCareStaff": true
   },
   {
     "no": 8,
@@ -151,7 +164,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "平成29年",
     "officialUrl": "https://seino-gakuen.ed.jp",
     "address": "〒501-0706 岐阜県揖斐郡揖斐川町西津汲481-3",
-    "note": "学校法人西濃学園が運営する、西濃学園中学校・高等学校の中学部です。"
+    "note": "学校法人西濃学園が運営する、西濃学園中学校・高等学校の中学部です。",
+    "hasDedicatedMentalCareStaff": true
   },
   {
     "no": 9,
@@ -235,7 +249,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和6年",
     "officialUrl": "https://jhs.sanko.ac.jp/",
     "address": "〒120-0015 東京都足立区足立1丁目13番26号",
-    "note": "学校法人三幸学園が運営しています。建学の精神は「未来ある生徒の生きる力を育み、家族と社会を明るく元気にする」です。「無理なく通えるカリキュラム」を特色とし、様々な業界の専門学校による体験授業や職業理解を深める行事を実施しています。"
+    "note": "学校法人三幸学園が運営しています。建学の精神は「未来ある生徒の生きる力を育み、家族と社会を明るく元気にする」です。「無理なく通えるカリキュラム」を特色とし、様々な業界の専門学校による体験授業や職業理解を深める行事を実施しています。",
+    "hasDedicatedMentalCareStaff": true
   },
   {
     "no": 15,
