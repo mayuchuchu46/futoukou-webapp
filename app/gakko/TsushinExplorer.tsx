@@ -33,12 +33,17 @@ export default function TsushinExplorer({
   // 東京都以外は、本校所在地が一致する学校に加えて、campuses（キャンパス・学習センター）
   // にその都道府県が含まれる学校も対象にする（2026-10-27追加。本校所在地だけで絞り込むと、
   // 実際にその都道府県にキャンパスがある学校を取りこぼすため）。
-  const schools =
+  const filteredSchools =
     pref === '東京都'
       ? allSchools
       : pref
       ? allSchools.filter((s) => s.prefecture === pref || s.campuses?.some((c) => c.prefecture === pref))
       : allSchools;
+  // 不登校生徒への対応・支援内容（note）が確認できている学校を上位に並べる（2026-10-28追加）。
+  // 「ユーザーが知りたいのは支援の充実度」との方針転換を受けて、確認済み情報がある学校を
+  // 埋もれさせないようにするための並び替え。note以外の並び順（都道府県内での順序）は
+  // 元のデータ順のまま変えない（安定ソート）。
+  const schools = [...filteredSchools].sort((a, b) => (b.note ? 1 : 0) - (a.note ? 1 : 0));
   const campusOnlySchoolNos = new Set(
     pref && pref !== '東京都'
       ? schools.filter((s) => s.prefecture !== pref).map((s) => s.no)
@@ -72,13 +77,27 @@ export default function TsushinExplorer({
                     href={`/gakko/tsushin/${s.no}`}
                     style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
                   >
-                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="qtext" style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      {s.name}
+                      {/* 不登校生徒への対応・支援内容（note）が確認できている学校の目印
+                          （2026-10-28追加）。一覧で埋もれないよう、上のソートと合わせて表示する。 */}
+                      {s.note && (
+                        <span className="chip chip-tag" style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px' }}>
+                          支援情報あり
+                        </span>
+                      )}
+                    </div>
                     <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
                       本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
                       {campusOnlySchoolNos.has(s.no) && pref && (
                         <>　※本校は{s.prefecture}ですが、{pref}にキャンパス・学習センターがあります</>
                       )}
                     </div>
+                    {s.note && (
+                      <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+                        {s.note.length > 70 ? `${s.note.slice(0, 70)}…` : s.note}
+                      </div>
+                    )}
                   </Link>
                 ))}
               </div>
