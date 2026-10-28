@@ -333,4 +333,17 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 226, prefecture: '山形県', municipality: '米沢市', name: '山形県立米沢鶴城高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '午前', note: '総合学科。全日制（工業科・商業科）に併置。「置賜地区唯一の定時制高校」' },
   { no: 227, prefecture: '山形県', municipality: '東田川郡庄内町', name: '山形県立庄内総合高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '昼間', note: '総合学科。全日制・通信制と一体的に運営' },
   { no: 228, prefecture: '山形県', municipality: '酒田市', name: '山形県立酒田西高等学校（定時制）', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', note: '全日制とは別校舎。2012年に酒田商業高校の定時制が統合移管' },
+
+  // ===== 新潟県（9校） =====
+  // 出典: 新潟県教育委員会告示第１号（令和8年3月17日付）、公立高等学校入学者選抜実施要綱（令和6・7年県報）
+  //       各校公式サイト（nein.ed.jp ドメイン）
+  { no: 229, prefecture: '新潟県', municipality: '村上市', name: '新潟県立荒川高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'standalone', parts: '午前部', curriculumType: '単位制', note: '全日制は確認できず、定時制のみ' },
+  { no: 230, prefecture: '新潟県', municipality: '新発田市', name: '新潟県立西新発田高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'standalone', parts: '午前部', curriculumType: '単位制', officialUrl: 'https://nishishibata-h.nein.ed.jp/' },
+  { no: 231, prefecture: '新潟県', municipality: '新潟市西区', name: '新潟県立新潟翠江高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'standalone', parts: '午前部', curriculumType: '単位制', officialUrl: 'https://niigatasuikou-h.nein.ed.jp/', note: '全日制なし。定時制（単位制）と通信制課程のみを置く学校' },
+  { no: 232, prefecture: '新潟県', municipality: '長岡市', name: '新潟県立長岡明徳高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'standalone', parts: '午前部・夜間部', curriculumType: '単位制', officialUrl: 'https://nagaokameitoku-h.nein.ed.jp/', note: '定時制課程のみ（全日制の記載なし）' },
+  { no: 233, prefecture: '新潟県', municipality: '三島郡出雲崎町', name: '新潟県立出雲崎高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'standalone', parts: '午前部', curriculumType: '単位制', note: '全日制なし' },
+  { no: 234, prefecture: '新潟県', municipality: '魚沼市', name: '新潟県立堀之内高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'standalone', parts: '午前部', curriculumType: '単位制', officialUrl: 'https://horinouchi-h.nein.ed.jp/', note: '全日制の記載なし（定時制課程のみ掲載）' },
+  { no: 235, prefecture: '新潟県', municipality: '十日町市', name: '新潟県立十日町高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'attached', note: '全日制と定時制を併設。部制・単位制/学年制は県資料に記載なし' },
+  { no: 236, prefecture: '新潟県', municipality: '上越市', name: '新潟県立高田南城高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'standalone', parts: '午前部', curriculumType: '単位制', officialUrl: 'https://takadammsr-h.nein.ed.jp/', note: '全日制なし。定時制（単位制）と通信制課程を置く学校' },
+  { no: 237, prefecture: '新潟県', municipality: '佐渡市', name: '新潟県立佐渡高等学校　相川分校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'attached', parts: '午前部', curriculumType: '単位制', note: '本校（佐渡高等学校、全日制・学年制）の分校' },
 ];
