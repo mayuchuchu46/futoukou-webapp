@@ -644,4 +644,26 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 449, prefecture: '広島県', municipality: '廿日市市', name: '広島県立廿日市高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
   { no: 450, prefecture: '広島県', municipality: '廿日市市', name: '広島県立宮島工業高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '機械科（技能連携を含む）。' },
   { no: 451, prefecture: '広島県', municipality: '広島市中区', name: '広島市立広島みらい創生高等学校', publicPrivate: '公立', operator: '広島市教育委員会', schoolCategory: 'standalone', curriculumType: '単位制（学年の区分なし）', note: '定時制は「平日登校コース」、通信制は「通信教育コース」。学科はキャリアデザイン科。授業料は定時制1単位につき1,740円。' },
+
+  // ===== 愛媛県（4校） =====
+  // 出典: 各校公式サイト（esnet.ed.jpドメイン）、愛媛県教育委員会 地区別募集定員計画PDF(R5) https://ehime-c.esnet.ed.jp/koukou/shinkou/shiryou/R5chikubetu.pdf
+  // 注: 定時制設置校を網羅した公式一覧PDFには到達できず、個別学校サイトでの確認に依拠。今治・新居浜・宇和島等に他の設置校がないかは未確認。
+  { no: 452, prefecture: '愛媛県', municipality: '松山市', name: '愛媛県立松山工業高等学校定時制', publicPrivate: '公立', operator: '愛媛県教育委員会', schoolCategory: 'attached', officialUrl: 'https://matsuyama-th-pt.esnet.ed.jp/', note: '学科は機械科・建築科。授業開始は17:40から。4年間での卒業が基本。' },
+  { no: 453, prefecture: '愛媛県', municipality: '八幡浜市', name: '愛媛県立八幡浜高等学校定時制', publicPrivate: '公立', operator: '愛媛県教育委員会', schoolCategory: 'attached', officialUrl: 'https://yawatahama-h-pt.esnet.ed.jp/', note: '学科は普通科（入学定員40名）。時間割は17:00〜21:05（夜間のみ）。沿革上「昼間部」が設けられた時期があったが後に廃止。' },
+  { no: 454, prefecture: '愛媛県', municipality: '西条市', name: '愛媛県立西条高等学校定時制', publicPrivate: '公立', operator: '愛媛県教育委員会', schoolCategory: 'attached', note: '学科は普通科。所在地：西条市明屋敷234番地。' },
+  { no: 455, prefecture: '愛媛県', municipality: '大洲市', name: '愛媛県立大洲高等学校肱川分校', publicPrivate: '公立', operator: '愛媛県教育委員会', schoolCategory: 'attached', parts: '昼間定時制', note: '本校は愛媛県立大洲高等学校。学科は普通（昼間）、募集定員1学級40名。所在地：大洲市肱川町宇和川3395。' },
+
+  // ===== 高知県（10校） =====
+  // 出典: 高知県教育委員会 入学定員PDF(R4) https://www.pref.kochi.lg.jp/doc/r4_koukouyushi_main/file_contents/r4_koukouteiinn.pdf
+  // 注: 所在市町村・部制・単位制区分は資料に記載なく省略。「高知工業」「高知東」等は記述が曖昧なため今回は含めず。
+  { no: 456, prefecture: '高知県', name: '高知県立室戸高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
+  { no: 457, prefecture: '高知県', name: '高知県立山田高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
+  { no: 458, prefecture: '高知県', name: '高知県立高知東工業高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・工業科（機械／電気／土木／建築）、各学科入学定員40名（成人特別選抜は機械科4名、他学科各20名）。' },
+  { no: 459, prefecture: '高知県', name: '高知県立高岡高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜8名）。' },
+  { no: 460, prefecture: '高知県', name: '高知県立須崎総合高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
+  { no: 461, prefecture: '高知県', name: '高知県立佐川高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜8名）。' },
+  { no: 462, prefecture: '高知県', name: '高知県立大方高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
+  { no: 463, prefecture: '高知県', name: '高知県立宿毛高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
+  { no: 464, prefecture: '高知県', name: '高知県立清水高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
+  { no: 465, prefecture: '高知県', name: '高知県立高知商業高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・商業科、入学定員40名（うち成人特別選抜4名）。' },
 ];
