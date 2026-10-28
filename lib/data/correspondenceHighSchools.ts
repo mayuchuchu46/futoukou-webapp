@@ -48,11 +48,11 @@ export type CorrespondenceHighSchool = {
   // 相談員の配置・通学頻度の柔軟性・転入実績等の固有情報のみを記載する。推測・一般論で
   // 埋めることはせず、確認できなかった学校はnoteを付けない（undefinedのまま）。
   // 調査進捗ログ（2026-10-28）：no.1から順に調査を開始。
-  // note追加：no.1,2,5,9,22,45,67,71,76,78,105,112。
+  // note追加：no.1,2,5,9,22,23,45,67,71,76,78,105,112（13校分）。
   // 検索・公式資料を確認したが不登校特化の具体的事実が見つからなかったもの：no.3,4,6,7,8,10,
-  // 16,17,21,90,99,107,108。
-  // 上記以外（no.11〜21の一部, 23〜44, 46〜66, 68〜75, 77, 79〜104, 106, 109〜111, 113〜115）は
-  // 未調査または未反映。続きはno.11から再開するとよい。
+  // 11,12,13,14,15,16,17,18,19,20,21,24,33,36,37,38,39,90,99,107,108,110。
+  // 上記以外（no.25〜32, 34,35, 40〜44, 46〜66, 68〜70, 72〜75, 77, 79〜98, 100〜104, 106, 109,
+  // 111, 113〜115）は未調査。続きはno.25から再開するとよい。
   note?: string;
 };
 
@@ -83,7 +83,7 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 20, prefecture: '茨城県', municipality: '', name: '四谷学院高等学校', operator: '学校法人四谷学院', officialUrl: 'https://ygh.ed.jp/', campuses: [{ prefecture: '東京都', municipality: '新宿区' }, { prefecture: '大阪府', municipality: '大阪市北区' }, { prefecture: '愛知県', municipality: '名古屋市中村区' }] },
   { no: 21, prefecture: '茨城県', municipality: '高萩市', name: '第一学院高等学校高萩校', operator: '株式会社ウィザス', officialUrl: 'https://www.daiichigakuin.ed.jp/campus/takahagi/' , campuses: [{ prefecture: '兵庫県', municipality: '養父市' }, { prefecture: '北海道', municipality: '札幌市北区' }, { prefecture: '秋田県', municipality: '秋田市' }, { prefecture: '岩手県', municipality: '盛岡市' }, { prefecture: '宮城県', municipality: '仙台市青葉区' }, { prefecture: '福島県', municipality: '郡山市' }, { prefecture: '栃木県', municipality: '宇都宮市' }, { prefecture: '茨城県', municipality: '水戸市' }, { prefecture: '群馬県', municipality: '高崎市' }, { prefecture: '埼玉県', municipality: 'さいたま市大宮区' }, { prefecture: '千葉県', municipality: '千葉市中央区' }, { prefecture: '東京都', municipality: '千代田区' }, { prefecture: '東京都', municipality: '立川市' }, { prefecture: '神奈川県', municipality: '横浜市神奈川区' }, { prefecture: '新潟県', municipality: '新潟市中央区' }, { prefecture: '長野県', municipality: '長野市' }, { prefecture: '富山県', municipality: '富山市' }, { prefecture: '石川県', municipality: '金沢市' }, { prefecture: '山梨県', municipality: '甲府市' }, { prefecture: '静岡県', municipality: '静岡市葵区' }, { prefecture: '愛知県', municipality: '名古屋市東区' }, { prefecture: '岐阜県', municipality: '岐阜市' }, { prefecture: '三重県', municipality: '四日市市' }, { prefecture: '京都府', municipality: '京都市下京区' }, { prefecture: '奈良県', municipality: '奈良市' }, { prefecture: '大阪府', municipality: '大阪市北区' }, { prefecture: '兵庫県', municipality: '神戸市中央区' }, { prefecture: '岡山県', municipality: '岡山市北区' }, { prefecture: '愛媛県', municipality: '松山市' }, { prefecture: '福岡県', municipality: '福岡市博多区' }, { prefecture: '熊本県', municipality: '熊本市中央区' }], campusesIncomplete: true },
   { no: 22, prefecture: '茨城県', municipality: '大子町', name: 'ルネサンス高等学校', operator: 'ブロードメディア株式会社', note: '年4日程度の登校（スクーリング）で卒業できる通信制高校で、「時間と場所にとらわれることなく」オンライン中心に学習を進められる独自のオンライン学習ツールを使用している。転校の場合は在籍期間や修得単位を引き継げるため、同級生と同じタイミングで卒業できる可能性がある。', officialUrl: 'https://www.r-ac.jp/', campuses: [{ prefecture: '茨城県', municipality: '水戸市' }, { prefecture: '東京都', municipality: '豊島区' }, { prefecture: '東京都', municipality: '渋谷区' }, { prefecture: '神奈川県', municipality: '横浜市神奈川区' }], campusesIncomplete: true },
-  { no: 23, prefecture: '栃木県', municipality: '', name: '日々輝学園高等学校', operator: '学校法人開桜学院', officialUrl: 'https://www.hibiki-gakuen.ed.jp/', campuses: [{ prefecture: '埼玉県', municipality: '入間市' }, { prefecture: '神奈川県', municipality: '綾瀬市' }, { prefecture: '神奈川県', municipality: '横浜市都筑区' }, { prefecture: '栃木県', municipality: '宇都宮市' }, { prefecture: '埼玉県', municipality: 'さいたま市大宮区' }], campusesIncomplete: true },
+  { no: 23, prefecture: '栃木県', municipality: '', name: '日々輝学園高等学校', operator: '学校法人開桜学院', note: '学校自身が「不登校や学力不振に悩む生徒を積極的に受け入れてきました」と説明しており、通信制高校としては珍しく全日制スタイルを中心とした校舎体制をとる。少人数制授業によるきめ細かな学習指導とメンタルサポートに取り組んでおり、塩谷町の学校農園・体験学習館（開桜館）での体験学習も特色としている。', officialUrl: 'https://www.hibiki-gakuen.ed.jp/', campuses: [{ prefecture: '埼玉県', municipality: '入間市' }, { prefecture: '神奈川県', municipality: '綾瀬市' }, { prefecture: '神奈川県', municipality: '横浜市都筑区' }, { prefecture: '栃木県', municipality: '宇都宮市' }, { prefecture: '埼玉県', municipality: 'さいたま市大宮区' }], campusesIncomplete: true },
   { no: 24, prefecture: '群馬県', municipality: '', name: 'R高等学校', operator: '学校法人角川ドワンゴ学園', officialUrl: 'https://nnn.ed.jp/campus/r_high_school/', campuses: [{ prefecture: '愛知県', municipality: '名古屋市' }], campusesIncomplete: true },
   { no: 25, prefecture: '埼玉県', municipality: '越谷市', name: '武蔵野星城高等学校', operator: '学校法人小池学園', campuses: [] },
   { no: 26, prefecture: '埼玉県', municipality: '', name: '志学会高等学校', operator: '学校法人志学会学院', officialUrl: 'https://shigakukai.ed.jp/' , campuses: [{ prefecture: '埼玉県', municipality: 'さいたま市岩槻区' }], campusesIncomplete: true },
