@@ -611,4 +611,37 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 423, prefecture: '山口県', name: '山口県立宇部中央高等学校', publicPrivate: '公立', operator: '山口県教育委員会', note: '定時制課程・普通科、入学定員40人。部制・所在市区町村・本校/分校の区別は資料上確認できず。' },
   { no: 424, prefecture: '山口県', municipality: '山陽小野田市', name: '山口県立小野田工業高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制課程・機械科、修業年限3年または4年、入学定員40人。' },
   { no: 425, prefecture: '山口県', name: '山口県立下関双葉高等学校', publicPrivate: '公立', operator: '山口県教育委員会', parts: '昼間部・夜間部', note: '定時制課程・学科名は資料上「総合」と表記（総合学科と推定されるが正式表記の確証なし）。入学定員は昼間部40人・夜間部40人。所在市区町村・本校/分校の区別は資料上確認できず。' },
+
+  // ===== 岡山県（11校） =====
+  // 出典: 岡山県教育委員会 令和7年度 入学定員資料 https://www.pref.okayama.jp/uploaded/life/1054590_10218886_misc.pdf
+  { no: 426, prefecture: '岡山県', name: '岡山県立烏城高等学校', publicPrivate: '公立', operator: '岡山県教育委員会', note: '普通科。R7募集定員140人。' },
+  { no: 427, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立精思高等学校', publicPrivate: '公立', operator: '倉敷市教育委員会', note: '普通科。R7募集定員80人。' },
+  { no: 428, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立精思高等学校霞丘校', publicPrivate: '公立', operator: '倉敷市教育委員会', note: '普通科・商業科。精思高等学校の分校。' },
+  { no: 429, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立工業高等学校', publicPrivate: '公立', operator: '倉敷市教育委員会', note: '機械科・電気科。R7募集定員120人。' },
+  { no: 430, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立倉敷翔南高等学校', publicPrivate: '公立', operator: '倉敷市教育委員会', curriculumType: '単位制', note: '総合学科。R7募集定員120人。' },
+  { no: 431, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立真備陵南高等学校', publicPrivate: '公立', operator: '倉敷市教育委員会', note: '普通科。R7募集定員80人。' },
+  { no: 432, prefecture: '岡山県', municipality: '玉野市', name: '玉野市立玉野備南高等学校', publicPrivate: '公立', operator: '玉野市教育委員会', note: '普通科。R7募集定員40人。' },
+  { no: 433, prefecture: '岡山県', municipality: '井原市', name: '井原市立高等学校', publicPrivate: '公立', operator: '井原市教育委員会', note: '普通科。R7募集定員80人。' },
+  { no: 434, prefecture: '岡山県', municipality: '高梁市', name: '高梁市立松山高等学校', publicPrivate: '公立', operator: '高梁市教育委員会', note: '普通科。R7募集定員40人。' },
+  { no: 435, prefecture: '岡山県', municipality: '高梁市', name: '高梁市立宇治高等学校', publicPrivate: '公立', operator: '高梁市教育委員会', note: '普通科。R7募集定員40人。' },
+  { no: 436, prefecture: '岡山県', municipality: '備前市', name: '備前市立片上高等学校', publicPrivate: '公立', operator: '備前市教育委員会', note: '普通科。R7募集定員40人。' },
+
+  // ===== 広島県（15校） =====
+  // 出典: 広島県教育委員会 令和6年度 入学定員資料 https://www.pref.hiroshima.lg.jp/uploaded/attachment/548698.pdf
+  //       広島市教育委員会 学校一覧 https://www.city.hiroshima.lg.jp/site/education/16733.html
+  { no: 437, prefecture: '広島県', municipality: '広島市安佐北区', name: '広島県立可部高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 438, prefecture: '広島県', municipality: '呉市', name: '広島県立呉工業高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '機械科（技能連携を含む）・電気科。' },
+  { no: 439, prefecture: '広島県', municipality: '三原市', name: '広島県立三原高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '午前部・夜間部', note: '普通科。' },
+  { no: 440, prefecture: '広島県', municipality: '尾道市', name: '広島県立尾道南高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 441, prefecture: '広島県', municipality: '尾道市（因島）', name: '広島県立因島高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 442, prefecture: '広島県', municipality: '福山市', name: '広島県立福山誠之館高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 443, prefecture: '広島県', municipality: '福山市', name: '広島県立葦陽高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '午前部', note: '普通科。' },
+  { no: 444, prefecture: '広島県', municipality: '福山市', name: '広島県立松永高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 445, prefecture: '広島県', municipality: '福山市', name: '広島県立福山工業高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '機械科（技能連携を含む）・電気科。' },
+  { no: 446, prefecture: '広島県', municipality: '福山市', name: '広島県立芦品まなび学園高等学校', publicPrivate: '公立', operator: '広島県教育委員会', schoolCategory: 'standalone', parts: '三部制（午前部・午後部・夜間部）', curriculumType: '単位制', note: '普通科のみ。所在地は福山市新市町戸手1330。定時制単独の三部制・単位制高校。' },
+  { no: 447, prefecture: '広島県', municipality: '三次市', name: '広島県立三次高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 448, prefecture: '広島県', municipality: '東広島市', name: '広島県立賀茂高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 449, prefecture: '広島県', municipality: '廿日市市', name: '広島県立廿日市高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 450, prefecture: '広島県', municipality: '廿日市市', name: '広島県立宮島工業高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '機械科（技能連携を含む）。' },
+  { no: 451, prefecture: '広島県', municipality: '広島市中区', name: '広島市立広島みらい創生高等学校', publicPrivate: '公立', operator: '広島市教育委員会', schoolCategory: 'standalone', curriculumType: '単位制（学年の区分なし）', note: '定時制は「平日登校コース」、通信制は「通信教育コース」。学科はキャリアデザイン科。授業料は定時制1単位につき1,740円。' },
 ];
