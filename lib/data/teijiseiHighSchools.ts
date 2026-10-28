@@ -374,4 +374,30 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 254, prefecture: '福井県', municipality: '敦賀市', name: '敦賀高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
   { no: 255, prefecture: '福井県', municipality: '小浜市', name: '若狭高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
   { no: 256, prefecture: '福井県', municipality: '福井市', name: '道守高等学校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'standalone', parts: '午前部・午後部・夜間部', note: '定時制・通信制の独立校。募集人員（定時制）110名（午前40・午後40・夜間30）。1971年、定時制・通信制教育のモデル校として開校' },
+
+  // ===== 静岡県（21校） =====
+  // 出典: 静岡県教育委員会公式サイト（各校の定時制課程ページ）
+  //       https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/031/855/nanateiji.pdf（定時制所在地一覧）
+  //       https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/031/399/r7gakkoumeibo_kakutei.pdf（静岡県立学校名簿）
+  { no: 257, prefecture: '静岡県', municipality: '下田市', name: '静岡県立下田高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 258, prefecture: '静岡県', municipality: '伊東市', name: '静岡県立伊豆伊東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 259, prefecture: '静岡県', municipality: '三島市', name: '静岡県立三島長陵高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3部制（1部・2部・3部、午前・午後・夜間）', curriculumType: '単位制' },
+  { no: 260, prefecture: '静岡県', municipality: '駿東郡小山町', name: '静岡県立小山高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制' },
+  { no: 261, prefecture: '静岡県', municipality: '沼津市', name: '静岡県立沼津工業高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', note: '工業' },
+  { no: 262, prefecture: '静岡県', municipality: '富士市', name: '静岡県立富士高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制' },
+  { no: 263, prefecture: '静岡県', municipality: '富士宮市', name: '静岡県立富士宮東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 264, prefecture: '静岡県', municipality: '静岡市清水区', name: '静岡県立清水東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 265, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立静岡高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間' },
+  { no: 266, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立科学技術高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', note: '工業' },
+  { no: 267, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立静岡中央高等学校（定時制）', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3コース制（aコース=午前、bコース=午後、cコース=夜間）', curriculumType: '単位制（学年のない単位制）' },
+  { no: 268, prefecture: '静岡県', municipality: '島田市', name: '静岡県立島田商業高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制', note: '商業。令和6年度以降の生徒募集を停止し、志太榛原地域の再編統合校へ移行中' },
+  { no: 269, prefecture: '静岡県', municipality: '島田市', name: '静岡県立ふじのくに国際高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', note: '普通科' },
+  { no: 270, prefecture: '静岡県', municipality: '藤枝市', name: '静岡県立藤枝東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 271, prefecture: '静岡県', municipality: '牧之原市', name: '静岡県立榛原高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 272, prefecture: '静岡県', municipality: '磐田市', name: '静岡県立磐田南高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 273, prefecture: '静岡県', municipality: '浜松市中区', name: '静岡県立浜松北高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 274, prefecture: '静岡県', municipality: '浜松市西区', name: '静岡県立浜松大平台高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3部制（朝・昼・夜）', curriculumType: '単位制', note: '普通科' },
+  { no: 275, prefecture: '静岡県', municipality: '浜松市北区', name: '静岡県立浜松工業高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 276, prefecture: '静岡県', municipality: '浜松市浜北区', name: '静岡県立浜名高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 277, prefecture: '静岡県', municipality: '湖西市', name: '静岡県立新居高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', curriculumType: '学年制' },
 ];
