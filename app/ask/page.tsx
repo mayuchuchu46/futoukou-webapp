@@ -308,11 +308,40 @@ function AskPageContent() {
     }).catch(() => {});
   }
 
+  // テーマは「毎回AIが勝手に選ぶ」ものにしたいとの要望を受けて追加（2026-10-28）。
+  // 以前は、入力が落ち着いてから1.2秒後に自動判定するuseEffect頼みだったため、
+  // 相談文を書き終えてすぐ送信ボタンを押すと判定が間に合わず、category===''のまま
+  // 送信ボタンがdisabledになり、結局ユーザー自身がテーマを手動選択する必要があった
+  // （「毎回勝手に選んでほしい」＝手動選択を要求したくない、という趣旨）。
+  // 送信時点でまだテーマが決まっていなければ、ここで直接判定APIを呼んで確定させる。
+  // 判定自体に失敗した場合（レート制限・AI側エラー等）も、相談の送信自体は止めたくない
+  // ため、「その他」にフォールバックする。
+  async function resolveCategory(): Promise<Category> {
+    if (category) return category;
+    try {
+      const res = await fetch('/api/classify-category', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text.trim(), author_id: getUid() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.category) {
+        setCategory(data.category as Category);
+        return data.category as Category;
+      }
+    } catch {
+      // 失敗時は下のフォールバックへ。
+    }
+    setCategory('other');
+    return 'other';
+  }
+
   async function submit() {
-    if (!text.trim() || !category) return;
+    if (!text.trim()) return;
     ensureConsentRecorded();
     setSubmitting(true);
     setError('');
+    const resolvedCategory = await resolveCategory();
     // AIの回答生成が通常より時間がかかった場合（AI側の混雑・サーバー関数のタイムアウト等）に、
     // fetchがエラーにも成功にもならずハングし続け、送信ボタンがグレーアウトしたまま
     // 押せなくなる不具合への対応（2026-10-18、「たまに押せなくなる。戻ってくると
@@ -326,7 +355,7 @@ function AskPageContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          category,
+          category: resolvedCategory,
           text,
           author_id: getUid(),
           grade: grade || null,
@@ -368,10 +397,13 @@ function AskPageContent() {
   }
 
   async function submitToExpert() {
-    if (!text.trim() || !category) return;
+    if (!text.trim()) return;
     ensureConsentRecorded();
     setExpertSubmitting(true);
     setError('');
+    // submit()と同じ理由で、テーマ未確定ならここで確定させる（resolveCategoryの
+    // コメント参照、2026-10-28）。
+    const resolvedCategory = await resolveCategory();
     // submit()と同じ理由（ハングしたまま固まる不具合対策）でタイムアウトを設ける（2026-10-18）。
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), ASK_TIMEOUT_MS);
@@ -380,7 +412,7 @@ function AskPageContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          category,
+          category: resolvedCategory,
           text,
           author_id: getUid(),
           grade: grade || null,
@@ -560,7 +592,7 @@ function AskPageContent() {
           ）。
         </div>
 
-        <button className="btn-primary" disabled={!text.trim() || !category || submitting || expertSubmitting} onClick={submit}>
+        <button className="btn-primary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submit}>
           {submitting ? 'どうする先生が考えています…' : 'どうする先生に相談する（無料・AIが回答）'}
         </button>
         {/* 待ち時間の目安を出すことで、「固まった？」と思ってタブを閉じる離脱を防ぐ
@@ -607,7 +639,7 @@ function AskPageContent() {
                   </>
                 )}
               </div>
-              <button className="btn-secondary" disabled={!text.trim() || !category || submitting || expertSubmitting} onClick={submitToExpert}>
+              <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
                 {expertSubmitting
                   ? '送信中…'
                   : freeQuestionAvailable
