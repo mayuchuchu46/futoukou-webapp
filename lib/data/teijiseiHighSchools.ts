@@ -444,4 +444,43 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 308, prefecture: '岐阜県', name: '岐阜県立飛騨高山高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', officialUrl: 'https://school.gifu-net.ed.jp/htakayama-hs/', note: '普通科。通信制も併設。所在地・単位制/学年制は未確認' },
   { no: 309, prefecture: '岐阜県', municipality: '関市', name: '関市立関商工高等学校', publicPrivate: '公立', operator: '関市教育委員会', schoolCategory: 'standalone', officialUrl: 'https://school.gifu-net.ed.jp/seki-hs/', note: '機械科。単位制/学年制は未確認' },
   { no: 310, prefecture: '岐阜県', municipality: '中津川市', name: '中津川市立阿木高等学校', publicPrivate: '公立', operator: '中津川市教育委員会', schoolCategory: 'standalone', note: '生産科学・総合生活。所在地・単位制/学年制は未確認' },
+
+  // ===== 愛知県（33校） =====
+  // 出典: 愛知県公立高等学校入学者選抜（令和9年度/2027年度）定時制・通信制実施要項 https://www.pref.aichi.jp/uploaded/attachment/630112.pdf
+  //       「フレキシブルハイスクール」紹介ページ https://www.pref.aichi.jp/soshiki/aichi-manabi/flexible-highschool.html
+  //       各校公式サイト（*.aichi-c.ed.jp ドメイン）
+  { no: 311, prefecture: '愛知県', municipality: '名古屋市北区', name: '城北つばさ高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'standalone', parts: '二部制（昼間部・夜間部）', curriculumType: '単位制', note: '昼間部=普通科120名、夜間部=ものづくり科40名。平成29年開校' },
+  { no: 312, prefecture: '愛知県', municipality: '愛西市', name: '愛知県立佐屋高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '昼間部', note: 'フレキシブルハイスクール（全日制・昼間定時制・通信制を併置）。昼間定時制=普通科。令和7年度（2025年4月）開設' },
+  { no: 313, prefecture: '愛知県', municipality: '知多郡武豊町', name: '愛知県立武豊高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '昼間部', curriculumType: '単位制', note: 'フレキシブルハイスクール。普通科。月～金、3限目から毎日4時間授業。令和7年度（2025年4月）開設' },
+  { no: 314, prefecture: '愛知県', municipality: '豊田市', name: '愛知県立豊野高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '昼間部', note: 'フレキシブルハイスクール。令和7年度（2025年4月）開設' },
+  { no: 315, prefecture: '愛知県', municipality: '豊川市', name: '愛知県立御津あおば高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '昼間部', curriculumType: '単位制', note: '普通科。令和5年4月に県立御津高等学校から校名変更し、全日制単位制に昼間定時制課程を併置' },
+  { no: 316, prefecture: '愛知県', municipality: '一宮市', name: '愛知県立一宮起工科高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '昼間部', note: '普通科、募集80名' },
+  { no: 317, prefecture: '愛知県', municipality: '刈谷市', name: '愛知県立刈谷東高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '二部制（昼間部・夜間部）', note: '昼間部=普通科、夜間部=機械科（募集40名）' },
+  { no: 318, prefecture: '愛知県', municipality: '名古屋市東区', name: '愛知県立明和高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '夜間定時制=普通科' },
+  { no: 319, prefecture: '愛知県', municipality: '名古屋市西区', name: '愛知県立名古屋西高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '夜間定時制=普通科' },
+  { no: 320, prefecture: '愛知県', municipality: '東海市', name: '愛知県立横須賀高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '夜間定時制=普通科。授業は17:40～20:55' },
+  { no: 321, prefecture: '愛知県', municipality: '一宮市', name: '愛知県立一宮高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '夜間定時制=普通科（4年制・3年制コースあり）' },
+  { no: 322, prefecture: '愛知県', municipality: '瀬戸市', name: '愛知県立瀬戸工科高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '夜間定時制=総合ビジネス科' },
+  { no: 323, prefecture: '愛知県', municipality: '半田市', name: '愛知県立半田商業高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '夜間定時制=総合ビジネス科' },
+  { no: 324, prefecture: '愛知県', municipality: '蒲郡市', name: '愛知県立蒲郡高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '夜間定時制=普通科。授業時間17:15～21:30' },
+  // 以下19校は入学者選抜実施要項（令和9年度）で学校名・学科は確認できたが、市区町村は公式資料で裏付けが取れず省略
+  { no: 325, prefecture: '愛知県', name: '愛知県立熱田高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 326, prefecture: '愛知県', name: '愛知県立名古屋工科高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '機械科。旧・愛知工業高等学校' },
+  { no: 327, prefecture: '愛知県', name: '愛知県立春日井高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 328, prefecture: '愛知県', name: '愛知県立犬山高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 329, prefecture: '愛知県', name: '愛知県立古知野高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 330, prefecture: '愛知県', name: '愛知県立小牧高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 331, prefecture: '愛知県', name: '愛知県立津島高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 332, prefecture: '愛知県', name: '愛知県立大府高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 333, prefecture: '愛知県', name: '愛知県立豊田西高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 334, prefecture: '愛知県', name: '愛知県立豊田工科高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '機械科。旧・豊田工業高等学校' },
+  { no: 335, prefecture: '愛知県', name: '愛知県立岡崎高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 336, prefecture: '愛知県', name: '愛知県立岡崎工科高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '機械科。旧・岡崎工業高等学校' },
+  { no: 337, prefecture: '愛知県', name: '愛知県立碧南高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 338, prefecture: '愛知県', name: '愛知県立安城高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 339, prefecture: '愛知県', name: '愛知県立一色高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '普通科' },
+  { no: 340, prefecture: '愛知県', name: '愛知県立豊橋工科高等学校', publicPrivate: '公立', operator: '愛知県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '機械科。旧・豊橋工業高等学校' },
+  { no: 341, prefecture: '愛知県', name: '名古屋市立中央高等学校', publicPrivate: '公立', operator: '名古屋市教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '普通科・商業科' },
+  { no: 342, prefecture: '愛知県', municipality: '豊橋市', name: '豊橋市立豊橋高等学校', publicPrivate: '公立', operator: '豊橋市教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '普通科' },
+  { no: 343, prefecture: '愛知県', name: '名古屋市立工業高等学校', publicPrivate: '公立', operator: '名古屋市教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '複数学科' },
 ];
