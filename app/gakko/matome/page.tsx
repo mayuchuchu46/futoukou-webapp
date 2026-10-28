@@ -252,11 +252,19 @@ export default async function GakkoMatomePage({
                         href={`/gakko/tsushin/${s.no}`}
                         style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
                       >
-                        <div className="qtext" style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div className="qtext" style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                           {s.name}
                           {s.note && (
                             <span className="chip chip-tag" style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px' }}>
                               支援情報あり
+                            </span>
+                          )}
+                          {s.hasDedicatedMentalCareStaff && (
+                            <span
+                              className="muted"
+                              style={{ fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 4, border: '1px solid var(--border)', color: 'var(--orange-text)' }}
+                            >
+                              心のケア専門職常駐
                             </span>
                           )}
                         </div>
@@ -277,6 +285,9 @@ export default async function GakkoMatomePage({
             )}
             <Link href="/gakko?type=tsushin" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
               通信制高校（広域）のページへ ›
+            </Link>
+            <Link href="/gakko/tsushin/kokoro-care" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              心のケア専門職が常駐する学校だけを見る ›
             </Link>
           </div>
         </details>

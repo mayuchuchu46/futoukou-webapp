@@ -77,13 +77,21 @@ export default function TsushinExplorer({
                     href={`/gakko/tsushin/${s.no}`}
                     style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
                   >
-                    <div className="qtext" style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div className="qtext" style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                       {s.name}
                       {/* 不登校生徒への対応・支援内容（note）が確認できている学校の目印
                           （2026-10-28追加）。一覧で埋もれないよう、上のソートと合わせて表示する。 */}
                       {s.note && (
                         <span className="chip chip-tag" style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px' }}>
                           支援情報あり
+                        </span>
+                      )}
+                      {s.hasDedicatedMentalCareStaff && (
+                        <span
+                          className="muted"
+                          style={{ fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 4, border: '1px solid var(--border)', color: 'var(--orange-text)' }}
+                        >
+                          心のケア専門職常駐
                         </span>
                       )}
                     </div>
@@ -112,6 +120,9 @@ export default function TsushinExplorer({
           >
             出典を見る ›
           </a>
+          <Link href="/gakko/tsushin/kokoro-care" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+            心のケア専門職が常駐する学校だけを見る ›
+          </Link>
         </div>
       )}
 
