@@ -50,7 +50,8 @@ export type CorrespondenceHighSchool = {
   // 調査進捗ログ（2026-10-28）：no.1から順に調査を開始。3巡目はcampuses（キャンパス数）が
   // 多い＝規模が大きい学校を優先し、officialUrlのドメインを起点にプレスリリース等を
   // 探す方式に変更。
-  // note追加：no.1,2,5,9,22,23,45,51,67,71,74,76,78,95,102,105,111,112,115（19校分）。
+  // note追加：no.1,2,5,9,22,23,43,45,51,67,71,74,76,78,95,102,105,111,112,115（20校分。
+  // no.43はユーザーからの個別の「もっと情報ほしい」という指摘を受けて2026-10-29に調査）。
   // 検索・公式資料を確認したが不登校特化の具体的事実が見つからなかったもの：no.3,4,6,7,8,10,
   // 11,12,13,14,15,16,17,18,19,20,21,24,26,33,36,37,38,39,50,54,56,58,63,64,72,73,75,77,79,
   // 81,82,85,90,91,92,93,94,97,98,99,100,101,103,104,106,107,108,109,110,113。
@@ -60,7 +61,7 @@ export type CorrespondenceHighSchool = {
   // あまり改善しなかった（1巡目41校中13校→2巡目25校中2校→3巡目18校中4校）。有効だった
   // ソースは学校自身のプレスリリース（resemom.jp等で配信）で、サポート校・提携先の
   // プレスリリースに本校名が言及されているケース（no.51,111等）も見つかった。
-  // 上記以外（no.25,27〜32,34,35,40〜44,46〜49,52,53,55,57,59〜62,65,66,68〜70,80,83,84,
+  // 上記以外（no.25,27〜32,34,35,40〜42,44,46〜49,52,53,55,57,59〜62,65,66,68〜70,80,83,84,
   // 86〜89,96,114）は未調査。続きはno.25から再開するとよい。
   note?: string;
   // スクールカウンセラー・公認心理師・学校心理士・精神保健福祉士・スクールソーシャルワーカー
@@ -120,7 +121,7 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 40, prefecture: '千葉県', municipality: '', name: '中山学園高等学校', operator: '学校法人中山学園', officialUrl: 'https://nakayama-gakuen.ac.jp/ngh/' },
   { no: 41, prefecture: '千葉県', municipality: '', name: '敬愛大学八日市場高等学校', operator: '学校法人長戸路学園', officialUrl: 'https://keiai8.ed.jp/' , hasDedicatedMentalCareStaff: true},
   { no: 42, prefecture: '千葉県', municipality: '', name: '鴨川令徳高等学校', operator: '学校法人令徳学園', officialUrl: 'https://reitoku.ed.jp/' , campuses: [] },
-  { no: 43, prefecture: '千葉県', municipality: '', name: '麗澤高等学校', operator: '学校法人廣池学園', officialUrl: 'https://www.hs.reitaku.jp/' },
+  { no: 43, prefecture: '千葉県', municipality: '柏市', name: '麗澤高等学校', operator: '学校法人廣池学園', officialUrl: 'https://www.hs.reitaku.jp/stm/', note: '千葉県・東京都在住者のみ入学できる狭域通信制で、学習拠点は千葉県柏市（麗澤大学生涯教育プラザ内）。進学コースと特別進学コースの2コース制で、進学コースはレポート・スクーリング・テストを組み合わせ、生活リズムを整えながら学べる。1学年の募集定員は50名の小規模校で、自習室・フリースペース・個人学習スペースがあり、担任・副担任を含む教職員が生徒一人ひとりに寄り添う方針をとる。「心の相談室」を設けているが、詳細は学校へ直接確認が必要。' },
   { no: 44, prefecture: '千葉県', municipality: '', name: '千葉科学大学附属高等学校', operator: '学校法人大城学園', officialUrl: 'https://www.cis.ac.jp/cish/index.html' },
   { no: 45, prefecture: '千葉県', municipality: '', name: 'ヒューマンキャンパスのぞみ高等学校', operator: '学校法人佐藤学園', note: '同じ学校法人佐藤学園が運営する姉妹校（ヒューマンキャンパス高等学校）の学校情報の公表資料では、教育目標として「学校に通えない時期があった生徒や進路変更をした生徒が、自分の将来を見つめ直せる教育」を掲げ、カリキュラム・ポリシーで「不登校や学力不振、進路変更に悩む生徒の受入れを第一」とすると明記されている。入学年次にかかわらず各教科の基礎学力を身につけられる編成としている。', officialUrl: 'https://www.hchs.ed.jp/' , campuses: [{ prefecture: '宮城県', municipality: '仙台市' }, { prefecture: '愛知県', municipality: '名古屋市' }, { prefecture: '広島県', municipality: '広島市' }, { prefecture: '福岡県', municipality: '福岡市' }, { prefecture: '香川県', municipality: '高松市' }, { prefecture: '鹿児島県', municipality: '鹿児島市' }, { prefecture: '埼玉県', municipality: 'さいたま市' }, { prefecture: '高知県', municipality: '高知市' }, { prefecture: '熊本県', municipality: '熊本市' }, { prefecture: '大阪府', municipality: '大阪市' }, { prefecture: '東京都', municipality: '千代田区' }, { prefecture: '栃木県', municipality: '宇都宮市' }, { prefecture: '東京都', municipality: '立川市' }, { prefecture: '福岡県', municipality: '北九州市' }, { prefecture: '沖縄県', municipality: '那覇市' }, { prefecture: '千葉県', municipality: '柏市' }, { prefecture: '静岡県', municipality: '浜松市' }, { prefecture: '三重県', municipality: '四日市市' }, { prefecture: '広島県', municipality: '福山市' }, { prefecture: '岡山県', municipality: '岡山市' }, { prefecture: '宮崎県', municipality: '宮崎市' }] , hasDedicatedMentalCareStaff: true},
   { no: 46, prefecture: '千葉県', municipality: '勝浦市', name: '成美学園高等學校', operator: '株式会社勝浦成美', officialUrl: 'https://k-seibi.ed.jp/' },
