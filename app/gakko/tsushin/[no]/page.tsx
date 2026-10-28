@@ -86,6 +86,13 @@ export default async function TsushinSchoolPage({
   // （学びの多様化学校の詳細ページで、住所未確認の学校に使っているのと同じ考え方）。
   const mapQuery = `${school.name} ${school.prefecture}${school.municipality}`;
   const schoolUrl = `${SITE_URL}/gakko/tsushin/${school.no}`;
+  // Xでのシェア文にnoteの抜粋も添える（app/gakko/school/[no]/page.tsxと同じ考え方、
+  // 2026-10-29追加）。
+  const shareNoteExcerpt = school.note
+    ? school.note.length > 50
+      ? `${school.note.slice(0, 50)}…`
+      : school.note
+    : '';
 
   // 構造化データ（schema.org/School）。公式サイトURLが確認できている学校のみ出力
   // （noindexページには出力しない、他カテゴリのschoolページと同じ方針）。
@@ -246,7 +253,7 @@ export default async function TsushinSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `不登校の進路に。通信制高校「${school.name}」（本校：${school.prefecture}${school.municipality}）`,
+                text: `不登校の進路に。通信制高校「${school.name}」（本校：${school.prefecture}${school.municipality}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,通信制高校',
               })}`}

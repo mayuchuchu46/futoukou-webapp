@@ -80,6 +80,9 @@ export default async function OnlineSchoolPage({
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(school.name)}`;
   const schoolUrl = `${SITE_URL}/gakko/online/${school.no}`;
+  // Xでのシェア文にnoteの抜粋も添える（app/gakko/school/[no]/page.tsxと同じ考え方、
+  // 2026-10-29追加）。ONLINE_FREE_SCHOOLSのnoteは必須項目（string）なので常に入る。
+  const shareNoteExcerpt = school.note.length > 50 ? `${school.note.slice(0, 50)}…` : school.note;
 
   // 構造化データ（schema.org/EducationalOrganization）。全件index対象のため全件出力。
   const jsonLd = {
@@ -165,7 +168,7 @@ export default async function OnlineSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `不登校でも自宅から参加できる。オンラインフリースクール「${school.name}」`,
+                text: `不登校でも自宅から参加できる。オンラインフリースクール「${school.name}」\n${shareNoteExcerpt}`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,オンラインフリースクール',
               })}`}

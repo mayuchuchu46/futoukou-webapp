@@ -80,6 +80,13 @@ export default async function FreeSchoolPage({
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(school.name + ' ' + school.city)}`;
   const mapQuery = school.address || `${school.name} ${school.prefecture}${school.city}`;
   const schoolUrl = `${SITE_URL}/gakko/free/${school.no}`;
+  // Xでのシェア文にnoteの抜粋も添える（app/gakko/school/[no]/page.tsxと同じ考え方、
+  // 2026-10-29追加）。
+  const shareNoteExcerpt = school.note
+    ? school.note.length > 50
+      ? `${school.note.slice(0, 50)}…`
+      : school.note
+    : '';
 
   // 構造化データ（schema.org/EducationalOrganization）。住所または公式サイトが
   // 確認できている施設のみ出力（noindexページには出力しない、schoolページと同じ方針）。
@@ -206,7 +213,7 @@ export default async function FreeSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `不登校の居場所に。フリースクール「${school.name}」（${school.prefecture}${school.city}）`,
+                text: `不登校の居場所に。フリースクール「${school.name}」（${school.prefecture}${school.city}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,フリースクール',
               })}`}

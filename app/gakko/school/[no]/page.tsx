@@ -106,6 +106,15 @@ export default async function GakkoSchoolPage({
   // 市区町村でマップ検索する（架空の住所を作ることはしない）。
   const mapQuery = school.address || `${fullName} ${school.prefecture}${school.city}`;
   const schoolUrl = `${SITE_URL}/gakko/school/${school.no}`;
+  // Xでのシェア文に、学校名・所在地だけでなく、noteがあればその学校固有の特徴も
+  // 一言添える（2026-10-29、「それぞれのスクールの特徴とか情報入れたテキストで
+  // シェアしたい」との指摘を受けて追加）。長すぎるとツイート全体が読みにくくなる
+  // ため、opengraph-image.tsxと同じ考え方で50文字に切り詰める。
+  const shareNoteExcerpt = school.note
+    ? school.note.length > 50
+      ? `${school.note.slice(0, 50)}…`
+      : school.note
+    : '';
   // 構造化データ（schema.org/School）。app/result/[id]/page.tsxのQAPage用jsonLdと
   // 同じ方式（<script type="application/ld+json">）。「SEO的にどう？」との質問を
   // 受けて追加（2026-10-18）。officialUrl・addressのどちらも確認できていない学校
@@ -263,7 +272,7 @@ export default async function GakkoSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `不登校の学び場に。「${fullName}」（${school.prefecture}${school.city}）`,
+                text: `不登校の学び場に。「${fullName}」（${school.prefecture}${school.city}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,学びの多様化学校',
               })}`}
