@@ -46,7 +46,9 @@ export default function NewsPage() {
                 {item.date || item.addedAt}
                 {CATEGORY_LABEL[item.category] ? `・${CATEGORY_LABEL[item.category]}` : ''}
               </div>
-              <div className="answer-label" style={{ fontSize: 15 }}>{item.title}</div>
+              <Link href={`/news/${item.id}`} className="answer-label" style={{ fontSize: 15, textDecoration: 'none', color: 'inherit' }}>
+                {item.title}
+              </Link>
               <div className="qtext">{item.summary}</div>
 
               {/* 記事中の数値比較を簡単なバーグラフで表示（2026-10-29追加）。

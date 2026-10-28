@@ -29,6 +29,12 @@ export type NewsItem = {
   // 受けて）。数値はsummary・出典で確認できた事実のみを入れる（推測で作らない）。
   // 2〜3項目程度の単純な比較を想定（app/today/page.tsxの集計バーと同じ見た目で表示）。
   stats?: { label: string; value: number; unit: string }[];
+  // 記事の中で一番インパクトのある数字（2026-10-29追加、「わかりやすいインパクトある
+  // 数字を見せつつ、バズりを意識した画像がいい」との要望を受けて）。個別記事ページ
+  // （/news/[id]）とそのシェア用OGP画像で、大きな文字で見せる「見出し数字」として使う。
+  // valueは記事・出典で確認できた数字（または、その数字から機械的に計算できる比率）
+  // のみとし、推測で作った数字は入れない。
+  headline?: { value: string; label: string };
 };
 
 export const NEWS_ITEMS: NewsItem[] = [
@@ -46,6 +52,7 @@ export const NEWS_ITEMS: NewsItem[] = [
       { label: '小学生', value: 5.7, unit: '%' },
       { label: '中学生', value: 19.9, unit: '%' },
     ],
+    headline: { value: '19.9%', label: '不登校の中学生が、学校健診を全科目受診できていない' },
   },
   {
     id: 'hattatsu-shogai-futoko-ritsu-2026-09',
@@ -61,5 +68,8 @@ export const NEWS_ITEMS: NewsItem[] = [
       { label: '全体平均', value: 3.71, unit: '%' },
       { label: '発達障害の指摘がある子ども', value: 13.26, unit: '%' },
     ],
+    // 13.26% ÷ 3.71% ≈ 3.57倍（出典記事で確認できた2つの数値からの単純な割り算。
+    // 出典記事の表現「3倍以上」より具体的だが、推測ではなく確認済みの数字の計算）。
+    headline: { value: '約3.6倍', label: '発達障害の指摘がある子どもの不登校割合は、全体平均の約3.6倍' },
   },
 ];

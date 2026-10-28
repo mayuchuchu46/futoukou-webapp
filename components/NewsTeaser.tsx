@@ -13,7 +13,7 @@ export default function NewsTeaser() {
   const titleLabel = latest.title.length > 32 ? `${latest.title.slice(0, 32)}…` : latest.title;
 
   return (
-    <Link href="/news" className="expertbanner expertbanner-today">
+    <Link href={`/news/${latest.id}`} className="expertbanner expertbanner-today">
       <span className="expertbanner-icon" aria-hidden="true" style={{ fontSize: 18, lineHeight: 1 }}>📰</span>
       <div className="expertbanner-body">
         <div className="expertbanner-title">{titleLabel}</div>

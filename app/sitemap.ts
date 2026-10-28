@@ -10,6 +10,7 @@ import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchool
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { PREFECTURES } from '@/lib/data/prefectures';
+import { NEWS_ITEMS } from '@/lib/data/news';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -168,6 +169,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.3,
   }));
 
+  // ニュース個別記事ページ（/news/[id]）。2026-10-29追加。
+  const newsEntries: MetadataRoute.Sitemap = NEWS_ITEMS.map((n) => ({
+    url: `${SITE_URL}/news/${n.id}`,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
   return [
     ...staticEntries,
     ...dictionaryEntries,
@@ -177,6 +185,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...onlineSchoolEntries,
     ...tsushinSchoolEntries,
     ...teijiSchoolEntries,
+    ...newsEntries,
     ...consultationEntries,
   ];
 }
