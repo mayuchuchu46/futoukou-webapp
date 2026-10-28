@@ -179,6 +179,9 @@ export default function SchoolTypeExplorer({
               })}
             </div>
           )}
+          <Link href="/gakko/manabi/kokoro-care" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+            心のケア専門職が常駐する学校だけを見る ›
+          </Link>
         </div>
       )}
 

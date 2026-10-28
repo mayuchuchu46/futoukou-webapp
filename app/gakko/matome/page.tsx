@@ -174,6 +174,9 @@ export default async function GakkoMatomePage({
             <Link href="/gakko" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
               学びの多様化学校のページへ ›
             </Link>
+            <Link href="/gakko/manabi/kokoro-care" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              心のケア専門職が常駐する学校だけを見る ›
+            </Link>
           </div>
         </details>
       ),
