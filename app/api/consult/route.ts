@@ -5,6 +5,7 @@ import { buildPrompt, buildOneLinerPrompt, PastConsultation } from '@/lib/prompt
 import { generateConsultAnswer } from '@/lib/aiAnswer';
 import { findMentionedSchool, buildSchoolFactsBlock } from '@/lib/schoolFacts';
 import { findMentionedInstitutions, buildInstitutionFactsBlock } from '@/lib/institutionFacts';
+import { findMentionedCorrespondenceSchool, buildCorrespondenceSchoolFactsBlock } from '@/lib/facilityLinkMatch';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -65,12 +66,23 @@ export async function POST(req: NextRequest) {
   const mentionedSchool = findMentionedSchool([text]);
   const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
 
+  // 通信制高校一覧に載っている学校名についても同様に確認済み情報を渡す
+  // （lib/facilityLinkMatch.ts参照、2026-10-28追加。それまではfindMentionedCorrespondenceSchool
+  // の結果を内部リンク表示にしか使っておらず、noteに確認済み情報がある学校について相談しても
+  // 「確認できる情報を持っていません」という回答になってしまっていた）。
+  const mentionedCorrespondenceSchool = findMentionedCorrespondenceSchool([text]);
+  const correspondenceSchoolFactsBlock = mentionedCorrespondenceSchool
+    ? buildCorrespondenceSchoolFactsBlock(mentionedCorrespondenceSchool)
+    : undefined;
+
   // 学校名が出てこない一般論の質問（例：「学びの多様化学校ってフリースクールと
   // 何が違うの？」）でも、制度・施設そのものについての確認済み情報を渡す
   // （lib/institutionFacts.ts参照、2026-10-21追加）。
   const mentionedInstitutions = findMentionedInstitutions([text]);
   const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-  const factsBlock = [schoolFactsBlock, institutionFactsBlock].filter(Boolean).join('\n');
+  const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, institutionFactsBlock]
+    .filter(Boolean)
+    .join('\n');
 
   const prompt = buildPrompt(
     category,

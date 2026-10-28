@@ -6,6 +6,7 @@ import { buildPrompt, buildFollowupPrompt } from '@/lib/prompt';
 import { generateConsultAnswer } from '@/lib/aiAnswer';
 import { findMentionedSchool, buildSchoolFactsBlock } from '@/lib/schoolFacts';
 import { findMentionedInstitutions, buildInstitutionFactsBlock } from '@/lib/institutionFacts';
+import { findMentionedCorrespondenceSchool, buildCorrespondenceSchoolFactsBlock } from '@/lib/facilityLinkMatch';
 
 // 無料AI相談（request_type='ai'）のAI回答を、現在のプロンプト設定（文字数の目安など）で
 // 作り直すための管理者向けエンドポイント。プロンプトを調整したあと、既存の投稿
@@ -60,9 +61,15 @@ export async function POST(req: NextRequest) {
     }
     const mentionedSchool = findMentionedSchool([parent.question, row.question]);
     const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
+    const mentionedCorrespondenceSchool = findMentionedCorrespondenceSchool([parent.question, row.question]);
+    const correspondenceSchoolFactsBlock = mentionedCorrespondenceSchool
+      ? buildCorrespondenceSchoolFactsBlock(mentionedCorrespondenceSchool)
+      : undefined;
     const mentionedInstitutions = findMentionedInstitutions([parent.question, parent.answer, row.question]);
     const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-    const factsBlock = [schoolFactsBlock, institutionFactsBlock].filter(Boolean).join('\n');
+    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, institutionFactsBlock]
+      .filter(Boolean)
+      .join('\n');
     prompt = buildFollowupPrompt(
       row.category,
       parent.question,
@@ -80,9 +87,15 @@ export async function POST(req: NextRequest) {
     // （lib/institutionFacts.ts参照、2026-10-21追加）。
     const mentionedSchool = findMentionedSchool([row.question]);
     const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
+    const mentionedCorrespondenceSchool = findMentionedCorrespondenceSchool([row.question]);
+    const correspondenceSchoolFactsBlock = mentionedCorrespondenceSchool
+      ? buildCorrespondenceSchoolFactsBlock(mentionedCorrespondenceSchool)
+      : undefined;
     const mentionedInstitutions = findMentionedInstitutions([row.question]);
     const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-    const factsBlock = [schoolFactsBlock, institutionFactsBlock].filter(Boolean).join('\n');
+    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, institutionFactsBlock]
+      .filter(Boolean)
+      .join('\n');
     prompt = buildPrompt(
       row.category,
       row.question,

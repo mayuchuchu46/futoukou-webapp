@@ -5,6 +5,7 @@ import { buildFollowupPrompt } from '@/lib/prompt';
 import { generateConsultAnswer } from '@/lib/aiAnswer';
 import { findMentionedSchool, buildSchoolFactsBlock } from '@/lib/schoolFacts';
 import { findMentionedInstitutions, buildInstitutionFactsBlock } from '@/lib/institutionFacts';
+import { findMentionedCorrespondenceSchool, buildCorrespondenceSchoolFactsBlock } from '@/lib/facilityLinkMatch';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -56,6 +57,12 @@ export async function POST(req: NextRequest) {
   const mentionedSchool = findMentionedSchool([parent.question, text]);
   const schoolFactsBlock = mentionedSchool ? buildSchoolFactsBlock(mentionedSchool) : undefined;
 
+  // 通信制高校についても同様（lib/facilityLinkMatch.ts参照、2026-10-28追加）。
+  const mentionedCorrespondenceSchool = findMentionedCorrespondenceSchool([parent.question, text]);
+  const correspondenceSchoolFactsBlock = mentionedCorrespondenceSchool
+    ? buildCorrespondenceSchoolFactsBlock(mentionedCorrespondenceSchool)
+    : undefined;
+
   // 返信（ラリー）では、今回の発言単体ではなく元の相談も含めた会話全体から
   // 制度・施設への言及を検出する（lib/institutionFacts.ts参照、2026-10-21追加。
   // 「学びの多様化学校が合うタイプと合わないタイプ」という親の相談への返信
@@ -63,7 +70,9 @@ export async function POST(req: NextRequest) {
   // 分からないケースがあるため）。
   const mentionedInstitutions = findMentionedInstitutions([parent.question, parent.answer, text]);
   const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-  const factsBlock = [schoolFactsBlock, institutionFactsBlock].filter(Boolean).join('\n');
+  const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, institutionFactsBlock]
+    .filter(Boolean)
+    .join('\n');
 
   const prompt = buildFollowupPrompt(
     parent.category,
