@@ -12,7 +12,6 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import SchoolConsultations from './SchoolConsultations';
 import SchoolFitCard from './SchoolFitCard';
-
 // 学びの多様化学校、1校ごとの紹介ページ。一覧（/gakko）の学校名を押すとここに来る
 // （2026-10-18、「学校名を押したらその学校の紹介ページに行くようにできる？」との
 // 指摘を受けて追加）。

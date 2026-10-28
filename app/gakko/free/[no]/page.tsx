@@ -11,7 +11,6 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import { Suspense } from 'react';
-
 // フリースクール（地域）、1件ごとの紹介ページ。一覧（/gakko?type=free）の施設名を
 // 押すとここに来る（2026-10-21、「学びの多様化学校と同じ仕組みでフリースクールも
 // 詳細ページにつなげたい」との要望を受けて、app/gakko/school/[no]/page.tsxと

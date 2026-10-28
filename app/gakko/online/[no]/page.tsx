@@ -11,7 +11,6 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import { Suspense } from 'react';
-
 // オンラインフリースクール、1校ごとの紹介ページ（2026-10-21追加）。
 //
 // これまでオンラインフリースクールだけは、一覧（/gakko?type=online・/gakko/matome）の

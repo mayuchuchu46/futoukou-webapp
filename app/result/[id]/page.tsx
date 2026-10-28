@@ -27,6 +27,7 @@ import TagChips from '@/components/TagChips';
 import { SEARCH_TAG_CANDIDATES, matchesThemeText, getThemeDisplayLabel } from '@/lib/searchTags';
 import { findMentionedSchool } from '@/lib/schoolFacts';
 import { findMentionedFreeSchool, findMentionedCorrespondenceSchool, findMentionedOnlineFreeSchool } from '@/lib/facilityLinkMatch';
+import { stripSchoolAskBoilerplate } from '@/lib/schoolAskPrefill';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -100,7 +101,18 @@ export async function generateMetadata({
   }
 
   const cat = CATS[item.category]?.label || CATS.other.label;
-  const questionTitle = item.question.replace(/\s+/g, ' ').trim().slice(0, 48);
+  // 学校詳細ページの「相談する」ボタンは「「◯◯学校」がうちの子に合うかどうか
+  // 知りたいです。子どもの特徴：（…）」という定型文をprefillする（lib/schoolAskPrefill.ts
+  // 参照）。この定型文部分だけで48文字近くに達するため、そのまま先頭48文字を使うと、
+  // 同じ学校に複数の保護者が相談するたびに、実際に書き足した内容（本来ページごとに
+  // 差が出るはずの部分）が削られ、title・descriptionがほぼ同一文になってしまっていた
+  // （2026-10-29、「聞き方が毎回同じだとSEO的によくない？」との指摘を受けて修正）。
+  // 定型文部分を取り除き、保護者が実際に書いた内容を優先してtitle・descriptionに使う。
+  const questionForMeta = stripSchoolAskBoilerplate(item.question);
+  // 学校の相談は冒頭の「「◯◯学校」がうちの子に合うかどうか知りたいです。」だけで
+  // 30文字前後を使うため、そのあとに保護者が書き足した内容が入る余地を残せるよう、
+  // 通常の48文字よりやや長めに取る（2026-10-29）。
+  const questionTitle = questionForMeta.replace(/\s+/g, ' ').trim().slice(0, 64);
   const title = `${questionTitle}｜${cat}の相談 - ${SITE_NAME}`;
 
   // 以前はAI回答のあるページだけdescSourceに回答本文を使っていたが、Xでシェアした際の
@@ -108,7 +120,7 @@ export async function generateMetadata({
   // 回答ではなく質問をシェアするパターンにしたい（答えは見せず続きを気にさせたい）」
   // というこのページ自体の設計意図（下のshareButtonのtext組み立て部分のコメント参照）と
   // 食い違っていた（2026-10-19、指摘を受けて修正）。常に質問文を使うようにする。
-  const description = item.question.replace(/\s+/g, ' ').trim().slice(0, 100);
+  const description = questionForMeta.replace(/\s+/g, ' ').trim().slice(0, 100);
 
   const url = `${SITE_URL}/result/${item.id}`;
 
