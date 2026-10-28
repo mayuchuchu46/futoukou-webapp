@@ -18,6 +18,7 @@ import {
 } from '@/lib/data/correspondenceHighSchools';
 import { FREESCHOOL_SUBSIDIES } from '@/lib/data/freeschoolSubsidies';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
+import { ALTERNATIVE_SCHOOLS, METHOD_LABEL } from '@/lib/data/alternativeSchools';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import SchoolTypeExplorer from './SchoolTypeExplorer';
 import FreeSchoolExplorer from './FreeSchoolExplorer';
@@ -39,7 +40,7 @@ import RelatedConsultations from './RelatedConsultations';
 // データはいずれも公的機関の公開情報で著作権上の問題がなく、更新頻度も低いため、
 // Supabaseにテーブルを作らずアプリ内の静的データとして持つ（「時間をかけたくない」との
 // 方針に合わせた最小実装）。
-export type GakkoType = 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' | 'josei' | 'teiji';
+export type GakkoType = 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' | 'josei' | 'teiji' | 'alternative';
 
 // 各タブに対応する、lib/searchTags.tsのテーマ語（実際の相談投稿を関連付けて表示する
 // ために使う）。「このページに学びの多様化学校に関する相談の投稿も載っているといい」
@@ -67,7 +68,9 @@ export function normalizeGakkoType(rawType?: string): GakkoType {
             ? 'josei'
             : rawType === 'teiji'
               ? 'teiji'
-              : 'gakko';
+              : rawType === 'alternative'
+                ? 'alternative'
+                : 'gakko';
 }
 
 // タブ（type）ごとのOGPタイトル・説明文・Xシェア文言。以前は全タブ共通の
@@ -141,6 +144,13 @@ const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
       '夜間部・多部制（三部制等）で学べる定時制高校を都道府県から探せます。埼玉県の「パレットスクール」、東京都の「チャレンジスクール」等、不登校経験者・中退者を主な対象にした単位制の定時制高校も含めて掲載しています。',
     tweetText:
       '不登校・中退経験からの学び直しに。夜間部・多部制の定時制高校（パレットスクール・チャレンジスクール等）を都道府県から探せます。',
+  },
+  alternative: {
+    title: `オルタナティブスクール（シュタイナー・サドベリー等）を探す｜${SITE_NAME}`,
+    description:
+      'シュタイナー教育・サドベリー型民主主義学校・イエナプラン・きのくに型など、一般的な公教育とは異なる独自の教育哲学を持つ「オルタナティブスクール」を全国から探せます。一条校（認可私立学校）と認可外施設の両方を掲載しています。',
+    tweetText:
+      '不登校のお子さんがいるご家庭へ。シュタイナー・サドベリー・イエナプラン・きのくに型など、独自の教育哲学を持つオルタナティブスクールを全国から探せます。',
   },
 };
 
@@ -302,6 +312,13 @@ export default async function GakkoPage({
               >
                 助成金・支援制度
               </Link>
+              <Link
+                href="/gakko?type=alternative"
+                className={`chip chip-tag${type === 'alternative' ? ' active' : ''}`}
+                style={{ textDecoration: 'none' }}
+              >
+                オルタナティブスクール
+              </Link>
             </div>
           </div>
           {/* 「学びの多様化学校とは」の説明は、都道府県を選んで絞り込んだ後の画面でも
@@ -416,6 +433,18 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {type === 'alternative' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>オルタナティブスクールとは</div>
+              <div className="qtext">
+                「オルタナティブスクール」とは、一般的な公教育とは異なる独自の教育哲学・教育メソッドで運営される学校・施設の総称です。シュタイナー教育・サドベリー型民主主義学校・イエナプラン・きのくに型（体験学習）・フレネ教育などのアプローチがあります。学校教育法第一条に基づく「認可私立学校（一条校）」と、認可外の私設施設（フリースクール等）の両方が含まれます。
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                一条校は高校卒業資格など公的な卒業資格が取得できますが、認可外施設では在籍校との連携や出席認定が必要な場合があります。各校に直接お問い合わせの上、最新情報をご確認ください。
+              </div>
+            </div>
+          )}
+
           {type === 'josei' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>国の制度：高等学校等就学支援金</div>
@@ -510,6 +539,61 @@ export default async function GakkoPage({
             <TeijiExplorer allSchools={teijiseiHighSchools} initialPref={selected} />
           )}
 
+          {/* オルタナティブスクール一覧。データ数が22校と少なく都道府県絞り込みの
+              需要が低いため、メソッド別グループに分けて静的に表示する（2026-10-29追加）。 */}
+          {type === 'alternative' && (
+            <>
+              {/* 一条校（認可私立学校）グループ */}
+              <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+                <div className="answer-label" style={{ fontSize: 14 }}>一条校（認可私立学校）</div>
+                <div className="muted" style={{ fontSize: 12, marginBottom: 4 }}>
+                  学校教育法第一条に基づく認可を受けた私立学校です。公的な卒業資格が取得できます。
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                  {ALTERNATIVE_SCHOOLS.filter((s) => s.isAccredited).map((s) => (
+                    <Link
+                      key={s.no}
+                      href={`/gakko/alternative/${s.no}`}
+                      style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                        {s.prefecture}{s.city}・{s.schoolType}・{METHOD_LABEL[s.method]}
+                      </div>
+                      {s.note && (
+                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note.length > 60 ? s.note.slice(0, 60) + '…' : s.note}</div>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              {/* 非一条校（認可外施設・フリースクール等）グループ */}
+              <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+                <div className="answer-label" style={{ fontSize: 14 }}>認可外施設（フリースクール等）</div>
+                <div className="muted" style={{ fontSize: 12, marginBottom: 4 }}>
+                  学校教育法上の「学校」ではありませんが、独自の教育哲学に基づいて運営されている民間施設です。
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                  {ALTERNATIVE_SCHOOLS.filter((s) => !s.isAccredited).map((s) => (
+                    <Link
+                      key={s.no}
+                      href={`/gakko/alternative/${s.no}`}
+                      style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                        {s.prefecture}{s.city}・{s.schoolType}・{METHOD_LABEL[s.method]}
+                      </div>
+                      {s.note && (
+                        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note.length > 60 ? s.note.slice(0, 60) + '…' : s.note}</div>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
           {type === 'gakko' && (
             <a
               href={MEXT_SOURCE_URL}
@@ -582,6 +666,15 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {type === 'alternative' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>このページのオルタナティブスクール情報について</div>
+              <div className="qtext">
+                このページのデータは、各校の公式サイト・メディア掲載情報・都道府県教育委員会の公開情報等をもとに手動で収集したもの（{ALTERNATIVE_SCHOOLS.length}校、2026年10月時点）です。オルタナティブスクールには文部科学省の全国統一リストが存在しないため、全国のすべての施設を網羅したものではありません。閉校・移転・変更等の可能性があるため、最新情報は必ず各校に直接ご確認ください。
+              </div>
+            </div>
+          )}
+
           {/* このタブに関連する実際の相談投稿。/dictionary/theme/[word]と同じデータを
               使い、同じテーマの相談を実際にしている他の保護者がいることが伝わるように
               した上で、そのテーマ辞典ページ・相談するページへつなげる（2026-10-18、
@@ -600,17 +693,17 @@ export default async function GakkoPage({
               「ボタン大きくおきたいね」との指摘を受けて）。 */}
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
-              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'teiji' ? '定時制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}について相談してみませんか？
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'teiji' ? '定時制高校' : type === 'josei' ? '助成金・支援制度' : type === 'alternative' ? 'オルタナティブスクール' : '学びの多様化学校'}について相談してみませんか？
             </div>
             <div className="qtext">
-              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'teiji' ? '定時制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'teiji' ? '定時制高校' : type === 'josei' ? '助成金・支援制度' : type === 'alternative' ? 'オルタナティブスクール' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
             </div>
             <Link
               href="/ask"
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
-              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'teiji' ? '定時制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}について相談する →
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'teiji' ? '定時制高校' : type === 'josei' ? '助成金・支援制度' : type === 'alternative' ? 'オルタナティブスクール' : '学びの多様化学校'}について相談する →
             </Link>
           </div>
 

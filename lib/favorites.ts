@@ -7,7 +7,7 @@
 // localStorageが使えない環境（プライベートモード等）でもページ自体は壊れないよう、
 // SSRガードとtry/catchをlib/uid.tsと同じスタイルで必ず入れる。
 
-export type FavoriteType = 'school' | 'free' | 'tsushin' | 'online' | 'teiji';
+export type FavoriteType = 'school' | 'free' | 'tsushin' | 'online' | 'teiji' | 'alternative';
 
 export type FavoriteItem = {
   type: FavoriteType;
