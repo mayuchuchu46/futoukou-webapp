@@ -19,6 +19,10 @@
 // 公的紹介中心でアフィリエイトの心配がほぼ無いため、学びの多様化学校の詳細ページと同じく
 // officialUrlは直接<a>タグでリンクする方針（通信制高校はこれと異なり/out経由。
 // lib/data/correspondenceHighSchools.tsのコメント参照）。
+//
+// noteに月会費・入会金等の料金は載せない方針（2026-10-28）。料金は施設ごとの改定が
+// 頻繁で古い情報のまま残りやすい上、「料金は載せない方向でいきたい」との指摘を受けた
+// ため。運営団体・支援方針・開所日時・学校連携など、料金以外の確認済み事実を記載する。
 export type FreeSchool = {
   no: number;
   name: string;
@@ -548,7 +552,7 @@ export const FREE_SCHOOLS: FreeSchool[] = [
   { no: 512, name: '特定非営利活動法人こころのテラス', prefecture: '宮城県', city: '仙台市泉区', address: '仙台市泉区鶴が丘3-18-17', contact: '090-6784-2294', ageRange: '高校生以上の青年・親子', sourceUrl: 'https://sendai-c.ed.jp/~jiyunomori/r4r5shisetusyoukai.pdf', asOf: '令和4・5年度版（.ed.jpドメイン）' },
   { no: 513, name: '特定非営利活動法人キッズドア東北事業部', prefecture: '宮城県', city: '仙台市宮城野区', address: '仙台市宮城野区榴岡3-2-5サンライズ仙台2階', contact: '022-354-1157', ageRange: '困難な環境にある子ども', sourceUrl: 'https://sendai-c.ed.jp/~jiyunomori/r4r5shisetusyoukai.pdf', asOf: '令和4・5年度版（.ed.jpドメイン）', officialUrl: 'https://kidsdoor-tohoku.net/', note: '認定NPO法人キッズドア（本部：東京都中央区）の東北支援事業の専用サイト。' },
   { no: 514, name: '不登校こころ支援NPO法人PASSON', prefecture: '宮城県', city: '仙台市青葉区', address: '仙台市青葉区本町1-14-18ライオンズプラザ本町ビル501', contact: '080-8383-8371', ageRange: '', sourceUrl: 'https://sendai-c.ed.jp/~jiyunomori/r4r5shisetusyoukai.pdf', asOf: '令和4・5年度版（.ed.jpドメイン）' },
-  { no: 515, name: '学びスペース あうるの森', prefecture: '新潟県', city: '長岡市', address: '石内2丁目3-9', contact: 'forest.of.owl.nagaoka@gmail.com', ageRange: '小学4年生～中学3年生（公式サイトのメタ情報では「小学1年生～高校3年生」との記載もあり、表記に食い違いあり）', sourceUrl: 'https://www.city.nagaoka.niigata.jp/kosodate/cate03/file/truant-01.pdf', asOf: '令和6年3月現在', officialUrl: 'https://www.owlnomori.com/', note: 'NPO法人運営。2013年から活動し、これまで200人以上の不登校児童・生徒を支援してきたとのこと。学校復帰のみを目標とせず、安心して過ごせる居場所づくりと放課後の学習支援を行う。平日8:00〜17:00開所、対話型AI教材（タブレット・PC）で一人ひとりのペースで学習を進める。在籍校と連絡を取り合い出席扱いを依頼し、毎月、学習・活動報告を文書で提出する。月会費35,000円・入会金22,000円（無料体験3回のあと入会時に支払い）。電話番号はサイト上に記載が無く、連絡先はメールのみ確認できた。' },
+  { no: 515, name: '学びスペース あうるの森', prefecture: '新潟県', city: '長岡市', address: '石内2丁目3-9', contact: 'forest.of.owl.nagaoka@gmail.com', ageRange: '小学4年生～中学3年生（公式サイトのメタ情報では「小学1年生～高校3年生」との記載もあり、表記に食い違いあり）', sourceUrl: 'https://www.city.nagaoka.niigata.jp/kosodate/cate03/file/truant-01.pdf', asOf: '令和6年3月現在', officialUrl: 'https://www.owlnomori.com/', note: '2013年からNPO法人が運営し、これまで200人以上の不登校児童・生徒を支援してきた居場所です。学校復帰だけを目標とせず、安心して過ごせる居場所づくりと放課後の学習支援を行っています。平日8:00〜17:00開所で、対話型AI教材（タブレット・PC）を使い一人ひとりのペースで学習を進められます。在籍校と連絡を取り合い、出席扱いの依頼や毎月の活動報告も行っています。電話番号はサイト上に記載が無く、連絡先はメールのみ確認できました。' },
   { no: 516, name: 'レアレア', prefecture: '新潟県', city: '長岡市', address: '', contact: '', ageRange: '', sourceUrl: 'https://www.city.nagaoka.niigata.jp/kosodate/cate03/file/truant-01.pdf', asOf: '令和6年3月現在' },
   { no: 517, name: 'あかり塾', prefecture: '石川県', city: '金沢市', address: '', contact: '076-291-6934', ageRange: '', sourceUrl: 'https://www4.city.kanazawa.lg.jp/material/files/group/93/Support_Leaflet.pdf', asOf: '' },
   { no: 518, name: 'LYHTY school－IRORI－', prefecture: '石川県', city: '金沢市', address: '山の上町26-52', contact: '076-254-5032', ageRange: '', sourceUrl: 'https://www4.city.kanazawa.lg.jp/material/files/group/93/Support_Leaflet.pdf', asOf: '', officialUrl: 'https://www.lyhty.or.jp/', note: '「すべての子どもに灯を」を掲げ、学校に行かない・行けない子どもを対象に学校外の学び場で学習支援・体験活動を行う教育団体。' },
