@@ -400,4 +400,33 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 275, prefecture: '静岡県', municipality: '浜松市北区', name: '静岡県立浜松工業高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
   { no: 276, prefecture: '静岡県', municipality: '浜松市浜北区', name: '静岡県立浜名高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
   { no: 277, prefecture: '静岡県', municipality: '湖西市', name: '静岡県立新居高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', curriculumType: '学年制' },
+
+  // ===== 山梨県（7校） =====
+  // 出典: 山梨県教育委員会 入学者選抜関連PDF（https://www.pref.yamanashi.jp/documents/7061/r6nyuushiteiinn.pdf 等）
+  { no: 278, prefecture: '山梨県', name: '韮崎高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科' },
+  { no: 279, prefecture: '山梨県', name: '甲府工業高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '工業科（機械科・電気科・建築科を一括募集）' },
+  { no: 280, prefecture: '山梨県', name: '巨摩高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科' },
+  { no: 281, prefecture: '山梨県', name: '山梨高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科' },
+  { no: 282, prefecture: '山梨県', name: '都留高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科（定員40名）' },
+  { no: 283, prefecture: '山梨県', name: '中央高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科、衛生看護科' },
+  { no: 284, prefecture: '山梨県', name: 'ひばりが丘高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科、情報経理科' },
+
+  // ===== 長野県（15校） =====
+  // 出典: 令和8年度長野県公立高校募集定員資料 https://www.pref.nagano.lg.jp/kyoiku/koko/saiyo-nyuushi/shiken/ko/r8/documents/20260319web2-2.pdf
+  //       各校公式サイト・資料（nagano-c.ed.jp ドメイン等）
+  { no: 285, prefecture: '長野県', municipality: '長野市', name: '長野商業高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', parts: '夜間部', curriculumType: '単位制（前後期2学期制）', nickname: '長商定時制', officialUrl: 'https://www.nagano-c.ed.jp/chosho/teijihp/documents/guide2024.pdf' },
+  { no: 286, prefecture: '長野県', municipality: '長野市', name: '長野吉田高等学校戸隠分校（定時制）', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', parts: '昼間定時制' },
+  { no: 287, prefecture: '長野県', municipality: '長野市', name: '長野高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached' },
+  { no: 288, prefecture: '長野県', municipality: '長野市', name: '長野工業高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', note: '基礎工学科・建築科。4年間で卒業、1日4時限' },
+  { no: 289, prefecture: '長野県', municipality: '長野市', name: '篠ノ井高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', parts: '夜間', note: '夜5時～8時25分。4年間で卒業' },
+  { no: 290, prefecture: '長野県', municipality: '上田市', name: '上田千曲高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', note: '工業・機械科' },
+  { no: 291, prefecture: '長野県', municipality: '上田市', name: '上田高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', note: '普通科' },
+  { no: 292, prefecture: '長野県', municipality: '小諸市', name: '小諸商業高等学校定時制課程', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', parts: '夜間定時制', curriculumType: '学年制（卒業までに4年間）' },
+  { no: 293, prefecture: '長野県', municipality: '佐久市', name: '野沢南高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', note: '普通科。授業時間17:30～20:55、卒業要件76単位' },
+  { no: 294, prefecture: '長野県', municipality: '諏訪市', name: '諏訪実業高等学校定時制課程', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', parts: '夜間定時制', note: '普通科' },
+  { no: 295, prefecture: '長野県', municipality: '駒ヶ根市', name: '赤穂高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached' },
+  { no: 296, prefecture: '長野県', municipality: '飯田市', name: '飯田OIDE長姫高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', note: '普通科、機械科、基礎工学科' },
+  { no: 297, prefecture: '長野県', name: '木曽青峰高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached' },
+  { no: 298, prefecture: '長野県', municipality: '北安曇郡池田町', name: '池田工業高等学校定時制課程', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', nickname: '池工', note: '普通科（全日制と定時制を併設）。「3年間91単位」「3修制」' },
+  { no: 299, prefecture: '長野県', name: '松本筑摩高等学校定時制（多部制・単位制）', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'standalone', parts: '午前部・午後部・夜間部', curriculumType: '単位制' },
 ];
