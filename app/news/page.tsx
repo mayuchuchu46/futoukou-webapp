@@ -48,6 +48,36 @@ export default function NewsPage() {
               </div>
               <div className="answer-label" style={{ fontSize: 15 }}>{item.title}</div>
               <div className="qtext">{item.summary}</div>
+
+              {/* 記事中の数値比較を簡単なバーグラフで表示（2026-10-29追加）。
+                  app/today/page.tsxの集計バーと同じ見た目（.card内の棒グラフ）を流用。
+                  最大値を基準にバーの長さを決め、最大値のバーだけ強調色にする。 */}
+              {item.stats && item.stats.length > 0 && (() => {
+                const max = Math.max(...item.stats.map((s) => s.value));
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', margin: '2px 0' }}>
+                    {item.stats.map((s) => (
+                      <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                          <span style={{ fontWeight: s.value === max ? 700 : 400 }}>{s.label}</span>
+                          <span className="muted">{s.value}{s.unit}</span>
+                        </div>
+                        <div style={{ background: 'var(--border)', borderRadius: 6, height: 8, overflow: 'hidden' }}>
+                          <div
+                            style={{
+                              width: `${max > 0 ? (s.value / max) * 100 : 0}%`,
+                              height: '100%',
+                              background: s.value === max ? 'var(--main)' : 'var(--sub)',
+                              borderRadius: 6,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+
               <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ fontSize: 13 }}>
                 出典：{item.sourceName} ›
               </a>

@@ -24,6 +24,11 @@ export type NewsItem = {
   sourceName: string; // 出典名（報道機関名・発表元名）
   sourceUrl: string;
   category: 'policy' | 'research' | 'local' | 'other'; // policy=制度・施策、research=調査・統計、local=自治体の取組、other=その他
+  // 記事中に数値の比較（○○は○%、△△は△%、など）が含まれる場合のみ設定する簡単な
+  // グラフ用データ（2026-10-29追加、「記事内容にあったグラフを出したい」との要望を
+  // 受けて）。数値はsummary・出典で確認できた事実のみを入れる（推測で作らない）。
+  // 2〜3項目程度の単純な比較を想定（app/today/page.tsxの集計バーと同じ見た目で表示）。
+  stats?: { label: string; value: number; unit: string }[];
 };
 
 export const NEWS_ITEMS: NewsItem[] = [
@@ -37,6 +42,10 @@ export const NEWS_ITEMS: NewsItem[] = [
     sourceName: '総務省行政評価局',
     sourceUrl: 'https://www.soumu.go.jp/menu_news/s-news/hyouka_261022000193158.html',
     category: 'policy',
+    stats: [
+      { label: '小学生', value: 5.7, unit: '%' },
+      { label: '中学生', value: 19.9, unit: '%' },
+    ],
   },
   {
     id: 'hattatsu-shogai-futoko-ritsu-2026-09',
@@ -48,5 +57,9 @@ export const NEWS_ITEMS: NewsItem[] = [
     sourceName: '熊本日日新聞（共同通信配信）',
     sourceUrl: 'https://kumanichi.com/articles/2039490',
     category: 'research',
+    stats: [
+      { label: '全体平均', value: 3.71, unit: '%' },
+      { label: '発達障害の指摘がある子ども', value: 13.26, unit: '%' },
+    ],
   },
 ];
