@@ -178,7 +178,7 @@ export default async function FreeSchoolPage({
             <Link
               href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
 
-子どもの特徴：（性格・好き嫌い・困りごとなど、思いつくまま書いてください）`)}`}
+`)}&childHint=1`}
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
@@ -228,7 +228,7 @@ export default async function FreeSchoolPage({
             <Link
               href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
 
-子どもの特徴：（性格・好き嫌い・困りごとなど、思いつくまま書いてください）`)}`}
+`)}&childHint=1`}
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
