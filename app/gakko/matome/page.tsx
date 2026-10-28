@@ -54,6 +54,14 @@ const ONLINE_GROUPS = [
 // （2026-10-22追加）。
 const ONLINE_PREVIEW_LIMIT = 6;
 
+// 教育支援センターは都道府県によって掲載件数の差が大きく（例：埼玉県は80件超）、
+// このまとめページでは絞り込み無しで全件を<details open>のまま描画していたため、
+// 件数が多い都道府県を選ぶほど描画量・ページサイズが増え、都道府県切り替えが遅く
+// 感じられる一因になっていた（2026-10-28、「都道府県選択しても切り替わるまで
+// 時間かかる」との指摘を受けて対応）。オンラインフリースクールと同じ「件数が多い
+// ものは上限を設けて以降は専用ページへ誘導する」方式に揃えた。
+const SHIEN_PREVIEW_LIMIT = 20;
+
 export async function generateMetadata(): Promise<Metadata> {
   const url = `${SITE_URL}/gakko/matome`;
   return {
@@ -235,15 +243,26 @@ export default async function GakkoMatomePage({
             ) : shienCenters.length === 0 ? (
               <div className="muted">掲載できる情報が見つかりませんでした。</div>
             ) : (
-              shienCenters.map((s, i) => (
-                <div key={`${s.city}-${s.name}-${i}`} style={{ borderTop: '1px solid var(--border)', paddingTop: 10 }}>
-                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                    {s.city}
-                    {s.address ? `・${s.address}` : ''}
+              <>
+                {shienCenters.slice(0, SHIEN_PREVIEW_LIMIT).map((s, i) => (
+                  <div key={`${s.city}-${s.name}-${i}`} style={{ borderTop: '1px solid var(--border)', paddingTop: 10 }}>
+                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                      {s.city}
+                      {s.address ? `・${s.address}` : ''}
+                    </div>
                   </div>
-                </div>
-              ))
+                ))}
+                {shienCenters.length > SHIEN_PREVIEW_LIMIT && (
+                  <Link
+                    href={`/gakko?type=shien&pref=${encodeURIComponent(selected)}`}
+                    className="muted"
+                    style={{ fontSize: 12, textDecoration: 'underline', borderTop: '1px solid var(--border)', paddingTop: 10 }}
+                  >
+                    ほか{shienCenters.length - SHIEN_PREVIEW_LIMIT}件を見る ›
+                  </Link>
+                )}
+              </>
             )}
             <Link href="/gakko?type=shien" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
               教育支援センターのページへ ›
