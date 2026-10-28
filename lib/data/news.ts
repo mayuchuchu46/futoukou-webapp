@@ -26,4 +26,27 @@ export type NewsItem = {
   category: 'policy' | 'research' | 'local' | 'other'; // policy=制度・施策、research=調査・統計、local=自治体の取組、other=その他
 };
 
-export const NEWS_ITEMS: NewsItem[] = [];
+export const NEWS_ITEMS: NewsItem[] = [
+  {
+    id: 'soumu-futoko-kenshin-chosa-2026-10',
+    date: '2026-10-22',
+    addedAt: '2026-10-29',
+    title: '不登校の子どもの学校健診、中学生で約2割が全科目未受診――総務省が改善策を要請',
+    summary:
+      '総務省行政評価局の調査（令和7年度）によると、不登校の子どものうち学校健診を全科目受診できなかった割合は小学生で5.7%、中学生で19.9%でした。病気の見過ごしを防ぐため、総務省は文部科学省・こども家庭庁・厚生労働省に対し、登校状況（断続的に登校／外出はできる／ひきこもり等）に応じて、校内での受診配慮や校外での受診機会の確保、福祉部局によるアウトリーチ支援など3類型の対策を講じるよう求めました。',
+    sourceName: '総務省行政評価局',
+    sourceUrl: 'https://www.soumu.go.jp/menu_news/s-news/hyouka_261022000193158.html',
+    category: 'policy',
+  },
+  {
+    id: 'hattatsu-shogai-futoko-ritsu-2026-09',
+    date: '2026-09-25',
+    addedAt: '2026-10-29',
+    title: '発達障害のある小中学生、不登校の割合が全体平均の3倍以上に――文科省委託調査',
+    summary:
+      '文部科学省が委託した調査研究（全国432校の小中学生対象、2025年11〜12月実施、報告書は2026年8月公表）によると、自閉症などの発達障害があるかその疑いを指摘されている子どものうち、不登校の割合は13.26%で、全体平均3.71%の3倍以上でした。コミュニケーションの苦手さなどの特性が影響した可能性があるとされ、文科省は専門家と連携した組織的な支援の必要性を指摘しています。',
+    sourceName: '熊本日日新聞（共同通信配信）',
+    sourceUrl: 'https://kumanichi.com/articles/2039490',
+    category: 'research',
+  },
+];
