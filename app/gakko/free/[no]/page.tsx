@@ -257,7 +257,8 @@ export default async function FreeSchoolPage({
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>
             <div className="qtext">
-              このページの情報は、都道府県・市区町村教育委員会等が公開している一覧をもとにしています。利用条件・費用・活動内容などの詳しい情報は含まれていないため、気になる場合は施設に直接お問い合わせください。
+              このページの情報は、都道府県・市区町村教育委員会等が公開している一覧や、確認できた範囲の公式サイト等をもとにしています。利用条件・費用・活動内容は変更される場合があるため、
+              {school.officialUrl ? '最新の正確な情報は施設の公式サイトで直接ご確認ください。' : '最新の正確な情報は施設に直接お問い合わせください。'}
             </div>
             <a
               href={searchUrl}
