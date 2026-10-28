@@ -40,6 +40,14 @@ export type CorrespondenceHighSchool = {
   // campusesが実際の全拠点を網羅していないと判断される場合true（規模から見て一部のみの可能性が高い、
   // 公式に非常に多数のキャンパスがあると案内されているが一部しか確認できなかった等）。
   campusesIncomplete?: boolean;
+  // 不登校の生徒への対応・支援内容に関する確認済み情報（2026-10-28追加）。
+  // 「どれだけ不登校の生徒に寛容か・支援が充実しているか」が保護者にとって一番知りたい
+  // 情報であり、かつ通信制高校はほぼ全校私立で収益化（アフィリエイト等）とも相性が良い、
+  // という方針転換を受けて追加（manabiTayoukaGakko.ts・freeSchools.tsのnoteと同じ考え方）。
+  // 公式サイト・学校案内PDF等の一次情報で確認できた、不登校生徒への対応方針・サポート体制・
+  // 相談員の配置・通学頻度の柔軟性・転入実績等の固有情報のみを記載する。推測・一般論で
+  // 埋めることはせず、確認できなかった学校はnoteを付けない（undefinedのまま）。
+  note?: string;
 };
 
 export const CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL =

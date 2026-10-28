@@ -11,8 +11,6 @@ import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { getFreeSchoolCoverage } from '@/lib/data/freeschoolCoverage';
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
-import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
-import { getEducationSupportCoverage } from '@/lib/data/educationSupportCoverage';
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
 import { FREESCHOOL_SUBSIDIES, getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
 import MatomePrefectureSelect from './MatomePrefectureSelect';
@@ -34,12 +32,17 @@ import MatomeTypeFilter, { MatomeSection } from './MatomeTypeFilter';
 //    チップ（MatomeTypeFilter、クライアント側トグル）に統合した。オンライン
 //    フリースクールも、本来の/gakko?type=onlineタブと同じ3分類（仲間づくり・
 //    学習サポート中心・紹介制）で見出し分けして表示するようにした。
+// 5. 教育支援センター（公的機関）のカードを撤去（2026-10-28）。「ユーザーが本当に
+//    知りたいのは不登校生徒への寛容さ・支援の充実度であり、公的窓口の一覧ではない」
+//    「マネタイズ観点では私立校（通信制高校・私立の学びの多様化学校）の方が
+//    やりやすい」との方針転換を受けた対応。データ自体（lib/data/educationSupportCenters.ts）
+//    と/gakko?type=shienタブは残しているが、このまとめページからは外した。
 //
 // 各カテゴリのさらに詳しい絞り込み（学校種など）は/gakkoの各タブ側に残し、
 // このページは「全部をまとめて見る」専用の入口として位置づけている。
 const PAGE_TITLE = `学校以外の学びの場・居場所を都道府県からまとめて探す｜${SITE_NAME}`;
 const PAGE_DESCRIPTION =
-  '不登校のお子さんが学校以外に過ごせる場所・学べる場所（学びの多様化学校・フリースクール・教育支援センター・通信制高校・助成金制度・オンラインフリースクール）を、都道府県を選ぶだけでまとめて一覧できます。';
+  '不登校のお子さんが学校以外に過ごせる場所・学べる場所（学びの多様化学校・フリースクール・通信制高校・助成金制度・オンラインフリースクール）を、都道府県を選ぶだけでまとめて一覧できます。';
 
 const ONLINE_GROUPS = [
   { key: 'community' as const, title: '仲間づくり・居場所のあるタイプ', desc: '学習だけでなく、交流やイベントなど「居場所」としての機能があるタイプです。' },
@@ -53,14 +56,6 @@ const ONLINE_GROUPS = [
 // 掲載数が増えてもこのページの縦幅が際限なく伸びないよう上限を設けている
 // （2026-10-22追加）。
 const ONLINE_PREVIEW_LIMIT = 6;
-
-// 教育支援センターは都道府県によって掲載件数の差が大きく（例：埼玉県は80件超）、
-// このまとめページでは絞り込み無しで全件を<details open>のまま描画していたため、
-// 件数が多い都道府県を選ぶほど描画量・ページサイズが増え、都道府県切り替えが遅く
-// 感じられる一因になっていた（2026-10-28、「都道府県選択しても切り替わるまで
-// 時間かかる」との指摘を受けて対応）。オンラインフリースクールと同じ「件数が多い
-// ものは上限を設けて以降は専用ページへ誘導する」方式に揃えた。
-const SHIEN_PREVIEW_LIMIT = 20;
 
 export async function generateMetadata(): Promise<Metadata> {
   const url = `${SITE_URL}/gakko/matome`;
@@ -84,7 +79,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // 都道府県が未選択の時に、場所に依存するカテゴリ（学びの多様化学校・フリースクール・
-// 教育支援センター・通信制高校・助成金）の中身に出す案内。オンラインフリースクールだけは
+// 通信制高校・助成金）の中身に出す案内。オンラインフリースクールだけは
 // 居住地を問わないため、この案内の対象外（常に実データを表示）。
 function SelectPrefecturePrompt({ nationwideNote }: { nationwideNote: string }) {
   return (
@@ -105,8 +100,6 @@ export default async function GakkoMatomePage({
   const gakkoSchools = selected ? MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === selected) : [];
   const freeSchools = selected ? FREE_SCHOOLS.filter((s) => s.prefecture === selected) : [];
   const freeCoverage = selected ? getFreeSchoolCoverage(selected) : undefined;
-  const shienCenters = selected ? EDUCATION_SUPPORT_CENTERS.filter((s) => s.prefecture === selected) : [];
-  const shienCoverage = selected ? getEducationSupportCoverage(selected) : undefined;
   // このデータの出典（東京都生活文化局の資料）自体が「通信教育を行う区域に東京都を含む」
   // 学校の一覧、つまり掲載校は全校すでに東京都在住者を対象にしている。そのため、東京都が
   // 選ばれた場合は本校所在地で絞り込む意味がなく（本校が東京都以外でも東京都在住者は
@@ -134,7 +127,6 @@ export default async function GakkoMatomePage({
   // データがあるのに「0件」と誤解を招く表示になっていた）。
   const gakkoCountDisplay = selected ? gakkoSchools.length : MANABI_TAYOUKA_GAKKO.length;
   const freeCountDisplay = selected ? freeSchools.length : FREE_SCHOOLS.length;
-  const shienCountDisplay = selected ? shienCenters.length : EDUCATION_SUPPORT_CENTERS.length;
   const tsushinCountDisplay = selected ? tsushinSchools.length : CORRESPONDENCE_HIGH_SCHOOLS.length;
   const joseiCountDisplay = selected ? joseiSubsidies.length : FREESCHOOL_SUBSIDIES.length;
 
@@ -218,54 +210,6 @@ export default async function GakkoMatomePage({
             )}
             <Link href="/gakko?type=free" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
               フリースクール（地域）のページへ ›
-            </Link>
-          </div>
-        </details>
-      ),
-    },
-    {
-      key: 'shien',
-      icon: '🧑‍🏫',
-      label: '教育支援センター',
-      count: shienCountDisplay,
-      node: (
-        <details className="card" style={{ padding: 0 }} open>
-          <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
-            🧑‍🏫 教育支援センター（{selected ? `${shienCountDisplay}件` : `全国${shienCountDisplay}件`}）
-          </summary>
-          <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {!selected ? (
-              <SelectPrefecturePrompt nationwideNote={`掲載できている分だけで全国に${shienCountDisplay}件あります（全国約1,873か所のうち一部）。`} />
-            ) : shienCoverage?.tier === 'none' || !shienCoverage ? (
-              <div className="muted">
-                {selected}については、{shienCoverage?.note ?? '都道府県単位でまとめた一覧は見つかりませんでした。'}教育支援センターが無いという意味ではなく、公開情報が見つからなかったということです。お住まいの市区町村にはほぼ必ず設置されています。
-              </div>
-            ) : shienCenters.length === 0 ? (
-              <div className="muted">掲載できる情報が見つかりませんでした。</div>
-            ) : (
-              <>
-                {shienCenters.slice(0, SHIEN_PREVIEW_LIMIT).map((s, i) => (
-                  <div key={`${s.city}-${s.name}-${i}`} style={{ borderTop: '1px solid var(--border)', paddingTop: 10 }}>
-                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                      {s.city}
-                      {s.address ? `・${s.address}` : ''}
-                    </div>
-                  </div>
-                ))}
-                {shienCenters.length > SHIEN_PREVIEW_LIMIT && (
-                  <Link
-                    href={`/gakko?type=shien&pref=${encodeURIComponent(selected)}`}
-                    className="muted"
-                    style={{ fontSize: 12, textDecoration: 'underline', borderTop: '1px solid var(--border)', paddingTop: 10 }}
-                  >
-                    ほか{shienCenters.length - SHIEN_PREVIEW_LIMIT}件を見る ›
-                  </Link>
-                )}
-              </>
-            )}
-            <Link href="/gakko?type=shien" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
-              教育支援センターのページへ ›
             </Link>
           </div>
         </details>
@@ -433,7 +377,7 @@ export default async function GakkoMatomePage({
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びの場・居場所まとめ</div>
             <div className="qtext">
-              都道府県を選ぶと、学びの多様化学校・フリースクール・教育支援センター・通信制高校・助成金制度を一度にまとめて確認できます。下の「種類で絞り込む」チップで、見たいものだけに絞ることもできます。オンラインフリースクールは居住地を問わないため、都道府県の選択に関係なく表示されます。
+              都道府県を選ぶと、学びの多様化学校・フリースクール・通信制高校・助成金制度を一度にまとめて確認できます。下の「種類で絞り込む」チップで、見たいものだけに絞ることもできます。オンラインフリースクールは居住地を問わないため、都道府県の選択に関係なく表示されます。
             </div>
           </div>
 

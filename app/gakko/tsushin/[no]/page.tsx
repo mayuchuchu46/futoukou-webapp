@@ -48,7 +48,8 @@ export async function generateMetadata({
     return { title: `ページが見つかりません | ${SITE_NAME}` };
   }
   const title = `${school.name}｜通信制高校 - ${SITE_NAME}`;
-  const description = `本校が${school.prefecture}${school.municipality}にある通信制高校「${school.name}」（設置者：${school.operator}）の情報です。`;
+  const baseDescription = `本校が${school.prefecture}${school.municipality}にある通信制高校「${school.name}」（設置者：${school.operator}）の情報です。`;
+  const description = school.note ? `${baseDescription}${school.note}` : baseDescription;
   const url = `${SITE_URL}/gakko/tsushin/${school.no}`;
 
   return {
@@ -134,6 +135,7 @@ export default async function TsushinSchoolPage({
             <div className="answer-label" style={{ fontSize: 14 }}>{school.name}</div>
             <div className="qtext">
               本校が{school.prefecture}{school.municipality}にある、「広域」通信制高校です。本校の都道府県以外からも入学できます。
+              {school.note && <> {school.note}</>}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
               {[
