@@ -584,4 +584,31 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 409, prefecture: '和歌山県', municipality: '御坊市', name: '和歌山県立日高高等学校', publicPrivate: '公立', operator: '和歌山県教育委員会', officialUrl: 'https://www.hidaka-h.wakayama-c.ed.jp/tei/data/gakkoannai.pdf', note: '住所は御坊市島45番地。修業年限は4修制・3修制の2種類があり単位修得が卒業要件とされるが「単位制」の呼称自体は確認できず。部制の記載なし。' },
   { no: 410, prefecture: '和歌山県', name: '和歌山県立耐久高等学校', publicPrivate: '公立', operator: '和歌山県教育委員会', officialUrl: 'https://www.taikyu-h.wakayama-c.ed.jp/schoolpolicy/schoolpolicy.pdf', note: '令和7年度入学者選抜実施状況でも定時制課程が確認できる。市区町村・単位制/学年制・部制は公式資料で確認できず省略。' },
   { no: 411, prefecture: '和歌山県', name: '和歌山県立新宮高等学校', publicPrivate: '公立', operator: '和歌山県教育委員会', officialUrl: 'https://www.pref.wakayama.lg.jp/prefg/500200/d00216812_d/fil/07jokyo.pdf', note: '始業時間は18:00（新宮高等学校定時制生徒心得より）。市区町村・単位制/学年制・部制は公式資料で確認できず省略。' },
+
+  // ===== 鳥取県（4校） =====
+  // 出典: https://www.pref.tottori.lg.jp/315424.htm（校名一覧）、https://www.pref.tottori.lg.jp/87667.htm（所在地一覧）、
+  //       各校スクール・ポリシーPDF（pref.tottori.lg.jp）
+  { no: 412, prefecture: '鳥取県', municipality: '鳥取市', name: '鳥取県立鳥取緑風高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', note: '全日制・通信制も併設。定時制課程は総合学科。' },
+  { no: 413, prefecture: '鳥取県', municipality: '米子市', name: '鳥取県立米子東高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', note: '定時制課程は普通学科。' },
+  { no: 414, prefecture: '鳥取県', municipality: '米子市', name: '鳥取県立米子白鳳高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', note: '全日制・通信制も併設。定時制課程は総合学科。' },
+  { no: 415, prefecture: '鳥取県', municipality: '倉吉市', name: '鳥取県立倉吉東高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', curriculumType: '単位制（通信制科目を併修し3年間での卒業も可能な教育課程）', note: '定時制課程は普通学科。' },
+
+  // ===== 島根県（3校） =====
+  // 出典: https://www1.pref.shimane.lg.jp/gakkokikaku/school/index.data/p40_teiji.pdf（校名一覧）、
+  //       島根県教育委員会 各校定時制課程資料
+  { no: 416, prefecture: '島根県', name: '島根県立松江工業高等学校', publicPrivate: '公立', operator: '島根県教育委員会', schoolCategory: 'attached', note: '定時制課程（夜間）。学科：機械科・電気科・建築科。1日4時間授業、4年間で卒業する教育課程。所在地は資料上未確認。' },
+  { no: 417, prefecture: '島根県', municipality: '松江市', name: '島根県立宍道高等学校', publicPrivate: '公立', operator: '島根県教育委員会', schoolCategory: 'standalone', parts: '三部制（午前部・午後部・夜間部）', curriculumType: '単位制', note: '普通科（入学定員：午前部80名、午後部40名、夜間部40名）。全校生徒数365名（令和7年5月1日現在）。' },
+  { no: 418, prefecture: '島根県', municipality: '浜田市', name: '島根県立浜田高等学校', publicPrivate: '公立', operator: '島根県教育委員会', schoolCategory: 'attached', parts: '二部制（昼間部・夜間部。定通併修・他部履修も条件付きで可能）', note: '定時制課程の学科は資料上未確認。' },
+
+  // ===== 山口県（7校） =====
+  // 出典: 山口県教育委員会 高校一覧資料 https://www.pref.yamaguchi.lg.jp/uploaded/life/148551_267732_misc.pdf
+  //       平成29年10月会議資料 https://www.pref.yamaguchi.lg.jp/uploaded/attachment/75274.pdf
+  //       各校学科・部制資料 https://www.pref.yamaguchi.lg.jp/uploaded/attachment/76557.pdf, 76740.pdf
+  { no: 419, prefecture: '山口県', name: '山口県立岩国商業高等学校　東分校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '普通科。入学定員は昼間部40人・夜間部40人。所在市区町村は資料上確認できず。' },
+  { no: 420, prefecture: '山口県', name: '山口県立下松工業高等学校', publicPrivate: '公立', operator: '山口県教育委員会', note: '定時制課程・機械科、入学定員40人。部制・所在市区町村・本校/分校の区別は資料上確認できず。' },
+  { no: 421, prefecture: '山口県', municipality: '周南市', name: '山口県立徳山高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制課程・普通科、修業年限3年または4年、入学定員40人。' },
+  { no: 422, prefecture: '山口県', municipality: '山口市', name: '山口県立山口松風館高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'standalone', parts: '三部制（昼間部午前部・昼間部午後部・夜間部）', curriculumType: '単位制', note: '普通科。所在地は山口市小郡令和三丁目。入学定員は各部38人程度。通信制課程も併設。' },
+  { no: 423, prefecture: '山口県', name: '山口県立宇部中央高等学校', publicPrivate: '公立', operator: '山口県教育委員会', note: '定時制課程・普通科、入学定員40人。部制・所在市区町村・本校/分校の区別は資料上確認できず。' },
+  { no: 424, prefecture: '山口県', municipality: '山陽小野田市', name: '山口県立小野田工業高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制課程・機械科、修業年限3年または4年、入学定員40人。' },
+  { no: 425, prefecture: '山口県', name: '山口県立下関双葉高等学校', publicPrivate: '公立', operator: '山口県教育委員会', parts: '昼間部・夜間部', note: '定時制課程・学科名は資料上「総合」と表記（総合学科と推定されるが正式表記の確証なし）。入学定員は昼間部40人・夜間部40人。所在市区町村・本校/分校の区別は資料上確認できず。' },
 ];
