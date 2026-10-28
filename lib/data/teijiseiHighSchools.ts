@@ -684,4 +684,14 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 472, prefecture: '香川県', municipality: '高松市', name: '香川県立高松工芸高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '同校自身の学校紹介資料（令和8年度分）に定時制課程（工業科：機械科・建築科・インテリア科、4学年・12学級、全校生徒46名）の記載あり。ただし香川県の令和9年度入学定員一覧には該当行が見当たらず、新規募集の有無は資料上確認できていない。' },
   { no: 473, prefecture: '香川県', municipality: '丸亀市', name: '香川県立丸亀高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '所在地：丸亀市六番丁1番地。令和9年度入学定員 普通科40人（全校生徒38名）。同校自身の学校紹介資料では定時制課程は「普通科」のみと明記。' },
   { no: 474, prefecture: '香川県', municipality: '観音寺市', name: '香川県立観音寺第一高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '令和9年度入学定員 普通科40人。所在地（旧資料）：観音寺市茂木町4丁目2番38号。部制の確認はできなかった。' },
+
+  // ===== 熊本県（1校）・大分県（3校） =====
+  // 出典: 熊本工業高等学校定時制 案内資料（sh.higo.ed.jp）、大分県教育委員会PDF（pref.oita.jp/uploaded/attachment/2267277.pdf, 2268817.pdf）、
+  //       czemi.benesse.ne.jp（爽風館高校紹介ページ、WebFetchで課程・学科を確認）
+  // 注: 熊本県・大分県とも定時制設置校を網羅した公式一覧ページには到達できず、個別校資料のみで確認できた分。
+  //     大分県立日田高等学校・熊本市立必由館高等学校は定時制該当の明記が確認できず今回は含めない。
+  { no: 475, prefecture: '熊本県', name: '熊本県立熊本工業高等学校', publicPrivate: '公立', operator: '熊本県教育委員会', schoolCategory: 'attached', note: '定時制。機械科40名・電気科40名・建築科40名を設置。授業は17時頃登校〜21時10分頃放課。3修制（3年で卒業できる仕組み）あり。部制・単位制/学年制の区別は未確認。' },
+  { no: 476, prefecture: '大分県', name: '大分県立中津東高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'attached', curriculumType: '単位制（2年次から通信制高校との併修による三修制も導入）', note: '定時制。機械科・商業科（各学年1学級）を設置。' },
+  { no: 477, prefecture: '大分県', name: '大分県立大分工業高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'attached', note: '定時制。県教育委員会資料に工業科設置校として記載。学科の詳細（具体的な科名・定員）・部制・単位制/学年制の区別は未確認。' },
+  { no: 478, prefecture: '大分県', municipality: '大分市', name: '大分県立爽風館高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'standalone', parts: '三部制（午前部・午後部・夜間部）', curriculumType: '単位制', note: '定時制（商業科、普通科I部・II部・III部）と通信制（普通科）を併設。所在地：大分市上野丘1丁目11-14。' },
 ];
