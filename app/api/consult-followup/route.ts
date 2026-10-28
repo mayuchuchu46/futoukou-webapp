@@ -10,6 +10,8 @@ import {
   buildCorrespondenceSchoolFactsBlock,
   findMentionedFreeSchool,
   buildFreeSchoolFactsBlock,
+  findMentionedOnlineFreeSchool,
+  buildOnlineFreeSchoolFactsBlock,
 } from '@/lib/facilityLinkMatch';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
@@ -72,6 +74,12 @@ export async function POST(req: NextRequest) {
   const mentionedFreeSchool = findMentionedFreeSchool([parent.question, text]);
   const freeSchoolFactsBlock = mentionedFreeSchool ? buildFreeSchoolFactsBlock(mentionedFreeSchool) : undefined;
 
+  // オンラインフリースクールについても同様（lib/facilityLinkMatch.ts参照、2026-10-29追加）。
+  const mentionedOnlineFreeSchool = findMentionedOnlineFreeSchool([parent.question, text]);
+  const onlineFreeSchoolFactsBlock = mentionedOnlineFreeSchool
+    ? buildOnlineFreeSchoolFactsBlock(mentionedOnlineFreeSchool)
+    : undefined;
+
   // 返信（ラリー）では、今回の発言単体ではなく元の相談も含めた会話全体から
   // 制度・施設への言及を検出する（lib/institutionFacts.ts参照、2026-10-21追加。
   // 「学びの多様化学校が合うタイプと合わないタイプ」という親の相談への返信
@@ -79,7 +87,7 @@ export async function POST(req: NextRequest) {
   // 分からないケースがあるため）。
   const mentionedInstitutions = findMentionedInstitutions([parent.question, parent.answer, text]);
   const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-  const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, institutionFactsBlock]
+  const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, institutionFactsBlock]
     .filter(Boolean)
     .join('\n');
 

@@ -11,6 +11,8 @@ import {
   buildCorrespondenceSchoolFactsBlock,
   findMentionedFreeSchool,
   buildFreeSchoolFactsBlock,
+  findMentionedOnlineFreeSchool,
+  buildOnlineFreeSchoolFactsBlock,
 } from '@/lib/facilityLinkMatch';
 
 // 無料AI相談（request_type='ai'）のAI回答を、現在のプロンプト設定（文字数の目安など）で
@@ -72,9 +74,13 @@ export async function POST(req: NextRequest) {
       : undefined;
     const mentionedFreeSchool = findMentionedFreeSchool([parent.question, row.question]);
     const freeSchoolFactsBlock = mentionedFreeSchool ? buildFreeSchoolFactsBlock(mentionedFreeSchool) : undefined;
+    const mentionedOnlineFreeSchool = findMentionedOnlineFreeSchool([parent.question, row.question]);
+    const onlineFreeSchoolFactsBlock = mentionedOnlineFreeSchool
+      ? buildOnlineFreeSchoolFactsBlock(mentionedOnlineFreeSchool)
+      : undefined;
     const mentionedInstitutions = findMentionedInstitutions([parent.question, parent.answer, row.question]);
     const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, institutionFactsBlock]
+    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, institutionFactsBlock]
       .filter(Boolean)
       .join('\n');
     prompt = buildFollowupPrompt(
@@ -100,9 +106,13 @@ export async function POST(req: NextRequest) {
       : undefined;
     const mentionedFreeSchool = findMentionedFreeSchool([row.question]);
     const freeSchoolFactsBlock = mentionedFreeSchool ? buildFreeSchoolFactsBlock(mentionedFreeSchool) : undefined;
+    const mentionedOnlineFreeSchool = findMentionedOnlineFreeSchool([row.question]);
+    const onlineFreeSchoolFactsBlock = mentionedOnlineFreeSchool
+      ? buildOnlineFreeSchoolFactsBlock(mentionedOnlineFreeSchool)
+      : undefined;
     const mentionedInstitutions = findMentionedInstitutions([row.question]);
     const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, institutionFactsBlock]
+    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, institutionFactsBlock]
       .filter(Boolean)
       .join('\n');
     prompt = buildPrompt(

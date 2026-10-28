@@ -1,5 +1,6 @@
 import { FREE_SCHOOLS, FreeSchool } from './data/freeSchools';
 import { CORRESPONDENCE_HIGH_SCHOOLS, CorrespondenceHighSchool } from './data/correspondenceHighSchools';
+import { ONLINE_FREE_SCHOOLS, OnlineFreeSchool } from './data/onlineFreeSchools';
 
 // 相談文（質問・AI回答）に、フリースクール一覧（freeSchools.ts）・通信制高校一覧
 // （correspondenceHighSchools.ts）に載っている施設名が含まれている場合、その施設の
@@ -61,6 +62,12 @@ export function findMentionedCorrespondenceSchool(
   texts: (string | null | undefined)[]
 ): CorrespondenceHighSchool | null {
   return findByName(texts, CORRESPONDENCE_HIGH_SCHOOLS);
+}
+
+export function findMentionedOnlineFreeSchool(
+  texts: (string | null | undefined)[]
+): OnlineFreeSchool | null {
+  return findByName(texts, ONLINE_FREE_SCHOOLS);
 }
 
 // AIに渡す「確認済みの通信制高校情報」ブロック。lib/schoolFacts.tsのbuildSchoolFactsBlock
@@ -145,6 +152,46 @@ export function buildFreeSchoolFactsBlock(school: FreeSchool): string {
       学習支援の有無、在籍校との連携実績）を1つ具体的に挙げ、見学・問い合わせの際に
       それを確認するとよい、という形で答え、施設への確認も案内すること。この場合、
       確認できていない特色を推測で答えないこと。
+  「ここでは確認できていません。施設に直接お問い合わせください」だけで終わる、中身のない
+  回答にはしないこと。
+【確認済みの施設情報】
+${facts.map((f) => '- ' + f).join('\n')}`;
+}
+
+// AIに渡す「確認済みのオンラインフリースクール情報」ブロック。
+// buildFreeSchoolFactsBlock・buildCorrespondenceSchoolFactsBlockと同じ考え方（2026-10-29追加）。
+export function buildOnlineFreeSchoolFactsLines(school: OnlineFreeSchool): string[] {
+  const facts: string[] = [
+    `施設名：${school.name}`,
+    `運営：${school.operator}`,
+    `対象：${school.ageRange}`,
+    `連絡先：${school.contact}`,
+  ];
+  if (school.note) facts.push(`その他の確認済み情報（指導内容・料金・特徴等）：${school.note}`);
+  return facts;
+}
+
+export function buildOnlineFreeSchoolFactsBlock(school: OnlineFreeSchool): string {
+  const facts = buildOnlineFreeSchoolFactsLines(school);
+  return `
+相談文に、当サイトが情報を持っているオンラインフリースクール「${school.name}」が含まれているようです。
+以下は、この施設について確認できている情報（当サイト側で事前に調査・確認済みのもの）です。
+- この施設について答える際は、質問にどんぴしゃで一致していなくても、関連しそうな確認済み情報は
+  積極的に回答に取り入れてください。
+- 下の【確認済みの施設情報】に書かれている事実は、必ずこの範囲内の情報だけを使い、推測や
+  断定で情報を足さないこと。
+- 「どんなタイプの子に合うか」「料金はどのくらいか」「どんな支援があるか」のような、施設ごとの特色に
+  関する質問については、下の【確認済みの施設情報】（特に「その他の確認済み情報」欄）の中に
+  関連しそうな記述があれば、それを相談文に書かれているお子さんの特徴と照らし合わせて、でき
+  るだけこの施設固有の内容で具体的に答えること。確認済みの情報の範囲を超える事実を断定しない
+  こと（web検索は使えないため、確認済みデータに無いことは「無い」と扱うこと）。
+  (1) 「その他の確認済み情報」に特色に関する記述がある場合は、それを踏まえて具体的に答える
+      こと。「公式サイトを見てみましょう」のような、どの施設にも当てはまる一般論だけで
+      終わらせないこと。
+  (2) 「その他の確認済み情報」が無い、またはあっても特色に関する記述が無い場合に限り、
+      オンラインフリースクールを検討する際に一般的に確認すると良い着眼点（例：無料体験の有無、
+      講師変更の可否、授業時間の柔軟性）を1つ具体的に挙げ、問い合わせの際にそれを確認するとよい、
+      という形で答え、施設への確認も案内すること。この場合、確認できていない特色を推測で答えないこと。
   「ここでは確認できていません。施設に直接お問い合わせください」だけで終わる、中身のない
   回答にはしないこと。
 【確認済みの施設情報】

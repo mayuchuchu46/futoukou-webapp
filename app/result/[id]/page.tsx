@@ -26,7 +26,7 @@ import AskSimilarBlock from './AskSimilarBlock';
 import TagChips from '@/components/TagChips';
 import { SEARCH_TAG_CANDIDATES, matchesThemeText, getThemeDisplayLabel } from '@/lib/searchTags';
 import { findMentionedSchool } from '@/lib/schoolFacts';
-import { findMentionedFreeSchool, findMentionedCorrespondenceSchool } from '@/lib/facilityLinkMatch';
+import { findMentionedFreeSchool, findMentionedCorrespondenceSchool, findMentionedOnlineFreeSchool } from '@/lib/facilityLinkMatch';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -405,9 +405,28 @@ export default async function ResultPage({
     </Link>
   );
 
-  // 学びの多様化学校・フリースクール・通信制高校のどれかが一致していれば、それを
-  // gakkoBlock（都道府県一覧への汎用案内）より優先して出す。
-  const anySchoolDetailBlock = schoolDetailBlock || freeSchoolDetailBlock || tsushinDetailBlock;
+  // オンラインフリースクール一覧に載っている施設名が含まれていれば詳細ページへ案内する。
+  // 他カテゴリと同じ排他チェックは省略（オンラインと地域フリースクールが同時に出ることは
+  // まずないため、すべて一致しない場合にのみ検索する形にしてもよいが、シンプルに常に
+  // 独立して検索する（2026-10-29追加）。
+  const mentionedOnlineFreeSchool = findMentionedOnlineFreeSchool([item.question, answerTextForJsonLd]);
+  const onlineSchoolDetailBlock = mentionedOnlineFreeSchool && (
+    <Link href={`/gakko/online/${mentionedOnlineFreeSchool.no}`} className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>
+        {mentionedOnlineFreeSchool.name}の詳細情報
+      </div>
+      <div className="qtext">
+        運営・対象・特徴など、このサイトで確認できている情報をまとめています。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        詳細を見る ›
+      </div>
+    </Link>
+  );
+
+  // 学びの多様化学校・フリースクール・通信制高校・オンラインフリースクールのどれかが
+  // 一致していれば、それをgakkoBlock（都道府県一覧への汎用案内）より優先して出す。
+  const anySchoolDetailBlock = schoolDetailBlock || freeSchoolDetailBlock || tsushinDetailBlock || onlineSchoolDetailBlock;
 
   // lib/prompt.tsの安全上書き（希死念慮・自傷等を検知した場合、具体的な助言をせず
   // ホットライン案内のみを返す指示）が発動した回答かどうか。consultations.crisis_detected

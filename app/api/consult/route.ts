@@ -10,6 +10,8 @@ import {
   buildCorrespondenceSchoolFactsBlock,
   findMentionedFreeSchool,
   buildFreeSchoolFactsBlock,
+  findMentionedOnlineFreeSchool,
+  buildOnlineFreeSchoolFactsBlock,
 } from '@/lib/facilityLinkMatch';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
@@ -86,12 +88,20 @@ export async function POST(req: NextRequest) {
   const mentionedFreeSchool = findMentionedFreeSchool([text]);
   const freeSchoolFactsBlock = mentionedFreeSchool ? buildFreeSchoolFactsBlock(mentionedFreeSchool) : undefined;
 
+  // オンラインフリースクール一覧に載っている施設名についても同様（2026-10-29追加。
+  // ソウガク等のオンラインフリースクールについて相談しても「当サイトでは確認できる情報を
+  // 持ち合わせていません」という回答になってしまっていたため）。
+  const mentionedOnlineFreeSchool = findMentionedOnlineFreeSchool([text]);
+  const onlineFreeSchoolFactsBlock = mentionedOnlineFreeSchool
+    ? buildOnlineFreeSchoolFactsBlock(mentionedOnlineFreeSchool)
+    : undefined;
+
   // 学校名が出てこない一般論の質問（例：「学びの多様化学校ってフリースクールと
   // 何が違うの？」）でも、制度・施設そのものについての確認済み情報を渡す
   // （lib/institutionFacts.ts参照、2026-10-21追加）。
   const mentionedInstitutions = findMentionedInstitutions([text]);
   const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-  const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, institutionFactsBlock]
+  const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, institutionFactsBlock]
     .filter(Boolean)
     .join('\n');
 
