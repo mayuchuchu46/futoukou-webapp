@@ -193,6 +193,15 @@ export const FREESCHOOL_SUBSIDIES: FreeschoolSubsidy[] = [
     sourceUrl: 'https://www.city.matsuyama.ehime.jp/kurashi/kosodate/kyoikushien/kysogosodan/freeschool/freehozyo2026.files/hozyoyoukou.pdf',
     note: '松山市独自の制度で、愛媛県全体の制度ではありません。',
   },
+  {
+    prefecture: '和歌山県',
+    entity: '和歌山県',
+    entityLevel: 'prefecture',
+    name: 'フリースクール等に通う不登校児童生徒支援調査研究事業（不登校調査協力金）',
+    summary: '県内公立小・中学校等に在籍し不登校状態でフリースクール等（週3日以上・平日日中に相談支援を行う等の要件を満たす施設）に通う児童生徒の保護者向け。調査への協力金として月1万円、年度最大7万円が支払われる。',
+    sourceUrl: 'https://www.pref.wakayama.lg.jp/prefg/501200/d00222083.html',
+    note: '制度上は「フリースクール利用料の補助」ではなく、県の調査（通所状況等の回答）への協力に対する「調査協力金」という位置づけ。利用施設が通所日数等の要件を満たしていること、在籍校・市町村教育委員会と連携できることなどの条件がある。令和8年度時点で実施中（期ごとの申請受付制）。',
+  },
 ];
 
 export function getFreeschoolSubsidiesByPrefecture(prefecture: string): FreeschoolSubsidy[] {
