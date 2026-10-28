@@ -17,11 +17,13 @@ import {
   CORRESPONDENCE_HIGH_SCHOOL_AS_OF,
 } from '@/lib/data/correspondenceHighSchools';
 import { FREESCHOOL_SUBSIDIES } from '@/lib/data/freeschoolSubsidies';
+import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import SchoolTypeExplorer from './SchoolTypeExplorer';
 import FreeSchoolExplorer from './FreeSchoolExplorer';
 import ShienExplorer from './ShienExplorer';
 import TsushinExplorer from './TsushinExplorer';
+import TeijiExplorer from './TeijiExplorer';
 import RelatedConsultations from './RelatedConsultations';
 
 // 「学びの多様化学校」（旧：不登校特例校）と「フリースクール（民間施設）」の
@@ -37,7 +39,7 @@ import RelatedConsultations from './RelatedConsultations';
 // データはいずれも公的機関の公開情報で著作権上の問題がなく、更新頻度も低いため、
 // Supabaseにテーブルを作らずアプリ内の静的データとして持つ（「時間をかけたくない」との
 // 方針に合わせた最小実装）。
-export type GakkoType = 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' | 'josei';
+export type GakkoType = 'gakko' | 'free' | 'online' | 'shien' | 'tsushin' | 'josei' | 'teiji';
 
 // 各タブに対応する、lib/searchTags.tsのテーマ語（実際の相談投稿を関連付けて表示する
 // ために使う）。「このページに学びの多様化学校に関する相談の投稿も載っているといい」
@@ -63,7 +65,9 @@ export function normalizeGakkoType(rawType?: string): GakkoType {
           ? 'tsushin'
           : rawType === 'josei'
             ? 'josei'
-            : 'gakko';
+            : rawType === 'teiji'
+              ? 'teiji'
+              : 'gakko';
 }
 
 // タブ（type）ごとのOGPタイトル・説明文・Xシェア文言。以前は全タブ共通の
@@ -130,6 +134,13 @@ const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
       'フリースクール等の利用料助成や、国の「高等学校等就学支援金」など、不登校のご家庭が使える助成金・支援制度を都道府県から探せます。',
     tweetText:
       '不登校のお子さんがいるご家庭へ。フリースクール等の利用料助成や就学支援金など、使える制度を都道府県から探せます。',
+  },
+  teiji: {
+    title: `定時制高校（パレットスクール等）を都道府県から探す｜${SITE_NAME}`,
+    description:
+      '夜間部・多部制（三部制等）で学べる定時制高校を都道府県から探せます。埼玉県の「パレットスクール」、東京都の「チャレンジスクール」等、不登校経験者・中退者を主な対象にした単位制の定時制高校も含めて掲載しています。',
+    tweetText:
+      '不登校・中退経験からの学び直しに。夜間部・多部制の定時制高校（パレットスクール・チャレンジスクール等）を都道府県から探せます。',
   },
 };
 
@@ -278,6 +289,13 @@ export default async function GakkoPage({
                 通信制高校（広域）
               </Link>
               <Link
+                href={selected ? `/gakko?type=teiji&pref=${encodeURIComponent(selected)}` : '/gakko?type=teiji'}
+                className={`chip chip-tag${type === 'teiji' ? ' active' : ''}`}
+                style={{ textDecoration: 'none' }}
+              >
+                定時制高校
+              </Link>
+              <Link
                 href="/gakko?type=josei"
                 className={`chip chip-tag${type === 'josei' ? ' active' : ''}`}
                 style={{ textDecoration: 'none' }}
@@ -370,6 +388,18 @@ export default async function GakkoPage({
               </div>
               <div className="muted" style={{ fontSize: 12 }}>
                 学費・カリキュラム・通学（キャンパス／サポート校）の有無は学校ごとに大きく異なります。このリストには個別のキャンパス所在地は含まれていないため（公式サイトURLは確認できた学校のみ各校の詳細ページに掲載しています）、気になる学校が見つかったら公式サイトで必ず確認してください。
+              </div>
+            </div>
+          )}
+
+          {type === 'teiji' && !selected && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>定時制高校とは</div>
+              <div className="qtext">
+                主に夜間部などで学ぶ、正式な高等学校の課程です。全日制高校に併設された夜間部に加えて、埼玉県の「パレットスクール」、東京都の「チャレンジスクール」等、都道府県ごとに異なる名称を持つ多部制（午前部・午後部・夜間部等）・単位制の定時制高校もあります。こうした学校は不登校経験者・中途退学者・学び直したい社会人などを主な対象としていることが多く、入学や転入のハードルが比較的低い場合があります。
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                基本的にお住まいの都道府県・通える範囲の学校が対象です（通信制高校のような「広域」入学の仕組みはありません）。募集の有無・学科・入学条件は学校ごとに大きく異なるため、気になる学校が見つかったら学校または教育委員会に直接お問い合わせください。
               </div>
             </div>
           )}
@@ -475,6 +505,11 @@ export default async function GakkoPage({
             <TsushinExplorer allSchools={CORRESPONDENCE_HIGH_SCHOOLS} initialPref={selected} />
           )}
 
+          {/* 定時制高校タブも同じ理由でTeijiExplorerへ統合（2026-10-29追加）。 */}
+          {type === 'teiji' && (
+            <TeijiExplorer allSchools={teijiseiHighSchools} initialPref={selected} />
+          )}
+
           {type === 'gakko' && (
             <a
               href={MEXT_SOURCE_URL}
@@ -529,6 +564,15 @@ export default async function GakkoPage({
             </div>
           )}
 
+          {type === 'teiji' && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>このページの定時制高校情報について</div>
+              <div className="qtext">
+                文部科学省は定時制高校の学校名を含む全国一覧を公表していないため、このページのデータは各都道府県教育委員会が公開している定時制高校一覧・入学者選抜実施要項等（現在{teijiseiHighSchools.length}校分）をもとにしています。都道府県によって確認できた情報の詳しさに差があり、すべての定時制高校を網羅したものではありません。最新の募集状況・学科・入学条件は学校の公式サイトまたは教育委員会で直接ご確認ください。
+              </div>
+            </div>
+          )}
+
           {type === 'josei' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>この助成金情報について</div>
@@ -556,17 +600,17 @@ export default async function GakkoPage({
               「ボタン大きくおきたいね」との指摘を受けて）。 */}
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
-              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}について相談してみませんか？
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'teiji' ? '定時制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}について相談してみませんか？
             </div>
             <div className="qtext">
-              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'teiji' ? '定時制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}が合うかどうかも含め、今のお子さんの状況からどうする先生が一緒に考えます。登録不要・匿名で利用できます。
             </div>
             <Link
               href="/ask"
               className="btn-primary sidebar-ask-btn-pink"
               style={{ textDecoration: 'none', width: '100%' }}
             >
-              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}について相談する →
+              {type === 'free' ? 'フリースクール' : type === 'online' ? 'オンラインフリースクール' : type === 'shien' ? '教育支援センター' : type === 'tsushin' ? '通信制高校' : type === 'teiji' ? '定時制高校' : type === 'josei' ? '助成金・支援制度' : '学びの多様化学校'}について相談する →
             </Link>
           </div>
 

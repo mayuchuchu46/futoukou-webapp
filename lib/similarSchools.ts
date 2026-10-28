@@ -2,6 +2,7 @@ import { ManabiTayoukaGakko } from './data/manabiTayoukaGakko';
 import { FreeSchool } from './data/freeSchools';
 import { CorrespondenceHighSchool } from './data/correspondenceHighSchools';
 import { OnlineFreeSchool } from './data/onlineFreeSchools';
+import { TeijiseiHighSchool } from './data/teijiseiHighSchools';
 
 // 各詳細ページ（/gakko/school, /gakko/free, /gakko/tsushin, /gakko/online）の下部に、
 // そのページを見た人が次に見たくなりそうな他の学校・施設を表示するための判定
@@ -71,4 +72,21 @@ export function findSimilarOnlineFreeSchools(
 ): OnlineFreeSchool[] {
   const others = all.filter((s) => s.no !== current.no);
   return others.filter((s) => s.category === current.category).slice(0, limit);
+}
+
+// 定時制高校：フリースクールと同様、通える距離が重要なため同じ市区町村を最優先し、
+// 足りなければ同じ都道府県内から補う（municipalityが無いデータも多いため、
+// 都道府県の一致のみで補完できるようにしている）。
+export function findSimilarTeijiseiHighSchools(
+  all: TeijiseiHighSchool[],
+  current: TeijiseiHighSchool,
+  limit = DEFAULT_LIMIT
+): TeijiseiHighSchool[] {
+  const others = all.filter((s) => s.no !== current.no);
+  const sameCity = current.municipality
+    ? others.filter((s) => s.prefecture === current.prefecture && s.municipality === current.municipality)
+    : [];
+  const sameCityNos = new Set(sameCity.map((s) => s.no));
+  const samePref = others.filter((s) => s.prefecture === current.prefecture && !sameCityNos.has(s.no));
+  return [...sameCity, ...samePref].slice(0, limit);
 }

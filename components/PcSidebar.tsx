@@ -99,6 +99,7 @@ export default function PcSidebar({
         { href: '/gakko?type=shien', icon: '🧑‍🏫', label: '教育支援センター' },
         { href: '/gakko?type=online', icon: '💻', label: 'オンラインフリースクール' },
         { href: '/gakko?type=tsushin', icon: '📮', label: '通信制高校（広域）' },
+        { href: '/gakko?type=teiji', icon: '🌙', label: '定時制高校' },
         { href: '/gakko?type=josei', icon: '💴', label: '助成金・支援制度' },
       ].map((item, i, arr) => (
         <Link

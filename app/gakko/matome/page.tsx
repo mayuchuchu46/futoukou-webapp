@@ -12,6 +12,7 @@ import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { getFreeSchoolCoverage } from '@/lib/data/freeschoolCoverage';
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
+import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { FREESCHOOL_SUBSIDIES, getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
 import MatomePrefectureSelect from './MatomePrefectureSelect';
 import MatomeTypeFilter, { MatomeSection } from './MatomeTypeFilter';
@@ -124,6 +125,9 @@ export default async function GakkoMatomePage({
   // 元の順序はそのまま維持する）。
   const tsushinSchools = [...tsushinSchoolsFiltered].sort((a, b) => (b.note ? 1 : 0) - (a.note ? 1 : 0));
   const joseiSubsidies = selected ? getFreeschoolSubsidiesByPrefecture(selected) : [];
+  // 定時制高校は通信制高校（広域）と違い、基本的にその都道府県に通える人が対象の
+  // 「地域」の学校のため、フリースクールと同じ都道府県一致のみで絞り込む（2026-10-29追加）。
+  const teijiSchools = selected ? teijiseiHighSchools.filter((s) => s.prefecture === selected) : [];
 
   // 都道府県未選択時は「0件」ではなく全国の総数を表示する（2026-10-21、「デフォルトは
   // 全国表示で数入れて、そこから県別に絞り込みの流れが良くない？」との指摘を受けて対応。
@@ -133,6 +137,7 @@ export default async function GakkoMatomePage({
   const freeCountDisplay = selected ? freeSchools.length : FREE_SCHOOLS.length;
   const tsushinCountDisplay = selected ? tsushinSchools.length : CORRESPONDENCE_HIGH_SCHOOLS.length;
   const joseiCountDisplay = selected ? joseiSubsidies.length : FREESCHOOL_SUBSIDIES.length;
+  const teijiCountDisplay = selected ? teijiSchools.length : teijiseiHighSchools.length;
 
   const sections: MatomeSection[] = [
     {
@@ -291,6 +296,50 @@ export default async function GakkoMatomePage({
             </Link>
             <Link href="/gakko/tsushin/kokoro-care" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
               心のケア専門職が常駐する学校だけを見る ›
+            </Link>
+          </div>
+        </details>
+      ),
+    },
+    {
+      key: 'teiji',
+      icon: '🌙',
+      label: '定時制高校',
+      count: teijiCountDisplay,
+      node: (
+        <details className="card" style={{ padding: 0 }} open>
+          <summary style={{ padding: 16, cursor: 'pointer', fontWeight: 700, fontSize: 14 }}>
+            🌙 定時制高校（{selected ? `${teijiCountDisplay}件` : `全国${teijiCountDisplay}件`}）
+          </summary>
+          <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {!selected ? (
+              <SelectPrefecturePrompt nationwideNote={`全国に${teijiCountDisplay}校あります。`} />
+            ) : teijiSchools.length === 0 ? (
+              <div className="muted">{selected}については、公開資料から定時制高校の情報を確認できませんでした。定時制高校が無いという意味ではありません。</div>
+            ) : (
+              teijiSchools.map((s) => (
+                <Link
+                  key={s.no}
+                  href={`/gakko/teiji/${s.no}`}
+                  style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="qtext" style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                    {s.name}
+                    {s.nickname && (
+                      <span className="chip chip-tag" style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px' }}>
+                        {s.nickname}
+                      </span>
+                    )}
+                  </div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                    {s.municipality ? `${s.municipality}・` : ''}{s.publicPrivate}
+                    {s.parts ? `・${s.parts}` : ''}
+                  </div>
+                </Link>
+              ))
+            )}
+            <Link href="/gakko?type=teiji" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              定時制高校のページへ ›
             </Link>
           </div>
         </details>

@@ -8,6 +8,7 @@ import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
+import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { PREFECTURES } from '@/lib/data/prefectures';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -37,7 +38,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...PREFECTURES.filter((pref) =>
       MANABI_TAYOUKA_GAKKO.some((s) => s.prefecture === pref) ||
       FREE_SCHOOLS.some((s) => s.prefecture === pref) ||
-      CORRESPONDENCE_HIGH_SCHOOLS.some((s) => s.prefecture === pref)
+      CORRESPONDENCE_HIGH_SCHOOLS.some((s) => s.prefecture === pref) ||
+      teijiseiHighSchools.some((s) => s.prefecture === pref)
     ).map((pref) => ({
       url: `${SITE_URL}/gakko/matome?pref=${encodeURIComponent(pref)}`,
       changeFrequency: 'monthly' as const,
@@ -153,6 +155,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.3,
   }));
 
+  // 定時制高校紹介ページ（/gakko/teiji/[no]）。app/gakko/teiji/[no]/page.tsxの
+  // hasEnoughInfoと同じ条件（municipalityまたはofficialUrlが確認できている学校のみ
+  // index対象）に合わせる（2026-10-29追加）。
+  const teijiSchoolEntries: MetadataRoute.Sitemap = teijiseiHighSchools.filter(
+    (s) => s.municipality || s.officialUrl
+  ).map((s) => ({
+    url: `${SITE_URL}/gakko/teiji/${s.no}`,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
   return [
     ...staticEntries,
     ...dictionaryEntries,
@@ -161,6 +174,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...freeSchoolEntries,
     ...onlineSchoolEntries,
     ...tsushinSchoolEntries,
+    ...teijiSchoolEntries,
     ...consultationEntries,
   ];
 }

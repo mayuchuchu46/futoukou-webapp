@@ -719,4 +719,61 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 496, prefecture: '福岡県', name: '福岡県立福岡工業高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', note: '工業系専門学科。夜間定時制課程。公式URL未確認。' },
   { no: 497, prefecture: '福岡県', name: '福岡県立三池工業高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://miike-tech.fku.ed.jp/', note: '工業系専門学科。夜間定時制課程。他県からの志願可能校。' },
   { no: 498, prefecture: '福岡県', name: '福岡県立嘉穂総合高等学校　大隈城山校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://kahosogo.fku.ed.jp/', note: '家庭系専門学科。本校は嘉穂総合高校（全日制）で、大隈城山校は分校（定時制）。夜間定時制課程。' },
+
+  // ===== 佐賀県（6校） =====
+  // 出典: 佐賀県教育委員会「令和９年度佐賀県立高等学校生徒募集定員等」
+  //       https://www.education.saga.jp/hp/hamatama-j/wp-content/uploads/sites/203/2026/07/令和９年度佐賀県立高等学校生徒募集定員等.pdf
+  // 注: 定時制課程の合計募集定員は280人（6校）。所在市区町村は当該資料に記載がなく、確認できなかったため省略した。
+  { no: 499, prefecture: '佐賀県', name: '佐賀県立鳥栖工業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（普通科40名、機械科・電気科合わせて40名）を併置。' },
+  { no: 500, prefecture: '佐賀県', name: '佐賀県立佐賀工業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（機械科・情報科合わせて40名）を併置。' },
+  { no: 501, prefecture: '佐賀県', name: '佐賀県立有田工業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（セラミック科・デザイン科合わせて40名）を併置。' },
+  { no: 502, prefecture: '佐賀県', name: '佐賀県立佐賀商業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（総合文化科40名）を併置。' },
+  { no: 503, prefecture: '佐賀県', name: '佐賀県立唐津商業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
+  { no: 504, prefecture: '佐賀県', name: '佐賀県立伊万里実業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
+
+  // ===== 長崎県（8校） =====
+  // 出典: 長崎県教育委員会 令和8年度入学者選抜 関連資料（定時制課程募集定員表）
+  //       https://www.pref.nagasaki.jp/shared/uploads/2026/02/1770615354.pdf
+  // 注: 長崎工業・佐世保工業は「工業技術」科の名称で確認。各校の正式名称・所在市区町村は、鳴滝高等学校（長崎市）のみ外部資料（学校情報サイト）で確認できたため記載し、
+  //     他校は県資料の表記（「○○定時制」）から通常の校名パターンに従って校名を補ったが、所在市区町村は確認できず省略した。
+  { no: 505, prefecture: '長崎県', municipality: '長崎市', name: '長崎県立鳴滝高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '定時制（普通科・商業科）を併置。昼間部・夜間部それぞれ普通科40名。夜間部は商業科40名も設置。' },
+  { no: 506, prefecture: '長崎県', name: '長崎県立佐世保中央高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '定時制（普通科、普通エンカレッジコース、商業エンカレッジコース）を併置。昼間部・夜間部それぞれ普通科40名。夜間部は普通エンカレッジコース40名・商業エンカレッジコース40名も設置。' },
+  { no: 507, prefecture: '長崎県', name: '長崎県立島原高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（普通科40名、夜間部）を併置。' },
+  { no: 508, prefecture: '長崎県', name: '長崎県立諫早高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（普通科40名、夜間部）を併置。' },
+  { no: 509, prefecture: '長崎県', name: '長崎県立大村高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（普通科40名、夜間部）を併置。' },
+  { no: 510, prefecture: '長崎県', name: '長崎県立五島高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（普通科40名、夜間部）を併置。' },
+  { no: 511, prefecture: '長崎県', name: '長崎県立長崎工業高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（建築科40名・工業技術科40名、夜間部）を併置。' },
+  { no: 512, prefecture: '長崎県', name: '長崎県立佐世保工業高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（工業技術科40名、夜間部）を併置。' },
+
+  // ===== 宮崎県（5校） =====
+  // 出典: 宮崎県教育委員会「令和9年度宮崎県立高等学校生徒募集定員」（定時制の課程）
+  //       https://www.pref.miyazaki.lg.jp/documents/109134/109134_20260718165610-1.pdf
+  // 注: 合計5校10学科・定員440人であることは別資料（令和8年度入学者選抜合格者状況 https://www.pref.miyazaki.lg.jp/documents/99874/99874_20260324161514-1.pdf ）の
+  //     集計（「定時制5校10学科」）とも一致。所在市区町村は延岡青朋高等学校のみ外部資料（学校情報サイト）で確認できた。
+  { no: 513, prefecture: '宮崎県', municipality: '延岡市', name: '宮崎県立延岡青朋高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', note: '定時制（普通科40名・商業科40名）。校名から定時制・通信制の専門校とみられるが、schoolCategory（併設か単独校か）は資料で確認できず省略した。' },
+  { no: 514, prefecture: '宮崎県', name: '宮崎県立富島高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
+  { no: 515, prefecture: '宮崎県', name: '宮崎県立宮崎東高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '定時制（普通科）を併置。昼間部80名・夜間部40名。' },
+  { no: 516, prefecture: '宮崎県', name: '宮崎県立宮崎工業高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', schoolCategory: 'attached', note: '定時制（機械科40名・電気科40名・建築科40名）を併置。' },
+  { no: 517, prefecture: '宮崎県', name: '宮崎県立都城泉ヶ丘高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', schoolCategory: 'attached', note: '定時制（普通科40名・商業科40名）を併置。' },
+
+  // ===== 鹿児島県（2校） =====
+  // 出典: 鹿児島県教育委員会「令和7年度公立高等学校生徒募集定員」
+  //       https://www.pref.kagoshima.jp/ba05/kyoiku-bunka/school/koukou/nyushi/r3/documents/115764_20241002072632-1.pdf
+  // 注: 県資料の学区別募集定員表を全学区（鹿児島・南薩・北薩・姶良伊佐・大隅・熊毛・大島）・市立含む全表を確認し、
+  //     定時制課程の記載があったのは下記2校のみ（県全体の定時制合計3学級・募集定員120人と資料の集計欄が一致）。
+  { no: 518, prefecture: '鹿児島県', municipality: '鹿児島市', name: '鹿児島県立開陽高等学校', publicPrivate: '公立', operator: '鹿児島県教育委員会', schoolCategory: 'standalone', curriculumType: '単位制', note: '定時制単独校（普通科40名・オフィス情報科40名）。単位制のため学級数表示なし。' },
+  { no: 519, prefecture: '鹿児島県', municipality: '奄美市', name: '鹿児島県立奄美高等学校', publicPrivate: '公立', operator: '鹿児島県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。奄美大島内唯一の県立定時制高校。' },
+
+  // ===== 沖縄県（7校） =====
+  // 出典: 沖縄県教育委員会「令和6年度沖縄県立高等学校生徒募集定員」
+  //       https://www.pref.okinawa.jp/_res/projects/default_project/_page_/001/008/889/06teiin.pdf
+  //       泊高等学校定時制 募集要項 https://teiji.tomari-h.open.ed.jp/13b90b0ed03dd111f6994297b65f2316e53528fd.pdf
+  // 注: 令和6年度時点の資料のため、その後の改廃（特に那覇商業高等学校の定時制募集停止以降の状況）は反映していない可能性がある。所在市区町村は泊高等学校のみ確認できた。
+  { no: 520, prefecture: '沖縄県', municipality: '那覇市', name: '沖縄県立泊高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', parts: '午前部（3学級・普通科120名）・夜間部（1学級・普通科40名）', note: '定時制課程（普通科）に加え通信制課程も併設。単位制か学年制かは資料で確認できなかった。' },
+  { no: 521, prefecture: '沖縄県', name: '沖縄県立コザ高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
+  { no: 522, prefecture: '沖縄県', name: '沖縄県立那覇工業高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（機械科40名・電気科40名）を併置。' },
+  { no: 523, prefecture: '沖縄県', name: '沖縄県立那覇商業高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（商業科）を併置していたが、令和6年度から募集を停止。' },
+  { no: 524, prefecture: '沖縄県', name: '沖縄県立北部農林高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（農業科40名）を併置。' },
+  { no: 525, prefecture: '沖縄県', name: '沖縄県立中部農林高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（農業科40名）を併置。' },
+  { no: 526, prefecture: '沖縄県', name: '沖縄県立八重山商工高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
 ];

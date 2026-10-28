@@ -8,7 +8,7 @@ import { FavoriteType } from '@/lib/favorites';
 // 運用するため（lib/favorites.ts）、このAPIはすべてログイン中の会員本人の分のみ
 // 操作する。
 
-const VALID_TYPES: FavoriteType[] = ['school', 'free', 'tsushin', 'online'];
+const VALID_TYPES: FavoriteType[] = ['school', 'free', 'tsushin', 'online', 'teiji'];
 
 function isValidType(value: unknown): value is FavoriteType {
   return typeof value === 'string' && (VALID_TYPES as string[]).includes(value);

@@ -19,6 +19,7 @@ const TYPE_PATH: Record<FavoriteType, string> = {
   free: 'free',
   tsushin: 'tsushin',
   online: 'online',
+  teiji: 'teiji',
 };
 
 const TYPE_LABEL: Record<FavoriteType, string> = {
@@ -26,6 +27,7 @@ const TYPE_LABEL: Record<FavoriteType, string> = {
   free: 'フリースクール',
   tsushin: '通信制高校',
   online: 'オンラインフリースクール',
+  teiji: '定時制高校',
 };
 
 export default function FavoritesPage() {
