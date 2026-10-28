@@ -429,4 +429,19 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 297, prefecture: '長野県', name: '木曽青峰高等学校定時制', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached' },
   { no: 298, prefecture: '長野県', municipality: '北安曇郡池田町', name: '池田工業高等学校定時制課程', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'attached', nickname: '池工', note: '普通科（全日制と定時制を併設）。「3年間91単位」「3修制」' },
   { no: 299, prefecture: '長野県', name: '松本筑摩高等学校定時制（多部制・単位制）', publicPrivate: '公立', operator: '長野県教育委員会', schoolCategory: 'standalone', parts: '午前部・午後部・夜間部', curriculumType: '単位制' },
+
+  // ===== 岐阜県（11校） =====
+  // 出典: https://www.pref.gifu.lg.jp/uploaded/attachment/358214.pdf（県立高等学校一覧・校名と部制の対応）
+  //       各校公式サイト（school.gifu-net.ed.jp ドメイン、多くが一時停止中）
+  { no: 300, prefecture: '岐阜県', municipality: '岐阜市', name: '岐阜県立華陽フロンティア高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部・Ⅱ部・Ⅲ部', curriculumType: '単位制', officialUrl: 'https://school.gifu-net.ed.jp/kayofront-hs/', note: '普通科。市区町村・単位制は学校情報サイトでの確認で、県公式資料では未確認' },
+  { no: 301, prefecture: '岐阜県', municipality: '土岐市', name: '岐阜県立東濃フロンティア高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部・Ⅱ部・Ⅲ部', curriculumType: '単位制', officialUrl: 'https://school.gifu-net.ed.jp/tonofront-hs/', note: '普通科。市区町村・単位制は学校情報サイトでの確認で、県公式資料では未確認' },
+  { no: 302, prefecture: '岐阜県', name: '岐阜県立岐阜商業高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', officialUrl: 'https://school.gifu-net.ed.jp/gifu-chs/', note: 'ビジネス科。所在地・単位制/学年制は公式サイト一時停止のため未確認' },
+  { no: 303, prefecture: '岐阜県', name: '岐阜県立岐阜工業高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', officialUrl: 'https://school.gifu-net.ed.jp/gifu-ths/', note: '工業技術。所在地・単位制/学年制は未確認' },
+  { no: 304, prefecture: '岐阜県', municipality: '大垣市', name: '岐阜県立大垣商業高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', officialUrl: 'https://school.gifu-net.ed.jp/ogaki-chs/', note: 'ビジネス。単位制/学年制は未確認' },
+  { no: 305, prefecture: '岐阜県', name: '岐阜県立大垣工業高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', officialUrl: 'https://school.gifu-net.ed.jp/ogaki-ths/', note: '工業技術。所在地・単位制/学年制は未確認' },
+  { no: 306, prefecture: '岐阜県', municipality: '美濃加茂市', name: '岐阜県立加茂高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', curriculumType: '単位制', officialUrl: 'https://school.gifu-net.ed.jp/kamo-hs/', note: '普通科' },
+  { no: 307, prefecture: '岐阜県', name: '岐阜県立中津高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', officialUrl: 'https://school.gifu-net.ed.jp/nakatsu-hs/', note: '普通科。所在地・単位制/学年制は未確認' },
+  { no: 308, prefecture: '岐阜県', name: '岐阜県立飛騨高山高等学校', publicPrivate: '公立', operator: '岐阜県教育委員会', schoolCategory: 'standalone', officialUrl: 'https://school.gifu-net.ed.jp/htakayama-hs/', note: '普通科。通信制も併設。所在地・単位制/学年制は未確認' },
+  { no: 309, prefecture: '岐阜県', municipality: '関市', name: '関市立関商工高等学校', publicPrivate: '公立', operator: '関市教育委員会', schoolCategory: 'standalone', officialUrl: 'https://school.gifu-net.ed.jp/seki-hs/', note: '機械科。単位制/学年制は未確認' },
+  { no: 310, prefecture: '岐阜県', municipality: '中津川市', name: '中津川市立阿木高等学校', publicPrivate: '公立', operator: '中津川市教育委員会', schoolCategory: 'standalone', note: '生産科学・総合生活。所在地・単位制/学年制は未確認' },
 ];
