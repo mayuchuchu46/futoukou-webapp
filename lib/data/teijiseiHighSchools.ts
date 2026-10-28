@@ -346,4 +346,32 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 235, prefecture: '新潟県', municipality: '十日町市', name: '新潟県立十日町高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'attached', note: '全日制と定時制を併設。部制・単位制/学年制は県資料に記載なし' },
   { no: 236, prefecture: '新潟県', municipality: '上越市', name: '新潟県立高田南城高等学校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'standalone', parts: '午前部', curriculumType: '単位制', officialUrl: 'https://takadammsr-h.nein.ed.jp/', note: '全日制なし。定時制（単位制）と通信制課程を置く学校' },
   { no: 237, prefecture: '新潟県', municipality: '佐渡市', name: '新潟県立佐渡高等学校　相川分校', publicPrivate: '公立', operator: '新潟県教育委員会', schoolCategory: 'attached', parts: '午前部', curriculumType: '単位制', note: '本校（佐渡高等学校、全日制・学年制）の分校' },
+
+  // ===== 富山県（6校） =====
+  // 出典: 富山県教育委員会「令和8年度富山県立高等学校入学者選抜」資料 https://www.pref.toyama.jp/documents/47208/r8minasan.pdf
+  { no: 238, prefecture: '富山県', municipality: '魚津市', name: '新川みどり野高校', publicPrivate: '公立', operator: '富山県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.midorino-h.tym.ed.jp' },
+  { no: 239, prefecture: '富山県', municipality: '富山市', name: '富山工業高校', publicPrivate: '公立', operator: '富山県教育委員会', officialUrl: 'https://www.toyama-th.tym.ed.jp', note: '定時制（夜間）。単位制ではないと公式資料に明記' },
+  { no: 240, prefecture: '富山県', municipality: '富山市', name: '雄峰高校', publicPrivate: '公立', operator: '富山県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.yuho-h.tym.ed.jp', note: '定時制・通信制の両方を設置' },
+  { no: 241, prefecture: '富山県', municipality: '高岡市', name: '志貴野高校', publicPrivate: '公立', operator: '富山県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.shikino-h.tym.ed.jp' },
+  { no: 242, prefecture: '富山県', municipality: '小矢部市', name: '小矢部園芸高校', publicPrivate: '公立', operator: '富山県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.oyabeengei-h.tym.ed.jp' },
+  { no: 243, prefecture: '富山県', municipality: '小矢部市', name: 'となみ野高校', publicPrivate: '公立', operator: '富山県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.tonamino-h.tym.ed.jp' },
+
+  // ===== 石川県（6校） =====
+  // 出典: 石川県教育委員会「外国人生徒等に係る特別入学実施校」一覧 https://cms1.ishikawa-c.ed.jp/wazith/wysiwyg/file/download/1/1377
+  { no: 244, prefecture: '石川県', name: '加賀聖城高校', publicPrivate: '公立', operator: '石川県教育委員会', note: '定時制：普通科（夜間・午前・午後）、総合学科（夜間・午前・午後）を設置' },
+  { no: 245, prefecture: '石川県', name: '小松北高校', publicPrivate: '公立', operator: '石川県教育委員会' },
+  { no: 246, prefecture: '石川県', municipality: '金沢市', name: '金沢中央高校', publicPrivate: '公立', operator: '石川県教育委員会', curriculumType: '単位制', note: '単位制総合学科' },
+  { no: 247, prefecture: '石川県', name: '羽松高校', publicPrivate: '公立', operator: '石川県教育委員会', note: '定時制：普通科（午前）を設置' },
+  { no: 248, prefecture: '石川県', name: '七尾城北高校', publicPrivate: '公立', operator: '石川県教育委員会', note: '定時制：普通科（夜間）を設置' },
+  { no: 249, prefecture: '石川県', name: '輪島高校', publicPrivate: '公立', operator: '石川県教育委員会', note: '定時制：普通科（夜間）を設置' },
+
+  // ===== 福井県（7校） =====
+  // 出典: 福井県教育委員会「令和8年度福井県立高等学校入学者選抜実施要項」 https://www.pref.fukui.lg.jp/doc/koukou/nyugaku/r08youkou_d/fil/R08annai.pdf
+  { no: 250, prefecture: '福井県', municipality: '坂井市', name: '丸岡高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員40名。昭和39年「城東分校（定時制）」として開校' },
+  { no: 251, prefecture: '福井県', municipality: '大野市', name: '大野高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
+  { no: 252, prefecture: '福井県', municipality: '鯖江市', name: '鯖江高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', parts: '昼間部のみ', note: '定時制。募集人員30名。平成22年度より単位制・2学期制、令和元年度より夜間部を廃止し昼間部のみに' },
+  { no: 253, prefecture: '福井県', municipality: '越前市', name: '武生高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員80名' },
+  { no: 254, prefecture: '福井県', municipality: '敦賀市', name: '敦賀高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
+  { no: 255, prefecture: '福井県', municipality: '小浜市', name: '若狭高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
+  { no: 256, prefecture: '福井県', municipality: '福井市', name: '道守高等学校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'standalone', parts: '午前部・午後部・夜間部', note: '定時制・通信制の独立校。募集人員（定時制）110名（午前40・午後40・夜間30）。1971年、定時制・通信制教育のモデル校として開校' },
 ];
