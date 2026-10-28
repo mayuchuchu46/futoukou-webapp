@@ -24,6 +24,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/about`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/support`, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${SITE_URL}/theme`, changeFrequency: 'weekly', priority: 0.5 },
+    // 不登校に関する最新ニュースまとめページ（2026-10-29追加）。
+    { url: `${SITE_URL}/news`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/experts`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/expertlist`, changeFrequency: 'weekly', priority: 0.4 },
     // 学びの多様化学校（旧：不登校特例校）の都道府県別一覧ページ（2026-10-18追加）。

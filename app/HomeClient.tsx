@@ -11,6 +11,7 @@ import EyeIcon from '@/components/EyeIcon';
 import TagChips from '@/components/TagChips';
 import PcSidebar from '@/components/PcSidebar';
 import TodayQuestionTeaser from '@/components/TodayQuestionTeaser';
+import NewsTeaser from '@/components/NewsTeaser';
 import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
@@ -275,6 +276,13 @@ export default function HomeClient({
                 </div>
               </div>
             )}
+
+            {/* 「不登校に関する最新ニュース」誘導バナー（2026-10-29追加）。ランキングの
+                直下、カテゴリ・テーマ用のチップ列より上に置く。PC・モバイル両方で
+                同じ位置に出す（home-main-colはPC/モバイル共通の1カラムのため、
+                PcSidebar側には別途置いていない）。ニュースが1件もないうちは
+                NewsTeaser内部でnullを返し、何も表示されない。 */}
+            {showExtras && <NewsTeaser />}
 
             {/* PCではサイド側に同じものを出すので、ここはモバイル専用（960px以上では非表示）。
                 見出しテキスト「気になるテーマから探す」は、スマホでは無くても
