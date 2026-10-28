@@ -20,9 +20,15 @@ import { CORRESPONDENCE_HIGH_SCHOOLS, CorrespondenceHighSchool } from './data/co
 // しまっていた（例：クラーク記念国際高等学校。CLARK SMARTコース等のnoteが既にあるのに
 // 回答に一切反映されなかった、という指摘を受けて発覚）。lib/schoolFacts.tsと同じ考え方で
 // buildCorrespondenceSchoolFactsBlockを追加し、各API route（app/api/consult等）から
-// 呼び出すようにした。フリースクール（findMentionedFreeSchool）は現時点でnote欄の
-// 「不登校生徒への対応」的な情報を積極整備する方針転換の対象外のため、ひとまず
-// 内部リンク表示のみの従来方針のままにしている。
+// 呼び出すようにした。
+//
+// 【2026-10-28再追記】上記の「フリースクールは対象外」という方針も撤回した。
+// 「学びスペース あうるの森」「レアレア」にnote（運営方針・支援内容等）を追加した
+// 直後、ユーザーから「レアレアの情報いれたのに、回答がかわらない」との指摘を受けて
+// 確認したところ、通信制高校と同様、findMentionedFreeSchoolの結果をAIプロンプトに
+// 渡す処理が無く、フリースクールのnoteは内部リンク表示にしか使われていなかった
+// （通信制高校で起きたのと全く同じ抜け）。buildFreeSchoolFactsBlockを追加し、
+// 各API routeから通信制高校と同じ要領で呼び出すようにした。
 
 function findByName<T extends { name: string }>(
   texts: (string | null | undefined)[],
@@ -103,5 +109,44 @@ export function buildCorrespondenceSchoolFactsBlock(school: CorrespondenceHighSc
   「ここでは確認できていません。学校に直接お問い合わせください」だけで終わる、中身のない
   回答にはしないこと。
 【確認済みの学校情報】
+${facts.map((f) => '- ' + f).join('\n')}`;
+}
+
+// AIに渡す「確認済みのフリースクール情報」ブロック。buildCorrespondenceSchoolFactsBlockと
+// 同じ考え方（2026-10-28追加、上記コメント参照）。
+export function buildFreeSchoolFactsLines(school: FreeSchool): string[] {
+  const facts: string[] = [`施設名：${school.name}`, `所在地：${school.prefecture}${school.city}`];
+  if (school.officialUrl) facts.push(`公式サイト：${school.officialUrl}`);
+  if (school.ageRange && school.ageRange !== '記載なし') facts.push(`対象：${school.ageRange}`);
+  if (school.note) facts.push(`その他の確認済み情報（運営団体・支援内容等）：${school.note}`);
+  return facts;
+}
+
+export function buildFreeSchoolFactsBlock(school: FreeSchool): string {
+  const facts = buildFreeSchoolFactsLines(school);
+
+  return `
+相談文に、当サイトが情報を持っているフリースクール「${school.name}」が含まれているようです。
+以下は、この施設について確認できている情報（当サイト側で事前に調査・確認済みのもの）です。
+- この施設について答える際は、質問にどんぴしゃで一致していなくても、関連しそうな確認済み情報は
+  積極的に回答に取り入れてください。
+- 下の【確認済みの施設情報】に書かれている事実は、必ずこの範囲内の情報だけを使い、推測や
+  断定で情報を足さないこと。
+- 「どんなタイプの子に合うか」「雰囲気はどうか」「どんな支援があるか」のような、施設ごとの特色に
+  関する質問については、下の【確認済みの施設情報】（特に「その他の確認済み情報」欄）の中に
+  関連しそうな記述があれば、それを相談文に書かれているお子さんの特徴と照らし合わせて、でき
+  るだけこの施設固有の内容で具体的に答えること。確認済みの情報の範囲を超える事実を断定しない
+  こと（web検索は使えないため、確認済みデータに無いことは「無い」と扱うこと）。
+  (1) 「その他の確認済み情報」に特色に関する記述がある場合は、それを踏まえて具体的に答える
+      こと。「公式サイトを見てみましょう」のような、どの施設にも当てはまる一般論だけで
+      終わらせないこと。
+  (2) 「その他の確認済み情報」が無い、またはあっても特色に関する記述が無い場合に限り、
+      フリースクールを比較・見学する際に一般的に確認すると良い着眼点（例：開所日時、
+      学習支援の有無、在籍校との連携実績）を1つ具体的に挙げ、見学・問い合わせの際に
+      それを確認するとよい、という形で答え、施設への確認も案内すること。この場合、
+      確認できていない特色を推測で答えないこと。
+  「ここでは確認できていません。施設に直接お問い合わせください」だけで終わる、中身のない
+  回答にはしないこと。
+【確認済みの施設情報】
 ${facts.map((f) => '- ' + f).join('\n')}`;
 }
