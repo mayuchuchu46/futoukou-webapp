@@ -221,4 +221,23 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 144, prefecture: '千葉県', name: '長狭高等学校', publicPrivate: '公立', operator: '千葉県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', officialUrl: 'https://www.pref.chiba.lg.jp/kyouiku/jisei/seitoshidou/kousoku/ichiran.html', note: '定時制課程は普通科' },
   { no: 145, prefecture: '千葉県', name: '館山総合高等学校', publicPrivate: '公立', operator: '千葉県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', officialUrl: 'https://www.pref.chiba.lg.jp/kyouiku/jisei/seitoshidou/kousoku/ichiran.html', note: '定時制課程は普通科' },
   { no: 146, prefecture: '千葉県', name: '木更津東高等学校', publicPrivate: '公立', operator: '千葉県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', officialUrl: 'https://www.pref.chiba.lg.jp/kyouiku/jisei/seitoshidou/kousoku/ichiran.html', note: '定時制課程は普通科' },
+
+  // ===== 秋田県（4校） =====
+  // 出典: https://www.pref.akita.lg.jp/uploads/public/archive_0000049957_00/秋田県高等学校一覧.pdf（秋田県教育委員会）
+  // 2回の調査でこの4校以外の定時制設置校は確認できなかった。部制・単位制/学年制・通称・公式URLは
+  // 出典資料に記載がなく、各校公式サイトも検索で特定できなかったため省略している。
+  { no: 147, prefecture: '秋田県', municipality: '大館市', name: '大館鳳鳴高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
+  { no: 148, prefecture: '秋田県', municipality: '能代市', name: '能代高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
+  { no: 149, prefecture: '秋田県', municipality: '仙北市', name: '角館高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
+  { no: 150, prefecture: '秋田県', municipality: '横手市', name: '横手高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
+
+  // ===== 福島県（6校） =====
+  // 出典: https://www.pref.fukushima.lg.jp/uploaded/attachment/600080.pdf（福島県教育委員会、入学者選抜関連資料）
+  //       各校公式サイト（fcs.ed.jp ドメイン）の募集要項・学校案内
+  { no: 151, prefecture: '福島県', municipality: '福島市', name: 'ふくしま新世高等学校', publicPrivate: '公立', operator: '福島県教育委員会', schoolCategory: 'standalone', parts: '夕間部・夜間部', officialUrl: 'https://fukushimashinsei-h.fcs.ed.jp/', note: '定時制普通科。夕間部は15:40〜19:25、夜間部は17:25〜21:05。夕間部は3年間での卒業も選択可能。所在地（福島市渡利七社宮17）はベネッセ提供データのみでの確認で、県教委・学校公式資料による独立した裏付けは取れていない。' },
+  { no: 152, prefecture: '福島県', municipality: '郡山市', name: '郡山萌世高等学校', publicPrivate: '公立', operator: '福島県教育委員会', schoolCategory: 'standalone', parts: '昼間主コース（募集120名）・夜間主コース（募集40名）', officialUrl: 'https://housei-h.fcs.ed.jp/', note: '定時制普通科。通信制課程も併設。' },
+  { no: 153, prefecture: '福島県', municipality: '白河市', name: '白河第二高等学校', publicPrivate: '公立', operator: '福島県教育委員会', schoolCategory: 'standalone', parts: '夜間', officialUrl: 'https://shirakawa2-h.fcs.ed.jp/', note: '夜間定時制普通科。1学年1クラスでクラス替えなし、1日4校時、卒業まで4年。' },
+  { no: 154, prefecture: '福島県', municipality: '会津若松市', name: '会津第二高等学校', publicPrivate: '公立', operator: '福島県教育委員会', schoolCategory: 'standalone', parts: '夜間', officialUrl: 'https://aizu2-h.fcs.ed.jp/', note: '定時制普通科（夜間）。在籍校での修得単位数に応じた編入学年の募集あり。' },
+  { no: 155, prefecture: '福島県', municipality: 'いわき市', name: 'いわき翠の杜高等学校', publicPrivate: '公立', operator: '福島県教育委員会', schoolCategory: 'standalone', parts: '夜間主コース・昼間主コース', curriculumType: '単位制', officialUrl: 'https://iwakimidorinomori-h.fcs.ed.jp/', note: '定時制普通科。募集要項に「単位制による」と明記。' },
+  { no: 156, prefecture: '福島県', municipality: '福島市', name: '福島工業高等学校', publicPrivate: '公立', operator: '福島県教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'https://fukushima-th.fcs.ed.jp/', note: '定時制（夜間）工業科。修業年限4年だが3年修了制を選択可能。2年次から機械コース・建築コースに分かれる。' },
 ];
