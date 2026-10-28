@@ -483,4 +483,16 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 341, prefecture: '愛知県', name: '名古屋市立中央高等学校', publicPrivate: '公立', operator: '名古屋市教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '普通科・商業科' },
   { no: 342, prefecture: '愛知県', municipality: '豊橋市', name: '豊橋市立豊橋高等学校', publicPrivate: '公立', operator: '豊橋市教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '普通科' },
   { no: 343, prefecture: '愛知県', name: '名古屋市立工業高等学校', publicPrivate: '公立', operator: '名古屋市教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '複数学科' },
+
+  // ===== 京都府（8校） =====
+  // 出典: 京都府教育委員会「定時制等設置校一覧」https://www.kyoto-be.ne.jp/koukyou/cms/wp-content/uploads/2022/12/teijiseitou.pdf
+  //       各校個別案内PDF（kyoto-be.ne.jp ドメイン）
+  { no: 344, prefecture: '京都府', municipality: '京都市北区', name: '京都府立清明高等学校', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'standalone', parts: '午前コース・午後コース（昼間2部制）', curriculumType: '単位制', note: '基本コンセプトは「学びアンダンテ」。ICT活用・AI学習アプリで自学自習を支援' },
+  { no: 345, prefecture: '京都府', municipality: '京丹後市弥栄町', name: '京都府立清新高等学校', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'standalone', curriculumType: '単位制', note: '総合学科の記載もあり' },
+  { no: 346, prefecture: '京都府', municipality: '京都市中京区', name: '京都府立朱雀高等学校　夜間定時制', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'attached', parts: '夜間', note: '朱雀高校は通信制課程も併設' },
+  { no: 347, prefecture: '京都府', municipality: '京都市南区', name: '京都府立鳥羽高等学校　夜間定時制', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'attached', parts: '夜間', curriculumType: '単位制', note: '単位制による普通科（平成28年度入学生から実施）。4年制が基本だが三修制により3年卒業も可。学校設定科目「スタートライン」で学び直し支援。制服なし' },
+  { no: 348, prefecture: '京都府', municipality: '京都市伏見区', name: '京都府立桃山高等学校　定時制', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'attached', note: '普通科・商業科。転入学は第2～4学年が対象' },
+  { no: 349, prefecture: '京都府', municipality: '南丹市美山町', name: '京都府立北桑田高等学校　美山分校（昼間定時制）', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'attached', parts: '昼間', note: '家政科・農業科。月～木登校、金曜は就業日とし4年間かけて学ぶ' },
+  { no: 350, prefecture: '京都府', municipality: '綾部市', name: '京都府立綾部高等学校　由良川キャンパス（東分校）夜間定時制', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'attached', parts: '夜間', note: '普通科。少人数・ティームティーチングによる個別支援' },
+  { no: 351, prefecture: '京都府', municipality: '舞鶴市', name: '京都府立東舞鶴高等学校　浮島分校（夜間定時制）', publicPrivate: '公立', operator: '京都府教育委員会', schoolCategory: 'attached', parts: '夜間' },
 ];
