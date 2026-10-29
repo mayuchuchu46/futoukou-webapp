@@ -73,7 +73,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // 出典: 令和9年度 東京都立高等学校 定時制課程・チャレンジスクール等 入学者選抜案内
   //       https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/r9_admission_pt_cs
   //       チャレンジスクール名称確認: https://www.kyoiku.metro.tokyo.lg.jp/admission/high_school/archives/exam/files/pamphlet2023_japanese/10.8.pdf
-  { no: 24, prefecture: '東京都', name: '東京都立一橋高等学校', publicPrivate: '公立', operator: '東京都教育委員会', schoolCategory: 'standalone', parts: '三部制', curriculumType: '単位制' },
+  { no: 24, prefecture: '東京都', name: '東京都立一橋高等学校', municipality: '千代田区', publicPrivate: '公立', operator: '東京都教育委員会', schoolCategory: 'standalone', parts: '三部制', curriculumType: '単位制', officialUrl: 'https://www.metro.ed.jp/hitotsubashi-he/' },
   { no: 25, prefecture: '東京都', name: '東京都立浅草高等学校', publicPrivate: '公立', operator: '東京都教育委員会', schoolCategory: 'standalone', parts: '三部制', curriculumType: '単位制' },
   { no: 26, prefecture: '東京都', name: '東京都立荻窪高等学校', publicPrivate: '公立', operator: '東京都教育委員会', schoolCategory: 'standalone', parts: '三部制', curriculumType: '単位制' },
   { no: 27, prefecture: '東京都', name: '東京都立八王子拓真高等学校', publicPrivate: '公立', operator: '東京都教育委員会', schoolCategory: 'standalone', parts: '三部制', curriculumType: '単位制' },

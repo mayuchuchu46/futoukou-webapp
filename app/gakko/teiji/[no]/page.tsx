@@ -76,7 +76,12 @@ export default async function TeijiSchoolPage({
   }
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(school.name + ' 定時制')}`;
-  const mapQuery = school.municipality ? `${school.name} ${school.prefecture}${school.municipality}` : null;
+  // 市区町村が未確認の学校でも、学校名＋都道府県での地図検索は可能なことが多いため、
+  // 以前は市区町村が確認できた学校のみ地図を出していたのを、無い場合は学校名＋都道府県
+  // にフォールバックする形に変更した（2026-10-29、「通信制と同じようにマップを出して
+  // ほしい」との要望を受けて。通信制高校の詳細ページ（app/gakko/tsushin/[no]/page.tsx）
+  // も学校名＋都道府県＋市区町村の検索ベースの地図で、常に表示している）。
+  const mapQuery = `${school.name} ${school.prefecture}${school.municipality || ''}`;
   const schoolUrl = `${SITE_URL}/gakko/teiji/${school.no}`;
   const shareNoteExcerpt = school.note
     ? school.note.length > 50
@@ -152,30 +157,28 @@ export default async function TeijiSchoolPage({
               ))}
             </div>
 
-            {mapQuery && (
-              <div style={{ width: '100%' }}>
-                <iframe
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=15&output=embed`}
-                  width="100%"
-                  height={220}
-                  style={{ border: 0, borderRadius: 12, display: 'block' }}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title={`${school.name}の地図`}
-                />
-                <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
-                  <a
-                    href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="muted"
-                    style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
-                  >
-                    Googleマップで開く ›
-                  </a>
-                </div>
+            <div style={{ width: '100%' }}>
+              <iframe
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=15&output=embed`}
+                width="100%"
+                height={220}
+                style={{ border: 0, borderRadius: 12, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${school.name}の地図`}
+              />
+              <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                <a
+                  href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="muted"
+                  style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
+                >
+                  Googleマップで開く ›
+                </a>
               </div>
-            )}
+            </div>
 
             <Link
               href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
