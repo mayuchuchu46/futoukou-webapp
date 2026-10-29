@@ -13,6 +13,7 @@ import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import ResultClient from './ResultClient';
+import QuoteShareCard from './QuoteShareCard';
 import ViewPing from './ViewPing';
 import LikeButton from './LikeButton';
 import ReactionButtons from './ReactionButtons';
@@ -299,36 +300,10 @@ export default async function ResultPage({
   );
 
   // 回答を一言に要約した「格言カード」シェア機能（2026-10-17追加）。
-  // one_liner（app/api/consult/route.tsで、crisis_detectedな回答以外にだけ生成・保存）が
-  // ある相談にだけ出す。この機能の追加前に投稿された相談・crisis_detectedな相談には
-  // one_linerが無いため、自然にブロックごと表示されない（isCrisisでの二重チェックはしない）。
-  const quoteImageUrl = `${resultUrl}/quote-image`;
-  const quoteShareBlock = item.request_type === 'ai' && item.one_liner && (
-    <div className="card quote-share-card" style={{ alignItems: 'center', gap: 14 }}>
-      <div className="answer-label" style={{ fontSize: 13 }}>この回答を、一言カードでシェア</div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={quoteImageUrl}
-        alt={item.one_liner}
-        width={1080}
-        height={1080}
-        style={{ width: '100%', maxWidth: 360, height: 'auto', borderRadius: 16, border: '1px solid var(--border)' }}
-        loading="lazy"
-      />
-      <a
-        className="share-btn"
-        href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-          text: `${item.one_liner}\n\nーどうする先生`,
-          url: resultUrl,
-          hashtags: 'どうする先生,不登校',
-        })}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span className="share-btn-icon">𝕏</span>
-        この一言をシェア
-      </a>
-    </div>
+  // one_linerの生成は、2026-10-30からオンデマンド化（QuoteShareCard参照）。
+  // crisis_detectedな回答・専門家回答（request_type !== 'ai'）には出さない方針は変わらず。
+  const quoteShareBlock = item.request_type === 'ai' && !item.crisis_detected && (
+    <QuoteShareCard id={item.id} resultUrl={resultUrl} initialOneLiner={item.one_liner ?? null} />
   );
 
   // 回答を見た後、「このまま終わり」にならないよう、もう一度（別の内容で）相談できる
