@@ -101,6 +101,10 @@ export default function Header({
       href: '/gakko?type=josei',
       label: '助成金・支援制度',
     },
+    // 「ニュース一覧への導線が弱い」との指摘を受けて追加（2026-10-29）。それまでは
+    // ホームのNewsTeaserバナー（showExtras時のみ表示・最新記事1件への直リンク）
+    // だけが唯一の入り口で、グローバルナビ・下部固定ナビのどこにも出ていなかった。
+    { type: 'link', href: '/news', label: 'ニュース' },
     { type: 'link', href: '/notebook', label: '伴走ノート' },
     { type: 'link', href: '/today', label: 'みんなのデータ' },
   ];

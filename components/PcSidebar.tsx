@@ -101,6 +101,11 @@ export default function PcSidebar({
         { href: '/gakko?type=tsushin', icon: '📮', label: '通信制高校（広域）' },
         { href: '/gakko?type=teiji', icon: '🌙', label: '定時制高校' },
         { href: '/gakko?type=josei', icon: '💴', label: '助成金・支援制度' },
+        // 「ニュース一覧への導線が弱い」との指摘を受けて追加（2026-10-29）。
+        // このカード（gakkoLinks）はPC右サイド・モバイル本文下の両方、
+        // ほぼ全ページに出るため、ホーム限定のNewsTeaserバナーよりも
+        // 恒常的な導線になる。
+        { href: '/news', icon: '📰', label: 'ニュース' },
       ].map((item, i, arr) => (
         <Link
           key={item.href}
