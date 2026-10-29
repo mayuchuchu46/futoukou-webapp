@@ -202,7 +202,7 @@ export default async function AlternativeSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `オルタナティブスクール「${school.name}」（${school.prefecture}${school.city}・${methodLabel}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
+                text: `【オルタナティブスクール】「${school.name}」（${school.prefecture}${school.city}・${methodLabel}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,オルタナティブスクール',
               })}`}
