@@ -105,26 +105,38 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               </div>
 
               {stats.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 760, marginTop: 4 }}>
-                  {stats.map((s) => (
-                    <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 22, fontWeight: 700, color: '#2B2B28' }}>
-                        <span style={{ display: 'flex' }}>{s.label}</span>
-                        <span style={{ display: 'flex', fontWeight: 800, color: s.value === maxStat ? '#3D7E65' : '#6FA389' }}>{s.value}{s.unit}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: 760, marginTop: 4 }}>
+                  {/* バー幅は「この記事内の最大値」ではなく、単位が%なら実際の
+                      パーセント値（＝0〜100%の目盛り）をそのまま使う
+                      （2026-10-29、「全体のうち何%かが伝わらない」との指摘を
+                      受けて修正。components/NewsStatsChart.tsxと同じ考え方）。 */}
+                  {stats.every((s) => s.unit === '%') && (
+                    <div style={{ display: 'flex', fontSize: 18, color: '#6B6A62' }}>全体を100%としたときの割合</div>
+                  )}
+                  {stats.map((s) => {
+                    const width = s.unit === '%'
+                      ? Math.min(Math.max(s.value, s.value > 0 ? 2 : 0), 100)
+                      : (maxStat > 0 ? Math.max((s.value / maxStat) * 100, 4) : 0);
+                    return (
+                      <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 22, fontWeight: 700, color: '#2B2B28' }}>
+                          <span style={{ display: 'flex' }}>{s.label}</span>
+                          <span style={{ display: 'flex', fontWeight: 800, color: s.value === maxStat ? '#3D7E65' : '#6FA389' }}>{s.value}{s.unit}</span>
+                        </div>
+                        <div style={{ display: 'flex', width: '100%', height: 18, background: '#E3DFD3', borderRadius: 9 }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              width: `${width}%`,
+                              height: '100%',
+                              background: s.value === maxStat ? '#3D7E65' : '#6FA389',
+                              borderRadius: 9,
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div style={{ display: 'flex', width: '100%', height: 18, background: '#E3DFD3', borderRadius: 9 }}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            width: `${maxStat > 0 ? Math.max((s.value / maxStat) * 100, 4) : 0}%`,
-                            height: '100%',
-                            background: s.value === maxStat ? '#3D7E65' : '#6FA389',
-                            borderRadius: 9,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
