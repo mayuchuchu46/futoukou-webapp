@@ -53,6 +53,17 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'mext-futoko-kenshin-taiou-2026-10',
+    date: '2026-10-27',
+    addedAt: '2026-10-29',
+    title: '不登校の子どもの健診未受診問題、文科相が対応表明――周知資料の作成や受診事例の普及へ',
+    summary:
+      '総務省が10月22日に公表した調査（不登校の中学生の19.9%が学校健診を全科目受診できていない）を受け、関芳弘文部科学大臣は10月27日の会見で、不登校の子どもも健診を受けられる仕組みの整備が必要との認識を示しました。具体的には、健診の重要性を伝える周知資料の作成や、学校医が勤務・経営する医療機関で受診できる事例の紹介などを進めるとし、受診できなかった児童生徒の健康管理のあり方については有識者会議で検討を続けているとしています。',
+    sourceName: '教育業界ニュース「ReseEd（リシード）」',
+    sourceUrl: 'https://reseed.resemom.jp/article/2026/10/28/14450.html',
+    category: 'policy',
+  },
+  {
     id: 'soumu-futoko-kenshin-chosa-2026-10',
     date: '2026-10-22',
     addedAt: '2026-10-29',
