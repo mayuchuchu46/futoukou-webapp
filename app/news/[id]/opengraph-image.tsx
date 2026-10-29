@@ -49,12 +49,15 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const title = item?.title || '不登校に関する最新ニュース';
   const headlineValue = item?.headline?.value || '';
   const headlineLabel = item?.headline?.label || '';
+  const stats = item?.stats || [];
+  const maxStat = stats.length > 0 ? Math.max(...stats.map((s) => s.value)) : 0;
 
   const logoData = await readFile(join(process.cwd(), 'public/assets/sensei_logo.png'), 'base64');
   const logoSrc = `data:image/png;base64,${logoData}`;
 
+  const statsText = stats.map((s) => `${s.label}${s.value}${s.unit}`).join('');
   const fontData = await loadGoogleFont(
-    `どうする先生不登校編${categoryLabel}${title}${headlineValue}${headlineLabel}`
+    `どうする先生不登校編${categoryLabel}${title}${headlineValue}${headlineLabel}${statsText}`
   );
 
   return new ImageResponse(
@@ -88,15 +91,42 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           </div>
 
           {/* インパクト数字を主役にする（2026-10-29）。無い記事はこのブロック自体を
-              出さず、タイトルだけを大きく見せる。 */}
+              出さず、タイトルだけを大きく見せる。statsがある記事は、数字の下に
+              簡単な比較バーも添える（2026-10-29、「数字と合わせてグラフも
+              入れたい」との要望を受けて追加）。カード内に収めるため、本文ページの
+              バーより小ぶりなサイズにしている。 */}
           {headlineValue ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ display: 'flex', fontSize: 148, fontWeight: 800, lineHeight: 1, color: '#3D7E65' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: stats.length > 0 ? 18 : 10 }}>
+              <div style={{ display: 'flex', fontSize: stats.length > 0 ? 108 : 148, fontWeight: 800, lineHeight: 1, color: '#3D7E65' }}>
                 {headlineValue}
               </div>
-              <div style={{ display: 'flex', fontSize: 38, fontWeight: 700, lineHeight: 1.35, color: '#2B2B28' }}>
+              <div style={{ display: 'flex', fontSize: 32, fontWeight: 700, lineHeight: 1.3, color: '#2B2B28' }}>
                 {headlineLabel}
               </div>
+
+              {stats.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 760, marginTop: 4 }}>
+                  {stats.map((s) => (
+                    <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 22, fontWeight: 700, color: '#2B2B28' }}>
+                        <span style={{ display: 'flex' }}>{s.label}</span>
+                        <span style={{ display: 'flex' }}>{s.value}{s.unit}</span>
+                      </div>
+                      <div style={{ display: 'flex', width: '100%', height: 16, background: '#E3DFD3', borderRadius: 8 }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            width: `${maxStat > 0 ? (s.value / maxStat) * 100 : 0}%`,
+                            height: '100%',
+                            background: s.value === maxStat ? '#3D7E65' : '#A9C3B8',
+                            borderRadius: 8,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ) : (
             <div
