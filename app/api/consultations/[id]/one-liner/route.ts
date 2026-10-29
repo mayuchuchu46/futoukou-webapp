@@ -41,7 +41,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
   let oneLiner: string | null = null;
   try {
     const oneLinerMsg = await anthropic.messages.create({
-      model: 'claude-sonnet-5',
+      model: 'claude-haiku-5-5',
       max_tokens: 100,
       messages: [{ role: 'user', content: buildOneLinerPrompt(item.question, item.answer) }],
     });
