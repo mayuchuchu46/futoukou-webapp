@@ -212,7 +212,7 @@ export default async function FreeSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `不登校の居場所に。フリースクール「${school.name}」（${school.prefecture}${school.city}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
+                text: `フリースクール「${school.name}」（${school.prefecture}${school.city}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,フリースクール',
               })}`}

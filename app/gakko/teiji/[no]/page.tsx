@@ -206,7 +206,7 @@ export default async function TeijiSchoolPage({
               className="share-btn"
               style={{ width: '100%' }}
               href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `不登校・中退経験からの学び直しに。定時制高校「${school.name}」${school.nickname ? `（${school.nickname}）` : ''}（${school.prefecture}${school.municipality || ''}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
+                text: `定時制高校「${school.name}」${school.nickname ? `（${school.nickname}）` : ''}（${school.prefecture}${school.municipality || ''}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
                 url: schoolUrl,
                 hashtags: 'どうする先生,定時制高校',
               })}`}
