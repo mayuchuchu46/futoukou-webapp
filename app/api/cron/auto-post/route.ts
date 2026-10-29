@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
   let question: string;
   try {
     const qMsg = await anthropic.messages.create({
-      model: 'claude-sonnet-5',
+      model: 'claude-haiku-5-5',
       max_tokens: 300,
       messages: [{ role: 'user', content: questionPrompt }],
     });
@@ -123,7 +123,7 @@ export async function GET(req: NextRequest) {
   let answer: string;
   try {
     const aMsg = await anthropic.messages.create({
-      model: 'claude-sonnet-5',
+      model: 'claude-haiku-5-5',
       max_tokens: 600,
       messages: [{ role: 'user', content: answerPrompt }],
     });
