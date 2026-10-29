@@ -39,11 +39,13 @@ export default function NewsStatsChart({ stats, caption }: { stats: Stat[]; capt
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', margin: '4px 0' }}>
       {/* この割合が何を表しているかの説明（2026-10-29追加、「この割合が何なのかも
           わかるようにテキストを入れたい」との要望を受けて）。記事ごとのcaptionが
-          あればそれを、無ければ単位%のときだけ最低限の汎用文を出す。 */}
+          あればそれを、無ければ単位%のときだけ最低限の汎用文を出す。
+          「もっと目立っていい」との指摘を受けて、小さい補足テキストではなく、
+          グラフの見出しとしてはっきり読める太字・濃い色に変更した。 */}
       {caption ? (
-        <div className="muted" style={{ fontSize: 11 }}>{caption}</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>{caption}</div>
       ) : (
-        allPercent && <div className="muted" style={{ fontSize: 11 }}>全体を100%としたときの割合</div>
+        allPercent && <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>全体を100%としたときの割合</div>
       )}
       {stats.map((s) => {
         const isMax = s.value === max;

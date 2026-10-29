@@ -112,10 +112,10 @@ export default async function Image({ params }: { params: Promise<{ id: string }
                       （2026-10-29、「全体のうち何%かが伝わらない」との指摘を
                       受けて修正。components/NewsStatsChart.tsxと同じ考え方）。 */}
                   {statsCaption ? (
-                    <div style={{ display: 'flex', fontSize: 18, color: '#6B6A62' }}>{statsCaption}</div>
+                    <div style={{ display: 'flex', fontSize: 22, fontWeight: 700, color: '#2B2B28' }}>{statsCaption}</div>
                   ) : (
                     stats.every((s) => s.unit === '%') && (
-                      <div style={{ display: 'flex', fontSize: 18, color: '#6B6A62' }}>全体を100%としたときの割合</div>
+                      <div style={{ display: 'flex', fontSize: 22, fontWeight: 700, color: '#2B2B28' }}>全体を100%としたときの割合</div>
                     )
                   )}
                   {stats.map((s) => {
