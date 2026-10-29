@@ -181,6 +181,16 @@ export default function PcSidebar({
               </div>
             ))}
           </div>
+          {/* 「もっと見る」リンク（2026-10-29追加）。このコンポーネントはホーム以外の
+              ページにも出るため、HomeClient.tsx側（同一ページ内でタブを直接切り替える）
+              とは違い、通常のページ遷移としてホームの閲覧数順タブへ飛ばす。 */}
+          <Link
+            href="/?sort=views"
+            className="muted"
+            style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 8 }}
+          >
+            もっと見る →
+          </Link>
         </div>
       )}
 

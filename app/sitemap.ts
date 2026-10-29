@@ -35,6 +35,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // canonicalが常に/gakko自体を指すため個別にはインデックスされない設計だが、
     // このページは独立したcanonicalを持つため別途追加している）。
     { url: `${SITE_URL}/gakko/matome`, changeFrequency: 'monthly', priority: 0.4 },
+    // 注目の学び場ランキング全件ページ（2026-10-29追加）。
+    { url: `${SITE_URL}/gakko/ranking`, changeFrequency: 'daily', priority: 0.4 },
     // 都道府県別まとめページ（?pref=XXX）。クエリパラメータ形式だがGoogleはインデックス
     // するため、実データがある都道府県（学びの多様化学校・フリースクール・通信制高校の
     // どれか1件以上ある）のみsitemapに追加（2026-10-22追加）。

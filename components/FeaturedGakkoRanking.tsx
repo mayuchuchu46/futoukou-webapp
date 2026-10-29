@@ -19,10 +19,12 @@ import { FeaturedGakko, FEATURED_GAKKO_TYPE_LABEL } from '@/lib/gakkoRankingType
 // 表示件数は「よく読まれている相談」と同じ3件固定（2026-10-29、「3位までにする？」との
 // 指摘を受けて5件→3件に変更。API（lib/gakkoRanking.ts）側も上位3件だけ返すようにした）。
 //
-// 下に「学び場をもっと見る」リンクを追加（2026-10-29、「もっとみる、とかあったほうが
+// 下に「もっと見る」リンクを追加（2026-10-29、「もっとみる、とかあったほうが
 // いいのかな？学び場ページトップに誘導できるといいよね？」との指摘を受けて）。
-// 遷移先は/gakko/matome（都道府県別の学校・フリースクール一覧ページ）。ホーム内の
-// 他の「学び場」系リンク（home-theme-link等）と同じ遷移先に揃えている。
+// 当初は/gakko/matome（都道府県別の学校・フリースクール一覧）に飛ばしていたが、
+// 「ランキングページもあるといいな」との追加要望を受けて、このランキングの続き
+// （4位以降）をそのまま見られる専用ページ（app/gakko/ranking/page.tsx）を新設し、
+// リンク先もそちらに変更した。
 export default function FeaturedGakkoRanking() {
   const router = useRouter();
   const [items, setItems] = useState<FeaturedGakko[]>([]);
@@ -60,11 +62,11 @@ export default function FeaturedGakkoRanking() {
         ))}
       </div>
       <Link
-        href="/gakko/matome"
+        href="/gakko/ranking"
         className="muted"
         style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 8 }}
       >
-        学び場をもっと見る →
+        もっと見る →
       </Link>
     </div>
   );

@@ -55,7 +55,12 @@ export default function HomeClient({
   // 専門家回答のみの絞り込みが外れない」という分かりにくさの指摘を受け、
   // 4つを排他的なタブ1列にまとめた（押したものだけが効く・タブの見た目にする）。
   type ViewTab = 'new' | 'views' | 'likes' | 'expert';
-  const [viewTab, setViewTab] = useState<ViewTab>('new');
+  // 「よく読まれている相談」ランキングの「もっと見る」リンク（2026-10-29追加）から
+  // /?sort=views で来た場合に、最初から閲覧数順タブを選択した状態で開けるようにする。
+  const initialSort = urlParams.get('sort');
+  const [viewTab, setViewTab] = useState<ViewTab>(
+    initialSort === 'views' || initialSort === 'likes' || initialSort === 'expert' ? initialSort : 'new'
+  );
   const [items, setItems] = useState<Consultation[]>(initialItems);
   const PAGE_SIZE = 8;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -281,6 +286,29 @@ export default function HomeClient({
                     </div>
                   ))}
                 </div>
+                {/* 「もっと見る」リンク（2026-10-29追加、「よく読まれてる相談のところも、
+                    リンクはれるといいなぁ」との指摘を受けて）。注目の学び場ランキングと
+                    違い専用ページは作らず、既にある「閲覧数順」タブにそのまま繋ぐ
+                    （下の一覧が全件の閲覧数順リストになる）。同じページ内のタブ切り替え
+                    なので、通常の<Link>（同一URLへの遷移は再マウントされずtabが
+                    切り替わらない）ではなくタブ自体を直接切り替える。 */}
+                <button
+                  type="button"
+                  className="muted"
+                  style={{
+                    fontSize: 12,
+                    textDecoration: 'underline',
+                    display: 'inline-block',
+                    marginTop: 8,
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => setViewTab('views')}
+                >
+                  もっと見る →
+                </button>
               </div>
             )}
 
@@ -334,18 +362,11 @@ export default function HomeClient({
               ))}
             </div>
 
-            {/* /theme・/dictionary/[category]は、作成時点ではアプリ内のどこからも
-                リンクされておらず、直接URLを知らないと辿り着けない孤立ページだった。
-                一番アクセスの多いホームに、カテゴリ絞り込みチップのすぐ下という目に
-                入りやすい場所で導線を足した（2026-10-15）。 */}
-            <Link href="/theme" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
-              テーマから探す・不登校お悩み辞典を見る →
-            </Link>
-            {/* /gakko（学びの多様化学校の都道府県別一覧）。「進路・勉強」「学校との関係」に
-                絞り込んだ時はアイコン付きカードで強めに出すが、それ以外（「すべて」の新着
-                フィード含む）では、新着を圧迫しないテキストリンク1行だけに弱める。
-                「スマホからだと導線が弱い」との指摘を受け、「すべて」表示でも完全に
-                消すのではなく、/theme同様の軽いリンクとして残すことにした（2026-10-18）。 */}
+            {/* /theme（テーマから探す）・/gakko/matome（学びの多様化学校・フリースクールを
+                探す）へのテキストリンクは、2026-10-29「この二つのテキストリンクは削除で
+                いい」との指摘を受けて削除した。/gakko/matomeへの導線は、カテゴリ絞り込み時
+                （下のカード型リンク）や注目の学び場ランキング（FeaturedGakkoRanking.tsx）の
+                「もっと見る」など、他の場所に残っている。 */}
             {category === 'course' || category === 'school' ? (
               <Link
                 href="/gakko/matome"
@@ -374,11 +395,7 @@ export default function HomeClient({
                 </div>
                 <div className="muted">›</div>
               </Link>
-            ) : (
-              <Link href="/gakko/matome" className="muted home-theme-link" style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', margin: '2px 0 10px' }}>
-                学びの多様化学校・フリースクールを探す →
-              </Link>
-            )}
+            ) : null}
 
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
                 「参考になった順」は各カードの「参考になった◯人」と同じlikesで並べている。
