@@ -129,6 +129,25 @@ export default async function NewsDetailPage({
             </a>
           </div>
 
+          {/* マナプリ（manapri.net）の関連コラムへの導線（2026-10-29追加）。
+              「このニュースに関連するコラムをマナプリで書いて、ここに貼るのが
+              いいんじゃない？相互リンクでさ」との提案を受けて追加。マナプリ側の
+              記事URLが分かっているニュースだけ表示する（relatedColumn未設定の
+              ニュースでは何も出さない＝存在しないリンクを置かない）。 */}
+          {item.relatedColumn && (
+            <a
+              href={item.relatedColumn.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card"
+              style={{ alignItems: 'flex-start', gap: 4, textDecoration: 'none', color: 'inherit' }}
+            >
+              <div className="muted" style={{ fontSize: 12 }}>関連コラム（マナプリ）</div>
+              <div className="answer-label" style={{ fontSize: 14 }}>{item.relatedColumn.title}</div>
+              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>コラムを読む ›</span>
+            </a>
+          )}
+
           {/* ニュースを読んで気になったことをそのまま相談につなげる導線
               （2026-10-29追加、「ニュースみて、これに関しての相談みたいな導線も
               あるといいかも」との要望を受けて）。app/gakko/school/[no]/page.tsxの
