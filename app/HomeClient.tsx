@@ -12,6 +12,7 @@ import TagChips from '@/components/TagChips';
 import PcSidebar from '@/components/PcSidebar';
 import TodayQuestionTeaser from '@/components/TodayQuestionTeaser';
 import NewsTeaser from '@/components/NewsTeaser';
+import FeaturedGakkoRanking from '@/components/FeaturedGakkoRanking';
 import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
@@ -262,6 +263,12 @@ export default function HomeClient({
                 className="home-hero-pc"
               />
             </Link>
+            {/* 「注目の学び場」ランキング（2026-10-29追加）。「よく読まれている相談」より
+                上、ホーム最上部のランキングとして置く（「トップに」との要望）。
+                中身がまだ無い（相談件数がまだ少ない）うちはコンポーネント内部でnullを
+                返すため、何も表示されない。 */}
+            {showExtras && <FeaturedGakkoRanking />}
+
             {showExtras && allItems.length >= 3 && (
               <div className="ranking home-ranking">
                 <div className="ranking-title">よく読まれている相談</div>
