@@ -50,7 +50,6 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const headlineValue = item?.headline?.value || '';
   const headlineLabel = item?.headline?.label || '';
   const stats = item?.stats || [];
-  const statsCaption = item?.statsCaption || '';
   const maxStat = stats.length > 0 ? Math.max(...stats.map((s) => s.value)) : 0;
 
   const logoData = await readFile(join(process.cwd(), 'public/assets/sensei_logo.png'), 'base64');
@@ -58,7 +57,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
   const statsText = stats.map((s) => `${s.label}${s.value}${s.unit}`).join('');
   const fontData = await loadGoogleFont(
-    `どうする先生不登校編${categoryLabel}${title}${headlineValue}${headlineLabel}${statsText}${statsCaption}`
+    `どうする先生不登校編${categoryLabel}${title}${headlineValue}${headlineLabel}${statsText}`
   );
 
   return new ImageResponse(
@@ -94,48 +93,44 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           {/* インパクト数字を主役にする（2026-10-29）。無い記事はこのブロック自体を
               出さず、タイトルだけを大きく見せる。statsがある記事は、数字の下に
               簡単な比較バーも添える（2026-10-29、「数字と合わせてグラフも
-              入れたい」との要望を受けて追加）。カード内に収めるため、本文ページの
-              バーより小ぶりなサイズにしている。 */}
+              入れたい」との要望を受けて追加）。
+              一度statsCaption（説明文）をバーの上に足したが、「カードの文字が
+              細かいのは伏せてグラフをもっと大きく見せたい」との指摘を受け、
+              OGP画像側ではこの説明文は出さず（本文ページ側には残す）、代わりに
+              バー自体を大きく・太くして視覚的なインパクトを優先する形に変更した。 */}
           {headlineValue ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: stats.length > 0 ? 18 : 10 }}>
-              <div style={{ display: 'flex', fontSize: stats.length > 0 ? 108 : 148, fontWeight: 800, lineHeight: 1, color: '#3D7E65' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: stats.length > 0 ? 20 : 10 }}>
+              <div style={{ display: 'flex', fontSize: stats.length > 0 ? 100 : 148, fontWeight: 800, lineHeight: 1, color: '#3D7E65' }}>
                 {headlineValue}
               </div>
-              <div style={{ display: 'flex', fontSize: 32, fontWeight: 700, lineHeight: 1.3, color: '#2B2B28' }}>
+              <div style={{ display: 'flex', fontSize: 30, fontWeight: 700, lineHeight: 1.3, color: '#2B2B28' }}>
                 {headlineLabel}
               </div>
 
               {stats.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: 760, marginTop: 4 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 18, width: 1080, marginTop: 10 }}>
                   {/* バー幅は「この記事内の最大値」ではなく、単位が%なら実際の
                       パーセント値（＝0〜100%の目盛り）をそのまま使う
                       （2026-10-29、「全体のうち何%かが伝わらない」との指摘を
                       受けて修正。components/NewsStatsChart.tsxと同じ考え方）。 */}
-                  {statsCaption ? (
-                    <div style={{ display: 'flex', fontSize: 22, fontWeight: 700, color: '#2B2B28' }}>{statsCaption}</div>
-                  ) : (
-                    stats.every((s) => s.unit === '%') && (
-                      <div style={{ display: 'flex', fontSize: 22, fontWeight: 700, color: '#2B2B28' }}>全体を100%としたときの割合</div>
-                    )
-                  )}
                   {stats.map((s) => {
                     const width = s.unit === '%'
                       ? Math.min(Math.max(s.value, s.value > 0 ? 2 : 0), 100)
                       : (maxStat > 0 ? Math.max((s.value / maxStat) * 100, 4) : 0);
                     return (
-                      <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 22, fontWeight: 700, color: '#2B2B28' }}>
+                      <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 28, fontWeight: 700, color: '#2B2B28' }}>
                           <span style={{ display: 'flex' }}>{s.label}</span>
                           <span style={{ display: 'flex', fontWeight: 800, color: s.value === maxStat ? '#3D7E65' : '#6FA389' }}>{s.value}{s.unit}</span>
                         </div>
-                        <div style={{ display: 'flex', width: '100%', height: 18, background: '#E3DFD3', borderRadius: 9 }}>
+                        <div style={{ display: 'flex', width: '100%', height: 38, background: '#E3DFD3', borderRadius: 19 }}>
                           <div
                             style={{
                               display: 'flex',
                               width: `${width}%`,
                               height: '100%',
                               background: s.value === maxStat ? '#3D7E65' : '#6FA389',
-                              borderRadius: 9,
+                              borderRadius: 19,
                             }}
                           />
                         </div>
