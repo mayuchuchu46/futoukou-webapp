@@ -662,7 +662,28 @@ h2.pagetitle {
    （padding上端・ブロック間のgap）を詰めた。左右のpaddingは20pxのまま
    だと相対的に広く感じたため18pxに少し寄せてバランスを取っている
    （PCでは下の@media内で元の値に戻す。2026-10-15）。 */
-.main { flex: 1; overflow-y: auto; padding: 8px 18px 90px 18px; display: flex; flex-direction: column; gap: 8px; }
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 18px 90px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* 「スマホでヘッダーが見えなくなる」不具合、これまでは.header側（兄弟要素）に
+     個別にGPU合成レイヤー昇格を足す対症療法を重ねてきたが（.header/.header-row/
+     .account-tab/.scroll-top-btn等）、今回ニュース欄追加でページが長くなり
+     再発したことから、スクロール元である.main自体を見直した。.mainは
+     overflow-y: autoで中身だけが独自にスクロールする入れ子構造になっているが、
+     iOS Safariでこの種の入れ子スクロールを慣性付きで正しく扱うために必要な
+     -webkit-overflow-scrolling: touchが設定されていなかった。これが抜けていると、
+     慣性スクロール中に.mainの外側にある兄弟要素（ヘッダー）の再描画が漏れることが
+     あるため、根本原因としてここに対策を追加した（2026-10-29）。
+     （.header側の既存の対策はそのまま残す。） */
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
 
 /* ホーム画面のみ、PCの広い画面では「よく読まれている相談」「気になるテーマから探す」を
    右サイドに回し、検索・カテゴリ・一覧を左に広く使う2カラムレイアウトにする。
