@@ -129,6 +129,29 @@ export default async function NewsDetailPage({
             </a>
           </div>
 
+          {/* ニュースを読んで気になったことをそのまま相談につなげる導線
+              （2026-10-29追加、「ニュースみて、これに関しての相談みたいな導線も
+              あるといいかも」との要望を受けて）。app/gakko/school/[no]/page.tsxの
+              「うちの子に合うか確かめてみませんか？」カードと同じ
+              /ask?prefill=…&childHint=1の仕組みを流用。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>
+              このニュース、うちの子にも関係あるかも…と思ったら
+            </div>
+            <div className="qtext">
+              気になったことをそのまま相談できます。登録不要・匿名で使えます。
+            </div>
+            <Link
+              href={`/ask?prefill=${encodeURIComponent(`「${item.title}」というニュースを読んで、気になっていることがあります。
+
+`)}&childHint=1`}
+              className="btn-primary sidebar-ask-btn-pink"
+              style={{ textDecoration: 'none', width: '100%' }}
+            >
+              このことについて相談する →
+            </Link>
+          </div>
+
           <Link href="/news" className="backlink">← ニュース一覧に戻る</Link>
         </div>
         <PcSidebar />
