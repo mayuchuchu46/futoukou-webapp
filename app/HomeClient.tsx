@@ -281,7 +281,19 @@ export default function HomeClient({
 
             {showExtras && allItems.length >= 3 && (
               <div className="ranking home-ranking">
-                <div className="ranking-title">よく読まれている相談</div>
+                {/* タイトル文字（緑字）自体も「もっと見る」と同じ操作で押せるように
+                    （2026-10-29、「緑の字おしてもいけるといいかも」との指摘を受けて）。 */}
+                <button
+                  type="button"
+                  className="ranking-title"
+                  style={{ background: 'none', border: 'none', padding: 0, margin: '0 0 4px', cursor: 'pointer', textAlign: 'left', display: 'block', width: '100%' }}
+                  onClick={() => {
+                    setViewTab('views');
+                    viewTabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                >
+                  よく読まれている相談
+                </button>
                 <div className="rank-list">
                   {ranking.map((item, i) => (
                     <div key={item.id} className="rank-item" role="button" tabIndex={0} onClick={() => router.push(`/result/${item.id}`)}>
@@ -375,10 +387,13 @@ export default function HomeClient({
 
             {/* /theme（テーマから探す）・/gakko/matome（学びの多様化学校・フリースクールを
                 探す）へのテキストリンクは、2026-10-29「この二つのテキストリンクは削除で
-                いい」との指摘を受けて削除した。/gakko/matomeへの導線は、カテゴリ絞り込み時
-                （下のカード型リンク）や注目の学び場ランキング（FeaturedGakkoRanking.tsx）の
-                「もっと見る」など、他の場所に残っている。 */}
-            {category === 'course' || category === 'school' ? (
+                いい」との指摘を受けて削除した。
+                /gakko/matomeへのアイコン付きカードは、以前は「進路・勉強」「学校との関係」
+                カテゴリに絞り込んだ時だけ表示していたが、「学び場のトップに行く導線も
+                強化してね」との指摘を受けて、デフォルトの「すべて」表示（showExtras）でも
+                出すようにした（2026-10-29）。検索中・他カテゴリ絞り込み中は出さない
+                （文脈とずれるため）。 */}
+            {category === 'course' || category === 'school' || showExtras ? (
               <Link
                 href="/gakko/matome"
                 className="card home-gakko-link"

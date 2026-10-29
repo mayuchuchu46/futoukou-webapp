@@ -40,7 +40,11 @@ export default function FeaturedGakkoRanking() {
 
   return (
     <div className="ranking home-ranking">
-      <div className="ranking-title">注目の学び場</div>
+      {/* タイトル文字（緑字）自体も押せるように（2026-10-29、「緑の字おしてもいけると
+          いいかも」との指摘を受けて）。 */}
+      <Link href="/gakko/ranking" className="ranking-title" style={{ display: 'block', textDecoration: 'none' }}>
+        注目の学び場
+      </Link>
       <div className="rank-list">
         {items.map((item, i) => (
           <div

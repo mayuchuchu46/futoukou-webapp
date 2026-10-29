@@ -93,6 +93,20 @@ export default function PcSidebar({
         <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>不登校お悩み辞典</span>
         <span className="muted">›</span>
       </Link>
+      {/* 「学び場トップ（/gakko/matome、都道府県別に全カテゴリを横断して探せるまとめ
+          ページ）」への導線（2026-10-29追加）。このカード自体には元々カテゴリ別の
+          個別リンクしか無く、まとめページ自体への行き方が無かった（ホーム側の
+          テキストリンクが唯一の入り口だったが、「この二つのテキストリンクは削除で
+          いい」との指摘で撤去済み）。「学び場のトップに行く導線も強化してね」との
+          指摘を受けて、カテゴリ一覧の一番上にまとめページへの行を追加した。 */}
+      <Link
+        href="/gakko/matome"
+        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '13px 16px', borderBottom: '1px solid var(--border)', textDecoration: 'none', color: 'var(--text)' }}
+      >
+        <span style={{ fontSize: 18 }} aria-hidden="true">🧭</span>
+        <span style={{ flex: 1, fontWeight: 700, fontSize: 14 }}>学び場トップ（都道府県から探す）</span>
+        <span className="muted">›</span>
+      </Link>
       {[
         { href: '/gakko', icon: '🏫', label: '学びの多様化学校' },
         { href: '/gakko?type=free', icon: '🏠', label: 'フリースクール（地域）' },
@@ -171,7 +185,12 @@ export default function PcSidebar({
 
       {ranking.length >= 3 && (
         <div className="ranking home-ranking">
-          <div className="ranking-title">よく読まれている相談</div>
+          {/* タイトル文字（緑字）自体も押せるように（2026-10-29、「緑の字おしても
+              いけるといいかも」との指摘を受けて）。HomeClient.tsx側と違いこのコンポーネントは
+              ホーム以外のページにも出るため、タブ切り替えではなく通常のページ遷移にする。 */}
+          <Link href="/?sort=views" className="ranking-title" style={{ display: 'block', textDecoration: 'none' }}>
+            よく読まれている相談
+          </Link>
           <div className="rank-list">
             {ranking.map((item, i) => (
               <div key={item.id} className="rank-item" role="button" tabIndex={0} onClick={() => router.push(`/result/${item.id}`)}>
