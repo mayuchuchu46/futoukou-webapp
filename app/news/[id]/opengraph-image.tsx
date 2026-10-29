@@ -110,16 +110,16 @@ export default async function Image({ params }: { params: Promise<{ id: string }
                     <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 22, fontWeight: 700, color: '#2B2B28' }}>
                         <span style={{ display: 'flex' }}>{s.label}</span>
-                        <span style={{ display: 'flex' }}>{s.value}{s.unit}</span>
+                        <span style={{ display: 'flex', fontWeight: 800, color: s.value === maxStat ? '#3D7E65' : '#6FA389' }}>{s.value}{s.unit}</span>
                       </div>
-                      <div style={{ display: 'flex', width: '100%', height: 16, background: '#E3DFD3', borderRadius: 8 }}>
+                      <div style={{ display: 'flex', width: '100%', height: 18, background: '#E3DFD3', borderRadius: 9 }}>
                         <div
                           style={{
                             display: 'flex',
-                            width: `${maxStat > 0 ? (s.value / maxStat) * 100 : 0}%`,
+                            width: `${maxStat > 0 ? Math.max((s.value / maxStat) * 100, 4) : 0}%`,
                             height: '100%',
-                            background: s.value === maxStat ? '#3D7E65' : '#A9C3B8',
-                            borderRadius: 8,
+                            background: s.value === maxStat ? '#3D7E65' : '#6FA389',
+                            borderRadius: 9,
                           }}
                         />
                       </div>

@@ -6,6 +6,7 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { NEWS_ITEMS } from '@/lib/data/news';
+import NewsStatsChart from '@/components/NewsStatsChart';
 
 // ニュース個別記事ページ（2026-10-29追加）。「記事ごとにシェアできるようにしたい」
 // との要望を受けて、/news（一覧）とは別に1記事ずつのURL・OGP画像・Xシェアボタンを
@@ -58,7 +59,6 @@ export default async function NewsDetailPage({
   if (!item) notFound();
 
   const url = `${SITE_URL}/news/${item.id}`;
-  const max = item.stats && item.stats.length > 0 ? Math.max(...item.stats.map((s) => s.value)) : 0;
 
   return (
     <div className="app-shell">
@@ -102,28 +102,7 @@ export default async function NewsDetailPage({
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="qtext">{item.summary}</div>
 
-            {item.stats && item.stats.length > 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', margin: '2px 0' }}>
-                {item.stats.map((s) => (
-                  <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-                      <span style={{ fontWeight: s.value === max ? 700 : 400 }}>{s.label}</span>
-                      <span className="muted">{s.value}{s.unit}</span>
-                    </div>
-                    <div style={{ background: 'var(--border)', borderRadius: 6, height: 8, overflow: 'hidden' }}>
-                      <div
-                        style={{
-                          width: `${max > 0 ? (s.value / max) * 100 : 0}%`,
-                          height: '100%',
-                          background: s.value === max ? 'var(--main)' : 'var(--sub)',
-                          borderRadius: 6,
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            {item.stats && <NewsStatsChart stats={item.stats} />}
 
             <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ fontSize: 13 }}>
               出典：{item.sourceName} ›
