@@ -68,6 +68,11 @@ export default function HomeClient({
   // （loadingがtrueの間はDOMから外れる）ため、useRefではなくstateで持ち、
   // 要素が新しく作られるたびにIntersectionObserverを張り直す。
   const [loadMoreEl, setLoadMoreEl] = useState<HTMLDivElement | null>(null);
+  // 「よく読まれている相談」ランキングの「もっと見る」クリック時に、タブ切り替え＋一覧
+  // （viewtabsのすぐ下）までスクロールするために参照する（2026-10-29追加。タブ切り替え
+  // だけだと一覧が画面下の方にあるため、クリックしても何も起きていないように見えると
+  // の指摘を受けて修正）。
+  const viewTabsRef = useRef<HTMLDivElement | null>(null);
   // バナー・ランキングは絞り込みに関わらず「全体」の集計を出すので、
   // category/q で動く items とは別に保持する。
   const [allItems, setAllItems] = useState<Consultation[]>(initialItems);
@@ -291,7 +296,10 @@ export default function HomeClient({
                     違い専用ページは作らず、既にある「閲覧数順」タブにそのまま繋ぐ
                     （下の一覧が全件の閲覧数順リストになる）。同じページ内のタブ切り替え
                     なので、通常の<Link>（同一URLへの遷移は再マウントされずtabが
-                    切り替わらない）ではなくタブ自体を直接切り替える。 */}
+                    切り替わらない）ではなくタブ自体を直接切り替える。
+                    タブ切り替えだけだと一覧（viewtabsのすぐ下）が画面下の方にあり、
+                    押しても何も起きていないように見えるとの指摘（2026-10-29）を受けて、
+                    クリック時にviewtabsまでスムーズスクロールするようにした。 */}
                 <button
                   type="button"
                   className="muted"
@@ -305,7 +313,10 @@ export default function HomeClient({
                     padding: 0,
                     cursor: 'pointer',
                   }}
-                  onClick={() => setViewTab('views')}
+                  onClick={() => {
+                    setViewTab('views');
+                    viewTabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
                 >
                   もっと見る →
                 </button>
@@ -407,7 +418,7 @@ export default function HomeClient({
                 見た目も「タブで切り替えている」感が伝わるよう、下線インジケーター付きの
                 タブバーにし、すぐ下の一覧（.home-list）と背景・枠を共有してそのまま
                 地続きになるようにした（.home-list側はapp/globals.css参照）。 */}
-            <div className="viewtabs">
+            <div className="viewtabs" ref={viewTabsRef}>
               {([
                 { key: 'new', label: '新着順' },
                 { key: 'views', label: '閲覧数順' },
