@@ -102,7 +102,7 @@ export default async function NewsDetailPage({
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="qtext">{item.summary}</div>
 
-            {item.stats && <NewsStatsChart stats={item.stats} />}
+            {item.stats && <NewsStatsChart stats={item.stats} caption={item.statsCaption} />}
 
             <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ fontSize: 13 }}>
               出典：{item.sourceName} ›

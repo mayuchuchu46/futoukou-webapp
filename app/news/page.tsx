@@ -54,7 +54,7 @@ export default function NewsPage() {
 
               {/* 記事中の数値比較を簡単なバーグラフで表示（2026-10-29追加、
                   components/NewsStatsChart.tsxに共通化。経緯はそちらのコメント参照）。 */}
-              {item.stats && <NewsStatsChart stats={item.stats} />}
+              {item.stats && <NewsStatsChart stats={item.stats} caption={item.statsCaption} />}
 
               <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ fontSize: 13 }}>
                 出典：{item.sourceName} ›

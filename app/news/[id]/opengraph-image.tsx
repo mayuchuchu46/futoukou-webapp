@@ -50,6 +50,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const headlineValue = item?.headline?.value || '';
   const headlineLabel = item?.headline?.label || '';
   const stats = item?.stats || [];
+  const statsCaption = item?.statsCaption || '';
   const maxStat = stats.length > 0 ? Math.max(...stats.map((s) => s.value)) : 0;
 
   const logoData = await readFile(join(process.cwd(), 'public/assets/sensei_logo.png'), 'base64');
@@ -57,7 +58,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
   const statsText = stats.map((s) => `${s.label}${s.value}${s.unit}`).join('');
   const fontData = await loadGoogleFont(
-    `どうする先生不登校編${categoryLabel}${title}${headlineValue}${headlineLabel}${statsText}`
+    `どうする先生不登校編${categoryLabel}${title}${headlineValue}${headlineLabel}${statsText}${statsCaption}`
   );
 
   return new ImageResponse(
@@ -110,8 +111,12 @@ export default async function Image({ params }: { params: Promise<{ id: string }
                       パーセント値（＝0〜100%の目盛り）をそのまま使う
                       （2026-10-29、「全体のうち何%かが伝わらない」との指摘を
                       受けて修正。components/NewsStatsChart.tsxと同じ考え方）。 */}
-                  {stats.every((s) => s.unit === '%') && (
-                    <div style={{ display: 'flex', fontSize: 18, color: '#6B6A62' }}>全体を100%としたときの割合</div>
+                  {statsCaption ? (
+                    <div style={{ display: 'flex', fontSize: 18, color: '#6B6A62' }}>{statsCaption}</div>
+                  ) : (
+                    stats.every((s) => s.unit === '%') && (
+                      <div style={{ display: 'flex', fontSize: 18, color: '#6B6A62' }}>全体を100%としたときの割合</div>
+                    )
                   )}
                   {stats.map((s) => {
                     const width = s.unit === '%'

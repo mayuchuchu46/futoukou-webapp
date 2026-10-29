@@ -30,17 +30,20 @@ function barWidthPercent(stat: Stat, max: number): number {
   return max > 0 ? Math.max((stat.value / max) * 100, 4) : 0;
 }
 
-export default function NewsStatsChart({ stats }: { stats: Stat[] }) {
+export default function NewsStatsChart({ stats, caption }: { stats: Stat[]; caption?: string }) {
   if (!stats || stats.length === 0) return null;
   const max = Math.max(...stats.map((s) => s.value));
   const allPercent = stats.every((s) => s.unit === '%');
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', margin: '4px 0' }}>
-      {/* 単位が%の記事だけ、「0〜100%の目盛りに対する割合」であることを
-          一言添える（2026-10-29追加。バーの意味の誤読を防ぐため）。 */}
-      {allPercent && (
-        <div className="muted" style={{ fontSize: 11 }}>全体を100%としたときの割合</div>
+      {/* この割合が何を表しているかの説明（2026-10-29追加、「この割合が何なのかも
+          わかるようにテキストを入れたい」との要望を受けて）。記事ごとのcaptionが
+          あればそれを、無ければ単位%のときだけ最低限の汎用文を出す。 */}
+      {caption ? (
+        <div className="muted" style={{ fontSize: 11 }}>{caption}</div>
+      ) : (
+        allPercent && <div className="muted" style={{ fontSize: 11 }}>全体を100%としたときの割合</div>
       )}
       {stats.map((s) => {
         const isMax = s.value === max;
