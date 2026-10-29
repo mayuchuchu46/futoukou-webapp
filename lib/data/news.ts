@@ -62,6 +62,12 @@ export const NEWS_ITEMS: NewsItem[] = [
     sourceName: '教育業界ニュース「ReseEd（リシード）」',
     sourceUrl: 'https://reseed.resemom.jp/article/2026/10/28/14450.html',
     category: 'policy',
+    // この記事自体は数値の発表ではなく大臣の対応表明だが、記事本文（summary）内で
+    // 前提として触れている総務省調査の数字（soumu-futoko-kenshin-chosa-2026-10と
+    // 同じ、確認済みの数字）を見出しに使う。新しい数字を作ってはいない
+    // （2026-10-30、「どの記事もインパクト重視の画像でシェアしたい」との要望を
+    // 受けて追加）。
+    headline: { value: '19.9%', label: '不登校の中学生の健診未受診を受け、文科相が対応表明' },
   },
   {
     id: 'soumu-futoko-kenshin-chosa-2026-10',

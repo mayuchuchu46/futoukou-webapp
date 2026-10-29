@@ -56,8 +56,12 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const logoSrc = `data:image/png;base64,${logoData}`;
 
   const statsText = stats.map((s) => `${s.label}${s.value}${s.unit}`).join('');
+  // headline無しのフォールバックで出典名（item.sourceName）も画像内に表示するように
+  // なったため（2026-10-30）、フォントのサブセット取得対象の文字列にも含める
+  // （含めないと出典名の文字がフォント未読み込みのまま表示されてしまう）。
+  const sourceName = item?.sourceName || '';
   const fontData = await loadGoogleFont(
-    `どうする先生不登校編${categoryLabel}${title}${headlineValue}${headlineLabel}${statsText}`
+    `どうする先生不登校編出典${categoryLabel}${title}${headlineValue}${headlineLabel}${statsText}${sourceName}`
   );
 
   return new ImageResponse(
@@ -141,16 +145,30 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               )}
             </div>
           ) : (
-            <div
-              style={{
-                display: 'flex',
-                fontSize: title.length > 28 ? 50 : 58,
-                fontWeight: 800,
-                lineHeight: 1.4,
-                color: '#2B2B28',
-              }}
-            >
-              {title}
+            // 見出し数字（headline）が無い記事のフォールバック（2026-10-30、
+            // 「どの記事もインパクト重視の画像でシェアしたい」との要望を受けて強化）。
+            // 以前はタイトルを大きく出すだけだったが、数字入りの記事と並ぶと見劣り
+            // していたため、見出し数字の代わりに出典名を帯で見せ、タイトル下に
+            // アクセントの太いバーを添えて、同じトーンの「主役がいる」構図にした
+            // （無い数字を作る代わりに、記事の信頼性＝出典を主役にする考え方）。
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <div
+                style={{
+                  display: 'flex',
+                  fontSize: title.length > 28 ? 54 : 64,
+                  fontWeight: 800,
+                  lineHeight: 1.35,
+                  color: '#2B2B28',
+                }}
+              >
+                {title}
+              </div>
+              <div style={{ display: 'flex', width: 180, height: 10, background: '#3D7E65', borderRadius: 6 }} />
+              {item?.sourceName && (
+                <div style={{ display: 'flex', fontSize: 26, fontWeight: 700, color: '#6FA389' }}>
+                  出典：{item.sourceName}
+                </div>
+              )}
             </div>
           )}
         </div>
