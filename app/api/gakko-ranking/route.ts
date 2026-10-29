@@ -5,6 +5,7 @@ import { getFeaturedGakkoRanking } from '@/lib/gakkoRanking';
 // lib/gakkoRanking.ts側（'use cache' + cacheLife）で行う（このNext.jsバージョンでは
 // Route HandlerのrevalidateエクスポートはcacheComponents設定と併用できないため）。
 export async function GET() {
-  const items = await getFeaturedGakkoRanking(5);
+  // 「よく読まれている相談」と同じ3件固定（2026-10-29、5件→3件に変更）。
+  const items = await getFeaturedGakkoRanking(3);
   return NextResponse.json({ items });
 }

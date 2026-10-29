@@ -27,7 +27,7 @@ import { FeaturedGakko, FeaturedGakkoType } from './gakkoRankingTypes';
 // という意味合いに近づける（開設から2週間の時点では実質ほぼ全件が対象になる）。
 const SCAN_LIMIT = 500;
 
-export async function getFeaturedGakkoRanking(topN = 5): Promise<FeaturedGakko[]> {
+export async function getFeaturedGakkoRanking(topN = 3): Promise<FeaturedGakko[]> {
   // 全ユーザー共通（ログイン状態等に依存しない）の公開データのため、数分単位でキャッシュする
   // （直近500件の相談本文を毎回スキャンするコストを抑えるため。lib/themeSummary.tsの
   // getThemeSummaryと同じ考え方）。

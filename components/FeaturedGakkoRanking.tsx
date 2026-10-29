@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FeaturedGakko, FEATURED_GAKKO_TYPE_LABEL } from '@/lib/gakkoRankingTypes';
 
@@ -15,6 +16,13 @@ import { FeaturedGakko, FEATURED_GAKKO_TYPE_LABEL } from '@/lib/gakkoRankingType
 // 実データが3件（上位3位）に満たないうちはカード自体を出さない。架空の数値や
 // 「まだ注目校がありません」のような空状態表示で無理に埋めない方針
 // （「よく読まれている相談」がranking.length>=3で同じ扱いをしているのに合わせた）。
+// 表示件数は「よく読まれている相談」と同じ3件固定（2026-10-29、「3位までにする？」との
+// 指摘を受けて5件→3件に変更。API（lib/gakkoRanking.ts）側も上位3件だけ返すようにした）。
+//
+// 下に「学び場をもっと見る」リンクを追加（2026-10-29、「もっとみる、とかあったほうが
+// いいのかな？学び場ページトップに誘導できるといいよね？」との指摘を受けて）。
+// 遷移先は/gakko/matome（都道府県別の学校・フリースクール一覧ページ）。ホーム内の
+// 他の「学び場」系リンク（home-theme-link等）と同じ遷移先に揃えている。
 export default function FeaturedGakkoRanking() {
   const router = useRouter();
   const [items, setItems] = useState<FeaturedGakko[]>([]);
@@ -51,6 +59,13 @@ export default function FeaturedGakkoRanking() {
           </div>
         ))}
       </div>
+      <Link
+        href="/gakko/matome"
+        className="muted"
+        style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 8 }}
+      >
+        学び場をもっと見る →
+      </Link>
     </div>
   );
 }
