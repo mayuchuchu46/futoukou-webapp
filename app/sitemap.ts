@@ -4,13 +4,6 @@ import { SITE_URL } from '@/lib/site';
 import { CATS } from '@/lib/categories';
 import { DICTIONARY_INDEX_THRESHOLD } from '@/lib/categorySummary';
 import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
-import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
-import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
-import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
-import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
-import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
-import { PREFECTURES } from '@/lib/data/prefectures';
-import { NEWS_ITEMS } from '@/lib/data/news';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -25,31 +18,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/about`, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${SITE_URL}/support`, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${SITE_URL}/theme`, changeFrequency: 'weekly', priority: 0.5 },
-    // 不登校に関する最新ニュースまとめページ（2026-10-29追加）。
-    { url: `${SITE_URL}/news`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/experts`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/expertlist`, changeFrequency: 'weekly', priority: 0.4 },
-    // 学びの多様化学校（旧：不登校特例校）の都道府県別一覧ページ（2026-10-18追加）。
-    { url: `${SITE_URL}/gakko`, changeFrequency: 'monthly', priority: 0.4 },
-    // 学校以外の学びの場・居場所のまとめページ（2026-10-21追加。/gakkoの各タブは
-    // canonicalが常に/gakko自体を指すため個別にはインデックスされない設計だが、
-    // このページは独立したcanonicalを持つため別途追加している）。
-    { url: `${SITE_URL}/gakko/matome`, changeFrequency: 'monthly', priority: 0.4 },
-    // 注目の学び場ランキング全件ページ（2026-10-29追加）。
-    { url: `${SITE_URL}/gakko/ranking`, changeFrequency: 'daily', priority: 0.4 },
-    // 都道府県別まとめページ（?pref=XXX）。クエリパラメータ形式だがGoogleはインデックス
-    // するため、実データがある都道府県（学びの多様化学校・フリースクール・通信制高校の
-    // どれか1件以上ある）のみsitemapに追加（2026-10-22追加）。
-    ...PREFECTURES.filter((pref) =>
-      MANABI_TAYOUKA_GAKKO.some((s) => s.prefecture === pref) ||
-      FREE_SCHOOLS.some((s) => s.prefecture === pref) ||
-      CORRESPONDENCE_HIGH_SCHOOLS.some((s) => s.prefecture === pref) ||
-      teijiseiHighSchools.some((s) => s.prefecture === pref)
-    ).map((pref) => ({
-      url: `${SITE_URL}/gakko/matome?pref=${encodeURIComponent(pref)}`,
-      changeFrequency: 'monthly' as const,
-      priority: 0.4,
-    })),
     { url: `${SITE_URL}/terms`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${SITE_URL}/privacy`, changeFrequency: 'yearly', priority: 0.2 },
   ];
@@ -61,6 +31,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // AIの回答への返信（ラリー）の続きは、単独の詳細ページとしては出さないため
     // サイトマップにも含めない（lib/consultations.ts参照、2026-10-16追加）。
     .is('parent_id', null)
+    // 希死念慮・自傷等の安全上書きが発動した相談は、検索エンジン・外部クローラーに
+    // 積極的に案内する対象から外す（2026-10-31、lib/consultations.tsの一覧非表示化と
+    // 合わせて対応。ページ自体は直リンクなら引き続き閲覧可能）。
+    .or('crisis_detected.is.null,crisis_detected.eq.false')
     .order('created_at', { ascending: false })
     .limit(5000);
 
@@ -115,79 +89,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  // 学校紹介ページ（/gakko/school/[no]）も、カテゴリ・テーマ辞典と同じ考え方で
-  // 抜け漏れていた（2026-10-18、「SEO的にどう？」との質問を受けて確認したところ発覚）。
-  // officialUrl・addressのどちらも確認できていない学校はページ自体がnoindexになる
-  // （app/gakko/school/[no]/page.tsx参照）ため、同じ条件でここも絞り込む。
-  const schoolEntries: MetadataRoute.Sitemap = MANABI_TAYOUKA_GAKKO.filter(
-    (s) => s.officialUrl || s.address
-  ).map((s) => ({
-    url: `${SITE_URL}/gakko/school/${s.no}`,
-    changeFrequency: 'monthly',
-    priority: 0.3,
-  }));
-
-  // フリースクール紹介ページ（/gakko/free/[no]）も同じ考え方で追加（2026-10-21、
-  // 「学びの多様化学校と同じ仕組みでフリースクールも詳細ページにつなげたい」との
-  // 要望を受けて追加）。住所または公式サイトURLが確認できている施設のみindex対象
-  // （app/gakko/free/[no]/page.tsxのhasEnoughInfoと同じ条件に合わせる。officialUrlだけ
-  // 確認できた施設がここから漏れていたため2026-10-21に修正）。
-  const freeSchoolEntries: MetadataRoute.Sitemap = FREE_SCHOOLS.filter((s) => s.address || s.officialUrl).map((s) => ({
-    url: `${SITE_URL}/gakko/free/${s.no}`,
-    changeFrequency: 'monthly',
-    priority: 0.3,
-  }));
-
-  // 通信制高校紹介ページ（/gakko/tsushin/[no]）。公式サイトURLを調査・追加した
-  // ため、officialUrlが確認できている学校のみindex対象とする（app/gakko/tsushin/
-  // [no]/page.tsxのhasEnoughInfoと同じ条件。2026-10-21、全校officialUrl調査完了に
-  // 合わせて追加。それまでは確認できている情報が少なく全校noindexだった）。
-  const tsushinSchoolEntries: MetadataRoute.Sitemap = CORRESPONDENCE_HIGH_SCHOOLS.filter(
-    (s) => s.officialUrl
-  ).map((s) => ({
-    url: `${SITE_URL}/gakko/tsushin/${s.no}`,
-    changeFrequency: 'monthly',
-    priority: 0.3,
-  }));
-
-  // オンラインフリースクール紹介ページ（/gakko/online/[no]）。情報は元々すべて確認済みの
-  // ため、他カテゴリと異なりofficialUrl等の確認状況によるフィルターは不要（2026-10-21、
-  // 「オンラインもまず内部ページで循環させたい」との指摘を受けて紹介ページを追加した際に
-  // 合わせて追加）。
-  const onlineSchoolEntries: MetadataRoute.Sitemap = ONLINE_FREE_SCHOOLS.map((s) => ({
-    url: `${SITE_URL}/gakko/online/${s.no}`,
-    changeFrequency: 'monthly',
-    priority: 0.3,
-  }));
-
-  // 定時制高校紹介ページ（/gakko/teiji/[no]）。app/gakko/teiji/[no]/page.tsxの
-  // hasEnoughInfoと同じ条件（municipalityまたはofficialUrlが確認できている学校のみ
-  // index対象）に合わせる（2026-10-29追加）。
-  const teijiSchoolEntries: MetadataRoute.Sitemap = teijiseiHighSchools.filter(
-    (s) => s.municipality || s.officialUrl
-  ).map((s) => ({
-    url: `${SITE_URL}/gakko/teiji/${s.no}`,
-    changeFrequency: 'monthly',
-    priority: 0.3,
-  }));
-
-  // ニュース個別記事ページ（/news/[id]）。2026-10-29追加。
-  const newsEntries: MetadataRoute.Sitemap = NEWS_ITEMS.map((n) => ({
-    url: `${SITE_URL}/news/${n.id}`,
-    changeFrequency: 'monthly',
-    priority: 0.3,
-  }));
-
-  return [
-    ...staticEntries,
-    ...dictionaryEntries,
-    ...themeEntries,
-    ...schoolEntries,
-    ...freeSchoolEntries,
-    ...onlineSchoolEntries,
-    ...tsushinSchoolEntries,
-    ...teijiSchoolEntries,
-    ...newsEntries,
-    ...consultationEntries,
-  ];
+  return [...staticEntries, ...dictionaryEntries, ...themeEntries, ...consultationEntries];
 }
