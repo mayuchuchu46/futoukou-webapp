@@ -393,22 +393,27 @@ export default function HomeClient({
                 強化してね」との指摘を受けて、デフォルトの「すべて」表示（showExtras）でも
                 出すようにした（2026-10-29）。検索中・他カテゴリ絞り込み中は出さない
                 （文脈とずれるため）。 */}
-            {/* 学び場への入口は1つに統一（2026-10-30、「結局同じことでしょ」との指摘）。
-                都道府県から探す一覧と、条件（学年・通う頻度等）から探すページは、
-                /gakko/matome の中から行き来できる。表示条件は従来のカードと同じ。 */}
+            {/* 学び場への入口。「条件から学校を探す」（/gakko/shindan）を主役として目立たせ、
+                都道府県別の一覧（/gakko/matome）は同じカード内の副リンクにした
+                （2026-10-30、「条件から探すを売り出していきたい」との指摘）。
+                表示条件は従来のカードと同じ。 */}
             {category === 'course' || category === 'school' || showExtras ? (
-              <Link
-                href="/gakko/matome"
+              <div
                 className="card home-gakko-link"
-                style={{ flexDirection: 'row', alignItems: 'center', gap: 10, margin: '0 0 10px', padding: '10px 14px' }}
+                style={{ alignItems: 'stretch', gap: 8, margin: '0 0 10px', padding: '12px 14px', border: '2px solid var(--main)', background: 'var(--sub)' }}
               >
-                <span aria-hidden="true" style={{ fontSize: 20 }}>🏫</span>
-                <span style={{ flex: 1 }}>
-                  <span style={{ display: 'block', fontWeight: 700, fontSize: 14 }}>学校・フリースクールを探す</span>
-                  <span className="muted" style={{ display: 'block', fontSize: 11 }}>都道府県・学年・通う頻度などから</span>
-                </span>
-                <span className="muted">›</span>
-              </Link>
+                <Link href="/gakko/shindan" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}>
+                  <span aria-hidden="true" style={{ fontSize: 22 }}>🧭</span>
+                  <span style={{ flex: 1 }}>
+                    <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>条件から学校を探す</span>
+                    <span style={{ display: 'block', fontSize: 12 }}>学年・地域・通う頻度を選ぶだけ。通信制もフリースクールも一度に</span>
+                  </span>
+                  <span style={{ color: 'var(--main)', fontWeight: 700 }}>›</span>
+                </Link>
+                <Link href="/gakko/matome" className="muted" style={{ fontSize: 12, textDecoration: 'underline', textAlign: 'right' }}>
+                  都道府県別の一覧から探す ›
+                </Link>
+              </div>
             ) : null}
 
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
