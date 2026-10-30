@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import { ATTENDANCE_STYLE_LABEL, SPECIALTY_TAG_LABEL, type AttendanceStyle, type SpecialtyTag } from '@/lib/data/correspondenceHighSchools';
 import { formatGrades, gradeLabel } from '@/lib/schoolGrade';
@@ -33,7 +33,10 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
   const [shown, setShown] = useState<Record<string, number>>({});
 
   const ready = grade > 0 && !!pref;
-  const touch = () => setDone(false);
+  // 一度「結果を見る」を押したあとは、条件を変えると結果もその場で更新する
+  // （押したのに変わったか分からない、という指摘を受けて 2026-10-30 に変更）
+  const touch = () => {};
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const result = useMemo(() => {
     if (!ready) return null;
@@ -250,13 +253,43 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
             学校の公式ページに、その分野のコース・専攻があると確認できた学校だけを「条件に合う」に入れます。確認できているのは、いまは通信制高校の一部だけです（それ以外は「未確認」の枠に出ます）。
           </div>
         </div>
-        <button type="button" className="btn-primary" style={{ width: '100%' }} disabled={!ready} onClick={() => setDone(true)}>
-          {ready ? '結果を見る' : '学年と都道府県を選んでください'}
+        <button
+          type="button"
+          className="btn-primary"
+          style={{ width: '100%' }}
+          disabled={!ready}
+          onClick={() => {
+            setDone(true);
+            // 結果は下に出るので、押したら結果の先頭まで画面を動かして変化が分かるようにする
+            setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+          }}
+        >
+          {ready && result ? `結果を見る（条件に合う${result.sure.length}校／未確認含め${result.sure.length + result.partial.length}校）` : '学年と都道府県を選んでください'}
         </button>
       </div>
 
       {done && result && (
-        <div className="card" style={{ alignItems: 'flex-start', gap: 14 }}>
+        <div ref={resultRef} className="card" style={{ alignItems: 'flex-start', gap: 14, scrollMarginTop: 70 }}>
+          <div style={{ width: '100%' }}>
+            <div className="answer-label" style={{ fontSize: 15 }}>
+              条件に合うと確認できた学校は{result.sure.length}校です
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              対象学年などが未確認の学校{result.partial.length}校も、下の別枠に出しています。
+            </div>
+            <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+              条件：{[
+                gradeLabel(grade),
+                pref,
+                freq !== 'any' ? FREQ_OPTIONS.find((o) => o.value === freq)?.label : null,
+                needCare ? '専門職の配置を確認できた学校だけ' : null,
+                tags.size > 0 ? Array.from(tags).map((x) => SPECIALTY_TAG_LABEL[x]).join('・') : null,
+              ].filter(Boolean).join(' / ')}
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              上の条件を変えると、この結果もその場で更新されます。
+            </div>
+          </div>
           {result.sure.length + result.partial.length === 0 && (
             <div className="muted">この条件で見つかった学校はありませんでした。学校の種類や条件をゆるめてみてください。</div>
           )}
