@@ -50,7 +50,7 @@ export default function SenpaiRecruitPage() {
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>報酬</div>
           <div className="qtext">
-            回答1件につき報酬をお支払いします。金額は決まり次第こちらでお知らせします。振込は、決済代行サービスのStripe（Stripe Express）を通じて毎月まとめて行います。Stripeアカウントの登録（本人確認・振込先口座の入力）については、準備が整い次第、ご登録のメールアドレス宛にご案内します。
+            回答1件につき報酬をお支払いします。金額は決まり次第こちらでお知らせします。振込は毎月まとめて行います（振込方法の詳細は、準備が整い次第、ご登録のメールアドレス宛にご案内します）。
           </div>
         </div>
 

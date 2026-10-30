@@ -164,17 +164,17 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
 
         <div className="card" style={{ gap: 12 }}>
           <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
-            報酬の振込先（Stripe）
+            報酬の振込先
             {!stripeConfigured && <span className="comingsoon-badge">準備中・近日公開</span>}
           </div>
           <div className="muted" style={{ fontSize: 13 }}>
             {!stripeConfigured
-              ? '振込機能の準備中です。設定が整い次第、こちらからStripeアカウントの登録（本人確認・振込先口座の入力）をお願いします。'
+              ? '振込機能の準備中です。設定が整い次第、こちらから登録（本人確認・振込先口座の入力）をお願いします。それまでの間の報酬は、運営から直接銀行振込でお支払いします。'
               : expert.stripe_payouts_enabled
-              ? '設定完了です。報酬は毎月まとめて、このStripeアカウントへお振込みします。'
+              ? '設定完了です。報酬は毎月まとめて、こちらの振込先へお振込みします。'
               : expert.stripe_account_id
-              ? 'Stripeアカウントの設定が未完了です。本人確認・口座情報の入力を完了してください。'
-              : '報酬の振込を受け取るには、Stripeアカウントの登録（本人確認・振込先口座の入力）が必要です。'}
+              ? '振込先の設定が未完了です。本人確認・口座情報の入力を完了してください。'
+              : '報酬の振込を受け取るには、振込先の登録（本人確認・振込先口座の入力）が必要です。'}
           </div>
           {stripeError && <div style={{ color: '#C0392B', fontSize: 13 }}>{stripeError}</div>}
           {stripeConfigured && (
@@ -183,7 +183,7 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
                 ? '移動中…'
                 : expert.stripe_account_id
                 ? (expert.stripe_payouts_enabled ? '登録内容を確認・変更する' : '設定を続ける')
-                : 'Stripeアカウントを登録する'}
+                : '振込先を登録する'}
             </button>
           )}
         </div>

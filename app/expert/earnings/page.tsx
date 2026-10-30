@@ -49,8 +49,8 @@ async function ExpertEarningsContent() {
         </div>
         <div className="noticebox" style={{ background: 'var(--sub)', borderRadius: 10, padding: '12px 14px', fontSize: 12, color: '#1F4A3C' }}>
           {payoutsEnabled
-            ? '振込は、運営が内容を確認のうえ、Stripe経由で毎月まとめて行います。振込状況についてのお問い合わせは運営までご連絡ください。'
-            : <>振込を受け取るには、Stripeアカウントの登録（本人確認・振込先口座の入力）が必要です。<a href="/expert/profile">プロフィール編集画面</a>から設定してください。</>}
+            ? '振込は、運営が内容を確認のうえ、毎月まとめて行います。振込状況についてのお問い合わせは運営までご連絡ください。'
+            : <>振込を受け取るには、振込先の登録（本人確認・振込先口座の入力）が必要です。<a href="/expert/profile">プロフィール編集画面</a>から設定してください。それまでの間は、運営から直接銀行振込でお支払いします。</>}
         </div>
         <div style={{ fontWeight: 700, marginTop: 12 }}>内訳</div>
         {rows.map((r) => (

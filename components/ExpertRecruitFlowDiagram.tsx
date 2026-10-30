@@ -54,7 +54,7 @@ export default function ExpertRecruitFlowDiagram({
       {/* STEP 5: 報酬 */}
       <rect x="20" y="330" width="280" height="52" rx="14" fill={accentBg} stroke="none" />
       <text x="160" y="352" fontSize="12.5" fill={accent} fontWeight="700" textAnchor="middle">毎月まとめて</text>
-      <text x="160" y="369" fontSize="12.5" fill={accent} fontWeight="700" textAnchor="middle">Stripeで報酬をお支払い</text>
+      <text x="160" y="369" fontSize="12.5" fill={accent} fontWeight="700" textAnchor="middle">報酬をお支払い</text>
 
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
