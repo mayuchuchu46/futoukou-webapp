@@ -393,66 +393,26 @@ export default function HomeClient({
                 強化してね」との指摘を受けて、デフォルトの「すべて」表示（showExtras）でも
                 出すようにした（2026-10-29）。検索中・他カテゴリ絞り込み中は出さない
                 （文脈とずれるため）。 */}
+            {/* 学び場への入口は、縦に2枚のカードだと場所を取るため、1行2列のコンパクトなタイル
+                にまとめた（2026-10-30、「もっとコンパクトにメニューおきたい」との指摘）。
+                表示条件は従来のカードと同じ。 */}
             {category === 'course' || category === 'school' || showExtras ? (
-              <Link
-                href="/gakko/matome"
-                className="card home-gakko-link"
-                style={{ flexDirection: 'row', alignItems: 'center', gap: 14, margin: '0 0 10px' }}
-              >
-                <div
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: '50%',
-                    background: 'var(--sub)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 20,
-                    flex: '0 0 auto',
-                  }}
-                  aria-hidden="true"
-                >
-                  🏫
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700 }}>学校・フリースクールを探す</div>
-                  <div className="muted" style={{ fontSize: 12 }}>都道府県別に学びの多様化学校（旧：不登校特例校）やフリースクールを調べられます</div>
-                </div>
-                <div className="muted">›</div>
-              </Link>
-            ) : null}
-
-            {/* 選択式診断（/gakko/shindan）への導線（2026-10-30追加）。上の学校・フリースクールの
-                カードと同じ表示条件・同じ見た目で、すぐ下に並べる。 */}
-            {category === 'course' || category === 'school' || showExtras ? (
-              <Link
-                href="/gakko/shindan"
-                className="card home-gakko-link"
-                style={{ flexDirection: 'row', alignItems: 'center', gap: 14, margin: '0 0 10px' }}
-              >
-                <div
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: '50%',
-                    background: 'var(--sub)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 20,
-                    flex: '0 0 auto',
-                  }}
-                  aria-hidden="true"
-                >
-                  🧭
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700 }}>選択式で学校をさがす</div>
-                  <div className="muted" style={{ fontSize: 12 }}>学年・地域・通う頻度などを選ぶと、条件に合う学校が見つかります</div>
-                </div>
-                <div className="muted">›</div>
-              </Link>
+              <div className="home-gakko-link" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, margin: '0 0 10px' }}>
+                {[
+                  { href: '/gakko/matome', icon: '🏫', label: '学校・フリースクール' },
+                  { href: '/gakko/shindan', icon: '🧭', label: '選択式で学校さがし' },
+                ].map((m) => (
+                  <Link
+                    key={m.href}
+                    href={m.href}
+                    className="card"
+                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, margin: 0, padding: '10px 8px', textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <span aria-hidden="true" style={{ fontSize: 18 }}>{m.icon}</span>
+                    <span style={{ fontWeight: 700, fontSize: 13 }}>{m.label}</span>
+                  </Link>
+                ))}
+              </div>
             ) : null}
 
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
