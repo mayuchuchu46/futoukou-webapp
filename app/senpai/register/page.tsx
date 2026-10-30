@@ -35,18 +35,8 @@ type DraftForm = {
   bio: string;
   link_url: string;
   specialtyCategories: string[];
-  schoolNames: string;
+  schoolNames: string[];
 };
-
-// 「保護者視点で話せる学校名」欄の入力を、読点・カンマ・改行区切りで配列に分解する
-// （2026-10-31追加。「フォームに、相談にのれる学校名が書く欄あってもいいかも」
-// 「保護者視点で話せるというね」との指摘を受けて、bioの自由記述とは別に専用欄を設けた）。
-function parseSchoolNames(raw: string): string[] {
-  return raw
-    .split(/[、,\n]/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
 
 function loadDraft(): Partial<DraftForm> {
   try {
@@ -67,8 +57,11 @@ export default function SenpaiRegisterPage() {
     bio: '',
     link_url: '',
     specialtyCategories: [] as string[],
-    schoolNames: '',
+    schoolNames: [] as string[],
   });
+  // 「保護者視点で話せる学校名」の入力中テキスト（1件ずつ追加する方式、2026-10-31、
+  // 「コンマより一個一個入力がいいかと」との指摘を受けて、カンマ区切り入力から変更）。
+  const [schoolNameInput, setSchoolNameInput] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -113,8 +106,7 @@ export default function SenpaiRegisterPage() {
     body.set('credential', CREDENTIAL);
     body.set('verification_method', 'call'); // 資格証が無いため常に通話確認
     form.specialtyCategories.forEach((cat) => body.append('specialty_categories', cat));
-    // 「、」「,」「\n」など複数の区切りに対応し、空要素・前後の空白を除いて送る。
-    parseSchoolNames(form.schoolNames).forEach((n) => body.append('experienced_school_names', n));
+    form.schoolNames.forEach((n) => body.append('experienced_school_names', n));
     if (photo) body.set('photo', photo);
     const res = await fetch('/api/expert/register', {
       method: 'POST',
@@ -219,15 +211,75 @@ export default function SenpaiRegisterPage() {
 
         {/* 「保護者視点で話せる学校名」専用欄（2026-10-31追加）。以前はbioの自己紹介文に
             学校名を書いてもらう方式のみだったが、専用の入力欄が欲しいとの要望を受けて
-            追加した。bioへの記載も引き続き有効（lib/expertSchoolMatch.ts参照）。 */}
-        <input
-          className="input"
-          placeholder="保護者視点で話せる学校名（任意・複数可。例：〇〇学園中等部、△△フリースクール）"
-          value={form.schoolNames}
-          onChange={(e) => setForm({ ...form, schoolNames: e.target.value })}
-        />
-        <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          お子さんが通われていた（通われている）学校の正式名称を入力すると、その学校の紹介ページにも「先輩保護者からこの学校の話を聞く」として表示されます。複数ある場合は読点（、）やカンマで区切ってください。
+            追加した。bioへの記載も引き続き有効（lib/expertSchoolMatch.ts参照）。
+            当初はカンマ・読点区切りの1つのテキスト欄だったが、「コンマより一個一個
+            入力がいいかと」との指摘を受け、1件ずつ入力して追加するチップ形式に変更。 */}
+        <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>
+          保護者視点で話せる学校名（任意・複数可）
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <input
+            className="input"
+            placeholder="例：〇〇学園中等部"
+            value={schoolNameInput}
+            onChange={(e) => setSchoolNameInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key !== 'Enter') return;
+              e.preventDefault();
+              const name = schoolNameInput.trim();
+              if (name && !form.schoolNames.includes(name)) {
+                setForm((f) => ({ ...f, schoolNames: [...f.schoolNames, name] }));
+              }
+              setSchoolNameInput('');
+            }}
+          />
+          <button
+            type="button"
+            className="btn-secondary"
+            style={{ flex: '0 0 auto' }}
+            onClick={() => {
+              const name = schoolNameInput.trim();
+              if (name && !form.schoolNames.includes(name)) {
+                setForm((f) => ({ ...f, schoolNames: [...f.schoolNames, name] }));
+              }
+              setSchoolNameInput('');
+            }}
+          >
+            追加
+          </button>
+        </div>
+        {form.schoolNames.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {form.schoolNames.map((n) => (
+              <span
+                key={n}
+                className="muted"
+                style={{
+                  fontSize: 13,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  border: '1px solid var(--border)',
+                  borderRadius: 999,
+                  padding: '4px 6px 4px 10px',
+                  background: 'var(--bg)',
+                }}
+              >
+                {n}
+                <button
+                  type="button"
+                  aria-label={`${n}を削除`}
+                  onClick={() => setForm((f) => ({ ...f, schoolNames: f.schoolNames.filter((x) => x !== n) }))}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: 14, lineHeight: 1, padding: 0 }}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        <div className="muted" style={{ fontSize: 12, marginTop: -4 }}>
+          お子さんが通われていた（通われている）学校の正式名称を1件ずつ入力して「追加」を押してください（Enterキーでも追加できます）。入力すると、その学校の紹介ページにも「先輩保護者からこの学校の話を聞く」として表示されます。
         </div>
 
         <input
