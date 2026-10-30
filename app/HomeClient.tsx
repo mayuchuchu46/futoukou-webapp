@@ -399,17 +399,20 @@ export default function HomeClient({
             {category === 'course' || category === 'school' || showExtras ? (
               <div className="home-gakko-link" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, margin: '0 0 10px' }}>
                 {[
-                  { href: '/gakko/matome', icon: '🏫', label: '学校・フリースクール' },
-                  { href: '/gakko/shindan', icon: '🧭', label: '選択式で学校さがし' },
+                  { href: '/gakko/matome', icon: '🏫', label: '学校・フリースクール', sub: '都道府県別の一覧から見る' },
+                  { href: '/gakko/shindan', icon: '🧭', label: '条件から学校をさがす', sub: '学年・通う頻度などで絞り込む' },
                 ].map((m) => (
                   <Link
                     key={m.href}
                     href={m.href}
                     className="card"
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, margin: 0, padding: '10px 8px', textDecoration: 'none', color: 'inherit' }}
+                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, margin: 0, padding: '10px 8px', textDecoration: 'none', color: 'inherit' }}
                   >
                     <span aria-hidden="true" style={{ fontSize: 18 }}>{m.icon}</span>
-                    <span style={{ fontWeight: 700, fontSize: 13 }}>{m.label}</span>
+                    <span>
+                      <span style={{ display: 'block', fontWeight: 700, fontSize: 13 }}>{m.label}</span>
+                      <span className="muted" style={{ display: 'block', fontSize: 11 }}>{m.sub}</span>
+                    </span>
                   </Link>
                 ))}
               </div>

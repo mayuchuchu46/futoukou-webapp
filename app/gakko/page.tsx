@@ -260,11 +260,11 @@ export default async function GakkoPage({
               (2)3グループに分かれているのが分かりにくい、(3)助成金・支援制度だけ1個しか
               ないのに専用グループになっている、という3点の指摘を受け、他のセクションと
               同じカードに収めた1本のチップ列に統合した（2026-10-18）。 */}
-          {/* 全種類の学校を学年・地域・通う頻度などで絞り込む選択式診断への入口（2026-10-30追加） */}
+          {/* 全種類の学校を学年・地域・通う頻度などで絞り込むページ（条件から学校をさがす）への入口（2026-10-30追加） */}
           <Link href="/gakko/shindan" className="card" style={{ textDecoration: 'none', color: 'inherit', alignItems: 'flex-start', gap: 4 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>選択式で学校をさがす ›</div>
+            <div className="answer-label" style={{ fontSize: 14 }}>条件から学校をさがす ›</div>
             <div className="muted" style={{ fontSize: 12 }}>
-              学年・地域・通う頻度などを選ぶと、通信制・定時制・学びの多様化学校・フリースクール・オルタナティブスクールから条件に合う学校を表示します。
+              都道府県から一覧を見るのではなく、学年・通う頻度などの条件を選んで、通信制・定時制・学びの多様化学校・フリースクール・オルタナティブスクールを絞り込めます。
             </div>
           </Link>
 
