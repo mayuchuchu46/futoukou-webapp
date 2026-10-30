@@ -32,6 +32,11 @@ const CATEGORY_OPTIONS = Object.entries(CATS).map(([key, c]) => ({ key, label: c
 const BIO_EXAMPLE =
   '例：公認心理師として、スクールカウンセラーや児童発達支援の現場で10年以上、不登校・行き渋りのお子さんとご家族の相談に携わってきました。無理に登校を促すのではなく、お子さんのペースに合わせた関わり方を一緒に考えます。';
 
+// 「先輩保護者からこの学校の話を聞く」機能（2026-10-30追加）がこのbio文を学校名で
+// 検索するため、学校の正式名称を書いてもらうよう例文で促す。
+const SENPAI_BIO_EXAMPLE =
+  '例：中2の息子が小5の時に不登校になり、現在は〇〇学園中等部に転校して元気に通っています。学校探しで悩んだ経験や、学校との付き合い方についてお話しできます。';
+
 // ファイル・パスワード以外の入力内容を下書きとして保存しておく（2026-10-13追加）。
 // 「せっかく途中まで書いたのに消える」「戻ると消える」という指摘を受けて、入力のたびに
 // localStorageへ保存し、次に開いたときに復元する。ファイル（登録証・写真）は
@@ -245,10 +250,19 @@ export default function ExpertRegisterPage() {
         <textarea
           className="input"
           rows={4}
-          placeholder={BIO_EXAMPLE}
+          placeholder={form.credential === '先輩保護者（経験者）' ? SENPAI_BIO_EXAMPLE : BIO_EXAMPLE}
           value={form.bio}
           onChange={(e) => setForm({ ...form, bio: e.target.value })}
         />
+        {form.credential === '先輩保護者（経験者）' && (
+          <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
+            {/* 「先輩保護者からこの学校の話を聞く」として学校ページに表示する機能
+                （2026-10-30追加）は、この自己紹介文に書かれた学校名で一致を探します。
+                お子さんが通われていた（通われている）学校名を書いていただくと、
+                その学校のページから見つけてもらいやすくなります。 */}
+            お子さんが通われていた（通われている）学校の正式名称を書いていただくと、その学校の紹介ページからも見つけてもらいやすくなります。
+          </div>
+        )}
         <input
           className="input"
           placeholder="ご自身のサービス・サイトなどへのリンク（任意）"

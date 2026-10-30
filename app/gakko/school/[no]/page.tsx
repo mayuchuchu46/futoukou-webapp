@@ -11,6 +11,7 @@ import { findSimilarManabiSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import SchoolConsultations from './SchoolConsultations';
+import SchoolExperiencedParents from './SchoolExperiencedParents';
 import SchoolFitCard from './SchoolFitCard';
 // 学びの多様化学校、1校ごとの紹介ページ。一覧（/gakko）の学校名を押すとここに来る
 // （2026-10-18、「学校名を押したらその学校の紹介ページに行くようにできる？」との
@@ -323,6 +324,13 @@ export default async function GakkoSchoolPage({
               表示を止めないよう、/gakkoのRelatedConsultationsと同じくSuspenseで囲む。 */}
           <Suspense fallback={null}>
             <SchoolConsultations schoolName={school.name} branchName={school.branchName} />
+          </Suspense>
+
+          {/* 「先輩保護者からこの学校の話を聞くとかね」との要望を受けて追加
+              （2026-10-30）。本人確認済みの先輩保護者（経験者）の自己紹介文に
+              この学校名・愛称が含まれていれば表示する。 */}
+          <Suspense fallback={null}>
+            <SchoolExperiencedParents schoolName={school.name} branchName={school.branchName} />
           </Suspense>
 
           {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との
