@@ -39,9 +39,16 @@ export default async function GakkoRankingPage() {
       <div className="main page-with-sidebar">
         <div className="page-main">
           <h2 className="pagetitle">注目の学び場ランキング</h2>
-          <div className="muted" style={{ marginBottom: 12 }}>
+          <div className="muted" style={{ marginBottom: 4 }}>
             実際に寄せられた相談の中で、学校名・施設名が話題になった件数のランキングです（閲覧数ではありません）。
           </div>
+          {/* ランキングを見た人が、自分で学び場を探す方にも進めるように
+              （2026-10-30、「学び場のトップへの導線を作りたい」との要望を受けて追加）。
+              他の一覧系ページ（app/gakko/teiji/[no]/page.tsx等）と同じ
+              .backlink--forwardのスタイルを使う。 */}
+          <Link href="/gakko/matome" className="backlink--forward" style={{ marginBottom: 12 }}>
+            学び場をまとめて見る（都道府県・種類から探す） ›
+          </Link>
 
           {items.length === 0 && (
             <div className="card">
@@ -86,6 +93,20 @@ export default async function GakkoRankingPage() {
               ))}
             </div>
           )}
+
+          {/* ランキングは話題になった学校だけなので、載っていない学校を探したい人向けに
+              学び場トップへのCTAも置く（2026-10-30追加）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>
+              気になる学校がランキングに無かったら
+            </div>
+            <div className="qtext">
+              都道府県や学校の種類（学びの多様化学校・フリースクール・通信制高校など）から、もっと詳しく学び場を探せます。
+            </div>
+            <Link href="/gakko/matome" className="btn-primary sidebar-ask-btn-pink" style={{ textDecoration: 'none', width: '100%' }}>
+              学び場をまとめて見る →
+            </Link>
+          </div>
 
           <Link href="/" className="backlink">← ホームに戻る</Link>
         </div>
