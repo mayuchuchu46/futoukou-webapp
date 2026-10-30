@@ -970,3 +970,17 @@ insert into consultations (category, question, answer, author_id, likes) values
  'seed', 61)
 on conflict do nothing;
 -- 新規DB向け初期データここまで
+
+-- 2026-10-30: 外部リンク（/out 経由）のクリック計測。
+-- 記録するのは「どのリンク(link_id)を・どの画面から(src)・いつ・どのホストへ」だけ。
+-- IPアドレス・User-Agent・ユーザーIDなど個人を特定しうる情報は保存しない。
+-- RLSを有効にしてポリシーを作らない＝service_role（サーバー側）だけが読み書きできる。
+create table if not exists outbound_clicks (
+  id bigint generated always as identity primary key,
+  link_id text not null,
+  src text,
+  target_host text not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists outbound_clicks_link_idx on outbound_clicks (link_id, created_at desc);
+alter table outbound_clicks enable row level security;

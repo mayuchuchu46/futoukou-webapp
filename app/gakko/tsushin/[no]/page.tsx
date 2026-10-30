@@ -12,6 +12,7 @@ import {
 } from '@/lib/data/correspondenceHighSchools';
 import { findSimilarCorrespondenceHighSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import TrackedOutLink from '@/components/TrackedOutLink';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import { Suspense } from 'react';
@@ -157,6 +158,8 @@ export default async function TsushinSchoolPage({
               {[
                 { label: '本校所在地（所轄庁）', value: `${school.prefecture}${school.municipality}` },
                 { label: '設置者', value: school.operator },
+                ...(school.attendanceNote ? [{ label: '通う頻度（確認できた内容）', value: school.attendanceNote }] : []),
+                ...(school.tuitionNote ? [{ label: '学費', value: school.tuitionNote }] : []),
               ].map((row) => (
                 <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
                   <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
@@ -172,15 +175,13 @@ export default async function TsushinSchoolPage({
                 書き換え不要にするための下準備。2026-10-21追加、現時点ではURLデータが
                 無いためこのボタン自体はまだどの学校にも表示されない）。 */}
             {school.officialUrl && (
-              <a
+              <TrackedOutLink
                 href={`/out?to=${encodeURIComponent(school.officialUrl)}&id=tsushin-${school.no}`}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="btn-secondary"
                 style={{ width: '100%', textAlign: 'center' }}
               >
                 学校の公式サイトを見る ›
-              </a>
+              </TrackedOutLink>
             )}
             <FavoriteButton type="tsushin" no={school.no} name={school.name} meta={`${school.prefecture}${school.municipality}`} />
             {/* 本校以外のキャンパス・学習センター等（lib/data/correspondenceHighSchools.tsの

@@ -120,6 +120,9 @@ export default function TsushinExplorer({
           >
             出典を見る ›
           </a>
+          <Link href="/gakko/tsushin/shindan" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+            地域・通う頻度から絞り込む（選択式診断）›
+          </Link>
           <Link href="/gakko/tsushin/kokoro-care" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
             心のケア専門職が常駐する学校だけを見る ›
           </Link>
