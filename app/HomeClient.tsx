@@ -423,6 +423,38 @@ export default function HomeClient({
               </Link>
             ) : null}
 
+            {/* 選択式診断（/gakko/shindan）への導線（2026-10-30追加）。上の学校・フリースクールの
+                カードと同じ表示条件・同じ見た目で、すぐ下に並べる。 */}
+            {category === 'course' || category === 'school' || showExtras ? (
+              <Link
+                href="/gakko/shindan"
+                className="card home-gakko-link"
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 14, margin: '0 0 10px' }}
+              >
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '50%',
+                    background: 'var(--sub)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 20,
+                    flex: '0 0 auto',
+                  }}
+                  aria-hidden="true"
+                >
+                  🧭
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700 }}>選択式で学校をさがす</div>
+                  <div className="muted" style={{ fontSize: 12 }}>学年・地域・通う頻度などを選ぶと、条件に合う学校が見つかります</div>
+                </div>
+                <div className="muted">›</div>
+              </Link>
+            ) : null}
+
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
                 「参考になった順」は各カードの「参考になった◯人」と同じlikesで並べている。
                 専門家回答の絞り込みは、以前は/expertlistへの別バナーのみで案内していたが、
