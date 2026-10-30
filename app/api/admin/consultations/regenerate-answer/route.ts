@@ -12,6 +12,7 @@ import {
   findMentionedFreeSchool,
   buildFreeSchoolFactsBlock,
   findMentionedOnlineFreeSchool,
+  buildAlternativeFactsBlockFor,
   buildOnlineFreeSchoolFactsBlock,
 } from '@/lib/facilityLinkMatch';
 
@@ -80,7 +81,7 @@ export async function POST(req: NextRequest) {
       : undefined;
     const mentionedInstitutions = findMentionedInstitutions([parent.question, parent.answer, row.question]);
     const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, institutionFactsBlock]
+    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, buildAlternativeFactsBlockFor([parent.question, row.question]), institutionFactsBlock]
       .filter(Boolean)
       .join('\n');
     prompt = buildFollowupPrompt(
@@ -112,7 +113,7 @@ export async function POST(req: NextRequest) {
       : undefined;
     const mentionedInstitutions = findMentionedInstitutions([row.question]);
     const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, institutionFactsBlock]
+    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, buildAlternativeFactsBlockFor([row.question]), institutionFactsBlock]
       .filter(Boolean)
       .join('\n');
     prompt = buildPrompt(

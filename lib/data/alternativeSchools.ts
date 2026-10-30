@@ -44,6 +44,8 @@ export type AlternativeSchool = {
   contact?: string;
   /** 備考・特徴等 */
   note?: string;
+  /** 入学・入試の方法（公式サイト等で確認できた事実のみ。無い＝未確認） */
+  admission?: { text: string; sourceUrl: string };
 };
 
 export const METHOD_LABEL: Record<AlternativeSchool['method'], string> = {
@@ -70,6 +72,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 2,
+    admission: { text: '義務教育学校（2027年4月入学）は書類選考のあと、通過者に最終選考（子ども選考・保護者面接）を実施する。募集は1年生35人、2〜6年生若干名、7年生8人。出願は2026年9月11日〜13日（締切済）で、年度途中の編入は受け付けていない。', sourceUrl: 'https://kazakoshi.ed.jp/campus/guide2027/' },
     name: '軽井沢風越学園',
     prefecture: '長野県',
     city: '北佐久郡軽井沢町',
@@ -81,6 +84,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 3,
+    admission: { text: '中学（2027年度入試）はA・B・C入試とも国語・算数の筆記試験と面接（A・Cはグループ、Bは個人）。A・B入試は理科・社会・体育・音楽・美術から1つ選ぶ授業もある。', sourceUrl: 'https://www.jiyunomori.ac.jp/nyugaku/shiken_chugaku.php' },
     specialties: [{ tag: 'music', course: '選択講座 声楽', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }, { tag: 'art', course: '選択講座 陶芸・木版画等', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }, { tag: 'nature', course: '選択講座 農業', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }, { tag: 'food', course: '選択講座 食べもの', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }, { tag: 'performing', course: '選択演劇', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }],
     name: '自由の森学園中学校・高等学校',
     prefecture: '埼玉県',
@@ -128,6 +132,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 7,
+    admission: { text: '2027年度新1年生について体験入学(入学選考)を実施する。入学願書提出前に子どもと学校見学を済ませるよう案内。現1・2年生も若干名募集。', sourceUrl: 'https://kitakyushu.kinokuni.ac.jp/wp/' },
     name: '北九州子どもの村小中学校',
     prefecture: '福岡県',
     city: '北九州市',
@@ -184,6 +189,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   // ── 非一条校（認可外の施設・フリースクール等） ─────────────────────────
   {
     no: 12,
+    admission: { text: '入学希望者は問い合わせ後、校長と30分程度の面談を行う。体験は無料見学・1日体験・1週間体験・1か月仮入学がある。2026年度の新入生・年度中途入学の見学と面談を随時受付、中途入学は各学年1名程度募集。', sourceUrl: 'https://www.amazing-college.com/admission-guide' },
     name: 'アメージングカレッジ',
     prefecture: '埼玉県',
     city: '東松山市',
@@ -195,6 +201,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 13,
+    admission: { text: '入学手続きは1次面談(子ども・両親・スタッフ)、1日学校体験、1週間学校体験(2度まで可)、最終面談の段階的なステップ。入学対象年齢は4月1日時点で5〜17歳。募集期間・定員数の記載はなく、『定員になり次第受付終了』とある。', sourceUrl: 'https://tokyosudbury.com/admission/' },
     name: '東京サドベリースクール',
     prefecture: '東京都',
     city: '世田谷区',
@@ -272,6 +279,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 20,
+    admission: { text: '入学までのステップに、スクール見学、体験入学、入学願書提出と考査料納付、入学考査、両親・スクール面談が含まれる。定員・入学基準は募集要項で確認する形で、本文に数値はない。', sourceUrl: 'https://tokyocs.org/admissions/school/step' },
     specialties: [{ tag: 'it', course: '情報(プログラミング)', sourceUrl: 'https://tokyocs.org/schoollife/primary/academics' }],
     name: '東京コミュニティスクール',
     prefecture: '東京都',
@@ -284,6 +292,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 21,
+    admission: { text: '全部門共通で入学申込書を郵送または持参で提出し、見学(水曜9〜12時)と最大1週間の体験入学(随時受付)がある。高等部(中卒以上)は4月入学で、取得単位によって編入学が可能な場合がある。', sourceUrl: 'https://sangosya.com/admission-2/' },
     specialties: [{ tag: 'music', course: 'シンカソング', sourceUrl: 'https://sangosya.com/koutoubu/' }, { tag: 'art', course: '紅型講座・焼物講座', sourceUrl: 'https://sangosya.com/koutoubu/' }, { tag: 'performing', course: '沖縄講座（芸能）', sourceUrl: 'https://sangosya.com/koutoubu/' }],
     name: '珊瑚舎スコーレ',
     prefecture: '沖縄県',

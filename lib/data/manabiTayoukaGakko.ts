@@ -54,11 +54,14 @@ export type ManabiTayoukaGakko = {
   // という状態）：no.4,9,13,15,16,17,20,21,23,27,32,34,44,51,52,58,63,64,65,66,69,
   // 77,79,83,84。
   hasDedicatedMentalCareStaff?: boolean;
+  /** 入学・入試の方法（公式サイト等で確認できた事実のみ。無い＝未確認） */
+  admission?: { text: string; sourceUrl: string };
 };
 
 export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   {
     "no": 1,
+    "admission": {"text": "八王子市内在住で市立小・中学校等に在籍し、年間30日以上の欠席等の状態が続く児童生徒が対象。手続きは電話での見学・面談申込、面談、やまゆり教室への通級・正式入級、体験交流、転入学審査会、転入学手続きの流れ。", "sourceUrl": "https://hachioji-school.ed.jp/takao3g/page/ChangeAfter"},
     "type": "本校型",
     "name": "八王子市立高尾山学園小学部・中学部",
     "branchName": null,
@@ -74,6 +77,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 2,
+    "admission": {"text": "転入学は在籍校を通じて不登校相談支援センターへ相談申請を行う。対象は京都市内等に住所があり、不登校・不登校傾向の児童生徒。令和8年度は前期で定員に達し後期募集なし。", "sourceUrl": "https://www.city.kyoto.lg.jp/kyoiku/page/0000307834.html"},
     "type": "本校型",
     "name": "京都市立洛風中学校",
     "branchName": null,
@@ -89,6 +93,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 3,
+    "admission": {"text": "出願は1月。入試の流れに面談参加（児童・保護者）と入試があり、WISC-IV/Vの結果（小4の1月以降分）を持っていれば提出。学力試験の有無はページに記載なし。", "sourceUrl": "https://www.seisahighschool.ed.jp/jrh/information/"},
     "type": "本校型",
     "name": "星槎中学校",
     "branchName": null,
@@ -104,6 +109,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 4,
+    "admission": {"text": "入学・転入を考える人は説明会・その他イベントへ参加するよう案内。試験・面接・書類の詳細は同ページに記載なし。", "sourceUrl": "https://katsushika.shuregakuen.ed.jp/admission/"},
     "type": "本校型",
     "name": "東京シューレ葛飾中学校",
     "branchName": null,
@@ -118,6 +124,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 5,
+    "admission": {"text": "京都市立洛友中学校（昼間部）の転入学は、在籍校を通じて不登校相談支援センターへの相談申請が必要。令和8年度前期は定員に達し後期募集なし。", "sourceUrl": "https://www.city.kyoto.lg.jp/kyoiku/page/0000307837.html"},
     "type": "本校型",
     "name": "京都市立洛友中学校",
     "branchName": null,
@@ -133,6 +140,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 6,
+    "admission": {"text": "2027年度入試は学力検査と面接。出願書類は入学志願票。第1回は出願2026/11/25〜12/24・選考2027/1/16、第2回は出願2027/1/12〜1/22・選考1/30。", "sourceUrl": "https://seisa-nagoyajh.ed.jp/information/"},
     "type": "本校型",
     "name": "星槎名古屋中学校",
     "branchName": null,
@@ -148,6 +156,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 7,
+    "admission": {"text": "新入生（2027年度）は第1回（自己推薦）は学力試験なし、第2・3回は作文・算数の学力試験、全回で本人面接。転入生（令和8年度）は学力試験なし・面接（本人のみ）で自己推薦書が必要。", "sourceUrl": "https://seisa.ed.jp/momiji-jh/information/"},
     "type": "本校型",
     "name": "星槎もみじ中学校",
     "branchName": null,
@@ -163,6 +172,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 8,
+    "admission": {"text": "本入学を希望する場合は必ず体験入学をお願いしているとの記載のみ。試験・面接・書類は同ページに記載なし。", "sourceUrl": "https://seino-gakuen.ed.jp/orientation/"},
     "type": "本校型",
     "name": "西濃学園中学校",
     "branchName": null,
@@ -178,6 +188,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 9,
+    "admission": {"text": "入学相談（保護者のみ、予約制・1回のみ）が出願の必須条件。2027年度分の申込は10月30日で締切。年度途中の追加募集は定員に空きがある場合のみの可能性。", "sourceUrl": "https://edogawa.shuregakuen.ed.jp/news/3079/"},
     "type": "本校型",
     "name": "東京シューレ江戸川小学校",
     "branchName": null,
@@ -207,6 +218,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 11,
+    "admission": {"text": "募集は新1年約10人程度、2・3年も少数。学校説明会への参加が必須で、転入希望者は学校体験会（令和8年11月7日）等。年度途中の転入学は受け付けない。", "sourceUrl": "https://www.city.gifu.lg.jp/kosodate/gakkou/1003900/1003901.html"},
     "type": "本校型",
     "name": "岐阜市立草潤中学校",
     "branchName": null,
@@ -222,6 +234,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 12,
+    "admission": {"text": "対象は市内すべての小中学校の児童生徒。学校説明・転入学の説明・見学・体験入学等は随時行っているとのこと。", "sourceUrl": "https://www.city.shiroishi.miyagi.jp/soshiki/29/26132.html"},
     "type": "本校型",
     "name": "白石市立白石南小学校・白石市立白石南中学校",
     "branchName": null,
@@ -250,6 +263,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 14,
+    "admission": {"text": "選考は書類選考と個人面接（学力試験の記載なし）。第1期は出願2026/1/10〜1/30・試験2/1,2/2、第2期は出願2/4〜2/12・試験2/14（2026年度入学分）。", "sourceUrl": "https://jhs.sanko.ac.jp/school/admissions/"},
     "type": "本校型",
     "name": "東京みらい中学校",
     "branchName": null,
@@ -265,6 +279,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 15,
+    "admission": {"text": "学力試験は実施しない。入学願書提出後、2泊3日の体験入学（グループ活動・心理検査・親子面接等）を実施。転入は中学は中3の1学期まで、高校は1年の2学期まで。", "sourceUrl": "https://www.ikuno.ed.jp/examinees/how_to/"},
     "type": "本校型",
     "name": "生野学園高等学校",
     "branchName": null,
@@ -322,6 +337,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 19,
+    "admission": {"text": "学びの多様化学校コースは令和9年度、1年7人程度・2年4人程度・3年2人程度を募集。対象は不登校・不登校傾向の児童生徒。入学希望者説明会で入学・転入学希望届を配布。", "sourceUrl": "https://www.pref.mie.lg.jp/TOPICS/m0045300179.htm"},
     "type": "本校型",
     "name": "三重県立みえ四葉ヶ咲中学校",
     "branchName": null,
@@ -337,6 +353,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 20,
+    "admission": {"text": "学力試験は実施しない。入学願書提出後、2泊3日の体験入学（グループ活動・心理検査・親子面接等）を実施。中学への転入受付は中3の1学期まで。", "sourceUrl": "https://www.ikuno.ed.jp/examinees/how_to/"},
     "type": "本校型",
     "name": "生野学園中学校",
     "branchName": null,
@@ -394,6 +411,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 24,
+    "admission": {"text": "令和8年10月転入学の申請受付は終了。令和9年度4月転入学の説明資料は令和8年11月中旬掲載予定。対象は原則学校を30日以上欠席している児童生徒。", "sourceUrl": "https://www.city.saitama.lg.jp/003/002/001/p117896.html"},
     "type": "本校型",
     "name": "さいたま市立いろどり学園小学部・中学部",
     "branchName": null,
@@ -409,6 +427,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 25,
+    "admission": {"text": "令和9年度当初の転入学には説明会（第1回・第2回のいずれか）への参加が必須。対象は川口市内在住または市立小中在籍で令和9年度中学1〜3年の予定者。", "sourceUrl": "https://www.city.kawaguchi.lg.jp/soshiki/04020/020/futoukoushien/47835.html"},
     "type": "本校型",
     "name": "川口市立芝園学園中学校",
     "branchName": null,
@@ -424,6 +443,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 26,
+    "admission": {"text": "転入学は保護者が不登校支援窓口へ電話申込（在籍校に出席状況を確認）。受け入れ可能人数を超えた場合は抽選。随時の施設見学は不可。", "sourceUrl": "https://www.city.setagaya.lg.jp/01300/1395.html"},
     "type": "本校型",
     "name": "世田谷区立北沢学園中学校",
     "branchName": null,
@@ -453,6 +473,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 28,
+    "admission": {"text": "令和9年度は新1年生35人まで募集。10月6日の学校説明会に必ず参加。個別面談（児童・保護者）があり、学校体験参加が出願資格の1つ。申込は9月30日締切。", "sourceUrl": "https://nisshin-jh.aichi-c.ed.jp/cms/page-123.html"},
     "type": "本校型",
     "name": "愛知県立日進高等学校附属中学校",
     "branchName": null,
@@ -513,6 +534,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 32,
+    "admission": {"text": "Web出願後、A日程（令和9年1月9日）は書類審査（調査書等）と面接（保護者同伴）。後期日程は令和8年12月21日〜令和9年3月5日出願で、試験日は随時実施。", "sourceUrl": "https://nagomi-jhs.shizugaku.jp/"},
     "type": "本校型",
     "name": "静岡学園なごみ中学校",
     "branchName": null,
@@ -527,6 +549,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 33,
+    "admission": {"text": "通学区域は市内全域で、福生市在住の生徒が対象（市外在住のままの転入学は不可）。転入学は、本人にとって最適な選択肢かを慎重に判断したうえで決定し、希望する場合はまず在籍校に相談する。視察は申請制で、受入不可の場合もある。", "sourceUrl": "https://www.city.fussa.tokyo.jp/education/1005766/1020800.html"},
     "type": "分校型",
     "name": "福生市立福生第一中学校",
     "branchName": "福生市立牛浜もくせい中学校",
@@ -556,6 +579,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 35,
+    "admission": {"text": "由比ガ浜中学校への転入学は「学校説明会」「在籍校・教育委員会との面談」「学校体験」「教育相談」の各プロセスを経る必要がある。対象は小5〜中2の児童生徒と保護者で、令和9年度希望者は説明会への参加が必須。", "sourceUrl": "https://www.city.kamakura.kanagawa.jp/jidouseito/manabinotayoukagakko.html"},
     "type": "分校型",
     "name": "鎌倉市立御成中学校",
     "branchName": "鎌倉市立由比ガ浜中学校",
@@ -616,6 +640,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 39,
+    "admission": {"text": "令和9年4月の入学・転入学は、在籍校に相談のうえ入学等申請書と事前アンケートを在籍校へ提出する（受付は令和8年10月27日〜11月27日）。対象は小6・中1・中2。個別相談を随時受け付け、学校見学は個別相談のうえ調整する。", "sourceUrl": "https://www.city.kushiro.lg.jp/kosodatekyouiku/kyouiku/1005512/1016608/1016609.html"},
     "type": "分校型",
     "name": "釧路市立北中学校",
     "branchName": "釧路市立くしろ創明学園",
@@ -631,6 +656,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 40,
+    "admission": {"text": "転入学は「転入学の手引き」を読んで手続きに進む。現在中学生と小6で区分があり、体験入学が10月17日・11月8日に予定されている。", "sourceUrl": "https://www.city.ojiya.niigata.jp/manabi/trancefer.html"},
     "type": "分校型",
     "name": "小千谷市立小千谷中学校",
     "branchName": "上ノ山分校",
@@ -646,6 +672,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 41,
+    "admission": {"text": "対象は原則、上越市内在住の不登校または不登校傾向の中学生で、各学年8名程度。令和9年度入学は、諏訪中学校が本人にとって最適かを入学プロセスで検討する。学校見学は令和8年12月11日まで受付（電話）。", "sourceUrl": "https://www.city.joetsu.niigata.jp/soshiki/j-gaku/manabino-tayoukagakkou.html"},
     "type": "分校型",
     "name": "上越市立雄志中学校",
     "branchName": "上越市立諏訪中学校",
@@ -735,6 +762,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 47,
+    "admission": {"text": "対象は市内全中学校の在籍生徒（来年度入学予定の児童を含む）。富谷中以外から入室する場合は指定校変更が必要。申請者が定員を超えると選考があり、定員未満でも体験入学時の様子や面接から不適当と判断される場合がある。", "sourceUrl": "https://tomiya-tomiyajhs.edumap.jp/nishinarita"},
     "type": "分教室型",
     "name": "富谷市立富谷中学校",
     "branchName": "西成田教室",
@@ -780,6 +808,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 50,
+    "admission": {"text": "令和9年4月の転入学は、不登校支援窓口へ保護者が電話で申し込む。申込前に手続きPDFを読む必要があり、在籍校に出席状況を確認する。受入可能人数を超えた場合は抽選。随時の施設見学は不可。", "sourceUrl": "https://www.city.setagaya.lg.jp/01300/1395.html"},
     "type": "分教室型",
     "name": "世田谷区立世田谷中学校",
     "branchName": "ねいろ",
@@ -868,6 +897,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 56,
+    "admission": {"text": "転入学者の募集は年2回（10月通学開始・翌年度4月通学開始）で、各学年10名程度。延岡市在住（予定含む）で年90日以上欠席の状態などが条件。説明会・体験学習のあと令和8年11月30日〜12月15日に転入学申請書を提出し、令和9年1月7日に決定通知。", "sourceUrl": "https://www.city.nobeoka.miyazaki.jp/soshiki/59/35502.html"},
     "type": "分教室型",
     "name": "延岡市立南浦中学校",
     "branchName": "熊野江教室",
@@ -898,6 +928,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 58,
+    "admission": {"text": "新1年生は運動・絵画・言葉と数・集団活動・面接、転入生(1〜3年生若干名)は国語・算数・体育・面接（いずれも受験者と保護者同席）。出願は入学願書と入学選考料10,000円、一般専願は2026年9月4日〜24日出願・10月17日試験、一般は10月30日〜11月9日出願・11月14日試験。年度途中の転入は学校へ問い合わせ。", "sourceUrl": "http://www.lilyvale.ed.jp/admission/entrance/"},
     "type": "分教室型",
     "name": "リリーベール小学校",
     "branchName": "リリーガーデン",
@@ -927,6 +958,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 60,
+    "admission": {"text": "入室対象は市内在住で市立または私立中学校に在籍する不登校傾向の生徒等。入室は対象要件・三者面談・体験入室の状況などから教育委員会が総合的に判断し、定員超過時は希望に沿えないことがある。申請書は在籍校経由で提出。浦安中学校へ転校が必要。", "sourceUrl": "https://www.city.urayasu.lg.jp/kodomo/gakko/shokai/1043661.html"},
     "type": "分教室型",
     "name": "浦安市立浦安中学校",
     "branchName": "UMI",
@@ -972,6 +1004,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 63,
+    "admission": {"text": "対象は府中市立中学校在籍で不登校状態の生徒。事前相談・体験入室を行った上で入退室検討委員会が入室を判断。申請時は在籍校長との面談後に体験入室へ参加。", "sourceUrl": "https://www.city.fuchu.tokyo.jp/kyoiku/mokuhyou/shisaku/futoukousien/kagayaki/manabi.html"},
     "type": "分教室型",
     "name": "府中市立浅間中学校",
     "branchName": "「かがやき」",
@@ -1019,6 +1052,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 66,
+    "admission": {"text": "学校説明会（令和7年度は9月29日・30日開催、小6〜中2と保護者対象）で転入学の流れを説明。入室申請書・意見書、体験入室申込書、個別面談申込書が掲載されている。定員は中学1〜3年各学年5〜10名程度。", "sourceUrl": "https://www.city.nasushiobara.tochigi.jp/soshikikarasagasu/gakkokyoikuka/kyoikushisetsu_kyoikukanrenshisetsu/22333.html"},
     "type": "分教室型",
     "name": "那須塩原市立三島中学校",
     "branchName": "プリズム",
@@ -1033,6 +1067,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 67,
+    "admission": {"text": "令和9年度入学生徒は現小学6年生が対象で、令和9年4月1日時点で市内在住の中学1年生であること。施設見学会（10月17日）、個別相談、12月12日の入学者面談あり。募集は16名程度。転入学者募集は準備が整い次第案内。", "sourceUrl": "https://www.city.shizuoka.lg.jp/s8273/s013049.html"},
     "type": "分教室型",
     "name": "静岡市立末広中学校",
     "branchName": null,
@@ -1048,6 +1083,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 68,
+    "admission": {"text": "対象は市内在住の中学生で、不登校（30日以上欠席）または傾向があり、入退室審査委員会が入室を認めた者。令和9年4月入室は4名募集（現在募集停止中）。相談・施設見学は随時受付。", "sourceUrl": "https://www.city.nagahama.lg.jp/0000016174.html"},
     "type": "分教室型",
     "name": "長浜市立浅井中学校",
     "branchName": null,
@@ -1063,6 +1099,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 69,
+    "admission": {"text": "令和9年度の転入学（入室）に係る学校説明会が令和8年11月6日(金)16時〜と11月7日(土)10時〜に開催され、どちらかへの参加が必要。参加申込は10月5日〜11月5日17時まで。", "sourceUrl": "https://www.city.kochi.kochi.jp/soshiki/89/sodan-tayoukagakkou.html"},
     "type": "分教室型",
     "name": "高知市立潮江中学校",
     "branchName": "SOLA",
@@ -1107,6 +1144,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 72,
+    "admission": {"text": "令和9年度前期入室を検討する場合、指定日程の説明会のいずれかへの参加が必須で、申込は在籍校を通して行う（締切10月19日）。詳細は入室案内チラシ(PDF)に記載。", "sourceUrl": "https://www.city.nagasaki.lg.jp/page/20067.html"},
     "type": "分教室型",
     "name": "長崎市立桜馬場中学校",
     "branchName": null,
@@ -1137,6 +1175,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 74,
+    "admission": {"text": "ドリームコース入試は作文(600字以内)と面接(本人・保護者別々)。出願書類は調査書と「心因性による不登校の診断書」または学校長の認定書類。Web出願12/1〜12/21、書類受付1/5〜1/8、試験日1/15（保護者同伴）、事前面談は10/1〜12/18随時。", "sourceUrl": "https://kjh.ed.jp/mss/recruitment/"},
     "type": "コース指定型",
     "name": "鹿児島城西高等学校",
     "branchName": "ドリームコース",
@@ -1167,6 +1206,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 76,
+    "admission": {"text": "試験科目は国語・英語・作文で、出願までに複数回の面談を行う。面談は中学3年第1学期終了時から受付。募集は専願30名。心因性の不登校であることの確認書または医療機関の診断書が条件。", "sourceUrl": "https://www.seika-h.ed.jp/course-fa/"},
     "type": "コース指定型",
     "name": "精華高等学校",
     "branchName": "フリーアカデミーコース",
@@ -1225,6 +1265,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 80,
+    "admission": {"text": "ブライトコースは専願入試で、入試科目は作文。募集人員は専願60名。面接・書類・日程はテキストで確認できず。", "sourceUrl": "https://www.f-kaisei.ed.jp/senior/admission/guideline/"},
     "type": "コース指定型",
     "name": "福岡海星女子学院高等学校",
     "branchName": "ブライトコース",
@@ -1255,6 +1296,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
   },
   {
     "no": 82,
+    "admission": {"text": "至誠コースは推薦入試で、出願前に受験生と保護者同伴の事前面談を行う。事前面談と申し送り書・調査書・作文をもとに総合的に合否を決定。書類出願は2027年1月12日〜25日、合格発表1月29日。", "sourceUrl": "https://keisei-h.jp/topics/shisei/"},
     "type": "コース指定型",
     "name": "慶成高等学校",
     "branchName": "至誠コース",

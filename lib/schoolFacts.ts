@@ -92,6 +92,7 @@ export function buildSchoolFactsLines(school: ManabiTayoukaGakko): string[] {
   if (school.address) facts.push(`住所：${school.address}`);
   if (school.officialUrl) facts.push(`公式サイト：${school.officialUrl}`);
   if (school.note) facts.push(`その他の確認済み情報：${school.note}`);
+  if (school.admission) facts.push(`入学・入試について確認できている情報（出典：${school.admission.sourceUrl}）：${school.admission.text}（これ以外の入試情報——倍率・合格基準など——は確認できていないため、断定しないこと）`);
   return facts;
 }
 

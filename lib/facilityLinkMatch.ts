@@ -1,6 +1,7 @@
 import { FREE_SCHOOLS, FreeSchool } from './data/freeSchools';
 import { CORRESPONDENCE_HIGH_SCHOOLS, CorrespondenceHighSchool } from './data/correspondenceHighSchools';
 import { ONLINE_FREE_SCHOOLS, OnlineFreeSchool } from './data/onlineFreeSchools';
+import { ALTERNATIVE_SCHOOLS, AlternativeSchool, METHOD_LABEL } from './data/alternativeSchools';
 
 // 相談文（質問・AI回答）に、フリースクール一覧（freeSchools.ts）・通信制高校一覧
 // （correspondenceHighSchools.ts）に載っている施設名が含まれている場合、その施設の
@@ -196,4 +197,51 @@ export function buildOnlineFreeSchoolFactsBlock(school: OnlineFreeSchool): strin
   回答にはしないこと。
 【確認済みの施設情報】
 ${facts.map((f) => '- ' + f).join('\n')}`;
+}
+
+
+// オルタナティブスクール（lib/data/alternativeSchools.ts）についても同様に、相談文に学校名が
+// 出てきたら確認済みの情報をAIに渡す（2026-10-30追加。「自由の森学園中学校・高等学校が
+// うちの子に合うか知りたい」という相談で、このデータが検出されず「確認済み情報を持っておらず」
+// と答えてしまったため）。
+export function findMentionedAlternativeSchool(
+  texts: (string | null | undefined)[]
+): AlternativeSchool | null {
+  return findByName(texts, ALTERNATIVE_SCHOOLS);
+}
+
+export function buildAlternativeSchoolFactsBlock(school: AlternativeSchool): string {
+  const facts: string[] = [
+    `学校名：${school.name}`,
+    `所在地：${school.prefecture}${school.city}`,
+    `対象：${school.schoolType}`,
+    `教育の特色の分類：${METHOD_LABEL[school.method]}`,
+    `一条校（学校教育法上の学校）か：${school.isAccredited ? 'はい' : 'いいえ（認可外の施設）'}`,
+  ];
+  if (school.officialUrl) facts.push(`公式サイト：${school.officialUrl}`);
+  if (school.note) facts.push(`その他の確認済み情報：${school.note}`);
+  if (school.specialties && school.specialties.length > 0) {
+    facts.push(`公式サイトで確認できた専門コース・活動：${school.specialties.map((x) => x.course).join('、')}`);
+  }
+  if (school.admission) {
+    facts.push(
+      `入学・入試について確認できている情報（出典：${school.admission.sourceUrl}）：${school.admission.text}（これ以外の入試情報——倍率・合格基準など——は確認できていないため、断定しないこと）`
+    );
+  }
+  return `
+相談文に、当サイトが情報を持っているオルタナティブスクール「${school.name}」が含まれているようです。
+以下は、この学校について確認できている情報（当サイト側で事前に調査・確認済みのもの）です。
+- 下の【確認済みの学校情報】に書かれている事実だけを使い、推測や断定で情報を足さないこと。
+- 入試・入学について聞かれた場合：「入学・入試について確認できている情報」があればそれを具体的に
+  伝え、無い場合や、聞かれた内容（倍率・合格基準・学力の目安など）がそこに無い場合は、「当サイトでは
+  確認できていない」と正直に述べ、学校の公式サイトや説明会での確認方法を具体的に案内すること。
+- 「合うかどうか」の質問には、確認済み情報（教育の特色・コース）と相談文のお子さんの様子を結びつけて
+  答え、確認できていない特色を推測で答えないこと。
+【確認済みの学校情報】
+${facts.map((f) => '- ' + f).join('\n')}`;
+}
+
+export function buildAlternativeFactsBlockFor(texts: (string | null | undefined)[]): string | undefined {
+  const school = findMentionedAlternativeSchool(texts);
+  return school ? buildAlternativeSchoolFactsBlock(school) : undefined;
 }

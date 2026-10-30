@@ -157,6 +157,18 @@ export default async function AlternativeSchoolPage({
                 </div>
               </div>
             )}
+            {school.admission && (
+              <div style={{ width: '100%' }}>
+                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
+                  入学・入試について（公式情報で確認できたもの）
+                </div>
+                <div style={{ fontSize: 13 }}>{school.admission.text}</div>
+                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+                  <a href={school.admission.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>出典ページ</a>
+                  　募集内容は年度で変わります。最新の情報は必ず公式にご確認ください。
+                </div>
+              </div>
+            )}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
               {[
                 { label: '所在地', value: school.address || `${school.prefecture}${school.city}` },
