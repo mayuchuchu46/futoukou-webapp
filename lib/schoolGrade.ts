@@ -18,13 +18,16 @@ type Tok = { level: '小' | '中' | '高'; grade: number | null } | { open: true
 
 // 学校種（小・中・高）で始まり、あとに続くのが学年・「以上」「相当」等だけのものを対象にする。
 // 「中等部」「初等部」のように途中だけ似ている語は読み取らない。
-const TOKEN_RE = /^(小|中|高)(?:学生?|学校|校生?|生)?(?:(\d)(?:年生?)?)?(以上.*|推奨|相当|年齢|年代|生年代)?$/;
+const TOKEN_RE = /^(小|中|高)(?:学生?|学校|校生?|生)?(?:(\d)(?:年生?|生)?)?(以上.*|推奨|相当|年齢|年代|生年代|まで)?$/;
 
 function parseToken(raw: string): Tok | null {
   const t = raw.trim();
   if (!t) return null;
   if (t.includes('高学年')) return null; // 「小高学年」等は学年が特定できない
   if (/^未就学/.test(t)) return { preschool: true };
+  // 「5歳～」のように小学校入学前後の年齢が始点なら、小1から対象とみなす（終点側には使わない）
+  const young = t.match(/^(\d+)\s*歳(?!.*歳)/);
+  if (young && Number(young[1]) <= 6) return { preschool: true };
   const age = t.match(/(\d+)\s*歳/);
   if (age) return Number(age[1]) >= 18 ? { open: true } : null;
   if (/^(20代|成人|社会人|大学|青年)/.test(t)) return { open: true };
@@ -53,7 +56,7 @@ function range(a: number, b: number): number[] {
 
 export function parseTargetGrades(text: string | null | undefined): number[] | null {
   if (!text) return null;
-  const s = text.normalize('NFKC').trim(); // 全角数字・記号を半角にそろえる
+  const s = text.normalize('NFKC').replace(/[~〜]/g, '～').trim(); // 全角数字・記号を半角にそろえ、範囲の記号も統一
   if (!s || s === '記載なし') return null;
   if (/[（(]/.test(s)) return null; // 括弧つきの条件は読み取らない
   if (s === '年齢不問' || s === '年齢制限なし') return range(GRADE_MIN, GRADE_MAX);
@@ -84,7 +87,7 @@ export function parseTargetGrades(text: string | null | undefined): number[] | n
   for (const item of items) {
     const it = item.trim();
     if (!it) continue;
-    if (/^(保護者|若者|親子|その他|幼|幼児)/.test(it)) continue;
+    if (/^(保護者|若者|親子|その他|一般|幼|幼児|未就学|大学|社会人|成人|青年|ひきこもり|特別支援|10)/.test(it)) continue;
     // 「小中高生」「小中学生」のように学校種が連続する書き方
     const compact = it.replace(/^不登校の/, '').match(/^([小中高]{2,3})(?:学?生|校生|学校)?(?:相当)?$/);
     if (compact) {
@@ -95,7 +98,10 @@ export function parseTargetGrades(text: string | null | undefined): number[] | n
       continue;
     }
     const tok = parseToken(it);
-    if (!tok || 'open' in tok || 'preschool' in tok) continue;
+    // 読み取れない項目が混ざる書き方（例「通信制高校に通う高校生と不登校の小学生」）は、
+    // 一部だけ読んで誤った範囲を返さないよう、全体を未確認（null）にする
+    if (!tok) return null;
+    if ('open' in tok || 'preschool' in tok) continue;
     const b = LEVEL_BASE[tok.level];
     if (tok.grade != null) {
       const g = gradeOf(tok, 'start');
