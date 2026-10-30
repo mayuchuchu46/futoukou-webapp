@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
+import { buildExperiencedParentOrFilter } from '@/lib/expertSchoolMatch';
 
 // 施設・学校ページに、その施設を経験した先輩保護者を表示する汎用コンポーネント
 // （2026-10-30、app/gakko/school/[no]/SchoolExperiencedParents.tsxと同じ仕組みを
 // 通信制高校・フリースクール・定時制・オンラインフリースクールにも広げるため汎用化。
 // components/FacilityConsultations.tsxと同じ構成に揃えた）。
-// 本人確認済みの先輩保護者（経験者）の自己紹介文（bio）に、施設名・愛称が
-// 含まれていれば表示する。呼び出し側は<Suspense fallback={null}>で囲むこと。
+// 本人確認済みの先輩保護者（経験者）の自己紹介文（bio）、または専用の構造化入力欄
+// （experienced_school_names、2026-10-31追加）に、施設名・愛称が含まれていれば表示する。
+// 呼び出し側は<Suspense fallback={null}>で囲むこと。
 export default async function FacilityExperiencedParents({
   name,
   altName,
@@ -19,7 +21,7 @@ export default async function FacilityExperiencedParents({
 }) {
   const supabase = getSupabaseAdmin();
   const names = [name, altName].filter((n): n is string => !!n);
-  const orFilter = names.map((n) => `bio.ilike.%${n}%`).join(',');
+  const orFilter = buildExperiencedParentOrFilter(names);
 
   const { data: rows } = await supabase
     .from('experts')

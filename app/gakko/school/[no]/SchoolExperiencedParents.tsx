@@ -1,16 +1,18 @@
 import Link from 'next/link';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
+import { buildExperiencedParentOrFilter } from '@/lib/expertSchoolMatch';
 
 // 「保護者は、語れる学校情報とか、わかるといいよね」「その学校のページにも出せると
 // いいな」という要望を受けて追加（2026-10-30）。先輩保護者（経験者）の自己紹介文
-// （bio）に、その学校の名前・愛称が含まれていれば、この学校のページに表示する。
+// （bio）、または専用の構造化入力欄（experienced_school_names、2026-10-31追加）に、
+// その学校の名前・愛称が含まれていれば、この学校のページに表示する。
 //
-// SchoolConsultations.tsx（この学校についての相談）と同じ考え方：専用の学校参照
-// 列を新設せず、既存のbio文をテキスト一致で検索する。学びの多様化学校・通信制・
-// フリースクールなど学校の種類ごとに別々のデータセット（no）を持っており、それを
-// 横断する構造化参照を作るのはコストが高いため、実装コストの低いテキスト一致に
-// した。該当が無ければ何も表示しない（存在しない先輩保護者を匂わせない）。
+// SchoolConsultations.tsx（この学校についての相談）と同じ考え方：学びの多様化学校・
+// 通信制・フリースクールなど学校の種類ごとに別々のデータセット（no）を持っており、
+// それを横断する構造化リレーションを作るのはコストが高いため、テキスト一致＋
+// 構造化配列の軽量な組み合わせにした。該当が無ければ何も表示しない（存在しない
+// 先輩保護者を匂わせない）。
 export default async function SchoolExperiencedParents({
   schoolName,
   branchName,
@@ -20,7 +22,7 @@ export default async function SchoolExperiencedParents({
 }) {
   const supabase = getSupabaseAdmin();
   const names = [schoolName, branchName].filter((n): n is string => !!n);
-  const orFilter = names.map((n) => `bio.ilike.%${n}%`).join(',');
+  const orFilter = buildExperiencedParentOrFilter(names);
 
   const { data: rows } = await supabase
     .from('experts')

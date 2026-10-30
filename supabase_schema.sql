@@ -429,6 +429,11 @@ create table if not exists experts (
   -- 増えることを見据え、資格種別と1対1対応にせず、専門家本人の判断で複数選んで
   -- もらう（2026-10-30追加）。
   specialty_categories text[] not null default '{}',
+  -- 先輩保護者（経験者）が「保護者視点で話せる」学校名（複数可）。以前はbio（自己紹介文）の
+  -- 自由記述にお子さんの学校名を書いてもらい、それをilikeでテキスト一致させる方式だったが、
+  -- 専用の入力欄が欲しいとの要望を受けて追加（2026-10-31）。bioでのマッチングも引き続き
+  -- 残し、こちらは精度を上げるための追加の構造化入力という位置づけ。
+  experienced_school_names text[] not null default '{}',
   created_at timestamptz not null default now()
 );
 -- アプリは常にservice_roleキー経由でのみ読み書きし、anon/authenticatedロールで
@@ -998,3 +1003,7 @@ alter table outbound_clicks enable row level security;
 -- 相談カテゴリを追加した場合（2026-10-30追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists verification_method text not null default 'upload';
 -- alter table experts add column if not exists specialty_categories text[] not null default '{}';
+
+-- 先輩保護者が「保護者視点で話せる学校名」を専用欄で入力できるようにした場合
+-- （2026-10-31追加）、既存DBでは次を実行してください。
+-- alter table experts add column if not exists experienced_school_names text[] not null default '{}';

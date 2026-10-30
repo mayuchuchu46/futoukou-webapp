@@ -35,7 +35,18 @@ type DraftForm = {
   bio: string;
   link_url: string;
   specialtyCategories: string[];
+  schoolNames: string;
 };
+
+// 「保護者視点で話せる学校名」欄の入力を、読点・カンマ・改行区切りで配列に分解する
+// （2026-10-31追加。「フォームに、相談にのれる学校名が書く欄あってもいいかも」
+// 「保護者視点で話せるというね」との指摘を受けて、bioの自由記述とは別に専用欄を設けた）。
+function parseSchoolNames(raw: string): string[] {
+  return raw
+    .split(/[、,\n]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
 
 function loadDraft(): Partial<DraftForm> {
   try {
@@ -56,6 +67,7 @@ export default function SenpaiRegisterPage() {
     bio: '',
     link_url: '',
     specialtyCategories: [] as string[],
+    schoolNames: '',
   });
   const [photo, setPhoto] = useState<File | null>(null);
   const [error, setError] = useState('');
@@ -78,6 +90,7 @@ export default function SenpaiRegisterPage() {
       bio: form.bio,
       link_url: form.link_url,
       specialtyCategories: form.specialtyCategories,
+      schoolNames: form.schoolNames,
     };
     try {
       window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -100,6 +113,8 @@ export default function SenpaiRegisterPage() {
     body.set('credential', CREDENTIAL);
     body.set('verification_method', 'call'); // 資格証が無いため常に通話確認
     form.specialtyCategories.forEach((cat) => body.append('specialty_categories', cat));
+    // 「、」「,」「\n」など複数の区切りに対応し、空要素・前後の空白を除いて送る。
+    parseSchoolNames(form.schoolNames).forEach((n) => body.append('experienced_school_names', n));
     if (photo) body.set('photo', photo);
     const res = await fetch('/api/expert/register', {
       method: 'POST',
@@ -201,8 +216,18 @@ export default function SenpaiRegisterPage() {
           value={form.bio}
           onChange={(e) => setForm({ ...form, bio: e.target.value })}
         />
+
+        {/* 「保護者視点で話せる学校名」専用欄（2026-10-31追加）。以前はbioの自己紹介文に
+            学校名を書いてもらう方式のみだったが、専用の入力欄が欲しいとの要望を受けて
+            追加した。bioへの記載も引き続き有効（lib/expertSchoolMatch.ts参照）。 */}
+        <input
+          className="input"
+          placeholder="保護者視点で話せる学校名（任意・複数可。例：〇〇学園中等部、△△フリースクール）"
+          value={form.schoolNames}
+          onChange={(e) => setForm({ ...form, schoolNames: e.target.value })}
+        />
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          お子さんが通われていた（通われている）学校の正式名称を書いていただくと、その学校の紹介ページにも「先輩保護者からこの学校の話を聞く」として表示されます。
+          お子さんが通われていた（通われている）学校の正式名称を入力すると、その学校の紹介ページにも「先輩保護者からこの学校の話を聞く」として表示されます。複数ある場合は読点（、）やカンマで区切ってください。
         </div>
 
         <input
