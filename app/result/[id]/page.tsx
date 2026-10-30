@@ -13,6 +13,7 @@ import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import ResultClient from './ResultClient';
+import QuoteShareCard from './QuoteShareCard';
 import ViewPing from './ViewPing';
 import LikeButton from './LikeButton';
 import ReactionButtons from './ReactionButtons';
@@ -22,8 +23,12 @@ import AiUsageUpsell from './AiUsageUpsell';
 import SaveConsultationPrompt from './SaveConsultationPrompt';
 import FollowupThread from './FollowupThread';
 import AskAgainBlock from './AskAgainBlock';
+import AskSimilarBlock from './AskSimilarBlock';
 import TagChips from '@/components/TagChips';
-import { SEARCH_TAG_CANDIDATES, matchesThemeText } from '@/lib/searchTags';
+import { SEARCH_TAG_CANDIDATES, matchesThemeText, getThemeDisplayLabel } from '@/lib/searchTags';
+import { findMentionedSchool } from '@/lib/schoolFacts';
+import { findMentionedFreeSchool, findMentionedCorrespondenceSchool, findMentionedOnlineFreeSchool } from '@/lib/facilityLinkMatch';
+import { stripSchoolAskBoilerplate } from '@/lib/schoolAskPrefill';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -97,14 +102,26 @@ export async function generateMetadata({
   }
 
   const cat = CATS[item.category]?.label || CATS.other.label;
-  const questionTitle = item.question.replace(/\s+/g, ' ').trim().slice(0, 48);
+  // 学校詳細ページの「相談する」ボタンは「「◯◯学校」がうちの子に合うかどうか
+  // 知りたいです。子どもの特徴：（…）」という定型文をprefillする（lib/schoolAskPrefill.ts
+  // 参照）。この定型文部分だけで48文字近くに達するため、そのまま先頭48文字を使うと、
+  // 同じ学校に複数の保護者が相談するたびに、実際に書き足した内容（本来ページごとに
+  // 差が出るはずの部分）が削られ、title・descriptionがほぼ同一文になってしまっていた
+  // （2026-10-29、「聞き方が毎回同じだとSEO的によくない？」との指摘を受けて修正）。
+  // 定型文部分を取り除き、保護者が実際に書いた内容を優先してtitle・descriptionに使う。
+  const questionForMeta = stripSchoolAskBoilerplate(item.question);
+  // 学校の相談は冒頭の「「◯◯学校」がうちの子に合うかどうか知りたいです。」だけで
+  // 30文字前後を使うため、そのあとに保護者が書き足した内容が入る余地を残せるよう、
+  // 通常の48文字よりやや長めに取る（2026-10-29）。
+  const questionTitle = questionForMeta.replace(/\s+/g, ' ').trim().slice(0, 64);
   const title = `${questionTitle}｜${cat}の相談 - ${SITE_NAME}`;
 
-  const descSource =
-    item.request_type === 'ai' && item.answer
-      ? item.answer
-      : item.question;
-  const description = descSource.replace(/\s+/g, ' ').trim().slice(0, 100);
+  // 以前はAI回答のあるページだけdescSourceに回答本文を使っていたが、Xでシェアした際の
+  // カードプレビュー（og:description）にまで回答の中身が出てしまい、「シェアボタンは
+  // 回答ではなく質問をシェアするパターンにしたい（答えは見せず続きを気にさせたい）」
+  // というこのページ自体の設計意図（下のshareButtonのtext組み立て部分のコメント参照）と
+  // 食い違っていた（2026-10-19、指摘を受けて修正）。常に質問文を使うようにする。
+  const description = questionForMeta.replace(/\s+/g, ' ').trim().slice(0, 100);
 
   const url = `${SITE_URL}/result/${item.id}`;
 
@@ -112,10 +129,6 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: url },
-    // 希死念慮・自傷等の安全上書きが発動した相談は、一覧・サイトマップから外すのに加えて、
-    // 直リンクで来た検索エンジン・クローラーにも「索引しないでほしい」と明示しておく
-    // （2026-10-31、lib/consultations.ts・app/sitemap.tsと合わせて対応）。
-    ...(item.crisis_detected ? { robots: { index: false, follow: false } } : {}),
     openGraph: {
       title,
       description,
@@ -172,6 +185,10 @@ export default async function ResultPage({
     .from('consultations')
     .select('id, question, answer')
     .eq('parent_id', item.id)
+    // 元の相談本体の取得（getConsultation）と同じく、管理画面で非表示にした行は
+    // 除外する（2026-10-21、ここにだけ.eq('hidden', false)が抜けており、非表示に
+    // したはずの返信がページには表示され続けてしまう不具合があった）。
+    .eq('hidden', false)
     .order('created_at', { ascending: true });
   const followups = (followupRows || []) as { id: string; question: string; answer: string }[];
 
@@ -230,7 +247,11 @@ export default async function ResultPage({
       rel="noopener noreferrer"
     >
       <span className="share-btn-icon">𝕏</span>
-      この回答をシェア
+      {/* 回答本文は見せず、質問（相談内容）だけを見せて続きを気にさせる作りなので、
+          ボタンの文言も「回答をシェア」ではなく「相談をシェア」が実態に合っている
+          （2026-10-19、「回答シェアじゃなくて相談をシェアってことになるね」との
+          指摘を受けて変更）。 */}
+      この相談をシェア
     </a>
   );
 
@@ -279,36 +300,10 @@ export default async function ResultPage({
   );
 
   // 回答を一言に要約した「格言カード」シェア機能（2026-10-17追加）。
-  // one_liner（app/api/consult/route.tsで、crisis_detectedな回答以外にだけ生成・保存）が
-  // ある相談にだけ出す。この機能の追加前に投稿された相談・crisis_detectedな相談には
-  // one_linerが無いため、自然にブロックごと表示されない（isCrisisでの二重チェックはしない）。
-  const quoteImageUrl = `${resultUrl}/quote-image`;
-  const quoteShareBlock = item.request_type === 'ai' && item.one_liner && (
-    <div className="card quote-share-card" style={{ alignItems: 'center', gap: 14 }}>
-      <div className="answer-label" style={{ fontSize: 13 }}>この回答を、一言カードでシェア</div>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={quoteImageUrl}
-        alt={item.one_liner}
-        width={1080}
-        height={1080}
-        style={{ width: '100%', maxWidth: 360, height: 'auto', borderRadius: 16, border: '1px solid var(--border)' }}
-        loading="lazy"
-      />
-      <a
-        className="share-btn"
-        href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-          text: `${item.one_liner}\n\nーどうする先生`,
-          url: resultUrl,
-          hashtags: 'どうする先生,不登校',
-        })}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span className="share-btn-icon">𝕏</span>
-        この一言をシェア
-      </a>
-    </div>
+  // one_linerの生成は、2026-10-30からオンデマンド化（QuoteShareCard参照）。
+  // crisis_detectedな回答・専門家回答（request_type !== 'ai'）には出さない方針は変わらず。
+  const quoteShareBlock = item.request_type === 'ai' && !item.crisis_detected && (
+    <QuoteShareCard id={item.id} resultUrl={resultUrl} initialOneLiner={item.one_liner ?? null} />
   );
 
   // 回答を見た後、「このまま終わり」にならないよう、もう一度（別の内容で）相談できる
@@ -317,6 +312,108 @@ export default async function ResultPage({
   // 指摘を受けて追加）。投稿者本人にだけ表示するため、本人確認が必要でクライアント
   // コンポーネント化したAskAgainBlock（2026-10-16）を使う。
   const askAgainBlock = <AskAgainBlock authorId={item.author_id} />;
+
+  // 「進路・勉強」「学校との関係」の相談には、学びの多様化学校（旧：不登校特例校）の
+  // 都道府県別一覧ページ（/gakko）への案内を出す（2026-10-18追加）。相談内容からは
+  // 居住都道府県が分からないため、都道府県選択は/gakko側で利用者自身に行ってもらう
+  // 最小実装（Supabaseにテーブルは作らず、文科省公表データを静的に保持）。
+  const gakkoBlock = (item.category === 'course' || item.category === 'school') && (
+    <Link href="/gakko/matome" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びの場という選択肢もあります</div>
+      <div className="qtext">
+        文部科学省指定の「学びの多様化学校」（全国約84校）のほか、フリースクール・教育支援センター・通信制高校など、お住まいの都道府県で選べる学びの場・居場所をまとめて調べられます。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        都道府県から探す ›
+      </div>
+    </Link>
+  );
+
+  // 相談文（・AI回答）に、学びの多様化学校一覧に載っている具体的な学校名が含まれている
+  // 場合は、都道府県一覧へのgakkoBlockより一歩進んだ、その学校自体の紹介ページへの
+  // 案内を出す（2026-10-19、「この回答ページから、この学校の詳細ページに飛ばしてあげると
+  // よくない？」との指摘を受けて追加）。lib/schoolFacts.tsのfindMentionedSchoolは
+  // どうする先生の回答プロンプトへの事実注入と同じ判定ロジックを使っているので、
+  // AIが学校の確認済み情報を使って答えたのと同じ学校がここでもリンクされる。
+  const mentionedSchool = findMentionedSchool([item.question, answerTextForJsonLd]);
+  const schoolDetailBlock = mentionedSchool && (
+    <Link href={`/gakko/school/${mentionedSchool.no}`} className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>
+        {mentionedSchool.name}{mentionedSchool.branchName ? `（${mentionedSchool.branchName}）` : ''}の詳細情報
+      </div>
+      <div className="qtext">
+        所在地・設置形態・指定年度など、このサイトで確認できている情報をまとめています。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        学校の詳細を見る ›
+      </div>
+    </Link>
+  );
+
+  // 上と同じ考え方を、フリースクール一覧（freeSchools.ts）・通信制高校一覧
+  // （correspondenceHighSchools.ts）にも広げたもの（2026-10-21追加）。きっかけ：
+  // 「学校法人角川ドワンゴ学園N中等部秋葉原キャンパスについて相談したいです」という
+  // 相談で、同校はfreeSchools.ts側のデータだったため、学びの多様化学校専用の
+  // mentionedSchoolでは検出できず、詳細ページへのリンクが出ていなかった。
+  // 学びの多様化学校の判定で既に一致している場合は、同じ相談に複数の案内カードを
+  // 並べて出す必要はないため判定自体をスキップする。
+  const mentionedFreeSchool = !mentionedSchool
+    ? findMentionedFreeSchool([item.question, answerTextForJsonLd])
+    : null;
+  const freeSchoolDetailBlock = mentionedFreeSchool && (
+    <Link href={`/gakko/free/${mentionedFreeSchool.no}`} className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>
+        {mentionedFreeSchool.name}の詳細情報
+      </div>
+      <div className="qtext">
+        所在地など、このサイトで確認できている情報をまとめています。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        施設の詳細を見る ›
+      </div>
+    </Link>
+  );
+
+  const mentionedTsushinSchool =
+    !mentionedSchool && !mentionedFreeSchool
+      ? findMentionedCorrespondenceSchool([item.question, answerTextForJsonLd])
+      : null;
+  const tsushinDetailBlock = mentionedTsushinSchool && (
+    <Link href={`/gakko/tsushin/${mentionedTsushinSchool.no}`} className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>
+        {mentionedTsushinSchool.name}の詳細情報
+      </div>
+      <div className="qtext">
+        本校所在地・設置者など、このサイトで確認できている情報をまとめています。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        学校の詳細を見る ›
+      </div>
+    </Link>
+  );
+
+  // オンラインフリースクール一覧に載っている施設名が含まれていれば詳細ページへ案内する。
+  // 他カテゴリと同じ排他チェックは省略（オンラインと地域フリースクールが同時に出ることは
+  // まずないため、すべて一致しない場合にのみ検索する形にしてもよいが、シンプルに常に
+  // 独立して検索する（2026-10-29追加）。
+  const mentionedOnlineFreeSchool = findMentionedOnlineFreeSchool([item.question, answerTextForJsonLd]);
+  const onlineSchoolDetailBlock = mentionedOnlineFreeSchool && (
+    <Link href={`/gakko/online/${mentionedOnlineFreeSchool.no}`} className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>
+        {mentionedOnlineFreeSchool.name}の詳細情報
+      </div>
+      <div className="qtext">
+        運営・対象・特徴など、このサイトで確認できている情報をまとめています。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        詳細を見る ›
+      </div>
+    </Link>
+  );
+
+  // 学びの多様化学校・フリースクール・通信制高校・オンラインフリースクールのどれかが
+  // 一致していれば、それをgakkoBlock（都道府県一覧への汎用案内）より優先して出す。
+  const anySchoolDetailBlock = schoolDetailBlock || freeSchoolDetailBlock || tsushinDetailBlock || onlineSchoolDetailBlock;
 
   // lib/prompt.tsの安全上書き（希死念慮・自傷等を検知した場合、具体的な助言をせず
   // ホットライン案内のみを返す指示）が発動した回答かどうか。consultations.crisis_detected
@@ -384,7 +481,7 @@ export default async function ResultPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-      <Header supervised={false} />
+      <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
         <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
@@ -427,6 +524,7 @@ export default async function ResultPage({
             <Suspense fallback={null}>
               <ResultClient id={id} initialItem={item} />
             </Suspense>
+            {anySchoolDetailBlock || gakkoBlock}
             {shareButtons}
             {askAgainBlock}
           </>
@@ -467,11 +565,44 @@ export default async function ResultPage({
                   もご活用ください。
                 </div>
               )}
+              {/* 学校名が出てくる相談では、lib/schoolFacts.tsのbuildSchoolFactsBlockが学校の
+                  校風・教育方針についての回答を含みうる（2026-10-26導入、2026-10-28に
+                  web検索ツール前提から静的データ（note欄）前提の指示に書き換え済み）。
+                  静的データも移転・制度変更等で最新の状況と異なる可能性があるため、
+                  app/support/page.tsx等と同じ文言のパターンで、学校の公式サイトでの確認を
+                  促す注記を添える。 */}
+              {!isCrisis && mentionedSchool && (
+                <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
+                  学校に関する情報は公開情報をもとにしたもので、最新の状況と異なる場合があります。最新の正確な情報は
+                  {mentionedSchool.officialUrl ? (
+                    <a
+                      href={mentionedSchool.officialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}
+                    >
+                      学校の公式サイト
+                    </a>
+                  ) : (
+                    '学校の公式サイト等'
+                  )}
+                  でご確認ください。
+                </div>
+              )}
             </div>
 
             {!isCrisis && (
               <FollowupThread parentId={item.id} authorId={item.author_id} initialFollowups={followups} />
             )}
+
+            {/* 投稿者本人以外には「自分の状況で相談してみる」ボタンを出す（2026-10-22追加）。
+                AIがありきたりの回答しか出せない場合でも、自分の子の特徴を追加して
+                相談するよう促す導線。FollowupThread（本人向け）と対になる位置に置く。 */}
+            {!isCrisis && (
+              <AskSimilarBlock authorId={item.author_id} question={item.question} />
+            )}
+
+            {!isCrisis && (anySchoolDetailBlock || gakkoBlock)}
 
             {isCrisis ? (
               // 希死念慮・自傷等の安全上書きが発動した相談専用の案内カード。以前は回答カード下の
@@ -601,7 +732,12 @@ export default async function ResultPage({
                 className="chip chip-tag"
                 style={{ textDecoration: 'none', display: 'inline-block' }}
               >
-                #{w}
+                {/* 検索・URL用のcanonical word（例：不登校特例校）と画面表示名
+                    （学びの多様化学校）を分けるため、getThemeDisplayLabelを通す
+                    （2026-10-19、「#不登校特例校というタグ、これは違うよね」との
+                    指摘を受けて修正。/gakko/RelatedConsultations.tsxでは既に
+                    この置き換えをしていたが、ここだけ生の語を出していた）。 */}
+                #{getThemeDisplayLabel(w)}
               </Link>
             ))}
           </div>
