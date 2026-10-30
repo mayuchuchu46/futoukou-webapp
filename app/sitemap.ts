@@ -61,6 +61,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // AIの回答への返信（ラリー）の続きは、単独の詳細ページとしては出さないため
     // サイトマップにも含めない（lib/consultations.ts参照、2026-10-16追加）。
     .is('parent_id', null)
+    // 希死念慮・自傷等の安全上書きが発動した相談は、検索エンジン・外部クローラーに
+    // 積極的に案内する対象から外す（2026-10-31、lib/consultations.tsの一覧非表示化と
+    // 合わせて対応。ページ自体は直リンクなら引き続き閲覧可能）。
+    .or('crisis_detected.is.null,crisis_detected.eq.false')
     .order('created_at', { ascending: false })
     .limit(5000);
 

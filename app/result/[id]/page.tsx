@@ -129,6 +129,10 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: url },
+    // 希死念慮・自傷等の安全上書きが発動した相談は、一覧・サイトマップから外すのに加えて、
+    // 直リンクで来た検索エンジン・クローラーにも「索引しないでほしい」と明示しておく
+    // （2026-10-31、lib/consultations.ts・app/sitemap.tsと合わせて対応）。
+    ...(item.crisis_detected ? { robots: { index: false, follow: false } } : {}),
     openGraph: {
       title,
       description,
