@@ -143,17 +143,29 @@ export default async function AboutPage() {
           </div>
         </Link>
 
+        {/* 専門家と先輩保護者（経験者）は入り口を分ける（2026-10-30、
+            「保護者と、専門家の入り口とページは別にしたい」との方針を受けて）。 */}
         <Link href="/expert/recruit" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>専門家・先輩保護者としてご協力いただける方へ</div>
+          <div className="answer-label" style={{ fontSize: 14 }}>専門家としてご協力いただける方へ</div>
           <div className="qtext">
-            ①公認心理師・臨床心理士・保健師などの専門家、②不登校を経験されたご家庭ご自身（先輩保護者）の2つの立場で募集しています。登録後、運営による本人確認を経て、有料相談への回答をお願いします。
+            公認心理師・臨床心理士・保健師など、不登校のご家庭への対応について専門知識をお持ちの方を募集しています。登録後、運営による本人確認（資格の確認）を経て、有料相談への回答をお願いします。
           </div>
           <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
             専門家募集ページへ ›
           </div>
         </Link>
+
+        <Link href="/senpai/recruit" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>先輩保護者としてご協力いただける方へ</div>
+          <div className="qtext">
+            資格は不要です。不登校を経験されたご家庭ご自身を募集しています。登録後、運営とのオンライン通話を経て、ご自身の体験に基づいた有料相談への回答をお願いします。
+          </div>
+          <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+            先輩保護者募集ページへ ›
+          </div>
+        </Link>
         <Link href="/expert/login" className="backlink" style={{ margin: '-10px 0 4px', fontSize: 13 }}>
-          すでに登録済みの専門家の方はこちらからログイン →
+          すでに登録済みの方はこちらからログイン →
         </Link>
 
         {/* 「使い方などのQ&Aいるかな？」との相談を受けて、匿名性・料金・退会など
