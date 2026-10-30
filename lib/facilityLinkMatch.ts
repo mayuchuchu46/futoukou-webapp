@@ -88,6 +88,11 @@ export function buildCorrespondenceSchoolFactsLines(school: CorrespondenceHighSc
     );
   }
   if (school.note) facts.push(`その他の確認済み情報（不登校生徒への対応・支援内容等）：${school.note}`);
+  if (school.admission) {
+    facts.push(
+      `入学・入試について確認できている情報（出典：${school.admission.sourceUrl}）：${school.admission.text}（これ以外の入試情報——倍率・合格基準など——は確認できていないため、断定しないこと）`
+    );
+  }
   return facts;
 }
 
