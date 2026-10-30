@@ -26,12 +26,17 @@ export default function ExpertsTeaser({
   experts,
   title = '専門家一覧',
   className = '',
+  compact = false,
 }: {
   experts: ExpertProfile[];
   title?: string;
   className?: string;
+  // trueのとき、アイコンを小さく・行間を詰めたコンパクト表示にする
+  // （2026-10-31、「もうちょいコンパクトで」との指摘を受けて追加）。
+  compact?: boolean;
 }) {
   const router = useRouter();
+  const avatarSize = compact ? 32 : 44;
 
   return (
     <div className={`home-experts ${className}`.trim()}>
@@ -48,7 +53,7 @@ export default function ExpertsTeaser({
             tabIndex={0}
             onClick={() => router.push('/expert/recruit')}
           >
-            <ExpertAvatar photoUrl={null} size={44} />
+            <ExpertAvatar photoUrl={null} size={avatarSize} />
             <div className="home-expert-body">
               <div className="home-expert-name">現在、専門家を募集中です</div>
               <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
@@ -61,7 +66,7 @@ export default function ExpertsTeaser({
             tabIndex={0}
             onClick={() => router.push('/senpai/recruit')}
           >
-            <ExpertAvatar photoUrl={null} size={44} />
+            <ExpertAvatar photoUrl={null} size={avatarSize} />
             <div className="home-expert-body">
               <div className="home-expert-name">先輩保護者（経験者）も募集中です</div>
               <div className="home-expert-desc">資格は不要です。不登校を経験されたご家庭ご自身を募集しています</div>
@@ -78,7 +83,7 @@ export default function ExpertsTeaser({
             tabIndex={0}
             onClick={() => router.push(`/ask?expert=${e.id}`)}
           >
-            <ExpertAvatar photoUrl={e.photo_url} size={44} />
+            <ExpertAvatar photoUrl={e.photo_url} size={avatarSize} />
             <div className="home-expert-body">
               <div className="home-expert-name">{e.credential}・{e.name}</div>
               {e.bio && <div className="home-expert-desc">{e.bio}</div>}

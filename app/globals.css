@@ -642,6 +642,15 @@ h2.pagetitle {
 .home-expert-name { font-weight: 700; font-size: 13px; color: var(--text); }
 .home-expert-desc { font-size: 11px; color: var(--muted); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* コンパクト版（2026-10-31追加）。ホーム画面のTOPに近い位置から、ニュース誘導の下
+   （優先度の低い位置）に移動したのに合わせて、カードの余白・文字サイズ・行間を
+   詰めて目立ちすぎないようにした。「もうちょいコンパクトで」との指摘を受けて対応。 */
+.home-experts--compact { gap: 6px; }
+.home-experts--compact .home-experts-title { font-size: 12.5px; }
+.home-experts--compact .home-expert-card { padding: 7px 10px; gap: 8px; border-radius: 10px; }
+.home-experts--compact .home-expert-name { font-size: 12px; }
+.home-experts--compact .home-expert-desc { font-size: 10.5px; }
+
 /* 専門家（回答する側）向けの募集導線。一覧の最後に置く、画像バナー（運営が用意した
    イラスト）。クリックで募集ページへ遷移する。高解像度の1枚（2019×303px）を
    モバイル・PC共通で使い、どちらの表示幅でもぼやけないようにしている。 */

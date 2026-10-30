@@ -231,20 +231,6 @@ export default function HomeClient({
           </div>
         )}
 
-        {/* 「専門家一覧」。PC（960px以上）では右コラム（PcSidebar内）に同じものが
-            出るため、ここはモバイル専用（2026-10-18、home-experts-mobileをCSS側で
-            960px以上は非表示にしている）。「専門家の紹介カードをTOPにも出したい」
-            との依頼を受けて追加。専門家がまだ0人の間はExpertsTeaser内の空状態
-            （「現在、専門家を募集中です」）がそのまま出る＝実在しない専門家を
-            でっち上げて見せることはしない。 */}
-        {showExtras && (
-          <ExpertsTeaser
-            experts={initialExperts}
-            title="専門家があなたの相談を見てくれます"
-            className="home-experts-mobile"
-          />
-        )}
-
         {/* PCの広い画面では、左右を完全に独立した縦積み（flex column）の
             2カラムにする（app/globals.cssの.home-layout参照）。検索ボックスや
             バナーなど高さの違う要素同士を同じ行に揃えようとすると謎の空白が
@@ -341,6 +327,26 @@ export default function HomeClient({
                 PcSidebar側には別途置いていない）。ニュースが1件もないうちは
                 NewsTeaser内部でnullを返し、何も表示されない。 */}
             {showExtras && <NewsTeaser />}
+
+            {/* 「専門家一覧」。PC（960px以上）では右コラム（PcSidebar内）に同じものが
+                出るため、ここはモバイル専用（2026-10-18、home-experts-mobileをCSS側で
+                960px以上は非表示にしている）。「専門家の紹介カードをTOPにも出したい」
+                との依頼を受けて追加。専門家がまだ0人の間はExpertsTeaser内の空状態
+                （「現在、専門家を募集中です」）がそのまま出る＝実在しない専門家を
+                でっち上げて見せることはしない。
+                以前はTodayQuestionTeaserの直後（ページ上部）に置いていたが、
+                「もうちょい下の方にのせておいてもいいかも、もうちょいコンパクトで」
+                との指摘を受け、ニュース誘導の下・タグ絞り込みの上に移動し、
+                compactバリアント（ExpertsTeaser側・CSS側のhome-experts--compact）に
+                変更した（2026-10-31）。 */}
+            {showExtras && (
+              <ExpertsTeaser
+                experts={initialExperts}
+                title="専門家があなたの相談を見てくれます"
+                className="home-experts-mobile home-experts--compact"
+                compact
+              />
+            )}
 
             {/* PCではサイド側に同じものを出すので、ここはモバイル専用（960px以上では非表示）。
                 見出しテキスト「気になるテーマから探す」は、スマホでは無くても
