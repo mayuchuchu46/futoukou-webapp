@@ -159,13 +159,27 @@ export default async function TsushinSchoolPage({
                 { label: '本校所在地（所轄庁）', value: `${school.prefecture}${school.municipality}` },
                 { label: '設置者', value: school.operator },
                 ...(school.attendanceNote ? [{ label: '通う頻度（確認できた内容）', value: school.attendanceNote }] : []),
-                ...(school.tuitionNote ? [{ label: '学費', value: school.tuitionNote }] : []),
+                ...(school.tuitionNote ? [{ label: '学費（公式サイトの記載）', value: school.tuitionNote }] : []),
               ].map((row) => (
                 <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
                   <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
                   <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
                 </div>
               ))}
+              {/* 通う頻度・学費の根拠にした公式サイトのページ（2026-10-30追加）。年度・コースで
+                  変わるため、最新の内容は必ずここから確認してもらう。 */}
+              {(school.attendanceSourceUrl || school.tuitionSourceUrl) && (
+                <div className="muted" style={{ fontSize: 12 }}>
+                  出典（公式サイト）：
+                  {school.attendanceSourceUrl && (
+                    <a href={school.attendanceSourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', marginRight: 10 }}>通う頻度</a>
+                  )}
+                  {school.tuitionSourceUrl && (
+                    <a href={school.tuitionSourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>学費</a>
+                  )}
+                  　※年度・コースで変わります。最新の内容は公式サイトでご確認ください。
+                </div>
+              )}
             </div>
             {/* 公式サイトURL（lib/data/correspondenceHighSchools.tsのofficialUrl、Web調査で
                 確認できた学校のみ）。通信制高校は私立運営が多く、資料請求等のアフィリエイト
