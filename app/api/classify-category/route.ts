@@ -30,6 +30,11 @@ export async function POST(req: NextRequest) {
   try {
     const msg = await anthropic.messages.create({
       model: 'claude-haiku-5-5',
+      // 2026-10-30、claude-haiku-5-5はデフォルトで拡張思考（thinking）が働き、
+      // max_tokensの枠をthinkingブロックだけで使い切って本文が空になる不具合が
+      // 判明（app/api/consultations/[id]/one-liner/route.tsの調査で発見）。
+      // ここも含め軽量タスクでは不要なため、同様に明示的に無効化した。
+      thinking: { type: 'disabled' },
       max_tokens: 10,
       messages: [{ role: 'user', content: buildCategoryClassificationPrompt(text.trim()) }],
     });

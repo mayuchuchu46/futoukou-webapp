@@ -118,6 +118,9 @@ async function getOrGenerateOverview(
   try {
     const msg = await anthropic.messages.create({
       model: 'claude-haiku-5-5',
+      // 2026-10-30、claude-haiku-5-5の拡張思考（thinking）がmax_tokensを使い切り
+      // 本文が空になる不具合への対策（詳細はone-liner/route.tsのコメント参照）。
+      thinking: { type: 'disabled' },
       max_tokens: 400,
       messages: [{ role: 'user', content: prompt }],
     });

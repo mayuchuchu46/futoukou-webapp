@@ -39,10 +39,16 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   let oneLiner: string | null = null;
-  let oneLinerMsg: Awaited<ReturnType<typeof anthropic.messages.create>> | null = null;
   try {
-    oneLinerMsg = await anthropic.messages.create({
+    const oneLinerMsg = await anthropic.messages.create({
       model: 'claude-haiku-5-5',
+      // 2026-10-30、「シェアカード作成すると失敗する」との報告を受けて調査したところ、
+      // claude-haiku-5-5はデフォルトで拡張思考（thinking）が働き、max_tokensの枠を
+      // thinkingブロックだけで使い切ってしまい、本文（textブロック）が一切返らないまま
+      // stop_reason: 'max_tokens'で終わっていたことが判明（Anthropicの生レスポンスで
+      // content[0].type === 'thinking'のみ、textブロック無しを確認）。この一言要約は
+      // 深く考える必要のない軽量タスクなのでthinkingは不要なため、明示的に無効化した。
+      thinking: { type: 'disabled' },
       max_tokens: 100,
       messages: [{ role: 'user', content: buildOneLinerPrompt(item.question, item.answer) }],
     });
@@ -58,18 +64,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
   }
 
   if (!oneLiner) {
-    // 2026-10-30、「シェアカード作成すると失敗する」との報告を受けた原因調査用の
-    // 一時的な診断情報。原因特定後に除去する。
-    return NextResponse.json(
-      {
-        error: '一言要約の生成に失敗しました',
-        debug: {
-          stop_reason: oneLinerMsg?.stop_reason,
-          content: oneLinerMsg?.content,
-        },
-      },
-      { status: 502 }
-    );
+    return NextResponse.json({ error: '一言要約の生成に失敗しました' }, { status: 502 });
   }
 
   const { error: updateErr } = await supabase.from('consultations').update({ one_liner: oneLiner }).eq('id', id);
