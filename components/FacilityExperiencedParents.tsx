@@ -38,22 +38,30 @@ export default async function FacilityExperiencedParents({
       <div className="answer-label" style={{ fontSize: 14 }}>
         {label}
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14, width: '100%' }}>
         {rows.map((e) => (
-          <Link
-            key={e.id}
-            href={`/experts/${e.id}`}
-            style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
-          >
-            <div className="qtext" style={{ fontWeight: 700 }}>
-              👤 {expertDisplayName(e)}（先輩保護者）
-            </div>
-            {e.bio && (
-              <div className="muted qtext-clamp-3" style={{ fontSize: 13, marginTop: 4 }}>
-                {e.bio}
+          <div key={e.id} style={{ borderBottom: '1px solid var(--border)', paddingBottom: 12 }}>
+            <Link href={`/experts/${e.id}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
+              <div className="qtext" style={{ fontWeight: 700 }}>
+                👤 {expertDisplayName(e)}（先輩保護者）
               </div>
-            )}
-          </Link>
+              {e.bio && (
+                <div className="muted qtext-clamp-3" style={{ fontSize: 13, marginTop: 4 }}>
+                  {e.bio}
+                </div>
+              )}
+            </Link>
+            {/* 「相談してみる、みたいな流れをつくりたい」との指摘を受けて追加（2026-10-31）。
+                プロフィールページ（/experts/[id]）にも同じ導線のボタンがあるが、学校ページ
+                から1タップで相談を始められるよう、ここにも直接置く。 */}
+            <Link
+              href={`/ask?expert=${e.id}`}
+              className="btn-secondary"
+              style={{ display: 'inline-block', marginTop: 8, fontSize: 13, padding: '6px 14px' }}
+            >
+              {expertDisplayName(e)}さんに相談してみる →
+            </Link>
+          </div>
         ))}
       </div>
     </div>
