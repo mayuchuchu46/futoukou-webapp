@@ -11,6 +11,7 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import { Suspense } from 'react';
+import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
 // オンラインフリースクール、1校ごとの紹介ページ（2026-10-21追加）。
 //
 // これまでオンラインフリースクールだけは、一覧（/gakko?type=online・/gakko/matome）の
@@ -129,6 +130,24 @@ export default async function OnlineSchoolPage({
             </div>
             {school.note && (
               <div className="muted" style={{ fontSize: 12 }}>{school.note}</div>
+            )}
+            {school.specialties && school.specialties.length > 0 && (
+              <div style={{ width: '100%' }}>
+                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
+                  伸ばせるコース・活動（公式サイトで確認できたもの）
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {school.specialties.map((sp, i) => (
+                    <div key={`${sp.tag}-${i}`} style={{ fontSize: 13 }}>
+                      <span className="chip chip-tag" style={{ fontSize: 11, marginRight: 6 }}>{SPECIALTY_TAG_LABEL[sp.tag]}</span>
+                      <a href={sp.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>{sp.course}</a>
+                    </div>
+                  ))}
+                </div>
+                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+                  開講状況は年度で異なる場合があります。最新の内容は公式サイトでご確認ください。
+                </div>
+              </div>
             )}
             {school.sourceKind === 'official-site' && (
               <div className="muted" style={{ fontSize: 12 }}>

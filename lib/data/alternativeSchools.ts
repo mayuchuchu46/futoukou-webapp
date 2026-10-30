@@ -10,7 +10,11 @@
 // データは各校の公式サイト・メディア掲載情報・都道府県教育委員会の情報等をもとに
 // 手動で収集（2026-10-29現在）。変更・閉校等の可能性があるため最新情報は各校に確認を。
 
+import type { SpecialtyTag } from './correspondenceHighSchools';
+
 export type AlternativeSchool = {
+  /** 公式サイトで確認できた専門コース・プログラム（無い＝未確認） */
+  specialties?: { tag: SpecialtyTag; course: string; sourceUrl: string }[];
   no: number;
   /** 学校・施設名 */
   name: string;
@@ -77,6 +81,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 3,
+    specialties: [{ tag: 'music', course: '選択講座 声楽', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }, { tag: 'art', course: '選択講座 陶芸・木版画等', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }, { tag: 'nature', course: '選択講座 農業', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }, { tag: 'food', course: '選択講座 食べもの', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }, { tag: 'performing', course: '選択演劇', sourceUrl: 'https://www.jiyunomori.ac.jp/kyouka/sentaku.php' }],
     name: '自由の森学園中学校・高等学校',
     prefecture: '埼玉県',
     city: '飯能市',
@@ -89,6 +94,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 4,
+    specialties: [{ tag: 'performing', course: 'プロジェクト「劇団きのくに」', sourceUrl: 'http://www.kinokuni.ac.jp/nc/html/htdocs/index.php?page_id=71' }, { tag: 'food', course: 'プロジェクト「おもしろ料理店」', sourceUrl: 'http://www.kinokuni.ac.jp/nc/html/htdocs/index.php?page_id=71' }, { tag: 'nature', course: 'プロジェクト「ファーム」(農業)', sourceUrl: 'http://www.kinokuni.ac.jp/nc/html/htdocs/index.php?page_id=71' }],
     name: 'きのくに子どもの村小中学校',
     prefecture: '和歌山県',
     city: '橋本市',
@@ -266,6 +272,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 20,
+    specialties: [{ tag: 'it', course: '情報(プログラミング)', sourceUrl: 'https://tokyocs.org/schoollife/primary/academics' }],
     name: '東京コミュニティスクール',
     prefecture: '東京都',
     city: '中野区',
@@ -277,6 +284,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
   },
   {
     no: 21,
+    specialties: [{ tag: 'music', course: 'シンカソング', sourceUrl: 'https://sangosya.com/koutoubu/' }, { tag: 'art', course: '紅型講座・焼物講座', sourceUrl: 'https://sangosya.com/koutoubu/' }, { tag: 'performing', course: '沖縄講座（芸能）', sourceUrl: 'https://sangosya.com/koutoubu/' }],
     name: '珊瑚舎スコーレ',
     prefecture: '沖縄県',
     city: '那覇市',

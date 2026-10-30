@@ -16,7 +16,11 @@
 //   'community' = 仲間づくり・居場所の機能がある学校・スクールタイプ
 //   'tutoring'  = 個別指導・家庭教師型（交流の場ではなく学習サポートが中心）
 //   'referral'  = 自治体等からの紹介がないと利用できない（個人が直接申し込めない）
+import type { SpecialtyTag } from './correspondenceHighSchools';
+
 export type OnlineFreeSchool = {
+  /** 公式サイトで確認できた専門コース・プログラム（無い＝未確認） */
+  specialties?: { tag: SpecialtyTag; course: string; sourceUrl: string }[];
   // 1校ごとの紹介ページ（app/gakko/online/[no]/page.tsx、2026-10-21追加）用の連番。
   // 配列の並び順＝掲載順をそのまま番号にしているだけで、公的な整理番号等ではない。
   no: number;
@@ -34,6 +38,7 @@ export type OnlineFreeSchool = {
 export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
   {
     no: 1,
+    specialties: [{ tag: 'it', course: 'プログラミングクラス（ネット部活）', sourceUrl: 'https://www.cjgakuen.com/onlinehractivities' }, { tag: 'art', course: 'イラスト（ネット部活）', sourceUrl: 'https://www.cjgakuen.com/onlinehractivities' }],
     name: 'クラスジャパン小中学園',
     operator: '一般社団法人クラスジャパンプロジェクト',
     ageRange: '小学1年生～高校3年生',
@@ -46,6 +51,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
   },
   {
     no: 2,
+    specialties: [{ tag: 'it', course: '選択学習カリキュラム プログラミングコース', sourceUrl: 'https://n-jr.jp/select_curriculum/programming/' }],
     name: 'N中等部 ネットコース',
     operator: '学校法人角川ドワンゴ学園',
     ageRange: '中学生',
@@ -70,6 +76,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
   },
   {
     no: 4,
+    specialties: [{ tag: 'it', course: 'パソコン部（プログラム学習含む）', sourceUrl: 'https://clulu.kirin-npo.com/' }, { tag: 'art', course: 'お絵かき部', sourceUrl: 'https://clulu.kirin-npo.com/' }],
     name: 'オンラインフリースクール clulu（クルル）',
     operator: 'NPO法人キリンこども応援団',
     ageRange: '小学4年生～中学3年生',
@@ -82,6 +89,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
   },
   {
     no: 5,
+    specialties: [{ tag: 'it', course: '専門領域プログラム メタバースコース', sourceUrl: 'https://emi-ko.jp/course/metaverse/' }],
     name: 'EMI高等学院・親子キャリアアカデミーちゃんぱす',
     operator: '運営者：山中恵美子（運営法人の記載なし）',
     ageRange: '小学1年生～高校3年生',
@@ -130,6 +138,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
   },
   {
     no: 9,
+    specialties: [{ tag: 'it', course: '情報Ⅰ（プログラミング演習）', sourceUrl: 'https://surala.jp/school/lp/Informatics/' }],
     name: 'すらら',
     operator: '株式会社すららネット',
     ageRange: '小学生～高校生（無学年式）',
@@ -166,6 +175,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
   },
   {
     no: 12,
+    specialties: [{ tag: 'music', course: '音楽部', sourceUrl: 'https://www.hello-halolab.org/' }, { tag: 'art', course: '工作・美術部', sourceUrl: 'https://www.hello-halolab.org/' }, { tag: 'food', course: 'お料理部', sourceUrl: 'https://www.hello-halolab.org/' }, { tag: 'sports', course: '運動部', sourceUrl: 'https://www.hello-halolab.org/' }],
     name: 'ハロハロラボ',
     operator: 'NPO法人ハロハロラボ',
     ageRange: '6歳～15歳（学習支援は6歳～12歳）',
@@ -202,6 +212,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
   },
   {
     no: 15,
+    specialties: [{ tag: 'it', course: 'プログラミング講座（希望者オプション）', sourceUrl: 'https://www.daiichigakuin-jr.jp/support/programming/' }],
     name: '第一学院中等部',
     operator: 'ウィザスグループ',
     ageRange: '中学生年代（学年の明記なし）',
@@ -238,6 +249,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
   },
   {
     no: 18,
+    specialties: [{ tag: 'it', course: 'room-Kプログラム（プログラミング）', sourceUrl: 'https://futoko.katariba.online/' }, { tag: 'art', course: 'room-Kプログラム（イラスト・工作）', sourceUrl: 'https://futoko.katariba.online/' }],
     name: 'room-K',
     operator: 'NPO法人カタリバ',
     ageRange: '小学生・中学生（連携自治体の教育委員会・学校からの紹介が必要）',

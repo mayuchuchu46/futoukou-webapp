@@ -154,7 +154,7 @@ export function buildShindanItems(): ShindanItem[] {
       flexible: false,
       attendanceNote: null,
       care: false,
-      specialties: [],
+      specialties: Array.from(new Set((s.specialties || []).map((x) => x.tag))),
       sub: `運営：${s.operator}`,
     });
   }
@@ -174,7 +174,7 @@ export function buildShindanItems(): ShindanItem[] {
       flexible: false,
       attendanceNote: null,
       care: false,
-      specialties: [],
+      specialties: Array.from(new Set((s.specialties || []).map((x) => x.tag))),
       sub: s.isAccredited ? '一条校（認可私立学校）' : '',
     });
   }
