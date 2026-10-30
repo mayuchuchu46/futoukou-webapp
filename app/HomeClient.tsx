@@ -393,29 +393,22 @@ export default function HomeClient({
                 強化してね」との指摘を受けて、デフォルトの「すべて」表示（showExtras）でも
                 出すようにした（2026-10-29）。検索中・他カテゴリ絞り込み中は出さない
                 （文脈とずれるため）。 */}
-            {/* 学び場への入口は、縦に2枚のカードだと場所を取るため、1行2列のコンパクトなタイル
-                にまとめた（2026-10-30、「もっとコンパクトにメニューおきたい」との指摘）。
-                表示条件は従来のカードと同じ。 */}
+            {/* 学び場への入口は1つに統一（2026-10-30、「結局同じことでしょ」との指摘）。
+                都道府県から探す一覧と、条件（学年・通う頻度等）から探すページは、
+                /gakko/matome の中から行き来できる。表示条件は従来のカードと同じ。 */}
             {category === 'course' || category === 'school' || showExtras ? (
-              <div className="home-gakko-link" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, margin: '0 0 10px' }}>
-                {[
-                  { href: '/gakko/matome', icon: '🏫', label: '学校・フリースクール', sub: '都道府県別の一覧から見る' },
-                  { href: '/gakko/shindan', icon: '🧭', label: '条件から学校を探す', sub: '学年・通う頻度などで絞り込む' },
-                ].map((m) => (
-                  <Link
-                    key={m.href}
-                    href={m.href}
-                    className="card"
-                    style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, margin: 0, padding: '10px 8px', textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <span aria-hidden="true" style={{ fontSize: 18 }}>{m.icon}</span>
-                    <span>
-                      <span style={{ display: 'block', fontWeight: 700, fontSize: 13 }}>{m.label}</span>
-                      <span className="muted" style={{ display: 'block', fontSize: 11 }}>{m.sub}</span>
-                    </span>
-                  </Link>
-                ))}
-              </div>
+              <Link
+                href="/gakko/matome"
+                className="card home-gakko-link"
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 10, margin: '0 0 10px', padding: '10px 14px' }}
+              >
+                <span aria-hidden="true" style={{ fontSize: 20 }}>🏫</span>
+                <span style={{ flex: 1 }}>
+                  <span style={{ display: 'block', fontWeight: 700, fontSize: 14 }}>学校・フリースクールを探す</span>
+                  <span className="muted" style={{ display: 'block', fontSize: 11 }}>都道府県・学年・通う頻度などから</span>
+                </span>
+                <span className="muted">›</span>
+              </Link>
             ) : null}
 
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。

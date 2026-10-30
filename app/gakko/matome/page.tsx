@@ -474,6 +474,20 @@ export default async function GakkoMatomePage({
             <span className="muted">›</span>
           </Link>
 
+          {/* 学年・通う頻度などの条件で絞り込むページへの入口（2026-10-30追加）。
+              トップの入口を1つにまとめたため、条件で探したい人はここから入る。 */}
+          <Link
+            href="/gakko/shindan"
+            className="card"
+            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          >
+            <span>
+              <span style={{ display: 'block', fontWeight: 700 }}>🧭 条件から学校を探す</span>
+              <span className="muted" style={{ display: 'block', fontSize: 12 }}>学年・通う頻度などを選んで、全種類の学校から絞り込む</span>
+            </span>
+            <span className="muted">›</span>
+          </Link>
+
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
             {/* 以前はこの下にPREFECTURES全47件のチップ一覧も並べていたが、プルダウンと
