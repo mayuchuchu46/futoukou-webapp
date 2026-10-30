@@ -53,6 +53,18 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'kumamoto-metaverse-futoko-shien-2026-10',
+    date: '2026-10-30',
+    addedAt: '2026-10-30',
+    title: '不登校の小中学生向け「メタバース」学習支援、熊本県が県内44市町村へ本格拡大',
+    summary:
+      '熊本県教育委員会は10月30日、不登校の小中学生がインターネット上の仮想空間（メタバース）で学習や交流ができる「くまもとオンライン教育支援センター」事業の開校式を行い、今年度（令和8年度）からの本格実施を始めました。対象は熊本市を除く県内44市町村で、家庭にいながら学習支援ソフトで自分のペースで学んだり、オンラインのイベント等で周囲とつながったりできる場を提供します。前年度（令和7年度）は県内5市町村で2026年3月までの試行運用が行われていました。',
+    sourceName: 'NHKニュース',
+    sourceUrl: 'https://news.web.nhk/newsweb/na/nd-20261030de68337',
+    category: 'local',
+    headline: { value: '44市町村', label: '熊本県が、不登校児童生徒向けメタバース支援を県内44市町村に拡大' },
+  },
+  {
     id: 'mext-futoko-kenshin-taiou-2026-10',
     date: '2026-10-27',
     addedAt: '2026-10-29',
