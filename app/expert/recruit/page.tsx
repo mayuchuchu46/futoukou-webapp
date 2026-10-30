@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
 
 // 一般利用者向けの/expertsとは別の、専門家（回答する側）募集専用ページ。
 // 一覧用の個人情報（会員数など）は含まないため、ビルド時に静的化してよい。
@@ -67,6 +68,7 @@ export default function ExpertRecruitPage() {
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>登録の流れ</div>
+          <ExpertRecruitFlowDiagram />
           <ol className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
             <li>登録フォームにプロフィール（①②どちらの立場か、自己紹介・対応できる相談カテゴリ）を入力</li>
             <li>本人確認の方法（アップロード／オンライン通話）を選択</li>
