@@ -144,9 +144,9 @@ export default async function AboutPage() {
         </Link>
 
         <Link href="/expert/recruit" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>専門家としてご協力いただける方へ</div>
+          <div className="answer-label" style={{ fontSize: 14 }}>専門家・先輩保護者としてご協力いただける方へ</div>
           <div className="qtext">
-            公認心理師・臨床心理士など、不登校のご家庭への対応について専門知識をお持ちの方を募集しています。登録後、運営による本人確認（資格の確認）を経て、有料相談への回答をお願いします。
+            公認心理師・臨床心理士・保健師などの専門家、また不登校を経験されたご家庭ご自身（先輩保護者）を募集しています。登録後、運営による本人確認を経て、有料相談への回答をお願いします。
           </div>
           <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
             専門家募集ページへ ›

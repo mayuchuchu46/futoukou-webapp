@@ -17,6 +17,11 @@ export default function ExpertRecruitPage() {
           <div className="qtext">
             「どうする先生」は、不登校のご家庭に向けたAI相談サービスです。AIの回答とは別に、公認心理師・臨床心理士など資格をお持ちの専門家本人が、利用者からの相談に直接回答する機能があります。この回答を担当していただける専門家の方を募集しています。
           </div>
+          {/* 資格を持つ専門家だけでなく、不登校を経験したご家庭ご自身の体験談を聞きたいという
+              ニーズに応えるため、「先輩保護者（経験者）」も募集対象に追加（2026-10-30）。 */}
+          <div className="qtext">
+            また、資格の有無にかかわらず、不登校を経験されたご家庭ご自身（先輩保護者）にも、その体験に基づく回答をお願いしています。
+          </div>
         </div>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
@@ -47,16 +52,22 @@ export default function ExpertRecruitPage() {
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>登録の流れ</div>
           <ol className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
-            <li>登録フォームにプロフィール（資格・自己紹介）を入力し、資格の登録証（画像またはPDF）を添付</li>
-            <li>運営が登録証の内容を確認（本人確認）</li>
+            <li>登録フォームにプロフィール（資格・自己紹介・対応できる相談カテゴリ）を入力</li>
+            <li>
+              本人確認の方法を選択：資格をお持ちの方は「登録証（画像またはPDF）をアップロード」、先輩保護者（経験者）など資格証がない方は「オンライン通話で画面に見せて確認（または口頭で確認）」のいずれかを選べます
+            </li>
+            <li>運営が内容を確認（本人確認）</li>
             <li>確認完了後、相談への回答が可能になります</li>
           </ol>
         </div>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>対象となる資格</div>
+          <div className="answer-label" style={{ fontSize: 14 }}>対象となる方</div>
           <div className="qtext">
-            公認心理師・臨床心理士など、不登校のご家庭への対応について専門知識をお持ちの方を対象としています。
+            公認心理師・臨床心理士・保健師など、不登校のご家庭への対応について専門知識をお持ちの方。
+          </div>
+          <div className="qtext">
+            また、資格の有無にかかわらず、不登校を経験されたご家庭ご自身（先輩保護者）。
           </div>
         </div>
 
