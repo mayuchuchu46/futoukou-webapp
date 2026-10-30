@@ -1,4 +1,4 @@
-import { CORRESPONDENCE_HIGH_SCHOOLS, type AttendanceStyle } from '@/lib/data/correspondenceHighSchools';
+import { CORRESPONDENCE_HIGH_SCHOOLS, type AttendanceStyle, type SpecialtyTag } from '@/lib/data/correspondenceHighSchools';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
@@ -43,6 +43,8 @@ export type ShindanItem = {
   flexible: boolean;
   attendanceNote: string | null;
   care: boolean;
+  // 公式ページで確認できたコース・専攻の分野（通信制高校のみ調査済み。他の種類は空＝未確認）
+  specialties: SpecialtyTag[];
   sub: string;
 };
 
@@ -66,6 +68,7 @@ export function buildShindanItems(): ShindanItem[] {
       flexible: !!s.attendanceFlexible,
       attendanceNote: s.attendanceNote || null,
       care: !!s.hasDedicatedMentalCareStaff,
+      specialties: Array.from(new Set((s.specialties || []).map((x) => x.tag))),
       sub: `設置者：${s.operator}`,
     });
   }
@@ -85,6 +88,7 @@ export function buildShindanItems(): ShindanItem[] {
       flexible: false,
       attendanceNote: null,
       care: false,
+      specialties: [],
       sub: [s.publicPrivate, s.parts, s.nickname].filter(Boolean).join('・'),
     });
   }
@@ -110,6 +114,7 @@ export function buildShindanItems(): ShindanItem[] {
       flexible: false,
       attendanceNote: null,
       care: !!s.hasDedicatedMentalCareStaff,
+      specialties: [],
       sub: `${s.publicPrivate}・${s.type}`,
     });
   }
@@ -129,6 +134,7 @@ export function buildShindanItems(): ShindanItem[] {
       flexible: false,
       attendanceNote: null,
       care: false,
+      specialties: [],
       sub: '',
     });
   }
@@ -148,6 +154,7 @@ export function buildShindanItems(): ShindanItem[] {
       flexible: false,
       attendanceNote: null,
       care: false,
+      specialties: [],
       sub: `運営：${s.operator}`,
     });
   }
@@ -167,6 +174,7 @@ export function buildShindanItems(): ShindanItem[] {
       flexible: false,
       attendanceNote: null,
       care: false,
+      specialties: [],
       sub: s.isAccredited ? '一条校（認可私立学校）' : '',
     });
   }

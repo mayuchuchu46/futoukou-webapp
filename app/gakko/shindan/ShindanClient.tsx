@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { PREFECTURES } from '@/lib/data/prefectures';
-import { ATTENDANCE_STYLE_LABEL, type AttendanceStyle } from '@/lib/data/correspondenceHighSchools';
+import { ATTENDANCE_STYLE_LABEL, SPECIALTY_TAG_LABEL, type AttendanceStyle, type SpecialtyTag } from '@/lib/data/correspondenceHighSchools';
 import { formatGrades, gradeLabel } from '@/lib/schoolGrade';
 import { SHINDAN_TYPE_LABEL, type ShindanItem, type ShindanType } from '@/lib/shindanItems';
 
@@ -20,6 +20,7 @@ const FREQ_OPTIONS: { value: Freq; label: string }[] = [
 
 const ALL_TYPES = Object.keys(SHINDAN_TYPE_LABEL) as ShindanType[];
 const PAGE = 20;
+const ALL_TAGS = Object.keys(SPECIALTY_TAG_LABEL) as SpecialtyTag[];
 
 export default function ShindanClient({ items }: { items: ShindanItem[] }) {
   const [grade, setGrade] = useState(0); // 0 = 未選択
@@ -27,6 +28,7 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
   const [types, setTypes] = useState<Set<ShindanType>>(new Set(ALL_TYPES));
   const [freq, setFreq] = useState<Freq>('any');
   const [needCare, setNeedCare] = useState(false);
+  const [tags, setTags] = useState<Set<SpecialtyTag>>(new Set());
   const [done, setDone] = useState(false);
   const [shown, setShown] = useState<Record<string, number>>({});
 
@@ -35,7 +37,7 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
 
   const result = useMemo(() => {
     if (!ready) return null;
-    type Row = { item: ShindanItem; gradeKnown: boolean; freqState: 'n/a' | 'confirmed' | 'flexible' | 'unknown'; local: boolean };
+    type Row = { item: ShindanItem; gradeKnown: boolean; freqState: 'n/a' | 'confirmed' | 'flexible' | 'unknown'; tagState: 'n/a' | 'confirmed' | 'unknown'; local: boolean };
     const rows: Row[] = [];
     for (const it of items) {
       if (!types.has(it.type)) continue;
@@ -63,19 +65,23 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
       if (freq !== 'any') {
         freqState = it.styles.includes(freq) ? 'confirmed' : it.flexible ? 'flexible' : 'unknown';
       }
-      rows.push({ item: it, gradeKnown, freqState, local });
+      // 好きなこと：選んだ分野のコース・専攻が公式ページで確認できていれば confirmed。
+      // 分野データがあるのは通信制高校のみで、それ以外は「未確認」（合わないという意味ではない）
+      const tagState: Row['tagState'] =
+        tags.size === 0 ? 'n/a' : it.specialties.some((s) => tags.has(s)) ? 'confirmed' : 'unknown';
+      rows.push({ item: it, gradeKnown, freqState, tagState, local });
     }
-    const sure = rows.filter((r) => r.gradeKnown && (r.freqState === 'n/a' || r.freqState === 'confirmed'));
+    const sure = rows.filter((r) => r.gradeKnown && (r.freqState === 'n/a' || r.freqState === 'confirmed') && r.tagState !== 'unknown');
     const partial = rows.filter((r) => !sure.includes(r));
     // 並び順は確認状況と地域のみ。同順位はデータ順のまま（広告・報酬は使わない）。
     const byLocal = (a: Row, b: Row) => (b.local ? 1 : 0) - (a.local ? 1 : 0);
     sure.sort(byLocal);
     partial.sort((a, b) => {
-      const rank = (r: Row) => (r.gradeKnown ? 0 : 1) + (r.freqState === 'flexible' ? 0 : r.freqState === 'unknown' ? 0.5 : 0);
+      const rank = (r: Row) => (r.gradeKnown ? 0 : 1) + (r.freqState === 'flexible' ? 0 : r.freqState === 'unknown' ? 0.5 : 0) + (r.tagState === 'unknown' ? 0.25 : 0);
       return rank(a) - rank(b) || byLocal(a, b);
     });
     return { sure, partial };
-  }, [items, ready, grade, pref, types, freq, needCare]);
+  }, [items, ready, grade, pref, types, freq, needCare, tags]);
 
   function remember() {
     try {
@@ -93,7 +99,7 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
     touch();
   }
 
-  function card(r: { item: ShindanItem; gradeKnown: boolean; freqState: string; local: boolean }) {
+  function card(r: { item: ShindanItem; gradeKnown: boolean; freqState: string; tagState: string; local: boolean }) {
     const s = r.item;
     return (
       <Link
@@ -119,6 +125,10 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
           ))}
           {r.freqState === 'flexible' && <span className="chip chip-tag" style={{ fontSize: 11 }}>登校日数は相談・選択可（希望に合うかは要確認）</span>}
           {r.freqState === 'unknown' && <span className="chip chip-tag" style={{ fontSize: 11 }}>通う頻度は未確認</span>}
+          {s.specialties.map((sp) => (
+            <span key={sp} className="chip chip-tag" style={{ fontSize: 11 }}>{SPECIALTY_TAG_LABEL[sp]}のコースあり</span>
+          ))}
+          {r.tagState === 'unknown' && <span className="chip chip-tag" style={{ fontSize: 11 }}>好きなことのコースは未確認</span>}
           {s.care && <span className="chip chip-tag" style={{ fontSize: 11 }}>心のケア専門職の配置を確認</span>}
         </div>
         {s.attendanceNote && <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>{s.attendanceNote}</div>}
@@ -215,6 +225,30 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
               配置の調査をしているのは通信制高校と学びの多様化学校だけです。それ以外の種類は、この条件では出ません。
             </div>
           )}
+        </div>
+        <div style={{ width: '100%' }}>
+          <div className="answer-label" style={{ fontSize: 14, marginBottom: 6 }}>6. 好きなこと・伸ばしたいこと（複数選べます）</div>
+          <div className="chip-row chip-row-wrap">
+            {ALL_TAGS.map((tg) => (
+              <button
+                key={tg}
+                type="button"
+                className={`chip chip-tag${tags.has(tg) ? ' active' : ''}`}
+                onClick={() => {
+                  const next = new Set(tags);
+                  if (next.has(tg)) next.delete(tg);
+                  else next.add(tg);
+                  setTags(next);
+                  touch();
+                }}
+              >
+                {SPECIALTY_TAG_LABEL[tg]}
+              </button>
+            ))}
+          </div>
+          <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>
+            学校の公式ページに、その分野のコース・専攻があると確認できた学校だけを「条件に合う」に入れます。確認できているのは、いまは通信制高校の一部だけです（それ以外は「未確認」の枠に出ます）。
+          </div>
         </div>
         <button type="button" className="btn-primary" style={{ width: '100%' }} disabled={!ready} onClick={() => setDone(true)}>
           {ready ? '結果を見る' : '学年と都道府県を選んでください'}

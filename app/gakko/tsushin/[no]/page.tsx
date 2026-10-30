@@ -10,6 +10,7 @@ import {
   CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL,
   CORRESPONDENCE_HIGH_SCHOOL_AS_OF,
 } from '@/lib/data/correspondenceHighSchools';
+import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
 import { findSimilarCorrespondenceHighSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import TrackedOutLink from '@/components/TrackedOutLink';
@@ -181,6 +182,24 @@ export default async function TsushinSchoolPage({
                 </div>
               )}
             </div>
+            {school.specialties && school.specialties.length > 0 && (
+              <div style={{ width: '100%' }}>
+                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
+                  伸ばせるコース・専攻（公式サイトで確認できたもの）
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  {school.specialties.map((sp, i) => (
+                    <div key={`${sp.tag}-${i}`} style={{ fontSize: 13 }}>
+                      <span className="chip chip-tag" style={{ fontSize: 11, marginRight: 6 }}>{SPECIALTY_TAG_LABEL[sp.tag]}</span>
+                      <a href={sp.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>{sp.course}</a>
+                    </div>
+                  ))}
+                </div>
+                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+                  開講状況はキャンパスや年度で異なる場合があります。最新の内容は公式サイトでご確認ください。
+                </div>
+              </div>
+            )}
             {/* 公式サイトURL（lib/data/correspondenceHighSchools.tsのofficialUrl、Web調査で
                 確認できた学校のみ）。通信制高校は私立運営が多く、資料請求等のアフィリエイト
                 プログラムを持つ学校があるため、学びの多様化学校・フリースクールの詳細ページ
