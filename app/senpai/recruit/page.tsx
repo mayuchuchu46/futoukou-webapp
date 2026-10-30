@@ -28,16 +28,29 @@ export default function SenpaiRecruitPage() {
           </div>
         </div>
 
+        {/* 「報酬の前に、内容（どういう形で協力するのか）を先に見せてほしい」との
+            指摘を受けて追加（2026-10-31）。テキスト回答／チャットリレー／
+            オンライントークの3パターンを先に示す。 */}
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>ご協力いただく内容（3つの形）</div>
+          <div className="qtext">
+            <strong>①テキストでの回答</strong>（現在ご利用いただけます）<br />
+            届いた相談文に、ご自身のタイミングで文章で回答します。
+          </div>
+          <div className="qtext">
+            <strong>②チャットリレー</strong>（近日公開予定）<br />
+            時間を決めて、その時間の中でチャットでやり取りします。
+          </div>
+          <div className="qtext">
+            <strong>③オンライントーク</strong>（近日公開予定）<br />
+            時間を決めて、LINE通話などでお話しします。
+          </div>
+        </div>
+
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>報酬</div>
           <div className="qtext">
             回答1件につき報酬をお支払いします。金額は決まり次第こちらでお知らせします。振込は、決済代行サービスのStripe（Stripe Express）を通じて毎月まとめて行います。Stripeアカウントの登録（本人確認・振込先口座の入力）については、準備が整い次第、ご登録のメールアドレス宛にご案内します。
-          </div>
-          {/* チャットリレー・オンライン通話は検討中で、まだ予約・決済の仕組みが
-              できていないため、「近日追加予定」として触れるだけにとどめる
-              （2026-10-31、「書かないの？」との指摘を受けて追加）。 */}
-          <div className="qtext" style={{ fontSize: 13 }}>
-            ※現在は上記のテキストでのご回答のみです。時間を決めてリアルタイムにやり取りする「オンライン通話」「チャットリレー」機能も近日追加予定です。
           </div>
         </div>
 
