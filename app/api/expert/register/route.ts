@@ -20,6 +20,12 @@ export async function POST(req: NextRequest) {
   const link_url = String(form.get('link_url') || '');
   const licenseDoc = form.get('license_doc');
   const photo = form.get('photo');
+  // 本人確認の方法（2026-10-30追加）。'call'（オンライン通話で確認）の場合は
+  // 登録証の画像・PDFを一切お預かりしないため、以降のアップロード必須チェックから外す。
+  const verificationMethodRaw = String(form.get('verification_method') || 'upload');
+  const verification_method: 'upload' | 'call' = verificationMethodRaw === 'call' ? 'call' : 'upload';
+  // お悩み辞典の既存カテゴリから、対応できるものを複数（任意）。
+  const specialty_categories = form.getAll('specialty_categories').map((v) => String(v)).filter(Boolean);
 
   if (!email || !password || !name) {
     return NextResponse.json({ error: 'メールアドレス・パスワード・名前は必須です' }, { status: 400 });
@@ -29,14 +35,18 @@ export async function POST(req: NextRequest) {
   }
   // 資格によっては登録番号制度自体が無いものもあるため、登録番号は任意項目にしている
   // （本人確認は登録証の提出・運営による目視確認で行う。2026-10-13、必須から変更）。
-  if (!(licenseDoc instanceof File) || licenseDoc.size === 0) {
-    return NextResponse.json({ error: '登録証（画像またはPDF）を添付してください' }, { status: 400 });
-  }
-  if (!isAllowedLicenseDocType(licenseDoc.type)) {
-    return NextResponse.json({ error: '登録証は画像（jpg/png）またはPDFで添付してください' }, { status: 400 });
-  }
-  if (licenseDoc.size > MAX_LICENSE_DOC_BYTES) {
-    return NextResponse.json({ error: `登録証のファイルサイズは${MAX_LICENSE_DOC_BYTES / 1024 / 1024}MB以内にしてください` }, { status: 400 });
+  // verification_methodが'call'の場合は、登録証自体をお預かりしないため、この
+  // チェック自体を行わない（2026-10-30追加）。
+  if (verification_method === 'upload') {
+    if (!(licenseDoc instanceof File) || licenseDoc.size === 0) {
+      return NextResponse.json({ error: '登録証（画像またはPDF）を添付してください' }, { status: 400 });
+    }
+    if (!isAllowedLicenseDocType(licenseDoc.type)) {
+      return NextResponse.json({ error: '登録証は画像（jpg/png）またはPDFで添付してください' }, { status: 400 });
+    }
+    if (licenseDoc.size > MAX_LICENSE_DOC_BYTES) {
+      return NextResponse.json({ error: `登録証のファイルサイズは${MAX_LICENSE_DOC_BYTES / 1024 / 1024}MB以内にしてください` }, { status: 400 });
+    }
   }
   // プロフィール写真は任意項目（登録後にプロフィール編集からでも追加・変更できる）。
   if (photo instanceof File && photo.size > 0) {
@@ -66,6 +76,8 @@ export async function POST(req: NextRequest) {
       bio: bio || '',
       license_number: license_number.trim(),
       link_url: link_url.trim(),
+      verification_method,
+      specialty_categories,
       verified: false,
     })
     .select('id')
@@ -85,31 +97,35 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const ext = licenseDoc.name.includes('.') ? licenseDoc.name.split('.').pop() : 'bin';
-  const path = `${expert.id}/license.${ext}`;
-  const buffer = Buffer.from(await licenseDoc.arrayBuffer());
-  const { error: uploadError } = await supabase.storage
-    .from(EXPERT_LICENSE_DOC_BUCKET)
-    .upload(path, buffer, { contentType: licenseDoc.type, upsert: true });
+  // verification_methodが'call'の場合は登録証をお預かりしないため、アップロード処理自体を
+  // 行わない（2026-10-30追加）。この場合は運営が別途オンライン通話で日程調整の連絡をする。
+  if (verification_method === 'upload' && licenseDoc instanceof File) {
+    const ext = licenseDoc.name.includes('.') ? licenseDoc.name.split('.').pop() : 'bin';
+    const path = `${expert.id}/license.${ext}`;
+    const buffer = Buffer.from(await licenseDoc.arrayBuffer());
+    const { error: uploadError } = await supabase.storage
+      .from(EXPERT_LICENSE_DOC_BUCKET)
+      .upload(path, buffer, { contentType: licenseDoc.type, upsert: true });
 
-  if (uploadError) {
-    // アカウント自体は作成済みなので、ここで失敗してもログインして
-    // ダッシュボードから登録証を再アップロードできる（/api/expert/license-doc）。
-    const res = NextResponse.json({
-      ok: true,
-      warning: '登録は完了しましたが、登録証のアップロードに失敗しました。ダッシュボードから再度お試しください：' + uploadError.message,
-    });
-    res.cookies.set(EXPERT_COOKIE_NAME, expert.id, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 90,
-    });
-    return res;
+    if (uploadError) {
+      // アカウント自体は作成済みなので、ここで失敗してもログインして
+      // ダッシュボードから登録証を再アップロードできる（/api/expert/license-doc）。
+      const res = NextResponse.json({
+        ok: true,
+        warning: '登録は完了しましたが、登録証のアップロードに失敗しました。ダッシュボードから再度お試しください：' + uploadError.message,
+      });
+      res.cookies.set(EXPERT_COOKIE_NAME, expert.id, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 90,
+      });
+      return res;
+    }
+
+    await supabase.from('experts').update({ license_doc_path: path }).eq('id', expert.id);
   }
-
-  await supabase.from('experts').update({ license_doc_path: path }).eq('id', expert.id);
 
   const res = NextResponse.json({ ok: true });
   res.cookies.set(EXPERT_COOKIE_NAME, expert.id, {

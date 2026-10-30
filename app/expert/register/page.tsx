@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { CATS } from '@/lib/categories';
 
 // 想定する資格の候補。「その他」を選んだ場合のみ自由入力欄を出す（2026-10-13追加、
 // それまでは資格欄が自由入力のみでブレが出やすかったため）。
+// 保健師を追加（2026-10-30、田村さんの発案で心理分野以外の専門家も募ることにしたため）。
 const CREDENTIAL_OPTIONS = [
   '公認心理師',
   '臨床心理士',
   '精神科医',
   '小児科医',
+  '保健師',
   '学校心理士',
   'スクールカウンセラー',
   '社会福祉士',
@@ -17,6 +20,10 @@ const CREDENTIAL_OPTIONS = [
   'キャリアコンサルタント',
   'その他',
 ];
+
+// お悩み辞典の既存カテゴリ（lib/categories.ts）から、対応できるものを専門家自身に
+// 複数選んでもらう（2026-10-30追加）。資格種別と1対1対応ではなく、本人の判断に委ねる。
+const CATEGORY_OPTIONS = Object.entries(CATS).map(([key, c]) => ({ key, label: c.label }));
 
 const BIO_EXAMPLE =
   '例：公認心理師として、スクールカウンセラーや児童発達支援の現場で10年以上、不登校・行き渋りのお子さんとご家族の相談に携わってきました。無理に登校を促すのではなく、お子さんのペースに合わせた関わり方を一緒に考えます。';
@@ -37,6 +44,8 @@ type DraftForm = {
   bio: string;
   license_number: string;
   link_url: string;
+  specialtyCategories: string[];
+  verificationMethod: 'upload' | 'call';
 };
 
 function loadDraft(): Partial<DraftForm> {
@@ -50,7 +59,19 @@ function loadDraft(): Partial<DraftForm> {
 
 export default function ExpertRegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ email: '', password: '', name: '', display_name: '', credential: '公認心理師', credentialOther: '', bio: '', license_number: '', link_url: '' });
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    name: '',
+    display_name: '',
+    credential: '公認心理師',
+    credentialOther: '',
+    bio: '',
+    license_number: '',
+    link_url: '',
+    specialtyCategories: [] as string[],
+    verificationMethod: 'upload' as 'upload' | 'call',
+  });
   const [licenseDoc, setLicenseDoc] = useState<File | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
   const [error, setError] = useState('');
@@ -75,6 +96,8 @@ export default function ExpertRegisterPage() {
       bio: form.bio,
       license_number: form.license_number,
       link_url: form.link_url,
+      specialtyCategories: form.specialtyCategories,
+      verificationMethod: form.verificationMethod,
     };
     try {
       window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -85,16 +108,21 @@ export default function ExpertRegisterPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!licenseDoc) {
+    if (form.verificationMethod === 'upload' && !licenseDoc) {
       setError('登録証（画像またはPDF）を添付してください');
       return;
     }
     setLoading(true);
     setError('');
     const body = new FormData();
-    Object.entries(form).forEach(([key, value]) => body.set(key, value));
+    Object.entries(form).forEach(([key, value]) => {
+      if (key === 'specialtyCategories' || key === 'verificationMethod') return; // 下で個別に追加する
+      body.set(key, String(value));
+    });
     if (form.credential === 'その他') body.set('credential', form.credentialOther);
-    body.set('license_doc', licenseDoc);
+    body.set('verification_method', form.verificationMethod);
+    form.specialtyCategories.forEach((cat) => body.append('specialty_categories', cat));
+    if (form.verificationMethod === 'upload' && licenseDoc) body.set('license_doc', licenseDoc);
     if (photo) body.set('photo', photo);
     const res = await fetch('/api/expert/register', {
       method: 'POST',
@@ -169,6 +197,47 @@ export default function ExpertRegisterPage() {
             required
           />
         )}
+
+        {/* 対応できる相談カテゴリ（2026-10-30追加）。資格種別を増やしていく前提で、
+            「この資格ならこのカテゴリ」と決めつけず、本人に選んでもらう。 */}
+        <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>対応できる相談カテゴリ（複数選択可・任意）</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {CATEGORY_OPTIONS.map((c) => {
+            const checked = form.specialtyCategories.includes(c.key);
+            return (
+              <label
+                key={c.key}
+                className="muted"
+                style={{
+                  fontSize: 13,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  border: '1px solid var(--border)',
+                  borderRadius: 999,
+                  padding: '4px 10px',
+                  cursor: 'pointer',
+                  background: checked ? 'var(--bg)' : 'transparent',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={(e) => {
+                    setForm((f) => ({
+                      ...f,
+                      specialtyCategories: e.target.checked
+                        ? [...f.specialtyCategories, c.key]
+                        : f.specialtyCategories.filter((k) => k !== c.key),
+                    }));
+                  }}
+                />
+                {c.label}
+              </label>
+            );
+          })}
+        </div>
+
         <textarea
           className="input"
           rows={4}
@@ -201,21 +270,57 @@ export default function ExpertRegisterPage() {
           公認心理師登録番号など。登録番号がない資格の場合は空欄でかまいません。
         </div>
 
-        <div className="muted" style={{ marginTop: 6 }}>登録証（画像またはPDF）</div>
-        <input
-          className="input"
-          type="file"
-          accept="image/png,image/jpeg,image/webp,application/pdf"
-          onChange={(e) => setLicenseDoc(e.target.files?.[0] || null)}
-          required
-        />
-        <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          登録番号の自己申告だけでは本人確認ができないため、登録証の画像またはPDFを添付してください。
-          {/* 2026-10-13: 差し戻し（不備・期限切れによる再提出）の大半を占める2点を、
-              申請前にあらかじめ明記しておくことで、差し戻しの件数自体を減らす狙いで追加。 */}
-          有効期限内のもので、氏名・資格名（登録番号がある場合はそれも）がはっきり読み取れる状態でご提出ください（内容が確認できない場合、再提出をお願いすることがあります）。
-          ご提出いただいた登録証は本人確認のみに使用し、第三者には提供しません。確認が完了するまで、有料相談への回答はできません。
+        {/* 本人確認の方法（2026-10-30追加）。登録証の画像・PDFを個人運営のサイトに
+            送ること自体を躊躇う方もいるため、オンライン通話で画面に見せてもらう方式も
+            選べるようにした。通話方式では画像・PDFは一切お預かりしない。 */}
+        <div className="muted" style={{ marginTop: 6 }}>本人確認の方法</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <label className="muted" style={{ fontSize: 13, display: 'flex', alignItems: 'flex-start', gap: 6, cursor: 'pointer' }}>
+            <input
+              type="radio"
+              name="verification_method"
+              checked={form.verificationMethod === 'upload'}
+              onChange={() => setForm({ ...form, verificationMethod: 'upload' })}
+              style={{ marginTop: 3 }}
+            />
+            <span>登録証（画像またはPDF）をアップロードする</span>
+          </label>
+          <label className="muted" style={{ fontSize: 13, display: 'flex', alignItems: 'flex-start', gap: 6, cursor: 'pointer' }}>
+            <input
+              type="radio"
+              name="verification_method"
+              checked={form.verificationMethod === 'call'}
+              onChange={() => setForm({ ...form, verificationMethod: 'call' })}
+              style={{ marginTop: 3 }}
+            />
+            <span>オンライン通話で画面に見せて確認してもらう（登録証の画像・PDFはお預かりしません。運営からご連絡し、日程を調整します）</span>
+          </label>
         </div>
+
+        {form.verificationMethod === 'upload' ? (
+          <>
+            <div className="muted" style={{ marginTop: 6 }}>登録証（画像またはPDF）</div>
+            <input
+              className="input"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,application/pdf"
+              onChange={(e) => setLicenseDoc(e.target.files?.[0] || null)}
+              required
+            />
+            <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
+              登録番号の自己申告だけでは本人確認ができないため、登録証の画像またはPDFを添付してください。
+              {/* 2026-10-13: 差し戻し（不備・期限切れによる再提出）の大半を占める2点を、
+                  申請前にあらかじめ明記しておくことで、差し戻しの件数自体を減らす狙いで追加。 */}
+              有効期限内のもので、氏名・資格名（登録番号がある場合はそれも）がはっきり読み取れる状態でご提出ください（内容が確認できない場合、再提出をお願いすることがあります）。
+              ご提出いただいた登録証は本人確認のみに使用し、第三者には提供しません。確認が完了するまで、有料相談への回答はできません。
+              確認が完了すると、画像・PDFのファイルは30日以内に削除します（確認済みという記録のみ残します）。
+            </div>
+          </>
+        ) : (
+          <div className="muted" style={{ fontSize: 12, marginTop: -4, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
+            ご登録いただいたメールアドレスに、運営から通話日程についてご連絡します。通話時に登録証（氏名・資格名・登録番号がわかるもの）を画面に見せていただき、運営が確認します。確認が完了するまで、有料相談への回答はできません。
+          </div>
+        )}
         <input className="input" type="email" placeholder="メールアドレス" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
         <input className="input" type="password" placeholder="パスワード（8文字以上）" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
 

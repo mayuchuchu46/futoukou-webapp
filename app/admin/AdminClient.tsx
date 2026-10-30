@@ -11,6 +11,8 @@ type UnverifiedExpert = {
   credential: string;
   license_number: string;
   license_doc_path: string | null;
+  verification_method?: 'upload' | 'call'; // 2026-10-30追加
+  specialty_categories?: string[]; // 2026-10-30追加
   review_status?: string; // 'pending' | 'needs_fix'（一覧に残るのはこの2つ。rejectedは一覧から除外済み）
   review_note?: string | null;
   created_at: string;
@@ -663,15 +665,27 @@ export default function AdminClient({
             {e.display_name && <div className="muted">表示名：{e.display_name}</div>}
             <div className="muted">{e.email}</div>
             <div className="muted">登録番号：{e.license_number || '（未入力）'}</div>
+            {!!e.specialty_categories?.length && (
+              <div className="muted">
+                対応カテゴリ：{e.specialty_categories.map((k) => CATS[k]?.label || k).join('・')}
+              </div>
+            )}
             {e.review_status === 'needs_fix' && (
               <div className="muted" style={{ color: 'var(--orange-text)' }}>
                 差し戻し中（本人の再提出待ち）：{e.review_note}
               </div>
             )}
+            {e.verification_method === 'call' && (
+              <div className="muted" style={{ color: 'var(--orange-text)' }}>
+                本人確認方法：オンライン通話希望（登録証の提出なし。メールで日程を連絡してください）
+              </div>
+            )}
             <div className="row">
-              <button className="btn-secondary" disabled={busy === e.id || !e.license_doc_path} onClick={() => viewLicenseDoc(e.id)}>
-                {e.license_doc_path ? (busy === e.id ? '取得中…' : '登録証を確認') : '登録証未提出'}
-              </button>
+              {e.verification_method !== 'call' && (
+                <button className="btn-secondary" disabled={busy === e.id || !e.license_doc_path} onClick={() => viewLicenseDoc(e.id)}>
+                  {e.license_doc_path ? (busy === e.id ? '取得中…' : '登録証を確認') : '登録証未提出'}
+                </button>
+              )}
               <button className="btn-primary" disabled={busy === e.id} onClick={() => verifyExpert(e.id)}>
                 {busy === e.id ? '処理中…' : '確認済みにする'}
               </button>

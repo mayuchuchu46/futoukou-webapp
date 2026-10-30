@@ -420,6 +420,15 @@ create table if not exists experts (
   -- コメント（差し戻しの理由・本人向けの一言）を入れる。
   review_status text not null default 'pending', -- 'pending' | 'verified' | 'needs_fix' | 'rejected'
   review_note text, -- 運営から本人向けのコメント（差し戻し理由・却下時の一言など）。ダッシュボードに表示
+  -- 本人確認の方法（2026-10-30追加）。登録証の画像・PDFを個人運営のサイトに
+  -- アップロードすること自体を専門家側が躊躇する可能性があるため、
+  -- 「オンライン通話で画面上に見せてもらい、運営が目視で確認する」方式を選べるように
+  -- した。'call'の場合はlicense_doc_pathが空のままでよい（画像自体を保存しないため）。
+  verification_method text not null default 'upload', -- 'upload' | 'call'
+  -- 対応できる相談カテゴリ（lib/categories.tsのキー）。保健師など資格の分野が
+  -- 増えることを見据え、資格種別と1対1対応にせず、専門家本人の判断で複数選んで
+  -- もらう（2026-10-30追加）。
+  specialty_categories text[] not null default '{}',
   created_at timestamptz not null default now()
 );
 -- アプリは常にservice_roleキー経由でのみ読み書きし、anon/authenticatedロールで
@@ -984,3 +993,8 @@ create table if not exists outbound_clicks (
 );
 create index if not exists outbound_clicks_link_idx on outbound_clicks (link_id, created_at desc);
 alter table outbound_clicks enable row level security;
+
+-- 専門家の本人確認方法（オンライン通話で確認／登録証アップロード）と、対応できる
+-- 相談カテゴリを追加した場合（2026-10-30追加）、既存DBでは次を実行してください。
+-- alter table experts add column if not exists verification_method text not null default 'upload';
+-- alter table experts add column if not exists specialty_categories text[] not null default '{}';
