@@ -37,6 +37,12 @@ export default function ExpertRecruitPage() {
                 個別にご案内する運用に変更（2026-10-13）。 */}
             Stripeアカウントの登録（本人確認・振込先口座の入力）については、準備が整い次第、ご登録のメールアドレス宛にご案内します。
           </div>
+          {/* チャットリレー・オンライン通話は検討中で、まだ予約・決済の仕組みが
+              できていないため、「近日追加予定」として触れるだけにとどめる
+              （2026-10-31、/senpai/recruit と同様の案内を追加）。 */}
+          <div className="qtext" style={{ fontSize: 13 }}>
+            ※現在は上記のテキストでのご回答のみです。時間を決めてリアルタイムにやり取りする「オンライン通話」「チャットリレー」機能も近日追加予定です。
+          </div>
         </div>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
