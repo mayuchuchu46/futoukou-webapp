@@ -150,6 +150,12 @@ export default async function FreeSchoolPage({
                   <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
                 </div>
               ))}
+              {school.ageRangeSourceUrl && (
+                <div className="muted" style={{ fontSize: 12 }}>
+                  「対象」の出典：
+                  <a href={school.ageRangeSourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>公式サイトのページ</a>
+                </div>
+              )}
             </div>
             {/* 学びの多様化学校の詳細ページと同じ考え方（app/gakko/school/[no]/page.tsx参照）。
                 施設の写真は無断転載・AI生成どちらも避け、実際の所在地の地図で代替する。 */}

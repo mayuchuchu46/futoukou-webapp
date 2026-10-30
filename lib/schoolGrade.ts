@@ -53,7 +53,7 @@ function range(a: number, b: number): number[] {
 
 export function parseTargetGrades(text: string | null | undefined): number[] | null {
   if (!text) return null;
-  const s = text.trim();
+  const s = text.normalize('NFKC').trim(); // 全角数字・記号を半角にそろえる
   if (!s || s === '記載なし') return null;
   if (/[（(]/.test(s)) return null; // 括弧つきの条件は読み取らない
   if (s === '年齢不問' || s === '年齢制限なし') return range(GRADE_MIN, GRADE_MAX);
