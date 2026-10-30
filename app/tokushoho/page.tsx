@@ -9,12 +9,16 @@ import Footer from '@/components/Footer';
 //
 // 現時点（2026-10-19）では、読み放題会員・専門家への質問などの有料機能は
 // app/terms/page.tsx「2. ベータ版について」のとおりまだ無料のベータ公開中で、
-// 実際の課金導線（Stripe決済）は専門家監修・専門家登録が整うまで有効化していない
+// 実際の課金導線は専門家監修・専門家登録が整うまで有効化していない
 // （claude/futoukou-monetization-plan.md「課題1」参照）。
 // このページは、有料機能を実際に開始する時点で適用される予定の運営者情報・支払条件を
 // あらかじめ明記したもの。価格（lib/config.tsのMEMBERSHIP_PRICE_JPY等）はまだ確定ではなく
 // 検討中のため、このページには記載しない（2026-10-19、「価格体系はまだ確定だから記載しないで」
 // との指摘を受けて削除）。価格が確定し、有料サービスの提供を開始する際に、このページへ追記する。
+// なお、「決済代行会社Stripe, Inc.を利用」としていた記載は、Stripeのアカウントが
+// カードネットワーク側の事情により利用できなくなったため削除し、乗り換え先が未確定の
+// 現時点では社名を出さない一般的な表現にしている（2026-10-31）。乗り換え先が決まったら
+// 社名を明記する。
 export default function TokushohoPage() {
   return (
     <div className="app-shell">
@@ -76,7 +80,7 @@ export default function TokushohoPage() {
           <div>
             <div style={{ fontWeight: 700, fontSize: 13 }}>お支払方法</div>
             <div className="qtext">
-              クレジットカード決済（決済代行会社Stripe, Inc.を利用）。
+              クレジットカード決済（決済代行会社を利用）。
             </div>
           </div>
 
