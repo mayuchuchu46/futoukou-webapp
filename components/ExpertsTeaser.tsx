@@ -37,19 +37,38 @@ export default function ExpertsTeaser({
     <div className={`home-experts ${className}`.trim()}>
       <div className="home-experts-title">{title}</div>
       {experts.length === 0 ? (
-        <div
-          className="home-expert-card home-expert-card--empty"
-          role="button"
-          tabIndex={0}
-          onClick={() => router.push('/expert/recruit')}
-        >
-          <ExpertAvatar photoUrl={null} size={44} />
-          <div className="home-expert-body">
-            <div className="home-expert-name">現在、専門家を募集中です</div>
-            <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
+        // 専門家と先輩保護者（経験者）は募集の入り口を分けているため（2026-10-30、
+        // 「保護者と、専門家の入り口とページは別にしたい」との方針）、まだ1人も
+        // verifiedがいない空状態では、1枚にまとめず2枚の別カードで案内する
+        // （2026-10-31、「トップには、保護者向けと専門家向け二つ別にだして」との指摘を受けて）。
+        <>
+          <div
+            className="home-expert-card home-expert-card--empty"
+            role="button"
+            tabIndex={0}
+            onClick={() => router.push('/expert/recruit')}
+          >
+            <ExpertAvatar photoUrl={null} size={44} />
+            <div className="home-expert-body">
+              <div className="home-expert-name">現在、専門家を募集中です</div>
+              <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
+            </div>
+            <span className="expertbanner-cta">›</span>
           </div>
-          <span className="expertbanner-cta">›</span>
-        </div>
+          <div
+            className="home-expert-card home-expert-card--empty"
+            role="button"
+            tabIndex={0}
+            onClick={() => router.push('/senpai/recruit')}
+          >
+            <ExpertAvatar photoUrl={null} size={44} />
+            <div className="home-expert-body">
+              <div className="home-expert-name">先輩保護者（経験者）も募集中です</div>
+              <div className="home-expert-desc">資格は不要です。不登校を経験されたご家庭ご自身を募集しています</div>
+            </div>
+            <span className="expertbanner-cta">›</span>
+          </div>
+        </>
       ) : (
         experts.map((e) => (
           <div
