@@ -40,7 +40,7 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
 
   const result = useMemo(() => {
     if (!ready) return null;
-    type Row = { item: ShindanItem; gradeKnown: boolean; freqState: 'n/a' | 'confirmed' | 'flexible' | 'unknown'; tagState: 'n/a' | 'confirmed' | 'unknown'; local: boolean };
+    type Row = { item: ShindanItem; gradeKnown: boolean; freqState: 'n/a' | 'confirmed' | 'flexible' | 'unknown'; tagState: 'n/a' | 'confirmed' | 'unknown'; local: boolean; future?: boolean };
     const rows: Row[] = [];
     for (const it of items) {
       if (!types.has(it.type)) continue;
@@ -57,7 +57,12 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
 
       // 学年：書かれている対象学年に含まれない学校は除外。読み取れない学校は「未確認」として残す。
       let gradeKnown = false;
-      if (it.grades) {
+      // 中学生が選んだ場合、通信制・定時制の高校は「進学先の候補」として別枠に出す
+      // （高校の対象学年に中学生は含まれないため、これまでは1校も出なかった。2026-10-30修正）
+      const future = (it.type === 'tsushin' || it.type === 'teiji') && grade >= 7 && grade <= 9 && !!it.grades && it.grades.includes(10);
+      if (future) {
+        gradeKnown = true;
+      } else if (it.grades) {
         if (!it.grades.includes(grade)) continue;
         gradeKnown = true;
       }
@@ -72,10 +77,12 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
       // 分野データがあるのは通信制高校のみで、それ以外は「未確認」（合わないという意味ではない）
       const tagState: Row['tagState'] =
         tags.size === 0 ? 'n/a' : it.specialties.some((s) => tags.has(s)) ? 'confirmed' : 'unknown';
-      rows.push({ item: it, gradeKnown, freqState, tagState, local });
+      rows.push({ item: it, gradeKnown, freqState, tagState, local, future });
     }
-    const sure = rows.filter((r) => r.gradeKnown && (r.freqState === 'n/a' || r.freqState === 'confirmed') && r.tagState !== 'unknown');
-    const partial = rows.filter((r) => !sure.includes(r));
+    const futureRows = rows.filter((r) => r.future);
+    const nowRows = rows.filter((r) => !r.future);
+    const sure = nowRows.filter((r) => r.gradeKnown && (r.freqState === 'n/a' || r.freqState === 'confirmed') && r.tagState !== 'unknown');
+    const partial = nowRows.filter((r) => !sure.includes(r));
     // 並び順は確認状況と地域のみ。同順位はデータ順のまま（広告・報酬は使わない）。
     const byLocal = (a: Row, b: Row) => (b.local ? 1 : 0) - (a.local ? 1 : 0);
     sure.sort(byLocal);
@@ -83,7 +90,8 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
       const rank = (r: Row) => (r.gradeKnown ? 0 : 1) + (r.freqState === 'flexible' ? 0 : r.freqState === 'unknown' ? 0.5 : 0) + (r.tagState === 'unknown' ? 0.25 : 0);
       return rank(a) - rank(b) || byLocal(a, b);
     });
-    return { sure, partial };
+    futureRows.sort((a, b) => ((b.freqState === 'confirmed' ? 1 : 0) + (b.tagState === 'confirmed' ? 1 : 0)) - ((a.freqState === 'confirmed' ? 1 : 0) + (a.tagState === 'confirmed' ? 1 : 0)) || byLocal(a, b));
+    return { sure, partial, future: futureRows };
   }, [items, ready, grade, pref, types, freq, needCare, tags]);
 
   function remember() {
@@ -264,7 +272,7 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
             setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
           }}
         >
-          {ready && result ? `結果を見る（条件に合う${result.sure.length}校／未確認含め${result.sure.length + result.partial.length}校）` : '学年と都道府県を選んでください'}
+          {ready && result ? `結果を見る（条件に合う${result.sure.length}校／未確認含め${result.sure.length + result.partial.length}校${result.future.length > 0 ? `／進学先の候補${result.future.length}校` : ''}）` : '学年と都道府県を選んでください'}
         </button>
       </div>
 
@@ -290,7 +298,7 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
               上の条件を変えると、この結果もその場で更新されます。
             </div>
           </div>
-          {result.sure.length + result.partial.length === 0 && (
+          {result.sure.length + result.partial.length + result.future.length === 0 && (
             <div className="muted">この条件で見つかった学校はありませんでした。学校の種類や条件をゆるめてみてください。</div>
           )}
           {section(
@@ -299,6 +307,13 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
             `${gradeLabel(grade)}が対象と確認できた学校です。${pref}にある学校を表示しています（通信制高校とオンラインは他の都道府県からも利用できるため、${pref}にあるものを先に並べています）。`,
             result.sure,
             true
+          )}
+          {section(
+            'future',
+            '高校進学を考えるなら（通信制・定時制）',
+            `${gradeLabel(grade)}のいまは通えませんが、中学卒業後の進学先として候補になる高校です。通信制高校は他の都道府県からも入学できる場合があり、${pref}にあるものを先に並べています。`,
+            result.future,
+            result.sure.length + result.partial.length === 0
           )}
           {section(
             'partial',
