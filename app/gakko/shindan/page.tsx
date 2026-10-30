@@ -13,7 +13,7 @@ import ShindanClient from './ShindanClient';
 // 入力内容はサーバーに送らず、ブラウザ内だけで絞り込む（個人情報を扱わない）。
 export const instant = false;
 
-const TITLE = '条件から学校をさがす';
+const TITLE = '条件から学校を探す';
 const DESC = '学年・お住まいの地域・学校の種類・通う頻度・心のケア専門職の有無を選ぶと、サイトに掲載している通信制高校・定時制高校・学びの多様化学校・フリースクール・オルタナティブスクールから条件に合う学校を確認できます。';
 
 export const metadata: Metadata = {

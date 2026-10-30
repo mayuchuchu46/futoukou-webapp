@@ -400,7 +400,7 @@ export default function HomeClient({
               <div className="home-gakko-link" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, margin: '0 0 10px' }}>
                 {[
                   { href: '/gakko/matome', icon: '🏫', label: '学校・フリースクール', sub: '都道府県別の一覧から見る' },
-                  { href: '/gakko/shindan', icon: '🧭', label: '条件から学校をさがす', sub: '学年・通う頻度などで絞り込む' },
+                  { href: '/gakko/shindan', icon: '🧭', label: '条件から学校を探す', sub: '学年・通う頻度などで絞り込む' },
                 ].map((m) => (
                   <Link
                     key={m.href}
