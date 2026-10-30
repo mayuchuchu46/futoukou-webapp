@@ -10,6 +10,7 @@ import { findSimilarFreeSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
+import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
 import { Suspense } from 'react';
 // フリースクール（地域）、1件ごとの紹介ページ。一覧（/gakko?type=free）の施設名を
 // 押すとここに来る（2026-10-21、「学びの多様化学校と同じ仕組みでフリースクールも
@@ -251,6 +252,9 @@ export default async function FreeSchoolPage({
           {/* この施設名を含む実際の相談（2026-10-22追加）。 */}
           <Suspense fallback={null}>
             <FacilityConsultations name={school.name} label="この施設についての相談" />
+          </Suspense>
+          <Suspense fallback={null}>
+            <FacilityExperiencedParents name={school.name} label="先輩保護者からこの学校の話を聞く" />
           </Suspense>
 
           {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との

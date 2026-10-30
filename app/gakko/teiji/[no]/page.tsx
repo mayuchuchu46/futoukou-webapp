@@ -10,6 +10,7 @@ import { findSimilarTeijiseiHighSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
+import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
 import { Suspense } from 'react';
 
 // 定時制高校、1件ごとの紹介ページ（2026-10-29追加）。他カテゴリ
@@ -238,6 +239,9 @@ export default async function TeijiSchoolPage({
 
           <Suspense fallback={null}>
             <FacilityConsultations name={school.name} label="この学校についての相談" />
+          </Suspense>
+          <Suspense fallback={null}>
+            <FacilityExperiencedParents name={school.name} label="先輩保護者からこの学校の話を聞く" />
           </Suspense>
 
           <RelatedListingsCard
