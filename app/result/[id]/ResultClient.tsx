@@ -107,11 +107,6 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
               {item.expert_answer_snippet}
             </div>
           )}
-          {item.experts?.credential === SENPAI_CREDENTIAL && (
-            <div className="muted" style={{ fontSize: 12 }}>
-              ※ 資格に基づく専門的な助言ではなく、あくまでこの方個人の経験・感想です。
-            </div>
-          )}
           <div className="blur-lines">
             <div />
             <div />
@@ -166,7 +161,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
               指摘を受けて追加）。 */}
           {item.experts?.credential === SENPAI_CREDENTIAL && (
             <div className="muted" style={{ fontSize: 12 }}>
-              ※ 資格に基づく専門的な助言ではなく、あくまでこの方個人の経験・感想です。
+              ※ あくまでこの方個人の経験・感想です。
             </div>
           )}
           {/* 回答したプロフィールへの誘導（2026-10-31、「誰が回答したかプロフィールへの
