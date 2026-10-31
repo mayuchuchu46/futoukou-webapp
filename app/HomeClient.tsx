@@ -37,6 +37,7 @@ export default function HomeClient({
   initialTotal,
   initialSidebarBanner,
   initialExperts,
+  initialSenpai,
 }: {
   initialItems: Consultation[];
   initialSupervised: boolean;
@@ -44,6 +45,7 @@ export default function HomeClient({
   initialTotal: number;
   initialSidebarBanner: SidebarBanner;
   initialExperts: ExpertProfile[];
+  initialSenpai: ExpertProfile[];
 }) {
   const router = useRouter();
   const urlParams = useSearchParams();
@@ -342,6 +344,7 @@ export default function HomeClient({
             {showExtras && (
               <ExpertsTeaser
                 experts={initialExperts}
+                senpai={initialSenpai}
                 title="専門家があなたの相談を見てくれます"
                 className="home-experts-mobile home-experts--compact"
                 compact

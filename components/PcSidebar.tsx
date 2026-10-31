@@ -31,6 +31,7 @@ export default function PcSidebar({
   const [ranking, setRanking] = useState<Consultation[]>([]);
   const [banner, setBanner] = useState<SidebarBanner>(null);
   const [experts, setExperts] = useState<ExpertProfile[]>([]);
+  const [senpai, setSenpai] = useState<ExpertProfile[]>([]);
   // このコンポーネント自体はPC（960px以上）だけ見た目に表示される
   // （app/globals.cssの.pc-sidebar参照）が、以前はスマホでも常にマウントされて
   // 裏でAPIを3つ（ランキング・サイドバナー・専門家一覧。下の<TagChips>内の
@@ -69,6 +70,11 @@ export default function PcSidebar({
     fetch('/api/experts/list')
       .then((r) => r.json())
       .then((d) => setExperts(d.experts || []))
+      .catch(() => {});
+
+    fetch('/api/experts/senpai-list')
+      .then((r) => r.json())
+      .then((d) => setSenpai(d.senpai || []))
       .catch(() => {});
   }, [isDesktop]);
 
@@ -221,7 +227,7 @@ export default function PcSidebar({
         </div>
       )}
 
-      {!hideExperts && <ExpertsTeaser experts={experts} className="home-experts-side" />}
+      {!hideExperts && <ExpertsTeaser experts={experts} senpai={senpai} className="home-experts-side" />}
 
       {gakkoLinks}
     </div>

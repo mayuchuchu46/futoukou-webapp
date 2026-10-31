@@ -126,15 +126,32 @@ async function getVerifiedExperts() {
   return (data || []).map((e) => ({ ...e, name: expertDisplayName(e) }));
 }
 
+// 本人確認済みの先輩保護者（経験者）も、専門家とは別枠でトップに出す
+// （2026-10-31、「私の情報トップにだして」との依頼を受けて追加）。
+async function getVerifiedSenpai() {
+  'use cache';
+  cacheLife('minutes');
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from('experts')
+    .select('id, name, display_name, credential, bio, photo_url')
+    .eq('verified', true)
+    .eq('credential', SENPAI_CREDENTIAL)
+    .order('created_at', { ascending: true })
+    .limit(3);
+  return (data || []).map((e) => ({ ...e, name: expertDisplayName(e) }));
+}
+
 export default async function HomePage() {
   // クローラー・初回表示用に「全カテゴリ・匿名」の一覧をサーバー側で取得する。
   // カテゴリ切り替えなど、その後の絞り込みはクライアント側（HomeClient）で行う。
-  const [items, guidelines, { counts, total }, sidebarBanner, experts] = await Promise.all([
+  const [items, guidelines, { counts, total }, sidebarBanner, experts, senpai] = await Promise.all([
     getConsultationsList({ category: 'all', viewerId: null }),
     getGuidelines(),
     getCounts(),
     getSidebarBanner(),
     getVerifiedExperts(),
+    getVerifiedSenpai(),
   ]);
 
   // 上のPromise.allで必要なデータは全てawait済み（HomeClientに渡すpropsは全て解決済み）
@@ -152,6 +169,7 @@ export default async function HomePage() {
       initialTotal={total}
       initialSidebarBanner={sidebarBanner}
       initialExperts={experts}
+      initialSenpai={senpai}
     />
   );
 }

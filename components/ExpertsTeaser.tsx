@@ -24,11 +24,17 @@ export type ExpertProfile = {
 
 export default function ExpertsTeaser({
   experts,
+  senpai = [],
   title = '専門家一覧',
   className = '',
   compact = false,
 }: {
   experts: ExpertProfile[];
+  // 先輩保護者（経験者）は専門家とは別の価格体系・有料相談の仕組み（まだ準備中）
+  // のため、カードは出しても遷移先は専門家向けの/ask?expert=ではなく、プロフィール
+  // 閲覧のみの/senpai/[id]にする（2026-10-31、本人確認済みの先輩保護者をトップに
+  // 出したいとの依頼を受けて追加）。
+  senpai?: ExpertProfile[];
   title?: string;
   className?: string;
   // trueのとき、アイコンを小さく・行間を詰めたコンパクト表示にする
@@ -41,39 +47,25 @@ export default function ExpertsTeaser({
   return (
     <div className={`home-experts ${className}`.trim()}>
       <div className="home-experts-title">{title}</div>
+      {/* 専門家と先輩保護者（経験者）は募集・表示の入り口を分けているため（2026-10-30、
+          「保護者と、専門家の入り口とページは別にしたい」との方針）、それぞれ
+          0人なら募集中カード、1人以上いれば実際のプロフィールカードを、別々に出す
+          （2026-10-31、「トップには、保護者向けと専門家向け二つ別にだして」
+          「私の情報トップにだして」との指摘を受けて）。 */}
       {experts.length === 0 ? (
-        // 専門家と先輩保護者（経験者）は募集の入り口を分けているため（2026-10-30、
-        // 「保護者と、専門家の入り口とページは別にしたい」との方針）、まだ1人も
-        // verifiedがいない空状態では、1枚にまとめず2枚の別カードで案内する
-        // （2026-10-31、「トップには、保護者向けと専門家向け二つ別にだして」との指摘を受けて）。
-        <>
-          <div
-            className="home-expert-card home-expert-card--empty"
-            role="button"
-            tabIndex={0}
-            onClick={() => router.push('/expert/recruit')}
-          >
-            <ExpertAvatar photoUrl={null} size={avatarSize} />
-            <div className="home-expert-body">
-              <div className="home-expert-name">現在、専門家を募集中です</div>
-              <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
-            </div>
-            <span className="expertbanner-cta">›</span>
+        <div
+          className="home-expert-card home-expert-card--empty"
+          role="button"
+          tabIndex={0}
+          onClick={() => router.push('/expert/recruit')}
+        >
+          <ExpertAvatar photoUrl={null} size={avatarSize} />
+          <div className="home-expert-body">
+            <div className="home-expert-name">現在、専門家を募集中です</div>
+            <div className="home-expert-desc">公認心理師・臨床心理士など、回答を担当いただける方を募集しています</div>
           </div>
-          <div
-            className="home-expert-card home-expert-card--empty"
-            role="button"
-            tabIndex={0}
-            onClick={() => router.push('/senpai/recruit')}
-          >
-            <ExpertAvatar photoUrl={null} size={avatarSize} />
-            <div className="home-expert-body">
-              <div className="home-expert-name">先輩保護者（経験者）も募集中です</div>
-              <div className="home-expert-desc">資格は不要です。不登校を経験されたご家庭ご自身を募集しています</div>
-            </div>
-            <span className="expertbanner-cta">›</span>
-          </div>
-        </>
+          <span className="expertbanner-cta">›</span>
+        </div>
       ) : (
         experts.map((e) => (
           <div
@@ -82,6 +74,38 @@ export default function ExpertsTeaser({
             role="button"
             tabIndex={0}
             onClick={() => router.push(`/ask?expert=${e.id}`)}
+          >
+            <ExpertAvatar photoUrl={e.photo_url} size={avatarSize} />
+            <div className="home-expert-body">
+              <div className="home-expert-name">{e.credential}・{e.name}</div>
+              {e.bio && <div className="home-expert-desc">{e.bio}</div>}
+            </div>
+            <span className="expertbanner-cta">›</span>
+          </div>
+        ))
+      )}
+      {senpai.length === 0 ? (
+        <div
+          className="home-expert-card home-expert-card--empty"
+          role="button"
+          tabIndex={0}
+          onClick={() => router.push('/senpai/recruit')}
+        >
+          <ExpertAvatar photoUrl={null} size={avatarSize} />
+          <div className="home-expert-body">
+            <div className="home-expert-name">先輩保護者（経験者）も募集中です</div>
+            <div className="home-expert-desc">資格は不要です。不登校を経験されたご家庭ご自身を募集しています</div>
+          </div>
+          <span className="expertbanner-cta">›</span>
+        </div>
+      ) : (
+        senpai.map((e) => (
+          <div
+            key={e.id}
+            className="home-expert-card"
+            role="button"
+            tabIndex={0}
+            onClick={() => router.push(`/senpai/${e.id}`)}
           >
             <ExpertAvatar photoUrl={e.photo_url} size={avatarSize} />
             <div className="home-expert-body">

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getStripe } from '@/lib/stripe';
-import { EXPERT_PRICE_JPY, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
+import { EXPERT_PRICE_JPY, EXPERT_VOLUNTEER_MODE, SENPAI_CREDENTIAL } from '@/lib/config';
 import { checkExpertRequestRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
@@ -46,6 +46,10 @@ export async function POST(req: NextRequest) {
       .select('id')
       .eq('id', requested_expert_id)
       .eq('verified', true)
+      // 先輩保護者（経験者）はこの専門家向け質問（¥600・専門家報酬¥400という
+      // 価格体系／報酬記録）の対象外（2026-10-31追加。URLを直接編集して指名
+      // されてしまうのを防ぐ）。
+      .neq('credential', SENPAI_CREDENTIAL)
       .single();
     requestedExpertId = expertRow?.id || null;
   }
