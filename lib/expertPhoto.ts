@@ -30,5 +30,10 @@ export async function uploadExpertPhoto(expertId: string, file: File): Promise<s
   if (error) throw error;
 
   const { data } = supabase.storage.from(EXPERT_PHOTO_BUCKET).getPublicUrl(path);
-  return data.publicUrl;
+  // ファイルパスが専門家IDごとに固定（上書き保存）のため、差し替えても公開URLの
+  // 見た目は同じで、ブラウザ・CDN側にキャッシュされた古い画像がそのまま表示され
+  // 続けてしまう（2026-10-31、「写真をアップロードし直したのに変更されてるか
+  // わからない」との報告を受けて発覚）。アップロード時刻をクエリパラメータとして
+  // 付け、差し替えるたびにURL自体が変わるようにしてキャッシュを回避する。
+  return `${data.publicUrl}?v=${Date.now()}`;
 }

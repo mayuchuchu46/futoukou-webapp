@@ -12,6 +12,7 @@ type Expert = {
   photo_url: string | null;
   link_url?: string | null;
   license_doc_path?: string | null;
+  verification_method?: 'upload' | 'call';
   verified?: boolean;
   stripe_account_id?: string | null;
   stripe_payouts_enabled?: boolean;
@@ -188,30 +189,36 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
           )}
         </div>
 
-        <div className="card" style={{ gap: 12 }}>
-          <div style={{ fontWeight: 700 }}>登録証（本人確認用）</div>
-          <div className="muted" style={{ fontSize: 13 }}>
-            {docSubmitted
-              ? docVerified
-                ? '提出済み・運営確認済みです。'
-                : '提出済みです。運営の確認をお待ちください。'
-              : '未提出です。登録証（画像またはPDF）を提出してください。'}
+        {/* 本人確認方式が「オンライン通話で確認」（先輩保護者は常にこちら）の場合、
+            そもそも登録証（資格証明書の画像・PDF）をお預かりしない方式のため、
+            このセクション自体を出さない（2026-10-31、先輩保護者のプロフィール編集
+            画面に登録証の提出欄が出てしまっていた不具合の指摘を受けて修正）。 */}
+        {expert.verification_method !== 'call' && (
+          <div className="card" style={{ gap: 12 }}>
+            <div style={{ fontWeight: 700 }}>登録証（本人確認用）</div>
+            <div className="muted" style={{ fontSize: 13 }}>
+              {docSubmitted
+                ? docVerified
+                  ? '提出済み・運営確認済みです。'
+                  : '提出済みです。運営の確認をお待ちください。'
+                : '未提出です。登録証（画像またはPDF）を提出してください。'}
+            </div>
+            <input
+              className="input"
+              type="file"
+              accept="image/png,image/jpeg,image/webp,application/pdf"
+              onChange={(e) => setLicenseDoc(e.target.files?.[0] || null)}
+            />
+            <div className="muted" style={{ fontSize: 12 }}>
+              差し替えると、改めて運営の本人確認待ちになります（確認が完了するまで有料相談への回答はできません）。
+            </div>
+            {docError && <div style={{ color: '#C0392B', fontSize: 13 }}>{docError}</div>}
+            {docSaved && <div style={{ color: 'var(--main)', fontSize: 13 }}>提出しました。運営の確認をお待ちください。</div>}
+            <button className="btn-secondary" onClick={uploadLicenseDoc} disabled={!licenseDoc || docUploading}>
+              {docUploading ? 'アップロード中…' : docSubmitted ? '登録証を差し替える' : '登録証を提出する'}
+            </button>
           </div>
-          <input
-            className="input"
-            type="file"
-            accept="image/png,image/jpeg,image/webp,application/pdf"
-            onChange={(e) => setLicenseDoc(e.target.files?.[0] || null)}
-          />
-          <div className="muted" style={{ fontSize: 12 }}>
-            差し替えると、改めて運営の本人確認待ちになります（確認が完了するまで有料相談への回答はできません）。
-          </div>
-          {docError && <div style={{ color: '#C0392B', fontSize: 13 }}>{docError}</div>}
-          {docSaved && <div style={{ color: 'var(--main)', fontSize: 13 }}>提出しました。運営の確認をお待ちください。</div>}
-          <button className="btn-secondary" onClick={uploadLicenseDoc} disabled={!licenseDoc || docUploading}>
-            {docUploading ? 'アップロード中…' : docSubmitted ? '登録証を差し替える' : '登録証を提出する'}
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );

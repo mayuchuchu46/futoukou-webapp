@@ -10,7 +10,7 @@ export async function getCurrentExpert() {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('experts')
-    .select('id, email, name, display_name, credential, bio, photo_url, link_url, license_number, license_doc_path, verified, review_status, review_note, created_at, stripe_account_id, stripe_payouts_enabled')
+    .select('id, email, name, display_name, credential, bio, photo_url, link_url, license_number, license_doc_path, verification_method, verified, review_status, review_note, created_at, stripe_account_id, stripe_payouts_enabled')
     .eq('id', expertId)
     .single();
   return data || null;
