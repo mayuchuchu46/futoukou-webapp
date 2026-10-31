@@ -107,7 +107,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               <div style={{ display: 'flex', fontSize: stats.length > 0 ? 100 : 148, fontWeight: 800, lineHeight: 1, color: '#3D7E65' }}>
                 {headlineValue}
               </div>
-              <div style={{ display: 'flex', fontSize: 30, fontWeight: 700, lineHeight: 1.3, color: '#2B2B28' }}>
+              <div style={{ display: 'flex', fontSize: 40, fontWeight: 700, lineHeight: 1.3, color: '#2B2B28' }}>
                 {headlineLabel}
               </div>
 
