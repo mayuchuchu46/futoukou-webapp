@@ -264,9 +264,13 @@ export default async function ResultPage({
   // 「今日からできる一手」は、AI・専門家の回答フォーマット（具体的な行動提案を
   // 1つ出す）には合うが、先輩保護者の回答は「次の一手」の提示というより実体験の
   // 共有なので、同じ言い回しだと実態と合わない（2026-10-31、「今日からできる一手、
-  // というのが違う気が！」との指摘を受けて追加）。
+  // というのが違う気が！」との指摘を受けて変更。さらに「実体験に基づく答え」でも
+  // しっくりこないとのことで、「実体験に基づく回答は？」という問いかけ型の文に
+  // 作り直した）。
   const isSenpaiAnswer = item.request_type === 'expert' && item.experts?.credential === SENPAI_CREDENTIAL;
-  const shareCatchphrase = isSenpaiAnswer ? '実体験に基づく答え' : '今日からできる一手';
+  const noAnswerShareText = isSenpaiAnswer
+    ? `「${questionSnippet}」に、${answererLabel}の実体験に基づく回答は？`
+    : `「${questionSnippet}」の相談に、${answererLabel}が出した"今日からできる一手"とは。`;
 
   const shareButton = (
     <a
@@ -282,7 +286,7 @@ export default async function ResultPage({
         // （questionSnippet）だけで悩みの具体性を出す。
         text: answerSnippet
           ? `「${questionSnippet}」\n\n${answererLabel}が出した答えはこちら↓`
-          : `「${questionSnippet}」の相談に、${answererLabel}が出した"${shareCatchphrase}"とは。`,
+          : noAnswerShareText,
         url: resultUrl,
         hashtags: 'どうする先生,不登校',
       })}`}
@@ -324,7 +328,7 @@ export default async function ResultPage({
         url: resultUrl,
         text: answerSnippet
           ? `「${questionSnippet}」の相談に、${answererLabel}は「${answerSnippet}」と回答。`
-          : `「${questionSnippet}」の相談に、${answererLabel}が出した"${shareCatchphrase}"とは。`,
+          : noAnswerShareText,
       })}`}
       target="_blank"
       rel="noopener noreferrer"
