@@ -25,3 +25,14 @@ export function expertPayout(_priceJpy: number) {
 // 無料AI相談を累計でこの回数使った利用者に、専門家への相談（有料）を案内する閾値。
 // 実利用データに基づく数値ではなく仮説（2026-10-11時点）。公開後のログを見て調整する。
 export const AI_USAGE_UPSELL_THRESHOLD = Number(process.env.AI_USAGE_UPSELL_THRESHOLD || 3);
+
+// Stripeのアカウントがカードネットワーク側の都合で利用できなくなり（2026-10-31）、
+// 乗り換え先の決済代行会社がまだ未確定の間、専門家・先輩保護者への質問機能を完全に
+// 止めてしまうのではなく、「当面は利用者には無料で開放し、専門家・先輩保護者には
+// ボランティアで協力してもらう」運用に切り替えるためのフラグ。
+// trueの間は、/api/expert-checkoutが読み放題会員登録・Stripe決済を要求せず、
+// 誰でも無料で専門家・先輩保護者に質問できる（expert_funding: 'volunteer'として記録）。
+// 専門家への報酬記録（expert_payout_jpy）自体は通常どおり計算・保存されるため、
+// 有償化した際に過去の貢献分を把握できる（実際に支払うかは別途判断）。
+// 新しい決済代行会社が決まり、通常の有料運用に戻すタイミングでfalseに変更する。
+export const EXPERT_VOLUNTEER_MODE = true;

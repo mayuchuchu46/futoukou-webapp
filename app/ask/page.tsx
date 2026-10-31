@@ -87,6 +87,9 @@ function AskPageContent() {
   const [expertPriceJpy, setExpertPriceJpy] = useState(600);
   const [requestedExpert, setRequestedExpert] = useState<RequestedExpert | null>(null);
   const [stripeConfigured, setStripeConfigured] = useState(false);
+  // 決済代行会社の乗り換え作業中、専門家への質問機能を無料開放する期間かどうか
+  // （lib/config.tsのEXPERT_VOLUNTEER_MODE参照、2026-10-31追加）。
+  const [expertVolunteerMode, setExpertVolunteerMode] = useState(false);
   const [draftLoaded, setDraftLoaded] = useState(false);
   // 子どもプロフィール機能（2026-10-16追加）。ログインしていない、またはお子さんの
   // プロフィールを1人も登録していない会員には今まで通り何も表示されない
@@ -253,6 +256,7 @@ function AskPageContent() {
         setExpertCredits(d.expertCredits || 0);
         if (d.expertPriceJpy) setExpertPriceJpy(d.expertPriceJpy);
         setStripeConfigured(!!d.stripeConfigured);
+        setExpertVolunteerMode(!!d.expertVolunteerMode);
       })
       .catch(() => setMemberActive(false));
     // 子どもプロフィール（2026-10-16追加）。ログインしていない場合はAPI側が
@@ -606,13 +610,13 @@ function AskPageContent() {
         <div className="expertteaser">
           <div className="expertteaser-title">
             {requestedExpert
-              ? `${requestedExpert.credential}・${requestedExpert.name}さんに相談する（有料）`
-              : '専門家に相談する（有料）'}
-            {(!stripeConfigured || (!expertAvailable && !requestedExpert)) && (
+              ? `${requestedExpert.credential}・${requestedExpert.name}さんに相談する${expertVolunteerMode ? '' : '（有料）'}`
+              : `専門家に相談する${expertVolunteerMode ? '' : '（有料）'}`}
+            {((!stripeConfigured && !expertVolunteerMode) || (!expertAvailable && !requestedExpert)) && (
               <span className="comingsoon-badge">準備中・近日公開</span>
             )}
           </div>
-          {!stripeConfigured ? (
+          {!stripeConfigured && !expertVolunteerMode ? (
             <div className="expertteaser-desc">
               現在、決済機能の準備中のため、専門家への有料相談はまだご利用いただけません。準備が整い次第、こちらからご利用いただけるようになります。
             </div>
@@ -620,6 +624,28 @@ function AskPageContent() {
             <div className="expertteaser-desc">
               現在、本人確認が完了した専門家（公認心理師など）がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
             </div>
+          ) : expertVolunteerMode ? (
+            <>
+              {/* 決済代行会社の乗り換え作業中（2026-10-31〜）、会員登録・支払いなしで
+                  誰でも無料で専門家に質問できる試験運用。専門家・先輩保護者側は
+                  ボランティアとして協力している（lib/config.tsのEXPERT_VOLUNTEER_MODE参照）。 */}
+              <div className="expertteaser-desc">
+                {requestedExpert ? <>ご指名の専門家が、</> : <>登録している専門家が、</>}
+                数日以内にテキストで直接回答します。
+                現在は試験的に、どなたでも無料でご利用いただけます（専門家・先輩保護者にはボランティアで対応いただいています）。
+                {!requestedExpert && (
+                  <>
+                    <br />
+                    <a href="/experts">どんな専門家が回答していますか？</a>
+                  </>
+                )}
+              </div>
+              <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
+                {expertSubmitting
+                  ? '送信中…'
+                  : `無料で${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`}
+              </button>
+            </>
           ) : memberActive ? (
             <>
               <div className="expertteaser-desc">

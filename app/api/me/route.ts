@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
 import { hasFreeMonthlyQuestion } from '@/lib/expertQuota';
-import { EXPERT_PRICE_JPY, EXPERT_TICKET_PACK_PRICE_JPY, EXPERT_TICKET_PACK_COUNT } from '@/lib/config';
+import { EXPERT_PRICE_JPY, EXPERT_TICKET_PACK_PRICE_JPY, EXPERT_TICKET_PACK_COUNT, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import { isStripeConfigured } from '@/lib/stripe';
 
 // 画面側（クライアントコンポーネント）が「ログイン中か」「読み放題会員として有効か」
@@ -23,5 +23,6 @@ export async function GET() {
     ticketPackPriceJpy: EXPERT_TICKET_PACK_PRICE_JPY,
     ticketPackCount: EXPERT_TICKET_PACK_COUNT,
     stripeConfigured: isStripeConfigured(),
+    expertVolunteerMode: EXPERT_VOLUNTEER_MODE,
   });
 }

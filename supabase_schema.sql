@@ -614,7 +614,11 @@ create table if not exists consultations (
   paid_at timestamptz, -- 報酬を振込済みにした時刻
   refunded boolean not null default false, -- 期限超過等でStripe側を返金した場合にtrue
   expert_answer_helpful boolean, -- 専門家回答への利用者フィードバック（null=未評価, true=役に立った, false=役に立たなかった）
-  expert_funding text check (expert_funding in ('paid','ticket','free_monthly')), -- 専門家質問の財源（都度払い／チケット消費／月1回無料枠）。request_type='expert'のみ使用
+  -- 専門家質問の財源（都度払い／チケット消費／月1回無料枠／ボランティア協力期間中の無償）。
+  -- request_type='expert'のみ使用。'volunteer'は2026-10-31追加：決済代行会社の乗り換え
+  -- 作業中、利用者には無料で開放しつつ、専門家・先輩保護者にはボランティアで協力してもらう
+  -- 期間の記録用（lib/config.tsのEXPERT_VOLUNTEER_MODE参照）。
+  expert_funding text check (expert_funding in ('paid','ticket','free_monthly','volunteer')),
 
   -- 希死念慮・自傷等を検知し、lib/prompt.tsの安全上書き（ホットライン案内のみを返す）が
   -- 発動したAI回答かどうか。従来はこの判定結果がどこにも保存されておらず、結果ページ側は
@@ -1007,3 +1011,10 @@ alter table outbound_clicks enable row level security;
 -- 先輩保護者が「保護者視点で話せる学校名」を専用欄で入力できるようにした場合
 -- （2026-10-31追加）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists experienced_school_names text[] not null default '{}';
+
+-- 専門家質問の財源にボランティア協力期間中の'volunteer'を追加した場合（2026-10-31追加、
+-- 決済代行会社の乗り換え作業中、無償ボランティアとして利用者に無料開放する対応）、
+-- 既存DBでは次を実行してください。
+-- alter table consultations drop constraint if exists consultations_expert_funding_check;
+-- alter table consultations add constraint consultations_expert_funding_check
+--   check (expert_funding in ('paid','ticket','free_monthly','volunteer'));

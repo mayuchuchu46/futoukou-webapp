@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getStripe } from '@/lib/stripe';
-import { EXPERT_PRICE_JPY } from '@/lib/config';
+import { EXPERT_PRICE_JPY, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import { checkExpertRequestRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
@@ -11,9 +11,13 @@ import { resolveExpertFunding } from '@/lib/expertQuota';
 // 財源は「月1回無料（会員特典）→チケット消費→都度¥600」の優先順位で決める
 // （2026-10-11 価格体系見直し。lib/expertQuota.ts参照）。無料枠・チケット消費の場合は
 // Stripe決済なしでその場で相談を確定させ、都度払いの場合だけ従来通りStripeへ進む。
+//
+// EXPERT_VOLUNTEER_MODE（lib/config.ts、2026-10-31追加）がtrueの間は、決済代行会社の
+// 乗り換え作業中につき、会員登録・決済を一切要求せず、誰でも無料で質問できる
+// （財源はexpert_funding: 'volunteer'として記録。専門家側の報酬記録は通常どおり残る）。
 export async function POST(req: NextRequest) {
   const member = await getCurrentMember();
-  if (!member || !isSubscriptionActive(member)) {
+  if (!EXPERT_VOLUNTEER_MODE && (!member || !isSubscriptionActive(member))) {
     return NextResponse.json(
       { error: '専門家への質問は、読み放題会員の登録が必要です', needsMembership: true },
       { status: 403 }
@@ -47,9 +51,10 @@ export async function POST(req: NextRequest) {
   }
 
   // 子どもプロフィール（2026-10-16追加）。/api/consultと同じく、ログイン中の
-  // 会員自身の子どもであることを確認してから紐付ける。
+  // 会員自身の子どもであることを確認してから紐付ける。EXPERT_VOLUNTEER_MODE中は
+  // 会員登録なしでも質問できるため、memberがnullの場合はそもそも紐付けない。
   let childId: string | null = null;
-  if (child_id) {
+  if (child_id && member) {
     const { data: child } = await supabase
       .from('children')
       .select('id')
@@ -59,9 +64,11 @@ export async function POST(req: NextRequest) {
     if (child) childId = child.id;
   }
 
-  const funding = resolveExpertFunding(member);
+  // ボランティア期間中は会員状態にかかわらず一律'volunteer'扱いにする
+  // （既に会員の人が利用した場合も、通常の財源消費は行わない＝会員特典を減らさない）。
+  const funding = EXPERT_VOLUNTEER_MODE ? 'volunteer' : resolveExpertFunding(member);
 
-  if (funding === 'free_monthly' || funding === 'ticket') {
+  if (funding === 'free_monthly' || funding === 'ticket' || funding === 'volunteer') {
     // Stripe決済を挟まず、その場で相談を確定させる（paid: true）。
     const { data: row, error: insertErr } = await supabase
       .from('consultations')
@@ -90,12 +97,13 @@ export async function POST(req: NextRequest) {
 
     // 相談の登録が成功した後にだけ、無料枠／チケットを消費する
     // （先に消費すると、登録失敗時に枠だけ無駄に失われてしまうため）。
-    if (funding === 'free_monthly') {
+    // 'volunteer'（ボランティア期間中）は会員特典を一切消費しない。
+    if (funding === 'free_monthly' && member) {
       await supabase
         .from('members')
         .update({ last_free_expert_question_period_end: member.subscription_current_period_end })
         .eq('id', member.id);
-    } else {
+    } else if (funding === 'ticket' && member) {
       await supabase
         .from('members')
         .update({ expert_credits: Math.max(0, member.expert_credits - 1) })
