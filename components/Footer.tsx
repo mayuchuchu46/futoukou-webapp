@@ -21,6 +21,13 @@ export default function Footer() {
         <Link href="/privacy">プライバシーポリシー</Link>
         <Link href="/tokushoho">特定商取引法に基づく表記</Link>
       </nav>
+      {/* 専門家・先輩保護者としてすでに登録した人が、自分のダッシュボード・
+          プロフィール編集にたどり着く入り口がURLを知っている人しか使えない状態
+          だったため追加（2026-10-31、「わかりやすいような導線にして」との
+          依頼を受けて）。ログイン後は自動的にダッシュボードへ進む。 */}
+      <nav className="site-footer-links">
+        <Link href="/expert/login">専門家・先輩保護者の方はこちら（ログイン）</Link>
+      </nav>
       <div className="site-footer-copyright">© {currentYear} manapri</div>
     </footer>
   );
