@@ -41,16 +41,19 @@ export async function POST(req: NextRequest) {
   // 渡す等）を避けるため、本人確認済みの専門家であることをここで確認してから保存する。
   let requestedExpertId: string | null = null;
   if (requested_expert_id) {
-    const { data: expertRow } = await supabase
+    let expertQuery = supabase
       .from('experts')
       .select('id')
       .eq('id', requested_expert_id)
-      .eq('verified', true)
-      // 先輩保護者（経験者）はこの専門家向け質問（¥600・専門家報酬¥400という
-      // 価格体系／報酬記録）の対象外（2026-10-31追加。URLを直接編集して指名
-      // されてしまうのを防ぐ）。
-      .neq('credential', SENPAI_CREDENTIAL)
-      .single();
+      .eq('verified', true);
+    // 先輩保護者（経験者）は通常運用中はこの専門家向け質問（¥600・専門家報酬¥400
+    // という価格体系／報酬記録）の対象外（2026-10-31追加。URLを直接編集して指名
+    // されてしまうのを防ぐ）。EXPERT_VOLUNTEER_MODE中は金銭のやり取りが発生しない
+    // ため、先輩保護者プロフィールページ（/senpai/[id]）からの指名を許可する。
+    if (!EXPERT_VOLUNTEER_MODE) {
+      expertQuery = expertQuery.neq('credential', SENPAI_CREDENTIAL);
+    }
+    const { data: expertRow } = await expertQuery.single();
     requestedExpertId = expertRow?.id || null;
   }
 

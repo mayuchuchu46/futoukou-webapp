@@ -7,7 +7,7 @@ import ExpertAvatar from '@/components/ExpertAvatar';
 import SenpaiConsultCta from '@/components/SenpaiConsultCta';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
-import { SENPAI_CREDENTIAL } from '@/lib/config';
+import { SENPAI_CREDENTIAL, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import { findSchoolMentionsInBio } from '@/lib/senpaiSchoolMentions';
 
 // 先輩保護者（経験者）の公開プロフィールページ。app/experts/[id]/page.tsx（専門家向け）
@@ -93,13 +93,11 @@ export default async function SenpaiProfilePublicPage({
                 )}
               </div>
             </div>
-            {/* 相談の予約・決済の仕組み自体はまだ準備中だが、「この方に相談する」という
-                導線は見せておきたいとの依頼（2026-10-31）を受けて、ボタンの見た目は
-                出しつつ、押しても実際の相談フローには進めない（準備中バッジ付き・
-                クリックで案内文を表示するのみ）形にした。このページ自体はサーバー
-                コンポーネントのため、クリック処理はSenpaiConsultCta（クライアント
-                コンポーネント）に切り出している。 */}
-            <SenpaiConsultCta />
+            {/* オンライン通話・チャットリレーの予約・決済はまだ準備中だが、
+                EXPERT_VOLUNTEER_MODE（無償ボランティア期間）中はテキストでの
+                質問は実際に使えるため、/askへ実際に飛ぶボタンにする（2026-10-31、
+                「この先輩保護者に相談する、の導線は？」との指摘を受けて変更）。 */}
+            <SenpaiConsultCta expertId={senpai.id} volunteerMode={EXPERT_VOLUNTEER_MODE} />
           </div>
 
           {schoolMentions.length > 0 && (
