@@ -637,6 +637,11 @@ h2.pagetitle {
 .home-experts-title { font-weight: 700; font-size: 14px; color: var(--text); }
 .home-expert-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
 .home-expert-card--empty { border-style: dashed; }
+/* 専門家・先輩保護者が1人以上いる場合でも「この人だけ」で終わって見えないよう、
+   引き続き募集中であることを伝える軽量な行（2026-10-31追加）。アイコン分の余白は
+   取らず、通常のカードより控えめな見た目にする。 */
+.home-expert-card--recruiting { border-style: dashed; padding: 7px 14px; background: transparent; }
+.home-expert-card--recruiting .home-expert-desc { white-space: normal; }
 .home-expert-photo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
 .home-expert-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .home-expert-name { font-weight: 700; font-size: 13px; color: var(--text); }

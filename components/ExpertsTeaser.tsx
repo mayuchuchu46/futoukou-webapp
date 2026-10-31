@@ -67,22 +67,37 @@ export default function ExpertsTeaser({
           <span className="expertbanner-cta">›</span>
         </div>
       ) : (
-        experts.map((e) => (
+        <>
+          {experts.map((e) => (
+            <div
+              key={e.id}
+              className="home-expert-card"
+              role="button"
+              tabIndex={0}
+              onClick={() => router.push(`/ask?expert=${e.id}`)}
+            >
+              <ExpertAvatar photoUrl={e.photo_url} size={avatarSize} />
+              <div className="home-expert-body">
+                <div className="home-expert-name">{e.credential}・{e.name}</div>
+                {e.bio && <div className="home-expert-desc">{e.bio}</div>}
+              </div>
+              <span className="expertbanner-cta">›</span>
+            </div>
+          ))}
+          {/* 1人以上いても「この人だけ」で終わって見えないよう、引き続き募集中である
+              ことが伝わる軽い導線を添える（2026-10-31、「これからもたくさん来る予感を
+              出したい」との依頼を受けて追加）。 */}
           <div
-            key={e.id}
-            className="home-expert-card"
+            className="home-expert-card home-expert-card--recruiting"
             role="button"
             tabIndex={0}
-            onClick={() => router.push(`/ask?expert=${e.id}`)}
+            onClick={() => router.push('/expert/recruit')}
           >
-            <ExpertAvatar photoUrl={e.photo_url} size={avatarSize} />
             <div className="home-expert-body">
-              <div className="home-expert-name">{e.credential}・{e.name}</div>
-              {e.bio && <div className="home-expert-desc">{e.bio}</div>}
+              <div className="home-expert-desc">他の専門家も引き続き募集中です →</div>
             </div>
-            <span className="expertbanner-cta">›</span>
           </div>
-        ))
+        </>
       )}
       {senpai.length === 0 ? (
         <div
@@ -99,22 +114,34 @@ export default function ExpertsTeaser({
           <span className="expertbanner-cta">›</span>
         </div>
       ) : (
-        senpai.map((e) => (
+        <>
+          {senpai.map((e) => (
+            <div
+              key={e.id}
+              className="home-expert-card"
+              role="button"
+              tabIndex={0}
+              onClick={() => router.push(`/senpai/${e.id}`)}
+            >
+              <ExpertAvatar photoUrl={e.photo_url} size={avatarSize} />
+              <div className="home-expert-body">
+                <div className="home-expert-name">{e.credential}・{e.name}</div>
+                {e.bio && <div className="home-expert-desc">{e.bio}</div>}
+              </div>
+              <span className="expertbanner-cta">›</span>
+            </div>
+          ))}
           <div
-            key={e.id}
-            className="home-expert-card"
+            className="home-expert-card home-expert-card--recruiting"
             role="button"
             tabIndex={0}
-            onClick={() => router.push(`/senpai/${e.id}`)}
+            onClick={() => router.push('/senpai/recruit')}
           >
-            <ExpertAvatar photoUrl={e.photo_url} size={avatarSize} />
             <div className="home-expert-body">
-              <div className="home-expert-name">{e.credential}・{e.name}</div>
-              {e.bio && <div className="home-expert-desc">{e.bio}</div>}
+              <div className="home-expert-desc">他の先輩保護者も引き続き募集中です →</div>
             </div>
-            <span className="expertbanner-cta">›</span>
           </div>
-        ))
+        </>
       )}
       <a
         href="/experts"
