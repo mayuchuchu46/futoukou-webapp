@@ -86,11 +86,22 @@ export default async function SenpaiProfilePublicPage({
                 )}
               </div>
             </div>
-            {/* オンライン通話・チャットリレーの予約・決済はまだ準備中のため、
-                相談ボタンは出さず、準備中である旨のみ伝える。 */}
-            <div className="qtext" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '10px 12px' }}>
-              先輩保護者への相談機能（オンライン通話・チャットリレー）は現在準備中です。近日公開予定です。
-            </div>
+            {/* 相談の予約・決済の仕組み自体はまだ準備中だが、「この方に相談する」という
+                導線は見せておきたいとの依頼（2026-10-31）を受けて、ボタンの見た目は
+                出しつつ、押しても実際の相談フローには進めない（準備中バッジ付き・
+                クリックで案内文を表示するのみ）形にした。 */}
+            <button
+              type="button"
+              className="btn-secondary"
+              style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 8 }}
+              onClick={(e) => {
+                e.preventDefault();
+                alert('先輩保護者への相談機能（オンライン通話・チャットリレー）は現在準備中です。近日公開予定ですので、もうしばらくお待ちください。');
+              }}
+            >
+              この先輩保護者に相談する
+              <span className="comingsoon-badge">近日公開</span>
+            </button>
           </div>
         </div>
         <PcSidebar hideExperts />
