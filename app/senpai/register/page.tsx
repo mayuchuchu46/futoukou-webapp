@@ -8,8 +8,13 @@ import { CATS } from '@/lib/categories';
 // 専門家向け（/expert/register）と入り口・ページを分けることにした（2026-10-30、
 // 「保護者と、専門家の入り口とページは別にしたい」との方針を受けて）。
 // このフォームは資格を前提としないため、資格選択・資格の登録番号・登録証
-// アップロードの項目は出さない。本人確認は常に「オンライン通話で確認」固定
-// （資格証が無いため、アップロード方式を選べる意味がない）。
+// アップロードの項目は出さない。本人確認は常に「call」（verification_method）
+// 固定で送るが、「気軽に登録できる流れがいいな」との指摘を受けて（2026-10-31）、
+// 必ずオンライン通話をするという案内はやめ、基本は登録内容（自己紹介文）を
+// 運営が確認して承認する、通話なしの流れに変更した。確認したい点がある場合
+// のみ、登録時のメールアドレスへ個別に連絡する運用（app/admin/AdminClient.tsx
+// 参照）。verification_method='call'という値自体は「資格証の提出がない登録」
+// を示すフラグとして内部的に維持している。
 // 送信先のAPI（/api/expert/register）・保存先のテーブル（experts）は専門家と
 // 共通のまま。credentialは固定で「先輩保護者（経験者）」を送る。
 
@@ -171,7 +176,7 @@ function SenpaiRegisterForm() {
 
         <input className="input" placeholder="お名前（本名）" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          本人確認（後述のオンライン通話）のために使用し、相談者には公開されません。
+          本人確認のために使用し、相談者には公開されません。
         </div>
         <input
           className="input"
@@ -318,10 +323,13 @@ function SenpaiRegisterForm() {
           onChange={(e) => setPhoto(e.target.files?.[0] || null)}
         />
 
-        {/* 資格証が無いため、本人確認はオンライン通話で固定（2026-10-30）。 */}
+        {/* 資格証が無いため本人確認が必要だが、「気軽に登録できる流れがいいな」との
+            指摘を受けて（2026-10-31）、オンライン通話を必須とする案内から、基本は
+            登録内容を運営が確認して承認する案内に変更。確認したい点がある場合のみ
+            個別に連絡する。 */}
         <div className="muted" style={{ marginTop: 6 }}>本人確認について</div>
         <div className="muted" style={{ fontSize: 12, marginTop: -4, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
-          ご登録いただいたメールアドレスに、運営からオンライン通話の日程についてご連絡します。簡単な自己紹介と、記入いただいた内容についてお話しいただくだけで、書類の提出は不要です。確認が完了するまで、有料相談への回答はできません。
+          書類の提出・通話は原則不要です。記入いただいた内容を運営が確認し、問題がなければそのまま承認します。内容について確認したいことがある場合のみ、ご登録のメールアドレスへ個別にご連絡します。確認が完了するまで、有料相談への回答はできません。
         </div>
 
         <input className="input" type="email" placeholder="メールアドレス" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />

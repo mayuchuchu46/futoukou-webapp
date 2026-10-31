@@ -99,10 +99,14 @@ export default async function SenpaiRecruitPage({
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>登録の流れ</div>
-          <ExpertRecruitFlowDiagram step2Detail="オンライン通話で確認（書類の提出は不要）" />
+          {/* 「気軽に登録できる流れがいいな」との指摘を受けて（2026-10-31）、
+              「オンライン通話で確認」を必須ステップとする表現をやめ、基本は
+              登録内容（自己紹介文）を運営が確認して承認する、通話なしの
+              流れに変更。確認したい点がある場合のみ個別に連絡する運用。 */}
+          <ExpertRecruitFlowDiagram step2Detail="登録内容を運営が確認（通話は原則不要）" />
           <ol className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
             <li>登録フォームにプロフィール（自己紹介・お話できる相談カテゴリ）を入力</li>
-            <li>運営とのオンライン通話で簡単に自己紹介（書類の提出は不要）</li>
+            <li>運営が登録内容を確認（書類の提出・通話は原則不要です）</li>
             <li>確認完了後、相談への回答が可能になります</li>
           </ol>
         </div>
