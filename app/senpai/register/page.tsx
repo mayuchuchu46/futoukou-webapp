@@ -174,9 +174,15 @@ function SenpaiRegisterForm() {
           </div>
         )}
 
-        <input className="input" placeholder="お名前（本名）" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+        {/* 「気軽に登録できる流れがいいな」「先輩保護者は本名じゃなくていいかも」との
+            指摘を受けて（2026-10-31）、本名必須をやめ、ニックネーム等でも登録できる
+            ようにした。報酬の振込を開始する段階で、振込先口座名義と一致する本名を
+            改めて確認する運用とする（今はボランティア協力期間のため実害はない）。
+            display_name（任意の表示名）と役割が重なるが、入力の手間を増やしたく
+            ないため項目自体は維持し、案内文のみ変更。 */}
+        <input className="input" placeholder="お名前（ニックネーム可）" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          本人確認のために使用し、相談者には公開されません。
+          本名でなくても構いません。相談者には公開されません（報酬のお支払いを始める段階で、振込先口座名義と合わせて改めて本名を確認させていただきます）。
         </div>
         <input
           className="input"
@@ -185,7 +191,7 @@ function SenpaiRegisterForm() {
           onChange={(e) => setForm({ ...form, display_name: e.target.value })}
         />
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          相談者に公開される名前です。未入力の場合は上のお名前（本名）がそのまま表示されます。
+          相談者に公開される名前です。未入力の場合は上のお名前がそのまま表示されます。
         </div>
 
         {/* 対応できる相談カテゴリ（任意）。 */}
