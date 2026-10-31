@@ -56,12 +56,14 @@ export default async function SenpaiRecruitPage({
             指摘を受けて追加（2026-10-31）。テキスト回答／チャットリレー／
             オンライントークの3パターンを先に示す。
             「①テキストでの回答（現在ご利用いただけます）」という表現が、決済代行会社の
-            乗り換え作業中で実際には無償ボランティア協力期間であることと食い違っていたため、
-            EXPERT_VOLUNTEER_MODE導入（2026-10-31）にあわせて実態通りの表現に変更。 */}
+            乗り換え作業中で実際には無償のプレ期間であることと食い違っていたため、
+            EXPERT_VOLUNTEER_MODE導入（2026-10-31）にあわせて実態通りの表現に変更。
+            「ボランティアで対応」という表現だと恒久的な無償運用に見えてしまうため、
+            準備が整うまでの期間限定のプレ期間であることが伝わる表現に調整。 */}
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>ご協力いただく内容（3つの形）</div>
           <div className="qtext">
-            <strong>①テキストでの回答</strong>（現在、試験的にご協力いただけます）<br />
+            <strong>①テキストでの回答</strong>（現在、プレ期間としてご利用いただけます）<br />
             届いた相談文に、ご自身のタイミングで文章で回答します。
           </div>
           <div className="qtext">
@@ -77,8 +79,10 @@ export default async function SenpaiRecruitPage({
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>報酬</div>
           <div className="qtext">
-            {/* EXPERT_VOLUNTEER_MODE（lib/config.ts）導入にあわせて追記（2026-10-31）。 */}
-            決済代行会社の乗り換え作業中のため、現在は利用者への質問受付を無料開放しており、この間のご回答はボランティアでのご協力としてお願いしています。回答件数など、この期間の貢献は記録しており、乗り換え完了後の報酬開始にあたって反映を検討します。金額は決まり次第こちらでお知らせします。
+            {/* EXPERT_VOLUNTEER_MODE（lib/config.ts）導入にあわせて追記（2026-10-31）。
+                「期間限定感」が伝わるよう、「ボランティア」ではなく「準備が整うまでの
+                プレ期間」という表現に調整。 */}
+            決済代行会社の乗り換え作業中のため、準備が整うまでの期間限定で、利用者への質問受付を無料のプレ期間として開放しています。この期間中のご回答件数などの貢献は記録しており、乗り換え完了後に正式に報酬をお支払いする運用へ切り替える際に反映を検討します。金額は決まり次第こちらでお知らせします。
             <br />
             振込方法の詳細は、準備が整い次第、ご登録のメールアドレス宛にご案内します。
           </div>
