@@ -329,7 +329,7 @@ function SenpaiRegisterForm() {
             個別に連絡する。 */}
         <div className="muted" style={{ marginTop: 6 }}>本人確認について</div>
         <div className="muted" style={{ fontSize: 12, marginTop: -4, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
-          書類の提出・通話は原則不要です。記入いただいた内容を運営が確認し、問題がなければそのまま承認します。内容について確認したいことがある場合のみ、ご登録のメールアドレスへ個別にご連絡します。確認が完了するまで、有料相談への回答はできません。
+          記入いただいた内容を運営が確認し、問題がなければそのまま承認します。内容について確認したいことがある場合のみ、ご登録のメールアドレスへ個別にご連絡します。確認が完了するまで、有料相談への回答はできません。
         </div>
 
         <input className="input" type="email" placeholder="メールアドレス" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
