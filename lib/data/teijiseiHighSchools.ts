@@ -46,7 +46,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   //       吉川美南 部制詳細 https://www.pref.saitama.lg.jp/documents/277139/144_yoshikawaminami_tei_r9.pdf
   //       パレットスクールの呼称・経緯 https://namiki-masatoshi.com/03/0331/619_1.html https://www.juku-coaching01.com/others/pallet/
   { no: 1, prefecture: '埼玉県', name: '埼玉県立上尾高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科）を併置' },
-  { no: 2, prefecture: '埼玉県', name: '埼玉県立朝霞高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科）を併置' },
+  { no: 2, prefecture: '埼玉県', name: '埼玉県立朝霞高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.asaka-h.spec.ed.jp/tei/', note: '埼玉県教育委員会公表の「活性化・特色化方針（スクール・ポリシー）」によれば、生徒数は84人（男61・女23、令和8年5月1日現在）。アクセスは東武東上線朝霞駅より徒歩20分、または西武バス「幸町三丁目交差点」下車徒歩3分。目指す学校像は「勤労を愛し、誠実で、他の人権を尊重し、協力し合える社会性のある生徒を育成する」。国語・数学・英語の必履修科目を2年間に分けて分割履修するなど基礎学力の定着を重視し、1・2年次に簿記を開設して資格取得を支援する。部活動は陸上競技部・バスケットボール部・バドミントン部・軟式野球部・写真映像部の5部で、授業終了後の午後9時から10時まで活動し、活動日は週1〜3回。定時制通信制の地区・県・全国大会に出場でき、令和元年度に軟式野球部が21年ぶりに県大会優勝・全国大会出場、令和7年度にはバスケットボール部が県大会3位、陸上部が走幅跳で全国大会に出場、バドミントン部がダブルスで県大会3位となった。朝霞・新座地区唯一の定時制高校として開設された学校で、令和3年度時点の資料では開設から54年を経過していた（全日制の朝霞高等学校自体は昭和38年創立）。' },
   { no: 3, prefecture: '埼玉県', name: '埼玉県立浦和高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科、男子）を併置' },
   { no: 4, prefecture: '埼玉県', name: '埼玉県立浦和第一女子高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科、女子）を併置' },
   { no: 5, prefecture: '埼玉県', name: '埼玉県立大宮商業高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科・商業科）を併置' },
