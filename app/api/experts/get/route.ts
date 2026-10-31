@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 
 // 専門家一覧の「この専門家に相談する」ボタンから渡された専門家IDをもとに、
 // 質問フォーム（/ask）側で表示名を出すための公開情報のみ返す（本人確認済みのみ）。
@@ -16,6 +17,8 @@ export async function GET(req: NextRequest) {
     .select('id, name, display_name, credential')
     .eq('id', id)
     .eq('verified', true)
+    // 先輩保護者（経験者）はこの専門家向けAPIの対象外（2026-10-31追加）。
+    .neq('credential', SENPAI_CREDENTIAL)
     .single();
 
   return NextResponse.json({ expert: data ? { id: data.id, name: expertDisplayName(data), credential: data.credential } : null });

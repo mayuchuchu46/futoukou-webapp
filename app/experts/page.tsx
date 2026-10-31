@@ -8,6 +8,7 @@ import BackButton from '@/components/BackButton';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 
 // データベースの最新状態（本人確認済みの専門家）を毎回サーバー側で取得するページなので、
 // ビルド時の静的化はせず、リクエストごとに生成する。閲覧者ごとに表示が変わる情報は
@@ -37,6 +38,11 @@ async function getVerifiedExperts(): Promise<ExpertProfile[]> {
     .from('experts')
     .select('id, name, display_name, credential, bio, photo_url, link_url')
     .eq('verified', true)
+    // 先輩保護者（経験者）は資格を持つ「専門家」とは別の入り口・ページ
+    // （/senpai/recruit, /senpai/register）を用意しているため、このページ
+    // （専門家一覧）には混ぜて表示しない（2026-10-31、先輩保護者が専門家一覧に
+    // 出てしまっていた不具合の指摘を受けて除外）。
+    .neq('credential', SENPAI_CREDENTIAL)
     .order('created_at', { ascending: true });
   // 本名（name）は本人確認用のため、公開ページに渡す前に表示名へ置き換える
   // （2026-10-13、本名と表示名を分離）。

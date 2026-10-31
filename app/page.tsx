@@ -5,6 +5,7 @@ import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { CATS } from '@/lib/categories';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 import HomeClient from './HomeClient';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
@@ -115,6 +116,9 @@ async function getVerifiedExperts() {
     .from('experts')
     .select('id, name, display_name, credential, bio, photo_url')
     .eq('verified', true)
+    // 先輩保護者（経験者）は別枠のため、専門家向けのこのteaserには出さない
+    // （2026-10-31、専門家一覧への混在を受けて横展開）。
+    .neq('credential', SENPAI_CREDENTIAL)
     .order('created_at', { ascending: true })
     .limit(3);
   // 本名（name）は本人確認用のため、公開ページに渡す前に表示名へ置き換える

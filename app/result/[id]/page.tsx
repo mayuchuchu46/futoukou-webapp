@@ -12,6 +12,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 import ResultClient from './ResultClient';
 import QuoteShareCard from './QuoteShareCard';
 import ViewPing from './ViewPing';
@@ -52,7 +53,9 @@ async function getExpertAvailable() {
   const { count, error } = await supabase
     .from('experts')
     .select('id', { count: 'exact', head: true })
-    .eq('verified', true);
+    .eq('verified', true)
+    // 先輩保護者（経験者）は別枠のため除外（2026-10-31追加）。
+    .neq('credential', SENPAI_CREDENTIAL);
   if (error) return false;
   return (count || 0) > 0;
 }

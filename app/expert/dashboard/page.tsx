@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCurrentExpert } from '@/lib/expertAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 import DashboardClient from './DashboardClient';
 
 export default function ExpertDashboardPage() {
@@ -108,15 +109,23 @@ async function ExpertDashboardContent() {
 
   const supabase = getSupabaseAdmin();
   // 利用者が専門家一覧から名前を指名して質問した相談（requested_expert_id）は、
-  // 指名された本人にのみ表示する。指名なし（null）の相談は誰でも回答できる。
-  const { data: pending } = await supabase
-    .from('consultations')
-    .select('*')
-    .eq('request_type', 'expert')
-    .eq('paid', true)
-    .eq('expert_status', 'pending')
-    .or(`requested_expert_id.is.null,requested_expert_id.eq.${expert.id}`)
-    .order('created_at', { ascending: true });
+  // 指名された本人にのみ表示する。指名なし（null）の相談は誰でも回答できる……が、
+  // 先輩保護者（経験者）は資格を前提とした¥600都度払い等の専門家向け有料相談の
+  // 対象外（別の価格体系・ブランディングのため）。先輩保護者には出さない
+  // （2026-10-31、専門家向けキューに先輩保護者が混在してしまう不具合を防ぐため）。
+  const isSenpai = expert.credential === SENPAI_CREDENTIAL;
+  const pending = isSenpai
+    ? []
+    : (
+        await supabase
+          .from('consultations')
+          .select('*')
+          .eq('request_type', 'expert')
+          .eq('paid', true)
+          .eq('expert_status', 'pending')
+          .or(`requested_expert_id.is.null,requested_expert_id.eq.${expert.id}`)
+          .order('created_at', { ascending: true })
+      ).data;
 
   const { data: answeredByMe } = await supabase
     .from('consultations')

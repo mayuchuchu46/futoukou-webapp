@@ -8,6 +8,7 @@ import ExpertAvatar from '@/components/ExpertAvatar';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName } from '@/lib/expertDisplay';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 
 // 専門家一覧（/experts）は専門家全員をまとめて表示するだけで、「この専門家が
 // 今までどう回答してきたか」を見られる個別ページが無かったため追加（2026-10-12、
@@ -33,6 +34,8 @@ async function getVerifiedExpert(id: string): Promise<ExpertProfile | null> {
     .select('id, name, display_name, credential, bio, photo_url, link_url, verified')
     .eq('id', id)
     .eq('verified', true)
+    // 先輩保護者（経験者）はこの専門家向け個別ページの対象外（2026-10-31追加）。
+    .neq('credential', SENPAI_CREDENTIAL)
     .single();
   // 本名（name）は本人確認用のため、公開ページに渡す前に表示名へ置き換える
   // （2026-10-13、本名と表示名を分離）。
