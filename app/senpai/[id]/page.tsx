@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import ExpertAvatar from '@/components/ExpertAvatar';
+import SenpaiConsultCta from '@/components/SenpaiConsultCta';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
@@ -89,19 +90,10 @@ export default async function SenpaiProfilePublicPage({
             {/* 相談の予約・決済の仕組み自体はまだ準備中だが、「この方に相談する」という
                 導線は見せておきたいとの依頼（2026-10-31）を受けて、ボタンの見た目は
                 出しつつ、押しても実際の相談フローには進めない（準備中バッジ付き・
-                クリックで案内文を表示するのみ）形にした。 */}
-            <button
-              type="button"
-              className="btn-secondary"
-              style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 8 }}
-              onClick={(e) => {
-                e.preventDefault();
-                alert('先輩保護者への相談機能（オンライン通話・チャットリレー）は現在準備中です。近日公開予定ですので、もうしばらくお待ちください。');
-              }}
-            >
-              この先輩保護者に相談する
-              <span className="comingsoon-badge">近日公開</span>
-            </button>
+                クリックで案内文を表示するのみ）形にした。このページ自体はサーバー
+                コンポーネントのため、クリック処理はSenpaiConsultCta（クライアント
+                コンポーネント）に切り出している。 */}
+            <SenpaiConsultCta />
           </div>
         </div>
         <PcSidebar hideExperts />
