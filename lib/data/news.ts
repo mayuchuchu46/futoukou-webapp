@@ -53,6 +53,23 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'yokkaichi-futoko-1114nin-hogosyakai-2026-10',
+    date: '2026-10-30',
+    addedAt: '2026-10-31',
+    title: '四日市市の不登校児童生徒、2025年度は過去最多の1114人に――市教委、保護者向けオンライン交流会を11月開催',
+    summary:
+      '三重県四日市市では、2025年度の不登校児童生徒数が過去最多の1114人（小学校494人、中学校620人）となり、2023年度の905人から増加しました。四日市市教育委員会は、不登校の子を育てた経験のある精神科医「さわ先生」を招いたオンライン保護者会を11月13日午後7時30分から開催し、保護者同士が気持ちを共有できる場を提供するとしています。',
+    sourceName: 'タウン情報「YOUよっかいち」',
+    sourceUrl: 'https://you-yokkaichi.com/2026/10/30/51288',
+    category: 'local',
+    stats: [
+      { label: '2023年度', value: 905, unit: '人' },
+      { label: '2025年度', value: 1114, unit: '人' },
+    ],
+    statsCaption: '四日市市内の不登校児童生徒数（小中学校合計）の推移',
+    headline: { value: '1114人', label: '四日市市の不登校児童生徒数が過去最多の1114人に（2025年度）' },
+  },
+  {
     id: 'kumamoto-metaverse-futoko-shien-2026-10',
     date: '2026-10-30',
     addedAt: '2026-10-30',
