@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getStripe } from '@/lib/stripe';
 import { getCurrentMember } from '@/lib/memberAuth';
-import { MEMBERSHIP_PRICE_JPY } from '@/lib/config';
+import { MEMBERSHIP_PRICE_JPY, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 
 // 読み放題会員（月¥800のサブスクリプション）の決済開始。
 // アカウント（members、メール／パスワードでログイン）単位の会員登録であり、
@@ -14,6 +14,20 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = getSupabaseAdmin();
+
+  // Stripeアカウント自体が使えない間（EXPERT_VOLUNTEER_MODE、lib/config.ts参照）は、
+  // 決済を一切挟まず、その場で会員を有効化する（2026-10-31、「今はベータ版で期間限定で
+  // 無料会員登録で読み放題」との方針確認を受けて）。本来のサブスクではないため、
+  // subscription_current_period_endは設定しない（更新日の表示自体を出さない）。
+  if (EXPERT_VOLUNTEER_MODE) {
+    const { error } = await supabase
+      .from('members')
+      .update({ subscription_status: 'active' })
+      .eq('id', member.id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ ok: true, activated: true });
+  }
+
   const origin = req.nextUrl.origin;
 
   try {

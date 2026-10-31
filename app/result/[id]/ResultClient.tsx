@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
+import { answerSectionLabel } from '@/lib/expertDisplay';
+import { EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 
 // 専門家回答つき相談の表示。
 // サーバー側は「会員ではない匿名の訪問者」として見えるべき初期状態（initialItem）を
@@ -95,19 +97,32 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
         <>
           <div className="answer-label">
             <img src="/assets/icon_bulb.png" alt="" />
-            専門家の回答
+            {answerSectionLabel(item.experts?.credential)}
           </div>
           <div className="blur-lines">
             <div />
             <div />
             <div />
           </div>
-          <div className="locked-note">
-            この相談は回答済みですが、本文を読むには読み放題会員の登録が必要です。会員は月1回、無料で専門家に直接質問もでき、使い切った後も都度払いやお得なまとめ買いチケットで質問できます。
-          </div>
-          <Link href="/account" className="btn-primary">
-            読み放題会員になる
-          </Link>
+          {EXPERT_VOLUNTEER_MODE ? (
+            <>
+              <div className="locked-note" style={{ fontWeight: 700 }}>
+                この相談は回答済みです。今だけ、無料の会員登録だけで本文が読み放題になります（ベータ版・期間限定）。
+              </div>
+              <Link href="/account" className="btn-primary">
+                無料で読み放題会員になる
+              </Link>
+            </>
+          ) : (
+            <>
+              <div className="locked-note">
+                この相談は回答済みですが、本文を読むには読み放題会員の登録が必要です。会員は月1回、無料で専門家に直接質問もでき、使い切った後も都度払いやお得なまとめ買いチケットで質問できます。
+              </div>
+              <Link href="/account" className="btn-primary">
+                読み放題会員になる
+              </Link>
+            </>
+          )}
         </>
       )}
 

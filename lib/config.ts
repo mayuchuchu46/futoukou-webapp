@@ -42,4 +42,13 @@ export const AI_USAGE_UPSELL_THRESHOLD = Number(process.env.AI_USAGE_UPSELL_THRE
 // 専門家への報酬記録（expert_payout_jpy）自体は通常どおり計算・保存されるため、
 // 有償化した際に過去の貢献分を把握できる（実際に支払うかは別途判断）。
 // 新しい決済代行会社が決まり、通常の有料運用に戻すタイミングでfalseに変更する。
+//
+// Stripeアカウント自体が使えないのは専門家への質問（都度払い）に限った話ではなく、
+// 読み放題会員（月¥800のサブスク）の新規登録・決済もまったく同じ理由で実行できない
+// （stripeConfigured＝環境変数の有無だけを見る既存のフラグは、キー自体はまだ設定されて
+// いるためtrueのままになっており、ボタンを押すとStripe API呼び出しの時点で失敗する）。
+// そのため、このフラグは「専門家への質問」だけでなく「読み放題会員への無料登録」
+// （/api/membership-checkout）にも流用する（2026-10-31、「今はベータ版で期間限定で
+// 無料会員登録で読み放題」との方針確認を受けて）。trueの間、会員登録はStripe決済を
+// 挟まずその場でsubscription_status='active'にする。
 export const EXPERT_VOLUNTEER_MODE = true;

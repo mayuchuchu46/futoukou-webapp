@@ -5,7 +5,7 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
-import { EXPERT_TICKET_PACK_PRICE_JPY, EXPERT_TICKET_PACK_COUNT } from '@/lib/config';
+import { EXPERT_TICKET_PACK_PRICE_JPY, EXPERT_TICKET_PACK_COUNT, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import { isStripeConfigured } from '@/lib/stripe';
 import LogoutButton from './LogoutButton';
 import MembershipPanel from './MembershipPanel';
@@ -134,6 +134,7 @@ async function AccountMemberSection() {
         active={isSubscriptionActive(member)}
         periodEnd={member.subscription_current_period_end}
         stripeConfigured={isStripeConfigured()}
+        volunteerMode={EXPERT_VOLUNTEER_MODE}
       />
 
       {isSubscriptionActive(member) && (
