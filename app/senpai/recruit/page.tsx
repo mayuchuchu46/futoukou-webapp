@@ -6,14 +6,38 @@ import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
 // 先輩保護者（経験者）専用の募集ページ。
 // 専門家向け（/expert/recruit）とは入り口・ページを分けている（2026-10-30、
 // 「保護者と、専門家の入り口とページは別にしたい」との方針を受けて）。
+//
+// 学校の各紹介ページ（FacilityExperiencedParents.tsx・SchoolExperiencedParents.tsx）に
+// 「この学校について話せる先輩保護者を募集しています」という導線を置くようになったのに
+// 合わせて、?school=学校名のクエリパラメータを受け取れるようにした（2026-10-31）。
+// 受け取った学校名は、登録フォーム（/senpai/register）へそのまま引き継ぎ、
+// 「保護者視点で話せる学校名」欄に自動で追加される。
 
-export default function SenpaiRecruitPage() {
+export default async function SenpaiRecruitPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ school?: string }>;
+}) {
+  const { school } = await searchParams;
+  const registerHref = school ? `/senpai/register?school=${encodeURIComponent(school)}` : '/senpai/register';
+
   return (
     <div className="app-shell">
       <Header supervised={false} showBack={false} />
       <div className="main">
         <Link href="/about" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
         <h2 className="pagetitle">先輩保護者募集</h2>
+
+        {school && (
+          <div className="card" style={{ alignItems: 'flex-start', gap: 4, background: 'var(--sub)', border: '2px solid var(--main)' }}>
+            <div className="qtext" style={{ fontWeight: 700 }}>
+              「{school}」について話せる先輩保護者を募集しています
+            </div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              この学校に実際に通われた（通われている）ご家庭からの体験談を探しています。
+            </div>
+          </div>
+        )}
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="qtext">
@@ -71,7 +95,7 @@ export default function SenpaiRecruitPage() {
           </ol>
         </div>
 
-        <Link href="/senpai/register" className="btn-primary" style={{ textAlign: 'center' }}>
+        <Link href={registerHref} className="btn-primary" style={{ textAlign: 'center' }}>
           先輩保護者として登録する（事前登録受付）
         </Link>
         <Link href="/expert/login" className="backlink" style={{ margin: '0 0 4px', fontSize: 13 }}>

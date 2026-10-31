@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CATS } from '@/lib/categories';
 
 // 先輩保護者（経験者）専用の登録フォーム。
@@ -47,8 +47,21 @@ function loadDraft(): Partial<DraftForm> {
   }
 }
 
+// useSearchParams()はプリレンダー時点では値が確定しないため、/ask・/account/registerと
+// 同様にSuspenseで囲む（2026-10-31追加。学校ページの「この学校について話せる先輩保護者を
+// 募集しています」からの?school=学校名を受け取るために追加）。
 export default function SenpaiRegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <SenpaiRegisterForm />
+    </Suspense>
+  );
+}
+
+function SenpaiRegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const schoolParam = searchParams.get('school');
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -74,6 +87,14 @@ export default function SenpaiRegisterPage() {
       setDraftRestored(true);
     }
   }, []);
+
+  // 学校ページの「この学校について話せる先輩保護者を募集しています」から来た場合
+  // （?school=学校名）、学校名欄に自動で追加する（2026-10-31追加）。
+  useEffect(() => {
+    if (!schoolParam) return;
+    setForm((f) => (f.schoolNames.includes(schoolParam) ? f : { ...f, schoolNames: [...f.schoolNames, schoolParam] }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [schoolParam]);
 
   useEffect(() => {
     const draft: DraftForm = {

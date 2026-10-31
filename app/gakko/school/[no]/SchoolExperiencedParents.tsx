@@ -32,7 +32,26 @@ export default async function SchoolExperiencedParents({
     .or(orFilter)
     .limit(5);
 
-  if (!rows || rows.length === 0) return null;
+  // まだ該当する先輩保護者がいない場合、以前は何も表示していなかったが、
+  // 「各学校のところに、この学校について話せる保護者を募集してる▶登録、
+  // な流れつくれたりする？」との指摘を受けて、募集導線を表示するように変更
+  // （2026-10-31）。登録フォーム（/senpai/register）には学校名をクエリ
+  // パラメータで渡し、入力の手間を減らす。
+  if (!rows || rows.length === 0) {
+    return (
+      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <div className="answer-label" style={{ fontSize: 14 }}>
+          先輩保護者からこの学校の話を聞く
+        </div>
+        <div className="qtext" style={{ fontSize: 13 }}>
+          まだ「{schoolName}」について話せる先輩保護者がいません。実際に通われた（通われている）ご家庭の方、募集しています。
+        </div>
+        <Link href={`/senpai/recruit?school=${encodeURIComponent(schoolName)}`} className="btn-secondary" style={{ fontSize: 13, padding: '6px 14px' }}>
+          先輩保護者として登録する →
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
