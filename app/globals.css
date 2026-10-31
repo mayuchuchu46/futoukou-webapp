@@ -324,6 +324,42 @@ button:active,
   text-decoration: none;
 }
 .account-tab svg { flex-shrink: 0; }
+
+/* expert-tab（専門家・先輩保護者ログイン中のみ表示。2026-10-31追加）。
+   account-tabの真下に同じ横位置で重ねる。account-tabの実測の高さぶん
+   （padding・font-sizeから見て概ね33px前後）だけtopをずらす。 */
+.expert-tab {
+  position: fixed;
+  top: 34px;
+  right: max(12px, calc(50% - 240px + 16px));
+  z-index: 29;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  padding: 6px 12px 7px;
+  border: none;
+  border-radius: 0 0 10px 10px;
+  background: var(--orange-bg);
+  color: var(--orange-text);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+.expert-tab-badge {
+  background: #C0392B;
+  color: #fff;
+  border-radius: 999px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+}
 .muted { color: var(--muted); font-size: 12px; }
 
 /* 「専門家監修：準備中…」の注記。header-rowの外に単独で置く、小さなピル型バッジ
@@ -731,6 +767,7 @@ h2.pagetitle {
      （.fabは2026-10-15に削除済み。この上書きも合わせて削除した。） */
   .scroll-top-btn { right: calc(50% - 540px + 20px); }
   .account-tab { right: max(12px, calc(50% - 540px + 16px)); }
+  .expert-tab { right: max(12px, calc(50% - 540px + 16px)); }
 
   /* 左右で高さの違う内容（検索ボックス vs サイドバナー等）を同じ行に揃えようとすると
      片方の短い要素の下に謎の空白ができてしまうため、grid-template-areasでの行合わせは

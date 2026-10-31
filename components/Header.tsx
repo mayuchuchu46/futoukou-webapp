@@ -45,6 +45,20 @@ export default function Header({
       .catch(() => setLoggedIn(false));
   }, []);
 
+  // 専門家・先輩保護者としてログイン中かどうかの軽量チェック。会員（member）とは
+  // 別のログイン・Cookieの仕組みのため、account-tabとは別に判定する
+  // （2026-10-31、「TOPのアカウントの箇所くらいにわかりやすく出せるといい」
+  // 「何件自分に質問が来てるとかそういうのもすぐチェックできるように」との
+  // 依頼を受けて追加）。未ログインの一般利用者には何も出さない。
+  const [expertStatus, setExpertStatus] = useState<{ loggedIn: boolean; pendingCount: number } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/expert/me')
+      .then((r) => r.json())
+      .then((d) => setExpertStatus(d.loggedIn ? { loggedIn: true, pendingCount: d.pendingCount || 0 } : null))
+      .catch(() => setExpertStatus(null));
+  }, []);
+
   // PC（960px以上）向けのグローバルメニュー。これまで主要ページへの導線は下部固定ナビ
   // （BottomNav、スマホ的なタブバー）に集約していたが、PCではヘッダーに通常のナビゲーション
   // メニューを出した方が自然だとの指摘を受けて追加（2026-10-18）。スマホではCSS側
@@ -245,6 +259,18 @@ export default function Header({
               リンクのまま文言だけ両方を伝える形にする（/account/loginからは
               /account/registerへの導線が既にある）。 */}
           {loggedIn ? 'アカウント' : 'ログイン / 無料登録'}
+        </Link>
+      )}
+
+      {/* 専門家・先輩保護者としてログイン中の人だけに出す、ダッシュボードへの
+          ショートカット。未回答の質問があれば件数バッジで一目で分かるようにする
+          （2026-10-31追加）。account-tabの真下に同じ横位置で重ねて表示する。 */}
+      {expertStatus?.loggedIn && (
+        <Link href="/expert/dashboard" className="expert-tab">
+          {expertStatus.pendingCount > 0 && (
+            <span className="expert-tab-badge">{expertStatus.pendingCount}</span>
+          )}
+          回答する
         </Link>
       )}
 
