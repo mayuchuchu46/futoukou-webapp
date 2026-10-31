@@ -270,7 +270,7 @@ export default function Header({
           {expertStatus.pendingCount > 0 && (
             <span className="expert-tab-badge">{expertStatus.pendingCount}</span>
           )}
-          回答する
+          マイページ
         </Link>
       )}
 
