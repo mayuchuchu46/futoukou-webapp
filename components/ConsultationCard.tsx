@@ -8,7 +8,7 @@ import { Consultation, metaLabel } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 import { SEARCH_TAG_CANDIDATES, matchesThemeText, getThemeDisplayLabel } from '@/lib/searchTags';
 import { relativeTimeLabel, isRecentPost } from '@/lib/relativeTime';
-import { answerSectionLabel } from '@/lib/expertDisplay';
+import { schoolAwareAnswerSectionLabel } from '@/lib/expertDisplay';
 import EyeIcon from './EyeIcon';
 import ReportButton from './ReportButton';
 import ReactionIcons from './ReactionIcons';
@@ -144,8 +144,15 @@ export default function ConsultationCard({
         <div className="card-answerbox">
           <div className="locked-badge">
             <img src="/assets/icon_lock.png" alt="" className="locked-badge-icon" />
-            {answerSectionLabel(item.experts?.credential)}
+            {schoolAwareAnswerSectionLabel(item.question, item.experts?.credential, item.experts?.experienced_school_names)}
           </div>
+          {/* 最初の1行だけ実際の文面を見せる（2026-10-31、result/[id]/ResultClient.tsx
+              と同じ対応）。 */}
+          {item.expert_answer_snippet && (
+            <div className="qtext qtext-clamp-3" style={{ fontSize: 13 }}>
+              {item.expert_answer_snippet}
+            </div>
+          )}
           <div className="blur-lines">
             <div />
             <div />

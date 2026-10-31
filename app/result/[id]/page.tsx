@@ -10,7 +10,7 @@ import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
-import { expertDisplayName } from '@/lib/expertDisplay';
+import { expertDisplayName, schoolAwareAnswererName, answerFirstLineSnippet } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { SENPAI_CREDENTIAL, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import ResultClient from './ResultClient';
@@ -71,7 +71,7 @@ async function getConsultation(id: string): Promise<Consultation | null> {
   // （指定しないとPostgRESTがどちらか判断できずエラーになる）。
   const { data, error } = await supabase
     .from('consultations')
-    .select('*, experts!expert_id(name, display_name, credential)')
+    .select('*, experts!expert_id(name, display_name, credential, experienced_school_names)')
     .eq('id', id)
     .eq('hidden', false)
     .single();
@@ -86,12 +86,21 @@ async function getConsultation(id: string): Promise<Consultation | null> {
 
   // 専門家の本名（experts.name）は本人確認用のため、相談者には表示名のみを渡す
   // （2026-10-13、本名と表示名を分離）。
-  const experts = data.experts ? { name: expertDisplayName(data.experts), credential: data.experts.credential } : null;
+  const experts = data.experts
+    ? {
+        name: expertDisplayName(data.experts),
+        credential: data.experts.credential,
+        experienced_school_names: data.experts.experienced_school_names || [],
+      }
+    : null;
   const base = { ...data, experts };
 
   const isExpertAnswered = data.request_type === 'expert' && data.expert_status === 'answered';
   if (isExpertAnswered) {
-    return { ...base, answer: '', expert_answer: null, locked: true } as Consultation;
+    // 本文は見せないが、最初の1行だけはそのまま見せる（2026-10-31、lib/consultations.ts
+    // と同じ対応。「ボカシは最初の1行だけみせるのどう？」との提案を受けて追加）。
+    const snippet = data.expert_answer ? answerFirstLineSnippet(data.expert_answer) : null;
+    return { ...base, answer: '', expert_answer: null, expert_answer_snippet: snippet, locked: true } as Consultation;
   }
   return { ...base, locked: false } as Consultation;
 }
@@ -236,6 +245,18 @@ export default async function ResultPage({
   // 変更した際に、両方の分岐で同じボタンを使い回せるようにするため）。
   const resultUrl = `${SITE_URL}/result/${item.id}`;
 
+  // SNSシェア文中の「◯◯が出した答え」の主語。AI回答は「どうする先生」のままだが、
+  // 専門家・先輩保護者が回答した相談を「どうする先生が出した」と書くのは実態と
+  // 違う（2026-10-31、「保護者だからそこら辺のテキストかえてみて」との指摘を
+  // 受けて修正）。先輩保護者が、質問文に出てくる学校を「話せる学校」として登録して
+  // いる場合は、「先輩保護者」ではなく「〇〇の先輩保護者」のように、その学校を
+  // 知っている人だと伝わる呼び方にする（「その先輩保護者がその学校のことを知ってる
+  // 人だという感じがわかるテキストにしたい」との指摘を受けて追加）。
+  const answererLabel =
+    item.request_type === 'expert'
+      ? schoolAwareAnswererName(item.question, item.experts?.credential, item.experts?.experienced_school_names)
+      : 'どうする先生';
+
   const shareButton = (
     <a
       className="share-btn"
@@ -249,8 +270,8 @@ export default async function ResultPage({
         // 読みやすいとのことで変更。回答抜粋は引き続き見せず、質問の抜粋
         // （questionSnippet）だけで悩みの具体性を出す。
         text: answerSnippet
-          ? `「${questionSnippet}」\n\nどうする先生が出した答えはこちら↓`
-          : `「${questionSnippet}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
+          ? `「${questionSnippet}」\n\n${answererLabel}が出した答えはこちら↓`
+          : `「${questionSnippet}」の相談に、${answererLabel}が出した"今日からできる一手"とは。`,
         url: resultUrl,
         hashtags: 'どうする先生,不登校',
       })}`}
@@ -291,8 +312,8 @@ export default async function ResultPage({
       href={`https://social-plugins.line.me/lineit/share?${new URLSearchParams({
         url: resultUrl,
         text: answerSnippet
-          ? `「${questionSnippet}」の相談に、どうする先生は「${answerSnippet}」と回答。`
-          : `「${questionSnippet}」の相談に、どうする先生が出した"今日からできる一手"とは。`,
+          ? `「${questionSnippet}」の相談に、${answererLabel}は「${answerSnippet}」と回答。`
+          : `「${questionSnippet}」の相談に、${answererLabel}が出した"今日からできる一手"とは。`,
       })}`}
       target="_blank"
       rel="noopener noreferrer"

@@ -32,6 +32,22 @@ import { ALTERNATIVE_SCHOOLS, AlternativeSchool, METHOD_LABEL } from './data/alt
 // （通信制高校で起きたのと全く同じ抜け）。buildFreeSchoolFactsBlockを追加し、
 // 各API routeから通信制高校と同じ要領で呼び出すようにした。
 
+// 「ヒロック初等部」を「ヒロック」とだけ呼ぶなど、保護者は正式名称から「初等部」
+// 「学園」等の種別を表す部分を省いて話すことが多い。完全一致だけだと、こうした
+// 口語的な呼び方でのリンク未検出が起きる（2026-10-31、「ヒロックの詳細ページに
+// 飛ばす誘導がここにないね」との指摘を受けて発覚・修正）。末尾の種別語を取り除いた
+// 「核」名称でも一致を試みる、lib/schoolFacts.tsのcoreName（先頭の自治体名を除く）と
+// 対になる考え方。
+const TRAILING_SUFFIX_RE = /(初等部|中等部|高等部|高等学校|中学校|小学校|学園|スクール)$/;
+
+function coreNameBySuffix(name: string): string | null {
+  const m = name.match(TRAILING_SUFFIX_RE);
+  if (!m) return null;
+  const core = name.slice(0, name.length - m[0].length);
+  // 短すぎる核名称は誤マッチしやすいため対象外。
+  return core.length > 3 ? core : null;
+}
+
 function findByName<T extends { name: string }>(
   texts: (string | null | undefined)[],
   items: readonly T[]
@@ -45,7 +61,9 @@ function findByName<T extends { name: string }>(
     // 短すぎる名称は誤マッチしやすいため対象外（lib/schoolFacts.tsのcoreName判定と
     // 同じ閾値）。
     if (!item.name || item.name.length <= 3) continue;
-    if (!haystack.includes(item.name)) continue;
+    const core = coreNameBySuffix(item.name);
+    const matched = haystack.includes(item.name) || (!!core && haystack.includes(core));
+    if (!matched) continue;
     // 同時に複数件一致した場合は、より長い（＝より具体的な）名称が一致した方を優先する。
     if (item.name.length > bestLen) {
       best = item;

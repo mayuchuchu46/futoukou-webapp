@@ -27,7 +27,10 @@ export type Consultation = {
   expert_answer: string | null;
   refunded: boolean;
   expert_answer_helpful?: boolean | null;
-  experts?: { name: string; credential: string } | null;
+  experts?: { name: string; credential: string; experienced_school_names?: string[] } | null;
+  // ロック中でも最初の1行だけは見せるためのスニペット（2026-10-31追加）。
+  // answerFirstLineSnippet()でexpert_answerから抽出したもの。locked=falseのときは未使用。
+  expert_answer_snippet?: string | null;
   locked?: boolean;
   // 希死念慮・自傷等を検知した安全上書き回答（ホットライン案内のみ）かどうか（2026-10-14追加）。
   crisis_detected?: boolean;

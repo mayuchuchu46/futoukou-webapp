@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
-import { answerSectionLabel } from '@/lib/expertDisplay';
+import { schoolAwareAnswerSectionLabel } from '@/lib/expertDisplay';
 import { EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 
 // 専門家回答つき相談の表示。
@@ -97,8 +97,16 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
         <>
           <div className="answer-label">
             <img src="/assets/icon_bulb.png" alt="" />
-            {answerSectionLabel(item.experts?.credential)}
+            {schoolAwareAnswerSectionLabel(item.question, item.experts?.credential, item.experts?.experienced_school_names)}
           </div>
+          {/* 本文は見せないが、最初の1行だけ実際の文面を見せて「続きが気になる」
+              感じを出す（2026-10-31、「ボカシは最初の1行だけみせるのどう？」との
+              提案を受けて追加）。 */}
+          {item.expert_answer_snippet && (
+            <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
+              {item.expert_answer_snippet}
+            </div>
+          )}
           <div className="blur-lines">
             <div />
             <div />

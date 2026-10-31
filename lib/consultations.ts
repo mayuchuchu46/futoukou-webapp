@@ -1,6 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { Consultation } from '@/lib/types';
-import { expertDisplayName } from '@/lib/expertDisplay';
+import { expertDisplayName, answerFirstLineSnippet } from '@/lib/expertDisplay';
 import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
 
 // 相談一覧の取得＋ロック判定（API route とホーム画面のSSRで共通利用）。
@@ -57,7 +57,7 @@ export async function getConsultationsList({
   // あいまいでPostgRESTがエラーを返す（結果、一覧が全件取得できなくなる）。
   let query = supabase
     .from('consultations')
-    .select('*, experts!expert_id(name, display_name, credential)')
+    .select('*, experts!expert_id(name, display_name, credential, experienced_school_names)')
     .eq('hidden', false)
     // AIの回答に対する「その場での返信（ラリー）」として作られた続きの相談（parent_idあり）は、
     // 他の人向けの一覧・検索には出さない（文脈がないと意味が分からない断片になる、
@@ -136,12 +136,21 @@ export async function getConsultationsList({
   return data.map((item) => {
     // 専門家の本名（experts.name）は本人確認用のため、相談者には表示名のみを渡す
     // （2026-10-13、本名と表示名を分離）。
-    const experts = item.experts ? { name: expertDisplayName(item.experts), credential: item.experts.credential } : null;
+    const experts = item.experts
+      ? {
+          name: expertDisplayName(item.experts),
+          credential: item.experts.credential,
+          experienced_school_names: item.experts.experienced_school_names || [],
+        }
+      : null;
     const base = { ...item, experts };
     const isExpertAnswered = item.request_type === 'expert' && item.expert_status === 'answered';
     const isOwner = viewerId && item.author_id === viewerId;
     if (isExpertAnswered && !isOwner && !memberActive) {
-      return { ...base, answer: '', expert_answer: null, locked: true };
+      // 本文は見せないが、「続きが気になる」導線として最初の1行だけはそのまま見せる
+      // （2026-10-31、「ボカシは最初の1行だけみせるのどう？」との提案を受けて追加）。
+      const snippet = item.expert_answer ? answerFirstLineSnippet(item.expert_answer) : null;
+      return { ...base, answer: '', expert_answer: null, expert_answer_snippet: snippet, locked: true };
     }
     return { ...base, locked: false };
   }) as Consultation[];
