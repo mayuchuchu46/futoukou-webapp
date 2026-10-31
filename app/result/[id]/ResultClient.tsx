@@ -99,6 +99,19 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
             <img src="/assets/icon_bulb.png" alt="" />
             {schoolAwareAnswerSectionLabel(item.question, item.experts?.credential, item.experts?.experienced_school_names)}
           </div>
+          {/* 回答本文は読めなくても、誰が回答したか（プロフィール）はすぐ飛べるように、
+              見出しの直後・本文より前に置く（2026-10-31、「誰が書いたかはプロフィール
+              にすぐとばせるようにしたい」との依頼を受けて、ぼかし・会員登録導線より
+              下にあった位置から移動）。 */}
+          {item.experts?.id && (
+            <Link
+              href={item.experts.credential === SENPAI_CREDENTIAL ? `/senpai/${item.experts.id}` : `/experts/${item.experts.id}`}
+              className="backlink"
+              style={{ fontSize: 13, margin: 0 }}
+            >
+              {item.experts.name}さんのプロフィールを見る →
+            </Link>
+          )}
           {/* 本文は見せないが、最初の1行だけ実際の文面を見せて「続きが気になる」
               感じを出す（2026-10-31、「ボカシは最初の1行だけみせるのどう？」との
               提案を受けて追加）。 */}
@@ -112,18 +125,6 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
             <div />
             <div />
           </div>
-          {/* 回答本文は読めなくても、誰が回答したか（プロフィール）は非会員でも見られる
-              ようにする（2026-10-31、「回答みれない非会員でも、誰が書いたかプロフィール
-              みれるといい」との依頼を受けて追加）。 */}
-          {item.experts?.id && (
-            <Link
-              href={item.experts.credential === SENPAI_CREDENTIAL ? `/senpai/${item.experts.id}` : `/experts/${item.experts.id}`}
-              className="backlink"
-              style={{ fontSize: 13, margin: 0 }}
-            >
-              {item.experts.name}さんのプロフィールを見る →
-            </Link>
-          )}
           {EXPERT_VOLUNTEER_MODE ? (
             <>
               <div className="locked-note" style={{ fontWeight: 700 }}>
@@ -152,20 +153,9 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
             <img src="/assets/icon_bulb.png" alt="" />
             {item.experts ? `${item.experts.credential}・${item.experts.name}さんの回答` : '専門家の回答'}
           </div>
-          <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
-            {item.expert_answer}
-          </div>
-          {/* 先輩保護者の回答は、資格に基づく専門的な助言ではなく、あくまで一個人の
-              経験・感想であることを明示する免責（2026-10-31、「あくまで個人の感想で
-              あるっていう免責もかいておきたいね」「この保護者の回答のところに」との
-              指摘を受けて追加）。 */}
-          {item.experts?.credential === SENPAI_CREDENTIAL && (
-            <div className="muted" style={{ fontSize: 12 }}>
-              ※ あくまでこの方個人の経験・感想です。
-            </div>
-          )}
-          {/* 回答したプロフィールへの誘導（2026-10-31、「誰が回答したかプロフィールへの
-              誘導もほしい」との依頼を受けて追加）。専門家は/experts/[id]、先輩保護者は
+          {/* 誰が書いたかプロフィールへすぐ飛べるよう、本文より前に置く（2026-10-31、
+              「誰が書いたかはプロフィールにすぐとばせるようにしたい」との依頼を受けて、
+              本文の下にあった位置から移動）。専門家は/experts/[id]、先輩保護者は
               /senpai/[id]とページが分かれているため、credentialで出し分ける。 */}
           {item.experts?.id && (
             <Link
@@ -175,6 +165,17 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
             >
               {item.experts.name}さんのプロフィールを見る →
             </Link>
+          )}
+          <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
+            {item.expert_answer}
+          </div>
+          {/* 先輩保護者の回答は、あくまで一個人の経験・感想であることを明示する免責
+              （2026-10-31、「あくまで個人の感想であるっていう免責もかいておきたいね」
+              「この保護者の回答のところに」との指摘を受けて追加）。 */}
+          {item.experts?.credential === SENPAI_CREDENTIAL && (
+            <div className="muted" style={{ fontSize: 12 }}>
+              ※ あくまでこの方個人の経験・感想です。
+            </div>
           )}
 
           {item.author_id === getUid() && (
