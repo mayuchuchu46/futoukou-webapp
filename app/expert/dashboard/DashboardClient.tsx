@@ -22,6 +22,10 @@ export default function DashboardClient({
   const [items, setItems] = useState(pending);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState<string | null>(null);
+  // 「自分が回答した相談」が件数分ずらっと並んで長くなるとの指摘（2026-10-31）を
+  // 受けて、最初は3件だけ表示し、「もっと見る」で残りを出す形にした。
+  const ANSWERED_PAGE_SIZE = 3;
+  const [answeredVisibleCount, setAnsweredVisibleCount] = useState(ANSWERED_PAGE_SIZE);
 
   async function submitAnswer(id: string) {
     const answer = drafts[id];
@@ -105,7 +109,7 @@ export default function DashboardClient({
 
         <div style={{ fontWeight: 700, marginTop: 16 }}>自分が回答した相談（直近20件）</div>
         {answeredByMe.length === 0 && <div className="muted">まだ回答した相談はありません。</div>}
-        {answeredByMe.map((item) => {
+        {answeredByMe.slice(0, answeredVisibleCount).map((item) => {
           const cat = CATS[item.category] || CATS.other;
           return (
             <div key={item.id} className="card">
@@ -116,6 +120,15 @@ export default function DashboardClient({
             </div>
           );
         })}
+        {answeredVisibleCount < answeredByMe.length && (
+          <button
+            type="button"
+            className="btn-ghost"
+            onClick={() => setAnsweredVisibleCount((n) => n + ANSWERED_PAGE_SIZE)}
+          >
+            もっと見る（残り{answeredByMe.length - answeredVisibleCount}件）
+          </button>
+        )}
       </div>
     </div>
   );
