@@ -71,7 +71,7 @@ async function getConsultation(id: string): Promise<Consultation | null> {
   // （指定しないとPostgRESTがどちらか判断できずエラーになる）。
   const { data, error } = await supabase
     .from('consultations')
-    .select('*, experts!expert_id(name, display_name, credential, experienced_school_names)')
+    .select('*, experts!expert_id(id, name, display_name, credential, experienced_school_names)')
     .eq('id', id)
     .eq('hidden', false)
     .single();
@@ -88,6 +88,10 @@ async function getConsultation(id: string): Promise<Consultation | null> {
   // （2026-10-13、本名と表示名を分離）。
   const experts = data.experts
     ? {
+        // プロフィールページへのリンク用。本人確認用の本名（name）とは違い、idは
+        // 公開しても問題ない（2026-10-31、「誰が回答したかプロフィールへの誘導も
+        // ほしい」との依頼を受けて追加）。
+        id: data.experts.id,
         name: expertDisplayName(data.experts),
         credential: data.experts.credential,
         experienced_school_names: data.experts.experienced_school_names || [],

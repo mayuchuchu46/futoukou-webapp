@@ -27,7 +27,7 @@ export type Consultation = {
   expert_answer: string | null;
   refunded: boolean;
   expert_answer_helpful?: boolean | null;
-  experts?: { name: string; credential: string; experienced_school_names?: string[] } | null;
+  experts?: { id?: string; name: string; credential: string; experienced_school_names?: string[] } | null;
   // ロック中でも最初の1行だけは見せるためのスニペット（2026-10-31追加）。
   // answerFirstLineSnippet()でexpert_answerから抽出したもの。locked=falseのときは未使用。
   expert_answer_snippet?: string | null;

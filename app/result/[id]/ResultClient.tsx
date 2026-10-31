@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 import { schoolAwareAnswerSectionLabel } from '@/lib/expertDisplay';
-import { EXPERT_VOLUNTEER_MODE } from '@/lib/config';
+import { EXPERT_VOLUNTEER_MODE, SENPAI_CREDENTIAL } from '@/lib/config';
 
 // 専門家回答つき相談の表示。
 // サーバー側は「会員ではない匿名の訪問者」として見えるべき初期状態（initialItem）を
@@ -143,6 +143,18 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
           <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
             {item.expert_answer}
           </div>
+          {/* 回答したプロフィールへの誘導（2026-10-31、「誰が回答したかプロフィールへの
+              誘導もほしい」との依頼を受けて追加）。専門家は/experts/[id]、先輩保護者は
+              /senpai/[id]とページが分かれているため、credentialで出し分ける。 */}
+          {item.experts?.id && (
+            <Link
+              href={item.experts.credential === SENPAI_CREDENTIAL ? `/senpai/${item.experts.id}` : `/experts/${item.experts.id}`}
+              className="backlink"
+              style={{ fontSize: 13, margin: 0 }}
+            >
+              {item.experts.name}さんのプロフィールを見る →
+            </Link>
+          )}
 
           {item.author_id === getUid() && (
             <div className="card-foot" style={{ marginTop: 4 }}>
