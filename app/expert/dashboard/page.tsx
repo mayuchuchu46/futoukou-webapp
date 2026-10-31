@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCurrentExpert } from '@/lib/expertAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { SENPAI_CREDENTIAL } from '@/lib/config';
+import { SENPAI_CREDENTIAL, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import DashboardClient from './DashboardClient';
 
 export default function ExpertDashboardPage() {
@@ -111,10 +111,16 @@ async function ExpertDashboardContent() {
   // 利用者が専門家一覧から名前を指名して質問した相談（requested_expert_id）は、
   // 指名された本人にのみ表示する。指名なし（null）の相談は誰でも回答できる……が、
   // 先輩保護者（経験者）は資格を前提とした¥600都度払い等の専門家向け有料相談の
-  // 対象外（別の価格体系・ブランディングのため）。先輩保護者には出さない
-  // （2026-10-31、専門家向けキューに先輩保護者が混在してしまう不具合を防ぐため）。
+  // 対象外（別の価格体系・ブランディングのため。2026-10-31追加）。
+  // ただし、EXPERT_VOLUNTEER_MODE（決済代行会社切り替え中の無償ボランティア期間）
+  // の間は、専門家・先輩保護者ともに無料で対応しており実際の金銭のやり取りが
+  // 発生しないため、先輩保護者もこのキューに参加できる（2026-10-31、「ボランティア
+  // 期間として無償で回答はできるようにする」との方針確認を受けて変更）。
+  // EXPERT_VOLUNTEER_MODEがfalseに戻ったら（通常の有料運用再開時）、自動的に
+  // 先輩保護者はこのキューから再び除外される。
   const isSenpai = expert.credential === SENPAI_CREDENTIAL;
-  const pending = isSenpai
+  const excludeSenpai = isSenpai && !EXPERT_VOLUNTEER_MODE;
+  const pending = excludeSenpai
     ? []
     : (
         await supabase

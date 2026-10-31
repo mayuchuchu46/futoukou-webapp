@@ -8,6 +8,7 @@ import SenpaiConsultCta from '@/components/SenpaiConsultCta';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
+import { findSchoolMentionsInBio } from '@/lib/senpaiSchoolMentions';
 
 // 先輩保護者（経験者）の公開プロフィールページ。app/experts/[id]/page.tsx（専門家向け）
 // と同じ構成だが、こちらには「この方に相談する」ボタンは置かない（オンライン通話・
@@ -56,6 +57,11 @@ export default async function SenpaiProfilePublicPage({
   }
 
   const link = safeHttpUrl(senpai.link_url);
+  // 自己紹介文（bio）に書かれた学校名から、この方が話せそうな学校を自動抽出する
+  // （2026-10-31、「この保護者が話せる学校情報もだしてあげるといいかも」との
+  // 依頼を受けて追加。学校ページ側のFacilityExperiencedParents等と向きが逆の、
+  // 同じ考え方のテキストマッチング）。
+  const schoolMentions = findSchoolMentionsInBio(senpai.bio);
 
   return (
     <div className="app-shell">
@@ -95,6 +101,20 @@ export default async function SenpaiProfilePublicPage({
                 コンポーネント）に切り出している。 */}
             <SenpaiConsultCta />
           </div>
+
+          {schoolMentions.length > 0 && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>話せる学校</div>
+              <div className="qtext" style={{ fontSize: 13 }}>
+                自己紹介文から、次の学校についてお話しできそうです。
+              </div>
+              {schoolMentions.map((m) => (
+                <Link key={m.path} href={m.path} className="backlink" style={{ fontSize: 13, margin: 0 }}>
+                  {m.name} →
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
         <PcSidebar hideExperts />
       </div>
