@@ -72,3 +72,35 @@ export function findSchoolMentionsInBio(bio: string | null | undefined): SenpaiS
   const seen = new Set<string>();
   return mentions.filter((m) => (seen.has(m.path) ? false : (seen.add(m.path), true))).slice(0, 5);
 }
+
+// 自己紹介文（bio）からの自動検出は、表記ゆれ（愛称・略称・自治体名の有無等）で
+// 一致しないことが多く、「話せる学校」セクションが何も出ないケースがあった
+// （2026-10-31発覚）。別のセッションの作業で、登録・プロフィール編集画面に
+// 「保護者視点で話せる学校名」専用の自由入力欄（experienced_school_names、
+// 1件ずつ追加する方式）が既に追加されていたため、そちらを主たる情報源として使う
+// （lib/expertSchoolMatch.tsが学校ページ側の逆引きに使っているのと同じカラム）。
+// 自由入力のため実在の学校ページに結びつくとは限らず、ここでは各名称を5データ
+// セットに対して照合し、一致すればリンク付き、一致しなければ名前のみで表示する。
+export function resolveSchoolName(name: string): SenpaiSchoolMention {
+  const trimmed = name.trim();
+  for (const s of MANABI_TAYOUKA_GAKKO) {
+    if (trimmed === s.name || trimmed === s.branchName) {
+      return { name: s.branchName || s.name, path: `/gakko/school/${s.no}` };
+    }
+  }
+  for (const s of CORRESPONDENCE_HIGH_SCHOOLS) {
+    if (trimmed === s.name) return { name: s.name, path: `/gakko/tsushin/${s.no}` };
+  }
+  for (const s of FREE_SCHOOLS) {
+    if (trimmed === s.name) return { name: s.name, path: `/gakko/free/${s.no}` };
+  }
+  for (const s of teijiseiHighSchools) {
+    if (trimmed === s.name) return { name: s.name, path: `/gakko/teiji/${s.no}` };
+  }
+  for (const s of ONLINE_FREE_SCHOOLS) {
+    if (trimmed === s.name) return { name: s.name, path: `/gakko/online/${s.no}` };
+  }
+  // 完全一致する学校ページが見つからない場合でも、本人が入力した名前自体は
+  // 信頼できる情報として、リンク無しのテキストとして表示する。
+  return { name: trimmed, path: '' };
+}
