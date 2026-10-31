@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { answerFirstLineSnippet } from '@/lib/expertDisplay';
+import { coreNameBySuffix } from '@/lib/facilityLinkMatch';
 
 // この学校について実際に寄せられた相談を学校ページに表示する（2026-10-18追加、
 // 「北沢学園についての相談を、この学校のページに載せたい」との要望を受けて）。
@@ -17,7 +18,11 @@ export default async function SchoolConsultations({
   branchName: string | null;
 }) {
   const supabase = getSupabaseAdmin();
-  const names = [schoolName, branchName].filter((n): n is string => !!n);
+  // 正式名称の末尾の種別語（中等部・学園等）を省いた口語的な呼び方でも検出できる
+  // ようにする（2026-10-31、components/FacilityConsultations.tsxと同じ対応）。
+  const baseNames = [schoolName, branchName].filter((n): n is string => !!n);
+  const coreNames = baseNames.map((n) => coreNameBySuffix(n)).filter((n): n is string => !!n);
+  const names = [...new Set([...baseNames, ...coreNames])];
   const orFilter = names.map((n) => `question.ilike.%${n}%`).join(',');
 
   const { data: rows } = await supabase

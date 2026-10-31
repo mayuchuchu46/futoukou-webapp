@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { answerFirstLineSnippet } from '@/lib/expertDisplay';
+import { coreNameBySuffix } from '@/lib/facilityLinkMatch';
 
 // 施設・学校ページに、その施設名を含む実際の相談を表示する汎用コンポーネント
 // （2026-10-22、app/gakko/school/[no]/SchoolConsultations.tsxと同じ仕組みを
@@ -16,7 +17,14 @@ export default async function FacilityConsultations({
   label?: string;
 }) {
   const supabase = getSupabaseAdmin();
-  const names = [name, altName].filter((n): n is string => !!n);
+  // 「ヒロック初等部」を「ヒロック」とだけ呼ぶなど、保護者は正式名称から末尾の
+  // 種別語（初等部・学園・スクール等）を省いて話すことが多い。完全一致の名称に加え、
+  // 末尾の種別語を取り除いた核名称でも検索する（2026-10-31、lib/facilityLinkMatch.ts
+  // の核名称マッチングと同じ考え方をこちらのDB検索側にも適用。「ヒロックのページに
+  // 相談出てないよ」との指摘を受けて修正）。
+  const baseNames = [name, altName].filter((n): n is string => !!n);
+  const coreNames = baseNames.map((n) => coreNameBySuffix(n)).filter((n): n is string => !!n);
+  const names = [...new Set([...baseNames, ...coreNames])];
   const orFilter = names.map((n) => `question.ilike.%${n}%`).join(',');
 
   const { data: rows } = await supabase

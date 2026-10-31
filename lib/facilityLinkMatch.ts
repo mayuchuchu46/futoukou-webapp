@@ -40,7 +40,7 @@ import { ALTERNATIVE_SCHOOLS, AlternativeSchool, METHOD_LABEL } from './data/alt
 // 対になる考え方。
 const TRAILING_SUFFIX_RE = /(初等部|中等部|高等部|高等学校|中学校|小学校|学園|スクール)$/;
 
-function coreNameBySuffix(name: string): string | null {
+export function coreNameBySuffix(name: string): string | null {
   const m = name.match(TRAILING_SUFFIX_RE);
   if (!m) return null;
   const core = name.slice(0, name.length - m[0].length);
