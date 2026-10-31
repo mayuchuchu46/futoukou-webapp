@@ -107,11 +107,28 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
               {item.expert_answer_snippet}
             </div>
           )}
+          {item.experts?.credential === SENPAI_CREDENTIAL && (
+            <div className="muted" style={{ fontSize: 12 }}>
+              ※ 資格に基づく専門的な助言ではなく、あくまでこの方個人の経験・感想です。
+            </div>
+          )}
           <div className="blur-lines">
             <div />
             <div />
             <div />
           </div>
+          {/* 回答本文は読めなくても、誰が回答したか（プロフィール）は非会員でも見られる
+              ようにする（2026-10-31、「回答みれない非会員でも、誰が書いたかプロフィール
+              みれるといい」との依頼を受けて追加）。 */}
+          {item.experts?.id && (
+            <Link
+              href={item.experts.credential === SENPAI_CREDENTIAL ? `/senpai/${item.experts.id}` : `/experts/${item.experts.id}`}
+              className="backlink"
+              style={{ fontSize: 13, margin: 0 }}
+            >
+              {item.experts.name}さんのプロフィールを見る →
+            </Link>
+          )}
           {EXPERT_VOLUNTEER_MODE ? (
             <>
               <div className="locked-note" style={{ fontWeight: 700 }}>
@@ -143,6 +160,15 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
           <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
             {item.expert_answer}
           </div>
+          {/* 先輩保護者の回答は、資格に基づく専門的な助言ではなく、あくまで一個人の
+              経験・感想であることを明示する免責（2026-10-31、「あくまで個人の感想で
+              あるっていう免責もかいておきたいね」「この保護者の回答のところに」との
+              指摘を受けて追加）。 */}
+          {item.experts?.credential === SENPAI_CREDENTIAL && (
+            <div className="muted" style={{ fontSize: 12 }}>
+              ※ 資格に基づく専門的な助言ではなく、あくまでこの方個人の経験・感想です。
+            </div>
+          )}
           {/* 回答したプロフィールへの誘導（2026-10-31、「誰が回答したかプロフィールへの
               誘導もほしい」との依頼を受けて追加）。専門家は/experts/[id]、先輩保護者は
               /senpai/[id]とページが分かれているため、credentialで出し分ける。 */}
