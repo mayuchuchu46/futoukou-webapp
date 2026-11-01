@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { getLocalSchools } from '@/lib/localSchools';
 
-// 指定した市区町村に実際にある学びの場（フリースクール・学びの多様化学校）を
-// 紹介するカード（2026-11-01追加）。もともと自治体の取組ニュース記事専用
+// 指定した市区町村に実際にある学びの場（フリースクール・学びの多様化学校・
+// 教育支援センター）を紹介するカード（2026-11-01追加、2026-11-02に教育支援
+// センターを追加）。もともと自治体の取組ニュース記事専用
 // （app/news/[id]/RelatedLocalSchools.tsx）だったが、ホーム画面の「自分の地域登録」
 // 機能（components/MyRegionCard.tsx）でも同じ見た目を使うため共通化した。
 // 該当する施設が無い場合は何も表示しない（存在しない情報を匂わせない）。
@@ -15,11 +16,18 @@ export default function LocalSchoolsCard({
   city: string;
   title?: string;
 }) {
-  const { freeSchools, manabiSchools } = getLocalSchools(prefecture, city);
+  const { freeSchools, manabiSchools, supportCenters } = getLocalSchools(prefecture, city);
   const matchedManabiSchools = manabiSchools.slice(0, 5);
   const matchedFreeSchools = freeSchools.slice(0, 5);
+  const matchedSupportCenters = supportCenters.slice(0, 5);
 
-  if (matchedFreeSchools.length === 0 && matchedManabiSchools.length === 0) return null;
+  if (
+    matchedFreeSchools.length === 0 &&
+    matchedManabiSchools.length === 0 &&
+    matchedSupportCenters.length === 0
+  ) {
+    return null;
+  }
 
   return (
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
@@ -44,6 +52,21 @@ export default function LocalSchoolsCard({
           >
             🏠 {s.name}（フリースクール）
           </Link>
+        ))}
+        {matchedSupportCenters.map((s, i) => (
+          // 教育支援センターには個別の詳細ページ（/gakko/school/[no]のような固有no）が
+          // 無いため、フリースクール・学びの多様化学校のようなLinkにはせず、名称・連絡先
+          // のみをその場で表示する（2026-11-02追加）。
+          <div
+            key={`shien-${s.city}-${s.name}-${i}`}
+            className="qtext"
+            style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 8 }}
+          >
+            🏢 {s.name}（教育支援センター）
+            {s.contact && (
+              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.contact}</div>
+            )}
+          </div>
         ))}
       </div>
       <Link href={`/gakko/matome?pref=${encodeURIComponent(prefecture)}`} className="btn-secondary">
