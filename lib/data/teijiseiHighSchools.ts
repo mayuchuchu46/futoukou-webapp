@@ -228,8 +228,8 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // 出典資料に記載がなく、各校公式サイトも検索で特定できなかったため省略している。
   { no: 147, prefecture: '秋田県', municipality: '大館市', name: '大館鳳鳴高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
   { no: 148, prefecture: '秋田県', municipality: '能代市', name: '能代高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
-  { no: 149, prefecture: '秋田県', municipality: '仙北市', name: '角館高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
-  { no: 150, prefecture: '秋田県', municipality: '横手市', name: '横手高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
+  { no: 149, prefecture: '秋田県', municipality: '仙北市', name: '角館高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kakunodate-hs.jp/', note: '定時制課程を併設' },
+  { no: 150, prefecture: '秋田県', municipality: '横手市', name: '横手高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', officialUrl: 'https://yokote-h.info', note: '定時制課程を併設' },
 
   // ===== 福島県（6校） =====
   // 出典: https://www.pref.fukushima.lg.jp/uploaded/attachment/600080.pdf（福島県教育委員会、入学者選抜関連資料）
@@ -269,7 +269,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 174, prefecture: '宮城県', municipality: '石巻市', name: '宮城県石巻北高等学校　飯野川校', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'attached', officialUrl: 'https://i13-hama.myswan.ed.jp/', note: '普通科。各年次1クラス計4クラスの小規模校。国語・数学・英語で習熟度別授業、学び直し担当教員配置。' },
   { no: 175, prefecture: '宮城県', municipality: '気仙沼市', name: '宮城県気仙沼高等学校　定時制', publicPrivate: '公立', operator: '宮城県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kesennuma-teiji.myswan.ed.jp/', note: '普通科。三年修業制・定通併修制あり。「学び直し」授業、ICT活用。' },
   { no: 176, prefecture: '宮城県', municipality: '仙台市宮城野区', name: '仙台市立仙台工業高等学校（定時制課程）', publicPrivate: '公立', operator: '仙台市教育委員会', schoolCategory: 'attached', officialUrl: 'https://sendai-c.ed.jp/~sen2kou/', note: '建築土木科・機械システム科。全日制課程と施設・設備を共用。' },
-  { no: 177, prefecture: '宮城県', municipality: '仙台市宮城野区', name: '仙台市立仙台大志高等学校', publicPrivate: '公立', operator: '仙台市教育委員会', schoolCategory: 'standalone', note: '普通科。進路目標や生活スタイルに応じて生徒自身が時間割を作成する制度あり。習熟度別授業あり。' },
+  { no: 177, prefecture: '宮城県', municipality: '仙台市宮城野区', name: '仙台市立仙台大志高等学校', publicPrivate: '公立', operator: '仙台市教育委員会', schoolCategory: 'standalone', officialUrl: 'https://www.sendai-c.ed.jp/~taishi/', note: '普通科。進路目標や生活スタイルに応じて生徒自身が時間割を作成する制度あり。習熟度別授業あり。' },
 
   // ===== 北海道（40校） =====
   // 出典: 北海道教育委員会「定時制・通信制課程のある高校」一覧 https://www.dokyoi.pref.hokkaido.lg.jp/hk/kki/teiji.html（全道一覧の一次ソース）
@@ -329,10 +329,10 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // ===== 山形県（5校） =====
   // 出典: https://www.pref.yamagata.jp/documents/42443/r08jisshikouichiran.pdf（県立高校一覧表）他
   { no: 224, prefecture: '山形県', municipality: '山形市', name: '山形県立霞城学園高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部（午前）・Ⅱ部（午後）・Ⅲ部（夜間）の3部制', curriculumType: '単位制', note: '普通科（定時制）。通信制（普通科・服飾科）も併設。全日制は置かず独立校。霞城セントラル内に所在' },
-  { no: 225, prefecture: '山形県', municipality: '新庄市', name: '山形県立新庄志誠館高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '夜間', note: '普通科。全日制に併置。「最北地区唯一の定時制の課程」。2026年4月、新庄北高校と新庄南高校の統合で開校' },
-  { no: 226, prefecture: '山形県', municipality: '米沢市', name: '山形県立米沢鶴城高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '午前', note: '総合学科。全日制（工業科・商業科）に併置。「置賜地区唯一の定時制高校」' },
-  { no: 227, prefecture: '山形県', municipality: '東田川郡庄内町', name: '山形県立庄内総合高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '昼間', note: '総合学科。全日制・通信制と一体的に運営' },
-  { no: 228, prefecture: '山形県', municipality: '酒田市', name: '山形県立酒田西高等学校（定時制）', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', note: '全日制とは別校舎。2012年に酒田商業高校の定時制が統合移管' },
+  { no: 225, prefecture: '山形県', municipality: '新庄市', name: '山形県立新庄志誠館高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'https://shiseikan.jp/', note: '普通科。全日制に併置。「最北地区唯一の定時制の課程」。2026年4月、新庄北高校と新庄南高校の統合で開校' },
+  { no: 226, prefecture: '山形県', municipality: '米沢市', name: '山形県立米沢鶴城高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '午前', officialUrl: 'https://yonezawa-kakujo.ed.jp/', note: '総合学科。全日制（工業科・商業科）に併置。「置賜地区唯一の定時制高校」' },
+  { no: 227, prefecture: '山形県', municipality: '東田川郡庄内町', name: '山形県立庄内総合高等学校', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', parts: '昼間', officialUrl: 'https://www.shonaisogo-h.ed.jp/', note: '総合学科。全日制・通信制と一体的に運営' },
+  { no: 228, prefecture: '山形県', municipality: '酒田市', name: '山形県立酒田西高等学校（定時制）', publicPrivate: '公立', operator: '山形県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.sakatanishi-h.ed.jp/', note: '全日制とは別校舎。2012年に酒田商業高校の定時制が統合移管' },
 
   // ===== 新潟県（9校） =====
   // 出典: 新潟県教育委員会告示第１号（令和8年3月17日付）、公立高等学校入学者選抜実施要綱（令和6・7年県報）
