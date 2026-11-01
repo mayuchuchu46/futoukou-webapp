@@ -14,6 +14,7 @@ import {
   findMentionedOnlineFreeSchool,
   buildAlternativeFactsBlockFor,
   buildOnlineFreeSchoolFactsBlock,
+  buildTeijiFactsBlockFor,
 } from '@/lib/facilityLinkMatch';
 
 // 無料AI相談（request_type='ai'）のAI回答を、現在のプロンプト設定（文字数の目安など）で
@@ -81,7 +82,7 @@ export async function POST(req: NextRequest) {
       : undefined;
     const mentionedInstitutions = findMentionedInstitutions([parent.question, parent.answer, row.question]);
     const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, buildAlternativeFactsBlockFor([parent.question, row.question]), institutionFactsBlock]
+    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, buildAlternativeFactsBlockFor([parent.question, row.question]), buildTeijiFactsBlockFor([parent.question, row.question]), institutionFactsBlock]
       .filter(Boolean)
       .join('\n');
     prompt = buildFollowupPrompt(
@@ -113,7 +114,7 @@ export async function POST(req: NextRequest) {
       : undefined;
     const mentionedInstitutions = findMentionedInstitutions([row.question]);
     const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, buildAlternativeFactsBlockFor([row.question]), institutionFactsBlock]
+    const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, buildAlternativeFactsBlockFor([row.question]), buildTeijiFactsBlockFor([row.question]), institutionFactsBlock]
       .filter(Boolean)
       .join('\n');
     prompt = buildPrompt(

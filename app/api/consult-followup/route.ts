@@ -13,6 +13,7 @@ import {
   findMentionedOnlineFreeSchool,
   buildAlternativeFactsBlockFor,
   buildOnlineFreeSchoolFactsBlock,
+  buildTeijiFactsBlockFor,
 } from '@/lib/facilityLinkMatch';
 import { checkAiConsultRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getCurrentMember } from '@/lib/memberAuth';
@@ -88,7 +89,7 @@ export async function POST(req: NextRequest) {
   // 分からないケースがあるため）。
   const mentionedInstitutions = findMentionedInstitutions([parent.question, parent.answer, text]);
   const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-  const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, buildAlternativeFactsBlockFor([parent.question, text]), institutionFactsBlock]
+  const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, buildAlternativeFactsBlockFor([parent.question, text]), buildTeijiFactsBlockFor([parent.question, text]), institutionFactsBlock]
     .filter(Boolean)
     .join('\n');
 

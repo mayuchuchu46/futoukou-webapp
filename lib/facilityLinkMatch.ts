@@ -2,6 +2,7 @@ import { FREE_SCHOOLS, FreeSchool } from './data/freeSchools';
 import { CORRESPONDENCE_HIGH_SCHOOLS, CorrespondenceHighSchool } from './data/correspondenceHighSchools';
 import { ONLINE_FREE_SCHOOLS, OnlineFreeSchool } from './data/onlineFreeSchools';
 import { ALTERNATIVE_SCHOOLS, AlternativeSchool, METHOD_LABEL } from './data/alternativeSchools';
+import { teijiseiHighSchools, TeijiseiHighSchool } from './data/teijiseiHighSchools';
 
 // 相談文（質問・AI回答）に、フリースクール一覧（freeSchools.ts）・通信制高校一覧
 // （correspondenceHighSchools.ts）に載っている施設名が含まれている場合、その施設の
@@ -267,4 +268,69 @@ ${facts.map((f) => '- ' + f).join('\n')}`;
 export function buildAlternativeFactsBlockFor(texts: (string | null | undefined)[]): string | undefined {
   const school = findMentionedAlternativeSchool(texts);
   return school ? buildAlternativeSchoolFactsBlock(school) : undefined;
+}
+
+// 定時制高校（lib/data/teijiseiHighSchools.ts）についても同様に、相談文に学校名が出てきたら
+// 確認済みの情報をAIに渡す（2026-11-01追加）。それまでは他の4種（学びの多様化学校・
+// 通信制高校・フリースクール・オンラインフリースクール・オルタナティブスクール）と違い、
+// findMentionedTeijiSchool/buildTeijiSchoolFactsBlockが存在せず、定時制高校のnoteに
+// 確認済み情報（生徒数・アクセス・教育課程の特徴等）があっても、「埼玉県立所沢高等学校が
+// うちの子に合うか」のような相談で的外れな一般論の回答になってしまっていた
+// （「質問の回答がもう少し具体的なのほしかったなぁ」との指摘を受けて発覚）。
+export function findMentionedTeijiSchool(
+  texts: (string | null | undefined)[]
+): TeijiseiHighSchool | null {
+  return findByName(texts, teijiseiHighSchools);
+}
+
+export function buildTeijiSchoolFactsLines(school: TeijiseiHighSchool): string[] {
+  const facts: string[] = [`学校名：${school.name}`, `設置区分：${school.publicPrivate}`];
+  if (school.municipality) facts.push(`所在地：${school.prefecture}${school.municipality}`);
+  else facts.push(`所在地（都道府県まで）：${school.prefecture}`);
+  if (school.operator) facts.push(`設置者：${school.operator}`);
+  if (school.schoolCategory) {
+    facts.push(
+      `課程の位置づけ：${school.schoolCategory === 'attached' ? '全日制高校等に併設された定時制課程' : '定時制単独校（多部制・単位制の独立校など）'}`
+    );
+  }
+  if (school.parts) facts.push(`部制：${school.parts}`);
+  if (school.curriculumType) facts.push(`課程の仕組み：${school.curriculumType}`);
+  if (school.nickname) facts.push(`通称：${school.nickname}`);
+  if (school.officialUrl) facts.push(`公式サイト：${school.officialUrl}`);
+  if (school.note) facts.push(`その他の確認済み情報（生徒数・アクセス・教育課程の特徴等）：${school.note}`);
+  return facts;
+}
+
+export function buildTeijiSchoolFactsBlock(school: TeijiseiHighSchool): string {
+  const facts = buildTeijiSchoolFactsLines(school);
+
+  return `
+相談文に、当サイトが情報を持っている定時制高校「${school.name}」が含まれているようです。
+以下は、この学校について確認できている情報（当サイト側で事前に調査・確認済みのもの）です。
+- この学校について答える際は、質問にどんぴしゃで一致していなくても、関連しそうな確認済み情報は
+  積極的に回答に取り入れてください。
+- 下の【確認済みの学校情報】に書かれている事実は、必ずこの範囲内の情報だけを使い、推測や
+  断定で情報を足さないこと。
+- 「どんなタイプの子に合うか」「雰囲気はどうか」「どんな支援があるか」のような、学校ごとの特色に
+  関する質問については、下の【確認済みの学校情報】（特に「その他の確認済み情報」欄）の中に
+  関連しそうな記述があれば、それを相談文に書かれているお子さんの特徴と照らし合わせて、でき
+  るだけこの学校固有の内容で具体的に答えること。確認済みの情報の範囲を超える事実を断定しない
+  こと（web検索は使えないため、確認済みデータに無いことは「無い」と扱うこと）。
+  (1) 「その他の確認済み情報」に特色に関する記述がある場合は、それを踏まえて具体的に答える
+      こと。「公式サイトや教育委員会のページで確認しましょう」のような、どの学校にも当てはまる
+      一般論だけで終わらせないこと。
+  (2) 「その他の確認済み情報」が無い、またはあっても特色に関する記述が無い場合に限り、
+      定時制高校を見学・検討する際に一般的に確認すると良い着眼点（例：部制・時間帯が子どもの
+      生活リズムに合うか、在籍する生徒の年齢層、転入・編入のタイミング）を1つ具体的に挙げ、
+      見学・問い合わせの際にそれを確認するとよい、という形で答え、学校や教育委員会への確認も
+      案内すること。この場合、確認できていない特色を推測で答えないこと。
+  「ここでは確認できていません。学校に直接お問い合わせください」だけで終わる、中身のない
+  回答にはしないこと。
+【確認済みの学校情報】
+${facts.map((f) => '- ' + f).join('\n')}`;
+}
+
+export function buildTeijiFactsBlockFor(texts: (string | null | undefined)[]): string | undefined {
+  const school = findMentionedTeijiSchool(texts);
+  return school ? buildTeijiSchoolFactsBlock(school) : undefined;
 }
