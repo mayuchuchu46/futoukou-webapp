@@ -18,6 +18,10 @@ export async function POST(req: NextRequest) {
   const bio = String(form.get('bio') || '');
   const license_number = String(form.get('license_number') || '');
   const link_url = String(form.get('link_url') || '');
+  // オンライン通話・チャットリレーの予約ページURL（MOSH等、本人が用意した外部の予約・
+  // 決済ページ。2026-11-01追加）。任意項目で、未入力なら「オンラインで相談する」
+  // ボタン自体をプロフィールページに出さない。
+  const online_consult_url = String(form.get('online_consult_url') || '');
   const licenseDoc = form.get('license_doc');
   const photo = form.get('photo');
   // 本人確認の方法（2026-10-30追加）。'call'（オンライン通話で確認）の場合は
@@ -79,6 +83,7 @@ export async function POST(req: NextRequest) {
       bio: bio || '',
       license_number: license_number.trim(),
       link_url: link_url.trim(),
+      online_consult_url: online_consult_url.trim(),
       verification_method,
       specialty_categories,
       experienced_school_names,

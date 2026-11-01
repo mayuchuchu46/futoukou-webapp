@@ -434,6 +434,13 @@ create table if not exists experts (
   -- 専用の入力欄が欲しいとの要望を受けて追加（2026-10-31）。bioでのマッチングも引き続き
   -- 残し、こちらは精度を上げるための追加の構造化入力という位置づけ。
   experienced_school_names text[] not null default '{}',
+  -- オンライン通話・チャットリレーの予約ページURL（MOSH・ストアカ等、外部サービスで
+  -- 専門家・先輩保護者本人が運用する予約・決済ページを想定。2026-11-01追加）。
+  -- link_url（ご本人のサービス・サイトへの一般的な任意リンク）とは別に持つ。こちらは
+  -- プロフィールページの「オンラインで相談する」ボタンの行き先として使う専用欄。
+  -- 顔出し・顔出しなし・声のみ・チャットのみの選択は当日Zoom等の画面上で行うため、
+  -- どうする先生側ではモード別にURLを分けない（1つのURLで足りる）。
+  online_consult_url text not null default '',
   created_at timestamptz not null default now()
 );
 -- アプリは常にservice_roleキー経由でのみ読み書きし、anon/authenticatedロールで
@@ -1018,3 +1025,9 @@ alter table outbound_clicks enable row level security;
 -- alter table consultations drop constraint if exists consultations_expert_funding_check;
 -- alter table consultations add constraint consultations_expert_funding_check
 --   check (expert_funding in ('paid','ticket','free_monthly','volunteer'));
+
+-- 専門家・先輩保護者のプロフィールページに「オンラインで相談する」ボタンを追加した場合
+-- （2026-11-01追加。MOSH等の外部予約・決済ページへのリンクを専門家本人に設定してもらう。
+-- 予約・決済・通話システム自体は自前で作らず、本人が用意した外部サービスにリンクするだけ
+-- にする方針）、既存DBでは次を実行してください。
+-- alter table experts add column if not exists online_consult_url text not null default '';

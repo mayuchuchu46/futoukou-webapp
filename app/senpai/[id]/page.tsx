@@ -11,10 +11,12 @@ import { SENPAI_CREDENTIAL, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import { findSchoolMentionsInBio, resolveSchoolName } from '@/lib/senpaiSchoolMentions';
 
 // 先輩保護者（経験者）の公開プロフィールページ。app/experts/[id]/page.tsx（専門家向け）
-// と同じ構成だが、こちらには「この方に相談する」ボタンは置かない（オンライン通話・
-// チャットリレーの予約・決済の仕組みがまだ準備中のため。2026-10-31、「私の情報
-// トップにだして」との依頼を受けて、トップのカードから遷移できるプロフィールページ
-// として新規作成）。
+// と同じ構成（2026-10-31、「私の情報トップにだして」との依頼を受けて、トップのカードから
+// 遷移できるプロフィールページとして新規作成）。
+// オンライン通話・チャットリレーの予約・決済は自前で作らず、本人が用意した外部サービス
+// （MOSH等）へのリンク（online_consult_url）を「オンラインで相談する」ボタンとして
+// 出す方式にした（2026-11-01追加。以前はこの仕組み自体が無かったため、ボタンを
+// 置いていなかった）。
 export const instant = false;
 
 type SenpaiProfile = {
@@ -24,6 +26,7 @@ type SenpaiProfile = {
   bio: string;
   photo_url: string | null;
   link_url: string | null;
+  online_consult_url: string | null;
   experienced_school_names: string[];
 };
 
@@ -31,7 +34,7 @@ async function getVerifiedSenpaiById(id: string): Promise<SenpaiProfile | null> 
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('experts')
-    .select('id, name, display_name, credential, bio, photo_url, link_url, experienced_school_names')
+    .select('id, name, display_name, credential, bio, photo_url, link_url, online_consult_url, experienced_school_names')
     .eq('id', id)
     .eq('verified', true)
     .eq('credential', SENPAI_CREDENTIAL)
@@ -58,6 +61,7 @@ export default async function SenpaiProfilePublicPage({
   }
 
   const link = safeHttpUrl(senpai.link_url);
+  const onlineConsultLink = safeHttpUrl(senpai.online_consult_url);
   // 「話せる学校」の一覧。登録・プロフィール編集画面の専用欄（experienced_school_names）に
   // 入力済みの学校名を優先的に使い、各名称を学校データセットと照合してリンクを付ける
   // （一致しなければ名前のみ表示）。専用欄が空の場合のみ、従来どおり自己紹介文（bio）
@@ -98,11 +102,32 @@ export default async function SenpaiProfilePublicPage({
                 )}
               </div>
             </div>
-            {/* オンライン通話・チャットリレーの予約・決済はまだ準備中だが、
-                EXPERT_VOLUNTEER_MODE（無償ボランティア期間）中はテキストでの
-                質問は実際に使えるため、/askへ実際に飛ぶボタンにする（2026-10-31、
-                「この先輩保護者に相談する、の導線は？」との指摘を受けて変更）。 */}
-            <SenpaiConsultCta expertId={senpai.id} volunteerMode={EXPERT_VOLUNTEER_MODE} />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {/* テキストでの質問（/askの既存フロー）はEXPERT_VOLUNTEER_MODE（無償
+                  ボランティア期間）中のみ実際に使える（2026-10-31、「この先輩保護者に
+                  相談する、の導線は？」との指摘を受けて変更）。 */}
+              <SenpaiConsultCta expertId={senpai.id} volunteerMode={EXPERT_VOLUNTEER_MODE} />
+              {/* オンライン通話・チャットリレーの予約・決済は本人が用意した外部サービス
+                  （MOSH等）に任せるため、どうする先生側の金銭のやり取り（volunteerMode）
+                  とは無関係に、online_consult_urlが設定されていれば常に表示する
+                  （2026-11-01追加）。 */}
+              {onlineConsultLink && (
+                <a
+                  href={onlineConsultLink}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="btn-secondary"
+                  style={{ alignSelf: 'flex-start' }}
+                >
+                  オンラインで相談する
+                </a>
+              )}
+            </div>
+            {onlineConsultLink && (
+              <div className="muted" style={{ fontSize: 12 }}>
+                予約ページへ移動します。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
+              </div>
+            )}
           </div>
 
           {schoolMentions.length > 0 && (

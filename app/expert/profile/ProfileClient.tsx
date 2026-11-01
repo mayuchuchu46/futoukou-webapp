@@ -11,6 +11,7 @@ type Expert = {
   bio: string;
   photo_url: string | null;
   link_url?: string | null;
+  online_consult_url?: string | null;
   license_doc_path?: string | null;
   verification_method?: 'upload' | 'call';
   verified?: boolean;
@@ -25,6 +26,7 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
     credential: expert.credential,
     bio: expert.bio,
     link_url: expert.link_url || '',
+    online_consult_url: expert.online_consult_url || '',
   });
   const [photoUrl, setPhotoUrl] = useState(expert.photo_url || '');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -140,6 +142,16 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
           />
           <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
             専門家一覧などに公開表示されます。
+          </div>
+          <div className="muted">オンラインでの通話・チャット相談の予約ページURL（任意）</div>
+          <input
+            className="input"
+            value={form.online_consult_url}
+            onChange={(e) => setForm({ ...form, online_consult_url: e.target.value })}
+            placeholder="https://mosh.jp/..."
+          />
+          <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
+            MOSHやストアカなど、ご自身で予約・決済ページをお持ちの場合はそのURLを入れてください。プロフィールページに「オンラインで相談する」ボタンが表示されます（顔出し・顔出しなし・チャットのみは当日の通話内で選べます）。未入力の場合、このボタンは表示されません。
           </div>
           {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
           {saved && <div style={{ color: 'var(--main)', fontSize: 13 }}>保存しました</div>}

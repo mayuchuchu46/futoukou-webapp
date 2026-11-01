@@ -39,6 +39,7 @@ type DraftForm = {
   display_name: string;
   bio: string;
   link_url: string;
+  online_consult_url: string;
   specialtyCategories: string[];
   schoolNames: string[];
 };
@@ -74,6 +75,7 @@ function SenpaiRegisterForm() {
     display_name: '',
     bio: '',
     link_url: '',
+    online_consult_url: '',
     specialtyCategories: [] as string[],
     schoolNames: [] as string[],
   });
@@ -108,6 +110,7 @@ function SenpaiRegisterForm() {
       display_name: form.display_name,
       bio: form.bio,
       link_url: form.link_url,
+      online_consult_url: form.online_consult_url,
       specialtyCategories: form.specialtyCategories,
       schoolNames: form.schoolNames,
     };
@@ -129,6 +132,7 @@ function SenpaiRegisterForm() {
     body.set('display_name', form.display_name);
     body.set('bio', form.bio);
     body.set('link_url', form.link_url);
+    body.set('online_consult_url', form.online_consult_url);
     body.set('credential', CREDENTIAL);
     body.set('verification_method', 'call'); // 資格証が無いため常に通話確認
     form.specialtyCategories.forEach((cat) => body.append('specialty_categories', cat));
@@ -320,6 +324,15 @@ function SenpaiRegisterForm() {
           value={form.link_url}
           onChange={(e) => setForm({ ...form, link_url: e.target.value })}
         />
+        <input
+          className="input"
+          placeholder="オンラインでの通話・チャット相談の予約ページURL（任意・MOSH等）"
+          value={form.online_consult_url}
+          onChange={(e) => setForm({ ...form, online_consult_url: e.target.value })}
+        />
+        <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
+          MOSHなどで予約・決済ページをお持ちの場合はそのURLを入れてください。プロフィールページに「オンラインで相談する」ボタンが表示されます。未入力の場合、このボタンは表示されません（あとからプロフィール編集でも設定できます）。
+        </div>
 
         <div className="muted" style={{ marginTop: 6 }}>プロフィール写真（任意・あとから登録・変更もできます）</div>
         <input

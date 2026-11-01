@@ -24,6 +24,7 @@ type ExpertProfile = {
   bio: string;
   photo_url: string | null;
   link_url: string | null;
+  online_consult_url: string | null;
   verified: boolean;
 };
 
@@ -31,7 +32,7 @@ async function getVerifiedExpert(id: string): Promise<ExpertProfile | null> {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('experts')
-    .select('id, name, display_name, credential, bio, photo_url, link_url, verified')
+    .select('id, name, display_name, credential, bio, photo_url, link_url, online_consult_url, verified')
     .eq('id', id)
     .eq('verified', true)
     // 先輩保護者（経験者）はこの専門家向け個別ページの対象外（2026-10-31追加）。
@@ -70,6 +71,11 @@ export default async function ExpertProfilePublicPage({
   const answeredItems = await getConsultationsList({ expertId: expert.id, expertAnswered: true, limit: 30 });
 
   const link = safeHttpUrl(expert.link_url);
+  // オンライン通話・チャットリレーの予約・決済は自前で作らず、専門家本人が用意した
+  // 外部サービス（MOSH等）のページへリンクするだけにする（2026-11-01追加。顔出し・
+  // 顔出しなし・チャットのみの選択は当日その予約先の通話内で行うため、ここでは
+  // モードを分けず1つのリンクのみ用意する）。
+  const onlineConsultLink = safeHttpUrl(expert.online_consult_url);
 
   return (
     <div className="app-shell">
@@ -101,9 +107,27 @@ export default async function ExpertProfilePublicPage({
                 )}
               </div>
             </div>
-            <Link href={`/ask?expert=${expert.id}`} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
-              この専門家に相談する
-            </Link>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              <Link href={`/ask?expert=${expert.id}`} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
+                どうする先生で質問する
+              </Link>
+              {onlineConsultLink && (
+                <a
+                  href={onlineConsultLink}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="btn-secondary"
+                  style={{ alignSelf: 'flex-start' }}
+                >
+                  オンラインで相談する
+                </a>
+              )}
+            </div>
+            {onlineConsultLink && (
+              <div className="muted" style={{ fontSize: 12 }}>
+                予約ページへ移動します。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
+              </div>
+            )}
           </div>
 
           <div className="muted" style={{ margin: '14px 0 6px', fontWeight: 700 }}>
