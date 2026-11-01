@@ -358,19 +358,19 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
 
   // ===== 石川県（6校） =====
   // 出典: 石川県教育委員会「外国人生徒等に係る特別入学実施校」一覧 https://cms1.ishikawa-c.ed.jp/wazith/wysiwyg/file/download/1/1377
-  { no: 244, prefecture: '石川県', name: '加賀聖城高校', publicPrivate: '公立', operator: '石川県教育委員会', note: '定時制：普通科（夜間・午前・午後）、総合学科（夜間・午前・午後）を設置' },
-  { no: 245, prefecture: '石川県', name: '小松北高校', publicPrivate: '公立', operator: '石川県教育委員会' },
-  { no: 246, prefecture: '石川県', municipality: '金沢市', name: '金沢中央高校', publicPrivate: '公立', operator: '石川県教育委員会', curriculumType: '単位制', note: '単位制総合学科' },
-  { no: 247, prefecture: '石川県', name: '羽松高校', publicPrivate: '公立', operator: '石川県教育委員会', note: '定時制：普通科（午前）を設置' },
-  { no: 248, prefecture: '石川県', name: '七尾城北高校', publicPrivate: '公立', operator: '石川県教育委員会', note: '定時制：普通科（夜間）を設置' },
-  { no: 249, prefecture: '石川県', name: '輪島高校', publicPrivate: '公立', operator: '石川県教育委員会', note: '定時制：普通科（夜間）を設置' },
+  { no: 244, prefecture: '石川県', name: '加賀聖城高校', publicPrivate: '公立', operator: '石川県教育委員会', officialUrl: 'https://cms.ishikawa-c.ed.jp/seijoh/', note: '定時制：普通科（夜間・午前・午後）、総合学科（夜間・午前・午後）を設置' },
+  { no: 245, prefecture: '石川県', name: '小松北高校', publicPrivate: '公立', operator: '石川県教育委員会', officialUrl: 'https://cms.ishikawa-c.ed.jp/kitath/' },
+  { no: 246, prefecture: '石川県', municipality: '金沢市', name: '金沢中央高校', publicPrivate: '公立', operator: '石川県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.ishikawa-c.ed.jp/~chuoth/', note: '単位制総合学科' },
+  { no: 247, prefecture: '石川県', name: '羽松高校', publicPrivate: '公立', operator: '石川県教育委員会', officialUrl: 'https://cms.ishikawa-c.ed.jp/ushouh/', note: '定時制：普通科（午前）を設置' },
+  { no: 248, prefecture: '石川県', name: '七尾城北高校', publicPrivate: '公立', operator: '石川県教育委員会', officialUrl: 'https://cms.ishikawa-c.ed.jp/jouhoh/', note: '定時制：普通科（夜間）を設置' },
+  { no: 249, prefecture: '石川県', name: '輪島高校', publicPrivate: '公立', operator: '石川県教育委員会', officialUrl: 'https://cms.ishikawa-c.ed.jp/wazith/', note: '定時制：普通科（夜間）を設置' },
 
   // ===== 福井県（7校） =====
   // 出典: 福井県教育委員会「令和8年度福井県立高等学校入学者選抜実施要項」 https://www.pref.fukui.lg.jp/doc/koukou/nyugaku/r08youkou_d/fil/R08annai.pdf
   { no: 250, prefecture: '福井県', municipality: '坂井市', name: '丸岡高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員40名。昭和39年「城東分校（定時制）」として開校' },
   { no: 251, prefecture: '福井県', municipality: '大野市', name: '大野高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
-  { no: 252, prefecture: '福井県', municipality: '鯖江市', name: '鯖江高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', parts: '昼間部のみ', note: '定時制。募集人員30名。平成22年度より単位制・2学期制、令和元年度より夜間部を廃止し昼間部のみに' },
-  { no: 253, prefecture: '福井県', municipality: '越前市', name: '武生高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員80名' },
+  { no: 252, prefecture: '福井県', municipality: '鯖江市', name: '鯖江高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', parts: '昼間部のみ', officialUrl: 'https://www.sabae-h.ed.jp/', note: '定時制。募集人員30名。平成22年度より単位制・2学期制、令和元年度より夜間部を廃止し昼間部のみに' },
+  { no: 253, prefecture: '福井県', municipality: '越前市', name: '武生高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.takefu-h.ed.jp/', note: '定時制。募集人員80名' },
   { no: 254, prefecture: '福井県', municipality: '敦賀市', name: '敦賀高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
   { no: 255, prefecture: '福井県', municipality: '小浜市', name: '若狭高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
   { no: 256, prefecture: '福井県', municipality: '福井市', name: '道守高等学校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'standalone', parts: '午前部・午後部・夜間部', note: '定時制・通信制の独立校。募集人員（定時制）110名（午前40・午後40・夜間30）。1971年、定時制・通信制教育のモデル校として開校' },
@@ -379,27 +379,27 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // 出典: 静岡県教育委員会公式サイト（各校の定時制課程ページ）
   //       https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/031/855/nanateiji.pdf（定時制所在地一覧）
   //       https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/031/399/r7gakkoumeibo_kakutei.pdf（静岡県立学校名簿）
-  { no: 257, prefecture: '静岡県', municipality: '下田市', name: '静岡県立下田高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
-  { no: 258, prefecture: '静岡県', municipality: '伊東市', name: '静岡県立伊豆伊東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
+  { no: 257, prefecture: '静岡県', municipality: '下田市', name: '静岡県立下田高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/shimoda-h/' },
+  { no: 258, prefecture: '静岡県', municipality: '伊東市', name: '静岡県立伊豆伊東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/izuito-h/' },
   { no: 259, prefecture: '静岡県', municipality: '三島市', name: '静岡県立三島長陵高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3部制（1部・2部・3部、午前・午後・夜間）', curriculumType: '単位制' },
-  { no: 260, prefecture: '静岡県', municipality: '駿東郡小山町', name: '静岡県立小山高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制' },
-  { no: 261, prefecture: '静岡県', municipality: '沼津市', name: '静岡県立沼津工業高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', note: '工業' },
+  { no: 260, prefecture: '静岡県', municipality: '駿東郡小山町', name: '静岡県立小山高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制', officialUrl: 'https://www.edu.pref.shizuoka.jp/oyama-h/' },
+  { no: 261, prefecture: '静岡県', municipality: '沼津市', name: '静岡県立沼津工業高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'https://www.edu.pref.shizuoka.jp/numazu-th/', note: '工業' },
   { no: 262, prefecture: '静岡県', municipality: '富士市', name: '静岡県立富士高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制' },
-  { no: 263, prefecture: '静岡県', municipality: '富士宮市', name: '静岡県立富士宮東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
-  { no: 264, prefecture: '静岡県', municipality: '静岡市清水区', name: '静岡県立清水東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
-  { no: 265, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立静岡高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間' },
-  { no: 266, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立科学技術高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', note: '工業' },
-  { no: 267, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立静岡中央高等学校（定時制）', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3コース制（aコース=午前、bコース=午後、cコース=夜間）', curriculumType: '単位制（学年のない単位制）' },
+  { no: 263, prefecture: '静岡県', municipality: '富士宮市', name: '静岡県立富士宮東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/fujihigashi-h/' },
+  { no: 264, prefecture: '静岡県', municipality: '静岡市清水区', name: '静岡県立清水東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/shimizuhigashi-h/' },
+  { no: 265, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立静岡高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'https://www.edu.pref.shizuoka.jp/shizuoka-h/' },
+  { no: 266, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立科学技術高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'https://www.sths.ed.jp/', note: '工業' },
+  { no: 267, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立静岡中央高等学校（定時制）', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3コース制（aコース=午前、bコース=午後、cコース=夜間）', curriculumType: '単位制（学年のない単位制）', officialUrl: 'https://www.edu.pref.shizuoka.jp/shizuokachuo-h2/' },
   { no: 268, prefecture: '静岡県', municipality: '島田市', name: '静岡県立島田商業高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制', note: '商業。令和6年度以降の生徒募集を停止し、志太榛原地域の再編統合校へ移行中' },
-  { no: 269, prefecture: '静岡県', municipality: '島田市', name: '静岡県立ふじのくに国際高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', note: '普通科' },
-  { no: 270, prefecture: '静岡県', municipality: '藤枝市', name: '静岡県立藤枝東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
-  { no: 271, prefecture: '静岡県', municipality: '牧之原市', name: '静岡県立榛原高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
-  { no: 272, prefecture: '静岡県', municipality: '磐田市', name: '静岡県立磐田南高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
-  { no: 273, prefecture: '静岡県', municipality: '浜松市中区', name: '静岡県立浜松北高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
-  { no: 274, prefecture: '静岡県', municipality: '浜松市西区', name: '静岡県立浜松大平台高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3部制（朝・昼・夜）', curriculumType: '単位制', note: '普通科' },
+  { no: 269, prefecture: '静岡県', municipality: '島田市', name: '静岡県立ふじのくに国際高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', officialUrl: 'https://www.edu.pref.shizuoka.jp/fujinokunikokusai-h/', note: '普通科' },
+  { no: 270, prefecture: '静岡県', municipality: '藤枝市', name: '静岡県立藤枝東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://fujiedahigashi-h.ed.jp/' },
+  { no: 271, prefecture: '静岡県', municipality: '牧之原市', name: '静岡県立榛原高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.haibara-h.ed.jp/' },
+  { no: 272, prefecture: '静岡県', municipality: '磐田市', name: '静岡県立磐田南高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/iwataminami-h/' },
+  { no: 273, prefecture: '静岡県', municipality: '浜松市中区', name: '静岡県立浜松北高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/hamamatsukita-h1/' },
+  { no: 274, prefecture: '静岡県', municipality: '浜松市西区', name: '静岡県立浜松大平台高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3部制（朝・昼・夜）', curriculumType: '単位制', officialUrl: 'https://www.edu.pref.shizuoka.jp/hamamatsuohiradai-h/', note: '普通科' },
   { no: 275, prefecture: '静岡県', municipality: '浜松市北区', name: '静岡県立浜松工業高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
-  { no: 276, prefecture: '静岡県', municipality: '浜松市浜北区', name: '静岡県立浜名高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached' },
-  { no: 277, prefecture: '静岡県', municipality: '湖西市', name: '静岡県立新居高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', curriculumType: '学年制' },
+  { no: 276, prefecture: '静岡県', municipality: '浜松市浜北区', name: '静岡県立浜名高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/hamana-h1/' },
+  { no: 277, prefecture: '静岡県', municipality: '湖西市', name: '静岡県立新居高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', curriculumType: '学年制', officialUrl: 'https://arai-h.ed.jp/' },
 
   // ===== 山梨県（7校） =====
   // 出典: 山梨県教育委員会 入学者選抜関連PDF（https://www.pref.yamanashi.jp/documents/7061/r6nyuushiteiinn.pdf 等）
