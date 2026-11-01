@@ -23,7 +23,7 @@ async function AdminPageContent() {
 
   const supabase = getSupabaseAdmin();
 
-  // 本人確認完了から一定期間が過ぎた登録証（本人確認書類）を自動削除する。
+  // 運営の確認完了から一定期間が過ぎた登録証（本人確認書類）を自動削除する。
   // 専用のスケジューラは設けず、運営がこの管理画面を開いたタイミングで実行する。
   await deleteExpiredLicenseDocs();
 

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import ExpertAvatar from './ExpertAvatar';
 
 // ホーム画面に置く「専門家一覧」の導線。/expertsページの簡易版で、
-// 本人確認済みの専門家を数件（なければ募集中カードを1件）表示する。
+// 運営が確認済みの専門家を数件（なければ募集中カードを1件）表示する。
 // もともとPcSidebar.tsxの中にだけ実装されていて、PC（960px以上）の
 // 右カラムでしか見えていなかった（スマホでは.pc-sidebar自体が非表示）。
 // 「専門家の紹介カードをTOPにも出したい」という依頼を受けて、同じ内容を

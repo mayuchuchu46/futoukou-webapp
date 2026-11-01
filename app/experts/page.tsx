@@ -10,7 +10,7 @@ import { expertDisplayName } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 
-// データベースの最新状態（本人確認済みの専門家）を毎回サーバー側で取得するページなので、
+// データベースの最新状態（運営が確認済みの専門家）を毎回サーバー側で取得するページなので、
 // ビルド時の静的化はせず、リクエストごとに生成する。閲覧者ごとに表示が変わる情報は
 // 含まない（誰が見ても同じ内容）ため、Cookieは読まずに済み、Suspenseで囲う必要もない。
 export const instant = false;
@@ -19,7 +19,7 @@ export const instant = false;
 // metadataを追加（2026-10-14、SEO対策の一環）。
 export const metadata: Metadata = {
   title: `専門家一覧｜${SITE_NAME}`,
-  description: '不登校の相談に対応する、本人確認済みの専門家（公認心理師など）の一覧です。',
+  description: '不登校の相談に対応する、運営が確認済みの専門家（公認心理師など）の一覧です。',
   alternates: { canonical: `${SITE_URL}/experts` },
 };
 
@@ -71,7 +71,7 @@ export default async function ExpertsPage() {
         <BackButton />
         <h2 className="pagetitle">専門家一覧</h2>
         <div className="muted" style={{ marginBottom: 14 }}>
-          無料でご質問いただける専門家です。公認心理師・臨床心理士など、運営が本人確認を行った方のみ掲載しています。
+          無料でご質問いただける専門家です。公認心理師・臨床心理士など、運営が内容を確認した方のみ掲載しています。
         </div>
 
         {/* 「利用の流れ」の説明を追加（2026-10-14、「専門家一覧ページをもうちょっと
@@ -91,7 +91,7 @@ export default async function ExpertsPage() {
 
         {experts.length === 0 ? (
           <>
-            <div className="empty">現在、本人確認が完了した専門家の登録がありません。準備が整い次第、ここに掲載されます。</div>
+            <div className="empty">現在、運営の確認が完了した専門家の登録がありません。準備が整い次第、ここに掲載されます。</div>
             <div className="muted" style={{ margin: '4px 0 2px', fontSize: 12 }}>掲載イメージ（サンプル）</div>
             <div
               className="card"
@@ -101,7 +101,7 @@ export default async function ExpertsPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div style={{ fontWeight: 700 }}>公認心理師・（例）山田 花子</div>
                 <div className="qtext">
-                  スクールカウンセラーとして10年。不登校のご家庭への対応を専門にしています。（本人確認が完了した専門家の自己紹介がここに表示されます）
+                  スクールカウンセラーとして10年。不登校のご家庭への対応を専門にしています。（運営の確認が完了した専門家の自己紹介がここに表示されます）
                 </div>
               </div>
             </div>

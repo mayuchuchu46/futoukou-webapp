@@ -105,7 +105,7 @@ async function getSidebarBanner() {
   return data || null;
 }
 
-// ホーム画面にも「専門家一覧」の導線を置くため、本人確認済みの専門家を取得する
+// ホーム画面にも「専門家一覧」の導線を置くため、運営が確認済みの専門家を取得する
 // （/expertsページと同じ条件。トップでは件数を絞って表示し、全件は/expertsへ誘導する）。
 // 2026-10-16: 専門家の本人確認（verified化）は管理画面での手作業のため頻度が低く'use cache'化。
 async function getVerifiedExperts() {
