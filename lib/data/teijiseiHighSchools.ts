@@ -710,7 +710,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 487, prefecture: '福岡県', name: '福岡県立筑紫中央高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://chikushichuo.fku.ed.jp/', note: '普通科。夜間定時制課程。' },
   { no: 488, prefecture: '福岡県', name: '福岡県立糸島高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://itoshima.fku.ed.jp/', note: '普通科。夜間定時制課程。' },
   { no: 489, prefecture: '福岡県', name: '福岡県立明善高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://meizen.fku.ed.jp/', note: '普通科。夜間定時制課程。' },
-  { no: 490, prefecture: '福岡県', name: '福岡県立大川樟風高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', note: '普通科。夜間定時制課程。他県からの志願可能校。公式URL未確認。' },
+  { no: 490, prefecture: '福岡県', name: '福岡県立大川樟風高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://shofu.fku.ed.jp', note: '普通科。夜間定時制課程。他県からの志願可能校。公式URL未確認。' },
   { no: 491, prefecture: '福岡県', name: '福岡県立福島高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://fukushima.fku.ed.jp/', note: '普通科。夜間定時制課程。' },
   { no: 492, prefecture: '福岡県', name: '福岡県立浮羽工業高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://ukiha-tech.fku.ed.jp/', note: '工業系専門学科。夜間定時制課程。他県からの志願可能校。' },
   { no: 493, prefecture: '福岡県', name: '福岡県立朝倉高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://asakura-highschool.ed.jp/', note: '普通科。夜間定時制課程。' },
