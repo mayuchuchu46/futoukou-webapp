@@ -3,9 +3,11 @@
 // 文部科学省の全国統一制度ではなく、都道府県または市区町村が独自に実施しているため、
 // フリースクール本体のデータ（freeSchools.ts）と同じく実施状況が地域ごとにバラバラで、
 // 全国の自治体（約1,700）を網羅的に調査したものではない（2026年10月、都道府県単位＋
-// 政令指定都市・主要市を中心にWeb検索で確認できたものを収集）。掲載が無い都道府県・
-// 市区町村でも、個別の制度が存在する可能性があるため、お住まいの市区町村教育委員会に
-// 直接確認することを勧める文言をページ側で表示する。
+// 政令指定都市・主要市を中心にWeb検索で確認できたものを収集。2026年11月に全国6地域に
+// 分けて追加調査を実施し、関東・中部・関西・九州沖縄で新たに確認できた制度を追加。
+// 北海道・東北、中国・四国の両地域は、今回の調査では家庭向け制度を確認できなかった）。
+// 掲載が無い都道府県・市区町村でも、個別の制度が存在する可能性があるため、お住まいの
+// 市区町村教育委員会に直接確認することを勧める文言をページ側で表示する。
 //
 // 「施設の運営者（フリースクール事業者）向け」の運営費補助金（例：福岡県・群馬県・
 // 静岡県などで確認）は、このデータの対象外（家庭が直接受け取る利用料助成のみ）。
@@ -201,6 +203,143 @@ export const FREESCHOOL_SUBSIDIES: FreeschoolSubsidy[] = [
     summary: '県内公立小・中学校等に在籍し不登校状態でフリースクール等（週3日以上・平日日中に相談支援を行う等の要件を満たす施設）に通う児童生徒の保護者向け。調査への協力金として月1万円、年度最大7万円が支払われる。',
     sourceUrl: 'https://www.pref.wakayama.lg.jp/prefg/501200/d00222083.html',
     note: '制度上は「フリースクール利用料の補助」ではなく、県の調査（通所状況等の回答）への協力に対する「調査協力金」という位置づけ。利用施設が通所日数等の要件を満たしていること、在籍校・市町村教育委員会と連携できることなどの条件がある。令和8年度時点で実施中（期ごとの申請受付制）。',
+  },
+  // 以下、2026年11月追加分（北海道・東北／中国・四国は家庭向け制度が確認できず0件。
+  // 関東・中部・関西・九州沖縄で新たに確認できたもののみ追加）
+  {
+    prefecture: '東京都',
+    entity: '荒川区',
+    entityLevel: 'city',
+    name: '荒川区フリースクール等利用児童生徒支援補助金',
+    summary: '区立小中学校に在籍し区内に住所を有する不登校児童生徒の保護者向け。申請前1年間で概ね30日以上欠席し、月1回以上在籍校の授業時間内にフリースクール等へ通所していること等が条件。月額上限2万円。',
+    sourceUrl: 'https://www.city.arakawa.tokyo.jp/documents/37145/01youkou.pdf',
+    note: '東京都の助成金（既存掲載）とは別の荒川区独自制度。',
+  },
+  {
+    prefecture: '東京都',
+    entity: '港区',
+    entityLevel: 'city',
+    name: '港区フリースクール等利用料助成金',
+    summary: '東京都の助成金の交付決定を受けている港区内在住の不登校児童生徒の保護者向け。月額利用料の2分の1から都助成金の月額上限額を差し引いた額を区がさらに助成（区の上限は月額2万円）。',
+    sourceUrl: 'https://www.city.minato.tokyo.jp/kyouikushien/minatofs.html',
+    note: '都の助成金の交付決定を受けていることが前提条件（都助成への上乗せ）。',
+  },
+  {
+    prefecture: '東京都',
+    entity: '品川区',
+    entityLevel: 'city',
+    name: '品川区フリースクール等利用料助成金',
+    summary: '東京都の助成金の交付決定を受けた品川区立学校在籍児童生徒の保護者向け。利用料から都助成金を差し引いた額を区がさらに助成（合計の上限は児童生徒1人につき月額2万円）。',
+    sourceUrl: 'https://www.city.shinagawa.tokyo.jp/PC/kuseizyoho/kuseizyoho-siryo/kuseizyoho-siryo-reiki/kuseizyoho-siryo-reiki-yoko/kuseizyoho-siryo-reiki-yoko-kyoiku/freeschoolyoukou.pdf',
+    note: '都の助成金の交付決定を受けていることが前提条件（都助成への上乗せ）。',
+  },
+  {
+    prefecture: '神奈川県',
+    entity: '藤沢市',
+    entityLevel: 'city',
+    name: '藤沢市フリースクール等利用児童生徒支援事業補助金',
+    summary: '市内在住の不登校児童生徒の保護者向け。市登録フリースクールへ月1回以上の利用が条件で、利用料等を月額上限1万円まで補助。',
+    sourceUrl: 'https://www.city.fujisawa.kanagawa.jp/documents/35903/tirasi.pdf',
+    note: '入会金・交通費等は対象外。',
+  },
+  {
+    prefecture: '神奈川県',
+    entity: '相模原市',
+    entityLevel: 'city',
+    name: '相模原市フリースクール等利用児童生徒支援事業補助金',
+    summary: '市内在住の不登校児童生徒の保護者向け。市登録フリースクールへ月1回以上の利用が条件で、利用料・実習費・教材費等を月額上限2万円まで補助。',
+    sourceUrl: 'https://www.city.sagamihara.kanagawa.jp/_res/projects/default_project/_page_/001/033/578/tebiki.pdf',
+    note: '',
+  },
+  {
+    prefecture: '神奈川県',
+    entity: '葉山町',
+    entityLevel: 'city',
+    name: '葉山町フリースクール等利用者支援補助金',
+    summary: '町立小中学校在籍の不登校児童生徒の保護者向け。町が認定したフリースクール等への通所が条件で、利用料等の2分の1（月額上限15,000円）を補助。',
+    sourceUrl: 'https://www.town.hayama.lg.jp/material/files/group/22/hogosya1.pdf',
+    note: '年度ごとの申請が必要。',
+  },
+  {
+    prefecture: '神奈川県',
+    entity: '二宮町',
+    entityLevel: 'city',
+    name: '二宮町フリースクール等利用児童生徒支援事業補助金',
+    summary: '町立小中学校在籍の不登校児童生徒の保護者向け。直近1年でおおむね30日以上欠席、月1回以上利用が条件で、利用料の3分の2または月額15,000円のいずれか低い額を補助。',
+    sourceUrl: 'https://www.town.ninomiya.kanagawa.jp/cmsfiles/contents/0000003/3387/youkou.pdf',
+    note: '',
+  },
+  {
+    prefecture: '新潟県',
+    entity: '上越市',
+    entityLevel: 'city',
+    name: '上越市フリースクール等利用支援補助金',
+    summary: '市内在住の小中学生の保護者で、生活保護世帯または市町村民税所得割合計50万7,000円未満の世帯が対象。教育委員会が出席扱いと認める施設の利用で、対象経費（入学費・入寮費・学習費・寮費等）の2分の1を補助（学習費は月額上限2万円、中学生2.25万円など区分ごとに設定）。',
+    sourceUrl: 'https://www.city.joetsu.niigata.jp/uploaded/attachment/265002.pdf',
+    note: '所得制限あり。新潟県・新潟市レベルの家庭向け制度は確認できず、上越市のみ確認。',
+  },
+  {
+    prefecture: '滋賀県',
+    entity: '大津市',
+    entityLevel: 'city',
+    name: '大津市フリースクール等民間施設利用者支援補助金',
+    summary: '大津市内在住で、申請前1か月以内に在籍校の学級活動参加が7日未満、校長がフリースクール等の利用を出席扱いと認めている不登校児童生徒の保護者向け。月額利用料の2分の1または10,000円のうち低い方を利用月ごとに算定し年度内で合算。',
+    sourceUrl: 'https://www.city.otsu.lg.jp/material/files/group/58/R8youkou.pdf',
+    note: '入会金・交通費・教材費・体験利用費は対象外。守山市（既存掲載）とは別の大津市独自制度。',
+  },
+  {
+    prefecture: '滋賀県',
+    entity: '草津市',
+    entityLevel: 'city',
+    name: '草津市フリースクール利用児童生徒支援補助金事業',
+    summary: '認定フリースクール利用児童生徒の保護者向け。補助額は利用料の2分の1（標準）、就学援助受給世帯は4分の3、生活保護受給世帯は全額。月額上限40,000円。',
+    sourceUrl: 'https://www.pref.shiga.lg.jp/file/attachment/5502721.pdf',
+    note: '確認できたのは草津市の事業を紹介する滋賀県の会議資料で、草津市自身の公式要綱は未確認。申請前に草津市教育委員会への確認を推奨。オンライン施設は本資料時点では対象外（検討中）とされていた。',
+  },
+  {
+    prefecture: '兵庫県',
+    entity: '加西市',
+    entityLevel: 'city',
+    name: '加西市民間フリースクール等利用支援補助制度',
+    summary: '加西市内在住・市立小中学校在籍で、フリースクール等利用が指導要録上出席扱いとされている児童生徒の保護者向け。他自治体からの同種補助なし・市税滞納なしが条件で、月ごとの対象経費（授業料・施設利用料）の2分の1と10,000円のうち低い方を補助。',
+    sourceUrl: 'https://www.city.kasai.hyogo.jp/uploaded/attachment/33257.pdf',
+    note: '',
+  },
+  {
+    prefecture: '兵庫県',
+    entity: '尼崎市',
+    entityLevel: 'city',
+    name: 'フリースクール等利用支援補助金',
+    summary: '尼崎市内居住の不登校小中学生で、市教育委員会認定のフリースクール等を利用している保護者向け。他自治体から同種補助を受けていないこと等が条件で、利用料総額の2分の1（1人につき月額上限1万円）を補助。',
+    sourceUrl: 'https://www.city.amagasaki.hyogo.jp/_res/projects/default_project/_page_/001/039/032/02bosyuyoko.pdf',
+    note: '入会金・体験利用料は対象外。確認できたのは令和7年度版の要綱。期別の申請期間が設定されている。',
+  },
+  {
+    prefecture: '兵庫県',
+    entity: '三木市',
+    entityLevel: 'city',
+    name: '三木市フリースクール等利用支援補助金',
+    summary: '三木市内在住で、市内小中学校・特別支援学校在籍、校長が出席扱いと認定、申請日前1年以内に概ね30日以上登校していない等の条件を満たす不登校児童生徒の保護者向け。対象経費（利用料）の2分の1（月額上限1万円）を補助。',
+    sourceUrl: 'https://www.city.miki.lg.jp/uploaded/life/93967_267545_misc.pdf',
+    note: '入会金・体験利用料は対象外。前期・後期で申請期間が分かれている。',
+  },
+  {
+    prefecture: '兵庫県',
+    entity: '豊岡市',
+    entityLevel: 'city',
+    name: '豊岡市フリースクール等利用料補助制度',
+    summary: '豊岡市立小中・義務教育学校在籍かつ市内居住、過去1年間に概ね30日以上欠席、校長が出席扱い可と判断、月1回以上通所などの条件を満たす保護者向け。対象経費の2分の1（月額上限1万円）を補助。',
+    sourceUrl: 'https://www.city.toyooka.lg.jp/_res/projects/default_project/_page_/001/033/376/chirashi.pdf',
+    note: '2025年度新設。国・県・他自治体からの同種補助がないことが条件。',
+  },
+  {
+    prefecture: '沖縄県',
+    entity: '沖縄県',
+    entityLevel: 'prefecture',
+    name: '沖縄県フリースクール等通学費支援（高校生バス通学費等支援事業の一部）',
+    summary: '在籍校が出席扱いとするフリースクールに通う中学生・高校生で、世帯が県民税・市町村民税非課税、児童扶養手当受給、ひとり親医療費助成受給、または急激な収入減少のいずれかに該当する場合、バス・モノレールの通学用ICカードを支給。',
+    sourceUrl: 'https://www.pref.okinawa.jp/kyoiku/edu/1008819/1008843/1025153/1017916.html',
+    note: '利用料そのものではなく通学費（交通費）が対象の制度。熊本県・栃木県の既存掲載制度と同種のスキーム。',
   },
 ];
 
