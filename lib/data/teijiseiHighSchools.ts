@@ -50,7 +50,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 3, prefecture: '埼玉県', name: '埼玉県立浦和高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://urawa-h.spec.ed.jp/', note: '定時制（普通科、男子）を併置' },
   { no: 4, prefecture: '埼玉県', name: '埼玉県立浦和第一女子高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://urawaichijo-h.spec.ed.jp/', note: '定時制（普通科、女子）を併置' },
   { no: 5, prefecture: '埼玉県', name: '埼玉県立大宮商業高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://omiyasyogyo-ch.spec.ed.jp/', note: '定時制（普通科・商業科）を併置' },
-  { no: 6, prefecture: '埼玉県', name: '埼玉県立大宮中央高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科）を併置' },
+  { no: 6, prefecture: '埼玉県', name: '埼玉県立大宮中央高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'http://www.ohmiyachuo-h.spec.ed.jp/', note: '定時制（普通科）を併置' },
   { no: 7, prefecture: '埼玉県', name: '埼玉県立小川高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://ogawa-h.spec.ed.jp/', note: '定時制（普通科）を併置' },
   { no: 8, prefecture: '埼玉県', name: '埼玉県立春日部高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kasukabe1899.spec.ed.jp/', note: '定時制（普通科）を併置' },
   { no: 9, prefecture: '埼玉県', name: '埼玉県立川越工業高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kawagoe-th.spec.ed.jp/zennichi/', note: '定時制（普通科・工業技術科）を併置' },
@@ -59,12 +59,12 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 12, prefecture: '埼玉県', name: '埼玉県立秩父農工科学高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://chichibunoko-bh.spec.ed.jp/', note: '定時制（普通科）を併置' },
   { no: 13, prefecture: '埼玉県', name: '埼玉県立越ヶ谷高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://koshigaya-h.spec.ed.jp/', note: '定時制（普通科）を併置' },
   { no: 14, prefecture: '埼玉県', name: '埼玉県立熊谷高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kumagaya-h.spec.ed.jp/', note: '定時制（普通科）を併置' },
-  { no: 15, prefecture: '埼玉県', name: '埼玉県立羽生高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', parts: '昼間・夜間', note: '定時制（普通科）を併置。資料に「昼間、夜間」の区分記載あり' },
+  { no: 15, prefecture: '埼玉県', name: '埼玉県立羽生高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', parts: '昼間・夜間', officialUrl: 'https://hanyu-h.spec.ed.jp/', note: '定時制（普通科）を併置。資料に「昼間、夜間」の区分記載あり' },
   { no: 16, prefecture: '埼玉県', name: '埼玉県立飯能高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://hanno-h.spec.ed.jp/', note: '定時制（普通科）を併置' },
   { no: 17, prefecture: '埼玉県', name: '埼玉県立本庄高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://honjo-h.spec.ed.jp/', note: '定時制（普通科）を併置' },
   { no: 18, prefecture: '埼玉県', name: '埼玉県立大宮科学技術高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://ost-h.spec.ed.jp/zen/', note: '定時制（工業技術科）を併置' },
   { no: 19, prefecture: '埼玉県', name: '埼玉県立川口工業高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kawaguchi-th.spec.ed.jp/', note: '定時制（工業技術科）を併置' },
-  { no: 20, prefecture: '埼玉県', name: '埼玉県立狭山緑陽高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部・Ⅱ部（総合学科）', nickname: 'パレットスクール', note: '不登校経験者・中退者・学び直したい社会人が対象' },
+  { no: 20, prefecture: '埼玉県', name: '埼玉県立狭山緑陽高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部・Ⅱ部（総合学科）', nickname: 'パレットスクール', officialUrl: 'http://www.sr-h.spec.ed.jp/', note: '不登校経験者・中退者・学び直したい社会人が対象' },
   { no: 21, prefecture: '埼玉県', name: '埼玉県立戸田翔陽高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部・Ⅱ部・Ⅲ部（総合学科、三部制）', nickname: 'パレットスクール', officialUrl: 'https://shoyo-h.spec.ed.jp/', note: '不登校経験者・中退者・学び直したい社会人が対象。2011年開校' },
   { no: 22, prefecture: '埼玉県', name: '埼玉県立吹上秋桜高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'standalone', parts: 'Ⅰ部・Ⅱ部（総合学科）', nickname: 'パレットスクール', officialUrl: 'https://shuo-h.spec.ed.jp/', note: '不登校経験者・中退者・学び直したい社会人が対象' },
   { no: 23, prefecture: '埼玉県', name: '埼玉県立吉川美南高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', parts: 'Ⅰ部・Ⅱ部（総合学科、Ⅱ部は夜間と確認）', officialUrl: 'https://yoshikawaminami-h.spec.ed.jp/' },
@@ -604,13 +604,13 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // 出典: 山口県教育委員会 高校一覧資料 https://www.pref.yamaguchi.lg.jp/uploaded/life/148551_267732_misc.pdf
   //       平成29年10月会議資料 https://www.pref.yamaguchi.lg.jp/uploaded/attachment/75274.pdf
   //       各校学科・部制資料 https://www.pref.yamaguchi.lg.jp/uploaded/attachment/76557.pdf, 76740.pdf
-  { no: 419, prefecture: '山口県', name: '山口県立岩国商業高等学校　東分校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '普通科。入学定員は昼間部40人・夜間部40人。所在市区町村は資料上確認できず。' },
+  { no: 419, prefecture: '山口県', name: '山口県立岩国商業高等学校　東分校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', officialUrl: 'http://www.iwakuni-hc.ysn21.jp/kyouiku/teiji/', note: '普通科。入学定員は昼間部40人・夜間部40人。所在市区町村は資料上確認できず。' },
   { no: 420, prefecture: '山口県', name: '山口県立下松工業高等学校', publicPrivate: '公立', operator: '山口県教育委員会', officialUrl: 'https://www.kudamatsu-t.ysn21.jp/', note: '定時制課程・機械科、入学定員40人。部制・所在市区町村・本校/分校の区別は資料上確認できず。' },
   { no: 421, prefecture: '山口県', municipality: '周南市', name: '山口県立徳山高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '夜間部', officialUrl: 'https://tokuyama-h.ed.jp/', note: '定時制課程・普通科、修業年限3年または4年、入学定員40人。' },
-  { no: 422, prefecture: '山口県', municipality: '山口市', name: '山口県立山口松風館高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'standalone', parts: '三部制（昼間部午前部・昼間部午後部・夜間部）', curriculumType: '単位制', note: '普通科。所在地は山口市小郡令和三丁目。入学定員は各部38人程度。通信制課程も併設。' },
-  { no: 423, prefecture: '山口県', name: '山口県立宇部中央高等学校', publicPrivate: '公立', operator: '山口県教育委員会', note: '定時制課程・普通科、入学定員40人。部制・所在市区町村・本校/分校の区別は資料上確認できず。' },
-  { no: 424, prefecture: '山口県', municipality: '山陽小野田市', name: '山口県立小野田工業高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制課程・機械科、修業年限3年または4年、入学定員40人。' },
-  { no: 425, prefecture: '山口県', name: '山口県立下関双葉高等学校', publicPrivate: '公立', operator: '山口県教育委員会', parts: '昼間部・夜間部', note: '定時制課程・学科名は資料上「総合」と表記（総合学科と推定されるが正式表記の確証なし）。入学定員は昼間部40人・夜間部40人。所在市区町村・本校/分校の区別は資料上確認できず。' },
+  { no: 422, prefecture: '山口県', municipality: '山口市', name: '山口県立山口松風館高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'standalone', parts: '三部制（昼間部午前部・昼間部午後部・夜間部）', curriculumType: '単位制', officialUrl: 'http://www.shofukan.ysn21.jp/', note: '普通科。所在地は山口市小郡令和三丁目。入学定員は各部38人程度。通信制課程も併設。' },
+  { no: 423, prefecture: '山口県', name: '山口県立宇部中央高等学校', publicPrivate: '公立', operator: '山口県教育委員会', officialUrl: 'http://www.ubechuo-h.ysn21.jp/', note: '定時制課程・普通科、入学定員40人。部制・所在市区町村・本校/分校の区別は資料上確認できず。' },
+  { no: 424, prefecture: '山口県', municipality: '山陽小野田市', name: '山口県立小野田工業高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '夜間部', officialUrl: 'http://www.onoda-t.ysn21.jp', note: '定時制課程・機械科、修業年限3年または4年、入学定員40人。' },
+  { no: 425, prefecture: '山口県', name: '山口県立下関双葉高等学校', publicPrivate: '公立', operator: '山口県教育委員会', parts: '昼間部・夜間部', officialUrl: 'http://www.futaba.ysn21.jp/', note: '定時制課程・学科名は資料上「総合」と表記（総合学科と推定されるが正式表記の確証なし）。入学定員は昼間部40人・夜間部40人。所在市区町村・本校/分校の区別は資料上確認できず。' },
 
   // ===== 岡山県（11校） =====
   // 出典: 岡山県教育委員会 令和7年度 入学定員資料 https://www.pref.okayama.jp/uploaded/life/1054590_10218886_misc.pdf
