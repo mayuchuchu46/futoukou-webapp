@@ -74,8 +74,17 @@ export default async function MimamoriResultPage({
           </div>
           <div className="card" style={{ alignItems: 'flex-start', gap: 12 }}>
             <div className="answer-label" style={{ fontSize: 13 }}>診断結果</div>
-            <div className="qtext-main" style={{ fontSize: 18 }}>{result.name}</div>
-            <div className="qtext" style={{ fontWeight: 600 }}>{result.catch}</div>
+            {/* 2026-11-01追加：タイプ名・キャッチコピーを含むビジュアル（シェア画像と共通）。
+                画像内にすでにタイプ名・キャッチコピーが入っているため、本文側で同じ文言を
+                見出しとして重複表示しない。 */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={result.image}
+              alt={`${result.name}：${result.catch}`}
+              width={1200}
+              height={675}
+              style={{ width: '100%', height: 'auto', borderRadius: 12, border: '1px solid var(--border)' }}
+            />
             <div className="qtext">{result.desc}</div>
             <div className="card-answerbox" style={{ width: '100%' }}>
               <div className="qtext" style={{ fontSize: 13 }}>

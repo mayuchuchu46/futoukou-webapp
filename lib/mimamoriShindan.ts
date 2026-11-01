@@ -103,6 +103,9 @@ export type MimamoriResult = {
   caution: string;
   categorySlug: Category;
   categoryLabel: string;
+  // 結果ページ・シェア画像（OGP）に使う、タイプ専用の完成済みビジュアル
+  // （2026-11-01追加。ChatGPTで作成した画像を本番用に1200x675へリサイズして配置）。
+  image: string;
 };
 
 export const MIMAMORI_RESULTS: Record<MimamoriType, MimamoriResult> = {
@@ -114,6 +117,7 @@ export const MIMAMORI_RESULTS: Record<MimamoriType, MimamoriResult> = {
     caution: '見守りすぎて、自分自身の不安や疲れを後回しにしないように。',
     categorySlug: 'approach',
     categoryLabel: '関わり方',
+    image: '/assets/shindan/mimamori-port.jpg',
   },
   warm: {
     type: 'warm',
@@ -123,6 +127,7 @@ export const MIMAMORI_RESULTS: Record<MimamoriType, MimamoriResult> = {
     caution: '関わる量が多い分、子どもが一人で考える時間も大切にしてみて。',
     categorySlug: 'home',
     categoryLabel: '家庭・自分のこと',
+    image: '/assets/shindan/mimamori-warm.jpg',
   },
   coach: {
     type: 'coach',
@@ -132,6 +137,7 @@ export const MIMAMORI_RESULTS: Record<MimamoriType, MimamoriResult> = {
     caution: '備えが整うほど「早く動きたい」気持ちが出やすいので、子どものペースとのズレに注意。',
     categorySlug: 'course',
     categoryLabel: '進路・学校選び',
+    image: '/assets/shindan/mimamori-coach.jpg',
   },
   strategist: {
     type: 'strategist',
@@ -141,6 +147,7 @@ export const MIMAMORI_RESULTS: Record<MimamoriType, MimamoriResult> = {
     caution: '動き続ける分、立ち止まって子どもの「今の気持ち」を確認する時間も意識して。',
     categorySlug: 'school',
     categoryLabel: '学校との関係',
+    image: '/assets/shindan/mimamori-strategist.jpg',
   },
 };
 
