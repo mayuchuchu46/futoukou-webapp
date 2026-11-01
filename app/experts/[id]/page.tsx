@@ -102,7 +102,7 @@ export default async function ExpertProfilePublicPage({
                     className="backlink"
                     style={{ fontSize: 13, margin: 0 }}
                   >
-                    ご本人のサービス・サイトはこちら →
+                    ご本人のサイト・SNSはこちら →
                   </a>
                 )}
               </div>
@@ -122,16 +122,16 @@ export default async function ExpertProfilePublicPage({
                   href={onlineConsultLink}
                   target="_blank"
                   rel="noopener noreferrer nofollow"
-                  className="btn-secondary"
+                  className="btn-primary"
                   style={{ alignSelf: 'flex-start' }}
                 >
-                  オンラインで相談する（内容・料金は本人設定）
+                  オンライン予約はこちら →
                 </a>
               )}
             </div>
             {onlineConsultLink && (
               <div className="muted" style={{ fontSize: 12 }}>
-                予約ページへ移動します。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
+                予約ページへ移動します（内容・料金はご本人の設定によります）。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
               </div>
             )}
           </div>

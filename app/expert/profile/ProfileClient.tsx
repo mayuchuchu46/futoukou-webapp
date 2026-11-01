@@ -133,7 +133,7 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
           <input className="input" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })} />
           <div className="muted">自己紹介</div>
           <textarea className="input" rows={5} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
-          <div className="muted">ご自身のサービス・サイトなどへのリンク（任意）</div>
+          <div className="muted">ご自身のサイト・SNS（X、Instagramなど）へのリンク（任意）</div>
           <input
             className="input"
             value={form.link_url}
@@ -141,7 +141,7 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
             placeholder="https://..."
           />
           <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-            専門家一覧などに公開表示されます。
+            プロフィールページに公開表示されます。
           </div>
           <div className="muted">オンラインでの通話・チャット相談の予約ページURL（任意）</div>
           <input

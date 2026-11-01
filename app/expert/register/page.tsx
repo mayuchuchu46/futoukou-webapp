@@ -246,7 +246,7 @@ export default function ExpertRegisterPage() {
         />
         <input
           className="input"
-          placeholder="ご自身のサービス・サイトなどへのリンク（任意）"
+          placeholder="ご自身のサイト・SNS（X、Instagramなど）へのリンク（任意）"
           value={form.link_url}
           onChange={(e) => setForm({ ...form, link_url: e.target.value })}
         />
