@@ -81,11 +81,21 @@ export default async function ExpertSection() {
     .order('created_at', { ascending: false })
     .limit(20);
 
+  // 「この方に直接相談をリクエストする」が押された件数（2026-11-01追加）。
+  // オンライン相談リンク（online_consult_url）を既に設定済みなら、リクエストは
+  // クライアント側でそちらへ直接誘導されるため記録されない。未設定の間だけ
+  // ここで件数を見せ、設定を促す。
+  const { count: consultRequestCount } = await supabase
+    .from('consult_requests')
+    .select('id', { count: 'exact', head: true })
+    .eq('expert_id', expert.id);
+
   return (
     <ExpertManagementPanel
       expert={{ id: expert.id, name: expert.name, credential: expert.credential }}
       pending={pending || []}
       answeredByMe={answeredByMe || []}
+      consultRequestCount={!expert.online_consult_url ? consultRequestCount || 0 : 0}
     />
   );
 }

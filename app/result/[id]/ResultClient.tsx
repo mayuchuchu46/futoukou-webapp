@@ -17,6 +17,56 @@ import { EXPERT_VOLUNTEER_MODE, SENPAI_CREDENTIAL } from '@/lib/config';
 // サーバー側は「会員ではない匿名の訪問者」として見えるべき初期状態（initialItem）を
 // すでにSSR済み。ここではマウント後に本当のviewer_id（本人／会員かどうか）で
 // 再取得し、ロック解除が必要なら表示を差し替える。
+// 回答した専門家・先輩保護者にとっては、回答すること自体が自分のプロフィールへの
+// 露出・集客になる（2026-11-01、「専門家や保護者にとっては、自分のプロフィールに
+// 誘導することが目的」との方針を受けて追加）。オンライン相談リンク（online_consult_url）
+// を設定済みならそこへ直接誘導し、未設定なら「直接相談をリクエストする」を記録するだけに
+// して、専門家側のダッシュボードに件数を表示し設定を促す（メール通知の基盤はまだ無いため）。
+function ConsultRequestButton({ expertId, consultationId, onlineConsultUrl }: { expertId: string; consultationId: string; onlineConsultUrl?: string | null }) {
+  const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+
+  if (onlineConsultUrl) {
+    return (
+      <a
+        href={onlineConsultUrl}
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        className="btn-secondary"
+        style={{ alignSelf: 'flex-start', fontSize: 13, padding: '6px 14px' }}
+      >
+        この方に直接相談する →
+      </a>
+    );
+  }
+
+  if (state === 'sent') {
+    return <div className="muted" style={{ fontSize: 12 }}>リクエストを送りました。ご本人に伝わります。</div>;
+  }
+
+  return (
+    <button
+      type="button"
+      className="btn-secondary"
+      disabled={state === 'sending'}
+      style={{ alignSelf: 'flex-start', fontSize: 13, padding: '6px 14px' }}
+      onClick={async () => {
+        setState('sending');
+        try {
+          await fetch('/api/expert/consult-request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ expert_id: expertId, consultation_id: consultationId, author_id: getUid() }),
+          });
+        } finally {
+          setState('sent');
+        }
+      }}
+    >
+      {state === 'sending' ? '送信中…' : 'この方に直接相談をリクエストする'}
+    </button>
+  );
+}
+
 export default function ResultClient({ id, initialItem }: { id: string; initialItem: Consultation }) {
   const [item, setItem] = useState<Consultation>(initialItem);
   const [feedbackSending, setFeedbackSending] = useState(false);
@@ -140,6 +190,13 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
           <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
             {item.expert_answer}
           </div>
+          {item.experts?.id && (
+            <ConsultRequestButton
+              expertId={item.experts.id}
+              consultationId={item.id}
+              onlineConsultUrl={item.experts.online_consult_url}
+            />
+          )}
           {/* 先輩保護者の回答は、あくまで一個人の経験・感想であることを明示する免責
               （2026-10-31、「あくまで個人の感想であるっていう免責もかいておきたいね」
               「この保護者の回答のところに」との指摘を受けて追加）。 */}

@@ -57,7 +57,7 @@ export async function getConsultationsList({
   // あいまいでPostgRESTがエラーを返す（結果、一覧が全件取得できなくなる）。
   let query = supabase
     .from('consultations')
-    .select('*, experts!expert_id(name, display_name, credential, experienced_school_names)')
+    .select('*, experts!expert_id(id, name, display_name, credential, experienced_school_names, online_consult_url)')
     .eq('hidden', false)
     // AIの回答に対する「その場での返信（ラリー）」として作られた続きの相談（parent_idあり）は、
     // 他の人向けの一覧・検索には出さない（文脈がないと意味が分からない断片になる、
@@ -138,9 +138,15 @@ export async function getConsultationsList({
     // （2026-10-13、本名と表示名を分離）。
     const experts = item.experts
       ? {
+          // プロフィールページへのリンク・「直接相談をリクエスト」ボタン用
+          // （2026-11-01、クライアント側の再取得（/api/consultations）でこのidが
+          // 欠けていたため、初回表示後にプロフィールリンクが消える不具合があった。
+          // app/result/[id]/page.tsxのgetConsultationと同じ項目を揃えた）。
+          id: item.experts.id,
           name: expertDisplayName(item.experts),
           credential: item.experts.credential,
           experienced_school_names: item.experts.experienced_school_names || [],
+          online_consult_url: item.experts.online_consult_url || null,
         }
       : null;
     const base = { ...item, experts };

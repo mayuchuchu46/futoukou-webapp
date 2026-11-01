@@ -659,6 +659,21 @@ create index if not exists consultations_member_id_idx on consultations (member_
 create index if not exists consultations_parent_id_idx on consultations (parent_id);
 create index if not exists consultations_child_id_idx on consultations (child_id);
 
+-- 専門家・先輩保護者がオンライン相談リンク（online_consult_url）を未設定の場合に、
+-- 回答を読んだ利用者が「直接相談をリクエストする」ボタンを押すと1件ここに記録される
+-- （2026-11-01追加。「専門家にその機会を促す」との依頼を受けて、リンクを設定済みなら
+-- そこへ直接案内し、未設定ならリクエストとして記録して専門家側のダッシュボードに
+-- 件数を表示する方式にした。メール等の通知基盤はまだ無いため、in-app表示で代替）。
+create table if not exists consult_requests (
+  id uuid primary key default gen_random_uuid(),
+  expert_id uuid not null references experts(id),
+  consultation_id uuid references consultations(id),
+  author_id text,
+  created_at timestamptz not null default now()
+);
+alter table consult_requests enable row level security;
+create index if not exists consult_requests_expert_id_idx on consult_requests (expert_id);
+
 -- マイページに表示する「今のお子さんの状況」のAIサマリー。会員の過去の相談をまとめて
 -- 生成し、ここにキャッシュする（毎回のページ表示でAIを呼び直さないようにするため）。
 -- consultation_count は生成時点でのその会員の相談件数。マイページ表示時にこの値と

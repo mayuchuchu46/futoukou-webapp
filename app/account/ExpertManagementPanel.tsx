@@ -15,10 +15,14 @@ export default function ExpertManagementPanel({
   expert,
   pending,
   answeredByMe,
+  consultRequestCount = 0,
 }: {
   expert: Expert;
   pending: Consultation[];
   answeredByMe: Consultation[];
+  // 「この方に直接相談をリクエストする」が押された件数。オンライン相談リンク
+  // （online_consult_url）を設定済みの場合は常に0（呼び出し側で判定済み）。
+  consultRequestCount?: number;
 }) {
   const router = useRouter();
   const [items, setItems] = useState(pending);
@@ -65,6 +69,23 @@ export default function ExpertManagementPanel({
           <a href="/expert/earnings" className="btn-ghost">報酬を見る</a>
         </div>
       </div>
+
+      {/* 「この方に直接相談をリクエストする」の件数（2026-11-01追加）。回答した相談から
+          読者がこのボタンを押すと、オンライン相談リンクが未設定の間はここに溜まる。
+          設定すれば以降は読者が直接そのリンクへ誘導されるようになる。 */}
+      {consultRequestCount > 0 && (
+        <div className="card" style={{ gap: 6, background: 'var(--sub)' }}>
+          <div style={{ fontWeight: 700 }}>
+            直接相談をリクエストした方が{consultRequestCount}人います
+          </div>
+          <div className="qtext" style={{ fontSize: 13 }}>
+            オンライン相談のリンク（MOSH等のご自身の予約・決済ページ）を設定すると、以降はリクエストした方を直接そちらへご案内できます。
+          </div>
+          <a href="/expert/profile" className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
+            オンライン相談のリンクを設定する
+          </a>
+        </div>
+      )}
 
       <div style={{ fontWeight: 700, marginTop: 8 }}>回答待ちの相談（{items.length}件）</div>
       {items.length === 0 && <div className="muted">今は回答待ちの相談はありません。</div>}
