@@ -562,13 +562,13 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 396, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立今宮工科高等学校', officialUrl: 'https://www.osaka-c.ed.jp/imamiya-t/', note: '定時制総合学科' },
   { no: 397, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立工芸高等学校', officialUrl: 'https://www3.osaka-c.ed.jp/kogei-t/', note: '定時制総合学科' },
   { no: 398, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立茨木工科高等学校', officialUrl: 'http://ibaraki-kouka.jp/', note: '定時制総合学科' },
-  { no: 399, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立藤井寺工科高等学校', note: '定時制総合学科' },
-  { no: 400, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立堺工科高等学校', note: '定時制総合学科' },
+  { no: 399, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立藤井寺工科高等学校', officialUrl: 'https://www.osaka-c.ed.jp/fujiidera-t/', note: '定時制総合学科' },
+  { no: 400, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立堺工科高等学校', officialUrl: 'https://www.osaka-c.ed.jp/sakai-t/', note: '定時制総合学科' },
   { no: 401, prefecture: '大阪府', municipality: '泉佐野市', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立佐野工科高等学校', officialUrl: 'https://www.osaka-c.ed.jp/sano-t-p/', note: '定時制総合学科' },
-  { no: 402, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立成城高等学校', note: '定時制総合学科。同校は全日制で総合学科（エンパワメントスクール）も設置' },
-  { no: 403, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立和泉総合高等学校', note: '定時制総合学科。同校は全日制で総合学科（エンパワメントスクール）も設置' },
-  { no: 404, prefecture: '大阪府', municipality: '堺市', publicPrivate: '公立', operator: '堺市教育委員会', schoolCategory: 'attached', curriculumType: '工業に関する学科／マネジメント創造科', name: '堺市立堺高等学校', note: '定時制。学科は工業に関する学科とマネジメント創造科の2系統' },
-  { no: 405, prefecture: '大阪府', municipality: '岸和田市', publicPrivate: '公立', operator: '岸和田市教育委員会', schoolCategory: 'attached', curriculumType: '商業科', name: '岸和田市立産業高等学校', note: '定時制' },
+  { no: 402, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立成城高等学校', officialUrl: 'https://www.osaka-c.ed.jp/seijo-t/', note: '定時制総合学科。同校は全日制で総合学科（エンパワメントスクール）も設置' },
+  { no: 403, prefecture: '大阪府', publicPrivate: '公立', operator: '大阪府教育委員会', schoolCategory: 'attached', curriculumType: '総合学科', name: '大阪府立和泉総合高等学校', officialUrl: 'https://www2.osaka-c.ed.jp/izumi-t/', note: '定時制総合学科。同校は全日制で総合学科（エンパワメントスクール）も設置' },
+  { no: 404, prefecture: '大阪府', municipality: '堺市', publicPrivate: '公立', operator: '堺市教育委員会', schoolCategory: 'attached', curriculumType: '工業に関する学科／マネジメント創造科', name: '堺市立堺高等学校', officialUrl: 'https://www.sakai.ed.jp/sakai-hs/', note: '定時制。学科は工業に関する学科とマネジメント創造科の2系統' },
+  { no: 405, prefecture: '大阪府', municipality: '岸和田市', publicPrivate: '公立', operator: '岸和田市教育委員会', schoolCategory: 'attached', curriculumType: '商業科', name: '岸和田市立産業高等学校', officialUrl: 'https://www.kishisan-h.ed.jp/', note: '定時制' },
 
   // ===== 奈良県（3校） =====
   // 出典: 奈良県教育委員会 https://www.pref.nara.jp/secure/296921/0_Koukou_r6_Mokuji.pdf、
