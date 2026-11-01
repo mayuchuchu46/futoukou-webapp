@@ -513,7 +513,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 361, prefecture: '兵庫県', municipality: '赤穂市', name: '兵庫県立赤穂高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~ako-hs/', note: '定時制課程。学年制と推察されるが資料に明記なし。' },
   { no: 362, prefecture: '兵庫県', municipality: '豊岡市', name: '兵庫県立豊岡高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~toyooka-hs/', note: '定時制課程。学年制/単位制は資料に明記なし。' },
   { no: 363, prefecture: '兵庫県', municipality: '洲本市', name: '兵庫県立洲本高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~sumoto-hs/', note: '定時制の課程。学年制/単位制は資料に明記なし。' },
-  { no: 364, prefecture: '兵庫県', name: '兵庫県立姫路北高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', curriculumType: '単位制', note: '普通科。夜間定時制・単位制（県議会資料で確認）。所在市区町村は公式資料で確認できず。' },
+  { no: 364, prefecture: '兵庫県', name: '兵庫県立姫路北高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.hyogo-c.ed.jp/~himekita-hs/', note: '普通科。夜間定時制・単位制（県議会資料で確認）。所在市区町村は公式資料で確認できず。' },
   { no: 365, prefecture: '兵庫県', municipality: '神戸市兵庫区', name: '兵庫県立神戸工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~kobe-ths/', note: '工業科。定時制。学年制/単位制は資料に明記なし。' },
   { no: 366, prefecture: '兵庫県', municipality: '尼崎市', name: '兵庫県立神崎工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~kanzaki-ths/', note: '工業科。定時制。学年制/単位制は資料に明記なし。' },
   { no: 367, prefecture: '兵庫県', name: '兵庫県立小野工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~ono2-ths/', note: '工業科（機械科）。定時制。所在市区町村は公式資料で確認できず。' },
@@ -534,7 +534,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 378, prefecture: '三重県', municipality: '松阪市', name: '三重県立松阪工業高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
   { no: 379, prefecture: '三重県', municipality: '伊勢市', name: '三重県立伊勢まなび高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '三部制（昼間部＝午前部・午後部、夜間部）', curriculumType: '単位制', note: '定時制学科はものづくり工学科（単位制）' },
   { no: 380, prefecture: '三重県', municipality: '尾鷲市', name: '三重県立尾鷲高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
-  { no: 381, prefecture: '三重県', municipality: '熊野市', name: '三重県立熊野青藍高等学校（木本校舎）', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
+  { no: 381, prefecture: '三重県', municipality: '熊野市', name: '三重県立熊野青藍高等学校（木本校舎）', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://sites.google.com/mie-c.ed.jp/kumanoseiran/', note: '定時制普通科（単位制）。部制の記載なし' },
 
   // ===== 滋賀県（5校） =====
   // 出典: 滋賀県教育委員会 確定出願状況資料（平成30・31年度）、各校公式サイト、school.js88.com、minkou.jp
