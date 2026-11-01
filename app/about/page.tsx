@@ -158,7 +158,7 @@ export default async function AboutPage() {
         <Link href="/senpai/recruit" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>先輩保護者としてご協力いただける方へ</div>
           <div className="qtext">
-            資格は不要です。不登校を経験されたご家庭ご自身を募集しています。登録後、運営とのオンライン通話を経て、ご自身の体験に基づいた相談への回答をお願いします。
+            資格は不要です。不登校を経験されたご家庭ご自身を募集しています。登録後、運営が内容を確認したうえで、ご自身の体験に基づいた相談への回答をお願いします。
           </div>
           <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
             先輩保護者募集ページへ ›
