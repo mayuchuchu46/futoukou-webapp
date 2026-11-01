@@ -528,12 +528,12 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 372, prefecture: '三重県', municipality: '四日市市', name: '三重県立四日市工業高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/tyokka/', note: '定時制学科は機械交通工学科・住システム工学科（いずれも単位制）。部制の記載なし' },
   { no: 373, prefecture: '三重県', municipality: '四日市市', name: '三重県立北星高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '夜間部', curriculumType: '単位制', officialUrl: 'http://www.mie-c.ed.jp/hhokus/', note: '定時制普通科（夜間部・単位制）のほか情報ビジネス科（単位制）、普通科（昼間部）の募集も記載あり（出典に記述の食い違いあり、要公式サイト確認）' },
   { no: 374, prefecture: '三重県', municipality: '鈴鹿市', name: '三重県立飯野高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/hiino/', note: '定時制普通科（単位制）。部制の記載なし' },
-  { no: 375, prefecture: '三重県', municipality: '津市', name: '三重県立みえ夢学園高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '三部制（昼間部＝午前部・午後部、夜間部）', curriculumType: '単位制', note: '総合学科' },
+  { no: 375, prefecture: '三重県', municipality: '津市', name: '三重県立みえ夢学園高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '三部制（昼間部＝午前部・午後部、夜間部）', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/hmieyu/', note: '総合学科' },
   { no: 376, prefecture: '三重県', municipality: '伊賀市', name: '三重県立上野高等学校', publicPrivate: '公立', operator: '三重県教育委員会', officialUrl: 'http://www.mie-c.ed.jp/hueno/', note: '定時制の学科・部制・単位制/学年制は未確認' },
   { no: 377, prefecture: '三重県', municipality: '名張市', name: '三重県立名張高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/hnabar/', note: '定時制普通科（単位制）。部制の記載なし' },
   { no: 378, prefecture: '三重県', municipality: '松阪市', name: '三重県立松阪工業高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/tmatus/', note: '定時制普通科（単位制）。部制の記載なし' },
-  { no: 379, prefecture: '三重県', municipality: '伊勢市', name: '三重県立伊勢まなび高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '三部制（昼間部＝午前部・午後部、夜間部）', curriculumType: '単位制', note: '定時制学科はものづくり工学科（単位制）' },
-  { no: 380, prefecture: '三重県', municipality: '尾鷲市', name: '三重県立尾鷲高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
+  { no: 379, prefecture: '三重県', municipality: '伊勢市', name: '三重県立伊勢まなび高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '三部制（昼間部＝午前部・午後部、夜間部）', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/bise/', note: '定時制学科はものづくり工学科（単位制）' },
+  { no: 380, prefecture: '三重県', municipality: '尾鷲市', name: '三重県立尾鷲高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/howase/', note: '定時制普通科（単位制）。部制の記載なし' },
   { no: 381, prefecture: '三重県', municipality: '熊野市', name: '三重県立熊野青藍高等学校（木本校舎）', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://sites.google.com/mie-c.ed.jp/kumanoseiran/', note: '定時制普通科（単位制）。部制の記載なし' },
 
   // ===== 滋賀県（5校） =====
@@ -541,7 +541,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 382, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立大津清陵高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', curriculumType: '単位制', officialUrl: 'http://www.ohtsuseiryo-h.shiga-ec.ed.jp/', note: '普通科。昼間部・通信部は大平1丁目14-1、夜間部は大津市中心部（JR膳所駅付近）。' },
   { no: 383, prefecture: '滋賀県', municipality: '東近江市', name: '滋賀県立能登川高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', officialUrl: 'https://www.notogawa-h.shiga-ec.ed.jp/', note: '普通科。' },
   { no: 384, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立瀬田工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', officialUrl: 'https://www.setatech-h.shiga-ec.ed.jp/', note: '定時制学科は機械・電気科。部制・単位制/学年制は未確認' },
-  { no: 385, prefecture: '滋賀県', municipality: '彦根市', name: '滋賀県立彦根工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '定時制学科は機械科。部制・単位制/学年制は未確認' },
+  { no: 385, prefecture: '滋賀県', municipality: '彦根市', name: '滋賀県立彦根工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', officialUrl: 'https://www.genkou-h.shiga-ec.ed.jp/', note: '定時制学科は機械科。部制・単位制/学年制は未確認' },
   { no: 386, prefecture: '滋賀県', municipality: '長浜市', name: '滋賀県立長浜北星高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '総合学科。部制・単位制/学年制は未確認' },
 
   // ===== 大阪府（19校） =====
@@ -588,9 +588,9 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // ===== 鳥取県（4校） =====
   // 出典: https://www.pref.tottori.lg.jp/315424.htm（校名一覧）、https://www.pref.tottori.lg.jp/87667.htm（所在地一覧）、
   //       各校スクール・ポリシーPDF（pref.tottori.lg.jp）
-  { no: 412, prefecture: '鳥取県', municipality: '鳥取市', name: '鳥取県立鳥取緑風高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', note: '全日制・通信制も併設。定時制課程は総合学科。' },
+  { no: 412, prefecture: '鳥取県', municipality: '鳥取市', name: '鳥取県立鳥取緑風高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.torikyo.ed.jp/ryokufu-h/', note: '全日制・通信制も併設。定時制課程は総合学科。' },
   { no: 413, prefecture: '鳥取県', municipality: '米子市', name: '鳥取県立米子東高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.torikyo.ed.jp/yonagoe-h/', note: '定時制課程は普通学科。' },
-  { no: 414, prefecture: '鳥取県', municipality: '米子市', name: '鳥取県立米子白鳳高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', note: '全日制・通信制も併設。定時制課程は総合学科。' },
+  { no: 414, prefecture: '鳥取県', municipality: '米子市', name: '鳥取県立米子白鳳高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.torikyo.ed.jp/hakuhou-h/', note: '全日制・通信制も併設。定時制課程は総合学科。' },
   { no: 415, prefecture: '鳥取県', municipality: '倉吉市', name: '鳥取県立倉吉東高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', curriculumType: '単位制（通信制科目を併修し3年間での卒業も可能な教育課程）', officialUrl: 'https://www.torikyo.ed.jp/kurae-h/', note: '定時制課程は普通学科。' },
 
   // ===== 島根県（3校） =====
