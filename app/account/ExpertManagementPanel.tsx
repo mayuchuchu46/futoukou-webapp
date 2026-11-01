@@ -7,8 +7,6 @@ import { Consultation, metaLabel } from '@/lib/types';
 
 type Expert = { id: string; name: string; credential: string };
 
-const MIN_ANSWER_LENGTH = 200;
-
 // 旧/expert/dashboardの回答キュー・回答済み一覧（DashboardClient.tsx）を、
 // アカウントページに統合するために切り出したもの（2026-11-01、「アカウントページに、
 // 専門家や保護者の管理内容も入れ込んじゃえばいい」との方針を受けて）。
@@ -31,7 +29,7 @@ export default function ExpertManagementPanel({
 
   async function submitAnswer(id: string) {
     const answer = drafts[id];
-    if (!answer || answer.trim().length < MIN_ANSWER_LENGTH) return;
+    if (!answer || !answer.trim()) return;
     setSubmitting(id);
     const res = await fetch('/api/expert/answer', {
       method: 'POST',
@@ -92,22 +90,16 @@ export default function ExpertManagementPanel({
                 {item.answer}
               </div>
             )}
-            <div className="muted" style={{ fontSize: 12, lineHeight: 1.6 }}>
-              良い回答の目安：①状況の受け止め（共感・ねぎらい）→②具体的な「次の一手」（今日・今週できること）→③注意点や見守りのポイント、の順で書くと伝わりやすいです。
-            </div>
             <textarea
               className="input"
               rows={6}
-              placeholder={`状況の受け止め→具体的な「次の一手」→注意点、の順で回答してください（${MIN_ANSWER_LENGTH}文字以上）`}
+              placeholder="回答を入力してください"
               value={drafts[item.id] || ''}
               onChange={(e) => setDrafts({ ...drafts, [item.id]: e.target.value })}
             />
-            <div className="muted" style={{ textAlign: 'right', fontSize: 12 }}>
-              {(drafts[item.id] || '').trim().length} / {MIN_ANSWER_LENGTH}文字以上
-            </div>
             <button
               className="btn-primary"
-              disabled={submitting === item.id || (drafts[item.id] || '').trim().length < MIN_ANSWER_LENGTH}
+              disabled={submitting === item.id || !(drafts[item.id] || '').trim()}
               onClick={() => submitAnswer(item.id)}
             >
               {submitting === item.id ? '送信中…' : '回答を送信する'}

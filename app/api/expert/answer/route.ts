@@ -3,8 +3,6 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { getCurrentExpert } from '@/lib/expertAuth';
 import { expertPayout } from '@/lib/config';
 
-const MIN_ANSWER_LENGTH = 200;
-
 export async function POST(req: NextRequest) {
   const expert = await getCurrentExpert();
   if (!expert) {
@@ -17,12 +15,6 @@ export async function POST(req: NextRequest) {
   const { consultation_id, answer } = await req.json();
   if (!consultation_id || !answer || !answer.trim()) {
     return NextResponse.json({ error: '回答を入力してください' }, { status: 400 });
-  }
-  if (answer.trim().length < MIN_ANSWER_LENGTH) {
-    return NextResponse.json(
-      { error: `回答は${MIN_ANSWER_LENGTH}文字以上でお願いします。具体的な「次の一手」を含めてください。` },
-      { status: 400 }
-    );
   }
 
   const supabase = getSupabaseAdmin();
