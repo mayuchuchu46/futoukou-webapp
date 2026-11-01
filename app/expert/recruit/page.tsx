@@ -38,7 +38,7 @@ export default function ExpertRecruitPage() {
           <div className="answer-label" style={{ fontSize: 14 }}>ご協力いただく内容</div>
           <div className="qtext">
             <strong>テキストでの回答</strong><br />
-            届いた相談文に、ご自身のタイミングで文章で回答します（具体的な「次の一手」を含む内容）。
+            届いた相談文に、ご自身のタイミングで文章で回答します。
           </div>
           <div className="qtext">
             <strong>オンラインでの通話・チャット（任意）</strong><br />
@@ -50,19 +50,6 @@ export default function ExpertRecruitPage() {
           <div className="answer-label" style={{ fontSize: 14 }}>報酬について</div>
           <div className="qtext">
             質問への回答自体には、報酬・お支払いはありません。相談に回答すると、回答した方のプロフィールページへのリンクが表示され、ご自身の活動やサービスを知ってもらうきっかけになります（上記のオンライン通話等をご自身のサービスとして有料で提供されることは可能です。その場合の料金設定・やり取りはご本人にお任せします）。
-          </div>
-        </div>
-
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>回答例</div>
-          <div className="muted" style={{ fontSize: 12, lineHeight: 1.6 }}>
-            ①状況の受け止め→②具体的な「次の一手」→③注意点、の順で書いていただく形式です。
-          </div>
-          <div className="qtext" style={{ fontSize: 13 }}>
-            Q. 小5の息子が、ここ2週間毎朝「お腹痛い」と言って学校に行きたがりません。無理に行かせるべきか悩んでいます。通常の腹痛の症状なのか、精神的なものから来てるのか、その判断基準を知りたいです。
-          </div>
-          <div className="qtext" style={{ whiteSpace: 'pre-wrap', background: 'var(--bg)', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>
-            2週間にわたり毎朝腹痛を訴える場合、まず押さえておきたい判断基準は「症状が出るタイミング」です。登校前・平日の朝だけに強く出て、休日や長期休暇中は目立たないようであれば、心理的なストレスが身体症状として表れている可能性が高いと考えられます。{'\n\n'}一方で、発熱・嘔吐・下痢・体重減少を伴う場合や、休日も腹痛が続く場合は、器質的な疾患の可能性があるため、まずは小児科を受診してください。起立直後に脈拍が大きく上がる起立性調節障害も、朝の不調としてよく見られるため、あわせて確認してもらうと安心です。{'\n\n'}身体的な問題がないと分かった場合も「気持ちの問題」と決めつけず、無理に行かせるかどうかの二択ではなく、保健室登校など段階を踏んだ選択肢を一緒に考えてください。
           </div>
         </div>
 
