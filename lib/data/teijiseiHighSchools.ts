@@ -226,8 +226,8 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // 出典: https://www.pref.akita.lg.jp/uploads/public/archive_0000049957_00/秋田県高等学校一覧.pdf（秋田県教育委員会）
   // 2回の調査でこの4校以外の定時制設置校は確認できなかった。部制・単位制/学年制・通称・公式URLは
   // 出典資料に記載がなく、各校公式サイトも検索で特定できなかったため省略している。
-  { no: 147, prefecture: '秋田県', municipality: '大館市', name: '大館鳳鳴高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
-  { no: 148, prefecture: '秋田県', municipality: '能代市', name: '能代高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設' },
+  { no: 147, prefecture: '秋田県', municipality: '大館市', name: '大館鳳鳴高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設', officialUrl: 'http://www.homei-h.akita-pref.ed.jp/' },
+  { no: 148, prefecture: '秋田県', municipality: '能代市', name: '能代高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', note: '定時制課程を併設', officialUrl: 'http://www.noshiro-h.akita-pref.ed.jp/' },
   { no: 149, prefecture: '秋田県', municipality: '仙北市', name: '角館高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kakunodate-hs.jp/', note: '定時制課程を併設' },
   { no: 150, prefecture: '秋田県', municipality: '横手市', name: '横手高等学校', publicPrivate: '公立', operator: '秋田県教育委員会', schoolCategory: 'attached', officialUrl: 'https://yokote-h.info', note: '定時制課程を併設' },
 
@@ -368,12 +368,12 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // ===== 福井県（7校） =====
   // 出典: 福井県教育委員会「令和8年度福井県立高等学校入学者選抜実施要項」 https://www.pref.fukui.lg.jp/doc/koukou/nyugaku/r08youkou_d/fil/R08annai.pdf
   { no: 250, prefecture: '福井県', municipality: '坂井市', name: '丸岡高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.maruoka-h.ed.jp', note: '定時制。募集人員40名。昭和39年「城東分校（定時制）」として開校' },
-  { no: 251, prefecture: '福井県', municipality: '大野市', name: '大野高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
+  { no: 251, prefecture: '福井県', municipality: '大野市', name: '大野高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名', officialUrl: 'https://www.daiko.ed.jp/' },
   { no: 252, prefecture: '福井県', municipality: '鯖江市', name: '鯖江高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', parts: '昼間部のみ', officialUrl: 'https://www.sabae-h.ed.jp/', note: '定時制。募集人員30名。平成22年度より単位制・2学期制、令和元年度より夜間部を廃止し昼間部のみに' },
   { no: 253, prefecture: '福井県', municipality: '越前市', name: '武生高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.takefu-h.ed.jp/', note: '定時制。募集人員80名' },
-  { no: 254, prefecture: '福井県', municipality: '敦賀市', name: '敦賀高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
-  { no: 255, prefecture: '福井県', municipality: '小浜市', name: '若狭高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
-  { no: 256, prefecture: '福井県', municipality: '福井市', name: '道守高等学校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'standalone', parts: '午前部・午後部・夜間部', note: '定時制・通信制の独立校。募集人員（定時制）110名（午前40・午後40・夜間30）。1971年、定時制・通信制教育のモデル校として開校' },
+  { no: 254, prefecture: '福井県', municipality: '敦賀市', name: '敦賀高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名', officialUrl: 'https://www.tonkou.ed.jp/' },
+  { no: 255, prefecture: '福井県', municipality: '小浜市', name: '若狭高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名', officialUrl: 'https://www.wakasa-h.ed.jp/' },
+  { no: 256, prefecture: '福井県', municipality: '福井市', name: '道守高等学校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'standalone', parts: '午前部・午後部・夜間部', note: '定時制・通信制の独立校。募集人員（定時制）110名（午前40・午後40・夜間30）。1971年、定時制・通信制教育のモデル校として開校', officialUrl: 'https://www.michimori-h.ed.jp/' },
 
   // ===== 静岡県（21校） =====
   // 出典: 静岡県教育委員会公式サイト（各校の定時制課程ページ）
@@ -404,12 +404,12 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // ===== 山梨県（7校） =====
   // 出典: 山梨県教育委員会 入学者選抜関連PDF（https://www.pref.yamanashi.jp/documents/7061/r6nyuushiteiinn.pdf 等）
   { no: 278, prefecture: '山梨県', name: '韮崎高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.niratakah.kai.ed.jp/', note: '普通科' },
-  { no: 279, prefecture: '山梨県', name: '甲府工業高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '工業科（機械科・電気科・建築科を一括募集）' },
+  { no: 279, prefecture: '山梨県', name: '甲府工業高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '工業科（機械科・電気科・建築科を一括募集）', officialUrl: 'https://www.kofu-th.ed.jp/' },
   { no: 280, prefecture: '山梨県', name: '巨摩高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.ko.kai.ed.jp/', note: '普通科' },
   { no: 281, prefecture: '山梨県', name: '山梨高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.yamah.kai.ed.jp/', note: '普通科' },
-  { no: 282, prefecture: '山梨県', name: '都留高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科（定員40名）' },
-  { no: 283, prefecture: '山梨県', name: '中央高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科、衛生看護科' },
-  { no: 284, prefecture: '山梨県', name: 'ひばりが丘高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科、情報経理科' },
+  { no: 282, prefecture: '山梨県', name: '都留高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科（定員40名）', officialUrl: 'https://www.tsuru-h.ed.jp/' },
+  { no: 283, prefecture: '山梨県', name: '中央高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科、衛生看護科', officialUrl: 'http://www.chuouh.kai.ed.jp/' },
+  { no: 284, prefecture: '山梨県', name: 'ひばりが丘高等学校定時制', publicPrivate: '公立', operator: '山梨県教育委員会', schoolCategory: 'attached', note: '普通科、情報経理科', officialUrl: 'https://www.hibarih.kai.ed.jp/' },
 
   // ===== 長野県（15校） =====
   // 出典: 令和8年度長野県公立高校募集定員資料 https://www.pref.nagano.lg.jp/kyoiku/koko/saiyo-nyuushi/shiken/ko/r8/documents/20260319web2-2.pdf
