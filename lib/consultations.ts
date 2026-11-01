@@ -3,6 +3,7 @@ import { Consultation } from '@/lib/types';
 import { expertDisplayName, answerFirstLineSnippet } from '@/lib/expertDisplay';
 import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
 import { CATS } from '@/lib/categories';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 
 // 検索語（q）をquestion/answerに対するPostgRESTの.or()フィルター文字列に変換する。
 // getConsultationsList（一覧取得）とgetConsultationCounts（カテゴリ別件数）の両方で
@@ -142,7 +143,15 @@ export async function getConsultationsList({
   const { data, error } = await query;
   if (error || !data) return [];
 
-  return data.map((item) => {
+  // expertAnswered（「専門家が回答した相談」の一覧・個別専門家ページ）は、
+  // ブランディング上「専門家」専用の区画のため、先輩保護者（経験者）の回答は
+  // 含めない（2026-11-01、専門家への質問の価格体系統一に伴い専門家・先輩保護者を
+  // 区別する条件を一通り撤去した際、ここだけ元々区別する条件が無かったことが
+  // 判明。「https://futoko-dosuru.com/expertlist 保護者の解答載ってるね」との
+  // 指摘を受けて追加）。
+  const filtered = expertAnswered ? data.filter((item) => item.experts?.credential !== SENPAI_CREDENTIAL) : data;
+
+  return filtered.map((item) => {
     // 専門家の本名（experts.name）は本人確認用のため、相談者には表示名のみを渡す
     // （2026-10-13、本名と表示名を分離）。
     const experts = item.experts
