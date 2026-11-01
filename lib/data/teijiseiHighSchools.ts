@@ -724,12 +724,12 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // 出典: 佐賀県教育委員会「令和９年度佐賀県立高等学校生徒募集定員等」
   //       https://www.education.saga.jp/hp/hamatama-j/wp-content/uploads/sites/203/2026/07/令和９年度佐賀県立高等学校生徒募集定員等.pdf
   // 注: 定時制課程の合計募集定員は280人（6校）。所在市区町村は当該資料に記載がなく、確認できなかったため省略した。
-  { no: 499, prefecture: '佐賀県', name: '佐賀県立鳥栖工業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（普通科40名、機械科・電気科合わせて40名）を併置。' },
-  { no: 500, prefecture: '佐賀県', name: '佐賀県立佐賀工業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（機械科・情報科合わせて40名）を併置。' },
-  { no: 501, prefecture: '佐賀県', name: '佐賀県立有田工業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（セラミック科・デザイン科合わせて40名）を併置。' },
-  { no: 502, prefecture: '佐賀県', name: '佐賀県立佐賀商業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（総合文化科40名）を併置。' },
-  { no: 503, prefecture: '佐賀県', name: '佐賀県立唐津商業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
-  { no: 504, prefecture: '佐賀県', name: '佐賀県立伊万里実業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
+  { no: 499, prefecture: '佐賀県', name: '佐賀県立鳥栖工業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.education.saga.jp/hp/tosukougyoukoukou-p/', note: '定時制（普通科40名、機械科・電気科合わせて40名）を併置。' },
+  { no: 500, prefecture: '佐賀県', name: '佐賀県立佐賀工業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.education.saga.jp/hp/sagakougyoukoukou-p/', note: '定時制（機械科・情報科合わせて40名）を併置。' },
+  { no: 501, prefecture: '佐賀県', name: '佐賀県立有田工業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.education.saga.jp/hp/aritakougyoukoukou-p/', note: '定時制（セラミック科・デザイン科合わせて40名）を併置。' },
+  { no: 502, prefecture: '佐賀県', name: '佐賀県立佐賀商業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.education.saga.jp/hp/sagashougyoukoukou-p/', note: '定時制（総合文化科40名）を併置。' },
+  { no: 503, prefecture: '佐賀県', name: '佐賀県立唐津商業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.education.saga.jp/hp/karatsushougyoukoukou/', note: '定時制（商業科40名）を併置。' },
+  { no: 504, prefecture: '佐賀県', name: '佐賀県立伊万里実業高等学校', publicPrivate: '公立', operator: '佐賀県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.education.saga.jp/hp/imarijitsugyoukoukou-p/', note: '定時制（商業科40名）を併置。' },
 
   // ===== 長崎県（8校） =====
   // 出典: 長崎県教育委員会 令和8年度入学者選抜 関連資料（定時制課程募集定員表）
