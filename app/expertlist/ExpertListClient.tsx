@@ -35,8 +35,12 @@ export default function ExpertListClient() {
           {!stripeConfigured && <span className="comingsoon-badge">準備中・近日公開</span>}
         </div>
         <div className="muted" style={{ marginBottom: 10 }}>
-          AIの自動回答とは別に、専門家（公認心理師など）本人が相談文を読んで直接回答したものです。
-          {!stripeConfigured && '現在、読み放題会員の登録は準備中です。準備が整い次第ご利用いただけます（専門家への質問自体はどなたでも無料です）。'}
+          AIの自動回答とは別に、専門家（公認心理師など）・先輩保護者（経験者）本人が相談文を読んで直接回答したものです。
+          {/* 「専門家への質問自体はどなたでも無料です」だと、専門家だけが対象のように
+              読めてしまう（現時点では本人確認済みの専門家は0人で、実際に質問できるのは
+              先輩保護者のみ）との指摘を受けて、先輩保護者への質問も無料であることが
+              伝わるよう書き換えた（2026-11-02）。 */}
+          {!stripeConfigured && '現在、読み放題会員の登録は準備中です。準備が整い次第ご利用いただけます（専門家・先輩保護者への質問自体はどなたでも無料です）。'}
         </div>
 
         <div className="card" style={{ gap: 8, alignItems: 'flex-start', marginBottom: 10 }}>
@@ -53,6 +57,11 @@ export default function ExpertListClient() {
 
         <Link href="/experts" className="backlink" style={{ margin: '0 0 14px' }}>
           どんな専門家が回答していますか？ →
+        </Link>
+        {/* /senpailistとの相互導線（2026-11-02追加、「先輩保護者の回答ってバージョンも
+            欲しいね」との要望を受けて）。 */}
+        <Link href="/senpailist" className="backlink" style={{ margin: '0 0 14px' }}>
+          先輩保護者が回答した相談を見る →
         </Link>
 
         {items === null ? (

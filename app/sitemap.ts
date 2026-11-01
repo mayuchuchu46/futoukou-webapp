@@ -30,6 +30,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/news`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/experts`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/expertlist`, changeFrequency: 'weekly', priority: 0.4 },
+    // 先輩保護者が回答した相談の一覧（2026-11-02追加、/expertlistの先輩保護者版）。
+    { url: `${SITE_URL}/senpailist`, changeFrequency: 'weekly', priority: 0.4 },
     // 学びの多様化学校（旧：不登校特例校）の都道府県別一覧ページ（2026-10-18追加）。
     { url: `${SITE_URL}/gakko`, changeFrequency: 'monthly', priority: 0.4 },
     // 学校以外の学びの場・居場所のまとめページ（2026-10-21追加。/gakkoの各タブは

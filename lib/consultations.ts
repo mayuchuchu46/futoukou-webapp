@@ -42,6 +42,7 @@ export async function getConsultationsList({
   viewerId,
   authorId,
   expertAnswered,
+  senpaiAnswered,
   expertId,
   memberActive = false,
   memberId,
@@ -54,6 +55,10 @@ export async function getConsultationsList({
   viewerId?: string | null;
   authorId?: string | null;
   expertAnswered?: boolean;
+  // expertAnsweredの先輩保護者版（2026-11-02追加、「先輩保護者の回答ってバージョンも
+  // 欲しいね」との要望を受けて）。/senpailistで使う。expertAnsweredと同時にtrueに
+  // することは想定していない（呼び出し側でどちらか一方だけ指定する）。
+  senpaiAnswered?: boolean;
   // 専門家個別ページ（/experts/[id]）で「この専門家が回答した相談」だけに絞るための条件。
   // expertAnswered（専門家回答全体）とは別に、回答した専門家本人のidで絞り込む（2026-10-12追加）。
   expertId?: string | null;
@@ -130,7 +135,7 @@ export async function getConsultationsList({
       query = query.eq('author_id', authorId);
     }
   }
-  if (expertAnswered) {
+  if (expertAnswered || senpaiAnswered) {
     query = query.eq('request_type', 'expert').eq('expert_status', 'answered');
   }
   if (expertId) {
@@ -148,8 +153,13 @@ export async function getConsultationsList({
   // 含めない（2026-11-01、専門家への質問の価格体系統一に伴い専門家・先輩保護者を
   // 区別する条件を一通り撤去した際、ここだけ元々区別する条件が無かったことが
   // 判明。「https://futoko-dosuru.com/expertlist 保護者の解答載ってるね」との
-  // 指摘を受けて追加）。
-  const filtered = expertAnswered ? data.filter((item) => item.experts?.credential !== SENPAI_CREDENTIAL) : data;
+  // 指摘を受けて追加）。senpaiAnswered（/senpailist、2026-11-02追加）はその逆で、
+  // 先輩保護者の回答だけに絞る。
+  const filtered = expertAnswered
+    ? data.filter((item) => item.experts?.credential !== SENPAI_CREDENTIAL)
+    : senpaiAnswered
+      ? data.filter((item) => item.experts?.credential === SENPAI_CREDENTIAL)
+      : data;
 
   return filtered.map((item) => {
     // 専門家の本名（experts.name）は本人確認用のため、相談者には表示名のみを渡す
