@@ -42,6 +42,15 @@ export default function MimamoriShindanPage() {
           <div style={{ margin: '14px 0' }}>
             <Link href="/" className="backlink">‹ ホームへ</Link>
           </div>
+          {/* 2026-11-01追加：ChatGPTで作成したバナー（public/assets/shindan/mimamori-banner.jpg）。 */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/shindan/mimamori-banner.jpg"
+            alt={TITLE}
+            width={1600}
+            height={533}
+            style={{ width: '100%', height: 'auto', borderRadius: 12, marginBottom: 14 }}
+          />
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>{TITLE}</div>
             <div className="qtext">{DESC}</div>
