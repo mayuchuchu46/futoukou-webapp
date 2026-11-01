@@ -90,8 +90,11 @@ export default async function SenpaiRecruitPage({
           {/* 「気軽に登録できる流れがいいな」との指摘を受けて（2026-10-31）、
               「オンライン通話で確認」を必須ステップとする表現をやめ、基本は
               登録内容（自己紹介文）を運営が確認して承認する、通話なしの
-              流れに変更。確認したい点がある場合のみ個別に連絡する運用。 */}
-          <ExpertRecruitFlowDiagram step2Detail="登録内容を運営が確認" />
+              流れに変更。確認したい点がある場合のみ個別に連絡する運用。
+              2026-11-02、図（ExpertRecruitFlowDiagram）側のSTEP2見出しに
+              「運営が内容を確認」という文言が入ったため、ここは見出しと
+              重複しない補足テキストに変更。 */}
+          <ExpertRecruitFlowDiagram step2Detail="自己紹介文・お話できる学校等を確認" />
           <ol className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
             <li>登録フォームにプロフィール（自己紹介・お話できる相談カテゴリ）を入力</li>
             <li>運営が登録内容を確認</li>

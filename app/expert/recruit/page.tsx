@@ -55,7 +55,7 @@ export default function ExpertRecruitPage() {
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>登録の流れ</div>
-          <ExpertRecruitFlowDiagram step2Detail="運営が内容を確認" />
+          <ExpertRecruitFlowDiagram step2Detail="プロフィール・資格・リンク等を確認" />
           <ol className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
             <li>登録フォームにプロフィール（資格・自己紹介・対応できる相談カテゴリ）を入力</li>
             <li>運営が内容を確認</li>
