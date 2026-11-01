@@ -12,7 +12,7 @@ export default function MimamoriShindanTeaser() {
         src="/assets/shindan/mimamori-top-banner.png"
         alt="あなたの「見守り力」タイプ診断　全8問・今のあなたの対応スタイルを診断"
         width={1200}
-        height={400}
+        height={381}
         style={{ width: '100%', height: 'auto', display: 'block' }}
       />
     </Link>
