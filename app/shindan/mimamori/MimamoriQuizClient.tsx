@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import {
   MIMAMORI_QUESTIONS,
   resolveMimamoriType,
@@ -10,11 +9,10 @@ import {
 } from '@/lib/mimamoriShindan';
 
 export default function MimamoriQuizClient() {
-  const router = useRouter();
   const [answers, setAnswers] = useState<Array<AxisAValue | AxisBValue | undefined>>([]);
   const [step, setStep] = useState(0);
+  const [moving, setMoving] = useState(false);
   const total = MIMAMORI_QUESTIONS.length;
-  const done = answers.length === total;
 
   // 最後の質問に答えたら、タイプごとの結果ページ（/shindan/mimamori/result/[type]）に
   // 遷移する（2026-11-01、シェア用ビジュアル対応で追加）。結果をこのページ内に
@@ -22,25 +20,34 @@ export default function MimamoriQuizClient() {
   // なってしまい、OGP画像・説明文をタイプごとに出せない。固有のURLに切り替えることで、
   // X・Facebook・LINEでシェアした時にタイプ専用のOGP画像（opengraph-image.tsx）・
   // 説明文が表示されるようにしている。
-  useEffect(() => {
-    if (!done) return;
-    const type = resolveMimamoriType(answers as Array<AxisAValue | AxisBValue>);
-    router.push(`/shindan/mimamori/result/${type}`);
-  }, [done, answers, router]);
+  //
+  // 遷移はnext/navigationのrouter.pushではなく、あえてwindow.location.hrefによる
+  // 通常の（フルリロードの）遷移にしている（2026-11-01、「診断結果を見た後、診断
+  // トップへ戻っても戻れない」「TOPから行っても結果ページになる」という不具合の対応）。
+  // router.pushだとNext.jsのクライアント側ルーターキャッシュに「回答済み（done=true）」
+  // の状態のまま/shindan/mimamoriのコンポーネントが保持され、そこへ再度Linkで
+  // 戻ってきた時に古い状態のままuseEffectが再発火して即座に結果ページへ押し戻されて
+  // いた。フルリロードにすることでそのキャッシュごと消え、次に/shindan/mimamoriへ
+  // 来た時は必ずQ1からの新しい状態になる。
+  function choose(value: AxisAValue | AxisBValue) {
+    const next = [...answers];
+    next[step] = value;
+    setAnswers(next);
+    if (step < total - 1) {
+      setStep(step + 1);
+      return;
+    }
+    setMoving(true);
+    const type = resolveMimamoriType(next as Array<AxisAValue | AxisBValue>);
+    window.location.href = `/shindan/mimamori/result/${type}`;
+  }
 
-  if (done) {
+  if (moving) {
     return (
       <div className="card" style={{ alignItems: 'center', gap: 10 }}>
         <div className="qtext">診断結果を表示しています…</div>
       </div>
     );
-  }
-
-  function choose(value: AxisAValue | AxisBValue) {
-    const next = [...answers];
-    next[step] = value;
-    setAnswers(next);
-    if (step < total - 1) setStep(step + 1);
   }
 
   const question = MIMAMORI_QUESTIONS[step];

@@ -91,6 +91,13 @@ export default async function MimamoriResultPage({
                 <strong>気をつけたいこと一つだけ：</strong>{result.caution}
               </div>
             </div>
+            {/* シェアされたリンクから来た人がその場ですぐ診断に進めるよう、目立つ色の
+                ボタンを結果の直後に置く（2026-11-01追加。「シェア経由で来た人がすぐ
+                診断できる導線がほしい」との要望を受けて）。下部の「もう一度診断する」は
+                この導線と役割が重複するため削除し、ここに一本化した。 */}
+            <Link href="/shindan/mimamori" className="btn-primary" style={{ width: '100%' }}>
+              あなたも診断してみる（全8問・1分）
+            </Link>
             <Link href={`/dictionary/${result.categorySlug}`} className="btn-secondary" style={{ width: '100%' }}>
               {result.categoryLabel}に関する相談を見る
             </Link>
@@ -130,9 +137,6 @@ export default async function MimamoriResultPage({
                 LINEでシェアする
               </a>
             </div>
-            <Link href="/shindan/mimamori" className="btn-secondary" style={{ width: '100%' }}>
-              もう一度診断する
-            </Link>
           </div>
         </div>
         <PcSidebar />
