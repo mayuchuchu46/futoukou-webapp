@@ -251,6 +251,14 @@ export default function Header({
           header-rightだけをずらす方式に戻した。2026-10-12）。 */}
       {loggedIn !== null && (
         <Link href={loggedIn ? '/account' : '/account/login'} className="account-tab">
+          {/* 専門家・先輩保護者として未回答の質問がある場合はここにバッジを出す
+              （2026-10-31追加、2026-11-01に専門家向け管理内容をアカウントページへ
+              統合したのに合わせて、別タブではなくこのアカウントタブ自体にバッジを
+              出す形に変更。専門家ログインは会員ログインとは別cookieのため、
+              expertStatusはloggedIn判定とは別に取得している）。 */}
+          {!!expertStatus?.pendingCount && (
+            <span className="expert-tab-badge">{expertStatus.pendingCount}</span>
+          )}
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <circle cx="12" cy="8" r="4" />
             <path d="M4 20a8 8 0 0 1 16 0z" />
@@ -259,18 +267,6 @@ export default function Header({
               リンクのまま文言だけ両方を伝える形にする（/account/loginからは
               /account/registerへの導線が既にある）。 */}
           {loggedIn ? 'アカウント' : 'ログイン / 無料登録'}
-        </Link>
-      )}
-
-      {/* 専門家・先輩保護者としてログイン中の人だけに出す、ダッシュボードへの
-          ショートカット。未回答の質問があれば件数バッジで一目で分かるようにする
-          （2026-10-31追加）。account-tabの真下に同じ横位置で重ねて表示する。 */}
-      {expertStatus?.loggedIn && (
-        <Link href="/expert/dashboard" className="expert-tab">
-          {expertStatus.pendingCount > 0 && (
-            <span className="expert-tab-badge">{expertStatus.pendingCount}</span>
-          )}
-          マイページ
         </Link>
       )}
 

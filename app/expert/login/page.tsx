@@ -25,7 +25,7 @@ export default function ExpertLoginPage() {
       setError(data.error || 'エラーが発生しました');
       return;
     }
-    router.push('/expert/dashboard');
+    router.push('/account');
   }
 
   return (

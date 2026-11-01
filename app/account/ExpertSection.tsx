@@ -1,0 +1,96 @@
+import { getCurrentExpert } from '@/lib/expertAuth';
+import { getSupabaseAdmin } from '@/lib/supabase';
+import { SENPAI_CREDENTIAL, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
+import ExpertManagementPanel from './ExpertManagementPanel';
+
+// 専門家・先輩保護者としての管理内容（旧/expert/dashboard）をアカウントページに
+// 統合したもの（2026-11-01、「アカウントページに、専門家や保護者の管理内容も
+// 入れ込んじゃえばいい」との方針を受けて）。以前は専門家用ログイン（cookie）が
+// 別建てで、ヘッダーの「マイページ」タブからしか辿れなかったため、そのタブが
+// 何らかの理由で出なくなると専門家向け機能そのものが見えなくなる問題があった
+// （2026-11-01、online_consult_url未マイグレーションによる実例）。
+// このセクションは専門家としてログインしていない場合は何も表示しない
+// （下にある「専門家として登録・ログイン」の案内カードのみが出る）。
+export default async function ExpertSection() {
+  const expert = await getCurrentExpert();
+  if (!expert) return null;
+
+  if (!expert.verified) {
+    const reviewStatus = expert.review_status || 'pending';
+
+    if (reviewStatus === 'rejected') {
+      return (
+        <div className="card">
+          <div style={{ fontWeight: 700 }}>専門家・先輩保護者としてのご登録について</div>
+          <div className="qtext">
+            この度は「どうする先生」登録にご関心をお寄せいただき、ありがとうございました。
+            ご提出いただいた内容を確認した結果、今回は登録要件を満たしていることを確認できなかったため、ご登録を見送らせていただくこととなりました。
+          </div>
+          {expert.review_note && (
+            <div className="qtext" style={{ background: 'var(--bg)', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>
+              {expert.review_note}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (reviewStatus === 'needs_fix') {
+      return (
+        <div className="card">
+          <div style={{ fontWeight: 700 }}>ご登録内容の修正をお願いします</div>
+          <div className="qtext">
+            ご登録いただいた内容を確認したところ、以下の点についてご修正・再提出をお願いしたく、ご連絡いたしました。
+          </div>
+          {expert.review_note && (
+            <div className="qtext" style={{ background: 'var(--bg)', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>
+              {expert.review_note}
+            </div>
+          )}
+          <a className="btn-primary" href="/expert/profile">登録内容を修正する</a>
+        </div>
+      );
+    }
+
+    return (
+      <div className="card">
+        <div style={{ fontWeight: 700 }}>本人確認中です</div>
+        <div className="qtext">
+          ご登録いただいた資格情報を、運営が確認しています。確認が完了するまで、有料相談への回答や報酬の受け取りはできません。確認が完了すると、ここから相談への回答ができるようになります。
+        </div>
+      </div>
+    );
+  }
+
+  const supabase = getSupabaseAdmin();
+  const isSenpai = expert.credential === SENPAI_CREDENTIAL;
+  const excludeSenpai = isSenpai && !EXPERT_VOLUNTEER_MODE;
+  const pending = excludeSenpai
+    ? []
+    : (
+        await supabase
+          .from('consultations')
+          .select('*')
+          .eq('request_type', 'expert')
+          .eq('paid', true)
+          .eq('expert_status', 'pending')
+          .or(`requested_expert_id.is.null,requested_expert_id.eq.${expert.id}`)
+          .order('created_at', { ascending: true })
+      ).data;
+
+  const { data: answeredByMe } = await supabase
+    .from('consultations')
+    .select('*')
+    .eq('expert_id', expert.id)
+    .eq('expert_status', 'answered')
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  return (
+    <ExpertManagementPanel
+      expert={{ id: expert.id, name: expert.name, credential: expert.credential }}
+      pending={pending || []}
+      answeredByMe={answeredByMe || []}
+    />
+  );
+}

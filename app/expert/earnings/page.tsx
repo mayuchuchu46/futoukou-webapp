@@ -35,7 +35,7 @@ async function ExpertEarningsContent() {
   return (
     <div className="app-shell">
       <div className="header">
-        <a className="btn-ghost" href="/expert/dashboard">← ダッシュボードへ</a>
+        <a className="btn-ghost" href="/account">← アカウントへ</a>
         <div style={{ fontWeight: 700, fontSize: 16 }}>報酬</div>
       </div>
       <div className="main">

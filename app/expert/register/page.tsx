@@ -148,7 +148,7 @@ export default function ExpertRegisterPage() {
     if (data.warning) {
       alert(data.warning);
     }
-    router.push('/expert/dashboard');
+    router.push('/account');
   }
 
   return (

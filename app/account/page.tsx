@@ -11,6 +11,7 @@ import LogoutButton from './LogoutButton';
 import MembershipPanel from './MembershipPanel';
 import TicketsPanel from './TicketsPanel';
 import MyConsultationsPanel from './MyConsultationsPanel';
+import ExpertSection from './ExpertSection';
 
 // 登録・ログイン直後、いきなり「自分の相談を書く」はハードルが高い人も多いので、
 // まずは他の人の相談（ホームの一覧）を見てもらう方を主導線にする。
@@ -44,6 +45,13 @@ export default function AccountPage() {
               Suspenseの外に出し、cookies()を読む本文側だけに影響範囲を絞った）。 */}
           <Suspense fallback={null}>
             <AccountMemberSection />
+          </Suspense>
+
+          {/* 専門家・先輩保護者としての管理内容（旧/expert/dashboard）。専門家としての
+              ログインは会員ログインとは別のcookieのため、AccountMemberSectionとは別の
+              Suspenseに分けている。専門家としてログインしていない場合は何も表示しない。 */}
+          <Suspense fallback={null}>
+            <ExpertSection />
           </Suspense>
 
           {/* 伴走ノートを見る（旧マイページ内のリンクを移設）。 */}

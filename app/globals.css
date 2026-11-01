@@ -325,32 +325,9 @@ button:active,
 }
 .account-tab svg { flex-shrink: 0; }
 
-/* expert-tab（専門家・先輩保護者ログイン中のみ表示。2026-10-31追加）。
-   account-tabの真下に同じ横位置で重ねる。account-tabの実測の高さぶん
-   （padding・font-sizeから見て概ね33px前後）だけtopをずらす。 */
-.expert-tab {
-  position: fixed;
-  top: 34px;
-  right: max(12px, calc(50% - 240px + 16px));
-  z-index: 29;
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  padding: 6px 12px 7px;
-  border: none;
-  border-radius: 0 0 10px 10px;
-  background: var(--orange-bg);
-  color: var(--orange-text);
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  text-decoration: none;
-}
+/* account-tab上に出す、専門家・先輩保護者としての未回答質問件数バッジ
+   （2026-10-31追加。2026-11-01、専門家向け管理内容をアカウントページへ統合したのに
+   合わせて、別タブ（旧.expert-tab）ではなくこのaccount-tab自体に出す形に変更）。 */
 .expert-tab-badge {
   background: #C0392B;
   color: #fff;
@@ -767,7 +744,6 @@ h2.pagetitle {
      （.fabは2026-10-15に削除済み。この上書きも合わせて削除した。） */
   .scroll-top-btn { right: calc(50% - 540px + 20px); }
   .account-tab { right: max(12px, calc(50% - 540px + 16px)); }
-  .expert-tab { right: max(12px, calc(50% - 540px + 16px)); }
 
   /* 左右で高さの違う内容（検索ボックス vs サイドバナー等）を同じ行に揃えようとすると
      片方の短い要素の下に謎の空白ができてしまうため、grid-template-areasでの行合わせは
