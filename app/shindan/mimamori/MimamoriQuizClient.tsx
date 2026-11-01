@@ -1,87 +1,46 @@
 'use client';
 
-import Link from 'next/link';
-import { useState } from 'react';
-import { SITE_URL } from '@/lib/site';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   MIMAMORI_QUESTIONS,
-  MIMAMORI_RESULTS,
   resolveMimamoriType,
   type AxisAValue,
   type AxisBValue,
 } from '@/lib/mimamoriShindan';
 
-const RESULT_URL = `${SITE_URL}/shindan/mimamori`;
-
 export default function MimamoriQuizClient() {
+  const router = useRouter();
   const [answers, setAnswers] = useState<Array<AxisAValue | AxisBValue | undefined>>([]);
   const [step, setStep] = useState(0);
   const total = MIMAMORI_QUESTIONS.length;
   const done = answers.length === total;
+
+  // 最後の質問に答えたら、タイプごとの結果ページ（/shindan/mimamori/result/[type]）に
+  // 遷移する（2026-11-01、シェア用ビジュアル対応で追加）。結果をこのページ内に
+  // 表示する方式だと、シェアした時のリンク先が診断トップ（全タイプ共通の説明）に
+  // なってしまい、OGP画像・説明文をタイプごとに出せない。固有のURLに切り替えることで、
+  // X・Facebook・LINEでシェアした時にタイプ専用のOGP画像（opengraph-image.tsx）・
+  // 説明文が表示されるようにしている。
+  useEffect(() => {
+    if (!done) return;
+    const type = resolveMimamoriType(answers as Array<AxisAValue | AxisBValue>);
+    router.push(`/shindan/mimamori/result/${type}`);
+  }, [done, answers, router]);
+
+  if (done) {
+    return (
+      <div className="card" style={{ alignItems: 'center', gap: 10 }}>
+        <div className="qtext">診断結果を表示しています…</div>
+      </div>
+    );
+  }
 
   function choose(value: AxisAValue | AxisBValue) {
     const next = [...answers];
     next[step] = value;
     setAnswers(next);
     if (step < total - 1) setStep(step + 1);
-  }
-
-  function reset() {
-    setAnswers([]);
-    setStep(0);
-  }
-
-  if (done) {
-    const type = resolveMimamoriType(answers as Array<AxisAValue | AxisBValue>);
-    const result = MIMAMORI_RESULTS[type];
-    const shareText = `【見守り力タイプ診断】\n私は「${result.name}」でした。\n${result.catch}`;
-
-    return (
-      <div className="card" style={{ alignItems: 'flex-start', gap: 12 }}>
-        <div className="answer-label" style={{ fontSize: 13 }}>診断結果</div>
-        <div className="qtext-main" style={{ fontSize: 18 }}>{result.name}</div>
-        <div className="qtext" style={{ fontWeight: 600 }}>{result.catch}</div>
-        <div className="qtext">{result.desc}</div>
-        <div className="card-answerbox" style={{ width: '100%' }}>
-          <div className="qtext" style={{ fontSize: 13 }}>
-            <strong>気をつけたいこと一つだけ：</strong>{result.caution}
-          </div>
-        </div>
-        <Link href={`/dictionary/${result.categorySlug}`} className="btn-secondary" style={{ width: '100%' }}>
-          {result.categoryLabel}に関する相談を見る
-        </Link>
-        <div className="share-btn-row" style={{ width: '100%' }}>
-          <a
-            className="share-btn"
-            href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-              text: shareText,
-              url: RESULT_URL,
-              hashtags: 'どうする先生,不登校',
-            })}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="share-btn-icon">𝕏</span>
-            診断結果をシェア
-          </a>
-          <a
-            className="share-btn share-btn-line"
-            href={`https://social-plugins.line.me/lineit/share?${new URLSearchParams({
-              url: RESULT_URL,
-              text: shareText,
-            })}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="share-btn-icon">L</span>
-            LINEでシェアする
-          </a>
-        </div>
-        <button type="button" className="btn-secondary" style={{ width: '100%' }} onClick={reset}>
-          もう一度診断する
-        </button>
-      </div>
-    );
   }
 
   const question = MIMAMORI_QUESTIONS[step];

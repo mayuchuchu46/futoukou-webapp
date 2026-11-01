@@ -11,6 +11,7 @@ import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import { NEWS_ITEMS } from '@/lib/data/news';
+import { MIMAMORI_RESULTS } from '@/lib/mimamoriShindan';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseAdmin();
@@ -50,8 +51,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.4,
     })),
-    // 拡散をメインに置いた診断コンテンツ（2026-11-01追加）。
+    // 拡散をメインに置いた診断コンテンツ（2026-11-01追加）。結果ページ（タイプごとの
+    // シェア用個別URL、opengraph-image.tsx付き）も合わせて登録する。
     { url: `${SITE_URL}/shindan/mimamori`, changeFrequency: 'yearly', priority: 0.5 },
+    ...Object.keys(MIMAMORI_RESULTS).map((type) => ({
+      url: `${SITE_URL}/shindan/mimamori/result/${type}`,
+      changeFrequency: 'yearly' as const,
+      priority: 0.4,
+    })),
     { url: `${SITE_URL}/terms`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${SITE_URL}/privacy`, changeFrequency: 'yearly', priority: 0.2 },
   ];
