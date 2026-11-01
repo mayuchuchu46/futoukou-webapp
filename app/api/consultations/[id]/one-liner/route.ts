@@ -18,7 +18,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
 
   const { data: item } = await supabase
     .from('consultations')
-    .select('question, answer, one_liner, crisis_detected, hidden, request_type')
+    .select('question, answer, one_liner, crisis_detected, hidden')
     .eq('id', id)
     .single();
 
@@ -26,8 +26,12 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: 'not found' }, { status: 404 });
   }
   // 命に関わる場面でシェア導線は出さない方針（結果ページのisCrisis分岐と同じ考え方）。
-  // 専門家回答（request_type !== 'ai'）も、この格言カード機能の対象外。
-  if (item.crisis_detected || item.request_type !== 'ai') {
+  // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AI回答
+  // （answer）は常に存在するようになったため、request_type==='expert'の相談も
+  // この格言カード機能の対象にする（以前はrequest_type!=='ai'を除外していたが、
+  // それだと「専門家からの回答もほしい」をチェックした相談でシェア画像作成が
+  // 必ず失敗するようになっていた）。
+  if (item.crisis_detected) {
     return NextResponse.json({ error: 'not applicable' }, { status: 400 });
   }
   if (item.one_liner) {
