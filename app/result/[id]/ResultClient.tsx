@@ -166,10 +166,6 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
               {item.expert_answer_snippet}
             </div>
           )}
-          {/* プロフィールカードは回答テキストのあとに置く（2026-11-01、「プロフィールの
-              位置は回答テキストのあとがよくない？」との指摘を受けて、見出し直後・本文
-              より前だった配置から変更）。 */}
-          {item.experts && <AnswererMiniProfile experts={item.experts} />}
           <div className="blur-lines">
             <div />
             <div />
@@ -194,6 +190,10 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
               </Link>
             </>
           )}
+          {/* プロフィールカードは会員登録ボタンのあとに置く（2026-11-01、「プロフィールの
+              位置は回答テキストのあとがよくない？」→「ぼかしのあとがいいよ」→「それが
+              緑ボタンのあと」と3段階で調整した最終形）。 */}
+          {item.experts && <AnswererMiniProfile experts={item.experts} />}
         </>
       )}
 
