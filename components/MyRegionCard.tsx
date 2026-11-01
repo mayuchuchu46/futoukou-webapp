@@ -69,9 +69,14 @@ export default function MyRegionCard() {
         <div className="qtext" style={{ fontSize: 13 }}>
           登録すると、その地域にあるフリースクール・学びの多様化学校をホーム画面で優先的に表示します。ログイン不要・ブラウザだけに保存され、他の人には見えません。
         </div>
+        {/* 「.inputクラスがwidth:100%のため、selectが2つとも横幅いっぱいずつ
+            縦積みになり、カードが余分に幅・高さを取っていた（2026-11-02、
+            「幅取りすぎ」との指摘を受けて修正）。inline styleのwidth:'auto'で
+            クラス側のwidth:100%を上書きし、flexで横並びにする。 */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, width: '100%' }}>
           <select
             className="input"
+            style={{ width: 'auto', flex: '1 1 140px', minWidth: 0 }}
             value={draftPref}
             onChange={(e) => {
               setDraftPref(e.target.value);
@@ -85,6 +90,7 @@ export default function MyRegionCard() {
           </select>
           <select
             className="input"
+            style={{ width: 'auto', flex: '1 1 140px', minWidth: 0 }}
             value={draftCity}
             disabled={!draftPref}
             onChange={(e) => setDraftCity(e.target.value)}
