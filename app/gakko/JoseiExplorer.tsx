@@ -65,6 +65,54 @@ export default function JoseiExplorer({ initialPref }: { initialPref: string | n
         </div>
       )}
 
+      {!pref && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <details style={{ width: '100%' }}>
+            <summary style={{ cursor: 'pointer' }} className="answer-label">
+              全国の実施自治体一覧を見る（{FREESCHOOL_SUBSIDIES.length}件）
+            </summary>
+            <div style={{ overflowX: 'auto', marginTop: 10 }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <th style={{ textAlign: 'left', padding: '6px 8px', whiteSpace: 'nowrap' }}>都道府県</th>
+                    <th style={{ textAlign: 'left', padding: '6px 8px', whiteSpace: 'nowrap' }}>実施主体</th>
+                    <th style={{ textAlign: 'left', padding: '6px 8px' }}>制度名</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {PREFECTURES.flatMap((p) => FREESCHOOL_SUBSIDIES.filter((s) => s.prefecture === p)).map((s, i) => (
+                    <tr key={`${s.entity}-${s.name}-${i}`} style={{ borderBottom: '1px solid var(--border)' }}>
+                      <td style={{ padding: '6px 8px', whiteSpace: 'nowrap' }}>
+                        <button
+                          type="button"
+                          onClick={() => selectPref(s.prefecture)}
+                          className="muted"
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            padding: 0,
+                            textDecoration: 'underline',
+                            cursor: 'pointer',
+                            font: 'inherit',
+                          }}
+                        >
+                          {s.prefecture}
+                        </button>
+                      </td>
+                      <td style={{ padding: '6px 8px', whiteSpace: 'nowrap' }}>
+                        {s.entity}{s.entityLevel === 'city' ? '（市区町村）' : ''}
+                      </td>
+                      <td style={{ padding: '6px 8px' }}>{s.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+      )}
+
       <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
         <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
         <select
