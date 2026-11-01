@@ -542,7 +542,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 383, prefecture: '滋賀県', municipality: '東近江市', name: '滋賀県立能登川高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', officialUrl: 'https://www.notogawa-h.shiga-ec.ed.jp/', note: '普通科。' },
   { no: 384, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立瀬田工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', officialUrl: 'https://www.setatech-h.shiga-ec.ed.jp/', note: '定時制学科は機械・電気科。部制・単位制/学年制は未確認' },
   { no: 385, prefecture: '滋賀県', municipality: '彦根市', name: '滋賀県立彦根工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', officialUrl: 'https://www.genkou-h.shiga-ec.ed.jp/', note: '定時制学科は機械科。部制・単位制/学年制は未確認' },
-  { no: 386, prefecture: '滋賀県', municipality: '長浜市', name: '滋賀県立長浜北星高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '総合学科。部制・単位制/学年制は未確認' },
+  { no: 386, prefecture: '滋賀県', municipality: '長浜市', name: '滋賀県立長浜北星高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '総合学科。部制・単位制/学年制は未確認', officialUrl: 'https://www.hokusei-h.shiga-ec.ed.jp/' },
 
   // ===== 大阪府（19校） =====
   // 出典: 大阪府公立高等学校入学者選抜実施要項（別表）https://www.pref.osaka.lg.jp/documents/129117/r9_jisshiko.pdf
@@ -629,9 +629,9 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // ===== 広島県（15校） =====
   // 出典: 広島県教育委員会 令和6年度 入学定員資料 https://www.pref.hiroshima.lg.jp/uploaded/attachment/548698.pdf
   //       広島市教育委員会 学校一覧 https://www.city.hiroshima.lg.jp/site/education/16733.html
-  { no: 437, prefecture: '広島県', municipality: '広島市安佐北区', name: '広島県立可部高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 437, prefecture: '広島県', municipality: '広島市安佐北区', name: '広島県立可部高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。', officialUrl: 'http://www.kabe-h.hiroshima-c.ed.jp/' },
   { no: 438, prefecture: '広島県', municipality: '呉市', name: '広島県立呉工業高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '機械科（技能連携を含む）・電気科。' },
-  { no: 439, prefecture: '広島県', municipality: '三原市', name: '広島県立三原高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '午前部・夜間部', note: '普通科。' },
+  { no: 439, prefecture: '広島県', municipality: '三原市', name: '広島県立三原高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '午前部・夜間部', note: '普通科。', officialUrl: 'https://www.mihara-h.hiroshima-c.ed.jp/' },
   { no: 440, prefecture: '広島県', municipality: '尾道市', name: '広島県立尾道南高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
   { no: 441, prefecture: '広島県', municipality: '尾道市（因島）', name: '広島県立因島高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', officialUrl: 'https://www.innoshima-h.hiroshima-c.ed.jp/', note: '普通科。' },
   { no: 442, prefecture: '広島県', municipality: '福山市', name: '広島県立福山誠之館高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', officialUrl: 'https://www.fukuyamaseishikan-h.hiroshima-c.ed.jp/', note: '普通科。' },
@@ -639,7 +639,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 444, prefecture: '広島県', municipality: '福山市', name: '広島県立松永高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
   { no: 445, prefecture: '広島県', municipality: '福山市', name: '広島県立福山工業高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', officialUrl: 'https://www.fukuyama-th.hiroshima-c.ed.jp/', note: '機械科（技能連携を含む）・電気科。' },
   { no: 446, prefecture: '広島県', municipality: '福山市', name: '広島県立芦品まなび学園高等学校', publicPrivate: '公立', operator: '広島県教育委員会', schoolCategory: 'standalone', parts: '三部制（午前部・午後部・夜間部）', curriculumType: '単位制', note: '普通科のみ。所在地は福山市新市町戸手1330。定時制単独の三部制・単位制高校。' },
-  { no: 447, prefecture: '広島県', municipality: '三次市', name: '広島県立三次高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。' },
+  { no: 447, prefecture: '広島県', municipality: '三次市', name: '広島県立三次高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', note: '普通科。', officialUrl: 'https://www.miyoshi-h.hiroshima-c.ed.jp/' },
   { no: 448, prefecture: '広島県', municipality: '東広島市', name: '広島県立賀茂高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', officialUrl: 'https://www.kamo-h.hiroshima-c.ed.jp/', note: '普通科。' },
   { no: 449, prefecture: '広島県', municipality: '廿日市市', name: '広島県立廿日市高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', officialUrl: 'https://www.hatsukaichi-h.hiroshima-c.ed.jp/', note: '普通科。' },
   { no: 450, prefecture: '広島県', municipality: '廿日市市', name: '広島県立宮島工業高等学校', publicPrivate: '公立', operator: '広島県教育委員会', parts: '夜間', officialUrl: 'https://www.miyajima-th.hiroshima-c.ed.jp/', note: '機械科（技能連携を含む）。' },
