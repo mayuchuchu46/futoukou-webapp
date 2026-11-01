@@ -25,6 +25,18 @@ import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
 // index対象とする（他カテゴリのofficialUrl・address未確認によるnoindex分岐は不要）。
 export const instant = false;
 
+// データ上の名称には「本体名（カタカナ読み／旧称等）」の形で括弧書きが付くものが
+// 5件ある（例：'aini school（アイニースクール）'）。先輩保護者が登録時に括弧書きを
+// 省いた本体名だけを入力すると、FacilityExperiencedParentsの完全一致ベースの
+// マッチング（lib/expertSchoolMatch.ts）では一致しなくなる不具合があった
+// （2026-11-02、aini schoolの先輩保護者から「確認済みなのに表示されない」との
+// 指摘を受けて発覚）。括弧書きを除いた名称をaltNameとして追加で渡し、どちらの
+// 表記で登録されていても拾えるようにする。
+function nameWithoutParenthetical(name: string): string | null {
+  const stripped = name.replace(/（[^）]*）/g, '').trim();
+  return stripped && stripped !== name ? stripped : null;
+}
+
 const CATEGORY_LABEL: Record<OnlineFreeSchool['category'], string> = {
   community: '仲間づくり・居場所のあるタイプ',
   tutoring: '学習サポート中心（個別指導・家庭教師タイプ）',
@@ -219,10 +231,18 @@ export default async function OnlineSchoolPage({
 
           {/* この施設名を含む実際の相談（2026-10-22追加）。 */}
           <Suspense fallback={null}>
-            <FacilityConsultations name={school.name} label="この学校についての相談" />
+            <FacilityConsultations
+              name={school.name}
+              altName={nameWithoutParenthetical(school.name)}
+              label="この学校についての相談"
+            />
           </Suspense>
           <Suspense fallback={null}>
-            <FacilityExperiencedParents name={school.name} label="先輩保護者からこの学校の話を聞く" />
+            <FacilityExperiencedParents
+              name={school.name}
+              altName={nameWithoutParenthetical(school.name)}
+              label="先輩保護者からこの学校の話を聞く"
+            />
           </Suspense>
 
           {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との
