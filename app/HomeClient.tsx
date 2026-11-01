@@ -81,8 +81,12 @@ export default function HomeClient({
   const [allItems, setAllItems] = useState<Consultation[]>(initialItems);
   const [loading, setLoading] = useState(false);
   const supervised = initialSupervised;
-  const counts = initialCounts;
-  const total = initialTotal;
+  // チップの件数（「身体面（19）」等）。サーバー側の初期値（検索語を考慮しないサイト
+  // 全体の件数）から始め、検索語（q）が変わるたびにその検索語で絞り込んだ件数に
+  // 更新する（2026-11-01追加。以前はinitialCountsを常にそのまま使っていたため、
+  // 検索中でもチップの件数がサイト全体のままだった）。
+  const [counts, setCounts] = useState<Record<string, number>>(initialCounts);
+  const [total, setTotal] = useState<number>(initialTotal);
   // サイドバナーは <PcSidebar> が自前でAPIから取得するため、ここでは
   // initialSidebarBanner は使わない（page.tsx側のサーバー取得・prop自体は
   // 後方互換のため残している）。
@@ -128,6 +132,24 @@ export default function HomeClient({
     } finally {
       if (showLoading) setLoading(false);
     }
+
+    // チップの件数（身体面（19）等）も、検索語に合わせて更新する。検索語が無い
+    // （＝サーバーが最初に返したサイト全体の件数のままでよい）場合は、余計な
+    // リクエストを増やさないようinitialCounts/initialTotalに戻すだけにする
+    // （2026-11-01追加）。
+    if (!nextQ.trim()) {
+      setCounts(initialCounts);
+      setTotal(initialTotal);
+      return;
+    }
+    try {
+      const countsRes = await fetch(`/api/consultations/counts?q=${encodeURIComponent(nextQ.trim())}`);
+      const countsData = await countsRes.json();
+      setCounts(countsData.counts || {});
+      setTotal(countsData.total || 0);
+    } catch {
+      // 件数取得に失敗しても一覧自体は表示できているので、黙って諦める。
+    }
   }
 
   function selectCategory(next: string) {
@@ -142,11 +164,21 @@ export default function HomeClient({
   // との指摘を受けて発覚・修正）。1つのeffectにまとめ、初回だけは静かに
   // （ローディング表示なし）、2回目以降（絞り込み変更時）はローディング表示ありで
   // 取得するようにした。
+  //
+  // 【2026-11-01修正】初回のこの「静かな再取得」は、サーバー側（app/page.tsx）の
+  // 取得条件に合わせるつもりで固定で 'all'・'' を渡していたが、他ページのタグ
+  // （テーマ）リンクから ?q=自閉スペクトラム症 のようなクエリ付きでホームに来た
+  // 場合、category/qのstate自体はurlParamsから正しく初期化されているのに、この
+  // 初回fetchだけ強制的に「すべて・検索なし」を取得してしまい、検索欄やチップの
+  // 見た目は絞り込み済みなのに一覧だけ無関係な全件のままになる不具合があった
+  // （「タグ選定してるのに全部でてくる」との指摘を受けて発覚）。サーバー側は
+  // 常に全カテゴリ・匿名のクローラー向け一覧を返すだけなので、初回の再取得では
+  // 固定値ではなく、urlParamsから初期化済みの実際のcategory/q/viewTabを使う。
   const didMountRef = useRef(false);
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
-      fetchResults('all', '', { showLoading: false });
+      fetchResults(category, q, { showLoading: false }, viewTab);
       return;
     }
     fetchResults(category, q, { showLoading: true }, viewTab);

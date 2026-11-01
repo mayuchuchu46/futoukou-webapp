@@ -2,6 +2,19 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { Consultation } from '@/lib/types';
 import { expertDisplayName, answerFirstLineSnippet } from '@/lib/expertDisplay';
 import { SEARCH_TAG_CANDIDATES, buildThemeOrFilter } from '@/lib/searchTags';
+import { CATS } from '@/lib/categories';
+
+// 検索語（q）をquestion/answerに対するPostgRESTの.or()フィルター文字列に変換する。
+// getConsultationsList（一覧取得）とgetConsultationCounts（カテゴリ別件数）の両方で
+// 同じ検索語の扱い（テーマ候補語ならTHEME_SYNONYMSまで含める）をするために共通化した
+// （2026-11-01追加。以前はgetConsultationsListにだけ実装されていて、カテゴリ別件数
+// （ホームのチップの件数表示）には検索語が反映されていなかった）。
+function buildSearchOrFilter(q: string): string {
+  const trimmedQ = q.trim();
+  return SEARCH_TAG_CANDIDATES.includes(trimmedQ)
+    ? buildThemeOrFilter(trimmedQ)
+    : `question.ilike.%${trimmedQ}%,answer.ilike.%${trimmedQ}%`;
+}
 
 // 相談一覧の取得＋ロック判定（API route とホーム画面のSSRで共通利用）。
 // 専門家の回答は、本人（投稿者）か、読み放題会員（memberActive）にだけ見せる。
@@ -90,15 +103,11 @@ export async function getConsultationsList({
     query = query.eq('category', category);
   }
   if (q && q.trim()) {
-    const trimmedQ = q.trim();
     // qが「気になるテーマから探す」のタグ候補語そのものと一致する場合は、
     // そのテーマの同義語（lib/searchTags.ts THEME_SYNONYMS）も含めて検索する。
     // タグ一覧（/api/consultations/tag-counts）側の件数も同じ語で数えているため、
     // タグをタップしたときの検索結果件数と表示件数が一致する（2026-10-16追加）。
-    const orFilter = SEARCH_TAG_CANDIDATES.includes(trimmedQ)
-      ? buildThemeOrFilter(trimmedQ)
-      : `question.ilike.%${trimmedQ}%,answer.ilike.%${trimmedQ}%`;
-    query = query.or(orFilter);
+    query = query.or(buildSearchOrFilter(q));
   }
   // memberIdによる絞り込みは、呼び出し側が明示的に「自分（author_id）の相談を見せてほしい」と
   // 言っている時（authorIdが渡されている時）だけ行う。authorIdが無い一般の一覧取得（ホーム画面の
@@ -166,4 +175,46 @@ export async function getConsultationsList({
     }
     return { ...base, locked: false };
   }) as Consultation[];
+}
+
+// カテゴリ別の件数（ホーム画面のチップ「身体面（19）」等）を取得する。
+// app/page.tsxのgetCounts（'use cache'でサイト全体の件数をキャッシュする版）とは別に、
+// こちらはクライアント側（HomeClient）から検索語（q）付きで呼べるようにしたもの
+// （2026-11-01追加。「タグ選定してるのに全部でてくる」との指摘を受けて調査したところ、
+// 一覧本体だけでなくチップの件数も検索語に関係なく常にサイト全体の件数のままだった
+// ため、検索中であってもその検索語に絞り込んだ件数を表示できるようにした）。
+// getConsultationsListと同じベースのフィルター（hidden・parent_id・crisis除外）を
+// そろえたうえで、qが指定されていればそれも反映する。
+export async function getConsultationCounts({
+  q,
+}: {
+  q?: string | null;
+} = {}): Promise<{ counts: Record<string, number>; total: number }> {
+  const supabase = getSupabaseAdmin();
+  const categoryKeys = Object.keys(CATS);
+
+  const buildBaseQuery = () => {
+    let query = supabase
+      .from('consultations')
+      .select('*', { count: 'exact', head: true })
+      .eq('hidden', false)
+      .is('parent_id', null)
+      .or('crisis_detected.is.null,crisis_detected.eq.false');
+    if (q && q.trim()) {
+      query = query.or(buildSearchOrFilter(q));
+    }
+    return query;
+  };
+
+  const [totalResult, ...categoryResults] = await Promise.all([
+    buildBaseQuery(),
+    ...categoryKeys.map((key) => buildBaseQuery().eq('category', key)),
+  ]);
+
+  const counts: Record<string, number> = {};
+  categoryKeys.forEach((key, i) => {
+    counts[key] = categoryResults[i].count || 0;
+  });
+
+  return { counts, total: totalResult.count || 0 };
 }
