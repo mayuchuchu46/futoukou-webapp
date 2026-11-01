@@ -754,14 +754,14 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 514, prefecture: '宮崎県', name: '宮崎県立富島高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
   { no: 515, prefecture: '宮崎県', name: '宮崎県立宮崎東高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '定時制（普通科）を併置。昼間部80名・夜間部40名。' },
   { no: 516, prefecture: '宮崎県', name: '宮崎県立宮崎工業高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', schoolCategory: 'attached', note: '定時制（機械科40名・電気科40名・建築科40名）を併置。' },
-  { no: 517, prefecture: '宮崎県', name: '宮崎県立都城泉ヶ丘高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', schoolCategory: 'attached', note: '定時制（普通科40名・商業科40名）を併置。' },
+  { no: 517, prefecture: '宮崎県', name: '宮崎県立都城泉ヶ丘高等学校', publicPrivate: '公立', operator: '宮崎県教育委員会', schoolCategory: 'attached', officialUrl: 'https://cms.miyazaki-c.ed.jp/6011/htdocs/', note: '定時制（普通科40名・商業科40名）を併置。' },
 
   // ===== 鹿児島県（2校） =====
   // 出典: 鹿児島県教育委員会「令和7年度公立高等学校生徒募集定員」
   //       https://www.pref.kagoshima.jp/ba05/kyoiku-bunka/school/koukou/nyushi/r3/documents/115764_20241002072632-1.pdf
   // 注: 県資料の学区別募集定員表を全学区（鹿児島・南薩・北薩・姶良伊佐・大隅・熊毛・大島）・市立含む全表を確認し、
   //     定時制課程の記載があったのは下記2校のみ（県全体の定時制合計3学級・募集定員120人と資料の集計欄が一致）。
-  { no: 518, prefecture: '鹿児島県', municipality: '鹿児島市', name: '鹿児島県立開陽高等学校', publicPrivate: '公立', operator: '鹿児島県教育委員会', schoolCategory: 'standalone', curriculumType: '単位制', note: '定時制単独校（普通科40名・オフィス情報科40名）。単位制のため学級数表示なし。' },
+  { no: 518, prefecture: '鹿児島県', municipality: '鹿児島市', name: '鹿児島県立開陽高等学校', publicPrivate: '公立', operator: '鹿児島県教育委員会', schoolCategory: 'standalone', curriculumType: '単位制', officialUrl: 'http://www.edu.pref.kagoshima.jp/sh/Kaiyo/', note: '定時制単独校（普通科40名・オフィス情報科40名）。単位制のため学級数表示なし。' },
   { no: 519, prefecture: '鹿児島県', municipality: '奄美市', name: '鹿児島県立奄美高等学校', publicPrivate: '公立', operator: '鹿児島県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。奄美大島内唯一の県立定時制高校。' },
 
   // ===== 沖縄県（7校） =====
@@ -769,11 +769,11 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   //       https://www.pref.okinawa.jp/_res/projects/default_project/_page_/001/008/889/06teiin.pdf
   //       泊高等学校定時制 募集要項 https://teiji.tomari-h.open.ed.jp/13b90b0ed03dd111f6994297b65f2316e53528fd.pdf
   // 注: 令和6年度時点の資料のため、その後の改廃（特に那覇商業高等学校の定時制募集停止以降の状況）は反映していない可能性がある。所在市区町村は泊高等学校のみ確認できた。
-  { no: 520, prefecture: '沖縄県', municipality: '那覇市', name: '沖縄県立泊高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', parts: '午前部（3学級・普通科120名）・夜間部（1学級・普通科40名）', note: '定時制課程（普通科）に加え通信制課程も併設。単位制か学年制かは資料で確認できなかった。' },
+  { no: 520, prefecture: '沖縄県', municipality: '那覇市', name: '沖縄県立泊高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', parts: '午前部（3学級・普通科120名）・夜間部（1学級・普通科40名）', officialUrl: 'https://teiji.tomari-h.open.ed.jp/', note: '定時制課程（普通科）に加え通信制課程も併設。単位制か学年制かは資料で確認できなかった。' },
   { no: 521, prefecture: '沖縄県', name: '沖縄県立コザ高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
-  { no: 522, prefecture: '沖縄県', name: '沖縄県立那覇工業高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（機械科40名・電気科40名）を併置。' },
-  { no: 523, prefecture: '沖縄県', name: '沖縄県立那覇商業高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（商業科）を併置していたが、令和6年度から募集を停止。' },
-  { no: 524, prefecture: '沖縄県', name: '沖縄県立北部農林高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（農業科40名）を併置。' },
-  { no: 525, prefecture: '沖縄県', name: '沖縄県立中部農林高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（農業科40名）を併置。' },
-  { no: 526, prefecture: '沖縄県', name: '沖縄県立八重山商工高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', note: '定時制（商業科40名）を併置。' },
+  { no: 522, prefecture: '沖縄県', name: '沖縄県立那覇工業高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', officialUrl: 'https://teiji.naha-th.open.ed.jp/', note: '定時制（機械科40名・電気科40名）を併置。' },
+  { no: 523, prefecture: '沖縄県', name: '沖縄県立那覇商業高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.teiji.naha-ch.open.ed.jp/', note: '定時制（商業科）を併置していたが、令和6年度から募集を停止。' },
+  { no: 524, prefecture: '沖縄県', name: '沖縄県立北部農林高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', officialUrl: 'https://teiji.hokubu-ah.open.ed.jp/', note: '定時制（農業科40名）を併置。' },
+  { no: 525, prefecture: '沖縄県', name: '沖縄県立中部農林高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.teiji.chubu-ah.open.ed.jp/', note: '定時制（農業科40名）を併置。' },
+  { no: 526, prefecture: '沖縄県', name: '沖縄県立八重山商工高等学校', publicPrivate: '公立', operator: '沖縄県教育委員会', schoolCategory: 'attached', officialUrl: 'https://teiji.yaeyama-th.open.ed.jp/', note: '定時制（商業科40名）を併置。' },
 ];
