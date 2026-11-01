@@ -20,7 +20,7 @@ import { EXPERT_VOLUNTEER_MODE, SENPAI_CREDENTIAL } from '@/lib/config';
 // 回答した専門家・先輩保護者にとっては、回答すること自体が自分のプロフィールへの
 // 露出・集客になる（2026-11-01、「専門家や保護者にとっては、自分のプロフィールに
 // 誘導することが目的」との方針を受けて追加）。オンライン相談リンク（online_consult_url）
-// を設定済みならそこへ直接誘導し、未設定なら「直接相談をリクエストする」を記録するだけに
+// を設定済みならそこへ直接誘導し、未設定なら「もっと相談したい」の意思表示を記録するだけに
 // して、専門家側のダッシュボードに件数を表示し設定を促す（メール通知の基盤はまだ無いため）。
 function ConsultRequestButton({ expertId, consultationId, onlineConsultUrl }: { expertId: string; consultationId: string; onlineConsultUrl?: string | null }) {
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
@@ -40,15 +40,15 @@ function ConsultRequestButton({ expertId, consultationId, onlineConsultUrl }: { 
   }
 
   if (state === 'sent') {
-    return <div className="muted" style={{ fontSize: 12 }}>リクエストを送りました。ご本人に伝わります。</div>;
+    return <div className="muted" style={{ fontSize: 12 }}>お伝えしました。ありがとうございます。</div>;
   }
 
   return (
     <button
       type="button"
-      className="btn-secondary"
+      className="btn-ghost"
       disabled={state === 'sending'}
-      style={{ alignSelf: 'flex-start', fontSize: 13, padding: '6px 14px' }}
+      style={{ alignSelf: 'flex-start', fontSize: 13, padding: '4px 10px' }}
       onClick={async () => {
         setState('sending');
         try {
@@ -62,7 +62,7 @@ function ConsultRequestButton({ expertId, consultationId, onlineConsultUrl }: { 
         }
       }}
     >
-      {state === 'sending' ? '送信中…' : 'この方に直接相談をリクエストする'}
+      {state === 'sending' ? '…' : 'この方にもっと相談したい（ご本人に伝わります）'}
     </button>
   );
 }

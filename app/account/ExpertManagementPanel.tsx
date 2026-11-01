@@ -70,16 +70,16 @@ export default function ExpertManagementPanel({
         </div>
       </div>
 
-      {/* 「この方に直接相談をリクエストする」の件数（2026-11-01追加）。回答した相談から
+      {/* 「この方にもっと相談したい」の件数（2026-11-01追加）。回答した相談から
           読者がこのボタンを押すと、オンライン相談リンクが未設定の間はここに溜まる。
           設定すれば以降は読者が直接そのリンクへ誘導されるようになる。 */}
       {consultRequestCount > 0 && (
         <div className="card" style={{ gap: 6, background: 'var(--sub)' }}>
           <div style={{ fontWeight: 700 }}>
-            直接相談をリクエストした方が{consultRequestCount}人います
+            「もっと相談したい」と思った方が{consultRequestCount}人います
           </div>
           <div className="qtext" style={{ fontSize: 13 }}>
-            オンライン相談のリンク（MOSH等のご自身の予約・決済ページ）を設定すると、以降はリクエストした方を直接そちらへご案内できます。
+            オンライン相談のリンク（MOSH等のご自身の予約・決済ページ）を設定すると、以降はこの方々を直接そちらへご案内できます。
           </div>
           <a href="/expert/profile" className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
             オンライン相談のリンクを設定する
