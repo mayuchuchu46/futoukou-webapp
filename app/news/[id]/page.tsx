@@ -9,7 +9,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { NEWS_ITEMS, getRelatedNews } from '@/lib/data/news';
 import NewsStatsChart from '@/components/NewsStatsChart';
 import RelatedConsultations from '@/app/gakko/RelatedConsultations';
-import RelatedLocalSchools from './RelatedLocalSchools';
+import LocalSchoolsCard from '@/components/LocalSchoolsCard';
 
 // ニュース個別記事ページ（2026-10-29追加）。「記事ごとにシェアできるようにしたい」
 // との要望を受けて、/news（一覧）とは別に1記事ずつのURL・OGP画像・Xシェアボタンを
@@ -191,7 +191,7 @@ export default async function NewsDetailPage({
           {/* 〇〇市のフリースクール・学びの多様化学校（2026-11-01追加、同要望）。
               lib/data/news.tsのrelatedMunicipality参照。該当施設が無ければ非表示。 */}
           {item.relatedMunicipality && (
-            <RelatedLocalSchools
+            <LocalSchoolsCard
               prefecture={item.relatedMunicipality.prefecture}
               city={item.relatedMunicipality.city}
             />

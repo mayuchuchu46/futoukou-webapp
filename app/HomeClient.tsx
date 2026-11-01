@@ -15,6 +15,7 @@ import NewsTeaser from '@/components/NewsTeaser';
 import MimamoriShindanTeaser from '@/components/MimamoriShindanTeaser';
 import FeaturedGakkoRanking from '@/components/FeaturedGakkoRanking';
 import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
+import MyRegionCard from '@/components/MyRegionCard';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -294,6 +295,15 @@ export default function HomeClient({
                 className="home-hero-pc"
               />
             </Link>
+
+            {/* 「自分の地域登録」カード（2026-11-01追加、「自分の自治体を登録すると、
+                その自治体の情報が優先的に表示されるようにしたい」との要望を受けて）。
+                絞り込み中（showExtrasがfalseの時）でも地域登録・確認はできた方がよいため、
+                showExtrasのゲートに関わらず常に表示する。未登録時は登録を促す小さな
+                カード、登録済みならその地域の学びの場をここに優先表示する
+                （components/MyRegionCard.tsx参照。ログイン不要・localStorageのみ）。 */}
+            <MyRegionCard />
+
             {/* 「注目の学び場」ランキング（2026-10-29追加）。「よく読まれている相談」より
                 上、ホーム最上部のランキングとして置く（「トップに」との要望）。
                 中身がまだ無い（相談件数がまだ少ない）うちはコンポーネント内部でnullを
