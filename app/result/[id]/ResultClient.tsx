@@ -6,6 +6,36 @@ import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 import { schoolAwareAnswerSectionLabel } from '@/lib/expertDisplay';
 import { EXPERT_VOLUNTEER_MODE, SENPAI_CREDENTIAL } from '@/lib/config';
+import ExpertAvatar from '@/components/ExpertAvatar';
+
+// 「この回答をした人」が一目で分かるよう、テキストリンクだけでなく写真つきの
+// 簡易プロフィールカードにした（2026-11-01、「この回答をした人って感じで
+// プロフィールが出る感じがいいかも」との指摘を受けて変更）。
+function AnswererMiniProfile({ experts }: { experts: NonNullable<Consultation['experts']> }) {
+  if (!experts.id) return null;
+  const href = experts.credential === SENPAI_CREDENTIAL ? `/senpai/${experts.id}` : `/experts/${experts.id}`;
+  return (
+    <Link
+      href={href}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        textDecoration: 'none',
+        color: 'inherit',
+        background: 'var(--bg)',
+        borderRadius: 10,
+        padding: '8px 10px',
+      }}
+    >
+      <ExpertAvatar photoUrl={experts.photo_url} size={36} />
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <span style={{ fontWeight: 700, fontSize: 14 }}>{experts.credential}・{experts.name}</span>
+        <span className="muted" style={{ fontSize: 12 }}>プロフィールを見る →</span>
+      </div>
+    </Link>
+  );
+}
 
 // 専門家・先輩保護者の回答がついた（またはつく予定の）相談の、AI回答の下に出す
 // 追加セクション。
@@ -124,15 +154,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
               見出しの直後・本文より前に置く（2026-10-31、「誰が書いたかはプロフィール
               にすぐとばせるようにしたい」との依頼を受けて、ぼかし・会員登録導線より
               下にあった位置から移動）。 */}
-          {item.experts?.id && (
-            <Link
-              href={item.experts.credential === SENPAI_CREDENTIAL ? `/senpai/${item.experts.id}` : `/experts/${item.experts.id}`}
-              className="backlink"
-              style={{ fontSize: 13, margin: 0 }}
-            >
-              {item.experts.name}さんのプロフィールを見る →
-            </Link>
-          )}
+          {item.experts && <AnswererMiniProfile experts={item.experts} />}
           {/* 本文は見せないが、最初の1行だけ実際の文面を見せて「続きが気になる」
               感じを出す（2026-10-31、「ボカシは最初の1行だけみせるのどう？」との
               提案を受けて追加）。 */}
@@ -178,15 +200,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
               「誰が書いたかはプロフィールにすぐとばせるようにしたい」との依頼を受けて、
               本文の下にあった位置から移動）。専門家は/experts/[id]、先輩保護者は
               /senpai/[id]とページが分かれているため、credentialで出し分ける。 */}
-          {item.experts?.id && (
-            <Link
-              href={item.experts.credential === SENPAI_CREDENTIAL ? `/senpai/${item.experts.id}` : `/experts/${item.experts.id}`}
-              className="backlink"
-              style={{ fontSize: 13, margin: 0 }}
-            >
-              {item.experts.name}さんのプロフィールを見る →
-            </Link>
-          )}
+          {item.experts && <AnswererMiniProfile experts={item.experts} />}
           <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
             {item.expert_answer}
           </div>
