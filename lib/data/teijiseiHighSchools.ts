@@ -367,7 +367,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
 
   // ===== 福井県（7校） =====
   // 出典: 福井県教育委員会「令和8年度福井県立高等学校入学者選抜実施要項」 https://www.pref.fukui.lg.jp/doc/koukou/nyugaku/r08youkou_d/fil/R08annai.pdf
-  { no: 250, prefecture: '福井県', municipality: '坂井市', name: '丸岡高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員40名。昭和39年「城東分校（定時制）」として開校' },
+  { no: 250, prefecture: '福井県', municipality: '坂井市', name: '丸岡高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.maruoka-h.ed.jp', note: '定時制。募集人員40名。昭和39年「城東分校（定時制）」として開校' },
   { no: 251, prefecture: '福井県', municipality: '大野市', name: '大野高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', note: '定時制。募集人員30名' },
   { no: 252, prefecture: '福井県', municipality: '鯖江市', name: '鯖江高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', curriculumType: '単位制', parts: '昼間部のみ', officialUrl: 'https://www.sabae-h.ed.jp/', note: '定時制。募集人員30名。平成22年度より単位制・2学期制、令和元年度より夜間部を廃止し昼間部のみに' },
   { no: 253, prefecture: '福井県', municipality: '越前市', name: '武生高校', publicPrivate: '公立', operator: '福井県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.takefu-h.ed.jp/', note: '定時制。募集人員80名' },
@@ -381,10 +381,10 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   //       https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/031/399/r7gakkoumeibo_kakutei.pdf（静岡県立学校名簿）
   { no: 257, prefecture: '静岡県', municipality: '下田市', name: '静岡県立下田高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/shimoda-h/' },
   { no: 258, prefecture: '静岡県', municipality: '伊東市', name: '静岡県立伊豆伊東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/izuito-h/' },
-  { no: 259, prefecture: '静岡県', municipality: '三島市', name: '静岡県立三島長陵高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3部制（1部・2部・3部、午前・午後・夜間）', curriculumType: '単位制' },
+  { no: 259, prefecture: '静岡県', municipality: '三島市', name: '静岡県立三島長陵高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '3部制（1部・2部・3部、午前・午後・夜間）', curriculumType: '単位制', officialUrl: 'https://www.edu.pref.shizuoka.jp/mishimachoryo-h/' },
   { no: 260, prefecture: '静岡県', municipality: '駿東郡小山町', name: '静岡県立小山高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制', officialUrl: 'https://www.edu.pref.shizuoka.jp/oyama-h/' },
   { no: 261, prefecture: '静岡県', municipality: '沼津市', name: '静岡県立沼津工業高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'https://www.edu.pref.shizuoka.jp/numazu-th/', note: '工業' },
-  { no: 262, prefecture: '静岡県', municipality: '富士市', name: '静岡県立富士高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制' },
+  { no: 262, prefecture: '静岡県', municipality: '富士市', name: '静岡県立富士高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', curriculumType: '学年制', officialUrl: 'https://www.edu.pref.shizuoka.jp/fuji-h/' },
   { no: 263, prefecture: '静岡県', municipality: '富士宮市', name: '静岡県立富士宮東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/fujihigashi-h/' },
   { no: 264, prefecture: '静岡県', municipality: '静岡市清水区', name: '静岡県立清水東高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.edu.pref.shizuoka.jp/shimizuhigashi-h/' },
   { no: 265, prefecture: '静岡県', municipality: '静岡市葵区', name: '静岡県立静岡高等学校', publicPrivate: '公立', operator: '静岡県教育委員会', schoolCategory: 'attached', parts: '夜間', officialUrl: 'https://www.edu.pref.shizuoka.jp/shizuoka-h/' },
@@ -526,19 +526,19 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   //       ベネッセ学校情報（czemi.benesse.ne.jp）、school.js88.com、minkou.jp 等
   { no: 371, prefecture: '三重県', municipality: '桑名市', name: '三重県立桑名高等学校', publicPrivate: '公立', operator: '三重県教育委員会', officialUrl: 'https://www.kuwana-h.ed.jp/top.html', note: '定時制の学科名・部制・単位制/学年制の区別は公式サイトで未確認' },
   { no: 372, prefecture: '三重県', municipality: '四日市市', name: '三重県立四日市工業高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/tyokka/', note: '定時制学科は機械交通工学科・住システム工学科（いずれも単位制）。部制の記載なし' },
-  { no: 373, prefecture: '三重県', municipality: '四日市市', name: '三重県立北星高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '夜間部', curriculumType: '単位制', note: '定時制普通科（夜間部・単位制）のほか情報ビジネス科（単位制）、普通科（昼間部）の募集も記載あり（出典に記述の食い違いあり、要公式サイト確認）' },
+  { no: 373, prefecture: '三重県', municipality: '四日市市', name: '三重県立北星高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '夜間部', curriculumType: '単位制', officialUrl: 'http://www.mie-c.ed.jp/hhokus/', note: '定時制普通科（夜間部・単位制）のほか情報ビジネス科（単位制）、普通科（昼間部）の募集も記載あり（出典に記述の食い違いあり、要公式サイト確認）' },
   { no: 374, prefecture: '三重県', municipality: '鈴鹿市', name: '三重県立飯野高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/hiino/', note: '定時制普通科（単位制）。部制の記載なし' },
   { no: 375, prefecture: '三重県', municipality: '津市', name: '三重県立みえ夢学園高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '三部制（昼間部＝午前部・午後部、夜間部）', curriculumType: '単位制', note: '総合学科' },
-  { no: 376, prefecture: '三重県', municipality: '伊賀市', name: '三重県立上野高等学校', publicPrivate: '公立', operator: '三重県教育委員会', note: '定時制の学科・部制・単位制/学年制は未確認' },
+  { no: 376, prefecture: '三重県', municipality: '伊賀市', name: '三重県立上野高等学校', publicPrivate: '公立', operator: '三重県教育委員会', officialUrl: 'http://www.mie-c.ed.jp/hueno/', note: '定時制の学科・部制・単位制/学年制は未確認' },
   { no: 377, prefecture: '三重県', municipality: '名張市', name: '三重県立名張高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/hnabar/', note: '定時制普通科（単位制）。部制の記載なし' },
-  { no: 378, prefecture: '三重県', municipality: '松阪市', name: '三重県立松阪工業高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
+  { no: 378, prefecture: '三重県', municipality: '松阪市', name: '三重県立松阪工業高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://www.mie-c.ed.jp/tmatus/', note: '定時制普通科（単位制）。部制の記載なし' },
   { no: 379, prefecture: '三重県', municipality: '伊勢市', name: '三重県立伊勢まなび高等学校', publicPrivate: '公立', operator: '三重県教育委員会', parts: '三部制（昼間部＝午前部・午後部、夜間部）', curriculumType: '単位制', note: '定時制学科はものづくり工学科（単位制）' },
   { no: 380, prefecture: '三重県', municipality: '尾鷲市', name: '三重県立尾鷲高等学校', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', note: '定時制普通科（単位制）。部制の記載なし' },
   { no: 381, prefecture: '三重県', municipality: '熊野市', name: '三重県立熊野青藍高等学校（木本校舎）', publicPrivate: '公立', operator: '三重県教育委員会', curriculumType: '単位制', officialUrl: 'https://sites.google.com/mie-c.ed.jp/kumanoseiran/', note: '定時制普通科（単位制）。部制の記載なし' },
 
   // ===== 滋賀県（5校） =====
   // 出典: 滋賀県教育委員会 確定出願状況資料（平成30・31年度）、各校公式サイト、school.js88.com、minkou.jp
-  { no: 382, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立大津清陵高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', curriculumType: '単位制', note: '普通科。昼間部・通信部は大平1丁目14-1、夜間部は大津市中心部（JR膳所駅付近）。' },
+  { no: 382, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立大津清陵高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', curriculumType: '単位制', officialUrl: 'http://www.ohtsuseiryo-h.shiga-ec.ed.jp/', note: '普通科。昼間部・通信部は大平1丁目14-1、夜間部は大津市中心部（JR膳所駅付近）。' },
   { no: 383, prefecture: '滋賀県', municipality: '東近江市', name: '滋賀県立能登川高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', officialUrl: 'https://www.notogawa-h.shiga-ec.ed.jp/', note: '普通科。' },
   { no: 384, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立瀬田工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', officialUrl: 'https://www.setatech-h.shiga-ec.ed.jp/', note: '定時制学科は機械・電気科。部制・単位制/学年制は未確認' },
   { no: 385, prefecture: '滋賀県', municipality: '彦根市', name: '滋賀県立彦根工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '定時制学科は機械科。部制・単位制/学年制は未確認' },
