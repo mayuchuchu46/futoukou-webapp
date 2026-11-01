@@ -5,50 +5,44 @@
 // に混ざって表示されていた不具合の指摘を受けて、該当箇所をまとめて除外）。
 export const SENPAI_CREDENTIAL = '先輩保護者（経験者）';
 
-// 有料の「専門家に相談」機能の設定。
-// 支払い自体はStripeで受け取るが、専門家への報酬は今のところ手動振込で管理する
-// （Stripe Connect等の自動振込は専門家の人数が増えてから別途検討する）。
-
-// 専門家への質問は、読み放題会員（lib/membership.ts参照）が次の3通りで利用できる
-// （2026-10-11 価格体系見直し）。
-// 1. 月1回、無料（会員特典として会員のサブスク更新周期ごとに1回。ユーザー負担は¥0だが、
-//    専門家への報酬¥400は運営が負担する＝「無料」はユーザー視点の話で、原価がかかっている）
-// 2. チケット（6回¥3000＝実質1回¥500。単発より割安）
-// 3. 都度払い（1回¥600）
-// どの経路で質問しても、専門家への報酬は一律¥400（lib/expertQuota.ts参照）。
+// 専門家への質問について。
+// 2026-10-11〜10-31は「読み放題会員限定・月1回無料／チケット6回¥3000／都度¥600、
+// 専門家への報酬は一律¥400」という価格体系だったが、2026-11-01に恒久的に無料化した
+// （質問する・回答するのどちらも無料。専門家・先輩保護者にとっての対価は、回答に
+// 付くプロフィールへの誘導＝宣伝効果。回答を読むには読み放題会員登録が必要という
+// 部分だけは残る）。EXPERT_PRICE_JPY・EXPERT_PAYOUT_JPY・チケット関連の定数、
+// lib/expertQuota.tsの財源判定は、この旧モデルの名残で、現在どこからも呼ばれていない
+// （過去にその価格体系で発生した実際の報酬の記録・振込確認のためだけに残している。
+// app/expert/earnings/page.tsx参照）。
 export const EXPERT_PRICE_JPY = Number(process.env.EXPERT_PRICE_JPY || 600);
-export const EXPERT_PAYOUT_JPY = Number(process.env.EXPERT_PAYOUT_JPY || 400); // 専門家への報酬（固定額。財源（都度払い／チケット／無料枠）によらず一律）
+export const EXPERT_PAYOUT_JPY = Number(process.env.EXPERT_PAYOUT_JPY || 400);
 
 export const EXPERT_TICKET_PACK_PRICE_JPY = Number(process.env.EXPERT_TICKET_PACK_PRICE_JPY || 3000);
 export const EXPERT_TICKET_PACK_COUNT = Number(process.env.EXPERT_TICKET_PACK_COUNT || 6);
 
-// 読み放題会員（月額サブスク）。内訳：運営¥400 / 専門家¥400（都度質問とは別建て）。
+// 読み放題会員（月額サブスク）。質問・回答自体は無料になったが、回答を読むにはこの
+// 会員登録が必要（将来的に有料化する想定。現在はEXPERT_VOLUNTEER_MODE中のため無料）。
 export const MEMBERSHIP_PRICE_JPY = Number(process.env.MEMBERSHIP_PRICE_JPY || 800);
 
+// 旧価格体系（都度払い／チケット／無料枠）で発生した報酬の金額。現在の
+// 'volunteer'（恒久的に無料）な相談には使われない（app/api/expert/answer/route.ts
+// 参照）。
 export function expertPayout(_priceJpy: number) {
   return EXPERT_PAYOUT_JPY;
 }
 
-// 無料AI相談を累計でこの回数使った利用者に、専門家への相談（有料）を案内する閾値。
+// 無料AI相談を累計でこの回数使った利用者に、専門家への相談を案内する閾値。
 // 実利用データに基づく数値ではなく仮説（2026-10-11時点）。公開後のログを見て調整する。
 export const AI_USAGE_UPSELL_THRESHOLD = Number(process.env.AI_USAGE_UPSELL_THRESHOLD || 3);
 
-// Stripeのアカウントがカードネットワーク側の都合で利用できなくなり（2026-10-31）、
-// 乗り換え先の決済代行会社がまだ未確定の間、専門家・先輩保護者への質問機能を完全に
-// 止めてしまうのではなく、「当面は利用者には無料で開放し、専門家・先輩保護者には
-// ボランティアで協力してもらう」運用に切り替えるためのフラグ。
-// trueの間は、/api/expert-checkoutが読み放題会員登録・Stripe決済を要求せず、
-// 誰でも無料で専門家・先輩保護者に質問できる（expert_funding: 'volunteer'として記録）。
-// 専門家への報酬記録（expert_payout_jpy）自体は通常どおり計算・保存されるため、
-// 有償化した際に過去の貢献分を把握できる（実際に支払うかは別途判断）。
-// 新しい決済代行会社が決まり、通常の有料運用に戻すタイミングでfalseに変更する。
+// Stripeのアカウントがカードネットワーク側の都合で利用できなくなっており（2026-10-31〜）、
+// 乗り換え先の決済代行会社の準備が整うまでの間、読み放題会員登録（/api/membership-checkout）
+// をStripe決済なしでその場で有効化するためのフラグ。trueの間、会員登録ボタンを押すと
+// Stripeを経由せずsubscription_status='active'になる（＝今だけ無料で読み放題会員になれる）。
+// 新しい決済代行会社が決まり、会員登録を通常の有料運用に戻すタイミングでfalseに変更する。
 //
-// Stripeアカウント自体が使えないのは専門家への質問（都度払い）に限った話ではなく、
-// 読み放題会員（月¥800のサブスク）の新規登録・決済もまったく同じ理由で実行できない
-// （stripeConfigured＝環境変数の有無だけを見る既存のフラグは、キー自体はまだ設定されて
-// いるためtrueのままになっており、ボタンを押すとStripe API呼び出しの時点で失敗する）。
-// そのため、このフラグは「専門家への質問」だけでなく「読み放題会員への無料登録」
-// （/api/membership-checkout）にも流用する（2026-10-31、「今はベータ版で期間限定で
-// 無料会員登録で読み放題」との方針確認を受けて）。trueの間、会員登録はStripe決済を
-// 挟まずその場でsubscription_status='active'にする。
+// 以前はこのフラグが「専門家への質問を無料開放する」判定にも使われていたが、2026-11-01に
+// 専門家への質問・回答そのものを恒久的に無料化したことで、その判定は不要になった
+// （Stripeの復旧状況に関係なく、質問・回答は常に無料。app/api/expert-checkout/route.ts
+// 参照）。このフラグが指すのは今はもう「読み放題会員登録のStripeバイパス」だけ。
 export const EXPERT_VOLUNTEER_MODE = true;

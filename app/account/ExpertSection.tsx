@@ -1,6 +1,5 @@
 import { getCurrentExpert } from '@/lib/expertAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { SENPAI_CREDENTIAL, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import ExpertManagementPanel from './ExpertManagementPanel';
 
 // 専門家・先輩保護者としての管理内容（旧/expert/dashboard）をアカウントページに
@@ -63,20 +62,16 @@ export default async function ExpertSection() {
   }
 
   const supabase = getSupabaseAdmin();
-  const isSenpai = expert.credential === SENPAI_CREDENTIAL;
-  const excludeSenpai = isSenpai && !EXPERT_VOLUNTEER_MODE;
-  const pending = excludeSenpai
-    ? []
-    : (
-        await supabase
-          .from('consultations')
-          .select('*')
-          .eq('request_type', 'expert')
-          .eq('paid', true)
-          .eq('expert_status', 'pending')
-          .or(`requested_expert_id.is.null,requested_expert_id.eq.${expert.id}`)
-          .order('created_at', { ascending: true })
-      ).data;
+  // 2026-11-01、専門家への質問を恒久的に無料化したのに伴い、先輩保護者をこの
+  // キューから除外する理由（価格体系・報酬の違い）自体がなくなったため、常に含める。
+  const { data: pending } = await supabase
+    .from('consultations')
+    .select('*')
+    .eq('request_type', 'expert')
+    .eq('paid', true)
+    .eq('expert_status', 'pending')
+    .or(`requested_expert_id.is.null,requested_expert_id.eq.${expert.id}`)
+    .order('created_at', { ascending: true });
 
   const { data: answeredByMe } = await supabase
     .from('consultations')

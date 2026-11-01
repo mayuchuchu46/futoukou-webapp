@@ -168,7 +168,7 @@ export default function ExpertRegisterPage() {
           戻る
         </button>
         <div style={{ fontWeight: 700, fontSize: 18 }}>専門家登録</div>
-        <div className="muted">「どうする先生」で有料相談に回答する専門家としてのプロフィールを作成します。</div>
+        <div className="muted">「どうする先生」で相談に回答する専門家としてのプロフィールを作成します。</div>
         {draftRestored && (
           <div className="muted" style={{ fontSize: 12, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
             前回入力中だった内容を復元しました。
@@ -327,13 +327,13 @@ export default function ExpertRegisterPage() {
               {/* 2026-10-13: 差し戻し（不備・期限切れによる再提出）の大半を占める2点を、
                   申請前にあらかじめ明記しておくことで、差し戻しの件数自体を減らす狙いで追加。 */}
               有効期限内のもので、氏名・資格名（登録番号がある場合はそれも）がはっきり読み取れる状態でご提出ください（内容が確認できない場合、再提出をお願いすることがあります）。
-              ご提出いただいた登録証は本人確認のみに使用し、第三者には提供しません。確認が完了するまで、有料相談への回答はできません。
+              ご提出いただいた登録証は本人確認のみに使用し、第三者には提供しません。確認が完了するまで、相談への回答はできません。
               確認が完了すると、画像・PDFのファイルは30日以内に削除します（確認済みという記録のみ残します）。
             </div>
           </>
         ) : (
           <div className="muted" style={{ fontSize: 12, marginTop: -4, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
-            ご登録いただいたメールアドレスに、運営から通話日程についてご連絡します。通話時に登録証（氏名・資格名・登録番号がわかるもの）を画面に見せていただき、運営が確認します。確認が完了するまで、有料相談への回答はできません。
+            ご登録いただいたメールアドレスに、運営から通話日程についてご連絡します。通話時に登録証（氏名・資格名・登録番号がわかるもの）を画面に見せていただき、運営が確認します。確認が完了するまで、相談への回答はできません。
           </div>
         )}
         <input className="input" type="email" placeholder="メールアドレス" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />

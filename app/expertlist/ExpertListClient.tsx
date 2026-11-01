@@ -36,7 +36,7 @@ export default function ExpertListClient() {
         </div>
         <div className="muted" style={{ marginBottom: 10 }}>
           AIの自動回答とは別に、専門家（公認心理師など）本人が相談文を読んで直接回答したものです。
-          {!stripeConfigured && '現在、読み放題会員・専門家への有料相談は準備中です。準備が整い次第ご利用いただけます。'}
+          {!stripeConfigured && '現在、読み放題会員の登録は準備中です。準備が整い次第ご利用いただけます（専門家への質問自体はどなたでも無料です）。'}
         </div>
 
         <div className="card" style={{ gap: 8, alignItems: 'flex-start', marginBottom: 10 }}>
@@ -45,7 +45,6 @@ export default function ExpertListClient() {
             {!stripeConfigured && <span className="comingsoon-badge">準備中</span>}
           </div>
           <div className="qtext" style={{ fontSize: 13 }}>✓ ここに並ぶ専門家回答が、すべて読めるようになる</div>
-          <div className="qtext" style={{ fontSize: 13 }}>✓ 専門家への質問が、月1回は無料でできる</div>
           {/* 伴走ノートの基本サマリー（状況整理・次の一手・言葉かけ等）は2026-10-12より
               無料会員にも開放したため、この行は「無料会員にはないもの」として、伴走ノートを
               より詳しく見られるという有料会員向けの訴求に書き換えた。 */}

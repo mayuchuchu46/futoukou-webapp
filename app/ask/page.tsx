@@ -81,15 +81,7 @@ function AskPageContent() {
   const [expertSubmitting, setExpertSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [expertAvailable, setExpertAvailable] = useState(false);
-  const [memberActive, setMemberActive] = useState(false);
-  const [freeQuestionAvailable, setFreeQuestionAvailable] = useState(false);
-  const [expertCredits, setExpertCredits] = useState(0);
-  const [expertPriceJpy, setExpertPriceJpy] = useState(600);
   const [requestedExpert, setRequestedExpert] = useState<RequestedExpert | null>(null);
-  const [stripeConfigured, setStripeConfigured] = useState(false);
-  // 決済代行会社の乗り換え作業中、専門家への質問機能を無料開放する期間かどうか
-  // （lib/config.tsのEXPERT_VOLUNTEER_MODE参照、2026-10-31追加）。
-  const [expertVolunteerMode, setExpertVolunteerMode] = useState(false);
   const [draftLoaded, setDraftLoaded] = useState(false);
   // 子どもプロフィール機能（2026-10-16追加）。ログインしていない、またはお子さんの
   // プロフィールを1人も登録していない会員には今まで通り何も表示されない
@@ -248,17 +240,8 @@ function AskPageContent() {
       .then((r) => r.json())
       .then((d) => setExpertAvailable(!!d.available))
       .catch(() => setExpertAvailable(false));
-    fetch('/api/me')
-      .then((r) => r.json())
-      .then((d) => {
-        setMemberActive(!!d.active);
-        setFreeQuestionAvailable(!!d.freeQuestionAvailable);
-        setExpertCredits(d.expertCredits || 0);
-        if (d.expertPriceJpy) setExpertPriceJpy(d.expertPriceJpy);
-        setStripeConfigured(!!d.stripeConfigured);
-        setExpertVolunteerMode(!!d.expertVolunteerMode);
-      })
-      .catch(() => setMemberActive(false));
+    // 専門家への質問が恒久的に無料になった（2026-11-01）ため、以前ここにあった
+    // /api/me経由の会員状態・無料枠・チケット残数・価格の取得は不要になった。
     // 子どもプロフィール（2026-10-16追加）。ログインしていない場合はAPI側が
     // {children: []}を返すだけで、他の表示には影響しない。
     fetch('/api/children')
@@ -428,24 +411,19 @@ function AskPageContent() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
-      if (data.funded) {
-        // 無料枠・チケット消費の場合はStripe決済なしでその場で確定しているので、
-        // 直接結果ページへ遷移する。
-        clearAskDraft();
-        // submit()と同じ理由で、ルーターキャッシュによりstateが残るのを防ぐため
-        // 明示的に空にする（2026-10-16）。
-        setText('');
-        setCategory('');
-        setGrade('');
-        setGender('');
-        categoryTouchedRef.current = false;
-        router.push(`/result/${data.consultation_id}`);
-        return;
-      }
-      // Stripe決済へ遷移する場合は、途中でキャンセルして戻ってくる可能性があるため
-      // ドラフトは消さずに残す。
-      if (!data.url) throw new Error('失敗しました');
-      window.location.href = data.url;
+      // 2026-11-01、専門家への質問が恒久的に無料になったため、Stripe決済へ
+      // 遷移する分岐は不要になった。登録と同時に確定するので直接結果ページへ遷移する。
+      if (!data.consultation_id) throw new Error('失敗しました');
+      clearAskDraft();
+      // submit()と同じ理由で、ルーターキャッシュによりstateが残るのを防ぐため
+      // 明示的に空にする（2026-10-16）。
+      setText('');
+      setCategory('');
+      setGrade('');
+      setGender('');
+      categoryTouchedRef.current = false;
+      router.push(`/result/${data.consultation_id}`);
+      return;
     } catch (e: unknown) {
       setError(
         e instanceof Error && e.name === 'AbortError'
@@ -610,30 +588,24 @@ function AskPageContent() {
         <div className="expertteaser">
           <div className="expertteaser-title">
             {requestedExpert
-              ? `${requestedExpert.credential}・${requestedExpert.name}さんに相談する${expertVolunteerMode ? '' : '（有料）'}`
-              : `専門家に相談する${expertVolunteerMode ? '' : '（有料）'}`}
-            {((!stripeConfigured && !expertVolunteerMode) || (!expertAvailable && !requestedExpert)) && (
+              ? `${requestedExpert.credential}・${requestedExpert.name}さんに相談する`
+              : '専門家に相談する'}
+            {!expertAvailable && !requestedExpert && (
               <span className="comingsoon-badge">準備中・近日公開</span>
             )}
           </div>
-          {!stripeConfigured && !expertVolunteerMode ? (
-            <div className="expertteaser-desc">
-              現在、決済機能の準備中のため、専門家への有料相談はまだご利用いただけません。準備が整い次第、こちらからご利用いただけるようになります。
-            </div>
-          ) : !expertAvailable && !requestedExpert ? (
+          {/* 2026-11-01、専門家・先輩保護者への質問を恒久的に無料化した（従来の
+              読み放題会員限定・月1回無料／チケット／都度¥600という価格体系は廃止）。
+              質問は誰でも無料。回答を読むには会員登録が必要（/result側のロック表示）。 */}
+          {!expertAvailable && !requestedExpert ? (
             <div className="expertteaser-desc">
               現在、本人確認が完了した専門家（公認心理師など）がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
             </div>
-          ) : expertVolunteerMode ? (
+          ) : (
             <>
-              {/* 決済代行会社の乗り換え作業中（2026-10-31〜）、会員登録・支払いなしで
-                  誰でも無料で専門家に質問できる試験運用。「ボランティアで対応」という
-                  表現だと恒久的な無償運用に見えてしまうため、「決済の準備が整うまでの
-                  期間限定のプレ期間」であることが伝わる表現に調整（2026-10-31）。 */}
               <div className="expertteaser-desc">
                 {requestedExpert ? <>ご指名の専門家が、</> : <>登録している専門家が、</>}
-                数日以内にテキストで直接回答します。
-                現在はプレ期間として、どなたでも無料でお試しいただけます（決済機能の準備が整うまでの期間限定です）。
+                数日以内にテキストで直接回答します。どなたでも無料でご質問いただけます（回答を読むには会員登録が必要です）。
                 {!requestedExpert && (
                   <>
                     <br />
@@ -646,44 +618,6 @@ function AskPageContent() {
                   ? '送信中…'
                   : `無料で${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`}
               </button>
-            </>
-          ) : memberActive ? (
-            <>
-              <div className="expertteaser-desc">
-                {requestedExpert ? <>ご指名の専門家が、</> : <>登録している専門家が、</>}
-                数日以内にテキストで直接回答します。
-                {freeQuestionAvailable ? (
-                  <>読み放題会員は月1回、無料で質問できます（今月はまだ利用可）。</>
-                ) : expertCredits > 0 ? (
-                  <>質問チケットが残り{expertCredits}枚あります（1枚消費します）。</>
-                ) : (
-                  <>今月の無料分は使用済みのため、都度払いとなります。<a href="/account">まとめ買いチケット</a>だと割安です。</>
-                )}
-                {!requestedExpert && (
-                  <>
-                    <br />
-                    <a href="/experts">どんな専門家が回答していますか？</a>
-                  </>
-                )}
-              </div>
-              <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
-                {expertSubmitting
-                  ? '送信中…'
-                  : freeQuestionAvailable
-                  ? `無料で${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`
-                  : expertCredits > 0
-                  ? `チケットを使って${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`
-                  : `${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`}
-              </button>
-            </>
-          ) : (
-            <>
-              <div className="expertteaser-desc">
-                専門家への質問は、読み放題会員限定です。会員になると、他の利用者への専門家回答もすべて読み放題になります。
-              </div>
-              <a className="btn-secondary" href="/account">
-                読み放題会員に登録する
-              </a>
             </>
           )}
         </div>

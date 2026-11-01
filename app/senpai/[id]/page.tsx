@@ -7,7 +7,7 @@ import ExpertAvatar from '@/components/ExpertAvatar';
 import SenpaiConsultCta from '@/components/SenpaiConsultCta';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
-import { SENPAI_CREDENTIAL, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 import { findSchoolMentionsInBio, resolveSchoolName } from '@/lib/senpaiSchoolMentions';
 
 // 先輩保護者（経験者）の公開プロフィールページ。app/experts/[id]/page.tsx（専門家向け）
@@ -103,10 +103,10 @@ export default async function SenpaiProfilePublicPage({
               </div>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {/* テキストでの質問（/askの既存フロー）はEXPERT_VOLUNTEER_MODE（無償
-                  ボランティア期間）中のみ実際に使える（2026-10-31、「この先輩保護者に
-                  相談する、の導線は？」との指摘を受けて変更）。 */}
-              <SenpaiConsultCta expertId={senpai.id} volunteerMode={EXPERT_VOLUNTEER_MODE} />
+              {/* テキストでの質問（/askの既存フロー）は2026-11-01に恒久的に無料化した
+                  ため、常に実際に使える（2026-10-31、「この先輩保護者に相談する、の
+                  導線は？」との指摘を受けて追加）。 */}
+              <SenpaiConsultCta expertId={senpai.id} />
               {/* オンライン通話・チャットリレーの予約・決済は本人が用意した外部サービス
                   （MOSH等）に任せるため、どうする先生側の金銭のやり取り（volunteerMode）
                   とは無関係に、online_consult_urlが設定されていれば常に表示する

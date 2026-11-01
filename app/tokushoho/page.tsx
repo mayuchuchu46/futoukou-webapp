@@ -87,7 +87,7 @@ export default function TokushohoPage() {
           <div>
             <div style={{ fontWeight: 700, fontSize: 13 }}>お支払時期</div>
             <div className="qtext">
-              読み放題会員（月額サブスクリプション）はお申し込み時、以降は毎月の更新日に自動で決済されます。専門家への質問（都度払い・チケット）はお申し込み時に決済されます。
+              読み放題会員（月額サブスクリプション）はお申し込み時、以降は毎月の更新日に自動で決済されます。専門家・先輩保護者への質問は無料です。
             </div>
           </div>
 

@@ -5,11 +5,10 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
-import { EXPERT_TICKET_PACK_PRICE_JPY, EXPERT_TICKET_PACK_COUNT, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
+import { EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import { isStripeConfigured } from '@/lib/stripe';
 import LogoutButton from './LogoutButton';
 import MembershipPanel from './MembershipPanel';
-import TicketsPanel from './TicketsPanel';
 import ExpertSection from './ExpertSection';
 
 // 登録・ログイン直後、いきなり「自分の相談を書く」はハードルが高い人も多いので、
@@ -147,14 +146,9 @@ async function AccountMemberSection() {
         volunteerMode={EXPERT_VOLUNTEER_MODE}
       />
 
-      {isSubscriptionActive(member) && (
-        <TicketsPanel
-          initialCredits={member.expert_credits}
-          priceJpy={EXPERT_TICKET_PACK_PRICE_JPY}
-          packCount={EXPERT_TICKET_PACK_COUNT}
-          stripeConfigured={isStripeConfigured()}
-        />
-      )}
+      {/* 専門家への質問チケット購入（TicketsPanel）は、2026-11-01に専門家への質問を
+          恒久的に無料化したのに伴い廃止した。チケットはもう何にも消費できないため、
+          購入導線を残すと「買っても使えないもの」を売ることになってしまう。 */}
 
       {/* お知らせ・メルマガの受信設定は不要とのことで非表示にした（2026-10-14）。
           APIやDBの購読状態は変更していないので、再表示したくなった場合は

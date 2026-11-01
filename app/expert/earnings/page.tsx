@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { getCurrentExpert } from '@/lib/expertAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 
 export default function ExpertEarningsPage() {
   // Cache Componentsではcookies()を読むコンポーネントをSuspense配下に置かないと、
@@ -53,15 +52,19 @@ async function ExpertEarningsContent() {
           <div className="muted" style={{ marginTop: 8 }}>未振込分</div>
           <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--main)' }}>¥{totalUnpaid.toLocaleString()}</div>
         </div>
-        {EXPERT_VOLUNTEER_MODE ? (
-          <div className="noticebox" style={{ background: 'var(--sub)', borderRadius: 10, padding: '12px 14px', fontSize: 12, color: '#1F4A3C' }}>
-            現在はボランティア期間中のため、回答への報酬・振込はありません（決済代行会社の切り替え作業が完了次第、通常の有料運用に戻ります）。
-          </div>
-        ) : (
+        {/* 2026-11-01、専門家・先輩保護者への質問を恒久的に無料化したのに伴い、報酬・
+            振込の仕組み自体を廃止した。ただし、それ以前（¥600都度払い・チケット・
+            読み放題会員の無料枠）の相談で実際に発生していた未払いの報酬が残っている
+            場合は、その分の振込案内だけは出し続ける必要がある。 */}
+        {totalUnpaid > 0 ? (
           <div className="noticebox" style={{ background: 'var(--sub)', borderRadius: 10, padding: '12px 14px', fontSize: 12, color: '#1F4A3C' }}>
             {payoutsEnabled
               ? '振込は、運営が内容を確認のうえ、毎月まとめて行います。振込状況についてのお問い合わせは運営までご連絡ください。'
               : <>振込を受け取るには、振込先の登録（本人確認・振込先口座の入力）が必要です。<a href="/expert/profile">プロフィール編集画面</a>から設定してください。それまでの間は、運営から直接銀行振込でお支払いします。</>}
+          </div>
+        ) : (
+          <div className="noticebox" style={{ background: 'var(--sub)', borderRadius: 10, padding: '12px 14px', fontSize: 12, color: '#1F4A3C' }}>
+            質問・回答はどなたでも無料です。専門家・先輩保護者への報酬・振込は発生しません。
           </div>
         )}
         <div style={{ fontWeight: 700, marginTop: 12 }}>内訳</div>

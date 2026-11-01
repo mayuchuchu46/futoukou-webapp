@@ -1,28 +1,24 @@
 import { NextResponse } from 'next/server';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { isSubscriptionActive } from '@/lib/membership';
-import { hasFreeMonthlyQuestion } from '@/lib/expertQuota';
-import { EXPERT_PRICE_JPY, EXPERT_TICKET_PACK_PRICE_JPY, EXPERT_TICKET_PACK_COUNT, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
 import { isStripeConfigured } from '@/lib/stripe';
 
 // 画面側（クライアントコンポーネント）が「ログイン中か」「読み放題会員として有効か」
-// 「専門家への質問が今どの財源で利用できるか」を判定するための軽量エンドポイント。
-// 価格はサーバー側のlib/config.ts（非NEXT_PUBLIC環境変数）の値をここで返すことで、
-// クライアントバンドルに直接埋め込まれない値も画面に正しく表示できるようにする。
+// 「決済機能（Stripe）が今使える状態か」を判定するための軽量エンドポイント。
 // 動的なRoute Handlerなので、ここでCookieを読んでもCDNキャッシュ汚染の心配はない
 // （lib/consultations.ts のコメント参照）。
+//
+// 2026-11-01、専門家への質問を恒久的に無料化したのに合わせて、質問時の財源判定
+// （無料枠・チケット・都度払い¥600）に関わる値はここから削除した。質問する側は
+// 誰でも無料になったため判定自体が不要（旧ロジックはlib/expertQuota.ts等に残っている
+// が、呼び出し元がなくなった）。stripeConfiguredは読み放題会員登録（有料化予定）側で
+// まだ使うため残している（app/expertlist/ExpertListClient.tsx参照）。
 export async function GET() {
   const member = await getCurrentMember();
   return NextResponse.json({
     loggedIn: !!member,
     active: isSubscriptionActive(member),
     email: member?.email || null,
-    freeQuestionAvailable: hasFreeMonthlyQuestion(member),
-    expertCredits: member?.expert_credits || 0,
-    expertPriceJpy: EXPERT_PRICE_JPY,
-    ticketPackPriceJpy: EXPERT_TICKET_PACK_PRICE_JPY,
-    ticketPackCount: EXPERT_TICKET_PACK_COUNT,
     stripeConfigured: isStripeConfigured(),
-    expertVolunteerMode: EXPERT_VOLUNTEER_MODE,
   });
 }

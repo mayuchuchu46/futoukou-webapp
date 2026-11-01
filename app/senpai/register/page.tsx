@@ -170,7 +170,7 @@ function SenpaiRegisterForm() {
         </button>
         <div style={{ fontWeight: 700, fontSize: 18 }}>先輩保護者（経験者）登録</div>
         <div className="muted">
-          不登校を経験されたご家庭ご自身として、「どうする先生」で有料相談に回答するプロフィールを作成します。資格は不要です。
+          不登校を経験されたご家庭ご自身として、「どうする先生」で相談に回答するプロフィールを作成します。資格は不要です。
         </div>
         {draftRestored && (
           <div className="muted" style={{ fontSize: 12, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
@@ -180,13 +180,14 @@ function SenpaiRegisterForm() {
 
         {/* 「気軽に登録できる流れがいいな」「先輩保護者は本名じゃなくていいかも」との
             指摘を受けて（2026-10-31）、本名必須をやめ、ニックネーム等でも登録できる
-            ようにした。報酬の振込を開始する段階で、振込先口座名義と一致する本名を
-            改めて確認する運用とする（今はボランティア協力期間のため実害はない）。
-            display_name（任意の表示名）と役割が重なるが、入力の手間を増やしたく
-            ないため項目自体は維持し、案内文のみ変更。 */}
+            ようにした。display_name（任意の表示名）と役割が重なるが、入力の手間を
+            増やしたくないため項目自体は維持し、案内文のみ変更。
+            2026-11-01、質問・回答を恒久的に無料化したのに伴い、以前ここにあった
+            「報酬のお支払いを始める段階で本名を確認する」という案内文は実態と合わなく
+            なったため削除。本人確認自体は運営が内容を確認する過程で必要に応じて行う。 */}
         <input className="input" placeholder="お名前（ニックネーム可）" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          本名でなくても構いません。相談者には公開されません（報酬のお支払いを始める段階で、振込先口座名義と合わせて改めて本名を確認させていただきます）。
+          本名でなくても構いません。相談者には公開されません。
         </div>
         <input
           className="input"

@@ -12,7 +12,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName, schoolAwareAnswererName, answerFirstLineSnippet } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
-import { SENPAI_CREDENTIAL, EXPERT_VOLUNTEER_MODE } from '@/lib/config';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 import ResultClient from './ResultClient';
 import QuoteShareCard from './QuoteShareCard';
 import ViewPing from './ViewPing';
@@ -50,16 +50,12 @@ async function getExpertAvailable() {
   'use cache';
   cacheLife('minutes');
   const supabase = getSupabaseAdmin();
-  // app/api/experts/available/route.tsと同じ条件（EXPERT_VOLUNTEER_MODE中は
-  // 先輩保護者も含める。2026-10-31）。
-  let query = supabase
+  // app/api/experts/available/route.tsと同じ条件。2026-11-01、専門家への質問を
+  // 恒久的に無料化したのに伴い、先輩保護者を除外する理由自体がなくなったため常に含める。
+  const { count, error } = await supabase
     .from('experts')
     .select('id', { count: 'exact', head: true })
     .eq('verified', true);
-  if (!EXPERT_VOLUNTEER_MODE) {
-    query = query.neq('credential', SENPAI_CREDENTIAL);
-  }
-  const { count, error } = await query;
   if (error) return false;
   return (count || 0) > 0;
 }

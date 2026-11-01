@@ -110,7 +110,7 @@ export default async function AboutPage() {
           <div className="qtext">
             1. 登録不要・匿名のまま「相談する」から今の状況を相談できます。<br />
             2. 会員登録（無料）すると、これまでの相談が「伴走ノート」として整理されるようになります。<br />
-            3. さらに詳しく聞きたいときは、専門家への有料相談も利用できます。
+            3. さらに詳しく聞きたいときは、専門家・先輩保護者への質問も利用できます（無料）。
           </div>
           <Link href="/ask" className="btn-secondary">相談するページへ</Link>
         </div>
@@ -123,10 +123,10 @@ export default async function AboutPage() {
         <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>
             <img src="/assets/icon_lock.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
-            専門家による有料回答について
+            専門家による回答について
           </div>
           <div className="qtext">
-            AIの自動回答とは別に、公認心理師など資格を持つ専門家本人が相談文を直接読んで回答する有料機能も用意しています。読み放題会員になると、他の人への専門家回答もすべて読めます。会員は月1回、無料で専門家に質問できます。
+            AIの自動回答とは別に、公認心理師など資格を持つ専門家本人が相談文を直接読んで回答する機能も用意しています。質問はどなたでも無料です。読み放題会員になると、他の人への専門家回答もすべて読めます。
           </div>
           <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
             相談するページへ ›
@@ -148,7 +148,7 @@ export default async function AboutPage() {
         <Link href="/expert/recruit" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>専門家としてご協力いただける方へ</div>
           <div className="qtext">
-            公認心理師・臨床心理士・保健師など、不登校のご家庭への対応について専門知識をお持ちの方を募集しています。登録後、運営による本人確認（資格の確認）を経て、有料相談への回答をお願いします。
+            公認心理師・臨床心理士・保健師など、不登校のご家庭への対応について専門知識をお持ちの方を募集しています。登録後、運営による本人確認（資格の確認）を経て、相談への回答をお願いします。
           </div>
           <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
             専門家募集ページへ ›
@@ -158,7 +158,7 @@ export default async function AboutPage() {
         <Link href="/senpai/recruit" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>先輩保護者としてご協力いただける方へ</div>
           <div className="qtext">
-            資格は不要です。不登校を経験されたご家庭ご自身を募集しています。登録後、運営とのオンライン通話を経て、ご自身の体験に基づいた有料相談への回答をお願いします。
+            資格は不要です。不登校を経験されたご家庭ご自身を募集しています。登録後、運営とのオンライン通話を経て、ご自身の体験に基づいた相談への回答をお願いします。
           </div>
           <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
             先輩保護者募集ページへ ›
