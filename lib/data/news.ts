@@ -59,6 +59,13 @@ export type NewsItem = {
   // 語が無い記事ではundefinedのままにし、その場合は個別記事ページ側で「関連する質問」
   // 欄ごと表示しない。
   relatedThemeWord?: string;
+  // 自治体の取組（category: 'local'）の記事で、その自治体に実際にあるフリースクール・
+  // 学びの多様化学校を「〇〇市のフリースクール」として個別記事ページに出すための
+  // 市区町村指定（2026-11-01追加、「四日市なら四日市のフリースクール情報を出す」との
+  // 要望を受けて）。lib/data/freeSchools.ts・lib/data/manabiTayoukaGakko.tsの
+  // prefecture・cityと完全一致する施設のみ表示する（表示側：
+  // app/news/[id]/RelatedLocalSchools.tsx）。該当施設が無い場合は何も表示しない。
+  relatedMunicipality?: { prefecture: string; city: string };
 };
 
 export const NEWS_ITEMS: NewsItem[] = [
@@ -78,6 +85,7 @@ export const NEWS_ITEMS: NewsItem[] = [
     ],
     statsCaption: '四日市市内の不登校児童生徒数（小中学校合計）の推移',
     headline: { value: '1114人', label: '四日市市の不登校児童生徒数が過去最多の1114人に（2025年度）' },
+    relatedMunicipality: { prefecture: '三重県', city: '四日市市' },
   },
   {
     id: 'kumamoto-metaverse-futoko-shien-2026-10',
@@ -162,6 +170,7 @@ export const NEWS_ITEMS: NewsItem[] = [
     headline: { value: '月額上限22,000円', label: '名古屋市が、フリースクール利用料を補助する制度を開始' },
     // タイトル・本文に「フリースクール」と明記されているため設定（2026-11-01）。
     relatedThemeWord: 'フリースクール',
+    relatedMunicipality: { prefecture: '愛知県', city: '名古屋市' },
   },
   {
     id: 'mext-futoko-chousa-r6-2025-10',
