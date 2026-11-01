@@ -49,6 +49,16 @@ export type NewsItem = {
   // ドキュメントで管理）。未設定（undefined）の間は、個別記事ページ側で
   // 「関連コラム」欄ごと表示しない（存在しないリンクを置かない）。
   relatedColumn?: { title: string; url: string };
+  // この記事に関連する実際の相談を「関連する質問」として個別記事ページに出すための
+  // テーマ語（2026-11-01追加、「関連するニュースや質問をこの後に入れておきたい」との
+  // 要望を受けて）。app/gakko/RelatedConsultations.tsxと全く同じ仕組み（lib/themeSummary.ts
+  // 経由でDBから実際の相談を取得）を再利用する。SEARCH_TAG_CANDIDATES（lib/searchTags.ts）
+  // に含まれる語のうち、記事の内容（title・summary）に実際にその言葉が出てくる場合のみ
+  // 設定する（例：記事本文に「教育支援センター」と明記されている、など）。記事の
+  // トピックから推測しただけの語は設定しない（無関係な相談が並ぶのを防ぐ）。該当する
+  // 語が無い記事ではundefinedのままにし、その場合は個別記事ページ側で「関連する質問」
+  // 欄ごと表示しない。
+  relatedThemeWord?: string;
 };
 
 export const NEWS_ITEMS: NewsItem[] = [
@@ -80,6 +90,9 @@ export const NEWS_ITEMS: NewsItem[] = [
     sourceUrl: 'https://news.web.nhk/newsweb/na/nd-20261030de68337',
     category: 'local',
     headline: { value: '44市町村', label: '熊本県が、不登校児童生徒向けメタバース支援を県内44市町村に拡大' },
+    // 記事本文に「くまもとオンライン教育支援センター」と明記されており、
+    // 「教育支援センター」という語が実際に出てくるため設定（2026-11-01）。
+    relatedThemeWord: '教育支援センター',
   },
   {
     id: 'mext-futoko-kenshin-taiou-2026-10',
@@ -133,6 +146,8 @@ export const NEWS_ITEMS: NewsItem[] = [
     // 13.26% ÷ 3.71% ≈ 3.57倍（出典記事で確認できた2つの数値からの単純な割り算。
     // 出典記事の表現「3倍以上」より具体的だが、推測ではなく確認済みの数字の計算）。
     headline: { value: '約3.6倍', label: '発達障害の指摘がある子どもの不登校割合は、全体平均の約3.6倍' },
+    // タイトル・本文に「発達障害」と明記されているため設定（2026-11-01）。
+    relatedThemeWord: '発達障害',
   },
   {
     id: 'nagoya-freeschool-hojo-2026-08',
@@ -145,6 +160,8 @@ export const NEWS_ITEMS: NewsItem[] = [
     sourceUrl: 'https://www.city.nagoya.jp/houdou/3003942/3003947/3005077.html',
     category: 'local',
     headline: { value: '月額上限22,000円', label: '名古屋市が、フリースクール利用料を補助する制度を開始' },
+    // タイトル・本文に「フリースクール」と明記されているため設定（2026-11-01）。
+    relatedThemeWord: 'フリースクール',
   },
   {
     id: 'mext-futoko-chousa-r6-2025-10',
@@ -171,3 +188,20 @@ export const NEWS_ITEMS: NewsItem[] = [
     headline: { value: '約35万4千人', label: '不登校の小中学生は過去最多を更新（12年連続増加）' },
   },
 ];
+
+// 個別記事ページ（/news/[id]）の下部に出す「関連ニュース」用（2026-11-01追加、
+// 「関連するニュースや質問をこの後に入れておきたい」との要望を受けて）。
+// 同じcategory（制度・施策／調査・統計／自治体の取組／その他）の記事を新しい順に
+// 優先して選び、足りない分は（同じ記事を重複させずに）他のカテゴリから新しい順に
+// 補う。記事数がまだ少ないため、カテゴリに関わらず「他の不登校ニュース」として
+// 紹介すること自体は害がない（facts側の推測ではなく、単純な「他の記事も読む？」
+// という内部リンクのため、他データファイルのような確度の心配は無い）。
+export function getRelatedNews(currentId: string, limit = 3): NewsItem[] {
+  const others = NEWS_ITEMS.filter((n) => n.id !== currentId);
+  const current = NEWS_ITEMS.find((n) => n.id === currentId);
+  if (!current) return others.slice(0, limit);
+
+  const sameCategory = others.filter((n) => n.category === current.category);
+  const rest = others.filter((n) => n.category !== current.category);
+  return [...sameCategory, ...rest].slice(0, limit);
+}

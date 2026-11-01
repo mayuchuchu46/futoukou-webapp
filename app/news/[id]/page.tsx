@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
-import { NEWS_ITEMS } from '@/lib/data/news';
+import { NEWS_ITEMS, getRelatedNews } from '@/lib/data/news';
 import NewsStatsChart from '@/components/NewsStatsChart';
+import RelatedConsultations from '@/app/gakko/RelatedConsultations';
 
 // ニュース個別記事ページ（2026-10-29追加）。「記事ごとにシェアできるようにしたい」
 // との要望を受けて、/news（一覧）とは別に1記事ずつのURL・OGP画像・Xシェアボタンを
@@ -59,6 +61,7 @@ export default async function NewsDetailPage({
   if (!item) notFound();
 
   const url = `${SITE_URL}/news/${item.id}`;
+  const relatedNews = getRelatedNews(item.id);
 
   return (
     <div className="app-shell">
@@ -170,6 +173,40 @@ export default async function NewsDetailPage({
               このことについて相談する →
             </Link>
           </div>
+
+          {/* このニュースに関する実際の相談（2026-11-01追加、「関連するニュースや質問を
+              この後に入れておきたい」との要望を受けて）。app/gakko/RelatedConsultations.tsx
+              と同じ仕組みを再利用し、記事ごとに設定したrelatedThemeWord（lib/data/news.ts、
+              記事本文に実際にその語が出てくる場合のみ設定）に対応する実際の相談を表示する。
+              該当する語が無い記事では何も出さない。DB問い合わせはこのコンポーネント内で
+              行われるため、ページ全体の表示をブロックしないようSuspenseで包む
+              （RelatedConsultations側のコメント・他の利用箇所と同じ方針）。 */}
+          {item.relatedThemeWord && (
+            <Suspense fallback={null}>
+              <RelatedConsultations themeWord={item.relatedThemeWord} />
+            </Suspense>
+          )}
+
+          {/* 関連ニュース（2026-11-01追加、同要望）。lib/data/news.tsのgetRelatedNews参照。
+              他の記事への内部リンクなので、記事ごとの手動設定は不要にしている。 */}
+          {relatedNews.length > 0 && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>関連ニュース</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                {relatedNews.map((n) => (
+                  <Link
+                    key={n.id}
+                    href={`/news/${n.id}`}
+                    style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 8, color: 'inherit', textDecoration: 'none' }}
+                  >
+                    <div className="muted" style={{ fontSize: 11 }}>{n.date || n.addedAt}</div>
+                    <div className="qtext">{n.title}</div>
+                  </Link>
+                ))}
+              </div>
+              <Link href="/news" className="btn-secondary">ニュース一覧をもっと見る</Link>
+            </div>
+          )}
 
           <Link href="/news" className="backlink">← ニュース一覧に戻る</Link>
         </div>
