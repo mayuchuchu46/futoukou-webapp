@@ -67,7 +67,7 @@ async function getConsultation(id: string): Promise<Consultation | null> {
   // （指定しないとPostgRESTがどちらか判断できずエラーになる）。
   const { data, error } = await supabase
     .from('consultations')
-    .select('*, experts!expert_id(id, name, display_name, credential, experienced_school_names, online_consult_url, photo_url)')
+    .select('*, experts!expert_id(id, name, display_name, credential, experienced_school_names, online_consult_url, photo_url, bio)')
     .eq('id', id)
     .eq('hidden', false)
     .single();
@@ -93,6 +93,7 @@ async function getConsultation(id: string): Promise<Consultation | null> {
         experienced_school_names: data.experts.experienced_school_names || [],
         online_consult_url: data.experts.online_consult_url || null,
         photo_url: data.experts.photo_url || null,
+        bio: data.experts.bio || null,
       }
     : null;
   const base = { ...data, experts };

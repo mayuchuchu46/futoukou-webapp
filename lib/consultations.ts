@@ -57,7 +57,7 @@ export async function getConsultationsList({
   // あいまいでPostgRESTがエラーを返す（結果、一覧が全件取得できなくなる）。
   let query = supabase
     .from('consultations')
-    .select('*, experts!expert_id(id, name, display_name, credential, experienced_school_names, online_consult_url, photo_url)')
+    .select('*, experts!expert_id(id, name, display_name, credential, experienced_school_names, online_consult_url, photo_url, bio)')
     .eq('hidden', false)
     // AIの回答に対する「その場での返信（ラリー）」として作られた続きの相談（parent_idあり）は、
     // 他の人向けの一覧・検索には出さない（文脈がないと意味が分からない断片になる、
@@ -148,6 +148,7 @@ export async function getConsultationsList({
           experienced_school_names: item.experts.experienced_school_names || [],
           online_consult_url: item.experts.online_consult_url || null,
           photo_url: item.experts.photo_url || null,
+          bio: item.experts.bio || null,
         }
       : null;
     const base = { ...item, experts };

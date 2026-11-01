@@ -8,9 +8,11 @@ import { schoolAwareAnswerSectionLabel } from '@/lib/expertDisplay';
 import { EXPERT_VOLUNTEER_MODE, SENPAI_CREDENTIAL } from '@/lib/config';
 import ExpertAvatar from '@/components/ExpertAvatar';
 
-// 「この回答をした人」が一目で分かるよう、テキストリンクだけでなく写真つきの
-// 簡易プロフィールカードにした（2026-11-01、「この回答をした人って感じで
-// プロフィールが出る感じがいいかも」との指摘を受けて変更）。
+// 「この回答をした人」が一目で分かるよう、テキストリンクだけでなく写真・自己紹介
+// つきの簡易プロフィールカードにした（2026-11-01、「この回答をした人って感じで
+// プロフィールが出る感じがいいかも。答えた人は目立ちたいわけだから」との指摘を
+// 受けて、リンク1行だけの控えめな見た目から、名前・顔写真・自己紹介が目立つ
+// カードに変更）。
 function AnswererMiniProfile({ experts }: { experts: NonNullable<Consultation['experts']> }) {
   if (!experts.id) return null;
   const href = experts.credential === SENPAI_CREDENTIAL ? `/senpai/${experts.id}` : `/experts/${experts.id}`;
@@ -20,18 +22,24 @@ function AnswererMiniProfile({ experts }: { experts: NonNullable<Consultation['e
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 10,
+        gap: 12,
         textDecoration: 'none',
         color: 'inherit',
-        background: 'var(--bg)',
-        borderRadius: 10,
-        padding: '8px 10px',
+        background: 'var(--sub)',
+        border: '1px solid var(--border)',
+        borderRadius: 12,
+        padding: '10px 12px',
       }}
     >
-      <ExpertAvatar photoUrl={experts.photo_url} size={36} />
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <span style={{ fontWeight: 700, fontSize: 14 }}>{experts.credential}・{experts.name}</span>
-        <span className="muted" style={{ fontSize: 12 }}>プロフィールを見る →</span>
+      <ExpertAvatar photoUrl={experts.photo_url} size={56} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+        <span style={{ fontWeight: 700, fontSize: 15 }}>{experts.credential}・{experts.name}</span>
+        {experts.bio && (
+          <span className="muted qtext-clamp-2" style={{ fontSize: 12 }}>
+            {experts.bio}
+          </span>
+        )}
+        <span style={{ fontSize: 12, color: 'var(--main)', fontWeight: 700 }}>プロフィールを見る →</span>
       </div>
     </Link>
   );
