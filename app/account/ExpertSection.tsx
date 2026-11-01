@@ -90,12 +90,24 @@ export default async function ExpertSection() {
     .select('id', { count: 'exact', head: true })
     .eq('expert_id', expert.id);
 
+  // 「報酬を見る」リンクは、質問・回答が恒久的に無料になった今、実際に報酬が発生した
+  // 実績（2026-11-01以前の旧価格体系で回答した分）がある人にだけ出す（2026-11-01、
+  // 「報酬のページがあるのはへんかな？」との指摘を受けて。無報酬のまま押しても
+  // 「質問・回答は無料です」としか出ないリンクを常に出すのは実態と合わないため）。
+  const { count: paidAnswerCount } = await supabase
+    .from('consultations')
+    .select('id', { count: 'exact', head: true })
+    .eq('expert_id', expert.id)
+    .eq('expert_status', 'answered')
+    .gt('expert_payout_jpy', 0);
+
   return (
     <ExpertManagementPanel
       expert={{ id: expert.id, name: expert.name, credential: expert.credential }}
       pending={pending || []}
       answeredByMe={answeredByMe || []}
       consultRequestCount={!expert.online_consult_url ? consultRequestCount || 0 : 0}
+      hasEarningsHistory={!!paidAnswerCount}
     />
   );
 }

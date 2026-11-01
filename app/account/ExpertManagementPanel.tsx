@@ -16,6 +16,7 @@ export default function ExpertManagementPanel({
   pending,
   answeredByMe,
   consultRequestCount = 0,
+  hasEarningsHistory = false,
 }: {
   expert: Expert;
   pending: Consultation[];
@@ -23,6 +24,10 @@ export default function ExpertManagementPanel({
   // 「この方に直接相談をリクエストする」が押された件数。オンライン相談リンク
   // （online_consult_url）を設定済みの場合は常に0（呼び出し側で判定済み）。
   consultRequestCount?: number;
+  // 2026-11-01以前の旧価格体系で、実際に報酬が発生した回答が1件でもあるか。
+  // falseなら「報酬を見る」リンク自体を出さない（常に無料になった今、誰も
+  // 報酬が発生していない人にこのリンクを出す意味がないため）。
+  hasEarningsHistory?: boolean;
 }) {
   const router = useRouter();
   const [items, setItems] = useState(pending);
@@ -66,7 +71,7 @@ export default function ExpertManagementPanel({
         <div className="muted" style={{ fontSize: 13 }}>{expert.name}さん</div>
         <div className="row">
           <a href="/expert/profile" className="btn-ghost">プロフィールを編集</a>
-          <a href="/expert/earnings" className="btn-ghost">報酬を見る</a>
+          {hasEarningsHistory && <a href="/expert/earnings" className="btn-ghost">報酬を見る</a>}
         </div>
       </div>
 
