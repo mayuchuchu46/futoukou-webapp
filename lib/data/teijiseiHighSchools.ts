@@ -660,10 +660,10 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 457, prefecture: '高知県', name: '高知県立山田高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.kochinet.ed.jp/yamada-h/', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
   { no: 458, prefecture: '高知県', name: '高知県立高知東工業高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', officialUrl: 'https://sites.google.com/g.kochinet.ed.jp/khths/', note: '定時制・工業科（機械／電気／土木／建築）、各学科入学定員40名（成人特別選抜は機械科4名、他学科各20名）。' },
   { no: 459, prefecture: '高知県', name: '高知県立高岡高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜8名）。' },
-  { no: 460, prefecture: '高知県', name: '高知県立須崎総合高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
+  { no: 460, prefecture: '高知県', name: '高知県立須崎総合高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。', officialUrl: 'https://www.kochinet.ed.jp/susakisogo-h/' },
   { no: 461, prefecture: '高知県', name: '高知県立佐川高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', officialUrl: 'https://sites.google.com/g.kochinet.ed.jp/sakawa-h/', note: '定時制・普通科、入学定員40名（うち成人特別選抜8名）。' },
   { no: 462, prefecture: '高知県', name: '高知県立大方高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.kochinet.ed.jp/ogata-h/', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
-  { no: 463, prefecture: '高知県', name: '高知県立宿毛高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
+  { no: 463, prefecture: '高知県', name: '高知県立宿毛高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。', officialUrl: 'https://sites.google.com/g.kochinet.ed.jp/sukumo-h/' },
   { no: 464, prefecture: '高知県', name: '高知県立清水高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', note: '定時制・普通科、入学定員40名（うち成人特別選抜4名）。' },
   { no: 465, prefecture: '高知県', name: '高知県立高知商業高等学校', publicPrivate: '公立', operator: '高知県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.city.kochi.kochi.jp/deeps/88/kochisho-h/', note: '定時制・商業科、入学定員40名（うち成人特別選抜4名）。' },
 
