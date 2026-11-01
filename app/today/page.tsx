@@ -8,6 +8,7 @@ import PcSidebar from '@/components/PcSidebar';
 import { Child } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 import CommentReportButton from '@/components/CommentReportButton';
+import DailyQuestionChart from '@/components/DailyQuestionChart';
 
 type QuestionChoice = { value: string; label: string };
 type Question = { slug: string; text: string; choices: QuestionChoice[] };
@@ -405,29 +406,7 @@ export default function TodayPage() {
 
                   {aggregate ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-                      <div className="muted" style={{ fontSize: 12 }}>これまでの回答：{aggregate.total}件</div>
-                      {question.choices.map((c) => {
-                        const count = aggregate.counts[c.value] || 0;
-                        const pct = aggregate.total > 0 ? Math.round((count / aggregate.total) * 100) : 0;
-                        return (
-                          <div key={c.value} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-                              <span style={{ fontWeight: c.value === myAnswer ? 700 : 400 }}>{c.label}</span>
-                              <span className="muted">{count}件（{pct}%）</span>
-                            </div>
-                            <div style={{ background: 'var(--border)', borderRadius: 6, height: 8, overflow: 'hidden' }}>
-                              <div
-                                style={{
-                                  width: `${pct}%`,
-                                  height: '100%',
-                                  background: c.value === myAnswer ? 'var(--main)' : 'var(--sub)',
-                                  borderRadius: 6,
-                                }}
-                              />
-                            </div>
-                          </div>
-                        );
-                      })}
+                      <DailyQuestionChart choices={question.choices} aggregate={aggregate} myAnswer={myAnswer} />
 
                       {/* みんなの声（任意コメント、2026-10-17追加）。集計グラフと同じく
                           回答した後なら誰でも見られる（会員登録は問わない）。表示名は個人を特定できない
@@ -507,29 +486,7 @@ export default function TodayPage() {
                       </div>
                     ) : q.aggregate ? (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                        <div className="muted" style={{ fontSize: 11 }}>これまでの回答：{q.aggregate.total}件</div>
-                        {q.choices.map((c) => {
-                          const count = q.aggregate!.counts[c.value] || 0;
-                          const pct = q.aggregate!.total > 0 ? Math.round((count / q.aggregate!.total) * 100) : 0;
-                          return (
-                            <div key={c.value} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11 }}>
-                                <span style={{ fontWeight: c.value === q.myAnswer ? 700 : 400 }}>{c.label}</span>
-                                <span className="muted">{count}件（{pct}%）</span>
-                              </div>
-                              <div style={{ background: 'var(--border)', borderRadius: 6, height: 6, overflow: 'hidden' }}>
-                                <div
-                                  style={{
-                                    width: `${pct}%`,
-                                    height: '100%',
-                                    background: c.value === q.myAnswer ? 'var(--main)' : 'var(--sub)',
-                                    borderRadius: 6,
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          );
-                        })}
+                        <DailyQuestionChart choices={q.choices} aggregate={q.aggregate} myAnswer={q.myAnswer} size="compact" />
 
                         {/* 過去の質問へのコメント追加・編集（2026-10-17追加）。今日の質問
                             カードと同じ、通常はテキスト表示＋「編集する」ボタン、押したときだけ
