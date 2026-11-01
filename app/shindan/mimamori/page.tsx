@@ -39,7 +39,10 @@ export default function MimamoriShindanPage() {
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <div style={{ margin: '14px 0' }}>
+          {/* バナーのすぐ上の余白を詰めるため、backlinkの下マージンは無し
+              （.page-mainのgap:12pxだけで十分な間隔になる。2026-11-01、
+              「バナーの上あたりの無駄なスペースをなくしたい」との指摘を受けて調整）。 */}
+          <div style={{ margin: '14px 0 0' }}>
             <Link href="/" className="backlink">‹ ホームへ</Link>
           </div>
           {/* 2026-11-01追加：ChatGPTで作成したバナー（public/assets/shindan/mimamori-banner.jpg）。 */}
@@ -49,7 +52,7 @@ export default function MimamoriShindanPage() {
             alt={TITLE}
             width={1600}
             height={534}
-            style={{ width: '100%', height: 'auto', borderRadius: 12, marginBottom: 14 }}
+            style={{ width: '100%', height: 'auto', borderRadius: 12 }}
           />
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>{TITLE}</div>
