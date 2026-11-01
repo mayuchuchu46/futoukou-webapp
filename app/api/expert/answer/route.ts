@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   const supabase = getSupabaseAdmin();
   const { data: row } = await supabase
     .from('consultations')
-    .select('id, request_type, paid, expert_status, price_jpy')
+    .select('id, request_type, paid, expert_status, price_jpy, expert_funding')
     .eq('id', consultation_id)
     .single();
 
@@ -39,7 +39,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'この相談には既に回答済みです' }, { status: 409 });
   }
 
-  const payout = expertPayout(row.price_jpy || 0);
+  // ボランティア期間中（expert_funding: 'volunteer'）の相談は金銭のやり取りが
+  // 発生しないため、報酬額は記録しない（2026-11-01、/expert/earningsに
+  // 実際には支払われない¥400が「累計報酬額」として表示されてしまっていた不具合を修正）。
+  const payout = row.expert_funding === 'volunteer' ? 0 : expertPayout(row.price_jpy || 0);
 
   const { error } = await supabase
     .from('consultations')
