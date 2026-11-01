@@ -49,7 +49,6 @@ type DraftForm = {
   link_url: string;
   online_consult_url: string;
   specialtyCategories: string[];
-  verificationMethod: 'upload' | 'call';
 };
 
 function loadDraft(): Partial<DraftForm> {
@@ -75,9 +74,7 @@ export default function ExpertRegisterPage() {
     link_url: '',
     online_consult_url: '',
     specialtyCategories: [] as string[],
-    verificationMethod: 'upload' as 'upload' | 'call',
   });
-  const [licenseDoc, setLicenseDoc] = useState<File | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -103,7 +100,6 @@ export default function ExpertRegisterPage() {
       link_url: form.link_url,
       online_consult_url: form.online_consult_url,
       specialtyCategories: form.specialtyCategories,
-      verificationMethod: form.verificationMethod,
     };
     try {
       window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -114,21 +110,18 @@ export default function ExpertRegisterPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (form.verificationMethod === 'upload' && !licenseDoc) {
-      setError('登録証（画像またはPDF）を添付してください');
-      return;
-    }
     setLoading(true);
     setError('');
     const body = new FormData();
     Object.entries(form).forEach(([key, value]) => {
-      if (key === 'specialtyCategories' || key === 'verificationMethod') return; // 下で個別に追加する
+      if (key === 'specialtyCategories') return; // 下で個別に追加する
       body.set(key, String(value));
     });
     if (form.credential === 'その他') body.set('credential', form.credentialOther);
-    body.set('verification_method', form.verificationMethod);
+    // 登録証アップロード・オンライン通話による本人確認は撤去したため、常に'call'
+    // （登録証の提出なし）を送る（DBのcheck制約・既存データとの整合のため）。
+    body.set('verification_method', 'call');
     form.specialtyCategories.forEach((cat) => body.append('specialty_categories', cat));
-    if (form.verificationMethod === 'upload' && licenseDoc) body.set('license_doc', licenseDoc);
     if (photo) body.set('photo', photo);
     const res = await fetch('/api/expert/register', {
       method: 'POST',
@@ -177,7 +170,7 @@ export default function ExpertRegisterPage() {
 
         <input className="input" placeholder="お名前（本名）" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-          登録証に記載の氏名と同じ本名でご登録ください。本人確認のみに使用し、相談者には公開されません。
+          本名でご登録ください。相談者には公開されません。
         </div>
         <input
           className="input"
@@ -287,57 +280,16 @@ export default function ExpertRegisterPage() {
           公認心理師登録番号など。登録番号がない資格の場合は空欄でかまいません。
         </div>
 
-        {/* 本人確認の方法（2026-10-30追加）。登録証の画像・PDFを個人運営のサイトに
-            送ること自体を躊躇う方もいるため、オンライン通話で画面に見せてもらう方式も
-            選べるようにした。通話方式では画像・PDFは一切お預かりしない。 */}
-        <div className="muted" style={{ marginTop: 6 }}>本人確認の方法</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <label className="muted" style={{ fontSize: 13, display: 'flex', alignItems: 'flex-start', gap: 6, cursor: 'pointer' }}>
-            <input
-              type="radio"
-              name="verification_method"
-              checked={form.verificationMethod === 'upload'}
-              onChange={() => setForm({ ...form, verificationMethod: 'upload' })}
-              style={{ marginTop: 3 }}
-            />
-            <span>登録証（画像またはPDF）をアップロードする</span>
-          </label>
-          <label className="muted" style={{ fontSize: 13, display: 'flex', alignItems: 'flex-start', gap: 6, cursor: 'pointer' }}>
-            <input
-              type="radio"
-              name="verification_method"
-              checked={form.verificationMethod === 'call'}
-              onChange={() => setForm({ ...form, verificationMethod: 'call' })}
-              style={{ marginTop: 3 }}
-            />
-            <span>オンライン通話で画面に見せて確認してもらう（登録証の画像・PDFはお預かりしません。運営からご連絡し、日程を調整します）</span>
-          </label>
+        {/* 2026-11-01、登録証アップロード・オンライン通話による本人確認を撤去し、
+            先輩保護者（/senpai/register）と同じ、内容（プロフィール・資格・URL等）を
+            運営が見て判断する自己申告ベースの流れに統一した。「ユーアルエルとか
+            プロフィールとか書いてくれるからある程度こっちで判断もできそう」との
+            判断を受けた変更。verification_methodは引き続き'call'（登録証の提出なし）
+            を送る（DBのcheck制約・既存データとの整合のため）。 */}
+        <div className="muted" style={{ marginTop: 6 }}>本人確認について</div>
+        <div className="muted" style={{ fontSize: 12, marginTop: -4, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
+          記入いただいた内容（資格・自己紹介・ご自身のサイト等へのリンク）を運営が確認し、問題がなければそのまま承認します。内容について確認したいことがある場合のみ、ご登録のメールアドレスへ個別にご連絡します。確認が完了するまで、相談への回答はできません。
         </div>
-
-        {form.verificationMethod === 'upload' ? (
-          <>
-            <div className="muted" style={{ marginTop: 6 }}>登録証（画像またはPDF）</div>
-            <input
-              className="input"
-              type="file"
-              accept="image/png,image/jpeg,image/webp,application/pdf"
-              onChange={(e) => setLicenseDoc(e.target.files?.[0] || null)}
-              required
-            />
-            <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-              登録番号の自己申告だけでは本人確認ができないため、登録証の画像またはPDFを添付してください。
-              {/* 2026-10-13: 差し戻し（不備・期限切れによる再提出）の大半を占める2点を、
-                  申請前にあらかじめ明記しておくことで、差し戻しの件数自体を減らす狙いで追加。 */}
-              有効期限内のもので、氏名・資格名（登録番号がある場合はそれも）がはっきり読み取れる状態でご提出ください（内容が確認できない場合、再提出をお願いすることがあります）。
-              ご提出いただいた登録証は本人確認のみに使用し、第三者には提供しません。確認が完了するまで、相談への回答はできません。
-              確認が完了すると、画像・PDFのファイルは30日以内に削除します（確認済みという記録のみ残します）。
-            </div>
-          </>
-        ) : (
-          <div className="muted" style={{ fontSize: 12, marginTop: -4, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px' }}>
-            ご登録いただいたメールアドレスに、運営から通話日程についてご連絡します。通話時に登録証（氏名・資格名・登録番号がわかるもの）を画面に見せていただき、運営が確認します。確認が完了するまで、相談への回答はできません。
-          </div>
-        )}
         <input className="input" type="email" placeholder="メールアドレス" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
         <input className="input" type="password" placeholder="パスワード（8文字以上）" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
 
