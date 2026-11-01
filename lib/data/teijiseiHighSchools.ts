@@ -738,11 +738,11 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   //     他校は県資料の表記（「○○定時制」）から通常の校名パターンに従って校名を補ったが、所在市区町村は確認できず省略した。
   { no: 505, prefecture: '長崎県', municipality: '長崎市', name: '長崎県立鳴滝高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '定時制（普通科・商業科）を併置。昼間部・夜間部それぞれ普通科40名。夜間部は商業科40名も設置。' },
   { no: 506, prefecture: '長崎県', name: '長崎県立佐世保中央高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '定時制（普通科、普通エンカレッジコース、商業エンカレッジコース）を併置。昼間部・夜間部それぞれ普通科40名。夜間部は普通エンカレッジコース40名・商業エンカレッジコース40名も設置。' },
-  { no: 507, prefecture: '長崎県', name: '長崎県立島原高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（普通科40名、夜間部）を併置。' },
-  { no: 508, prefecture: '長崎県', name: '長崎県立諫早高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（普通科40名、夜間部）を併置。' },
-  { no: 509, prefecture: '長崎県', name: '長崎県立大村高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（普通科40名、夜間部）を併置。' },
+  { no: 507, prefecture: '長崎県', name: '長崎県立島原高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', officialUrl: 'https://www.shimabara-h.ed.jp/', note: '定時制（普通科40名、夜間部）を併置。' },
+  { no: 508, prefecture: '長崎県', name: '長崎県立諫早高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', officialUrl: 'https://www2.news.ed.jp/section/httpwww2news-ed-jpisahaya-h/', note: '定時制（普通科40名、夜間部）を併置。' },
+  { no: 509, prefecture: '長崎県', name: '長崎県立大村高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', officialUrl: 'https://www.news.ed.jp/omura-h/', note: '定時制（普通科40名、夜間部）を併置。' },
   { no: 510, prefecture: '長崎県', name: '長崎県立五島高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（普通科40名、夜間部）を併置。' },
-  { no: 511, prefecture: '長崎県', name: '長崎県立長崎工業高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（建築科40名・工業技術科40名、夜間部）を併置。' },
+  { no: 511, prefecture: '長崎県', name: '長崎県立長崎工業高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', officialUrl: 'http://www2.nagasaki-th.ed.jp/', note: '定時制（建築科40名・工業技術科40名、夜間部）を併置。' },
   { no: 512, prefecture: '長崎県', name: '長崎県立佐世保工業高等学校', publicPrivate: '公立', operator: '長崎県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制（工業技術科40名、夜間部）を併置。' },
 
   // ===== 宮崎県（5校） =====
