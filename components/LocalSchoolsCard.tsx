@@ -55,10 +55,13 @@ export default function LocalSchoolsCard({
         ))}
         {matchedSupportCenters.map((s, i) => (
           // 教育支援センターには個別の詳細ページ（/gakko/school/[no]のような固有no）が
-          // 無いため、フリースクール・学びの多様化学校のようなLinkにはせず、名称・連絡先
-          // のみをその場で表示する（2026-11-02追加）。
-          <div
+          // 無いため、フリースクール・学びの多様化学校と違い個別施設への直リンクはできない。
+          // 以前は<div>のまま何もリンクしておらず「リンク飛ばない」との指摘を受けた
+          // （2026-11-02）。代わりに、その都道府県の教育支援センター一覧タブ
+          // （/gakko?type=shien&pref=…、app/gakko/ShienExplorer.tsx）へリンクする。
+          <Link
             key={`shien-${s.city}-${s.name}-${i}`}
+            href={`/gakko?type=shien&pref=${encodeURIComponent(prefecture)}`}
             className="qtext"
             style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 8 }}
           >
@@ -66,7 +69,7 @@ export default function LocalSchoolsCard({
             {s.contact && (
               <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.contact}</div>
             )}
-          </div>
+          </Link>
         ))}
       </div>
       <Link href={`/gakko/matome?pref=${encodeURIComponent(prefecture)}`} className="btn-secondary">
