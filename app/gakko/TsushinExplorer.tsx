@@ -5,12 +5,16 @@ import { useState } from 'react';
 import Link from 'next/link';
 import type { CorrespondenceHighSchool } from '@/lib/data/correspondenceHighSchools';
 import { CORRESPONDENCE_HIGH_SCHOOL_AS_OF, CORRESPONDENCE_HIGH_SCHOOL_SOURCE_URL } from '@/lib/data/correspondenceHighSchools';
-import { getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
 import { PREFECTURES } from '@/lib/data/prefectures';
 
-// 通信制高校（広域）タブの都道府県絞り込み＋結果一覧（＋選択時の助成金情報）。
+// 通信制高校（広域）タブの都道府県絞り込み＋結果一覧。
 // FreeSchoolExplorer.tsx／ShienExplorer.tsxと同じ理由（2026-10-24）で、useStateに
 // よるその場更新に変更した。
+//
+// 助成金情報（選択時にこのタブの中に表示していた）は2026-11-01に撤去した。
+// 「通信制高校は広域の制度、助成金はお住まいの自治体の制度」という性質の違いが
+// 噛み合っておらず、専用の「助成金・支援制度」タブ（JoseiExplorer）に一覧表示機能を
+// 新設したため、ここでは軽いリンク誘導のみに差し替えている。
 export default function TsushinExplorer({
   allSchools,
   initialPref,
@@ -49,8 +53,6 @@ export default function TsushinExplorer({
       ? schools.filter((s) => s.prefecture !== pref).map((s) => s.no)
       : []
   );
-  const joseiSubsidies = pref ? getFreeschoolSubsidiesByPrefecture(pref) : [];
-
   return (
     <>
       {pref && (
@@ -133,38 +135,11 @@ export default function TsushinExplorer({
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>{pref}の助成金・支援制度</div>
           <div className="muted" style={{ fontSize: 12 }}>
-            通信制高校の学費については、世帯の状況に応じて授業料の一部または全部を支援する、国の「高等学校等就学支援金」が対象になります（全国統一の制度のため、ここでは都道府県ごとの一覧は出ません）。下記は{pref}内でWeb検索で確認できた、フリースクール等（民間施設）の利用料を独自に助成する自治体の制度一覧です。通信制高校そのものを対象にした制度ではありませんが、フリースクール等を併用される場合の参考情報として掲載しています。
+            通信制高校の学費については、世帯の状況に応じて授業料の一部または全部を支援する、国の「高等学校等就学支援金」が対象になります（全国統一の制度のため、都道府県ごとの一覧は出ません）。{pref}内でフリースクール等（民間施設）の利用料を独自に助成する自治体の制度は、助成金・支援制度タブでまとめてご確認いただけます。
           </div>
-          {joseiSubsidies.length === 0 ? (
-            <div className="muted">
-              {pref}については、Web検索で確認できるフリースクール等の利用料助成制度が見つかりませんでした。制度が無いという意味ではなく、見つからなかったということです。お住まいの市区町村教育委員会に直接お問い合わせください。
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-              {joseiSubsidies.map((s, i) => (
-                <div
-                  key={`${s.entity}-${s.name}-${i}`}
-                  style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
-                >
-                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                    実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
-                  </div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
-                  {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>※ {s.note}</div>}
-                  <a
-                    href={s.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="muted"
-                    style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
-                  >
-                    出典を見る ›
-                  </a>
-                </div>
-              ))}
-            </div>
-          )}
+          <Link href={`/gakko?type=josei&pref=${encodeURIComponent(pref)}`} className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+            {pref}の助成金・支援制度を見る ›
+          </Link>
         </div>
       )}
 

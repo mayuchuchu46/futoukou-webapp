@@ -25,6 +25,7 @@ import FreeSchoolExplorer from './FreeSchoolExplorer';
 import ShienExplorer from './ShienExplorer';
 import TsushinExplorer from './TsushinExplorer';
 import TeijiExplorer from './TeijiExplorer';
+import JoseiExplorer from './JoseiExplorer';
 import RelatedConsultations from './RelatedConsultations';
 
 // 「学びの多様化学校」（旧：不登校特例校）と「フリースクール（民間施設）」の
@@ -265,6 +266,17 @@ export default async function GakkoPage({
             <div className="answer-label" style={{ fontSize: 14 }}>条件から学校を探す ›</div>
             <div className="muted" style={{ fontSize: 12 }}>
               都道府県から一覧を見るのではなく、学年・通う頻度などの条件を選んで、通信制・定時制・学びの多様化学校・フリースクール・オルタナティブスクールを絞り込めます。
+            </div>
+          </Link>
+
+          {/* 都道府県を1回選ぶだけで、助成金を含む全カテゴリをまとめて見られる
+              /gakko/matomeへの入口（2026-11-01追加）。以前からこのページ自体は存在して
+              いたが、トップから一切リンクされておらず発見できなかった（学び場UI/UX
+              見直しの指摘）。 */}
+          <Link href="/gakko/matome" className="card" style={{ textDecoration: 'none', color: 'inherit', alignItems: 'flex-start', gap: 4 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>都道府県からまとめて探す ›</div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              お住まいの都道府県を1回選ぶだけで、学びの多様化学校・フリースクール・通信制高校・定時制高校・助成金・支援制度など、すべてのカテゴリをまとめて一覧できます。
             </div>
           </Link>
 
@@ -536,8 +548,10 @@ export default async function GakkoPage({
               「本校所在地」の都道府県を選んでから一覧を見る形にする（2026-10-18、未選択時は
               一覧を出さずチップ選択を促す。以前は未選択時に全115校を表示していたが、
               わかりにくいとの指摘で変更）。 */}
-          {/* 通信制高校タブ（結果一覧＋都道府県選択時の助成金情報）も同じ理由で
-              TsushinExplorerへ統合（2026-10-24）。 */}
+          {/* 通信制高校タブ（結果一覧）も同じ理由でTsushinExplorerへ統合（2026-10-24）。
+              助成金情報は以前このタブの中に従属的に埋め込まれていたが、「通信制高校は
+              広域の制度、助成金はお住まいの自治体の制度」という性質の違いが噛み合って
+              いなかったため、2026-11-01にJoseiExplorer（専用タブ）へ切り出した。 */}
           {type === 'tsushin' && (
             <TsushinExplorer allSchools={CORRESPONDENCE_HIGH_SCHOOLS} initialPref={selected} />
           )}
@@ -546,6 +560,11 @@ export default async function GakkoPage({
           {type === 'teiji' && (
             <TeijiExplorer allSchools={teijiseiHighSchools} initialPref={selected} />
           )}
+
+          {/* 助成金・支援制度タブ（2026-11-01追加）。それまで説明文のカードしかなく、
+              都道府県を選んでも一覧を見る手段が無かった（学び場UI/UX見直しの指摘）。
+              他タブと同じ都道府県選択＋一覧パターンに統合。 */}
+          {type === 'josei' && <JoseiExplorer initialPref={selected} />}
 
           {/* オルタナティブスクール一覧。データ数が22校と少なく都道府県絞り込みの
               需要が低いため、メソッド別グループに分けて静的に表示する（2026-10-29追加）。 */}
