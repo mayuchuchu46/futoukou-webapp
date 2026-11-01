@@ -332,9 +332,15 @@ export default function HomeClient({
             {showExtras && <NewsTeaser />}
 
             {/* 拡散をメインに置いた「見守り力タイプ診断」への誘導バナー（2026-11-01追加）。
-                ニュースバナーの直下、専門家一覧の上に置く。PC・モバイル両方で同じ位置に
-                出す（NewsTeaserと同じ理由でPcSidebar側には別途置いていない）。 */}
-            {showExtras && <MimamoriShindanTeaser />}
+                ニュースバナーの直下、専門家一覧の上に置く。
+                2026-11-01、PC（960px以上）ではPcSidebar側（.home-mimamori-side）に
+                移動したため、こちらはモバイル専用にした（「PCはサイドバナーに置いて」
+                との指摘を受けて対応）。 */}
+            {showExtras && (
+              <div className="home-mimamori-mobile">
+                <MimamoriShindanTeaser />
+              </div>
+            )}
 
             {/* 「専門家一覧」。PC（960px以上）では右コラム（PcSidebar内）に同じものが
                 出るため、ここはモバイル専用（2026-10-18、home-experts-mobileをCSS側で

@@ -7,6 +7,7 @@ import EyeIcon from './EyeIcon';
 import TagChips from './TagChips';
 import ExpertsTeaser, { ExpertProfile } from './ExpertsTeaser';
 import TodayQuestionTeaser from './TodayQuestionTeaser';
+import MimamoriShindanTeaser from './MimamoriShindanTeaser';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 
@@ -166,6 +167,17 @@ export default function PcSidebar({
           この右コラムに移動した（2026-10-16、「今日の質問は右コラムの中においてみて」
           との指摘を受けて）。モバイルではHomeClient.tsx側に残している。 */}
       {isDesktop && <TodayQuestionTeaser />}
+
+      {/* 拡散をメインに置いた「見守り力タイプ診断」への誘導バナー（2026-11-01追加）。
+          以前はHomeClient.tsx本文側（PC・モバイル共通）にのみ出していたが、
+          「PCはサイドバナーに置いて」との指摘を受けてこちらに移動。本文側は
+          モバイル専用（.home-mimamori-mobile）にした。このコンポーネントは
+          ホーム以外のページのPcSidebarにも出る（他の導線と同様の扱い）。 */}
+      {isDesktop && (
+        <div className="home-mimamori-side">
+          <MimamoriShindanTeaser />
+        </div>
+      )}
 
       {/* 「専門家が回答した相談」。以前はホーム画面の一番上（2カラムの外）に
           全幅で表示していたが、PC（960px以上）ではこちらの右コラムに出すよう
