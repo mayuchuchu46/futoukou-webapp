@@ -539,8 +539,8 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // ===== 滋賀県（5校） =====
   // 出典: 滋賀県教育委員会 確定出願状況資料（平成30・31年度）、各校公式サイト、school.js88.com、minkou.jp
   { no: 382, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立大津清陵高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', curriculumType: '単位制', note: '普通科。昼間部・通信部は大平1丁目14-1、夜間部は大津市中心部（JR膳所駅付近）。' },
-  { no: 383, prefecture: '滋賀県', municipality: '東近江市', name: '滋賀県立能登川高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', note: '普通科。' },
-  { no: 384, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立瀬田工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '定時制学科は機械・電気科。部制・単位制/学年制は未確認' },
+  { no: 383, prefecture: '滋賀県', municipality: '東近江市', name: '滋賀県立能登川高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', parts: '昼間部・夜間部', officialUrl: 'https://www.notogawa-h.shiga-ec.ed.jp/', note: '普通科。' },
+  { no: 384, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立瀬田工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', officialUrl: 'https://www.setatech-h.shiga-ec.ed.jp/', note: '定時制学科は機械・電気科。部制・単位制/学年制は未確認' },
   { no: 385, prefecture: '滋賀県', municipality: '彦根市', name: '滋賀県立彦根工業高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '定時制学科は機械科。部制・単位制/学年制は未確認' },
   { no: 386, prefecture: '滋賀県', municipality: '長浜市', name: '滋賀県立長浜北星高等学校', publicPrivate: '公立', operator: '滋賀県教育委員会', note: '総合学科。部制・単位制/学年制は未確認' },
 
