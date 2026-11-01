@@ -53,7 +53,12 @@ export async function POST(req: NextRequest) {
   if (!parent || parent.author_id !== author_id) {
     return NextResponse.json({ error: '元の相談が見つかりませんでした' }, { status: 404 });
   }
-  if (parent.request_type !== 'ai' || !parent.answer) {
+  // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AI回答
+  // （answer）は常に存在するようになったため、request_type==='expert'の相談にも
+  // 返信（ラリー）できるようにする（以前はrequest_type!=='ai'を除外していたが、
+  // それだと「専門家からの回答もほしい」をチェックした相談でAI回答への返信が
+  // 必ず失敗していた）。
+  if (!parent.answer) {
     return NextResponse.json({ error: 'この相談には返信できません' }, { status: 400 });
   }
 
