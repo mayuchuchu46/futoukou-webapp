@@ -589,9 +589,9 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // 出典: https://www.pref.tottori.lg.jp/315424.htm（校名一覧）、https://www.pref.tottori.lg.jp/87667.htm（所在地一覧）、
   //       各校スクール・ポリシーPDF（pref.tottori.lg.jp）
   { no: 412, prefecture: '鳥取県', municipality: '鳥取市', name: '鳥取県立鳥取緑風高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', note: '全日制・通信制も併設。定時制課程は総合学科。' },
-  { no: 413, prefecture: '鳥取県', municipality: '米子市', name: '鳥取県立米子東高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', note: '定時制課程は普通学科。' },
+  { no: 413, prefecture: '鳥取県', municipality: '米子市', name: '鳥取県立米子東高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.torikyo.ed.jp/yonagoe-h/', note: '定時制課程は普通学科。' },
   { no: 414, prefecture: '鳥取県', municipality: '米子市', name: '鳥取県立米子白鳳高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', note: '全日制・通信制も併設。定時制課程は総合学科。' },
-  { no: 415, prefecture: '鳥取県', municipality: '倉吉市', name: '鳥取県立倉吉東高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', curriculumType: '単位制（通信制科目を併修し3年間での卒業も可能な教育課程）', note: '定時制課程は普通学科。' },
+  { no: 415, prefecture: '鳥取県', municipality: '倉吉市', name: '鳥取県立倉吉東高等学校', publicPrivate: '公立', operator: '鳥取県教育委員会', schoolCategory: 'attached', curriculumType: '単位制（通信制科目を併修し3年間での卒業も可能な教育課程）', officialUrl: 'https://www.torikyo.ed.jp/kurae-h/', note: '定時制課程は普通学科。' },
 
   // ===== 島根県（3校） =====
   // 出典: https://www1.pref.shimane.lg.jp/gakkokikaku/school/index.data/p40_teiji.pdf（校名一覧）、
@@ -605,8 +605,8 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   //       平成29年10月会議資料 https://www.pref.yamaguchi.lg.jp/uploaded/attachment/75274.pdf
   //       各校学科・部制資料 https://www.pref.yamaguchi.lg.jp/uploaded/attachment/76557.pdf, 76740.pdf
   { no: 419, prefecture: '山口県', name: '山口県立岩国商業高等学校　東分校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '昼間部・夜間部', note: '普通科。入学定員は昼間部40人・夜間部40人。所在市区町村は資料上確認できず。' },
-  { no: 420, prefecture: '山口県', name: '山口県立下松工業高等学校', publicPrivate: '公立', operator: '山口県教育委員会', note: '定時制課程・機械科、入学定員40人。部制・所在市区町村・本校/分校の区別は資料上確認できず。' },
-  { no: 421, prefecture: '山口県', municipality: '周南市', name: '山口県立徳山高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制課程・普通科、修業年限3年または4年、入学定員40人。' },
+  { no: 420, prefecture: '山口県', name: '山口県立下松工業高等学校', publicPrivate: '公立', operator: '山口県教育委員会', officialUrl: 'https://www.kudamatsu-t.ysn21.jp/', note: '定時制課程・機械科、入学定員40人。部制・所在市区町村・本校/分校の区別は資料上確認できず。' },
+  { no: 421, prefecture: '山口県', municipality: '周南市', name: '山口県立徳山高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '夜間部', officialUrl: 'https://tokuyama-h.ed.jp/', note: '定時制課程・普通科、修業年限3年または4年、入学定員40人。' },
   { no: 422, prefecture: '山口県', municipality: '山口市', name: '山口県立山口松風館高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'standalone', parts: '三部制（昼間部午前部・昼間部午後部・夜間部）', curriculumType: '単位制', note: '普通科。所在地は山口市小郡令和三丁目。入学定員は各部38人程度。通信制課程も併設。' },
   { no: 423, prefecture: '山口県', name: '山口県立宇部中央高等学校', publicPrivate: '公立', operator: '山口県教育委員会', note: '定時制課程・普通科、入学定員40人。部制・所在市区町村・本校/分校の区別は資料上確認できず。' },
   { no: 424, prefecture: '山口県', municipality: '山陽小野田市', name: '山口県立小野田工業高等学校', publicPrivate: '公立', operator: '山口県教育委員会', schoolCategory: 'attached', parts: '夜間部', note: '定時制課程・機械科、修業年限3年または4年、入学定員40人。' },
