@@ -158,11 +158,6 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
             <img src="/assets/icon_bulb.png" alt="" />
             {schoolAwareAnswerSectionLabel(item.question, item.experts?.credential, item.experts?.experienced_school_names)}
           </div>
-          {/* 回答本文は読めなくても、誰が回答したか（プロフィール）はすぐ飛べるように、
-              見出しの直後・本文より前に置く（2026-10-31、「誰が書いたかはプロフィール
-              にすぐとばせるようにしたい」との依頼を受けて、ぼかし・会員登録導線より
-              下にあった位置から移動）。 */}
-          {item.experts && <AnswererMiniProfile experts={item.experts} />}
           {/* 本文は見せないが、最初の1行だけ実際の文面を見せて「続きが気になる」
               感じを出す（2026-10-31、「ボカシは最初の1行だけみせるのどう？」との
               提案を受けて追加）。 */}
@@ -171,6 +166,10 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
               {item.expert_answer_snippet}
             </div>
           )}
+          {/* プロフィールカードは回答テキストのあとに置く（2026-11-01、「プロフィールの
+              位置は回答テキストのあとがよくない？」との指摘を受けて、見出し直後・本文
+              より前だった配置から変更）。 */}
+          {item.experts && <AnswererMiniProfile experts={item.experts} />}
           <div className="blur-lines">
             <div />
             <div />
@@ -204,14 +203,14 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
             <img src="/assets/icon_bulb.png" alt="" />
             {item.experts ? `${item.experts.credential}・${item.experts.name}さんの回答` : '専門家の回答'}
           </div>
-          {/* 誰が書いたかプロフィールへすぐ飛べるよう、本文より前に置く（2026-10-31、
-              「誰が書いたかはプロフィールにすぐとばせるようにしたい」との依頼を受けて、
-              本文の下にあった位置から移動）。専門家は/experts/[id]、先輩保護者は
-              /senpai/[id]とページが分かれているため、credentialで出し分ける。 */}
-          {item.experts && <AnswererMiniProfile experts={item.experts} />}
           <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
             {item.expert_answer}
           </div>
+          {/* プロフィールカードは回答テキストのあとに置く（2026-11-01、「プロフィールの
+              位置は回答テキストのあとがよくない？」との指摘を受けて、本文より前だった
+              配置から変更）。専門家は/experts/[id]、先輩保護者は/senpai/[id]とページが
+              分かれているため、credentialで出し分ける（AnswererMiniProfile内で判定）。 */}
+          {item.experts && <AnswererMiniProfile experts={item.experts} />}
           {item.experts?.id && (
             <ConsultRequestButton
               expertId={item.experts.id}
