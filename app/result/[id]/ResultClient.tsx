@@ -59,7 +59,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
             専門家・先輩保護者が回答します
           </div>
           <div className="muted">
-            登録している専門家・先輩保護者が内容を確認し、数日以内にテキストで回答します。回答が届くとこのページに表示されます。
+            登録している専門家・先輩保護者が内容を確認し、テキストで回答します。回答が届くとこのページに表示されます。
           </div>
         </>
       )}
