@@ -676,14 +676,14 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // 出典: 香川県 令和9年度公立高等学校入学定員 https://www.pref.kagawa.lg.jp/documents/64233/r9_nyuugakuteiin_full.pdf
   //       各校学校紹介資料（pref.kagawa.lg.jp/documents/17867/ 配下）
   // 注: 入学定員表の行抽出に高松/高松工芸、丸亀/多度津の混在が疑われ、各校自身の資料で裏取りした（完全には解消できていない点を明記）。
-  { no: 467, prefecture: '香川県', municipality: '小豆郡小豆島町', name: '香川県立小豆島中央高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', curriculumType: '四修制（夜間授業のみ・4年で卒業）／三修制（夜間4時間＋昼間2時間・3年で卒業）を2学年以降に選択', note: '令和9年度入学定員 普通科40人。所在地：小豆郡小豆島町蒲生甲1001番地。「昼間部・夜間部」という部制表記はなく、修業年数による四修制／三修制の区分で運営。' },
-  { no: 468, prefecture: '香川県', municipality: '東かがわ市', name: '香川県立三本松高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '令和9年度入学定員 普通科40人。所在地（旧資料）：東かがわ市三本松1500番地1。部制の確認はできなかった。' },
-  { no: 469, prefecture: '香川県', municipality: '木田郡三木町', name: '香川県立三木高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '令和9年度入学定員 普通科40人。所在地（旧資料）：木田郡三木町平木750番地。部制の確認はできなかった。' },
-  { no: 470, prefecture: '香川県', municipality: '高松市', name: '香川県立高松高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '所在地：高松市番町三丁目1番1号。令和9年度入学定員 普通科40人。同校自身の学校紹介資料では定時制課程の学科は「普通科のみ」と明記。' },
+  { no: 467, prefecture: '香川県', municipality: '小豆郡小豆島町', name: '香川県立小豆島中央高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', curriculumType: '四修制（夜間授業のみ・4年で卒業）／三修制（夜間4時間＋昼間2時間・3年で卒業）を2学年以降に選択', officialUrl: 'https://www.kagawa-edu.jp/syochuh02/', note: '令和9年度入学定員 普通科40人。所在地：小豆郡小豆島町蒲生甲1001番地。「昼間部・夜間部」という部制表記はなく、修業年数による四修制／三修制の区分で運営。' },
+  { no: 468, prefecture: '香川県', municipality: '東かがわ市', name: '香川県立三本松高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.kagawa-edu.jp/sankoh01/', note: '令和9年度入学定員 普通科40人。所在地（旧資料）：東かがわ市三本松1500番地1。部制の確認はできなかった。' },
+  { no: 469, prefecture: '香川県', municipality: '木田郡三木町', name: '香川県立三木高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.kagawa-edu.jp/mikih02/', note: '令和9年度入学定員 普通科40人。所在地（旧資料）：木田郡三木町平木750番地。部制の確認はできなかった。' },
+  { no: 470, prefecture: '香川県', municipality: '高松市', name: '香川県立高松高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.kagawa-edu.jp/takah02/', note: '所在地：高松市番町三丁目1番1号。令和9年度入学定員 普通科40人。同校自身の学校紹介資料では定時制課程の学科は「普通科のみ」と明記。' },
   { no: 471, prefecture: '香川県', municipality: '高松市', name: '香川県立高松商業高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '令和9年度入学定員 商業科40人。所在地（旧資料）：高松市松島町1丁目18番54号。部制の確認はできなかった。' },
   { no: 472, prefecture: '香川県', municipality: '高松市', name: '香川県立高松工芸高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '同校自身の学校紹介資料（令和8年度分）に定時制課程（工業科：機械科・建築科・インテリア科、4学年・12学級、全校生徒46名）の記載あり。ただし香川県の令和9年度入学定員一覧には該当行が見当たらず、新規募集の有無は資料上確認できていない。' },
   { no: 473, prefecture: '香川県', municipality: '丸亀市', name: '香川県立丸亀高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '所在地：丸亀市六番丁1番地。令和9年度入学定員 普通科40人（全校生徒38名）。同校自身の学校紹介資料では定時制課程は「普通科」のみと明記。' },
-  { no: 474, prefecture: '香川県', municipality: '観音寺市', name: '香川県立観音寺第一高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', note: '令和9年度入学定員 普通科40人。所在地（旧資料）：観音寺市茂木町4丁目2番38号。部制の確認はできなかった。' },
+  { no: 474, prefecture: '香川県', municipality: '観音寺市', name: '香川県立観音寺第一高等学校', publicPrivate: '公立', operator: '香川県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.kagawa-edu.jp/kanich02/', note: '令和9年度入学定員 普通科40人。所在地（旧資料）：観音寺市茂木町4丁目2番38号。部制の確認はできなかった。' },
 
   // ===== 熊本県（1校）・大分県（3校） =====
   // 出典: 熊本工業高等学校定時制 案内資料（sh.higo.ed.jp）、大分県教育委員会PDF（pref.oita.jp/uploaded/attachment/2267277.pdf, 2268817.pdf）、
