@@ -63,12 +63,12 @@ export default function HomeClient({
   // 組み合わせにしていたが、「専門家回答のみを押した後、他の並び替えを押しても
   // 専門家回答のみの絞り込みが外れない」という分かりにくさの指摘を受け、
   // 4つを排他的なタブ1列にまとめた（押したものだけが効く・タブの見た目にする）。
-  type ViewTab = 'new' | 'views' | 'likes' | 'expert';
+  type ViewTab = 'new' | 'views' | 'likes' | 'expert' | 'senpai';
   // 「よく読まれている相談」ランキングの「もっと見る」リンク（2026-10-29追加）から
   // /?sort=views で来た場合に、最初から閲覧数順タブを選択した状態で開けるようにする。
   const initialSort = urlParams.get('sort');
   const [viewTab, setViewTab] = useState<ViewTab>(
-    initialSort === 'views' || initialSort === 'likes' || initialSort === 'expert' ? initialSort : 'new'
+    initialSort === 'views' || initialSort === 'likes' || initialSort === 'expert' || initialSort === 'senpai' ? initialSort : 'new'
   );
   const [items, setItems] = useState<Consultation[]>(initialItems);
   const PAGE_SIZE = 8;
@@ -125,6 +125,8 @@ export default function HomeClient({
     if (nextQ.trim()) params.set('q', nextQ.trim());
     if (nextTab === 'expert') {
       params.set('expert_answered', '1');
+    } else if (nextTab === 'senpai') {
+      params.set('senpai_answered', '1');
     } else if (nextTab !== 'new') {
       params.set('sort', nextTab);
     }
@@ -504,6 +506,11 @@ export default function HomeClient({
                 { key: 'views', label: '閲覧数順' },
                 { key: 'likes', label: '参考になった順' },
                 { key: 'expert', label: '専門家回答' },
+                // 「（先輩保護者が回答した相談を新規追加）これどこにある？」との指摘を
+                // 受けて追加（2026-11-02）。/senpailistを作っただけでは、ホーム画面から
+                // 辿る導線が無かった（専門家回答タブと違い、ここのタブに無いと
+                // 見つけてもらえない）。
+                { key: 'senpai', label: '先輩保護者回答' },
               ] as const).map((opt) => (
                 <button
                   key={opt.key}
