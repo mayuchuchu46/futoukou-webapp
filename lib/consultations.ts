@@ -149,8 +149,12 @@ export async function getConsultationsList({
     if (isExpertAnswered && !isOwner && !memberActive) {
       // 本文は見せないが、「続きが気になる」導線として最初の1行だけはそのまま見せる
       // （2026-10-31、「ボカシは最初の1行だけみせるのどう？」との提案を受けて追加）。
+      // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、answer列は
+      // 常にAIの回答を保持する（ロックの対象はexpert_answerだけ）。以前はここでanswerも
+      // ''にしていたが、それだと専門家回答待ちの相談のAI回答までロック扱いで消えて
+      // しまっていた。
       const snippet = item.expert_answer ? answerFirstLineSnippet(item.expert_answer) : null;
-      return { ...base, answer: '', expert_answer: null, expert_answer_snippet: snippet, locked: true };
+      return { ...base, expert_answer: null, expert_answer_snippet: snippet, locked: true };
     }
     return { ...base, locked: false };
   }) as Consultation[];

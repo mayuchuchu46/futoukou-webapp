@@ -140,7 +140,20 @@ export default function ConsultationCard({
           ))}
         </div>
       )}
-      {item.locked ? (
+      {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AI回答
+          （answerPreview）は常に表示し、専門家・先輩保護者の回答（ある場合）は
+          その下に別枠で追加するようにした（以前はitem.lockedで両者を排他的に
+          出し分けていたが、今はAI回答は常に無条件で読めるため）。 */}
+      {answerPreview && (
+        <div className="card-answerbox">
+          <div className="answer-label">
+            <img src="/assets/sensei_logo.png" alt="" />
+            どうする先生（AI）
+          </div>
+          <div className="qtext qtext-clamp-3">{answerPreview}</div>
+        </div>
+      )}
+      {item.request_type === 'expert' && item.expert_status === 'answered' && item.locked && (
         <div className="card-answerbox">
           <div className="locked-badge">
             <img src="/assets/icon_lock.png" alt="" className="locked-badge-icon" />
@@ -159,16 +172,17 @@ export default function ConsultationCard({
             <div />
           </div>
         </div>
-      ) : (
-        answerPreview && (
-          <div className="card-answerbox">
-            <div className="answer-label">
-              <img src="/assets/sensei_logo.png" alt="" />
-              どうする先生（AI）
-            </div>
-            <div className="qtext qtext-clamp-3">{answerPreview}</div>
+      )}
+      {item.request_type === 'expert' && item.expert_status === 'answered' && !item.locked && item.expert_answer && (
+        <div className="card-answerbox">
+          <div className="answer-label">
+            <img src="/assets/icon_bulb.png" alt="" />
+            {schoolAwareAnswerSectionLabel(item.question, item.experts?.credential, item.experts?.experienced_school_names)}
           </div>
-        )
+          <div className="qtext qtext-clamp-3" style={{ fontSize: 13 }}>
+            {item.expert_answer}
+          </div>
+        </div>
       )}
       <div className="card-foot">
         {/* 以前は「参考になった ◯人」とテキストで表示していたが、隣に絵文字＋件数

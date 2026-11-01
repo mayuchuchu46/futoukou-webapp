@@ -27,7 +27,7 @@ export default async function SchoolConsultations({
 
   const { data: rows } = await supabase
     .from('consultations')
-    .select('id, question, answer, request_type, paid, expert_status')
+    .select('id, question, answer, request_type, paid, expert_status, expert_answer')
     .eq('hidden', false)
     .is('parent_id', null)
     .not('answer', 'is', null)
@@ -44,13 +44,13 @@ export default async function SchoolConsultations({
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%' }}>
         {rows.map((c) => {
-          // 専門家・先輩保護者が回答した相談は、answerカラムにもexpert_answerと同じ
-          // 本文がそのまま保存されている（/api/expert/answer参照）。このカードは会員・
-          // 本人判定をせず誰でも見られる一覧なので、ここでanswerをそのまま出すと、
-          // 本来は会員登録しないと読めないはずの回答が無条件に読めてしまう
-          // （2026-10-31、「この質問はボカシで出したい」との指摘を受けて発覚・修正）。
-          // 詳細ページ（/result/[id]）側の正規のロック判定に任せ、ここでは本文を
-          // 見せずロック中である旨だけ示す。
+          // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、answer列は
+          // 常にAIの回答（誰でも無条件に読める）、expert_answer列が専門家・先輩保護者の
+          // 回答（会員登録しないと読めない）という役割分担になった。以前はここでanswer
+          // をそのまま出すと本来ロックされているはずの専門家回答が漏れる不具合があった
+          // （2026-10-31、「この質問はボカシで出したい」との指摘を受けて発覚・修正）が、
+          // 今はanswerを出すこと自体は常に安全。専門家の回答がある場合だけ、別途
+          // ロック中である旨を追加で示す（詳細ページ側の正規のロック判定に本文は任せる）。
           const isExpertAnswered = c.request_type === 'expert' && c.paid && c.expert_status === 'answered';
           return (
             <Link
@@ -62,16 +62,15 @@ export default async function SchoolConsultations({
                 💬 {c.question.slice(0, 60)}
                 {c.question.length > 60 ? '…' : ''}
               </div>
-              {isExpertAnswered ? (
-                <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>
-                  🔒 {answerFirstLineSnippet(c.answer)}（続きは会員登録で読めます）
+              {c.answer && (
+                <div className="muted qtext-clamp-3" style={{ fontSize: 13, marginTop: 4 }}>
+                  {c.answer}
                 </div>
-              ) : (
-                c.answer && (
-                  <div className="muted qtext-clamp-3" style={{ fontSize: 13, marginTop: 4 }}>
-                    {c.answer}
-                  </div>
-                )
+              )}
+              {isExpertAnswered && (
+                <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>
+                  🔒 専門家・先輩保護者の回答あり：{answerFirstLineSnippet(c.expert_answer || '')}（続きは会員登録で読めます）
+                </div>
               )}
             </Link>
           );

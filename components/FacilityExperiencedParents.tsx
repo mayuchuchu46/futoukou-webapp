@@ -74,11 +74,11 @@ export default async function FacilityExperiencedParents({
                 プロフィールページ（/experts/[id]）にも同じ導線のボタンがあるが、学校ページ
                 から1タップで相談を始められるよう、ここにも直接置く。 */}
             <Link
-              href={`/ask?expert=${e.id}`}
+              href={'/ask'}
               className="btn-secondary"
               style={{ display: 'inline-block', marginTop: 8, fontSize: 13, padding: '6px 14px' }}
             >
-              {expertDisplayName(e)}さんに相談してみる →
+どうする先生で相談してみる →
             </Link>
           </div>
         ))}

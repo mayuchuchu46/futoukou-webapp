@@ -134,8 +134,8 @@ export default async function ExpertsPage() {
                   </div>
                 </div>
                 <div className="row" style={{ gap: 10 }}>
-                  <Link href={`/ask?expert=${e.id}`} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
-                    この専門家に相談する
+                  <Link href={'/ask'} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
+                    どうする先生で相談してみる
                   </Link>
                   {/* この専門家が今までどう回答してきたかを見られる個別ページ（2026-10-12追加） */}
                   <Link href={`/experts/${e.id}`} className="backlink" style={{ alignSelf: 'flex-start', margin: 0 }}>

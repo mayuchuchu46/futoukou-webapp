@@ -103,10 +103,10 @@ export default async function SenpaiProfilePublicPage({
               </div>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              {/* テキストでの質問（/askの既存フロー）は2026-11-01に恒久的に無料化した
-                  ため、常に実際に使える（2026-10-31、「この先輩保護者に相談する、の
-                  導線は？」との指摘を受けて追加）。 */}
-              <SenpaiConsultCta expertId={senpai.id} />
+              {/* テキストでの質問（/askの既存フロー）は2026-11-01に恒久的に無料化し、
+                  指名機能も撤去して一般の相談フォームへの案内に統一した（2026-10-31、
+                  「この先輩保護者に相談する、の導線は？」との指摘を受けて追加）。 */}
+              <SenpaiConsultCta />
               {/* オンライン通話・チャットリレーの予約・決済は本人が用意した外部サービス
                   （MOSH等）に任せるため、どうする先生側の金銭のやり取り（volunteerMode）
                   とは無関係に、online_consult_urlが設定されていれば常に表示する

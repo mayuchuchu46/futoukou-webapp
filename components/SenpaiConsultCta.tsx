@@ -1,19 +1,20 @@
 import Link from 'next/link';
 
-// 先輩保護者プロフィールページ（app/senpai/[id]/page.tsx）に置く
-// 「この先輩保護者に相談する」ボタン。
-// 2026-11-01、専門家・先輩保護者への質問を恒久的に無料化したのに伴い、
-// 常に/askへの実際のリンクとして機能するようにした（以前は無償ボランティア期間
-// （EXPERT_VOLUNTEER_MODE）中だけ機能するボタンだったが、その前提自体が恒久化した
-// ため、準備中表示との出し分けは不要になった）。
-export default function SenpaiConsultCta({ expertId }: { expertId: string }) {
+// 先輩保護者プロフィールページ（app/senpai/[id]/page.tsx）に置く、相談フォームへの
+// ボタン。
+// 2026-11-01、専門家への質問を「質問するときに希望すれば、登録している専門家・
+// 先輩保護者が任意で回答してくれる」という恒久的に無料の仕組みに統合し、特定の人を
+// 指名する機能は撤去した。そのため、このボタンも「この先輩保護者」宛てではなく、
+// 一般の相談フォーム（/ask、専門家・先輩保護者からの回答もほしいチェック付き）へ
+// 案内する文言に変更した。
+export default function SenpaiConsultCta() {
   return (
     <Link
-      href={`/ask?expert=${expertId}`}
+      href="/ask"
       className="btn-secondary"
       style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 8 }}
     >
-      この先輩保護者に相談する（テキストで質問）
+      どうする先生で相談してみる →
     </Link>
   );
 }

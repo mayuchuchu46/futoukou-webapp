@@ -108,7 +108,7 @@ export default async function ExpertProfilePublicPage({
               </div>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              <Link href={`/ask?expert=${expert.id}`} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
+              <Link href={'/ask'} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
                 どうする先生で質問する
               </Link>
               {onlineConsultLink && (

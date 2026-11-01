@@ -82,6 +82,16 @@ export default function ExpertManagementPanel({
               {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
             </div>
             <div className="qtext">{item.question}</div>
+            {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AIが
+                既にどう答えているかをここに表示する（以前はrequest_type==='expert'の
+                相談にAI回答が存在しなかったため、質問文だけが出ていた）。専門家・
+                先輩保護者がAIの回答を踏まえて、それに付け足す形で回答しやすくする。 */}
+            {item.answer && (
+              <div className="muted" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px', whiteSpace: 'pre-wrap' }}>
+                <span style={{ fontWeight: 700 }}>AIの回答：</span>
+                {item.answer}
+              </div>
+            )}
             <div className="muted" style={{ fontSize: 12, lineHeight: 1.6 }}>
               良い回答の目安：①状況の受け止め（共感・ねぎらい）→②具体的な「次の一手」（今日・今週できること）→③注意点や見守りのポイント、の順で書くと伝わりやすいです。
             </div>

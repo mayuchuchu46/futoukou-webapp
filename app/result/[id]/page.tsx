@@ -99,8 +99,10 @@ async function getConsultation(id: string): Promise<Consultation | null> {
   if (isExpertAnswered) {
     // 本文は見せないが、最初の1行だけはそのまま見せる（2026-10-31、lib/consultations.ts
     // と同じ対応。「ボカシは最初の1行だけみせるのどう？」との提案を受けて追加）。
+    // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、answerは
+    // 常にAIの回答として残す（ロックの対象はexpert_answerだけ）。
     const snippet = data.expert_answer ? answerFirstLineSnippet(data.expert_answer) : null;
-    return { ...base, answer: '', expert_answer: null, expert_answer_snippet: snippet, locked: true } as Consultation;
+    return { ...base, expert_answer: null, expert_answer_snippet: snippet, locked: true } as Consultation;
   }
   return { ...base, locked: false } as Consultation;
 }
@@ -213,10 +215,10 @@ export default async function ResultPage({
   const followups = (followupRows || []) as { id: string; question: string; answer: string }[];
 
   // クローラー・初回表示用のJSON-LD（QAPage）。
-  // 専門家回答がロック中の場合は本文がまだ無いので、AI回答か、
-  // ロック解除済みの専門家回答がある場合だけ付与する。
-  const answerTextForJsonLd =
-    item.request_type === 'ai' ? item.answer : !item.locked ? item.expert_answer : null;
+  // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AI回答
+  // （item.answer）は常に存在するので常にベースとして使い、ロック解除済みの
+  // 専門家回答があれば（item.expert_answerはロック中はnullになる）追加で含める。
+  const answerTextForJsonLd = item.expert_answer ? `${item.answer} ${item.expert_answer}` : item.answer;
 
   // シェア文に回答の冒頭を少しだけ見せて続きを気にさせるための抜粋。
   // 専門家回答がロック中など本文が無い場合は抜粋を作らず、質問文のみのテキストにする。
@@ -252,10 +254,15 @@ export default async function ResultPage({
   // いる場合は、「先輩保護者」ではなく「〇〇の先輩保護者」のように、その学校を
   // 知っている人だと伝わる呼び方にする（「その先輩保護者がその学校のことを知ってる
   // 人だという感じがわかるテキストにしたい」との指摘を受けて追加）。
-  const answererLabel =
-    item.request_type === 'expert'
-      ? schoolAwareAnswererName(item.question, item.experts?.credential, item.experts?.experienced_school_names)
-      : 'どうする先生';
+  // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、専門家・先輩保護者
+  // が実際に回答済みの場合だけその人を主語にし、それ以外（AI回答のみ・専門家回答待ち）は
+  // 「どうする先生」のままにする（以前はrequest_type==='expert'なら常に専門家側を主語に
+  // していたが、今は回答待ちの段階でもrequest_type==='expert'になるため、未回答のうちは
+  // 実態と合わない）。
+  const expertHasAnswered = item.request_type === 'expert' && item.expert_status === 'answered';
+  const answererLabel = expertHasAnswered
+    ? schoolAwareAnswererName(item.question, item.experts?.credential, item.experts?.experienced_school_names)
+    : 'どうする先生';
 
   // 「今日からできる一手」は、AI・専門家の回答フォーマット（具体的な行動提案を
   // 1つ出す）には合うが、先輩保護者の回答は「次の一手」の提示というより実体験の
@@ -263,7 +270,7 @@ export default async function ResultPage({
   // というのが違う気が！」との指摘を受けて変更。さらに「実体験に基づく答え」でも
   // しっくりこないとのことで、「実体験に基づく回答は？」という問いかけ型の文に
   // 作り直した）。
-  const isSenpaiAnswer = item.request_type === 'expert' && item.experts?.credential === SENPAI_CREDENTIAL;
+  const isSenpaiAnswer = expertHasAnswered && item.experts?.credential === SENPAI_CREDENTIAL;
   const noAnswerShareText = isSenpaiAnswer
     ? `「${questionSnippet}」に、${answererLabel}の実体験に基づく回答は？`
     : `「${questionSnippet}」の相談に、${answererLabel}が出した"今日からできる一手"とは。`;
@@ -344,8 +351,10 @@ export default async function ResultPage({
 
   // 回答を一言に要約した「格言カード」シェア機能（2026-10-17追加）。
   // one_linerの生成は、2026-10-30からオンデマンド化（QuoteShareCard参照）。
-  // crisis_detectedな回答・専門家回答（request_type !== 'ai'）には出さない方針は変わらず。
-  const quoteShareBlock = item.request_type === 'ai' && !item.crisis_detected && (
+  // 常にAI回答（item.answer）を要約対象にするため、2026-11-01の統合後は
+  // request_typeに関係なく出す（AI回答は今はどの相談にも必ず付くため）。
+  // crisis_detectedな回答には引き続き出さない。
+  const quoteShareBlock = !item.crisis_detected && (
     <QuoteShareCard id={item.id} resultUrl={resultUrl} initialOneLiner={item.one_liner ?? null} />
   );
 
@@ -464,8 +473,10 @@ export default async function ResultPage({
   // 回答本文そのものからも同じ判定をフォールバックで行う（2026-10-14追加。「希死念慮の相談は
   // 多いので、専門家や公的支援につなげる流れを隠すのではなくしっかり作りたい」との要望を受けて、
   // これまで回答カード下の小さな注意書き1行だけだった案内を、専用の目立つカードに変更する）。
-  const isCrisis =
-    item.request_type === 'ai' && (!!item.crisis_detected || item.answer.includes('0120-0-78310'));
+  // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、request_typeに
+  // 関係なく判定する（以前はrequest_type==='ai'限定だったが、専門家回答待ちの相談にも
+  // 必ずAI回答が付くようになったため、そちらでも安全上書きが発動しうる）。
+  const isCrisis = !!item.crisis_detected || item.answer.includes('0120-0-78310');
 
   // この相談に関連する「不登校お悩み辞典」（カテゴリ・テーマ）への内部リンク。
   // 辞典ページ同士の回遊だけでなく、相談ページ→辞典ページの導線も作る目的で追加
@@ -483,14 +494,11 @@ export default async function ResultPage({
   // サイト運営者（どうする先生）のOrganization、専門家回答ならexperts/[id]の公開プロフィール
   // ページを持つPersonにした。upvoteCountは既存のlikes（「参考になった」等の件数とは別の、
   // ハートで押す「いいね」カウント）をそのまま使う。
-  const answerAuthor =
-    item.request_type === 'expert' && item.experts
-      ? {
-          '@type': 'Person' as const,
-          name: item.experts.name,
-          ...(item.expert_id ? { url: `${SITE_URL}/experts/${item.expert_id}` } : {}),
-        }
-      : { '@type': 'Organization' as const, name: SITE_NAME, url: SITE_URL };
+  // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、JSON-LDの
+  // 本文（answerTextForJsonLd）は常にAI回答がベースになるため、著者は常にサイト
+  // 運営者（Organization）にする（以前はrequest_type==='expert'なら専門家個人に
+  // していたが、本文の大半がAI回答である以上、専門家個人を著者にするのは不正確）。
+  const answerAuthor = { '@type': 'Organization' as const, name: SITE_NAME, url: SITE_URL };
 
   const jsonLd = answerTextForJsonLd
     ? {
@@ -562,154 +570,156 @@ export default async function ResultPage({
           />
         </div>
 
-        {item.request_type === 'expert' ? (
-          <>
-            <Suspense fallback={null}>
-              <ResultClient id={id} initialItem={item} />
-            </Suspense>
-            {anySchoolDetailBlock || gakkoBlock}
-            {shareButtons}
-            {askAgainBlock}
-          </>
-        ) : (
-          <>
-            <div className="card">
-              <div className="answer-label">
-                <img src="/assets/sensei_logo.png" alt="" />
-                {isCrisis ? 'どうする先生からのお返事' : 'どうする先生の回答・次にできそうなこと'}
-              </div>
-              <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
-                {item.answer}
-              </div>
-              {/* AIは一般論ベースの回答で外れることもあるという前提を明示しつつ、
-                  「個別の状況は専門家へ」という差別化の文脈で専門家相談への導線も
-                  兼ねる一文。AiUsageUpsell（利用回数の閾値後に出る導線）とは別に、
-                  AI回答には毎回必ず表示する（2026-10-13追加）。安全上書き（isCrisis）の
-                  場合は、この1行の注意書きの代わりに下の専用カードで案内するため、
-                  ここでは出さない（2026-10-14）。 */}
-              {!isCrisis && (
-                <div
-                  className="muted"
-                  style={{ fontSize: 12, marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}
-                >
-                  {/* 2026-10-13: AIの提案通りに動いて状況が悪化するケースもあり得るため、
-                      「あくまで一つの案」「最終判断は保護者自身」というニュアンスを一言添えた。
-                      あわせて、専門家（無料）だけでなく、公的な相談機関（/support）
-                      にも導線を出すよう変更。上に薄い区切り線を追加し、回答本文との境目を
-                      分かりやすくした（2026-10-13）。 */}
-                  ⚠️ AIの回答は一つの案で、間違えることもあります。実際にどうするかはご家庭の状況に合わせてご判断ください。重要なことは
-                  <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
-                    専門家に相談する
-                  </Link>
-                  こともできます{!expertAvailable && '（現在、準備中）'}。
-                  <Link href="/support" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
-                    公的な相談機関
-                  </Link>
-                  もご活用ください。
-                </div>
-              )}
-              {/* 学校名が出てくる相談では、lib/schoolFacts.tsのbuildSchoolFactsBlockが学校の
-                  校風・教育方針についての回答を含みうる（2026-10-26導入、2026-10-28に
-                  web検索ツール前提から静的データ（note欄）前提の指示に書き換え済み）。
-                  静的データも移転・制度変更等で最新の状況と異なる可能性があるため、
-                  app/support/page.tsx等と同じ文言のパターンで、学校の公式サイトでの確認を
-                  促す注記を添える。 */}
-              {!isCrisis && mentionedSchool && (
-                <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
-                  学校に関する情報は公開情報をもとにしたもので、最新の状況と異なる場合があります。最新の正確な情報は
-                  {mentionedSchool.officialUrl ? (
-                    <a
-                      href={mentionedSchool.officialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}
-                    >
-                      学校の公式サイト
-                    </a>
-                  ) : (
-                    '学校の公式サイト等'
-                  )}
-                  でご確認ください。
-                </div>
-              )}
+        {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合した（以前はrequest_type
+            でAI回答のみの相談／専門家回答のみの相談を完全に分けて表示していたが、
+            今はAI回答が常に付き、request_type==='expert'の相談だけ、その下に
+            専門家・先輩保護者からの回答（待ち・ロック中・公開済み）のセクションが
+            追加で付く）。 */}
+        <div className="card">
+          <div className="answer-label">
+            <img src="/assets/sensei_logo.png" alt="" />
+            {isCrisis ? 'どうする先生からのお返事' : 'どうする先生の回答・次にできそうなこと'}
+          </div>
+          <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
+            {item.answer}
+          </div>
+          {/* AIは一般論ベースの回答で外れることもあるという前提を明示しつつ、
+              「個別の状況は専門家へ」という差別化の文脈で専門家相談への導線も
+              兼ねる一文。AiUsageUpsell（利用回数の閾値後に出る導線）とは別に、
+              AI回答には毎回必ず表示する（2026-10-13追加）。安全上書き（isCrisis）の
+              場合は、この1行の注意書きの代わりに下の専用カードで案内するため、
+              ここでは出さない（2026-10-14）。すでにこの相談で専門家からの回答も
+              リクエスト済み（request_type==='expert'）の場合は、「専門家に相談する」
+              の案内は不要なので出さない（2026-11-01）。 */}
+          {!isCrisis && item.request_type !== 'expert' && (
+            <div
+              className="muted"
+              style={{ fontSize: 12, marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--border)' }}
+            >
+              {/* 2026-10-13: AIの提案通りに動いて状況が悪化するケースもあり得るため、
+                  「あくまで一つの案」「最終判断は保護者自身」というニュアンスを一言添えた。
+                  あわせて、専門家（無料）だけでなく、公的な相談機関（/support）
+                  にも導線を出すよう変更。上に薄い区切り線を追加し、回答本文との境目を
+                  分かりやすくした（2026-10-13）。 */}
+              ⚠️ AIの回答は一つの案で、間違えることもあります。実際にどうするかはご家庭の状況に合わせてご判断ください。重要なことは
+              <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+                専門家に相談する
+              </Link>
+              こともできます{!expertAvailable && '（現在、準備中）'}。
+              <Link href="/support" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+                公的な相談機関
+              </Link>
+              もご活用ください。
             </div>
+          )}
+          {/* 学校名が出てくる相談では、lib/schoolFacts.tsのbuildSchoolFactsBlockが学校の
+              校風・教育方針についての回答を含みうる（2026-10-26導入、2026-10-28に
+              web検索ツール前提から静的データ（note欄）前提の指示に書き換え済み）。
+              静的データも移転・制度変更等で最新の状況と異なる可能性があるため、
+              app/support/page.tsx等と同じ文言のパターンで、学校の公式サイトでの確認を
+              促す注記を添える。 */}
+          {!isCrisis && mentionedSchool && (
+            <div className="muted" style={{ fontSize: 12, marginTop: 8 }}>
+              学校に関する情報は公開情報をもとにしたもので、最新の状況と異なる場合があります。最新の正確な情報は
+              {mentionedSchool.officialUrl ? (
+                <a
+                  href={mentionedSchool.officialUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}
+                >
+                  学校の公式サイト
+                </a>
+              ) : (
+                '学校の公式サイト等'
+              )}
+              でご確認ください。
+            </div>
+          )}
+        </div>
 
-            {!isCrisis && (
-              <FollowupThread parentId={item.id} authorId={item.author_id} initialFollowups={followups} />
-            )}
+        {item.request_type === 'expert' && (
+          <Suspense fallback={null}>
+            <ResultClient id={id} initialItem={item} />
+          </Suspense>
+        )}
 
-            {/* 投稿者本人以外には「自分の状況で相談してみる」ボタンを出す（2026-10-22追加）。
-                AIがありきたりの回答しか出せない場合でも、自分の子の特徴を追加して
-                相談するよう促す導線。FollowupThread（本人向け）と対になる位置に置く。 */}
-            {!isCrisis && (
-              <AskSimilarBlock authorId={item.author_id} question={item.question} />
-            )}
+        {!isCrisis && (
+          <FollowupThread parentId={item.id} authorId={item.author_id} initialFollowups={followups} />
+        )}
 
-            {!isCrisis && (anySchoolDetailBlock || gakkoBlock)}
+        {/* 投稿者本人以外には「自分の状況で相談してみる」ボタンを出す（2026-10-22追加）。
+            AIがありきたりの回答しか出せない場合でも、自分の子の特徴を追加して
+            相談するよう促す導線。FollowupThread（本人向け）と対になる位置に置く。 */}
+        {!isCrisis && (
+          <AskSimilarBlock authorId={item.author_id} question={item.question} />
+        )}
 
-            {isCrisis ? (
-              // 希死念慮・自傷等の安全上書きが発動した相談専用の案内カード。以前は回答カード下の
-              // 小さな注意書き1行だけだったが、「このテーマは相談でかなり多い。隠すのではなく、
-              // 専門家や公的支援、相談につなげる流れをしっかり作りたい」との要望を受けて、
-              // 目立つ専用カードに変更した（2026-10-14）。番号・文言は/support・CrisisModalと
-              // 揃えている。有料導線（AiUsageUpsell）・会員登録導線（SaveConsultationPrompt）・
-              // SNSシェアは、命に関わる場面にはふさわしくないため、この相談では出さない。
-              <div className="card" style={{ alignItems: 'flex-start', gap: 10, borderLeft: '4px solid #C0392B' }}>
-                <div className="answer-label" style={{ fontSize: 14, color: '#C0392B' }}>
-                  一人で抱え込まないでください
-                </div>
-                <div className="qtext" style={{ fontSize: 13 }}>
-                  お子さんの安全に関わる内容です。AIの回答だけで終わらせず、下記の窓口にもぜひご連絡ください。すべて無料で、匿名でも相談できます。
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700 }}>24時間子供SOSダイヤル</div>
-                  <div className="qtext">
-                    <a href="tel:0120078310" style={{ fontWeight: 700 }}>0120-0-78310</a>（24時間・無料）
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700 }}>よりそいホットライン</div>
-                  <div className="qtext">
-                    <a href="tel:0120279338" style={{ fontWeight: 700 }}>0120-279-338</a>（無料）
-                  </div>
-                </div>
-                <Link href="/support" className="btn-secondary">
-                  ほかの相談窓口も見る
-                </Link>
-                {/* 以前はテキストリンク1本だけだったが、「専門家への誘導をもっと強化してもいいのでは」
-                    との指摘を受け、他の導線（ほかの相談窓口を見る／もう一度相談する）と並ぶ
-                    ボタンに変更した。準備中の間もボタン自体は出し、注記で正確な状態を添える
-                    （2026-10-14）。
-                    リンク先は、新規相談を書く通常の/askではなく、専門家を紹介する/experts
-                    にした。「専門家に相談するのリンク先が通常の相談ページに飛ぶのは違和感」
-                    との指摘を受けた変更（2026-10-14）。/expertsは専門家未登録の間も
-                    「準備が整い次第掲載されます」という案内付きの紹介ページとして機能する。 */}
-                <Link href="/experts" className="btn-primary">
-                  専門家に相談する
-                </Link>
-                {!expertAvailable && (
-                  <div className="muted" style={{ fontSize: 12 }}>
-                    現在、本人確認済みの専門家の登録待ちのため準備中です。登録が整い次第ご利用いただけます。
-                  </div>
-                )}
+        {!isCrisis && (anySchoolDetailBlock || gakkoBlock)}
+
+        {isCrisis ? (
+          // 希死念慮・自傷等の安全上書きが発動した相談専用の案内カード。以前は回答カード下の
+          // 小さな注意書き1行だけだったが、「このテーマは相談でかなり多い。隠すのではなく、
+          // 専門家や公的支援、相談につなげる流れをしっかり作りたい」との要望を受けて、
+          // 目立つ専用カードに変更した（2026-10-14）。番号・文言は/support・CrisisModalと
+          // 揃えている。会員登録導線（SaveConsultationPrompt）・SNSシェアは、命に関わる
+          // 場面にはふさわしくないため、この相談では出さない。
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10, borderLeft: '4px solid #C0392B' }}>
+            <div className="answer-label" style={{ fontSize: 14, color: '#C0392B' }}>
+              一人で抱え込まないでください
+            </div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              お子さんの安全に関わる内容です。AIの回答だけで終わらせず、下記の窓口にもぜひご連絡ください。すべて無料で、匿名でも相談できます。
+            </div>
+            <div>
+              <div style={{ fontWeight: 700 }}>24時間子供SOSダイヤル</div>
+              <div className="qtext">
+                <a href="tel:0120078310" style={{ fontWeight: 700 }}>0120-0-78310</a>（24時間・無料）
               </div>
-            ) : (
-              <Suspense fallback={null}>
-                <SaveConsultationPrompt id={item.id} authorId={item.author_id} />
-              </Suspense>
+            </div>
+            <div>
+              <div style={{ fontWeight: 700 }}>よりそいホットライン</div>
+              <div className="qtext">
+                <a href="tel:0120279338" style={{ fontWeight: 700 }}>0120-279-338</a>（無料）
+              </div>
+            </div>
+            <Link href="/support" className="btn-secondary">
+              ほかの相談窓口も見る
+            </Link>
+            {/* 以前はテキストリンク1本だけだったが、「専門家への誘導をもっと強化してもいいのでは」
+                との指摘を受け、他の導線（ほかの相談窓口を見る／もう一度相談する）と並ぶ
+                ボタンに変更した。準備中の間もボタン自体は出し、注記で正確な状態を添える
+                （2026-10-14）。
+                リンク先は、新規相談を書く通常の/askではなく、専門家を紹介する/experts
+                にした。「専門家に相談するのリンク先が通常の相談ページに飛ぶのは違和感」
+                との指摘を受けた変更（2026-10-14）。/expertsは専門家未登録の間も
+                「準備が整い次第掲載されます」という案内付きの紹介ページとして機能する。 */}
+            <Link href="/experts" className="btn-primary">
+              専門家に相談する
+            </Link>
+            {!expertAvailable && (
+              <div className="muted" style={{ fontSize: 12 }}>
+                現在、本人確認済みの専門家の登録待ちのため準備中です。登録が整い次第ご利用いただけます。
+              </div>
             )}
-            {askAgainBlock}
-            {!isCrisis && (
-              <>
-                {/* 「もっと詳しく相談してみませんか？」（AiUsageUpsell、有料導線）より上に
-                    シェアボタンを置く。無料でできる行動（シェア）を、課金に近い案内より
-                    先に提示する並び（2026-10-12）。 */}
-                {shareButtons}
-                {quoteShareBlock}
-                <Suspense fallback={null}>
-                  <AiUsageUpsell />
-                </Suspense>
-              </>
+          </div>
+        ) : (
+          <Suspense fallback={null}>
+            <SaveConsultationPrompt id={item.id} authorId={item.author_id} />
+          </Suspense>
+        )}
+        {askAgainBlock}
+        {!isCrisis && (
+          <>
+            {/* 「もっと詳しく相談してみませんか？」（AiUsageUpsell）より上に
+                シェアボタンを置く。無料でできる行動（シェア）を、会員登録に近い案内より
+                先に提示する並び（2026-10-12）。 */}
+            {shareButtons}
+            {quoteShareBlock}
+            {item.request_type !== 'expert' && (
+              <Suspense fallback={null}>
+                <AiUsageUpsell />
+              </Suspense>
             )}
           </>
         )}

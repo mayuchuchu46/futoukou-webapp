@@ -23,9 +23,7 @@ const DEFAULT_PLACEHOLDER = CATEGORY_EXAMPLES.body;
 // （2026-10-18、「たまにボタンが押せなくなる。戻ってくると直る」との報告を受けて追加）。
 const ASK_TIMEOUT_MS = 55000;
 
-type RequestedExpert = { id: string; name: string; credential: string };
-
-// useSearchParams()（?expert=指名用）はレンダリング時点でしか値が確定しないため、
+// useSearchParams()はレンダリング時点でしか値が確定しないため、
 // プリレンダーをブロックしないようにSuspenseで囲む。
 // ただし、以前はHeader・PcSidebar・BottomNav（ページ全体の外枠）までこのSuspenseの
 // 内側に含めてしまっていたため、再サスペンド時にfallback（何も表示しない）へ
@@ -50,7 +48,6 @@ export default function AskPage() {
 function AskPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const expertIdParam = searchParams.get('expert');
   // 伴走ノート（/notebook）の子ども切り替えや、お子さんのプロフィール画面から
   // 「この子について相談する」で来た場合に、あらかじめ選択済みにする（2026-10-16追加）。
   const childIdParam = searchParams.get('child');
@@ -78,10 +75,14 @@ function AskPageContent() {
   const [grade, setGrade] = useState('');
   const [gender, setGender] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [expertSubmitting, setExpertSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [expertAvailable, setExpertAvailable] = useState(false);
-  const [requestedExpert, setRequestedExpert] = useState<RequestedExpert | null>(null);
+  // 「専門家・先輩保護者からの回答もほしい」チェックボックス（2026-11-01追加）。
+  // 以前は専門家への質問を別の相談として送る専用の「専門家に相談する」ボタンが
+  // あったが、「専門家が答えたい質問に勝手に答えてくる仕組みにしたい。質問者は
+  // 専門家からの回答してほしいボタンを押しておく」との方針を受けて、通常の相談
+  // 送信時にチェックするだけの単一フローに統合した。
+  const [wantExpertAnswer, setWantExpertAnswer] = useState(false);
   const [draftLoaded, setDraftLoaded] = useState(false);
   // 子どもプロフィール機能（2026-10-16追加）。ログインしていない、またはお子さんの
   // プロフィールを1人も登録していない会員には今まで通り何も表示されない
@@ -265,19 +266,6 @@ function AskPageContent() {
     if (childrenList.length > 0) setChildParamApplied(true);
   }, [draftLoaded, childParamApplied, childIdParam, childrenList, selectedChildId]);
 
-  // 専門家一覧の「この専門家に相談する」から来た場合（?expert=ID）、
-  // 本人確認済みの専門家であることを確認したうえで、指名表示に切り替える。
-  useEffect(() => {
-    if (!expertIdParam) {
-      setRequestedExpert(null);
-      return;
-    }
-    fetch(`/api/experts/get?id=${encodeURIComponent(expertIdParam)}`)
-      .then((r) => r.json())
-      .then((d) => setRequestedExpert(d.expert || null))
-      .catch(() => setRequestedExpert(null));
-  }, [expertIdParam]);
-
   // 以前は相談を書き始める前に「ご利用前の確認」という独立した画面を必ず一度表示し、
   // 「同意して相談をはじめる」を押すまで入力欄自体を出さない作りだった。この画面が
   // 離脱の原因になっているとの判断で廃止し（2026-10-26）、免責文は下の送信ボタン
@@ -348,6 +336,8 @@ function AskPageContent() {
           grade: grade || null,
           gender: gender || null,
           child_id: selectedChildId || null,
+          // 「専門家・先輩保護者からの回答もほしい」チェック（2026-11-01追加）。
+          want_expert: wantExpertAnswer,
         }),
         signal: controller.signal,
       });
@@ -383,61 +373,6 @@ function AskPageContent() {
     }
   }
 
-  async function submitToExpert() {
-    if (!text.trim()) return;
-    ensureConsentRecorded();
-    setExpertSubmitting(true);
-    setError('');
-    // submit()と同じ理由で、テーマ未確定ならここで確定させる（resolveCategoryの
-    // コメント参照、2026-10-28）。
-    const resolvedCategory = await resolveCategory();
-    // submit()と同じ理由（ハングしたまま固まる不具合対策）でタイムアウトを設ける（2026-10-18）。
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), ASK_TIMEOUT_MS);
-    try {
-      const res = await fetch('/api/expert-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          category: resolvedCategory,
-          text,
-          author_id: getUid(),
-          grade: grade || null,
-          gender: gender || null,
-          requested_expert_id: requestedExpert?.id || null,
-          child_id: selectedChildId || null,
-        }),
-        signal: controller.signal,
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || '失敗しました');
-      // 2026-11-01、専門家への質問が恒久的に無料になったため、Stripe決済へ
-      // 遷移する分岐は不要になった。登録と同時に確定するので直接結果ページへ遷移する。
-      if (!data.consultation_id) throw new Error('失敗しました');
-      clearAskDraft();
-      // submit()と同じ理由で、ルーターキャッシュによりstateが残るのを防ぐため
-      // 明示的に空にする（2026-10-16）。
-      setText('');
-      setCategory('');
-      setGrade('');
-      setGender('');
-      categoryTouchedRef.current = false;
-      router.push(`/result/${data.consultation_id}`);
-      return;
-    } catch (e: unknown) {
-      setError(
-        e instanceof Error && e.name === 'AbortError'
-          ? '送信に時間がかかりすぎたため中断しました。お手数ですが、もう一度お試しください。'
-          : e instanceof Error
-          ? e.message
-          : 'エラーが発生しました'
-      );
-    } finally {
-      clearTimeout(timeoutId);
-      // submit()と同じ理由でfinallyに移動（2026-10-22）。
-      setExpertSubmitting(false);
-    }
-  }
 
   return (
         <div className="page-main">
@@ -574,7 +509,34 @@ function AskPageContent() {
           ）。
         </div>
 
-        <button className="btn-primary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submit}>
+        {/* 「専門家からの回答もほしい」チェック（2026-11-01追加）。以前は「専門家に
+            相談する」という別の送信ボタンを分けていたが、「専門家が答えたい質問に
+            勝手に答えてくる仕組みにしたい。質問者は専門家からの回答してほしいボタンを
+            押しておく」との方針を受けて、質問を送るときにチェックするだけの単一の
+            フローに統合した。チェックしても、AIの回答はこれまでどおりすぐに届く。
+            登録している専門家・先輩保護者がこの質問を見て、任意のタイミングで
+            追加で回答してくれる（本人確認済みがまだ誰もいない間はチェック自体を
+            出さない）。 */}
+        {expertAvailable && (
+          <label className="card" style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={wantExpertAnswer}
+              onChange={(e) => setWantExpertAnswer(e.target.checked)}
+              style={{ marginTop: 3 }}
+            />
+            <span>
+              <span style={{ fontWeight: 700 }}>専門家・先輩保護者からの回答もほしい（無料）</span>
+              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                登録している専門家・先輩保護者がこの質問を見て、数日以内にテキストで追加の回答をしてくれることがあります。回答を読むには会員登録が必要です。
+                <br />
+                <a href="/experts">どんな専門家が回答していますか？</a>
+              </div>
+            </span>
+          </label>
+        )}
+
+        <button className="btn-primary" disabled={!text.trim() || submitting} onClick={submit}>
           {submitting ? 'どうする先生が考えています…' : 'どうする先生に相談する（無料・AIが回答）'}
         </button>
         {/* 待ち時間の目安を出すことで、「固まった？」と思ってタブを閉じる離脱を防ぐ
@@ -584,43 +546,6 @@ function AskPageContent() {
             通常20〜30秒ほどで回答が出ます。このままお待ちください。
           </div>
         )}
-
-        <div className="expertteaser">
-          <div className="expertteaser-title">
-            {requestedExpert
-              ? `${requestedExpert.credential}・${requestedExpert.name}さんに相談する`
-              : '専門家に相談する'}
-            {!expertAvailable && !requestedExpert && (
-              <span className="comingsoon-badge">準備中・近日公開</span>
-            )}
-          </div>
-          {/* 2026-11-01、専門家・先輩保護者への質問を恒久的に無料化した（従来の
-              読み放題会員限定・月1回無料／チケット／都度¥600という価格体系は廃止）。
-              質問は誰でも無料。回答を読むには会員登録が必要（/result側のロック表示）。 */}
-          {!expertAvailable && !requestedExpert ? (
-            <div className="expertteaser-desc">
-              現在、本人確認が完了した専門家（公認心理師など）がまだ登録されていないため、準備中です。登録が整い次第、こちらからご利用いただけるようになります。
-            </div>
-          ) : (
-            <>
-              <div className="expertteaser-desc">
-                {requestedExpert ? <>ご指名の専門家が、</> : <>登録している専門家が、</>}
-                数日以内にテキストで直接回答します。どなたでも無料でご質問いただけます（回答を読むには会員登録が必要です）。
-                {!requestedExpert && (
-                  <>
-                    <br />
-                    <a href="/experts">どんな専門家が回答していますか？</a>
-                  </>
-                )}
-              </div>
-              <button className="btn-secondary" disabled={!text.trim() || submitting || expertSubmitting} onClick={submitToExpert}>
-                {expertSubmitting
-                  ? '送信中…'
-                  : `無料で${requestedExpert ? `${requestedExpert.name}さんに相談する` : '専門家に相談する'}`}
-              </button>
-            </>
-          )}
-        </div>
         </div>
   );
 }

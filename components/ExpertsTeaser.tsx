@@ -31,7 +31,7 @@ export default function ExpertsTeaser({
 }: {
   experts: ExpertProfile[];
   // 先輩保護者（経験者）は専門家とは表示・ブランディングを分けているため、カードは
-  // 出しても遷移先は専門家向けの/ask?expert=ではなく、プロフィール閲覧用の
+  // 出しても遷移先はプロフィール閲覧用の
   // /senpai/[id]にする（質問自体はそのプロフィールページ内のボタンから可能。
   // 2026-10-31、本人確認済みの先輩保護者をトップに出したいとの依頼を受けて追加）。
   senpai?: ExpertProfile[];
@@ -74,7 +74,7 @@ export default function ExpertsTeaser({
               className="home-expert-card"
               role="button"
               tabIndex={0}
-              onClick={() => router.push(`/ask?expert=${e.id}`)}
+              onClick={() => router.push(`/experts/${e.id}`)}
             >
               <ExpertAvatar photoUrl={e.photo_url} size={avatarSize} />
               <div className="home-expert-body">
