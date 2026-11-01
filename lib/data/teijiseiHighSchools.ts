@@ -596,9 +596,9 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // ===== 島根県（3校） =====
   // 出典: https://www1.pref.shimane.lg.jp/gakkokikaku/school/index.data/p40_teiji.pdf（校名一覧）、
   //       島根県教育委員会 各校定時制課程資料
-  { no: 416, prefecture: '島根県', name: '島根県立松江工業高等学校', publicPrivate: '公立', operator: '島根県教育委員会', schoolCategory: 'attached', note: '定時制課程（夜間）。学科：機械科・電気科・建築科。1日4時間授業、4年間で卒業する教育課程。所在地は資料上未確認。' },
-  { no: 417, prefecture: '島根県', municipality: '松江市', name: '島根県立宍道高等学校', publicPrivate: '公立', operator: '島根県教育委員会', schoolCategory: 'standalone', parts: '三部制（午前部・午後部・夜間部）', curriculumType: '単位制', note: '普通科（入学定員：午前部80名、午後部40名、夜間部40名）。全校生徒数365名（令和7年5月1日現在）。' },
-  { no: 418, prefecture: '島根県', municipality: '浜田市', name: '島根県立浜田高等学校', publicPrivate: '公立', operator: '島根県教育委員会', schoolCategory: 'attached', parts: '二部制（昼間部・夜間部。定通併修・他部履修も条件付きで可能）', note: '定時制課程の学科は資料上未確認。' },
+  { no: 416, prefecture: '島根県', name: '島根県立松江工業高等学校', publicPrivate: '公立', operator: '島根県教育委員会', schoolCategory: 'attached', officialUrl: 'https://www.shimanet.ed.jp/matsue-tht/', note: '定時制課程（夜間）。学科：機械科・電気科・建築科。1日4時間授業、4年間で卒業する教育課程。所在地は資料上未確認。' },
+  { no: 417, prefecture: '島根県', municipality: '松江市', name: '島根県立宍道高等学校', publicPrivate: '公立', operator: '島根県教育委員会', schoolCategory: 'standalone', parts: '三部制（午前部・午後部・夜間部）', curriculumType: '単位制', officialUrl: 'https://www.shinji-h.ed.jp/', note: '普通科（入学定員：午前部80名、午後部40名、夜間部40名）。全校生徒数365名（令和7年5月1日現在）。' },
+  { no: 418, prefecture: '島根県', municipality: '浜田市', name: '島根県立浜田高等学校', publicPrivate: '公立', operator: '島根県教育委員会', schoolCategory: 'attached', parts: '二部制（昼間部・夜間部。定通併修・他部履修も条件付きで可能）', officialUrl: 'https://www.hamakou.ed.jp/', note: '定時制課程の学科は資料上未確認。' },
 
   // ===== 山口県（7校） =====
   // 出典: 山口県教育委員会 高校一覧資料 https://www.pref.yamaguchi.lg.jp/uploaded/life/148551_267732_misc.pdf
@@ -614,14 +614,14 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
 
   // ===== 岡山県（11校） =====
   // 出典: 岡山県教育委員会 令和7年度 入学定員資料 https://www.pref.okayama.jp/uploaded/life/1054590_10218886_misc.pdf
-  { no: 426, prefecture: '岡山県', name: '岡山県立烏城高等学校', publicPrivate: '公立', operator: '岡山県教育委員会', note: '普通科。R7募集定員140人。' },
-  { no: 427, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立精思高等学校', publicPrivate: '公立', operator: '倉敷市教育委員会', note: '普通科。R7募集定員80人。' },
+  { no: 426, prefecture: '岡山県', name: '岡山県立烏城高等学校', publicPrivate: '公立', operator: '岡山県教育委員会', officialUrl: 'https://www.okayama-kenritsukoukou.jp/school/155/', note: '普通科。R7募集定員140人。' },
+  { no: 427, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立精思高等学校', publicPrivate: '公立', operator: '倉敷市教育委員会', officialUrl: 'http://www.seishi-hs.kurashiki.okayama.jp/', note: '普通科。R7募集定員80人。' },
   { no: 428, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立精思高等学校霞丘校', publicPrivate: '公立', operator: '倉敷市教育委員会', note: '普通科・商業科。精思高等学校の分校。' },
   { no: 429, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立工業高等学校', publicPrivate: '公立', operator: '倉敷市教育委員会', officialUrl: 'https://www.kurako.okayama-c.ed.jp/', note: '機械科・電気科。R7募集定員120人。' },
   { no: 430, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立倉敷翔南高等学校', publicPrivate: '公立', operator: '倉敷市教育委員会', curriculumType: '単位制', note: '総合学科。R7募集定員120人。' },
   { no: 431, prefecture: '岡山県', municipality: '倉敷市', name: '倉敷市立真備陵南高等学校', publicPrivate: '公立', operator: '倉敷市教育委員会', note: '普通科。R7募集定員80人。' },
   { no: 432, prefecture: '岡山県', municipality: '玉野市', name: '玉野市立玉野備南高等学校', publicPrivate: '公立', operator: '玉野市教育委員会', note: '普通科。R7募集定員40人。' },
-  { no: 433, prefecture: '岡山県', municipality: '井原市', name: '井原市立高等学校', publicPrivate: '公立', operator: '井原市教育委員会', note: '普通科。R7募集定員80人。' },
+  { no: 433, prefecture: '岡山県', municipality: '井原市', name: '井原市立高等学校', publicPrivate: '公立', operator: '井原市教育委員会', officialUrl: 'http://www.ibara.ed.jp/iharahigh/', note: '普通科。R7募集定員80人。' },
   { no: 434, prefecture: '岡山県', municipality: '高梁市', name: '高梁市立松山高等学校', publicPrivate: '公立', operator: '高梁市教育委員会', note: '普通科。R7募集定員40人。' },
   { no: 435, prefecture: '岡山県', municipality: '高梁市', name: '高梁市立宇治高等学校', publicPrivate: '公立', operator: '高梁市教育委員会', note: '普通科。R7募集定員40人。' },
   { no: 436, prefecture: '岡山県', municipality: '備前市', name: '備前市立片上高等学校', publicPrivate: '公立', operator: '備前市教育委員会', note: '普通科。R7募集定員40人。' },
@@ -691,8 +691,8 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   // 注: 熊本県・大分県とも定時制設置校を網羅した公式一覧ページには到達できず、個別校資料のみで確認できた分。
   //     大分県立日田高等学校・熊本市立必由館高等学校は定時制該当の明記が確認できず今回は含めない。
   { no: 475, prefecture: '熊本県', name: '熊本県立熊本工業高等学校', publicPrivate: '公立', operator: '熊本県教育委員会', schoolCategory: 'attached', officialUrl: 'https://sh.higo.ed.jp/kumakoths/', note: '定時制。機械科40名・電気科40名・建築科40名を設置。授業は17時頃登校〜21時10分頃放課。3修制（3年で卒業できる仕組み）あり。部制・単位制/学年制の区別は未確認。' },
-  { no: 476, prefecture: '大分県', name: '大分県立中津東高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'attached', curriculumType: '単位制（2年次から通信制高校との併修による三修制も導入）', note: '定時制。機械科・商業科（各学年1学級）を設置。' },
-  { no: 477, prefecture: '大分県', name: '大分県立大分工業高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'attached', note: '定時制。県教育委員会資料に工業科設置校として記載。学科の詳細（具体的な科名・定員）・部制・単位制/学年制の区別は未確認。' },
+  { no: 476, prefecture: '大分県', name: '大分県立中津東高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'attached', curriculumType: '単位制（2年次から通信制高校との併修による三修制も導入）', officialUrl: 'http://kou.oita-ed.jp/nakatuhigasitei/', note: '定時制。機械科・商業科（各学年1学級）を設置。' },
+  { no: 477, prefecture: '大分県', name: '大分県立大分工業高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'attached', officialUrl: 'https://kou.oita-ed.jp/daikoutei/', note: '定時制。県教育委員会資料に工業科設置校として記載。学科の詳細（具体的な科名・定員）・部制・単位制/学年制の区別は未確認。' },
   { no: 478, prefecture: '大分県', municipality: '大分市', name: '大分県立爽風館高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'standalone', parts: '三部制（午前部・午後部・夜間部）', curriculumType: '単位制', note: '定時制（商業科、普通科I部・II部・III部）と通信制（普通科）を併設。所在地：大分市上野丘1丁目11-14。' },
 
   // ===== 福岡県（19校） =====
