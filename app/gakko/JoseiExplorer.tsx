@@ -29,42 +29,9 @@ export default function JoseiExplorer({ initialPref }: { initialPref: string | n
 
   return (
     <>
-      {pref && (
-        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>{pref}のフリースクール等利用料助成</div>
-          {subsidies.length === 0 ? (
-            <div className="muted">
-              {pref}については、Web検索で確認できるフリースクール等の利用料助成制度が見つかりませんでした。制度が無いという意味ではなく、見つからなかったということです。お住まいの市区町村教育委員会に直接お問い合わせください。
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-              {subsidies.map((s, i) => (
-                <div
-                  key={`${s.entity}-${s.name}-${i}`}
-                  style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
-                >
-                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                    実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
-                  </div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
-                  {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>※ {s.note}</div>}
-                  <a
-                    href={s.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="muted"
-                    style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
-                  >
-                    出典を見る ›
-                  </a>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
+      {/* 都道府県の選択を結果一覧より先（上）に表示する（2026-11-01、選んだ直後に
+          結果が選択UIより上に出て見つけにくいとの指摘を受けて、他タブ共通で
+          選ぶ→結果が下に出る順番に変更）。 */}
       <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
         <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
         <select
@@ -101,6 +68,42 @@ export default function JoseiExplorer({ initialPref }: { initialPref: string | n
           })}
         </div>
       </div>
+
+      {pref && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>{pref}のフリースクール等利用料助成</div>
+          {subsidies.length === 0 ? (
+            <div className="muted">
+              {pref}については、Web検索で確認できるフリースクール等の利用料助成制度が見つかりませんでした。制度が無いという意味ではなく、見つからなかったということです。お住まいの市区町村教育委員会に直接お問い合わせください。
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+              {subsidies.map((s, i) => (
+                <div
+                  key={`${s.entity}-${s.name}-${i}`}
+                  style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                >
+                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                    実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
+                  </div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
+                  {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>※ {s.note}</div>}
+                  <a
+                    href={s.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="muted"
+                    style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
+                  >
+                    出典を見る ›
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 }

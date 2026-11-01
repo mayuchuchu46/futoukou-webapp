@@ -38,6 +38,55 @@ export default function FreeSchoolExplorer({
 
   return (
     <>
+      {/* 都道府県の選択を結果一覧より先（上）に表示する（2026-11-01、選んだ直後に
+          結果が選択UIより上に出て見つけにくいとの指摘を受けて、他タブ共通で
+          選ぶ→結果が下に出る順番に変更）。 */}
+      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
+        <select
+          className="input"
+          value={pref || ''}
+          onChange={(e) => selectPref(e.target.value || null)}
+        >
+          <option value="">都道府県を選択…</option>
+          {PREFECTURES.map((p) => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
+        <div className="chip-row chip-row-wrap">
+          {/* フリースクールタブでは、都道府県の一覧の中に「オンライン」も選択肢として
+              並べておく（2026-10-18）。 */}
+          <Link
+            href="/gakko?type=online"
+            className="chip chip-tag"
+            style={{ textDecoration: 'none', display: 'inline-block', fontWeight: 700 }}
+          >
+            オンライン（全国どこからでも）
+          </Link>
+          {PREFECTURES.map((p) => {
+            const count = allSchools.filter((s) => s.prefecture === p).length;
+            return (
+              <Link
+                key={p}
+                href={pref ? `/gakko?type=free&pref=${encodeURIComponent(p)}` : `/gakko?type=free&pref=${encodeURIComponent(p)}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  selectPref(p);
+                }}
+                className={`chip chip-tag${pref === p ? ' active' : ''}`}
+                style={{
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                  opacity: count > 0 ? 1 : 0.55,
+                }}
+              >
+                {p}{count > 0 ? `（${count}）` : ''}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
       {pref && (
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>{pref}のフリースクール</div>
@@ -84,52 +133,6 @@ export default function FreeSchoolExplorer({
           )}
         </div>
       )}
-
-      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-        <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
-        <select
-          className="input"
-          value={pref || ''}
-          onChange={(e) => selectPref(e.target.value || null)}
-        >
-          <option value="">都道府県を選択…</option>
-          {PREFECTURES.map((p) => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-        </select>
-        <div className="chip-row chip-row-wrap">
-          {/* フリースクールタブでは、都道府県の一覧の中に「オンライン」も選択肢として
-              並べておく（2026-10-18）。 */}
-          <Link
-            href="/gakko?type=online"
-            className="chip chip-tag"
-            style={{ textDecoration: 'none', display: 'inline-block', fontWeight: 700 }}
-          >
-            オンライン（全国どこからでも）
-          </Link>
-          {PREFECTURES.map((p) => {
-            const count = allSchools.filter((s) => s.prefecture === p).length;
-            return (
-              <Link
-                key={p}
-                href={pref ? `/gakko?type=free&pref=${encodeURIComponent(p)}` : `/gakko?type=free&pref=${encodeURIComponent(p)}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  selectPref(p);
-                }}
-                className={`chip chip-tag${pref === p ? ' active' : ''}`}
-                style={{
-                  textDecoration: 'none',
-                  display: 'inline-block',
-                  opacity: count > 0 ? 1 : 0.55,
-                }}
-              >
-                {p}{count > 0 ? `（${count}）` : ''}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
     </>
   );
 }

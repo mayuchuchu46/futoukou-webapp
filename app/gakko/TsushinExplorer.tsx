@@ -55,6 +55,51 @@ export default function TsushinExplorer({
   );
   return (
     <>
+      {/* 都道府県の選択を結果一覧より先（上）に表示する（2026-11-01、他タブ共通で
+          選ぶ→結果が下に出る順番に変更）。 */}
+      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
+        <select
+          className="input"
+          value={pref || ''}
+          onChange={(e) => selectPref(e.target.value || null)}
+        >
+          <option value="">都道府県を選択…</option>
+          {PREFECTURES.map((p) => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
+        <div className="chip-row chip-row-wrap">
+          {PREFECTURES.map((p) => {
+            // 上のschools算出と同じ理由で、東京都だけ全校を対象とした件数にする
+            // （本校所在地で数えると常に0件になり、チップが「選択肢なし」に見えて
+            // しまうため）。東京都以外は本校所在地＋campusesの一致件数（上のschools算出と同じ条件）。
+            const count =
+              p === '東京都'
+                ? allSchools.length
+                : allSchools.filter((s) => s.prefecture === p || s.campuses?.some((c) => c.prefecture === p)).length;
+            return (
+              <Link
+                key={p}
+                href={`/gakko?type=tsushin&pref=${encodeURIComponent(p)}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  selectPref(p);
+                }}
+                className={`chip chip-tag${pref === p ? ' active' : ''}`}
+                style={{
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                  opacity: count > 0 ? 1 : 0.55,
+                }}
+              >
+                {p}{count > 0 ? `（${count}）` : ''}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
       {pref && (
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>
@@ -142,49 +187,6 @@ export default function TsushinExplorer({
           </Link>
         </div>
       )}
-
-      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-        <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
-        <select
-          className="input"
-          value={pref || ''}
-          onChange={(e) => selectPref(e.target.value || null)}
-        >
-          <option value="">都道府県を選択…</option>
-          {PREFECTURES.map((p) => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-        </select>
-        <div className="chip-row chip-row-wrap">
-          {PREFECTURES.map((p) => {
-            // 上のschools算出と同じ理由で、東京都だけ全校を対象とした件数にする
-            // （本校所在地で数えると常に0件になり、チップが「選択肢なし」に見えて
-            // しまうため）。東京都以外は本校所在地＋campusesの一致件数（上のschools算出と同じ条件）。
-            const count =
-              p === '東京都'
-                ? allSchools.length
-                : allSchools.filter((s) => s.prefecture === p || s.campuses?.some((c) => c.prefecture === p)).length;
-            return (
-              <Link
-                key={p}
-                href={`/gakko?type=tsushin&pref=${encodeURIComponent(p)}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  selectPref(p);
-                }}
-                className={`chip chip-tag${pref === p ? ' active' : ''}`}
-                style={{
-                  textDecoration: 'none',
-                  display: 'inline-block',
-                  opacity: count > 0 ? 1 : 0.55,
-                }}
-              >
-                {p}{count > 0 ? `（${count}）` : ''}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
     </>
   );
 }
