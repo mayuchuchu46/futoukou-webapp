@@ -690,7 +690,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   //       czemi.benesse.ne.jp（爽風館高校紹介ページ、WebFetchで課程・学科を確認）
   // 注: 熊本県・大分県とも定時制設置校を網羅した公式一覧ページには到達できず、個別校資料のみで確認できた分。
   //     大分県立日田高等学校・熊本市立必由館高等学校は定時制該当の明記が確認できず今回は含めない。
-  { no: 475, prefecture: '熊本県', name: '熊本県立熊本工業高等学校', publicPrivate: '公立', operator: '熊本県教育委員会', schoolCategory: 'attached', note: '定時制。機械科40名・電気科40名・建築科40名を設置。授業は17時頃登校〜21時10分頃放課。3修制（3年で卒業できる仕組み）あり。部制・単位制/学年制の区別は未確認。' },
+  { no: 475, prefecture: '熊本県', name: '熊本県立熊本工業高等学校', publicPrivate: '公立', operator: '熊本県教育委員会', schoolCategory: 'attached', officialUrl: 'https://sh.higo.ed.jp/kumakoths/', note: '定時制。機械科40名・電気科40名・建築科40名を設置。授業は17時頃登校〜21時10分頃放課。3修制（3年で卒業できる仕組み）あり。部制・単位制/学年制の区別は未確認。' },
   { no: 476, prefecture: '大分県', name: '大分県立中津東高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'attached', curriculumType: '単位制（2年次から通信制高校との併修による三修制も導入）', note: '定時制。機械科・商業科（各学年1学級）を設置。' },
   { no: 477, prefecture: '大分県', name: '大分県立大分工業高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'attached', note: '定時制。県教育委員会資料に工業科設置校として記載。学科の詳細（具体的な科名・定員）・部制・単位制/学年制の区別は未確認。' },
   { no: 478, prefecture: '大分県', municipality: '大分市', name: '大分県立爽風館高等学校', publicPrivate: '公立', operator: '大分県教育委員会', schoolCategory: 'standalone', parts: '三部制（午前部・午後部・夜間部）', curriculumType: '単位制', note: '定時制（商業科、普通科I部・II部・III部）と通信制（普通科）を併設。所在地：大分市上野丘1丁目11-14。' },
@@ -713,10 +713,10 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 490, prefecture: '福岡県', name: '福岡県立大川樟風高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', note: '普通科。夜間定時制課程。他県からの志願可能校。公式URL未確認。' },
   { no: 491, prefecture: '福岡県', name: '福岡県立福島高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://fukushima.fku.ed.jp/', note: '普通科。夜間定時制課程。' },
   { no: 492, prefecture: '福岡県', name: '福岡県立浮羽工業高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://ukiha-tech.fku.ed.jp/', note: '工業系専門学科。夜間定時制課程。他県からの志願可能校。' },
-  { no: 493, prefecture: '福岡県', name: '福岡県立朝倉高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', note: '普通科。夜間定時制課程。公式URL未確認。' },
-  { no: 494, prefecture: '福岡県', name: '福岡県立嘉穂東高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', note: '普通科。夜間定時制課程。公式URL未確認。' },
+  { no: 493, prefecture: '福岡県', name: '福岡県立朝倉高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://asakura-highschool.ed.jp/', note: '普通科。夜間定時制課程。' },
+  { no: 494, prefecture: '福岡県', name: '福岡県立嘉穂東高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://kahohigashi.fku.ed.jp/', note: '普通科。夜間定時制課程。' },
   { no: 495, prefecture: '福岡県', name: '福岡県立鞍手高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://kurate.fku.ed.jp/', note: '普通科。夜間定時制課程。' },
-  { no: 496, prefecture: '福岡県', name: '福岡県立福岡工業高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', note: '工業系専門学科。夜間定時制課程。公式URL未確認。' },
+  { no: 496, prefecture: '福岡県', name: '福岡県立福岡工業高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://fths.fku.ed.jp/', note: '工業系専門学科。夜間定時制課程。' },
   { no: 497, prefecture: '福岡県', name: '福岡県立三池工業高等学校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://miike-tech.fku.ed.jp/', note: '工業系専門学科。夜間定時制課程。他県からの志願可能校。' },
   { no: 498, prefecture: '福岡県', name: '福岡県立嘉穂総合高等学校　大隈城山校', publicPrivate: '公立', operator: '福岡県教育委員会', curriculumType: '学年制', officialUrl: 'https://kahosogo.fku.ed.jp/', note: '家庭系専門学科。本校は嘉穂総合高校（全日制）で、大隈城山校は分校（定時制）。夜間定時制課程。' },
 
