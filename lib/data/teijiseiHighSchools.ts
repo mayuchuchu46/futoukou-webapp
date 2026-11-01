@@ -55,7 +55,7 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 8, prefecture: '埼玉県', name: '埼玉県立春日部高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科）を併置' },
   { no: 9, prefecture: '埼玉県', name: '埼玉県立川越工業高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科・工業技術科）を併置' },
   { no: 10, prefecture: '埼玉県', name: '埼玉県立久喜高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科）を併置' },
-  { no: 11, prefecture: '埼玉県', name: '埼玉県立所沢高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科）を併置' },
+  { no: 11, prefecture: '埼玉県', name: '埼玉県立所沢高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', officialUrl: 'https://tokorozawa-h.spec.ed.jp/', note: '埼玉県教育委員会公表の「活性化・特色化方針（スクール・ポリシー）」（R5.5.1時点）によれば、生徒数は68人（男38・女30）。アクセスは西武池袋線・西武狭山線「西所沢駅」より徒歩8分、西武池袋線・西武新宿線「所沢駅」より徒歩15分。目指す学校像は「多様な生徒一人一人に相応し、社会的自立を促す親身あふれる温かい教育」。英語は全学年、数学は1・2年、理科は1年でティームティーチングを実施し、日本語を母語としない生徒には日本語支援員や地域ボランティアによる補講・個別支援を行う。部活動は実施しておらず、「総合的な探究の時間」で文化的活動やスポーツ活動を選んで取り組む仕組みがある。学校行事は新入生歓迎会・ボウリング大会・遠足・体育祭・文化祭・修学旅行（3年次、少人数ならではの行程）・二十歳を祝う会などを実施。進路面では、担任面談やスクールカウンセラー・スクールソーシャルワーカー・行政機関・日本語支援員等と連携した支援体制があり、令和5年度卒業生は四年制大学3人・専門学校2人・就職5人という実績がある。' },
   { no: 12, prefecture: '埼玉県', name: '埼玉県立秩父農工科学高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科）を併置' },
   { no: 13, prefecture: '埼玉県', name: '埼玉県立越ヶ谷高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科）を併置' },
   { no: 14, prefecture: '埼玉県', name: '埼玉県立熊谷高等学校', publicPrivate: '公立', operator: '埼玉県教育委員会', schoolCategory: 'attached', note: '定時制（普通科）を併置' },
