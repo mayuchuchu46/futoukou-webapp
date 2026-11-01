@@ -10,7 +10,6 @@ import { isStripeConfigured } from '@/lib/stripe';
 import LogoutButton from './LogoutButton';
 import MembershipPanel from './MembershipPanel';
 import TicketsPanel from './TicketsPanel';
-import MyConsultationsPanel from './MyConsultationsPanel';
 import ExpertSection from './ExpertSection';
 
 // 登録・ログイン直後、いきなり「自分の相談を書く」はハードルが高い人も多いので、
@@ -30,10 +29,13 @@ export default function AccountPage() {
         <div className="page-main">
           <h2 className="pagetitle">アカウント</h2>
 
-          {/* 自分が投稿した相談一覧（旧マイページ）。ログイン状態に関係なく、ローカルの
-              uidに紐づく投稿を表示するため、cookies()を読むAccountMemberSectionとは
-              別のSuspense外に置いている。 */}
-          <MyConsultationsPanel />
+          {/* 自分が投稿した相談一覧（旧マイページ）。以前はここに直接一覧を展開していたが、
+              アカウントページが縦長になりすぎるため、「別ページに飛ばして見れるのがいい」
+              との要望を受けて専用ページ（/account/mine）に分離した（2026-11-01）。 */}
+          <Link href="/account/mine" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <span>自分が書いた質問・回答を見る</span>
+            <span className="muted">›</span>
+          </Link>
 
           {/* Cache Componentsではcookies()を読むコンポーネントをSuspense配下に置かないと、
               レンダリング結果がCDNの共有キャッシュに乗ってしまい、別のログイン状態の訪問者にも
