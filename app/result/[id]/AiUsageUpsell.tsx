@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { getUid } from '@/lib/uid';
 
 // AI無料相談を累計で一定回数（閾値はlib/config.tsのAI_USAGE_UPSELL_THRESHOLD）
-// 使った利用者に、専門家への相談（有料）を案内するバナー。
+// 使った利用者に、専門家への相談（無料。2026-11-01に恒久的に無料化した）を
+// 案内するバナー。
 // 2026-10-11時点では実利用データのない仮説の閾値なので、ここで表示/非表示だけ
 // 切り替え、実際の案内文言・導線は既存の「専門家に相談する」teaserと揃える。
 export default function AiUsageUpsell() {
@@ -43,7 +44,7 @@ export default function AiUsageUpsell() {
       {expertAvailable ? (
         <>
           <div className="expertteaser-desc">
-            ここまで何度かAIに相談いただいています。状況を直接読んだ専門家から、文章で個別の回答がほしい場合は、有料の専門家相談もご利用いただけます。
+            ここまで何度かAIに相談いただいています。状況を直接読んだ専門家から、文章で個別の回答がほしい場合は、専門家への質問もご利用いただけます（無料）。
           </div>
           <a className="btn-secondary" href="/ask">
             専門家に相談する

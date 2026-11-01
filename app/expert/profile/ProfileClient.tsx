@@ -222,7 +222,7 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
               onChange={(e) => setLicenseDoc(e.target.files?.[0] || null)}
             />
             <div className="muted" style={{ fontSize: 12 }}>
-              差し替えると、改めて運営の本人確認待ちになります（確認が完了するまで有料相談への回答はできません）。
+              差し替えると、改めて運営の本人確認待ちになります（確認が完了するまで相談への回答はできません）。
             </div>
             {docError && <div style={{ color: '#C0392B', fontSize: 13 }}>{docError}</div>}
             {docSaved && <div style={{ color: 'var(--main)', fontSize: 13 }}>提出しました。運営の確認をお待ちください。</div>}

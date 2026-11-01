@@ -55,7 +55,7 @@ export default async function ExpertSection() {
       <div className="card">
         <div style={{ fontWeight: 700 }}>本人確認中です</div>
         <div className="qtext">
-          ご登録いただいた資格情報を、運営が確認しています。確認が完了するまで、有料相談への回答や報酬の受け取りはできません。確認が完了すると、ここから相談への回答ができるようになります。
+          ご登録いただいた資格情報を、運営が確認しています。確認が完了するまで、相談への回答はできません。確認が完了すると、ここから相談への回答ができるようになります。
         </div>
       </div>
     );

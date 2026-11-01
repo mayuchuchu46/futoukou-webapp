@@ -71,7 +71,7 @@ export default async function ExpertsPage() {
         <BackButton />
         <h2 className="pagetitle">専門家一覧</h2>
         <div className="muted" style={{ marginBottom: 14 }}>
-          有料の専門家相談でご回答いただく専門家です。公認心理師・臨床心理士など、運営が本人確認を行った方のみ掲載しています。
+          無料でご質問いただける専門家です。公認心理師・臨床心理士など、運営が本人確認を行った方のみ掲載しています。
         </div>
 
         {/* 「利用の流れ」の説明を追加（2026-10-14、「専門家一覧ページをもうちょっと

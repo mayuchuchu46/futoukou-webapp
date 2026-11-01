@@ -386,7 +386,7 @@ export default function AdminClient({
       <div key={c.id} className="card" style={{ opacity: c.hidden ? 0.5 : 1 }}>
         <div className="row">
           <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
-          <span className="muted">{c.request_type === 'expert' ? '有料' : '無料AI'}</span>
+          <span className="muted">{c.request_type === 'expert' ? '専門家' : 'AI'}</span>
           {!!c.reports && (
             <span
               className="muted"
@@ -732,7 +732,7 @@ export default function AdminClient({
           </div>
         ))}
 
-        <div style={{ fontWeight: 700, marginTop: 16 }}>未回答の有料相談（5日以上経過・{overdue.length}件）</div>
+        <div style={{ fontWeight: 700, marginTop: 16 }}>未回答の専門家向け相談（5日以上経過・{overdue.length}件）</div>
         {overdue.length === 0 && <div className="muted">対象の相談はありません。</div>}
         {overdue.map((o) => (
           <div key={o.id} className="card">
