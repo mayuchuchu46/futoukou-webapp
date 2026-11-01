@@ -514,12 +514,12 @@ export const teijiseiHighSchools: TeijiseiHighSchool[] = [
   { no: 362, prefecture: '兵庫県', municipality: '豊岡市', name: '兵庫県立豊岡高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~toyooka-hs/', note: '定時制課程。学年制/単位制は資料に明記なし。' },
   { no: 363, prefecture: '兵庫県', municipality: '洲本市', name: '兵庫県立洲本高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~sumoto-hs/', note: '定時制の課程。学年制/単位制は資料に明記なし。' },
   { no: 364, prefecture: '兵庫県', name: '兵庫県立姫路北高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', curriculumType: '単位制', note: '普通科。夜間定時制・単位制（県議会資料で確認）。所在市区町村は公式資料で確認できず。' },
-  { no: 365, prefecture: '兵庫県', municipality: '神戸市兵庫区', name: '兵庫県立神戸工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '工業科。定時制。学年制/単位制は資料に明記なし。' },
-  { no: 366, prefecture: '兵庫県', municipality: '尼崎市', name: '兵庫県立神崎工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '工業科。定時制。学年制/単位制は資料に明記なし。' },
-  { no: 367, prefecture: '兵庫県', name: '兵庫県立小野工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '工業科（機械科）。定時制。所在市区町村は公式資料で確認できず。' },
-  { no: 368, prefecture: '兵庫県', municipality: '相生市', name: '兵庫県立相生産業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '工業科。定時制課程。学年制/単位制は資料に明記なし。' },
-  { no: 369, prefecture: '兵庫県', municipality: '神戸市長田区', name: '兵庫県立長田商業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '商業科。定時制課程。学年制/単位制は資料に明記なし。' },
-  { no: 370, prefecture: '兵庫県', municipality: 'たつの市', name: '兵庫県立龍野北高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', note: '商業科。定時制。学年制/単位制は資料に明記なし。' },
+  { no: 365, prefecture: '兵庫県', municipality: '神戸市兵庫区', name: '兵庫県立神戸工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~kobe-ths/', note: '工業科。定時制。学年制/単位制は資料に明記なし。' },
+  { no: 366, prefecture: '兵庫県', municipality: '尼崎市', name: '兵庫県立神崎工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~kanzaki-ths/', note: '工業科。定時制。学年制/単位制は資料に明記なし。' },
+  { no: 367, prefecture: '兵庫県', name: '兵庫県立小野工業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~ono2-ths/', note: '工業科（機械科）。定時制。所在市区町村は公式資料で確認できず。' },
+  { no: 368, prefecture: '兵庫県', municipality: '相生市', name: '兵庫県立相生産業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~aioi-ihs/', note: '工業科。定時制課程。学年制/単位制は資料に明記なし。' },
+  { no: 369, prefecture: '兵庫県', municipality: '神戸市長田区', name: '兵庫県立長田商業高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~nagata-chs/', note: '商業科。定時制課程。学年制/単位制は資料に明記なし。' },
+  { no: 370, prefecture: '兵庫県', municipality: 'たつの市', name: '兵庫県立龍野北高等学校', publicPrivate: '公立', operator: '兵庫県教育委員会', officialUrl: 'https://www.hyogo-c.ed.jp/~tatsunokita-hs/', note: '商業科。定時制。学年制/単位制は資料に明記なし。' },
 
   // ===== 三重県（11校） =====
   // 出典: 三重県教育委員会（各校リンク一覧 https://www.pref.mie.lg.jp/SEISHI/HP/p0013700012.htm）、
