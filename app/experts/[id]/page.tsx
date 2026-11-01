@@ -107,6 +107,12 @@ export default async function ExpertProfilePublicPage({
                 )}
               </div>
             </div>
+            {/* 2026-11-01、指名機能を撤去したため、ここから送った質問が必ずこの専門家に
+                届く・回答される保証はない（登録している専門家・先輩保護者が任意で拾って
+                回答するボランティアの仕組みのため）。誤解されないよう一言添える。 */}
+            <div className="muted" style={{ fontSize: 12 }}>
+              質問はどうする先生に送られ、登録している専門家・先輩保護者が任意で回答します（この方が必ず回答するとは限りません）。
+            </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               <Link href={'/ask'} className="btn-secondary" style={{ alignSelf: 'flex-start' }}>
                 どうする先生で質問する
