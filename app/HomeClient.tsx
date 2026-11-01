@@ -12,6 +12,7 @@ import TagChips from '@/components/TagChips';
 import PcSidebar from '@/components/PcSidebar';
 import TodayQuestionTeaser from '@/components/TodayQuestionTeaser';
 import NewsTeaser from '@/components/NewsTeaser';
+import MimamoriShindanTeaser from '@/components/MimamoriShindanTeaser';
 import FeaturedGakkoRanking from '@/components/FeaturedGakkoRanking';
 import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
 import { CATS } from '@/lib/categories';
@@ -329,6 +330,11 @@ export default function HomeClient({
                 PcSidebar側には別途置いていない）。ニュースが1件もないうちは
                 NewsTeaser内部でnullを返し、何も表示されない。 */}
             {showExtras && <NewsTeaser />}
+
+            {/* 拡散をメインに置いた「見守り力タイプ診断」への誘導バナー（2026-11-01追加）。
+                ニュースバナーの直下、専門家一覧の上に置く。PC・モバイル両方で同じ位置に
+                出す（NewsTeaserと同じ理由でPcSidebar側には別途置いていない）。 */}
+            {showExtras && <MimamoriShindanTeaser />}
 
             {/* 「専門家一覧」。PC（960px以上）では右コラム（PcSidebar内）に同じものが
                 出るため、ここはモバイル専用（2026-10-18、home-experts-mobileをCSS側で
