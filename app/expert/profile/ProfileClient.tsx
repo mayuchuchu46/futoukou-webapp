@@ -152,6 +152,8 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
           />
           <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
             MOSHやストアカなど、ご自身で予約・決済ページをお持ちの場合はそのURLを入れてください。プロフィールページに「オンラインで相談する」ボタンが表示されます（顔出し・顔出しなし・チャットのみは当日の通話内で選べます）。未入力の場合、このボタンは表示されません。
+            <br />
+            どうする先生での質問回答は無料ですが、個別に有料で対応されたい場合（テキストでの個別相談も含む）は、このリンク先でご自身で料金・やり取りを設定してください。予約・決済・返信期限等はすべてそちらのサービス上で完結し、どうする先生は関与しません。
           </div>
           {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
           {saved && <div style={{ color: 'var(--main)', fontSize: 13 }}>保存しました</div>}

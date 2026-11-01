@@ -125,7 +125,7 @@ export default async function SenpaiProfilePublicPage({
                   className="btn-secondary"
                   style={{ alignSelf: 'flex-start' }}
                 >
-                  オンラインで相談する
+                  オンラインで相談する（内容・料金は本人設定）
                 </a>
               )}
             </div>
