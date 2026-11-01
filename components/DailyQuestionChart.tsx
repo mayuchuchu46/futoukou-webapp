@@ -1,6 +1,10 @@
-// 「みんなのデータ」（/today）の集計グラフ。以前は選択肢ごとに同じ色の細い横棒＋
-// パーセント表示だけで地味だったため、選択肢ごとに色分けするデザインに変更した
-// （2026-11-02、「グラフが面白くない」「見せ方」との指摘を受けて）。
+// 「みんなのデータ」（/today）の集計グラフ。
+// 2026-11-02、「グラフが面白くない」「見せ方」との指摘を受けて選択肢ごとの色分け版に
+// 更新したが、それでも「いけてない」とのことで、3案（ドーナツ／大きな数字を主役に
+// した版／人型ピクトグラム）のモックアップを見てもらい、「B（大きな数字を主役にして、
+// 内訳バーは補足として小さく）」を選んでもらった。このコンポーネントはその案で
+// 実装している：一番多い回答の％を大きく見せ、各選択肢の内訳は細い棒＋件数だけの
+// 控えめな表示にする。
 // 「今日の質問」カードと「過去の質問」一覧の両方で同じ集計表示を使っていた（コピペで
 // 重複していた）ため、ここに共通化した。sizeで文字・バーの太さだけ変える。
 const CHOICE_COLORS = [
@@ -29,89 +33,83 @@ export default function DailyQuestionChart({
   size?: 'normal' | 'compact';
 }) {
   const compact = size === 'compact';
-  // 件数が一番多い選択肢を見つけて、ひとことで要約できるようにする
-  // （「一番多い回答を大きく見せる」案も検討したが、質問によっては選択肢が多く
-  // 画面が間延びするため、まずは全選択肢を色分けしたうえで、一番多い回答だけ
-  // 見出しで示す形にした）。
   const top = choices.reduce<{ choice: ChartChoice; count: number } | null>((best, c) => {
     const count = aggregate.counts[c.value] || 0;
     if (!best || count > best.count) return { choice: c, count };
     return best;
   }, null);
   const topPct = top && aggregate.total > 0 ? Math.round((top.count / aggregate.total) * 100) : 0;
+  const topColor = top ? CHOICE_COLORS[choices.indexOf(top.choice) % CHOICE_COLORS.length] : null;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: compact ? 6 : 8, width: '100%' }}>
       <div className="muted" style={{ fontSize: compact ? 11 : 12 }}>これまでの回答：{aggregate.total}件</div>
 
-      {/* 一番多い回答を見出しとして見せる（2026-11-02追加）。総数が少なすぎる段階だと
-          「1件中1件で100%」のような大げさな表示になってしまうため、3件未満のときは
-          出さない。 */}
-      {top && aggregate.total >= 3 && (
+      {/* 一番多い回答を主役として大きく見せる（2026-11-02、モックアップ案Bを採用）。
+          総数が少なすぎる段階だと「1件中1件で100%」のような大げさな表示になって
+          しまうため、3件未満のときは出さない。 */}
+      {top && topColor && aggregate.total >= 3 && (
         <div
           style={{
             display: 'flex',
             alignItems: 'baseline',
-            gap: 6,
-            background: CHOICE_COLORS[choices.indexOf(top.choice) % CHOICE_COLORS.length].bg,
-            borderRadius: 8,
-            padding: compact ? '6px 10px' : '8px 12px',
+            gap: 8,
+            background: topColor.bg,
+            borderRadius: 12,
+            padding: compact ? '10px 14px' : '14px 16px',
           }}
         >
-          <span style={{ fontSize: compact ? 20 : 26, fontWeight: 800, color: CHOICE_COLORS[choices.indexOf(top.choice) % CHOICE_COLORS.length].text, lineHeight: 1 }}>
+          <span style={{ fontSize: compact ? 26 : 36, fontWeight: 800, color: topColor.text, lineHeight: 1 }}>
             {topPct}%
           </span>
-          <span style={{ fontSize: compact ? 11 : 12, fontWeight: 700 }}>
+          <span style={{ fontSize: compact ? 11 : 13, fontWeight: 700 }}>
             が「{top.choice.label}」と回答
           </span>
         </div>
       )}
 
-      {choices.map((c, i) => {
-        const count = aggregate.counts[c.value] || 0;
-        const pct = aggregate.total > 0 ? Math.round((count / aggregate.total) * 100) : 0;
-        const isMine = c.value === myAnswer;
-        const color = CHOICE_COLORS[i % CHOICE_COLORS.length];
-        return (
-          <div key={c.value} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: compact ? 11 : 12 }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontWeight: isMine ? 700 : 400 }}>
-                <span
-                  aria-hidden="true"
-                  style={{ width: 9, height: 9, borderRadius: '50%', background: color.bar, flex: '0 0 auto' }}
-                />
-                {c.label}
-                {isMine && (
-                  <span
-                    style={{
-                      fontSize: compact ? 9 : 10,
-                      fontWeight: 700,
-                      color: color.text,
-                      background: color.bg,
-                      borderRadius: 999,
-                      padding: '1px 7px',
-                    }}
-                  >
-                    あなた
-                  </span>
-                )}
-              </span>
-              <span className="muted" style={{ fontWeight: isMine ? 700 : 400 }}>{count}件（{pct}%）</span>
-            </div>
-            <div style={{ background: color.bg, borderRadius: 999, height: compact ? 8 : 11, overflow: 'hidden' }}>
-              <div
+      {/* 内訳は、上の大きな数字を補足する細いバーだけに留める（色分けは残すが、
+          ラベル・バーともに控えめなサイズにする）。 */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: compact ? 4 : 6 }}>
+        {choices.map((c, i) => {
+          const count = aggregate.counts[c.value] || 0;
+          const pct = aggregate.total > 0 ? Math.round((count / aggregate.total) * 100) : 0;
+          const isMine = c.value === myAnswer;
+          const color = CHOICE_COLORS[i % CHOICE_COLORS.length];
+          return (
+            <div key={c.value} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: compact ? 11 : 12 }}>
+              <span
                 style={{
-                  width: `${pct}%`,
-                  height: '100%',
-                  background: color.bar,
-                  borderRadius: 999,
-                  transition: 'width 0.3s ease',
+                  width: compact ? 76 : 92,
+                  flex: '0 0 auto',
+                  fontWeight: isMine ? 700 : 400,
+                  color: isMine ? 'var(--text)' : 'var(--muted)',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
-              />
+                title={c.label}
+              >
+                {c.label}
+                {isMine && <span style={{ color: 'var(--muted)', fontWeight: 400 }}>（あなた）</span>}
+              </span>
+              <span style={{ flex: 1, height: compact ? 6 : 7, borderRadius: 999, background: 'var(--border)', overflow: 'hidden' }}>
+                <span
+                  style={{
+                    display: 'block',
+                    width: `${pct}%`,
+                    height: '100%',
+                    borderRadius: 999,
+                    background: color.bar,
+                    transition: 'width 0.3s ease',
+                  }}
+                />
+              </span>
+              <span className="muted" style={{ width: compact ? 44 : 50, flex: '0 0 auto', textAlign: 'right' }}>{count}件</span>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
