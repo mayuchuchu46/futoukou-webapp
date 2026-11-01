@@ -48,7 +48,7 @@ export default function MimamoriShindanPage() {
             src="/assets/shindan/mimamori-banner.jpg"
             alt={TITLE}
             width={1600}
-            height={533}
+            height={534}
             style={{ width: '100%', height: 'auto', borderRadius: 12, marginBottom: 14 }}
           />
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
