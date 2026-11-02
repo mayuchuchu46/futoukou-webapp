@@ -514,8 +514,8 @@ export default function HomeClient({
             <div className="viewtabs-card">
             <div className="viewtabs" ref={viewTabsRef}>
               {([
-                { key: 'new', label: '新着順' },
-                { key: 'views', label: '閲覧数順' },
+                { key: 'new', label: '新着' },
+                { key: 'views', label: '閲覧' },
                 { key: 'senpai', label: '経験者回答' },
                 { key: 'expert', label: '専門家回答' },
               ] as const).map((opt) => (

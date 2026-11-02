@@ -635,7 +635,7 @@ h2.pagetitle {
 .viewtabs-tab {
   flex: 0 0 auto;
   white-space: nowrap;
-  padding: 12px 14px 11px;
+  padding: 12px 18px 11px;
   font-size: 13px;
   font-weight: 700;
   color: var(--muted);
