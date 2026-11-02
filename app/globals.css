@@ -629,73 +629,38 @@ h2.pagetitle {
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   border-bottom: 1px solid var(--border);
-  padding: 10px 10px;
-  background: var(--bg);
+  padding: 10px 12px;
 }
 .viewtabs::-webkit-scrollbar { display: none; }
 .viewtabs-tab {
   flex: 0 0 auto;
   white-space: nowrap;
-  padding: 8px 16px;
+  padding: 7px 14px;
   font-size: 13px;
   font-weight: 700;
   color: var(--muted);
-  background: var(--card);
-  border: 1.5px solid var(--border);
+  background: var(--bg);
+  border: none;
   border-radius: 100px;
-  box-shadow: 0 2px 0 var(--border);
   cursor: pointer;
-  transition: transform 0.08s, box-shadow 0.08s;
+  transition: background 0.12s, color 0.12s;
 }
 .viewtabs-tab:hover {
   background: var(--sub);
-  border-color: var(--main);
   color: var(--main);
-}
-.viewtabs-tab:active {
-  transform: translateY(2px);
-  box-shadow: none;
 }
 .viewtabs-tab.active {
   color: #fff;
   background: var(--main);
-  border-color: var(--main);
-  box-shadow: 0 2px 0 #2a5e4a;
-}
-.viewtabs-tab.active:active {
-  transform: translateY(2px);
-  box-shadow: none;
 }
 /* 経験者回答：未選択時も色あり */
-.viewtabs-tab--senpai {
-  color: var(--moss-text);
-  border-color: var(--moss);
-}
-.viewtabs-tab--senpai:hover {
-  background: var(--moss-bg);
-  color: var(--moss-text);
-  border-color: var(--moss-text);
-}
-.viewtabs-tab--senpai.active {
-  background: var(--moss-text);
-  border-color: var(--moss-text);
-  box-shadow: 0 2px 0 #3a4a18;
-}
+.viewtabs-tab--senpai { color: var(--moss-text); }
+.viewtabs-tab--senpai:hover { background: var(--moss-bg); color: var(--moss-text); }
+.viewtabs-tab--senpai.active { background: var(--moss-text); color: #fff; }
 /* 専門家回答：未選択時も色あり */
-.viewtabs-tab--expert {
-  color: var(--orange-text);
-  border-color: var(--orange);
-}
-.viewtabs-tab--expert:hover {
-  background: var(--orange-bg);
-  color: var(--orange-text);
-  border-color: var(--orange-text);
-}
-.viewtabs-tab--expert.active {
-  background: var(--orange-text);
-  border-color: var(--orange-text);
-  box-shadow: 0 2px 0 #6b3020;
-}
+.viewtabs-tab--expert { color: var(--orange-text); }
+.viewtabs-tab--expert:hover { background: var(--orange-bg); color: var(--orange-text); }
+.viewtabs-tab--expert.active { background: var(--orange-text); color: #fff; }
 .home-list--tabbed { padding: 12px 14px 4px; }
 
 /* ホーム画面TOPに置く「専門家一覧」の導線。/expertsページの簡易版で、
