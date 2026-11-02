@@ -559,7 +559,17 @@ export default async function GakkoMatomePage({
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <Link href="/" className="backlink" style={{ margin: '14px 0' }}>‹ もどる</Link>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '14px 0' }}>
+            <Link href="/" className="backlink" style={{ margin: 0 }}>‹ もどる</Link>
+            {/* 学校詳細ページで保存したお気に入りの一覧への入口（2026-10-22追加）。以前は
+                「条件から学校を探す」等と並ぶフルサイズのカードだったが、利用頻度の低い
+                補助的な導線がメインの導線と同格の幅を取っていたため、小さなテキスト
+                リンクに縮小してこの位置に移した（2026-11-03、「この位置でよいの？幅
+                取りすぎてるような」との指摘を受けて対応）。 */}
+            <Link href="/gakko/favorites" className="muted" style={{ fontSize: 13, textDecoration: 'underline', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span aria-hidden>★</span>お気に入り
+            </Link>
+          </div>
 
           {/* 学び場トップのイメージバナー（2026-11-02追加、ユーザー提供画像。
               同日、差し替え依頼を受けv2→v3に更新）。/gakko各タブのheroBanner
@@ -581,20 +591,6 @@ export default async function GakkoMatomePage({
               都道府県を1つ選ぶと、学びの多様化学校・フリースクール・通信制高校・助成金制度などをまとめて確認できます。1種類だけ詳しく見たいときは<Link href="/gakko" style={{ textDecoration: 'underline' }}>学校種を選んで探すページ</Link>へ。
             </div>
           </div>
-
-          {/* 学校詳細ページで保存したお気に入りの一覧への入口（2026-10-22追加）。
-              各詳細ページ（/gakko/school等）の保存ボタンで貯めたものをここから見返せる。 */}
-          <Link
-            href="/gakko/favorites"
-            className="card"
-            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span aria-hidden style={{ fontSize: 16 }}>★</span>
-              保存したお気に入りを見る
-            </span>
-            <span className="muted">›</span>
-          </Link>
 
           {/* 学年・通う頻度などの条件で絞り込むページへの入口（2026-10-30追加）。
               トップの入口を1つにまとめたため、条件で探したい人はここから入る。 */}
