@@ -460,12 +460,13 @@ export default async function GakkoMatomePage({
         <div className="page-main">
           <Link href="/" className="backlink" style={{ margin: '14px 0' }}>‹ もどる</Link>
 
-          {/* 学び場トップのイメージバナー（2026-11-02追加、ユーザー提供画像）。
-              /gakko各タブのheroBanner（PAGE_CONTENT参照）と同じ扱いで、
-              カード類の前にページ冒頭の目印として表示する。 */}
+          {/* 学び場トップのイメージバナー（2026-11-02追加、ユーザー提供画像。
+              同日、差し替え依頼を受けv2に更新）。/gakko各タブのheroBanner
+              （PAGE_CONTENT参照）と同じ扱いで、カード類の前にページ冒頭の目印として
+              表示する。 */}
           <img
-            src="/assets/matome_hero_banner_v1.jpg"
-            alt="学校以外の学びの場・居場所を探そう"
+            src="/assets/matome_hero_banner_v2.jpg"
+            alt="学校以外の学びの選択肢（フリースクール・通信制高校・学びの多様化学校・オルタナティブスクール）"
             style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16, margin: '0 0 12px' }}
           />
 
