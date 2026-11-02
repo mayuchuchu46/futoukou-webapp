@@ -237,6 +237,15 @@ export const FREESCHOOL_SUBSIDIES: FreeschoolSubsidy[] = [
   // 関東・中部・関西・九州沖縄で新たに確認できたもののみ追加）
   {
     prefecture: '東京都',
+    entity: '足立区',
+    entityLevel: 'city',
+    name: '足立区フリースクール等利用者支援助成金',
+    summary: '足立区内に住所を有する小中学生の保護者向け。東京都「フリースクール等利用者支援事業」の交付決定を受けていることが条件で、都の助成金を引いた自己負担額（上限2万円）をさらに区が上乗せ助成。都の助成（月額上限2万円）と合わせて最大月4万円。',
+    sourceUrl: 'https://www.city.adachi.tokyo.jp/kyoikushido/freeschool-josei.html',
+    note: '東京都の助成金（既存掲載）への上乗せ制度のため、都の交付決定が前提条件。入会金・施設維持費・教材費は対象外。',
+  },
+  {
+    prefecture: '東京都',
     entity: '荒川区',
     entityLevel: 'city',
     name: '荒川区フリースクール等利用児童生徒支援補助金',
