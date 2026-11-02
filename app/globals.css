@@ -616,31 +616,34 @@ h2.pagetitle {
    .home-listと背景・余白を続けて「地続き」に見えるようにしている。 */
 .viewtabs {
   display: flex;
-  gap: 2px;
+  gap: 6px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
-  border-bottom: 1px solid var(--border);
+  padding: 10px 0 10px;
   margin: 2px 0 0;
 }
 .viewtabs::-webkit-scrollbar { display: none; }
 .viewtabs-tab {
   flex: 0 0 auto;
   white-space: nowrap;
-  padding: 10px 13px 9px;
+  padding: 7px 14px;
   font-size: 12.5px;
   font-weight: 700;
   color: var(--muted);
-  background: none;
+  background: var(--border);
   border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  border-radius: 100px;
 }
-.viewtabs-tab.active { color: var(--main); border-bottom-color: var(--main); }
-/* 「専門家回答」タブだけは、専門家関連の案内（.expertbanner・ロック中バッジ等）で
-   使っているオレンジに揃え、専門家コンテンツとのつながりが見た目でもわかるように
-   している。 */
-.viewtabs-tab--expert.active { color: var(--orange-text); border-bottom-color: var(--orange); }
+.viewtabs-tab.active {
+  color: #fff;
+  background: var(--main);
+}
+/* 「専門家回答」タブは選択時にオレンジ背景にして専門家コンテンツとのつながりを示す。 */
+.viewtabs-tab--expert.active {
+  color: #fff;
+  background: var(--orange);
+}
 /* タブバーのすぐ下に一覧が続くことを示すため、一覧側の最初の余白を少し削って
    タブと一覧が地続きに見えるようにする。 */
 .home-list--tabbed { margin-top: 2px; }
