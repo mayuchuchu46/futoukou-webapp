@@ -614,39 +614,46 @@ h2.pagetitle {
    変更した。チップ（丸ピル・背景で選択状態を示す）ではなく、下線
    インジケーターで選択状態を示す実際のタブらしい見た目にし、すぐ下の
    .home-listと背景・余白を続けて「地続き」に見えるようにしている。 */
+/* タブ＋一覧を1つのカードで包むラッパー。「タブで中身を切り替えている」関係が
+   見た目でわかるよう、タブバーと一覧を同じカード内に収める。 */
+.viewtabs-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
 .viewtabs {
   display: flex;
-  gap: 6px;
+  gap: 0;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
-  padding: 10px 0 10px;
-  margin: 2px 0 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 6px;
 }
 .viewtabs::-webkit-scrollbar { display: none; }
 .viewtabs-tab {
   flex: 0 0 auto;
   white-space: nowrap;
-  padding: 7px 14px;
-  font-size: 12.5px;
+  padding: 12px 14px 11px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--muted);
-  background: var(--border);
+  background: none;
   border: none;
-  border-radius: 100px;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1px;
 }
 .viewtabs-tab.active {
-  color: #fff;
-  background: var(--main);
+  color: var(--main);
+  border-bottom-color: var(--main);
 }
-/* 「専門家回答」タブは選択時にオレンジ背景にして専門家コンテンツとのつながりを示す。 */
+/* 「専門家回答」タブだけはオレンジ系で専門家コンテンツとのつながりを示す。 */
 .viewtabs-tab--expert.active {
-  color: #fff;
-  background: var(--orange);
+  color: var(--orange-text);
+  border-bottom-color: var(--orange);
 }
-/* タブバーのすぐ下に一覧が続くことを示すため、一覧側の最初の余白を少し削って
-   タブと一覧が地続きに見えるようにする。 */
-.home-list--tabbed { margin-top: 2px; }
+.home-list--tabbed { padding: 12px 14px 4px; }
 
 /* ホーム画面TOPに置く「専門家一覧」の導線。/expertsページの簡易版で、
    本人確認済みの専門家を数件（なければ募集中カードを1件）表示する。 */

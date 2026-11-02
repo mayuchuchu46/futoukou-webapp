@@ -511,6 +511,7 @@ export default function HomeClient({
                 見た目も「タブで切り替えている」感が伝わるよう、下線インジケーター付きの
                 タブバーにし、すぐ下の一覧（.home-list）と背景・枠を共有してそのまま
                 地続きになるようにした（.home-list側はapp/globals.css参照）。 */}
+            <div className="viewtabs-card">
             <div className="viewtabs" ref={viewTabsRef}>
               {([
                 { key: 'new', label: '新着順' },
@@ -561,6 +562,7 @@ export default function HomeClient({
                 />
               )}
             </div>
+            </div>{/* /viewtabs-card */}
           </div>
 
           {/* PCではサイド（右カラム）に表示。中身はPcSidebar側で自前取得する
