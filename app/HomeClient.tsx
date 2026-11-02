@@ -72,7 +72,7 @@ const PC_HERO_SLIDES: HeroSlide[] = [
     id: 'pc-ask',
     href: '/ask',
     src: '/assets/home_hero_pc_ask.jpg',
-    alt: 'ひとりで抱え込まないで。不登校の今の悩み、AIが具体的な次の一手を提案します。どうする先生に提案してみる。',
+    alt: '不登校のご家庭に、AI＋専門家から、次の一手を。子どもの状況に合わせて、今できる具体的なアクションをご提案します。どうする先生に相談してみる。',
   },
   {
     id: 'pc-notebook',
