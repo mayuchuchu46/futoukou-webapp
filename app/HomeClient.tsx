@@ -521,7 +521,7 @@ export default function HomeClient({
               ] as const).map((opt) => (
                 <button
                   key={opt.key}
-                  className={`viewtabs-tab ${opt.key === 'expert' ? 'viewtabs-tab--expert' : ''} ${viewTab === opt.key ? 'active' : ''}`}
+                  className={`viewtabs-tab ${opt.key === 'expert' ? 'viewtabs-tab--expert' : ''} ${opt.key === 'senpai' ? 'viewtabs-tab--senpai' : ''} ${viewTab === opt.key ? 'active' : ''}`}
                   onClick={() => setViewTab(opt.key)}
                 >
                   {opt.label}

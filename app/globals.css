@@ -648,7 +648,17 @@ h2.pagetitle {
   color: var(--main);
   border-bottom-color: var(--main);
 }
-/* 「専門家回答」タブだけはオレンジ系で専門家コンテンツとのつながりを示す。 */
+/* 経験者回答・専門家回答は未選択時にも色をつけて目立たせる。 */
+.viewtabs-tab--senpai {
+  color: var(--moss-text);
+}
+.viewtabs-tab--senpai.active {
+  color: var(--moss-text);
+  border-bottom-color: var(--moss);
+}
+.viewtabs-tab--expert {
+  color: var(--orange-text);
+}
 .viewtabs-tab--expert.active {
   color: var(--orange-text);
   border-bottom-color: var(--orange);
