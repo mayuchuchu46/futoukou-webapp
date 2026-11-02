@@ -23,8 +23,20 @@ const AUTOPLAY_MS = 5000;
  *   （止めっぱなしにはしない＝放置されたら気づかれないため）。
  * - スライドが1枚しか無い場合はドット・自動送りを出さず、これまで通り1枚だけ
  *   静的に表示する（将来スライドを減らしても壊れないように）。
+ *
+ * variant（2026-11-03追加）：スマホ用とPC用で、同じ仕組みを使い回しつつ
+ * 表示/非表示の出し分け・見た目の微調整だけCSS側（app/globals.css）で変える
+ * ための区別。PC（960px以上）では、以前は.home-hero-pc-linkという1枚固定の
+ * 静的バナーだったが、「PCも同じようにカルーセルバナーにする」との依頼を受けて
+ * こちらに統一した。
  */
-export default function HomeHeroCarousel({ slides }: { slides: HeroSlide[] }) {
+export default function HomeHeroCarousel({
+  slides,
+  variant = 'mobile',
+}: {
+  slides: HeroSlide[];
+  variant?: 'mobile' | 'pc';
+}) {
   const [index, setIndex] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const touchStartX = useRef<number | null>(null);
@@ -58,7 +70,11 @@ export default function HomeHeroCarousel({ slides }: { slides: HeroSlide[] }) {
   if (slides.length === 0) return null;
 
   return (
-    <div className="home-hero-carousel" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <div
+      className={`home-hero-carousel home-hero-carousel--${variant}`}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <div
         className="home-hero-carousel-track"
         style={{ transform: `translateX(-${index * 100}%)` }}

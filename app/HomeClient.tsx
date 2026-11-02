@@ -56,6 +56,33 @@ const HERO_SLIDES: HeroSlide[] = [
   },
 ];
 
+// PC（960px以上）左カラム上部の自動スライドバナー（2026-11-03追加）。
+// 「PCも同じようにカルーセルバナーにする」との依頼を受けて、以前の1枚固定の
+// 静的バナー（/assets/header_hero_pc.jpg、.home-hero-pc-link）をカルーセルに
+// 置き換えた。1枚目は新しく届いた画像（home_hero_pc_ask.jpg）。2・3枚目は
+// まだ届いていないため、暫定的に同じ画像で埋めている（画像が届き次第ここを
+// 差し替える。スマホ側HERO_SLIDESと同じ運用）。
+const PC_HERO_SLIDES: HeroSlide[] = [
+  {
+    id: 'pc-ask',
+    href: '/ask',
+    src: '/assets/home_hero_pc_ask.jpg',
+    alt: '不登校のご家庭に、AI＋専門家から、次の一手を。子どもの状況に合わせて、今できる具体的なアクションをご提案します。どうする先生に相談してみる。',
+  },
+  {
+    id: 'pc-ask-2',
+    href: '/ask',
+    src: '/assets/home_hero_pc_ask.jpg',
+    alt: '不登校のご家庭に、AI＋専門家から、次の一手を。子どもの状況に合わせて、今できる具体的なアクションをご提案します。どうする先生に相談してみる。',
+  },
+  {
+    id: 'pc-ask-3',
+    href: '/ask',
+    src: '/assets/home_hero_pc_ask.jpg',
+    alt: '不登校のご家庭に、AI＋専門家から、次の一手を。子どもの状況に合わせて、今できる具体的なアクションをご提案します。どうする先生に相談してみる。',
+  },
+];
+
 type SidebarBanner = {
   enabled: boolean;
   image_url: string;
@@ -320,20 +347,12 @@ export default function HomeClient({
             ページもPCは2コラムに統一して」との指摘を受けて修正）。 */}
         <div className="home-layout home-layout--with-side">
           <div className="home-main-col">
-            {/* PC（960px以上）左カラムの一番上に出すヒーロー画像（2026-10-17追加、
-                ユーザーから提供されたバナー画像を使用）。「左コラムの上でいいんだけど」
-                との指摘を受けて、全ページ共通のヘッダーから、ホームの左カラム上部に
-                移動した（app/globals.cssの.home-hero-pc参照、スマホ幅では非表示）。
-                「バナークリックすると、相談ページに行くようにして、ホバーも入れてね」
-                との指摘を受けて、/askへのリンクにし、ホバー時に少し拡大する
-                （.home-hero-pc-linkのtransition、globals.css参照）。 */}
-            <Link href="/ask" className="home-hero-pc-link">
-              <img
-                src="/assets/header_hero_pc.jpg"
-                alt="不登校のご家庭に、次の一手を一緒に。どうする先生に相談する。"
-                className="home-hero-pc"
-              />
-            </Link>
+            {/* PC（960px以上）左カラムの一番上に出すヒーロー画像（2026-10-17追加）。
+                もとは1枚固定の静的バナーだったが、「PCも同じようにカルーセルバナーに
+                する」との依頼を受けて、スマホと同じHomeHeroCarouselコンポーネントを
+                variant="pc"で使う形に変更した（2026-11-03）。スマホ幅では
+                .home-hero-carousel--pc側（globals.css）で非表示にする。 */}
+            <HomeHeroCarousel slides={PC_HERO_SLIDES} variant="pc" />
 
             {/* 「注目の学び場」ランキング（2026-10-29追加）。「よく読まれている相談」より
                 上、ホーム最上部のランキングとして置く（「トップに」との要望）。

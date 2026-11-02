@@ -469,29 +469,11 @@ h2.pagetitle {
   margin-top: 1px;
 }
 
-/* PC（960px以上）のホーム、左コラム（.home-main-col）の一番上に出すヒーロー画像
-   （2026-10-17追加）。「左コラムの上でいいんだけど」との指摘を受けて、ヘッダー
-   （全ページ共通・全幅）から、ホームの左カラム上部（ホームのみ・サイドバーと
-   並ぶ幅）に移動した。横長のバナー画像なので、スマホ幅では場所を取りすぎるため
-   出さない。 */
-.home-hero-pc-link { display: none; }
-.home-hero-pc {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 16px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-@media (min-width: 960px) {
-  .home-hero-pc-link { display: block; }
-  /* クリックできることが伝わるよう、ホバー時に少し拡大＋影を付ける
-     （2026-10-17、「バナークリックすると、相談ページに行くようにして、ホバーも
-     入れてね」との要望）。 */
-  .home-hero-pc-link:hover .home-hero-pc {
-    transform: scale(1.01);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-  }
-}
+/* PC（960px以上）のホーム、左コラム（.home-main-col）の一番上に出していたヒーロー
+   画像（2026-10-17追加、1枚固定の静的バナー）は、2026-11-03に下のHomeHeroCarousel
+   （variant="pc"）へ置き換えた。「PCも同じようにカルーセルバナーにする」との依頼を
+   受けたもので、.home-hero-pc-link／.home-hero-pcの旧ルール自体は削除済み
+   （PC用の見た目調整は.home-hero-carousel--pc側にまとめている）。 */
 /* ホーム画面トップの「相談する」CTAカード。チャッピー（ChatGPT）に描いてもらった
    バナー画像をそのまま1枚で表示する。「.card home-cta」の2クラス指定だが、.cardの
    定義がこのファイルの下の方にあり同じ詳細度のため後勝ちで上書きされてしまう不具合が
@@ -500,8 +482,10 @@ h2.pagetitle {
    0にして画像をカード全体に敷き詰めている。
    一度スマホ含め全撤去したが、「はずして」の指摘はPC（右コラムに「相談する」ボタンを
    置く方）の話で、スマホ側は変えなくてよかったとのことで、スマホ分のみ復活させた
-   （2026-10-15）。PCでは引き続き下の@media内の.home-cta { display: none; }で
-   非表示にする。 */
+   （2026-10-15）。PCでは引き続き下の@media内で.home-hero-carousel--mobile（この
+   カードを含む外枠）ごと非表示にする（2026-11-03、PC側もカルーセル化したのに
+   合わせて、.card.home-cta単体への一括display:noneはやめた。スライドが
+   .card.home-ctaクラスをPC版カルーセルとも共有しているため）。 */
 .card.home-cta {
   padding: 0;
   overflow: hidden;
@@ -520,6 +504,13 @@ h2.pagetitle {
   overflow: hidden;
   margin: 0 0 2px;
   border-radius: 14px;
+}
+/* PC版（variant="pc"）は、モバイル幅ではそもそも場所を取りすぎるため出さない
+   （960px以上の@media側で.home-hero-carousel--pc { display: block; }に
+   上書きする）。角丸も旧.home-hero-pc（16px）に合わせて少し大きくする。 */
+.home-hero-carousel--pc {
+  display: none;
+  border-radius: 16px;
 }
 .home-hero-carousel-track {
   display: flex;
@@ -880,19 +871,25 @@ h2.pagetitle {
      .home-mimamori-side）に出すので、本流に出しているモバイル用の方は隠す
      （2026-11-01）。 */
   .home-mimamori-mobile { display: none; }
-  /* ホームCTAバナー（チャッピーのバナー画像）は、PC（960px以上）ではカードごと
-     非表示にする。「相談する」への導線はPCサイドの.sidebar-ask-btn-pinkでカバーする
-     （2026-10-15）。
-     2026-10-16追記：.home-cta単体（詳細度0,1,0）だと、このファイル下方にある
-     .card { display: flex; }（同じ詳細度0,1,0、メディアクエリ無し）の方が
-     カスケード順で後勝ちしてしまい、PCで実際には非表示になっていなかった
-     不具合が発覚（「PCにバナーが出ている」との報告で判明）。.card.home-cta
-     （詳細度0,2,0）にして確実に上書きされるようにした。
-     2026-11-03追記：カルーセル化に伴い、外側の.home-hero-carousel自体も
-     非表示にする（.card.home-ctaだけ消すと、空のカルーセル枠とドットが
-     PCに残ってしまうため）。 */
-  .card.home-cta { display: none; }
-  .home-hero-carousel { display: none; }
+  /* スマホ用カルーセル（variant="mobile"）は、PC（960px以上）では非表示にする。
+     「相談する」への導線はPCサイドの.sidebar-ask-btn-pinkでカバーする
+     （2026-10-15）。PC版のカルーセル（variant="pc"、.home-main-col先頭）は
+     別物なので、ここでは.home-hero-carousel--mobileだけを対象にする
+     （2026-11-03、PCもカルーセル化したのに合わせて.card.home-ctaへの一括
+     display:noneをやめた。スライドが.card.home-ctaクラスを共有しているため、
+     それだとPC版カルーセルの中身まで消えてしまう）。 */
+  .home-hero-carousel--mobile { display: none; }
+  /* PC版カルーセルはここで初めて表示する（デフォルトでは下の非メディアクエリ側で
+     display:noneにしてある）。クリックできることが伝わるよう、ホバー時に少し
+     拡大＋影を付ける（旧.home-hero-pc-linkの挙動を踏襲）。 */
+  .home-hero-carousel--pc {
+    display: block;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .home-hero-carousel--pc:hover {
+    transform: scale(1.01);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
 
   /* サイドのタグ一覧は横スクロールではなく、折り返して並べる
      （ホームのサイド・他ページのPcSidebarどちらでも使うため、
