@@ -59,27 +59,32 @@ const HERO_SLIDES: HeroSlide[] = [
 // PC（960px以上）左カラム上部の自動スライドバナー（2026-11-03追加）。
 // 「PCも同じようにカルーセルバナーにする」との依頼を受けて、以前の1枚固定の
 // 静的バナー（/assets/header_hero_pc.jpg、.home-hero-pc-link）をカルーセルに
-// 置き換えた。1枚目は新しく届いた画像（home_hero_pc_ask.jpg）。2・3枚目は
-// まだ届いていないため、暫定的に同じ画像で埋めている（画像が届き次第ここを
-// 差し替える。スマホ側HERO_SLIDESと同じ運用）。
+// 置き換えた。4枚：相談する→伴走ノート→経験者・専門家募集→学びの場を探す、
+// という順番（2026-11-03、4枚分の画像が揃ったのでまとめて反映）。
 const PC_HERO_SLIDES: HeroSlide[] = [
   {
     id: 'pc-ask',
     href: '/ask',
     src: '/assets/home_hero_pc_ask.jpg',
-    alt: '不登校のご家庭に、AI＋専門家から、次の一手を。子どもの状況に合わせて、今できる具体的なアクションをご提案します。どうする先生に相談してみる。',
+    alt: 'ひとりで抱え込まないで。不登校の今の悩み、AIが具体的な次の一手を提案します。どうする先生に提案してみる。',
   },
   {
-    id: 'pc-ask-2',
-    href: '/ask',
-    src: '/assets/home_hero_pc_ask.jpg',
-    alt: '不登校のご家庭に、AI＋専門家から、次の一手を。子どもの状況に合わせて、今できる具体的なアクションをご提案します。どうする先生に相談してみる。',
+    id: 'pc-notebook',
+    href: '/notebook',
+    src: '/assets/home_hero_pc_notebook.jpg',
+    alt: '相談のあとも、ずっとそばで。あなたのペースで気持ちと変化を記録できる伴走ノート。伴走ノートを使ってみる。',
   },
   {
-    id: 'pc-ask-3',
-    href: '/ask',
-    src: '/assets/home_hero_pc_ask.jpg',
-    alt: '不登校のご家庭に、AI＋専門家から、次の一手を。子どもの状況に合わせて、今できる具体的なアクションをご提案します。どうする先生に相談してみる。',
+    id: 'pc-recruit',
+    href: '/recruit',
+    src: '/assets/home_hero_pc_recruit.jpg',
+    alt: 'どうする先生を一緒に育てる。専門家の方・不登校の経験をもつ保護者の方を募集しています！専門家・経験者として参加する。',
+  },
+  {
+    id: 'pc-gakko',
+    href: '/gakko/matome',
+    src: '/assets/home_hero_pc_gakko.jpg',
+    alt: 'お子さんに合う、学びの場を探そう。フリースクール・学びの多様化学校・通信制高校などをまとめて検索。学びの場を探してみる。',
   },
 ];
 
