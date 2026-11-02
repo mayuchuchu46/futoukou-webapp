@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // まとめページの「種類で絞り込む」チップ（2026-10-21追加）。
 //
@@ -42,6 +42,23 @@ export default function MatomeTypeFilter({ sections }: { sections: MatomeSection
 
   const allActive = active.size === sections.length;
 
+  // 種類チップで1種類だけに絞り込んだとき、その中身（<details>）が元々閉じた状態
+  // だと（オンラインフリースクールのセクションは、都道府県による絞り込みが効かず
+  // 常に内容があるため、他の5種類と違って初期状態は閉じている）、絞り込んだのに
+  // もう一度タップして開かないと一覧が見えない二度手間になっていた
+  // （2026-11-02、「オンラインフリースクール選んでもすぐ一覧で出るようにして」
+  // との指摘を受けて対応）。1種類だけに絞り込んだ直後は、そのセクション内の
+  // <details>を強制的に開く。
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  useEffect(() => {
+    if (active.size !== 1) return;
+    const onlyKey = Array.from(active)[0];
+    const el = sectionRefs.current[onlyKey];
+    el?.querySelectorAll('details').forEach((d) => {
+      d.open = true;
+    });
+  }, [active]);
+
   return (
     <>
       <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
@@ -69,7 +86,13 @@ export default function MatomeTypeFilter({ sections }: { sections: MatomeSection
       </div>
 
       {sections.map((s) => (
-        <div key={s.key} style={{ display: active.has(s.key) ? 'contents' : 'none' }}>
+        <div
+          key={s.key}
+          ref={(el) => {
+            sectionRefs.current[s.key] = el;
+          }}
+          style={{ display: active.has(s.key) ? 'contents' : 'none' }}
+        >
           {s.node}
         </div>
       ))}
