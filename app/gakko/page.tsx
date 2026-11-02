@@ -206,9 +206,9 @@ function gakkoCount(pref: string, schoolType: SchoolTypeFilter | null = null) {
 export default async function GakkoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ pref?: string; type?: string; school?: string }>;
+  searchParams: Promise<{ pref?: string; type?: string; school?: string; city?: string }>;
 }) {
-  const { pref, type: rawType, school: rawSchoolType } = await searchParams;
+  const { pref, type: rawType, school: rawSchoolType, city } = await searchParams;
   // 2026-10-18: オンラインフリースクールが21件まで増え、フリースクール（地域）タブに
   // 常に埋め込むと情報量が多すぎたため、「オンラインフリースクール」を独立した
   // 3つめのタブに分離した。
@@ -579,7 +579,7 @@ export default async function GakkoPage({
           {/* 助成金・支援制度タブ（2026-11-01追加）。それまで説明文のカードしかなく、
               都道府県を選んでも一覧を見る手段が無かった（学び場UI/UX見直しの指摘）。
               他タブと同じ都道府県選択＋一覧パターンに統合。 */}
-          {type === 'josei' && <JoseiExplorer initialPref={selected} />}
+          {type === 'josei' && <JoseiExplorer initialPref={selected} initialCity={city ?? null} />}
 
           {/* オルタナティブスクール一覧。データ数が22校と少なく都道府県絞り込みの
               需要が低いため、メソッド別グループに分けて静的に表示する（2026-10-29追加）。 */}

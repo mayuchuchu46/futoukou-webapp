@@ -16,24 +16,44 @@ import { notFoundText } from '@/lib/emptyStateText';
 // のみ）。助成金データを20件→35件に拡充した直後、「反映された感じがしない」との
 // 指摘を受けて初めて発覚した構造的な欠落。他タブ（FreeSchoolExplorer.tsx等）と同じ
 // useStateによるその場更新パターンに合わせて新設した。
-export default function JoseiExplorer({ initialPref }: { initialPref: string | null }) {
+export default function JoseiExplorer({ initialPref, initialCity }: { initialPref: string | null; initialCity?: string | null }) {
   const router = useRouter();
   const [pref, setPref] = useState<string | null>(initialPref);
+  // 市区町村フィルター（LocalSchoolsCardからのリンク等でURLに?cityが付いた場合に絞り込む）
+  const [city, setCity] = useState<string | null>(initialCity ?? null);
 
   function selectPref(p: string | null) {
     setPref(p);
+    setCity(null);
     const href = p ? `/gakko?type=josei&pref=${encodeURIComponent(p)}` : '/gakko?type=josei';
+    router.replace(href, { scroll: false });
+  }
+
+  function selectCity(c: string | null) {
+    setCity(c);
+    const href = pref
+      ? c
+        ? `/gakko?type=josei&pref=${encodeURIComponent(pref)}&city=${encodeURIComponent(c)}`
+        : `/gakko?type=josei&pref=${encodeURIComponent(pref)}`
+      : '/gakko?type=josei';
     router.replace(href, { scroll: false });
   }
 
   // 都道府県単位の制度（対象が広い）を先に、市区町村単位の制度をあとに表示する
   // （2026-11-02、「もっと見やすく」との指摘を受けて、badge表示と合わせて整理）。
   // 元のデータ順（安定ソート）は都道府県単位内・市区町村単位内でそのまま維持する。
-  const subsidies = pref
+  // 市区町村フィルターが選択されている場合は、都道府県単位の制度（entityLevel=prefecture）と
+  // 選択した市区町村の制度のみを表示する（2026-11-02追加）。
+  const allSubsidies = pref
     ? [...getFreeschoolSubsidiesByPrefecture(pref)].sort(
         (a, b) => (a.entityLevel === 'city' ? 1 : 0) - (b.entityLevel === 'city' ? 1 : 0)
       )
     : [];
+  const subsidies = city
+    ? allSubsidies.filter((s) => s.entityLevel === 'prefecture' || s.entity === city)
+    : allSubsidies;
+  // 市区町村フィルターとして選べる選択肢（その都道府県の市区町村制度の実施主体一覧）
+  const cityOptions = [...new Set(allSubsidies.filter((s) => s.entityLevel === 'city').map((s) => s.entity))];
 
   return (
     <>
@@ -77,9 +97,36 @@ export default function JoseiExplorer({ initialPref }: { initialPref: string | n
         </div>
       </div>
 
+      {pref && cityOptions.length > 0 && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>市区町村で絞り込む</div>
+          <div className="chip-row chip-row-wrap">
+            <button
+              type="button"
+              onClick={() => selectCity(null)}
+              className={`chip chip-tag${!city ? ' active' : ''}`}
+            >
+              すべて
+            </button>
+            {cityOptions.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => selectCity(c)}
+                className={`chip chip-tag${city === c ? ' active' : ''}`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {pref && (
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>{pref}のフリースクール等利用料助成</div>
+          <div className="answer-label" style={{ fontSize: 14 }}>
+            {city ? `${city}（および${pref}）のフリースクール等利用料助成` : `${pref}のフリースクール等利用料助成`}
+          </div>
           {subsidies.length === 0 ? (
             <div className="muted">
               {notFoundText(pref, 'Web検索で確認できるフリースクール等の利用料助成制度', 'お住まいの市区町村教育委員会に直接お問い合わせください。')}

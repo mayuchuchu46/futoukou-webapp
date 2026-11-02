@@ -75,8 +75,12 @@ export default function LocalSchoolsCard({
         <Link href={`/gakko/matome?pref=${encodeURIComponent(prefecture)}`} className="btn-secondary" style={{ flex: 1 }}>
           {prefecture}の学びの場をもっと見る
         </Link>
-        <Link href={`/gakko?type=josei&pref=${encodeURIComponent(prefecture)}`} className="btn-secondary" style={{ flex: 1 }}>
-          {prefecture}の助成金を見る
+        <Link
+          href={`/gakko?type=josei&pref=${encodeURIComponent(prefecture)}&city=${encodeURIComponent(city)}`}
+          className="btn-secondary"
+          style={{ flex: 1 }}
+        >
+          {city}の助成金を見る
         </Link>
       </div>
     </div>
