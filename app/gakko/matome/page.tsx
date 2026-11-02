@@ -509,22 +509,6 @@ export default async function GakkoMatomePage({
             <span className="muted">›</span>
           </Link>
 
-          {/* /gakko本体（学校種を1つ選んで詳しく絞り込むページ）への逆リンク
-              （2026-11-02追加）。/gakko側からはこのページへのリンクが既にあるが、
-              逆方向が無く「このページと/gakko本体の関係が分からない」との指摘を
-              受けた。 */}
-          <Link
-            href="/gakko"
-            className="card"
-            style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <span>
-              <span style={{ display: 'block', fontWeight: 700 }}>🔍 学校種を選んで探す</span>
-              <span className="muted" style={{ display: 'block', fontSize: 12 }}>学びの多様化学校・フリースクールなど、1種類だけをもっと詳しく絞り込みたいときはこちら</span>
-            </span>
-            <span className="muted">›</span>
-          </Link>
-
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>{selected ? '都道府県を選び直す' : '都道府県から探す'}</div>
             {/* 以前はこの下にPREFECTURES全47件のチップ一覧も並べていたが、プルダウンと
