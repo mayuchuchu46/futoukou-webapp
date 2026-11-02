@@ -122,6 +122,47 @@ export default function SchoolTypeExplorer({
         </div>
       </div>
 
+      {/* 都道府県の選択を結果一覧より先（上）に表示する（2026-11-01、他タブ共通で
+          選ぶ→結果が下に出る順番に変更）。 */}
+      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
+        <select
+          className="input"
+          value={pref || ''}
+          onChange={(e) => selectPref(e.target.value || null)}
+        >
+          <option value="">都道府県を選択…</option>
+          {PREFECTURES.map((p) => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
+        <div className="chip-row chip-row-wrap">
+          {PREFECTURES.map((p) => {
+            const count = allSchools.filter(
+              (s) => s.prefecture === p && (!schoolType || s.schoolType === schoolType)
+            ).length;
+            return (
+              <Link
+                key={p}
+                href={prefHref(p)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  selectPref(p);
+                }}
+                className={`chip chip-tag${pref === p ? ' active' : ''}`}
+                style={{
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                  opacity: count > 0 ? 1 : 0.55,
+                }}
+              >
+                {p}{count > 0 ? `（${count}）` : ''}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
       {pref && (
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>{pref}の学びの多様化学校</div>
@@ -185,49 +226,6 @@ export default function SchoolTypeExplorer({
         </div>
       )}
 
-      {/* 都道府県の絞り込み（2026-10-19、学校種と同じ即時反映の仕組みに統合）。
-          セレクトボックスはクロールされる対象ではないため、単純にローカル状態＋
-          router.replaceで良い。チップはクローラーが個別の都道府県ページを
-          たどれるよう<Link>のhrefを実URLのままにし、人の操作だけpreventDefaultで
-          その場更新に差し替える。 */}
-      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-        <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
-        <select
-          className="input"
-          value={pref || ''}
-          onChange={(e) => selectPref(e.target.value || null)}
-        >
-          <option value="">都道府県を選択…</option>
-          {PREFECTURES.map((p) => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-        </select>
-        <div className="chip-row chip-row-wrap">
-          {PREFECTURES.map((p) => {
-            const count = allSchools.filter(
-              (s) => s.prefecture === p && (!schoolType || s.schoolType === schoolType)
-            ).length;
-            return (
-              <Link
-                key={p}
-                href={prefHref(p)}
-                onClick={(e) => {
-                  e.preventDefault();
-                  selectPref(p);
-                }}
-                className={`chip chip-tag${pref === p ? ' active' : ''}`}
-                style={{
-                  textDecoration: 'none',
-                  display: 'inline-block',
-                  opacity: count > 0 ? 1 : 0.55,
-                }}
-              >
-                {p}{count > 0 ? `（${count}）` : ''}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
     </>
   );
 }
