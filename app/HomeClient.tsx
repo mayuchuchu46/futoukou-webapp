@@ -24,7 +24,7 @@ import { getThemeDisplayLabel } from '@/lib/searchTags';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 
 // 「専門家が回答した相談」はブランディング上「専門家」専用の集計のため、
-// 先輩保護者（経験者）の回答は含めない（2026-11-01、/expertlistの一覧で同じ
+// 経験者の回答は含めない（2026-11-01、/expertlistの一覧で同じ
 // 区別が抜けていたのに合わせて、ここのバナー件数でも修正。「保護者の解答
 // 載ってるね」との指摘を受けて）。
 function isExpertAnswered(item: Consultation) {

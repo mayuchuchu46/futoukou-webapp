@@ -10,7 +10,7 @@ import { expertDisplayName } from '@/lib/expertDisplay';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 import { findSchoolMentionsInBio, resolveSchoolName } from '@/lib/senpaiSchoolMentions';
 
-// 先輩保護者（経験者）の公開プロフィールページ。app/experts/[id]/page.tsx（専門家向け）
+// 経験者の公開プロフィールページ。app/experts/[id]/page.tsx（専門家向け）
 // と同じ構成（2026-10-31、「私の情報トップにだして」との依頼を受けて、トップのカードから
 // 遷移できるプロフィールページとして新規作成）。
 // オンライン通話・チャットリレーの予約・決済は自前で作らず、本人が用意した外部サービス
@@ -83,7 +83,10 @@ export default async function SenpaiProfilePublicPage({
             <div style={{ display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
               <ExpertAvatar photoUrl={senpai.photo_url} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontWeight: 700, fontSize: 16 }}>{senpai.credential}・{senpai.name}</div>
+                {/* senpai.credentialはDB上の識別値（SENPAI_CREDENTIAL）のままなので、
+                    表示文言の「経験者」統一に合わせてここは固定文言で出す
+                    （2026-11-03、「先輩保護者じゃなく経験者に統一して」との指示）。 */}
+                <div style={{ fontWeight: 700, fontSize: 16 }}>経験者・{senpai.name}</div>
                 {senpai.bio && (
                   <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
                     {senpai.bio}
@@ -102,16 +105,16 @@ export default async function SenpaiProfilePublicPage({
                 )}
               </div>
             </div>
-            {/* 2026-11-01、指名機能を撤去したため、ここから送った質問が必ずこの先輩保護者に
-                届く・回答される保証はない（登録している専門家・先輩保護者が任意で拾って
+            {/* 2026-11-01、指名機能を撤去したため、ここから送った質問が必ずこの経験者に
+                届く・回答される保証はない（登録している専門家・経験者が任意で拾って
                 回答するボランティアの仕組みのため）。誤解されないよう一言添える。 */}
             <div className="muted" style={{ fontSize: 12 }}>
-              質問はどうする先生に送られ、登録している専門家・先輩保護者が任意で回答します（この方が必ず回答するとは限りません）。
+              質問はどうする先生に送られ、登録している専門家・経験者が任意で回答します（この方が必ず回答するとは限りません）。
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {/* テキストでの質問（/askの既存フロー）は2026-11-01に恒久的に無料化し、
                   指名機能も撤去して一般の相談フォームへの案内に統一した（2026-10-31、
-                  「この先輩保護者に相談する、の導線は？」との指摘を受けて追加）。 */}
+                  「この経験者に相談する、の導線は？」との指摘を受けて追加）。 */}
               <SenpaiConsultCta />
               {/* オンライン通話・チャットリレーの予約・決済は本人が用意した外部サービス
                   （MOSH等）に任せるため、どうする先生側の金銭のやり取り（volunteerMode）

@@ -77,7 +77,7 @@ function AskPageContent() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [expertAvailable, setExpertAvailable] = useState(false);
-  // 「専門家・先輩保護者からの回答もほしい」チェックボックス（2026-11-01追加）。
+  // 「専門家・経験者からの回答もほしい」チェックボックス（2026-11-01追加）。
   // 以前は専門家への質問を別の相談として送る専用の「専門家に相談する」ボタンが
   // あったが、「専門家が答えたい質問に勝手に答えてくる仕組みにしたい。質問者は
   // 専門家からの回答してほしいボタンを押しておく」との方針を受けて、通常の相談
@@ -336,7 +336,7 @@ function AskPageContent() {
           grade: grade || null,
           gender: gender || null,
           child_id: selectedChildId || null,
-          // 「専門家・先輩保護者からの回答もほしい」チェック（2026-11-01追加）。
+          // 「専門家・経験者からの回答もほしい」チェック（2026-11-01追加）。
           want_expert: wantExpertAnswer,
         }),
         signal: controller.signal,
@@ -514,7 +514,7 @@ function AskPageContent() {
             勝手に答えてくる仕組みにしたい。質問者は専門家からの回答してほしいボタンを
             押しておく」との方針を受けて、質問を送るときにチェックするだけの単一の
             フローに統合した。チェックしても、AIの回答はこれまでどおりすぐに届く。
-            登録している専門家・先輩保護者がこの質問を見て、任意のタイミングで
+            登録している専門家・経験者がこの質問を見て、任意のタイミングで
             追加で回答してくれる（本人確認済みがまだ誰もいない間はチェック自体を
             出さない）。 */}
         {expertAvailable && (
@@ -526,9 +526,9 @@ function AskPageContent() {
               style={{ marginTop: 3 }}
             />
             <span>
-              <span style={{ fontWeight: 700 }}>専門家・先輩保護者にも回答してもらう（無料）</span>
+              <span style={{ fontWeight: 700 }}>専門家・経験者にも回答してもらう（無料）</span>
               <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                登録している専門家・先輩保護者がこの質問を見て、テキストで回答を追加してくれることがあります。回答を読むには会員登録が必要です。
+                登録している専門家・経験者がこの質問を見て、テキストで回答を追加してくれることがあります。回答を読むには会員登録が必要です。
               </div>
               <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>
                 <a href="/experts">どんな専門家が回答していますか？</a>

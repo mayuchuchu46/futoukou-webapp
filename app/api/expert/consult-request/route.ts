@@ -4,7 +4,7 @@ import { sendEmail } from '@/lib/email';
 import { expertDisplayName, answererName } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 
-// 専門家・先輩保護者がオンライン相談リンク（online_consult_url）を未設定の場合に、
+// 専門家・経験者がオンライン相談リンク（online_consult_url）を未設定の場合に、
 // 回答を読んだ利用者が「直接相談をリクエストする」を押すと呼ばれる（2026-11-01追加）。
 // リンクが設定済みならクライアント側でそちらへ直接遷移させるため、ここは呼ばれない
 // （app/result/[id]/ResultClient.tsx参照）。

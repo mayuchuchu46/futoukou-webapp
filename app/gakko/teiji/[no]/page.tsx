@@ -241,7 +241,7 @@ export default async function TeijiSchoolPage({
             <FacilityConsultations name={school.name} label="この学校についての相談" />
           </Suspense>
           <Suspense fallback={null}>
-            <FacilityExperiencedParents name={school.name} label="先輩保護者からこの学校の話を聞く" />
+            <FacilityExperiencedParents name={school.name} label="経験者からこの学校の話を聞く" />
           </Suspense>
 
           <RelatedListingsCard

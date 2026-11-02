@@ -74,7 +74,7 @@ export default async function AboutPage() {
             <strong>AIへの相談（無料）</strong>：今の状況を入力すると、どうする先生が今日からできる次の一手を提案します。登録不要・匿名で利用できます（1日あたりのご利用回数には上限があります）。
           </div>
           <div className="qtext">
-            <strong>専門家・先輩保護者への相談（無料）</strong>：公認心理師など資格を持つ専門家本人、または不登校を経験されたご家庭ご自身（先輩保護者）が、相談文を直接読んで回答します。
+            <strong>専門家・経験者への相談（無料）</strong>：公認心理師など資格を持つ専門家本人、または不登校を経験されたご家庭ご自身（経験者）が、相談文を直接読んで回答します。
           </div>
           <div className="qtext">
             <strong>伴走ノート</strong>：会員登録すると、これまでの相談内容を一つのノートにまとめ、今のお子さんの状況や次にできそうなことを整理します。相談を重ねるほど詳しくなります。
@@ -110,7 +110,7 @@ export default async function AboutPage() {
           <div className="qtext">
             1. 登録不要・匿名のまま「相談する」から今の状況を相談できます。<br />
             2. 会員登録（無料）すると、これまでの相談が「伴走ノート」として整理されるようになります。<br />
-            3. さらに詳しく聞きたいときは、専門家・先輩保護者への質問も利用できます（無料）。
+            3. さらに詳しく聞きたいときは、専門家・経験者への質問も利用できます（無料）。
           </div>
           <Link href="/ask" className="btn-secondary">相談するページへ</Link>
         </div>
@@ -143,7 +143,7 @@ export default async function AboutPage() {
           </div>
         </Link>
 
-        {/* 専門家と先輩保護者（経験者）は入り口を分ける（2026-10-30、
+        {/* 専門家と経験者は入り口を分ける（2026-10-30、
             「保護者と、専門家の入り口とページは別にしたい」との方針を受けて）。 */}
         <Link href="/expert/recruit" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>専門家としてご協力いただける方へ</div>
@@ -156,12 +156,12 @@ export default async function AboutPage() {
         </Link>
 
         <Link href="/senpai/recruit" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>先輩保護者としてご協力いただける方へ</div>
+          <div className="answer-label" style={{ fontSize: 14 }}>経験者としてご協力いただける方へ</div>
           <div className="qtext">
             資格は不要です。不登校を経験されたご家庭ご自身を募集しています。登録後、運営が内容を確認したうえで、ご自身の体験に基づいた相談への回答をお願いします。
           </div>
           <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
-            先輩保護者募集ページへ ›
+            経験者募集ページへ ›
           </div>
         </Link>
         <Link href="/expert/login" className="backlink" style={{ margin: '-10px 0 4px', fontSize: 13 }}>

@@ -254,7 +254,7 @@ export default async function FreeSchoolPage({
             <FacilityConsultations name={school.name} label="この施設についての相談" />
           </Suspense>
           <Suspense fallback={null}>
-            <FacilityExperiencedParents name={school.name} label="先輩保護者からこの学校の話を聞く" />
+            <FacilityExperiencedParents name={school.name} label="経験者からこの学校の話を聞く" />
           </Suspense>
 
           {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との

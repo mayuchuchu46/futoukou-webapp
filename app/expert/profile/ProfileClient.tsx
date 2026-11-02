@@ -203,9 +203,9 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
           )}
         </div>
 
-        {/* 本人確認方式が「オンライン通話で確認」（先輩保護者は常にこちら）の場合、
+        {/* 本人確認方式が「オンライン通話で確認」（経験者は常にこちら）の場合、
             そもそも登録証（資格証明書の画像・PDF）をお預かりしない方式のため、
-            このセクション自体を出さない（2026-10-31、先輩保護者のプロフィール編集
+            このセクション自体を出さない（2026-10-31、経験者のプロフィール編集
             画面に登録証の提出欄が出てしまっていた不具合の指摘を受けて修正）。 */}
         {expert.verification_method !== 'call' && (
           <div className="card" style={{ gap: 12 }}>

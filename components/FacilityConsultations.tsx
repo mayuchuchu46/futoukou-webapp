@@ -47,7 +47,7 @@ export default async function FacilityConsultations({
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%' }}>
         {rows.map((c) => {
           // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、answer列は
-          // 常にAIの回答（誰でも無条件に読める）、expert_answer列が専門家・先輩保護者の
+          // 常にAIの回答（誰でも無条件に読める）、expert_answer列が専門家・経験者の
           // 回答（会員登録しないと読めない）という役割分担になった。以前はここでanswer
           // をそのまま出すと本来ロックされているはずの専門家回答が漏れる不具合があった
           // （2026-10-31、「この質問はボカシで出したい」との指摘を受けて発覚・修正）が、
@@ -71,7 +71,7 @@ export default async function FacilityConsultations({
               )}
               {isExpertAnswered && (
                 <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>
-                  🔒 専門家・先輩保護者の回答あり：{answerFirstLineSnippet(c.expert_answer || '')}（続きは会員登録で読めます）
+                  🔒 専門家・経験者の回答あり：{answerFirstLineSnippet(c.expert_answer || '')}（続きは会員登録で読めます）
                 </div>
               )}
             </Link>

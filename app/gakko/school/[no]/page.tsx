@@ -326,8 +326,8 @@ export default async function GakkoSchoolPage({
             <SchoolConsultations schoolName={school.name} branchName={school.branchName} />
           </Suspense>
 
-          {/* 「先輩保護者からこの学校の話を聞くとかね」との要望を受けて追加
-              （2026-10-30）。本人確認済みの先輩保護者（経験者）の自己紹介文に
+          {/* 「経験者からこの学校の話を聞くとかね」との要望を受けて追加
+              （2026-10-30）。本人確認済みの経験者の自己紹介文に
               この学校名・愛称が含まれていれば表示する。 */}
           <Suspense fallback={null}>
             <SchoolExperiencedParents schoolName={school.name} branchName={school.branchName} />

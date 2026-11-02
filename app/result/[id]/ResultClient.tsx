@@ -15,7 +15,12 @@ import ExpertAvatar from '@/components/ExpertAvatar';
 // カードに変更）。
 function AnswererMiniProfile({ experts }: { experts: NonNullable<Consultation['experts']> }) {
   if (!experts.id) return null;
-  const href = experts.credential === SENPAI_CREDENTIAL ? `/senpai/${experts.id}` : `/experts/${experts.id}`;
+  const isSenpai = experts.credential === SENPAI_CREDENTIAL;
+  const href = isSenpai ? `/senpai/${experts.id}` : `/experts/${experts.id}`;
+  // experts.credentialはDB上の識別値（SENPAI_CREDENTIAL）のままなので、
+  // 表示文言の「経験者」統一に合わせてここだけ固定文言に出し分ける
+  // （2026-11-03、「先輩保護者じゃなく経験者に統一して」との指示）。
+  const credentialLabel = isSenpai ? '経験者' : experts.credential;
   return (
     <Link
       href={href}
@@ -33,7 +38,7 @@ function AnswererMiniProfile({ experts }: { experts: NonNullable<Consultation['e
     >
       <ExpertAvatar photoUrl={experts.photo_url} size={56} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-        <span style={{ fontWeight: 700, fontSize: 15 }}>{experts.credential}・{experts.name}</span>
+        <span style={{ fontWeight: 700, fontSize: 15 }}>{credentialLabel}・{experts.name}</span>
         {experts.bio && (
           <span className="muted qtext-clamp-2" style={{ fontSize: 12 }}>
             {experts.bio}
@@ -45,9 +50,9 @@ function AnswererMiniProfile({ experts }: { experts: NonNullable<Consultation['e
   );
 }
 
-// 専門家・先輩保護者の回答がついた（またはつく予定の）相談の、AI回答の下に出す
+// 専門家・経験者の回答がついた（またはつく予定の）相談の、AI回答の下に出す
 // 追加セクション。
-// 2026-11-01、専門家への質問を「AI回答に加えて、登録している専門家・先輩保護者が
+// 2026-11-01、専門家への質問を「AI回答に加えて、登録している専門家・経験者が
 // 任意で回答してくれる」という単一の相談に統合したのに伴い、Stripe決済確認まわり
 // （session_id・confirming・!item.paid表示）を撤去した。新しい相談は登録と同時に
 // 必ずpaid:trueになるため、決済待ち・未決済の状態は存在しない。
@@ -55,7 +60,7 @@ function AnswererMiniProfile({ experts }: { experts: NonNullable<Consultation['e
 // サーバー側は「会員ではない匿名の訪問者」として見えるべき初期状態（initialItem）を
 // すでにSSR済み。ここではマウント後に本当のviewer_id（本人／会員かどうか）で
 // 再取得し、ロック解除が必要なら表示を差し替える。
-// 回答した専門家・先輩保護者にとっては、回答すること自体が自分のプロフィールへの
+// 回答した専門家・経験者にとっては、回答すること自体が自分のプロフィールへの
 // 露出・集客になる（2026-11-01、「専門家や保護者にとっては、自分のプロフィールに
 // 誘導することが目的」との方針を受けて追加）。オンライン相談リンク（online_consult_url）
 // を設定済みならそこへ直接誘導し、未設定なら「もっと相談したい」の意思表示を記録するだけに
@@ -144,10 +149,10 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
         <>
           <div className="answer-label">
             <img src="/assets/icon_bulb.png" alt="" />
-            専門家・先輩保護者が回答します
+            専門家・経験者が回答します
           </div>
           <div className="muted">
-            登録している専門家・先輩保護者が内容を確認し、テキストで回答します。回答が届くとこのページに表示されます。
+            登録している専門家・経験者が内容を確認し、テキストで回答します。回答が届くとこのページに表示されます。
           </div>
         </>
       )}
@@ -201,14 +206,16 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
         <>
           <div className="answer-label">
             <img src="/assets/icon_bulb.png" alt="" />
-            {item.experts ? `${item.experts.credential}・${item.experts.name}さんの回答` : '専門家の回答'}
+            {item.experts
+              ? `${item.experts.credential === SENPAI_CREDENTIAL ? '経験者' : item.experts.credential}・${item.experts.name}さんの回答`
+              : '専門家の回答'}
           </div>
           <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
             {item.expert_answer}
           </div>
           {/* プロフィールカードは回答テキストのあとに置く（2026-11-01、「プロフィールの
               位置は回答テキストのあとがよくない？」との指摘を受けて、本文より前だった
-              配置から変更）。専門家は/experts/[id]、先輩保護者は/senpai/[id]とページが
+              配置から変更）。専門家は/experts/[id]、経験者は/senpai/[id]とページが
               分かれているため、credentialで出し分ける（AnswererMiniProfile内で判定）。 */}
           {item.experts && <AnswererMiniProfile experts={item.experts} />}
           {item.experts?.id && (
@@ -218,7 +225,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
               onlineConsultUrl={item.experts.online_consult_url}
             />
           )}
-          {/* 先輩保護者の回答は、あくまで一個人の経験・感想であることを明示する免責
+          {/* 経験者の回答は、あくまで一個人の経験・感想であることを明示する免責
               （2026-10-31、「あくまで個人の感想であるっていう免責もかいておきたいね」
               「この保護者の回答のところに」との指摘を受けて追加）。 */}
           {item.experts?.credential === SENPAI_CREDENTIAL && (

@@ -116,7 +116,7 @@ async function getVerifiedExperts() {
     .from('experts')
     .select('id, name, display_name, credential, bio, photo_url')
     .eq('verified', true)
-    // 先輩保護者（経験者）は別枠のため、専門家向けのこのteaserには出さない
+    // 経験者は別枠のため、専門家向けのこのteaserには出さない
     // （2026-10-31、専門家一覧への混在を受けて横展開）。
     .neq('credential', SENPAI_CREDENTIAL)
     .order('created_at', { ascending: true })
@@ -126,7 +126,7 @@ async function getVerifiedExperts() {
   return (data || []).map((e) => ({ ...e, name: expertDisplayName(e) }));
 }
 
-// 本人確認済みの先輩保護者（経験者）も、専門家とは別枠でトップに出す
+// 本人確認済みの経験者も、専門家とは別枠でトップに出す
 // （2026-10-31、「私の情報トップにだして」との依頼を受けて追加）。
 async function getVerifiedSenpai() {
   'use cache';

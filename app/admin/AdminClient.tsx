@@ -13,7 +13,7 @@ type UnverifiedExpert = {
   license_doc_path: string | null;
   verification_method?: 'upload' | 'call'; // 2026-10-30追加
   specialty_categories?: string[]; // 2026-10-30追加
-  experienced_school_names?: string[]; // 2026-10-31追加（先輩保護者が話せる学校名）
+  experienced_school_names?: string[]; // 2026-10-31追加（経験者が話せる学校名）
   review_status?: string; // 'pending' | 'needs_fix'（一覧に残るのはこの2つ。rejectedは一覧から除外済み）
   review_note?: string | null;
   created_at: string;

@@ -4,18 +4,18 @@ import { FREE_SCHOOLS } from './data/freeSchools';
 import { teijiseiHighSchools } from './data/teijiseiHighSchools';
 import { ONLINE_FREE_SCHOOLS } from './data/onlineFreeSchools';
 
-// 先輩保護者（経験者）のプロフィールページ（app/senpai/[id]/page.tsx）に、
+// 経験者のプロフィールページ（app/senpai/[id]/page.tsx）に、
 // 「この方が話せる学校」を自動で出すための仕組み（2026-10-31追加）。
 //
 // 学校ページ側（SchoolExperiencedParents.tsx・FacilityExperiencedParents.tsx）は
-// 「学校名 → 一致する先輩保護者」という向きの検索（ilikeでbioを検索）だが、
-// こちらはその逆（先輩保護者のbio → 一致する学校）。5つの学校データセットは
+// 「学校名 → 一致する経験者」という向きの検索（ilikeでbioを検索）だが、
+// こちらはその逆（経験者のbio → 一致する学校）。5つの学校データセットは
 // すべてアプリのメモリ上に持っている定数配列なので、DB問い合わせではなく、
 // bioの文字列に対してJS側で単純な部分一致を行う（学校名が短すぎると誤マッチ
 // しやすいため、3文字以下の名称は対象外にする。lib/schoolFacts.tsの
 // coreName()と同じ考え方）。
 //
-// 1人の先輩保護者が複数の学校に言及することは稀だが、0件避けのため最大5件まで返す。
+// 1人の経験者が複数の学校に言及することは稀だが、0件避けのため最大5件まで返す。
 export type SenpaiSchoolMention = {
   name: string;
   path: string;

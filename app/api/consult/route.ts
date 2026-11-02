@@ -34,8 +34,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: limit.message }, { status: 429 });
   }
 
-  // 2026-11-01、専門家・先輩保護者への質問を「AI回答に加えて、登録している
-  // 専門家・先輩保護者が任意で回答してくれる」という単一の相談に統合した
+  // 2026-11-01、専門家・経験者への質問を「AI回答に加えて、登録している
+  // 専門家・経験者が任意で回答してくれる」という単一の相談に統合した
   // （以前は/api/expert-checkoutで別の相談として作っていた）。この相談もAI回答
   // 自体は必ず付くため、乱用対策としてAI用のレート制限に加えて、専門家向けの
   // レート制限もかける。
@@ -158,7 +158,7 @@ export async function POST(req: NextRequest) {
   // 押された時だけ生成する方式（/api/consultations/[id]/one-liner）に変更した。
   // ここでは常にnullのまま保存する。
 
-  // 希死念慮等の安全上書きが出た相談は、専門家・先輩保護者向けの回答待ちキューには
+  // 希死念慮等の安全上書きが出た相談は、専門家・経験者向けの回答待ちキューには
   // 乗せない（本人の安全に関わる内容を、資格確認済みとはいえ第三者が任意で拾って
   // 回答する一覧に出すのは適切でないため）。
   const wantExpert = !!want_expert && !crisisDetected;
@@ -180,8 +180,8 @@ export async function POST(req: NextRequest) {
       views: 0,
       crisis_detected: crisisDetected,
       one_liner: null,
-      // 専門家・先輩保護者の回答待ちキューに乗せるかどうか（2026-11-01、恒久的に無料の
-      // 「登録している専門家・先輩保護者が任意で回答してくれる」仕組みに統合）。
+      // 専門家・経験者の回答待ちキューに乗せるかどうか（2026-11-01、恒久的に無料の
+      // 「登録している専門家・経験者が任意で回答してくれる」仕組みに統合）。
       ...(wantExpert
         ? {
             request_type: 'expert',

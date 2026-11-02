@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 
 type Expert = { id: string; name: string; credential: string };
 
@@ -63,7 +64,12 @@ export default function ExpertManagementPanel({
     <>
       <div className="card" style={{ gap: 6 }}>
         <div className="row" style={{ justifyContent: 'space-between' }}>
-          <div style={{ fontWeight: 700 }}>{expert.credential}として登録中</div>
+          {/* expert.credentialはDB上の識別値（SENPAI_CREDENTIAL）のままなので、
+              表示文言の「経験者」統一に合わせてここだけ固定文言に出し分ける
+              （2026-11-03、「先輩保護者じゃなく経験者に統一して」との指示）。 */}
+          <div style={{ fontWeight: 700 }}>
+            {expert.credential === SENPAI_CREDENTIAL ? '経験者' : expert.credential}として登録中
+          </div>
           <button type="button" className="btn-ghost" onClick={logout} style={{ fontSize: 12 }}>
             専門家としてログアウト
           </button>
@@ -109,7 +115,7 @@ export default function ExpertManagementPanel({
             {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AIが
                 既にどう答えているかをここに表示する（以前はrequest_type==='expert'の
                 相談にAI回答が存在しなかったため、質問文だけが出ていた）。専門家・
-                先輩保護者がAIの回答を踏まえて、それに付け足す形で回答しやすくする。 */}
+                経験者がAIの回答を踏まえて、それに付け足す形で回答しやすくする。 */}
             {item.answer && (
               <div className="muted" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px', whiteSpace: 'pre-wrap' }}>
                 <span style={{ fontWeight: 700 }}>AIの回答：</span>

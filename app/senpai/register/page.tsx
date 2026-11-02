@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CATS } from '@/lib/categories';
 
-// 先輩保護者（経験者）専用の登録フォーム。
+// 経験者専用の登録フォーム。
 // 専門家向け（/expert/register）と入り口・ページを分けることにした（2026-10-30、
 // 「保護者と、専門家の入り口とページは別にしたい」との方針を受けて）。
 // このフォームは資格を前提としないため、資格選択・資格の登録番号・登録証
@@ -16,14 +16,14 @@ import { CATS } from '@/lib/categories';
 // 参照）。verification_method='call'という値自体は「資格証の提出がない登録」
 // を示すフラグとして内部的に維持している。
 // 送信先のAPI（/api/expert/register）・保存先のテーブル（experts）は専門家と
-// 共通のまま。credentialは固定で「先輩保護者（経験者）」を送る。
+// 共通のまま。credentialは固定で「経験者」を送る。
 
 const CREDENTIAL = '先輩保護者（経験者）';
 
 // お悩み辞典の既存カテゴリ（lib/categories.ts）から、対応できるものを複数選んでもらう。
 const CATEGORY_OPTIONS = Object.entries(CATS).map(([key, c]) => ({ key, label: c.label }));
 
-// 「先輩保護者からこの学校の話を聞く」機能（2026-10-30追加、app/gakko内の各学校ページ）
+// 「経験者からこの学校の話を聞く」機能（2026-10-30追加、app/gakko内の各学校ページ）
 // がこの自己紹介文（bio）を学校名で検索するため、学校の正式名称を書いてもらうよう
 // 例文で促す。
 const BIO_EXAMPLE =
@@ -54,7 +54,7 @@ function loadDraft(): Partial<DraftForm> {
 }
 
 // useSearchParams()はプリレンダー時点では値が確定しないため、/ask・/account/registerと
-// 同様にSuspenseで囲む（2026-10-31追加。学校ページの「この学校について話せる先輩保護者を
+// 同様にSuspenseで囲む（2026-10-31追加。学校ページの「この学校について話せる経験者を
 // 募集しています」からの?school=学校名を受け取るために追加）。
 export default function SenpaiRegisterPage() {
   return (
@@ -95,7 +95,7 @@ function SenpaiRegisterForm() {
     }
   }, []);
 
-  // 学校ページの「この学校について話せる先輩保護者を募集しています」から来た場合
+  // 学校ページの「この学校について話せる経験者を募集しています」から来た場合
   // （?school=学校名）、学校名欄に自動で追加する（2026-10-31追加）。
   useEffect(() => {
     if (!schoolParam) return;
@@ -168,7 +168,7 @@ function SenpaiRegisterForm() {
           </svg>
           戻る
         </button>
-        <div style={{ fontWeight: 700, fontSize: 18 }}>先輩保護者（経験者）登録</div>
+        <div style={{ fontWeight: 700, fontSize: 18 }}>経験者登録</div>
         <div className="muted">
           不登校を経験されたご家庭ご自身として、「どうする先生」で相談に回答するプロフィールを作成します。資格は不要です。
         </div>
@@ -178,7 +178,7 @@ function SenpaiRegisterForm() {
           </div>
         )}
 
-        {/* 「気軽に登録できる流れがいいな」「先輩保護者は本名じゃなくていいかも」との
+        {/* 「気軽に登録できる流れがいいな」「経験者は本名じゃなくていいかも」との
             指摘を受けて（2026-10-31）、本名必須をやめ、ニックネーム等でも登録できる
             ようにした。display_name（任意の表示名）と役割が重なるが、入力の手間を
             増やしたくないため項目自体は維持し、案内文のみ変更。
@@ -316,7 +316,7 @@ function SenpaiRegisterForm() {
           </div>
         )}
         <div className="muted" style={{ fontSize: 12, marginTop: -4 }}>
-          お子さんが通われていた（通われている）学校の正式名称を1件ずつ入力して「追加」を押してください（Enterキーでも追加できます）。入力すると、その学校の紹介ページにも「先輩保護者からこの学校の話を聞く」として表示されます。
+          お子さんが通われていた（通われている）学校の正式名称を1件ずつ入力して「追加」を押してください（Enterキーでも追加できます）。入力すると、その学校の紹介ページにも「経験者からこの学校の話を聞く」として表示されます。
         </div>
 
         <input

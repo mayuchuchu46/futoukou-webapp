@@ -52,7 +52,7 @@ async function ExpertEarningsContent() {
           <div className="muted" style={{ marginTop: 8 }}>未振込分</div>
           <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--main)' }}>¥{totalUnpaid.toLocaleString()}</div>
         </div>
-        {/* 2026-11-01、専門家・先輩保護者への質問を恒久的に無料化したのに伴い、報酬・
+        {/* 2026-11-01、専門家・経験者への質問を恒久的に無料化したのに伴い、報酬・
             振込の仕組み自体を廃止した。ただし、それ以前（¥600都度払い・チケット・
             読み放題会員の無料枠）の相談で実際に発生していた未払いの報酬が残っている
             場合は、その分の振込案内だけは出し続ける必要がある。 */}
@@ -64,7 +64,7 @@ async function ExpertEarningsContent() {
           </div>
         ) : (
           <div className="noticebox" style={{ background: 'var(--sub)', borderRadius: 10, padding: '12px 14px', fontSize: 12, color: '#1F4A3C' }}>
-            質問・回答はどなたでも無料です。専門家・先輩保護者への報酬・振込は発生しません。
+            質問・回答はどなたでも無料です。専門家・経験者への報酬・振込は発生しません。
           </div>
         )}
         <div style={{ fontWeight: 700, marginTop: 12 }}>内訳</div>

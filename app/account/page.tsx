@@ -48,7 +48,7 @@ export default function AccountPage() {
             <AccountMemberSection />
           </Suspense>
 
-          {/* 専門家・先輩保護者としての管理内容（旧/expert/dashboard）。専門家としての
+          {/* 専門家・経験者としての管理内容（旧/expert/dashboard）。専門家としての
               ログインは会員ログインとは別のcookieのため、AccountMemberSectionとは別の
               Suspenseに分けている。専門家としてログインしていない場合は何も表示しない。 */}
           <Suspense fallback={null}>

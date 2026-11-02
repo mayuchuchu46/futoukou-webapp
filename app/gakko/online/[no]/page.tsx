@@ -26,10 +26,10 @@ import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
 export const instant = false;
 
 // データ上の名称には「本体名（カタカナ読み／旧称等）」の形で括弧書きが付くものが
-// 5件ある（例：'aini school（アイニースクール）'）。先輩保護者が登録時に括弧書きを
+// 5件ある（例：'aini school（アイニースクール）'）。経験者が登録時に括弧書きを
 // 省いた本体名だけを入力すると、FacilityExperiencedParentsの完全一致ベースの
 // マッチング（lib/expertSchoolMatch.ts）では一致しなくなる不具合があった
-// （2026-11-02、aini schoolの先輩保護者から「確認済みなのに表示されない」との
+// （2026-11-02、aini schoolの経験者から「確認済みなのに表示されない」との
 // 指摘を受けて発覚）。括弧書きを除いた名称をaltNameとして追加で渡し、どちらの
 // 表記で登録されていても拾えるようにする。
 function nameWithoutParenthetical(name: string): string | null {
@@ -241,7 +241,7 @@ export default async function OnlineSchoolPage({
             <FacilityExperiencedParents
               name={school.name}
               altName={nameWithoutParenthetical(school.name)}
-              label="先輩保護者からこの学校の話を聞く"
+              label="経験者からこの学校の話を聞く"
             />
           </Suspense>
 

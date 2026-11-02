@@ -141,7 +141,7 @@ export default function ConsultationCard({
         </div>
       )}
       {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AI回答
-          （answerPreview）は常に表示し、専門家・先輩保護者の回答（ある場合）は
+          （answerPreview）は常に表示し、専門家・経験者の回答（ある場合）は
           その下に別枠で追加するようにした（以前はitem.lockedで両者を排他的に
           出し分けていたが、今はAI回答は常に無条件で読めるため）。 */}
       {answerPreview && (

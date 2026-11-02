@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
   const payout = row.expert_funding === 'volunteer' ? 0 : expertPayout(row.price_jpy || 0);
 
   // 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、`answer`列は
-  // 常にAIの回答を保持する列として扱うことにした。専門家・先輩保護者の回答は
+  // 常にAIの回答を保持する列として扱うことにした。専門家・経験者の回答は
   // `expert_answer`列にだけ書き込む（以前はここで`answer`も同じ文面で上書きしていたが、
   // それだとAIの回答が専門家の回答で消えてしまう）。
   const { error } = await supabase

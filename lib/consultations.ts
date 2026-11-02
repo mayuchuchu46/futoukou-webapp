@@ -55,7 +55,7 @@ export async function getConsultationsList({
   viewerId?: string | null;
   authorId?: string | null;
   expertAnswered?: boolean;
-  // expertAnsweredの先輩保護者版（2026-11-02追加、「先輩保護者の回答ってバージョンも
+  // expertAnsweredの経験者版（2026-11-02追加、「経験者の回答ってバージョンも
   // 欲しいね」との要望を受けて）。/senpailistで使う。expertAnsweredと同時にtrueに
   // することは想定していない（呼び出し側でどちらか一方だけ指定する）。
   senpaiAnswered?: boolean;
@@ -149,12 +149,12 @@ export async function getConsultationsList({
   if (error || !data) return [];
 
   // expertAnswered（「専門家が回答した相談」の一覧・個別専門家ページ）は、
-  // ブランディング上「専門家」専用の区画のため、先輩保護者（経験者）の回答は
-  // 含めない（2026-11-01、専門家への質問の価格体系統一に伴い専門家・先輩保護者を
+  // ブランディング上「専門家」専用の区画のため、経験者の回答は
+  // 含めない（2026-11-01、専門家への質問の価格体系統一に伴い専門家・経験者を
   // 区別する条件を一通り撤去した際、ここだけ元々区別する条件が無かったことが
   // 判明。「https://futoko-dosuru.com/expertlist 保護者の解答載ってるね」との
   // 指摘を受けて追加）。senpaiAnswered（/senpailist、2026-11-02追加）はその逆で、
-  // 先輩保護者の回答だけに絞る。
+  // 経験者の回答だけに絞る。
   const filtered = expertAnswered
     ? data.filter((item) => item.experts?.credential !== SENPAI_CREDENTIAL)
     : senpaiAnswered

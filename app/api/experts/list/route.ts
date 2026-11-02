@@ -14,7 +14,7 @@ export async function GET() {
     .from('experts')
     .select('id, name, display_name, credential, bio, photo_url')
     .eq('verified', true)
-    // 先輩保護者（経験者）は別枠のため出さない（2026-10-31追加）。
+    // 経験者は別枠のため出さない（2026-10-31追加）。
     .neq('credential', SENPAI_CREDENTIAL)
     .order('created_at', { ascending: true })
     .limit(3);

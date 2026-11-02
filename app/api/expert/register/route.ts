@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   const verification_method: 'upload' | 'call' = verificationMethodRaw === 'call' ? 'call' : 'upload';
   // お悩み辞典の既存カテゴリから、対応できるものを複数（任意）。
   const specialty_categories = form.getAll('specialty_categories').map((v) => String(v)).filter(Boolean);
-  // 先輩保護者（経験者）が「保護者視点で話せる」学校名（複数・任意、2026-10-31追加）。
+  // 経験者が「保護者視点で話せる」学校名（複数・任意、2026-10-31追加）。
   // 専門家（資格保有者）側の登録フォームからは送られてこないため、常に空配列になる。
   const experienced_school_names = form.getAll('experienced_school_names').map((v) => String(v)).filter(Boolean);
 

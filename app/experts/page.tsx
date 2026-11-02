@@ -38,9 +38,9 @@ async function getVerifiedExperts(): Promise<ExpertProfile[]> {
     .from('experts')
     .select('id, name, display_name, credential, bio, photo_url, link_url')
     .eq('verified', true)
-    // 先輩保護者（経験者）は資格を持つ「専門家」とは別の入り口・ページ
+    // 経験者は資格を持つ「専門家」とは別の入り口・ページ
     // （/senpai/recruit, /senpai/register）を用意しているため、このページ
-    // （専門家一覧）には混ぜて表示しない（2026-10-31、先輩保護者が専門家一覧に
+    // （専門家一覧）には混ぜて表示しない（2026-10-31、経験者が専門家一覧に
     // 出てしまっていた不具合の指摘を受けて除外）。
     .neq('credential', SENPAI_CREDENTIAL)
     .order('created_at', { ascending: true });

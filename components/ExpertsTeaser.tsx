@@ -30,10 +30,10 @@ export default function ExpertsTeaser({
   compact = false,
 }: {
   experts: ExpertProfile[];
-  // 先輩保護者（経験者）は専門家とは表示・ブランディングを分けているため、カードは
+  // 経験者は専門家とは表示・ブランディングを分けているため、カードは
   // 出しても遷移先はプロフィール閲覧用の
   // /senpai/[id]にする（質問自体はそのプロフィールページ内のボタンから可能。
-  // 2026-10-31、本人確認済みの先輩保護者をトップに出したいとの依頼を受けて追加）。
+  // 2026-10-31、本人確認済みの経験者をトップに出したいとの依頼を受けて追加）。
   senpai?: ExpertProfile[];
   title?: string;
   className?: string;
@@ -47,7 +47,7 @@ export default function ExpertsTeaser({
   return (
     <div className={`home-experts ${className}`.trim()}>
       <div className="home-experts-title">{title}</div>
-      {/* 専門家と先輩保護者（経験者）は募集・表示の入り口を分けているため（2026-10-30、
+      {/* 専門家と経験者は募集・表示の入り口を分けているため（2026-10-30、
           「保護者と、専門家の入り口とページは別にしたい」との方針）、それぞれ
           0人なら募集中カード、1人以上いれば実際のプロフィールカードを、別々に出す
           （2026-10-31、「トップには、保護者向けと専門家向け二つ別にだして」
@@ -108,7 +108,7 @@ export default function ExpertsTeaser({
         >
           <ExpertAvatar photoUrl={null} size={avatarSize} />
           <div className="home-expert-body">
-            <div className="home-expert-name">先輩保護者（経験者）も募集中です</div>
+            <div className="home-expert-name">経験者も募集中です</div>
             <div className="home-expert-desc">資格は不要です。不登校を経験されたご家庭ご自身を募集しています</div>
           </div>
           <span className="expertbanner-cta">›</span>
@@ -125,7 +125,10 @@ export default function ExpertsTeaser({
             >
               <ExpertAvatar photoUrl={e.photo_url} size={avatarSize} />
               <div className="home-expert-body">
-                <div className="home-expert-name">{e.credential}・{e.name}</div>
+                {/* senpaiに入っている時点でcredentialはSENPAI_CREDENTIAL固定のDB値
+                    （「先輩保護者（経験者）」）なので、表示文言の「経験者」統一に合わせて
+                    固定文言で出す（2026-11-03、「先輩保護者じゃなく経験者に統一して」との指示）。 */}
+                <div className="home-expert-name">経験者・{e.name}</div>
                 {e.bio && <div className="home-expert-desc">{e.bio}</div>}
               </div>
               <span className="expertbanner-cta">›</span>
@@ -138,7 +141,7 @@ export default function ExpertsTeaser({
             onClick={() => router.push('/senpai/recruit')}
           >
             <div className="home-expert-body">
-              <div className="home-expert-desc">他の先輩保護者も引き続き募集中です →</div>
+              <div className="home-expert-desc">他の経験者も引き続き募集中です →</div>
             </div>
           </div>
         </>

@@ -3,12 +3,12 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
 
-// 先輩保護者（経験者）専用の募集ページ。
+// 経験者専用の募集ページ。
 // 専門家向け（/expert/recruit）とは入り口・ページを分けている（2026-10-30、
 // 「保護者と、専門家の入り口とページは別にしたい」との方針を受けて）。
 //
 // 学校の各紹介ページ（FacilityExperiencedParents.tsx・SchoolExperiencedParents.tsx）に
-// 「この学校について話せる先輩保護者を募集しています」という導線を置くようになったのに
+// 「この学校について話せる経験者を募集しています」という導線を置くようになったのに
 // 合わせて、?school=学校名のクエリパラメータを受け取れるようにした（2026-10-31）。
 // 受け取った学校名は、登録フォーム（/senpai/register）へそのまま引き継ぎ、
 // 「保護者視点で話せる学校名」欄に自動で追加される。
@@ -26,12 +26,12 @@ export default async function SenpaiRecruitPage({
       <Header supervised={false} showBack={false} />
       <div className="main">
         <Link href="/about" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
-        <h2 className="pagetitle">先輩保護者募集</h2>
+        <h2 className="pagetitle">経験者募集</h2>
 
         {school && (
           <div className="card" style={{ alignItems: 'flex-start', gap: 4, background: 'var(--sub)', border: '2px solid var(--main)' }}>
             <div className="qtext" style={{ fontWeight: 700 }}>
-              「{school}」について話せる先輩保護者を募集しています
+              「{school}」について話せる経験者を募集しています
             </div>
             <div className="qtext" style={{ fontSize: 13 }}>
               この学校に実際に通われた（通われている）ご家庭からの体験談を探しています。
@@ -41,7 +41,7 @@ export default async function SenpaiRecruitPage({
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="qtext">
-            「どうする先生」は、不登校のご家庭に向けたAI相談サービスです。AIの回答や専門家の回答とは別に、不登校を経験されたご家庭ご自身（先輩保護者）に、その体験に基づいて相談に回答していただく機能があります。資格は不要です。
+            「どうする先生」は、不登校のご家庭に向けたAI相談サービスです。AIの回答や専門家の回答とは別に、不登校を経験されたご家庭ご自身（経験者）に、その体験に基づいて相談に回答していただく機能があります。資格は不要です。
           </div>
         </div>
 
@@ -81,7 +81,7 @@ export default async function SenpaiRecruitPage({
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>学校の紹介ページにも表示されます</div>
           <div className="qtext">
-            登録時に、お子さんが通われていた（通われている）学校の正式名称を自己紹介文に書いていただくと、その学校の紹介ページにも「先輩保護者からこの学校の話を聞く」として表示され、同じ学校を検討している方から見つけてもらいやすくなります。
+            登録時に、お子さんが通われていた（通われている）学校の正式名称を自己紹介文に書いていただくと、その学校の紹介ページにも「経験者からこの学校の話を聞く」として表示され、同じ学校を検討している方から見つけてもらいやすくなります。
           </div>
         </div>
 
@@ -103,12 +103,12 @@ export default async function SenpaiRecruitPage({
         </div>
 
         <Link href={registerHref} className="btn-primary" style={{ textAlign: 'center' }}>
-          先輩保護者として登録する（事前登録受付）
+          経験者として登録する（事前登録受付）
         </Link>
         <Link href="/expert/login" className="backlink" style={{ margin: '0 0 4px', fontSize: 13 }}>
           すでに登録済みの方はこちらからログイン →
         </Link>
-        {/* 先輩保護者向けページから、専門家向けページへの案内（2026-10-30追加）。 */}
+        {/* 経験者向けページから、専門家向けページへの案内（2026-10-30追加）。 */}
         <Link href="/expert/recruit" className="backlink" style={{ margin: '0 0 14px', fontSize: 13 }}>
           公認心理師・臨床心理士など資格をお持ちの方はこちら →
         </Link>

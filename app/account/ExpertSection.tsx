@@ -2,7 +2,7 @@ import { getCurrentExpert } from '@/lib/expertAuth';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import ExpertManagementPanel from './ExpertManagementPanel';
 
-// 専門家・先輩保護者としての管理内容（旧/expert/dashboard）をアカウントページに
+// 専門家・経験者としての管理内容（旧/expert/dashboard）をアカウントページに
 // 統合したもの（2026-11-01、「アカウントページに、専門家や保護者の管理内容も
 // 入れ込んじゃえばいい」との方針を受けて）。以前は専門家用ログイン（cookie）が
 // 別建てで、ヘッダーの「マイページ」タブからしか辿れなかったため、そのタブが
@@ -20,7 +20,7 @@ export default async function ExpertSection() {
     if (reviewStatus === 'rejected') {
       return (
         <div className="card">
-          <div style={{ fontWeight: 700 }}>専門家・先輩保護者としてのご登録について</div>
+          <div style={{ fontWeight: 700 }}>専門家・経験者としてのご登録について</div>
           <div className="qtext">
             この度は「どうする先生」登録にご関心をお寄せいただき、ありがとうございました。
             ご提出いただいた内容を確認した結果、今回は登録要件を満たしていることを確認できなかったため、ご登録を見送らせていただくこととなりました。
@@ -62,7 +62,7 @@ export default async function ExpertSection() {
   }
 
   const supabase = getSupabaseAdmin();
-  // 2026-11-01、専門家への質問を恒久的に無料化したのに伴い、先輩保護者をこの
+  // 2026-11-01、専門家への質問を恒久的に無料化したのに伴い、経験者をこの
   // キューから除外する理由（価格体系・報酬の違い）自体がなくなったため、常に含める。
   const { data: pending } = await supabase
     .from('consultations')

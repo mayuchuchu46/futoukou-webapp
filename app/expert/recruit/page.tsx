@@ -7,7 +7,7 @@ import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
 // 一覧用の個人情報（会員数など）は含まないため、ビルド時に静的化してよい。
 //
 // 「保護者と、専門家の入り口とページは別にしたい」との方針を受けて（2026-10-30）、
-// 先輩保護者（経験者）向けの内容は /senpai/recruit に専用ページとして分離した。
+// 経験者向けの内容は /senpai/recruit に専用ページとして分離した。
 // このページは専門家（資格をお持ちの方）専用に戻している。
 
 export default function ExpertRecruitPage() {
@@ -69,7 +69,7 @@ export default function ExpertRecruitPage() {
         <Link href="/expert/login" className="backlink" style={{ margin: '0 0 4px', fontSize: 13 }}>
           すでに登録済みの専門家の方はこちらからログイン →
         </Link>
-        {/* 専門家向けページから、先輩保護者向けページへの案内（2026-10-30追加）。 */}
+        {/* 専門家向けページから、経験者向けページへの案内（2026-10-30追加）。 */}
         <Link href="/senpai/recruit" className="backlink" style={{ margin: '0 0 14px', fontSize: 13 }}>
           資格ではなく、ご自身の不登校経験についてお話しいただける方はこちら →
         </Link>
