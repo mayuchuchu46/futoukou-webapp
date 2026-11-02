@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import BackButton from '@/components/BackButton';
 import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
 
 // 一般利用者向けの/expertsとは別の、専門家（回答する側）募集専用ページ。
@@ -15,7 +16,11 @@ export default function ExpertRecruitPage() {
     <div className="app-shell">
       <Header supervised={false} showBack={false} />
       <div className="main">
-        <Link href="/about" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
+        {/* 「もどる」の行き先を/about固定にすると、2026-11-03に追加した/recruit
+            （経験者・専門家の統合ランディング）経由で来た人が、実際に来た場所とは
+            違う/aboutに戻ってしまう問題があった。BackButton（router.back()）に
+            変更して、実際に直前にいた画面へ戻るようにした。 */}
+        <BackButton />
         <h2 className="pagetitle">専門家募集</h2>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
