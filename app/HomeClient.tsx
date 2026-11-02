@@ -526,7 +526,7 @@ export default function HomeClient({
                 >
                   {opt.key === 'senpai' && (
                     /* 経験者回答アイコン：ぽってり顔 + 吹き出し */
-                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4, marginTop: -1 }}>
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4, marginTop: -1 }}>
                       <circle cx="8" cy="6" r="3.2" stroke="currentColor" strokeWidth="1.5"/>
                       <circle cx="6.6" cy="5.5" r="0.55" fill="currentColor"/>
                       <circle cx="9.4" cy="5.5" r="0.55" fill="currentColor"/>
