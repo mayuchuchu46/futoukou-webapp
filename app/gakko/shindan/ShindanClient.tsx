@@ -322,6 +322,19 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
             result.partial,
             result.sure.length === 0
           )}
+          {/* 診断結果の最後に、選んだ都道府県の助成金・支援制度への案内を1行追加
+              （2026-11-02）。学校探しと使えるお金の制度は別の動機だが、使える制度を
+              知らずに終わる人を減らすための軽い誘導。診断ロジック自体に助成金を
+              組み込むのは見送り、リンク1本の統合にとどめる（学び場UI/UX見直しの
+              対応4）。 */}
+          <Link
+            href={`/gakko?type=josei&pref=${encodeURIComponent(pref)}`}
+            onClick={remember}
+            className="muted"
+            style={{ fontSize: 13, textDecoration: 'underline', display: 'inline-block' }}
+          >
+            {pref}の助成金・支援制度も見る ›
+          </Link>
         </div>
       )}
     </>

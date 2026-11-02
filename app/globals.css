@@ -974,6 +974,10 @@ h2.pagetitle {
    一覧表示したいとの要望（2026-10-13）に対応。.chip-rowの上書きなので、
    wrap propを渡したTagChipsにだけ付与する。 */
 .chip-row-wrap { flex-wrap: wrap; overflow-x: visible; padding-bottom: 0; }
+/* 「探したいものを選ぶ」チップ列の視覚的グルーピング用の区切り線（2026-11-02追加）。
+   過去に見出し付き3セクションに分けたところ分かりにくいと指摘された経緯があるため、
+   チップ列自体は1本のまま、グループの切れ目にだけ細い縦線を挟む軽い対応にする。 */
+.chip-group-divider { flex: 0 0 auto; align-self: stretch; width: 1px; background: var(--border); margin: 2px 2px; }
 .chip {
   flex: 0 0 auto;
   white-space: nowrap;

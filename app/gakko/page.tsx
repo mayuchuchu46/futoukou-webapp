@@ -282,7 +282,14 @@ export default async function GakkoPage({
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>探したいものを選ぶ</div>
+            {/* 「学び場UI/UX見直し」の指摘（2026-11-01）を受け、8チップを3グループに
+                視覚的に区切った（グループA：学校以外の居場所・学び方／グループB：
+                学校（高校）の選択肢／単独：お金の支援）。過去に見出し付きセクションに
+                分けたところ分かりにくいと指摘された経緯があるため、チップ列自体は
+                1本のまま、グループの切れ目に細い縦線（.chip-group-divider）を挟む
+                だけの軽い対応にとどめた（2026-11-02）。 */}
             <div className="chip-row chip-row-wrap">
+              {/* グループA：学校以外の居場所・学び方 */}
               <Link
                 href={selected ? `/gakko?pref=${encodeURIComponent(selected)}` : '/gakko'}
                 className={`chip chip-tag${type === 'gakko' ? ' active' : ''}`}
@@ -298,6 +305,13 @@ export default async function GakkoPage({
                 フリースクール
               </Link>
               <Link
+                href="/gakko?type=online"
+                className={`chip chip-tag${type === 'online' ? ' active' : ''}`}
+                style={{ textDecoration: 'none' }}
+              >
+                オンラインフリースクール
+              </Link>
+              <Link
                 href={selected ? `/gakko?type=shien&pref=${encodeURIComponent(selected)}` : '/gakko?type=shien'}
                 className={`chip chip-tag${type === 'shien' ? ' active' : ''}`}
                 style={{ textDecoration: 'none' }}
@@ -305,12 +319,16 @@ export default async function GakkoPage({
                 教育支援センター
               </Link>
               <Link
-                href="/gakko?type=online"
-                className={`chip chip-tag${type === 'online' ? ' active' : ''}`}
+                href="/gakko?type=alternative"
+                className={`chip chip-tag${type === 'alternative' ? ' active' : ''}`}
                 style={{ textDecoration: 'none' }}
               >
-                オンラインフリースクール
+                オルタナティブスクール
               </Link>
+
+              <span className="chip-group-divider" aria-hidden="true" />
+
+              {/* グループB：学校（高校）の選択肢 */}
               <Link
                 href={selected ? `/gakko?type=tsushin&pref=${encodeURIComponent(selected)}` : '/gakko?type=tsushin'}
                 className={`chip chip-tag${type === 'tsushin' ? ' active' : ''}`}
@@ -325,19 +343,16 @@ export default async function GakkoPage({
               >
                 定時制高校
               </Link>
+
+              <span className="chip-group-divider" aria-hidden="true" />
+
+              {/* 単独：お金の支援 */}
               <Link
                 href="/gakko?type=josei"
                 className={`chip chip-tag${type === 'josei' ? ' active' : ''}`}
                 style={{ textDecoration: 'none' }}
               >
                 助成金・支援制度
-              </Link>
-              <Link
-                href="/gakko?type=alternative"
-                className={`chip chip-tag${type === 'alternative' ? ' active' : ''}`}
-                style={{ textDecoration: 'none' }}
-              >
-                オルタナティブスクール
               </Link>
             </div>
           </div>
