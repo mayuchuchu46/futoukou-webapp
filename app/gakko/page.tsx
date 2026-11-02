@@ -276,7 +276,7 @@ export default async function GakkoPage({
               「診断」ワードを使った名称に変更（2026-11-03）。選択式で絞り込むだけで個別最適化
               まではしていないため、「ぴったり」等の言い過ぎは避けた。 */}
           <Link href="/gakko/shindan" className="card" style={{ textDecoration: 'none', color: 'inherit', alignItems: 'flex-start', gap: 4 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>🧭 学校診断 ›</div>
+            <div className="answer-label" style={{ fontSize: 14 }}>🧭 学校タイプ診断 ›</div>
             <div className="muted" style={{ fontSize: 12 }}>
               都道府県から一覧を見るのではなく、学年・通う頻度などの条件を選んで、通信制・定時制・学びの多様化学校・フリースクール・オルタナティブスクールを絞り込めます。
             </div>

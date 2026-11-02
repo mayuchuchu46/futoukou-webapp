@@ -168,7 +168,7 @@ export default function TsushinExplorer({
             出典を見る ›
           </a>
           <Link href="/gakko/shindan" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
-            学校診断（学年・通う頻度で絞り込み・全種類の学校が対象）›
+            学校タイプ診断（学年・通う頻度で絞り込み・全種類の学校が対象）›
           </Link>
           <Link href="/gakko/tsushin/kokoro-care" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
             心のケア専門職が常駐する学校だけを見る ›
