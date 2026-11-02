@@ -476,7 +476,7 @@ export default async function GakkoMatomePage({
                 との指摘を受けて）。「種類で絞り込む」チップの説明は、チップ自体に
                 見出しが付いているため省略した。 */}
             <div className="qtext">
-              都道府県を1つ選ぶと、学びの多様化学校・フリースクール・通信制高校・助成金制度などをまとめて確認できます（オンラインフリースクールは居住地を問わず常に表示）。1種類だけ詳しく見たいときは<Link href="/gakko" style={{ textDecoration: 'underline' }}>学校種を選んで探すページ</Link>へ。
+              都道府県を1つ選ぶと、学びの多様化学校・フリースクール・通信制高校・助成金制度などをまとめて確認できます。1種類だけ詳しく見たいときは<Link href="/gakko" style={{ textDecoration: 'underline' }}>学校種を選んで探すページ</Link>へ。
             </div>
           </div>
 
