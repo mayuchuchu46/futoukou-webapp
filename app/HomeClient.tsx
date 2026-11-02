@@ -16,6 +16,7 @@ import MimamoriShindanTeaser from '@/components/MimamoriShindanTeaser';
 import FeaturedGakkoRanking from '@/components/FeaturedGakkoRanking';
 import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
 import MyRegionCard from '@/components/MyRegionCard';
+import HomeHeroCarousel, { HeroSlide } from '@/components/HomeHeroCarousel';
 import { CATS } from '@/lib/categories';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -29,6 +30,31 @@ import { SENPAI_CREDENTIAL } from '@/lib/config';
 function isExpertAnswered(item: Consultation) {
   return item.request_type === 'expert' && item.expert_status === 'answered' && item.experts?.credential !== SENPAI_CREDENTIAL;
 }
+
+// スマホトップの自動スライドバナー（2026-11-03追加）。本来は3枚それぞれ別の
+// 訴求内容の画像にする予定だが、2枚目・3枚目の画像はまだ用意できていないため、
+// 暫定的に同じバナー画像・同じリンク先で3枚分用意している（カルーセルの仕組み
+// 自体は動く状態にしておき、画像が届き次第ここのsrc/alt/hrefだけ差し替える）。
+const HERO_SLIDES: HeroSlide[] = [
+  {
+    id: 'ask',
+    href: '/ask',
+    src: '/assets/home_cta_banner.jpg',
+    alt: 'ひとりで抱えず、次の一手を一緒に。不登校の悩みを、AIと専門家と一緒に考えます。どうする先生に相談する。',
+  },
+  {
+    id: 'ask-2',
+    href: '/ask',
+    src: '/assets/home_cta_banner.jpg',
+    alt: 'ひとりで抱えず、次の一手を一緒に。不登校の悩みを、AIと専門家と一緒に考えます。どうする先生に相談する。',
+  },
+  {
+    id: 'ask-3',
+    href: '/ask',
+    src: '/assets/home_cta_banner.jpg',
+    alt: 'ひとりで抱えず、次の一手を一緒に。不登校の悩みを、AIと専門家と一緒に考えます。どうする先生に相談する。',
+  },
+];
 
 type SidebarBanner = {
   enabled: boolean;
@@ -257,16 +283,11 @@ export default function HomeClient({
             バナーははずしてね」との指摘を受けて一度スマホ含め全撤去したが、その指摘は
             PCの話（右コラムに「相談する」ボタンを置く方の文脈）で、スマホ側は
             変えなくてよかったとのことで、スマホ分のみ復活させた（2026-10-15）。
-            PCでは引き続き.home-cta（CSS側、960px以上でdisplay:none）で非表示にする。 */}
-        {showExtras && (
-          <Link href="/ask" className="card home-cta">
-            <img
-              src="/assets/home_cta_banner.jpg"
-              alt="ひとりで抱えず、次の一手を一緒に。不登校の悩みを、AIと専門家と一緒に考えます。どうする先生に相談する。"
-              className="home-cta-banner"
-            />
-          </Link>
-        )}
+            PCでは引き続き.home-cta（CSS側、960px以上でdisplay:none）で非表示にする。
+            2026-11-03、「自動スライドで3枚くらい動くようにして」との依頼を受けて、
+            1枚固定表示からHomeHeroCarousel（自動スライド）に変更。スライドの中身は
+            HERO_SLIDES（このファイル冒頭）参照。 */}
+        {showExtras && <HomeHeroCarousel slides={HERO_SLIDES} />}
 
         {/* 「専門家が回答した相談」のモバイル用バナーは、この位置（検索・一覧より上）
             からは削除した（2026-10-16、「トップのこの場所はいらない」との指摘）。

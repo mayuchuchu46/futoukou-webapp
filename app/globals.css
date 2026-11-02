@@ -511,6 +511,50 @@ h2.pagetitle {
 }
 .home-cta-banner { display: block; width: 100%; height: auto; }
 
+/* HomeHeroCarousel（2026-11-03追加）。.home-cta自体のカード装飾（margin等）は
+   そのまま使い、外側に.home-hero-carouselでスライド用のoverflow:hiddenの枠を
+   かぶせている。.card.home-ctaの中にtrackが来る形ではなく、track自身がカードを
+   横に並べて1枚ずつ見せる構造（スライド＝カード1枚ずつ）。 */
+.home-hero-carousel {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 2px;
+  border-radius: 14px;
+}
+.home-hero-carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+.home-hero-carousel-slide.card.home-cta {
+  flex: 0 0 100%;
+  min-width: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+.home-hero-carousel-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.home-hero-carousel-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+}
+.home-hero-carousel-dot.is-active {
+  background: #fff;
+  width: 16px;
+  border-radius: 4px;
+}
+
 .expertbanner,
 .recruitnote-banner {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -843,8 +887,12 @@ h2.pagetitle {
      .card { display: flex; }（同じ詳細度0,1,0、メディアクエリ無し）の方が
      カスケード順で後勝ちしてしまい、PCで実際には非表示になっていなかった
      不具合が発覚（「PCにバナーが出ている」との報告で判明）。.card.home-cta
-     （詳細度0,2,0）にして確実に上書きされるようにした。 */
+     （詳細度0,2,0）にして確実に上書きされるようにした。
+     2026-11-03追記：カルーセル化に伴い、外側の.home-hero-carousel自体も
+     非表示にする（.card.home-ctaだけ消すと、空のカルーセル枠とドットが
+     PCに残ってしまうため）。 */
   .card.home-cta { display: none; }
+  .home-hero-carousel { display: none; }
 
   /* サイドのタグ一覧は横スクロールではなく、折り返して並べる
      （ホームのサイド・他ページのPcSidebarどちらでも使うため、
