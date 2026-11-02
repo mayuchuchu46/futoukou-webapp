@@ -544,10 +544,16 @@ export default function HomeClient({
                     </svg>
                   )}
                   {opt.key === 'views' && (
-                    /* 閲覧アイコン：目 */
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4, marginTop: -1 }}>
-                      <path d="M1.5 8s2.5-5 6.5-5 6.5 5 6.5 5-2.5 5-6.5 5S1.5 8 1.5 8z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
-                      <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.4"/>
+                    /* 閲覧アイコン：ぽってりまつ毛目 */
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4, marginTop: -1 }}>
+                      {/* まつ毛 */}
+                      <path d="M5 5.2L4.3 3.8M8 4.8V3.3M11 5.2L11.7 3.8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                      {/* 目の輪郭（ぽってり） */}
+                      <path d="M1.5 8.5C3.5 5 12.5 5 14.5 8.5C12.5 12 3.5 12 1.5 8.5Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+                      {/* 瞳 */}
+                      <circle cx="8" cy="8.5" r="2.3" fill="currentColor"/>
+                      {/* ハイライト */}
+                      <circle cx="9.1" cy="7.4" r="0.7" fill="white"/>
                     </svg>
                   )}
                   {opt.key === 'expert' && (
