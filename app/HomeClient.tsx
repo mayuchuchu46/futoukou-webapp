@@ -490,7 +490,7 @@ export default function HomeClient({
                 <Link href="/gakko/shindan" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}>
                   <span aria-hidden="true" style={{ fontSize: 22 }}>🧭</span>
                   <span style={{ flex: 1 }}>
-                    <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>条件から学校を探す</span>
+                    <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>学校診断</span>
                     <span style={{ display: 'block', fontSize: 12 }}>学年・地域・通う頻度を選ぶだけ。通信制もフリースクールも一度に</span>
                   </span>
                   <span style={{ color: 'var(--main)', fontWeight: 700 }}>›</span>
