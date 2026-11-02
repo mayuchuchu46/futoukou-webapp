@@ -495,9 +495,18 @@ export default function HomeClient({
                   </span>
                   <span style={{ color: 'var(--main)', fontWeight: 700 }}>›</span>
                 </Link>
-                <Link href="/gakko/matome" className="muted" style={{ fontSize: 12, textDecoration: 'underline', textAlign: 'right' }}>
-                  都道府県別の一覧から探す ›
-                </Link>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+                  <Link href="/gakko/matome" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+                    都道府県別の一覧から探す ›
+                  </Link>
+                  {/* 助成金・支援制度（/gakko?type=josei）はPC版グローバルメニュー
+                      （Header.tsx）には単独リンクがあるが、スマホではそのメニュー自体が
+                      非表示（CSS側でPC限定）のため、トップページから辿る手段が無かった。
+                      「トップからいける？」との指摘を受けて追加（2026-11-02）。 */}
+                  <Link href="/gakko?type=josei" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+                    💴 助成金・支援制度を見る ›
+                  </Link>
+                </div>
               </div>
             ) : null}
 
