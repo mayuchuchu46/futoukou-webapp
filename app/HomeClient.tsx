@@ -543,6 +543,13 @@ export default function HomeClient({
                       <path d="M5 10.5c0-1.7 1.3-3 3-3s3 1.3 3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                     </svg>
                   )}
+                  {opt.key === 'views' && (
+                    /* 閲覧アイコン：目 */
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4, marginTop: -1 }}>
+                      <path d="M1.5 8s2.5-5 6.5-5 6.5 5 6.5 5-2.5 5-6.5 5S1.5 8 1.5 8z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+                      <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.4"/>
+                    </svg>
+                  )}
                   {opt.key === 'expert' && (
                     /* 専門家回答アイコン：星バッジ */
                     <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4, marginTop: -1 }}>
