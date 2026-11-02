@@ -25,18 +25,19 @@ export type MatomeSection = {
 export default function MatomeTypeFilter({ sections }: { sections: MatomeSection[] }) {
   const [active, setActive] = useState<Set<string>>(new Set(sections.map((s) => s.key)));
 
-  function toggle(key: string) {
-    setActive((cur) => {
-      const next = new Set(cur);
-      if (next.has(key)) {
-        // 最後の1つは消さない（全部非表示になって「何も無い」ように見えるのを防ぐ）。
-        if (next.size === 1) return next;
-        next.delete(key);
-      } else {
-        next.add(key);
-      }
-      return next;
-    });
+  // 以前は「すべて表示」の状態から、見たくない種類を1つずつ外していく（トグルで
+  // 解除していく）方式だった。1種類だけ見たいときに他の5つを全部タップして
+  // 消さなければならず、「ボタンを外していく選択方法がめんどい」との指摘を
+  // 受けた（2026-11-02）。種類チップをタップしたら、それ1種類だけに絞り込む
+  // 方式（タブに近い動き）に変更し、「すべて」チップで全種類表示に戻せるように
+  // した。複数種類を組み合わせて見たい場合の手段は無くなるが、単一種類への
+  // 絞り込みのほうが頻度が高いと判断した。
+  function selectOnly(key: string) {
+    setActive(new Set([key]));
+  }
+
+  function selectAll() {
+    setActive(new Set(sections.map((s) => s.key)));
   }
 
   const allActive = active.size === sections.length;
@@ -49,7 +50,7 @@ export default function MatomeTypeFilter({ sections }: { sections: MatomeSection
           <button
             type="button"
             className={`chip chip-tag${allActive ? ' active' : ''}`}
-            onClick={() => setActive(new Set(sections.map((s) => s.key)))}
+            onClick={selectAll}
           >
             すべて
           </button>
@@ -57,8 +58,8 @@ export default function MatomeTypeFilter({ sections }: { sections: MatomeSection
             <button
               key={s.key}
               type="button"
-              className={`chip chip-tag${active.has(s.key) ? ' active' : ''}`}
-              onClick={() => toggle(s.key)}
+              className={`chip chip-tag${!allActive && active.has(s.key) ? ' active' : ''}`}
+              onClick={() => selectOnly(s.key)}
               style={{ opacity: s.count === 0 ? 0.55 : 1 }}
             >
               {s.icon} {s.label}（{s.count}）
