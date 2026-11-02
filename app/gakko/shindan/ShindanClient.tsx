@@ -33,6 +33,19 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
   const [shown, setShown] = useState<Record<string, number>>({});
 
   const ready = grade > 0 && !!pref;
+  // 中学生（中1〜中3）はまだ在学中でも、卒業後にどの高校へ進学するかが早くから
+  // 切実な関心事になる。当初は中3（grade===9）だけに絞っていたが、「中学生は
+  // みんな高校進路出してあげて」との指摘を受け、中1・中2も対象に広げた
+  // （2026-11-02）。同じ考え方で、小学校高学年（小5・小6）も「中学校の進路」が
+  // 関心事になるため対象に加えた（同日、「小学生高学年は中学校進路出す」との
+  // 指摘を受けて）。
+  const isJunior = grade >= 7 && grade <= 9;
+  const isUpperElementary = grade === 5 || grade === 6;
+  const showsFuturePath = isJunior || isUpperElementary;
+  // 進学先セクションの見出し・文言に使う、次の学校段階の呼び方。
+  const nextStageLabel = isJunior ? '高校' : '中学校';
+  const nextStageTypeLabel = isJunior ? '通信制・定時制' : '学びの多様化学校';
+  const graduationLabel = isJunior ? '中学卒業後' : '小学校卒業後';
   // 一度「結果を見る」を押したあとは、条件を変えると結果もその場で更新する
   // （押したのに変わったか分からない、という指摘を受けて 2026-10-30 に変更）
   const touch = () => {};
@@ -58,8 +71,16 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
       // 学年：書かれている対象学年に含まれない学校は除外。読み取れない学校は「未確認」として残す。
       let gradeKnown = false;
       // 中学生が選んだ場合、通信制・定時制の高校は「進学先の候補」として別枠に出す
-      // （高校の対象学年に中学生は含まれないため、これまでは1校も出なかった。2026-10-30修正）
-      const future = (it.type === 'tsushin' || it.type === 'teiji') && grade >= 7 && grade <= 9 && !!it.grades && it.grades.includes(10);
+      // （高校の対象学年に中学生は含まれないため、これまでは1校も出なかった。2026-10-30修正）。
+      // 同じ考え方で、小学校高学年（小5・小6）が選んだ場合は、中学校課程の学びの
+      // 多様化学校（schoolTypeが「中学校」のみ＝小5・小6自身は対象学年に含まれない）
+      // も「進学先の候補」として出す（2026-11-02、「小学生高学年は中学校進路出す」
+      // との指摘を受けて追加）。schoolTypeが「小・中」の学校はすでに小5・小6が
+      // 対象学年に含まれているため、通常の判定（下のelse if）で「いま通える学校」
+      // 側に入る＝ここでは対象にしない。
+      const future =
+        ((it.type === 'tsushin' || it.type === 'teiji') && grade >= 7 && grade <= 9 && !!it.grades && it.grades.includes(10)) ||
+        (it.type === 'manabi' && (grade === 5 || grade === 6) && !!it.grades && it.grades.includes(7) && !it.grades.includes(grade));
       if (future) {
         gradeKnown = true;
       } else if (it.grades) {
@@ -273,7 +294,7 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
           }}
         >
           {ready && result
-            ? grade === 9 && result.future.length > 0
+            ? showsFuturePath && result.future.length > 0
               ? `結果を見る（進学先の候補${result.future.length}校／いま通える場所${result.sure.length}校）`
               : `結果を見る（条件に合う${result.sure.length}校／未確認含め${result.sure.length + result.partial.length}校${result.future.length > 0 ? `／進学先の候補${result.future.length}校` : ''}）`
             : '学年と都道府県を選んでください'}
@@ -283,13 +304,13 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
       {done && result && (
         <div ref={resultRef} className="card" style={{ alignItems: 'flex-start', gap: 14, scrollMarginTop: 70 }}>
           <div style={{ width: '100%' }}>
-            {grade === 9 && result.future.length > 0 ? (
+            {showsFuturePath && result.future.length > 0 ? (
               <>
                 <div className="answer-label" style={{ fontSize: 15 }}>
-                  中学卒業後の進学先として候補になる高校は{result.future.length}校です
+                  {graduationLabel}の進学先として候補になる{nextStageLabel}は{result.future.length}校です
                 </div>
                 <div className="muted" style={{ fontSize: 12 }}>
-                  いま中学生として通える場所も{result.sure.length}校見つかっています（下の別枠）。
+                  いま{isJunior ? '中学生' : '小学生'}として通える場所も{result.sure.length}校見つかっています（下の別枠）。
                 </div>
               </>
             ) : (
@@ -318,24 +339,26 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
           {result.sure.length + result.partial.length + result.future.length === 0 && (
             <div className="muted">この条件で見つかった学校はありませんでした。学校の種類や条件をゆるめてみてください。</div>
           )}
-          {/* 中3は、いまの学校探しより「卒業後どの高校に進学するか」が切実な関心事に
-              なることが多いため、高校進学の候補（通信制・定時制）を先頭・常に開いた
-              状態で出す（2026-10-30時点では「sure/partialが0件のときだけ繰り上げ」
-              だったため、他の種類も条件に合う中3の場合は結局埋もれていた。2026-11-02、
-              「中3なら高校の進路知りたいよね」との指摘を受けて対応）。
-              中1・中2はまだ高校選びが先の話なので対象外とする。 */}
-          {grade === 9 && result.future.length > 0 ? (
+          {/* 中学生（中1〜中3）・小学校高学年（小5・小6）は、いまの学校探しより
+              「次の学校段階（高校／中学校）にどこへ進むか」が切実な関心事になること
+              が多いため、進学先の候補セクションを先頭・常に開いた状態で出す
+              （2026-10-30時点では「sure/partialが0件のときだけ繰り上げ」だったため、
+              他の種類も条件に合う場合は結局埋もれていた。2026-11-02、「中3なら高校の
+              進路知りたいよね」「中学生はみんな高校進路出してあげて」「小学生高学年は
+              中学校進路出す」との指摘を受けて対応）。中1・中2・小4以下は対象外
+              （まだ次の学校段階を考えるには早い、または該当データが無い）。 */}
+          {showsFuturePath && result.future.length > 0 ? (
             <>
               {section(
                 'future',
-                '高校進学を考えるなら（通信制・定時制）',
-                `中学卒業後の進学先として候補になる高校です。通信制高校は他の都道府県からも入学できる場合があり、${pref}にあるものを先に並べています。`,
+                `${nextStageLabel}進学を考えるなら（${nextStageTypeLabel}）`,
+                `${graduationLabel}の進学先として候補になる${nextStageLabel}です。${isJunior ? '通信制高校は他の都道府県からも入学できる場合があり、' : ''}${pref}にあるものを先に並べています。`,
                 result.future,
                 true
               )}
               {section(
                 'sure',
-                '中学生のいま通える場所（条件に合うと確認できた学校）',
+                `${isJunior ? '中学生' : '小学生'}のいま通える場所（条件に合うと確認できた学校）`,
                 `${gradeLabel(grade)}が対象と確認できた学校です。${pref}にある学校を表示しています（オンラインは他の都道府県からも利用できます）。`,
                 result.sure,
                 result.sure.length > 0
@@ -364,7 +387,7 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
             '一部が未確認の学校',
             '対象学年や通う頻度がデータから確認できていない学校です。「合わない」という意味ではないので、詳細ページや公式サイトで確認してください。',
             result.partial,
-            result.sure.length === 0 && !(grade === 9 && result.future.length > 0)
+            result.sure.length === 0 && !(showsFuturePath && result.future.length > 0)
           )}
           {/* 診断結果の最後に、選んだ都道府県の助成金・支援制度への案内を1行追加
               （2026-11-02）。学校探しと使えるお金の制度は別の動機だが、使える制度を
