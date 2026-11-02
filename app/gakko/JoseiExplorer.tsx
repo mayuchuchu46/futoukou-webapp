@@ -26,7 +26,14 @@ export default function JoseiExplorer({ initialPref }: { initialPref: string | n
     router.replace(href, { scroll: false });
   }
 
-  const subsidies = pref ? getFreeschoolSubsidiesByPrefecture(pref) : [];
+  // 都道府県単位の制度（対象が広い）を先に、市区町村単位の制度をあとに表示する
+  // （2026-11-02、「もっと見やすく」との指摘を受けて、badge表示と合わせて整理）。
+  // 元のデータ順（安定ソート）は都道府県単位内・市区町村単位内でそのまま維持する。
+  const subsidies = pref
+    ? [...getFreeschoolSubsidiesByPrefecture(pref)].sort(
+        (a, b) => (a.entityLevel === 'city' ? 1 : 0) - (b.entityLevel === 'city' ? 1 : 0)
+      )
+    : [];
 
   return (
     <>
@@ -79,23 +86,48 @@ export default function JoseiExplorer({ initialPref }: { initialPref: string | n
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+              {/* 2026-11-02、一覧が全部同じ見た目の文字の塊で読みづらいとの指摘を受けて、
+                  1件ずつ枠で区切ったカードにし、実施主体（都道府県／市区町村）をバッジ
+                  で見分けられるようにした。 */}
               {subsidies.map((s, i) => (
                 <div
                   key={`${s.entity}-${s.name}-${i}`}
-                  style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                  style={{
+                    border: '1px solid var(--border)',
+                    borderRadius: 12,
+                    padding: '12px 14px',
+                    width: '100%',
+                  }}
                 >
-                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-                    実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 4 }}>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        padding: '2px 8px',
+                        borderRadius: 999,
+                        background: s.entityLevel === 'city' ? 'var(--clay-bg)' : 'var(--teal-bg)',
+                        color: s.entityLevel === 'city' ? 'var(--clay-text)' : 'var(--teal-text)',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {s.entityLevel === 'city' ? '市区町村' : '都道府県'}
+                    </span>
+                    <span style={{ fontWeight: 700, fontSize: 13 }}>{s.entity}</span>
                   </div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
-                  {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>※ {s.note}</div>}
+                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>{s.summary}</div>
+                  {s.note && (
+                    <div className="muted" style={{ fontSize: 12, marginTop: 4, paddingLeft: 8, borderLeft: '2px solid var(--border)' }}>
+                      {s.note}
+                    </div>
+                  )}
                   <a
                     href={s.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="muted"
-                    style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
+                    style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 6 }}
                   >
                     出典を見る ›
                   </a>
