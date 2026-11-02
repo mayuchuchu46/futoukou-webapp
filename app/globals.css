@@ -624,44 +624,77 @@ h2.pagetitle {
 }
 .viewtabs {
   display: flex;
-  gap: 0;
+  gap: 6px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   border-bottom: 1px solid var(--border);
-  padding: 0 6px;
+  padding: 10px 10px;
+  background: var(--bg);
 }
 .viewtabs::-webkit-scrollbar { display: none; }
 .viewtabs-tab {
   flex: 0 0 auto;
   white-space: nowrap;
-  padding: 12px 18px 11px;
+  padding: 8px 16px;
   font-size: 13px;
   font-weight: 700;
   color: var(--muted);
-  background: none;
-  border: none;
-  border-bottom: 2.5px solid transparent;
-  margin-bottom: -1px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  box-shadow: 0 2px 0 var(--border);
+  cursor: pointer;
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+.viewtabs-tab:hover {
+  background: var(--sub);
+  border-color: var(--main);
+  color: var(--main);
+}
+.viewtabs-tab:active {
+  transform: translateY(2px);
+  box-shadow: none;
 }
 .viewtabs-tab.active {
-  color: var(--main);
-  border-bottom-color: var(--main);
+  color: #fff;
+  background: var(--main);
+  border-color: var(--main);
+  box-shadow: 0 2px 0 #2a5e4a;
 }
-/* 経験者回答・専門家回答は未選択時にも色をつけて目立たせる。 */
+.viewtabs-tab.active:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+/* 経験者回答：未選択時も色あり */
 .viewtabs-tab--senpai {
   color: var(--moss-text);
+  border-color: var(--moss);
+}
+.viewtabs-tab--senpai:hover {
+  background: var(--moss-bg);
+  color: var(--moss-text);
+  border-color: var(--moss-text);
 }
 .viewtabs-tab--senpai.active {
-  color: var(--moss-text);
-  border-bottom-color: var(--moss);
+  background: var(--moss-text);
+  border-color: var(--moss-text);
+  box-shadow: 0 2px 0 #3a4a18;
 }
+/* 専門家回答：未選択時も色あり */
 .viewtabs-tab--expert {
   color: var(--orange-text);
+  border-color: var(--orange);
+}
+.viewtabs-tab--expert:hover {
+  background: var(--orange-bg);
+  color: var(--orange-text);
+  border-color: var(--orange-text);
 }
 .viewtabs-tab--expert.active {
-  color: var(--orange-text);
-  border-bottom-color: var(--orange);
+  background: var(--orange-text);
+  border-color: var(--orange-text);
+  box-shadow: 0 2px 0 #6b3020;
 }
 .home-list--tabbed { padding: 12px 14px 4px; }
 
