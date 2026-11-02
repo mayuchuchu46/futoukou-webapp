@@ -278,7 +278,7 @@ export default async function GakkoPage({
           <Link href="/gakko/shindan" className="card" style={{ textDecoration: 'none', color: 'inherit', alignItems: 'flex-start', gap: 4 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>🧭 学校タイプ診断 ›</div>
             <div className="muted" style={{ fontSize: 12 }}>
-              都道府県から一覧を見るのではなく、学年・通う頻度などの条件を選んで、通信制・定時制・学びの多様化学校・フリースクール・オルタナティブスクールを絞り込めます。
+              都道府県から一覧を見るのではなく、学年・好きなこと・通う頻度などの条件を選んで、お子さんに合う学校の候補を絞り込めます。
             </div>
           </Link>
 
