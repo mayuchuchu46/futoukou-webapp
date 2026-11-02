@@ -262,7 +262,7 @@ export default function HomeClient({
           <Link href="/ask" className="card home-cta">
             <img
               src="/assets/home_cta_banner.jpg"
-              alt="「今、どうしたらいい？」どうする先生に相談する。学年や状況をかんたんに入力するだけ。今できることや、次の一手を一緒に整理します。"
+              alt="ひとりで抱えず、次の一手を一緒に。不登校の悩みを、AIと専門家と一緒に考えます。どうする先生に相談する。"
               className="home-cta-banner"
             />
           </Link>
