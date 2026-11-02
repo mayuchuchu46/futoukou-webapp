@@ -31,10 +31,10 @@ function isExpertAnswered(item: Consultation) {
   return item.request_type === 'expert' && item.expert_status === 'answered' && item.experts?.credential !== SENPAI_CREDENTIAL;
 }
 
-// スマホトップの自動スライドバナー（2026-11-03追加、3枚とも画像差し替え済み）。
+// スマホトップの自動スライドバナー（2026-11-03追加、4枚とも画像差し替え済み）。
 // 1枚目：相談する（AI＋専門家）訴求、2枚目：伴走ノートの訴求、3枚目：経験者・専門家の
-// 募集訴求、という順番（2026-11-03、「1枚目はこれ（新しい相談バナー）、3枚目に
-// 経験者・専門家」との指示で、相談バナーと募集バナーの順番を入れ替え）。
+// 募集訴求、4枚目：学びの場を探す訴求、という順番（2026-11-03、PC版（PC_HERO_SLIDES）と
+// 同じ4枚構成に合わせて追加）。
 const HERO_SLIDES: HeroSlide[] = [
   {
     id: 'ask',
@@ -53,6 +53,12 @@ const HERO_SLIDES: HeroSlide[] = [
     href: '/recruit',
     src: '/assets/home_hero_recruit.jpg',
     alt: '経験者・専門家として、不登校のご家庭を一緒に支えませんか？不登校の経験者も歓迎、心理・教育・福祉の専門家、オンラインで無理なく参加、ご家庭の安心につながる。経験者・専門家として参加する。',
+  },
+  {
+    id: 'gakko',
+    href: '/gakko/matome',
+    src: '/assets/home_hero_gakko.jpg',
+    alt: 'お子さんに合う、学びの場を探そう。フリースクール・学びの多様化学校・通信制高校などをまとめて検索。学びの場を探してみる。',
   },
 ];
 
