@@ -516,8 +516,8 @@ export default function HomeClient({
               {([
                 { key: 'new', label: '新着順' },
                 { key: 'views', label: '閲覧数順' },
-                { key: 'senpai', label: '経験者回答' },
-                { key: 'expert', label: '専門家回答' },
+                { key: 'senpai', label: '🙋 経験者回答' },
+                { key: 'expert', label: '🎓 専門家回答' },
               ] as const).map((opt) => (
                 <button
                   key={opt.key}
