@@ -19,7 +19,7 @@ import LocalSchoolsCard from './LocalSchoolsCard';
 // localStorageの読み出しはクライアントマウント後にしかできないため、初回レンダー
 // （サーバー側）ではregisteredをnullのままにし、useEffectで読み込む
 // （lib/favorites.tsを使う既存コンポーネント群と同じ、hydrationズレを避けるパターン）。
-export default function MyRegionCard() {
+export default function MyRegionCard({ className = '' }: { className?: string } = {}) {
   const [registered, setRegistered] = useState<MyRegion | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -64,7 +64,7 @@ export default function MyRegionCard() {
 
   if (editing) {
     return (
-      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className={`card ${className}`.trim()} style={{ alignItems: 'flex-start', gap: 10 }}>
         <div className="answer-label" style={{ fontSize: 14 }}>お住まいの地域を登録</div>
         <div className="qtext" style={{ fontSize: 13 }}>
           登録すると、その地域にあるフリースクール・学びの多様化学校をホーム画面で優先的に表示します。ログイン不要・ブラウザだけに保存され、他の人には見えません。
@@ -119,7 +119,7 @@ export default function MyRegionCard() {
 
   if (!registered) {
     return (
-      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className={`card ${className}`.trim()} style={{ alignItems: 'flex-start', gap: 10 }}>
         <div className="answer-label" style={{ fontSize: 14 }}>お住まいの地域を登録する</div>
         <div className="qtext" style={{ fontSize: 13 }}>
           お住まいの都道府県・市区町村を登録すると、近くのフリースクール・学びの多様化学校をここに優先表示します。
@@ -132,7 +132,7 @@ export default function MyRegionCard() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div className={className} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       <LocalSchoolsCard
         prefecture={registered.prefecture}
         city={registered.city}

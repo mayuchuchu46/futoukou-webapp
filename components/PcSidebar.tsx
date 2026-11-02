@@ -8,6 +8,7 @@ import TagChips from './TagChips';
 import ExpertsTeaser, { ExpertProfile } from './ExpertsTeaser';
 import TodayQuestionTeaser from './TodayQuestionTeaser';
 import MimamoriShindanTeaser from './MimamoriShindanTeaser';
+import MyRegionCard from './MyRegionCard';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 
@@ -240,6 +241,21 @@ export default function PcSidebar({
       )}
 
       {!hideExperts && <ExpertsTeaser experts={experts} senpai={senpai} className="home-experts-side" />}
+
+      {/* 「自分の地域登録」カード。以前はホーム本文（.home-main-col）に
+          PC・モバイル共通で出していたが、PCでは本文の相談一覧を押し下げてしまう
+          との指摘（2026-11-03）を受けて、他の専門家一覧・見守り力診断と同じ
+          パターンでこちらの右コラムに移動した。本文側（HomeClient.tsx）は
+          モバイル専用（.home-myregion-mobile）にしてある。gakkoLinks（学びの場
+          カテゴリ一覧）の直前に置き、学びの場関連の導線同士を隣接させる。
+          localStorageのみの読み出しでAPIを叩かないため、isDesktopでの
+          ゲーティングは必須ではないが、他のサイド専用コンポーネントとの
+          一貫性のため揃えておく。 */}
+      {isDesktop && (
+        <div className="home-myregion-side">
+          <MyRegionCard />
+        </div>
+      )}
 
       {gakkoLinks}
     </div>

@@ -485,8 +485,12 @@ export default function HomeClient({
                 falseの時）でも地域登録・確認はできた方がよいため、showExtrasの
                 ゲートに関わらず常に表示する。未登録時は登録を促す小さなカード、
                 登録済みならその地域の学びの場をここに優先表示する
-                （components/MyRegionCard.tsx参照。ログイン不要・localStorageのみ）。 */}
-            <MyRegionCard />
+                （components/MyRegionCard.tsx参照。ログイン不要・localStorageのみ）。
+                PC（960px以上）では右コラム（PcSidebar内、.home-myregion-side）に
+                同じものを出すので、ここはモバイル専用にした（2026-11-03、「PCの場合
+                右サイドでよくない？」との指摘を受けて、他の専門家一覧・見守り力診断
+                等と同じモバイル／PC出し分けパターンに合わせた）。 */}
+            <MyRegionCard className="home-myregion-mobile" />
 
             {/* PCではサイド側に同じものを出すので、ここはモバイル専用（960px以上では非表示）。
                 見出しテキスト「気になるテーマから探す」は、スマホでは無くても
