@@ -221,6 +221,15 @@ export default async function GakkoPage({
   // 利用料助成は居住地（自治体）に紐づくため、学びの多様化学校等と同様に都道府県で
   // 絞り込める形にした。
   const type = normalizeGakkoType(rawType);
+  // type未指定でアクセスした場合、normalizeGakkoTypeは既定で'gakko'を返す。これまでは
+  // それをそのまま使っていたため、「学校種を選んで探す」という中立な入口のつもりで
+  // 置いたリンク（/gakko、type指定なし）を踏むと、選んでもいないのに「学びの多様化
+  // 学校」タブの中身（バナー・説明・一覧）がいきなり表示されてしまっていた
+  // （2026-11-02、「学校種から選ぶと、学びの多様化学校のトップにいくよ」との指摘を
+  // 受けて発覚）。type=gakkoを明示したリンク、または都道府県を選んで操作を続けている
+  // 途中は従来どおり表示し、「type未指定かつ都道府県も未選択」の素のアクセス時だけ、
+  // チップの選択肢を見せるにとどめる。
+  const explicitType = rawType !== undefined;
   // このタブに関連する実際の相談投稿（lib/themeSummary.ts、/dictionary/theme/[word]と
   // 同じ仕組み）。「学びの多様化学校に関する相談の投稿も載っているといい」との指摘を
   // 受けて追加（2026-10-18）。対応するテーマ語が無いタブ（online・josei）ではundefined。
@@ -229,6 +238,7 @@ export default async function GakkoPage({
   // 表示をブロックしないよう2026-10-18に分離）。
   const themeWord = TAB_THEME_WORD[type];
   const selected = pref && PREFECTURES.includes(pref) ? pref : null;
+  const showGakkoContent = type === 'gakko' && (explicitType || !!selected);
   const selectedSchoolType: SchoolTypeFilter | null =
     rawSchoolType && (SCHOOL_TYPES as readonly string[]).includes(rawSchoolType)
       ? (rawSchoolType as SchoolTypeFilter)
@@ -246,7 +256,7 @@ export default async function GakkoPage({
           {/* タブ冒頭のトップバナー（PAGE_CONTENT[type].heroBanner参照）。チャッピー
               （ChatGPT）に描いてもらった画像の上下の白い余白をタイトにクロップして使用
               （2026-10-18）。都道府県選択時もタブ冒頭の目印として残す。 */}
-          {PAGE_CONTENT[type].heroBanner && (
+          {PAGE_CONTENT[type].heroBanner && (type !== 'gakko' || showGakkoContent) && (
             <img
               src={PAGE_CONTENT[type].heroBanner!.src}
               alt={PAGE_CONTENT[type].heroBanner!.alt}
@@ -292,7 +302,7 @@ export default async function GakkoPage({
               {/* グループA：学校以外の居場所・学び方 */}
               <Link
                 href={selected ? `/gakko?pref=${encodeURIComponent(selected)}` : '/gakko'}
-                className={`chip chip-tag${type === 'gakko' ? ' active' : ''}`}
+                className={`chip chip-tag${showGakkoContent ? ' active' : ''}`}
                 style={{ textDecoration: 'none' }}
               >
                 学びの多様化学校
@@ -360,7 +370,7 @@ export default async function GakkoPage({
               毎回同じ説明が繰り返し表示されてしまっていた。説明自体は変わらないため、
               都道府県未選択（タブの最初の画面）のときだけ表示するようにした
               （2026-10-19、「最初のページだけ表示でいい」との指摘を受けて）。 */}
-          {type === 'gakko' && !selected && (
+          {showGakkoContent && !selected && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>学びの多様化学校（旧：不登校特例校）とは</div>
               <div className="qtext">
@@ -378,7 +388,7 @@ export default async function GakkoPage({
               長い一覧を全部見る必要があった。結果一覧の直前（都道府県未選択時は直後に
               続く「都道府県から探す」の直前）に置き、絞り込んでから一覧を見られるように
               した（2026-10-18、「小中高で絞り込みできたらいい」との指摘を受けて）。 */}
-          {type === 'gakko' && (
+          {showGakkoContent && (
             // 2026-10-19、都道府県の絞り込みもSchoolTypeExplorer内に統合したため
             // （「都道府県・学校種を操作した時の反応が遅い」との指摘を受けて）、
             // 都道府県の絞り込みカード自体もこのコンポーネントが描画する
@@ -636,7 +646,7 @@ export default async function GakkoPage({
             </>
           )}
 
-          {type === 'gakko' && (
+          {showGakkoContent && (
             <a
               href={MEXT_SOURCE_URL}
               target="_blank"
