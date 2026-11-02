@@ -618,6 +618,9 @@ h2.pagetitle {
   gap: 2px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
+  /* 横スクロール中に縦方向のジェスチャーが競合してグラグラするのを防ぐ
+     （2026-11-02、touch-action: pan-x を追加）。 */
+  touch-action: pan-x;
   scrollbar-width: none;
   border-bottom: 1px solid var(--border);
   margin: 2px 0 0;
