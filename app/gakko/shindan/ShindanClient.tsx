@@ -272,19 +272,36 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
             setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
           }}
         >
-          {ready && result ? `結果を見る（条件に合う${result.sure.length}校／未確認含め${result.sure.length + result.partial.length}校${result.future.length > 0 ? `／進学先の候補${result.future.length}校` : ''}）` : '学年と都道府県を選んでください'}
+          {ready && result
+            ? grade === 9 && result.future.length > 0
+              ? `結果を見る（進学先の候補${result.future.length}校／いま通える場所${result.sure.length}校）`
+              : `結果を見る（条件に合う${result.sure.length}校／未確認含め${result.sure.length + result.partial.length}校${result.future.length > 0 ? `／進学先の候補${result.future.length}校` : ''}）`
+            : '学年と都道府県を選んでください'}
         </button>
       </div>
 
       {done && result && (
         <div ref={resultRef} className="card" style={{ alignItems: 'flex-start', gap: 14, scrollMarginTop: 70 }}>
           <div style={{ width: '100%' }}>
-            <div className="answer-label" style={{ fontSize: 15 }}>
-              条件に合うと確認できた学校は{result.sure.length}校です
-            </div>
-            <div className="muted" style={{ fontSize: 12 }}>
-              対象学年などが未確認の学校{result.partial.length}校も、下の別枠に出しています。
-            </div>
+            {grade === 9 && result.future.length > 0 ? (
+              <>
+                <div className="answer-label" style={{ fontSize: 15 }}>
+                  中学卒業後の進学先として候補になる高校は{result.future.length}校です
+                </div>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  いま中学生として通える場所も{result.sure.length}校見つかっています（下の別枠）。
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="answer-label" style={{ fontSize: 15 }}>
+                  条件に合うと確認できた学校は{result.sure.length}校です
+                </div>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  対象学年などが未確認の学校{result.partial.length}校も、下の別枠に出しています。
+                </div>
+              </>
+            )}
             <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
               条件：{[
                 gradeLabel(grade),
@@ -301,26 +318,53 @@ export default function ShindanClient({ items }: { items: ShindanItem[] }) {
           {result.sure.length + result.partial.length + result.future.length === 0 && (
             <div className="muted">この条件で見つかった学校はありませんでした。学校の種類や条件をゆるめてみてください。</div>
           )}
-          {section(
-            'sure',
-            '条件に合うと確認できた学校',
-            `${gradeLabel(grade)}が対象と確認できた学校です。${pref}にある学校を表示しています（通信制高校とオンラインは他の都道府県からも利用できるため、${pref}にあるものを先に並べています）。`,
-            result.sure,
-            true
-          )}
-          {section(
-            'future',
-            '高校進学を考えるなら（通信制・定時制）',
-            `${gradeLabel(grade)}のいまは通えませんが、中学卒業後の進学先として候補になる高校です。通信制高校は他の都道府県からも入学できる場合があり、${pref}にあるものを先に並べています。`,
-            result.future,
-            result.sure.length + result.partial.length === 0
+          {/* 中3は、いまの学校探しより「卒業後どの高校に進学するか」が切実な関心事に
+              なることが多いため、高校進学の候補（通信制・定時制）を先頭・常に開いた
+              状態で出す（2026-10-30時点では「sure/partialが0件のときだけ繰り上げ」
+              だったため、他の種類も条件に合う中3の場合は結局埋もれていた。2026-11-02、
+              「中3なら高校の進路知りたいよね」との指摘を受けて対応）。
+              中1・中2はまだ高校選びが先の話なので対象外とする。 */}
+          {grade === 9 && result.future.length > 0 ? (
+            <>
+              {section(
+                'future',
+                '高校進学を考えるなら（通信制・定時制）',
+                `中学卒業後の進学先として候補になる高校です。通信制高校は他の都道府県からも入学できる場合があり、${pref}にあるものを先に並べています。`,
+                result.future,
+                true
+              )}
+              {section(
+                'sure',
+                '中学生のいま通える場所（条件に合うと確認できた学校）',
+                `${gradeLabel(grade)}が対象と確認できた学校です。${pref}にある学校を表示しています（オンラインは他の都道府県からも利用できます）。`,
+                result.sure,
+                result.sure.length > 0
+              )}
+            </>
+          ) : (
+            <>
+              {section(
+                'sure',
+                '条件に合うと確認できた学校',
+                `${gradeLabel(grade)}が対象と確認できた学校です。${pref}にある学校を表示しています（通信制高校とオンラインは他の都道府県からも利用できるため、${pref}にあるものを先に並べています）。`,
+                result.sure,
+                true
+              )}
+              {section(
+                'future',
+                '高校進学を考えるなら（通信制・定時制）',
+                `${gradeLabel(grade)}のいまは通えませんが、中学卒業後の進学先として候補になる高校です。通信制高校は他の都道府県からも入学できる場合があり、${pref}にあるものを先に並べています。`,
+                result.future,
+                result.sure.length + result.partial.length === 0
+              )}
+            </>
           )}
           {section(
             'partial',
             '一部が未確認の学校',
             '対象学年や通う頻度がデータから確認できていない学校です。「合わない」という意味ではないので、詳細ページや公式サイトで確認してください。',
             result.partial,
-            result.sure.length === 0
+            result.sure.length === 0 && !(grade === 9 && result.future.length > 0)
           )}
           {/* 診断結果の最後に、選んだ都道府県の助成金・支援制度への案内を1行追加
               （2026-11-02）。学校探しと使えるお金の制度は別の動機だが、使える制度を
