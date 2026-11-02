@@ -31,25 +31,24 @@ function isExpertAnswered(item: Consultation) {
   return item.request_type === 'expert' && item.expert_status === 'answered' && item.experts?.credential !== SENPAI_CREDENTIAL;
 }
 
-// スマホトップの自動スライドバナー（2026-11-03追加）。本来は3枚それぞれ別の
-// 訴求内容の画像にする予定だが、2枚目・3枚目の画像はまだ用意できていないため、
-// 暫定的に同じバナー画像・同じリンク先で3枚分用意している（カルーセルの仕組み
-// 自体は動く状態にしておき、画像が届き次第ここのsrc/alt/hrefだけ差し替える）。
+// スマホトップの自動スライドバナー（2026-11-03追加、3枚とも画像差し替え済み）。
+// 1枚目：経験者・専門家の募集訴求、2枚目：伴走ノートの訴求、3枚目：相談する（AI＋専門家）
+// というこれまでの導線3本をそのままスライドにまとめた構成。
 const HERO_SLIDES: HeroSlide[] = [
   {
+    id: 'recruit',
+    href: '/expert/recruit',
+    src: '/assets/home_hero_recruit.jpg',
+    alt: '不登校のご家庭を一緒に支える経験者・専門家を募集しています。ご自身の経験や専門性を活かして、悩むご家庭の力になりませんか？経験者・専門家として参加する。',
+  },
+  {
+    id: 'notebook',
+    href: '/notebook',
+    src: '/assets/home_hero_notebook.jpg',
+    alt: '伴走ノートで、今の状況を整理しよう。AIとの対話を通して、子どものこと・家庭のこと・今できることを一緒に整理できます。伴走ノートで状況を整理する。',
+  },
+  {
     id: 'ask',
-    href: '/ask',
-    src: '/assets/home_cta_banner.jpg',
-    alt: 'ひとりで抱えず、次の一手を一緒に。不登校の悩みを、AIと専門家と一緒に考えます。どうする先生に相談する。',
-  },
-  {
-    id: 'ask-2',
-    href: '/ask',
-    src: '/assets/home_cta_banner.jpg',
-    alt: 'ひとりで抱えず、次の一手を一緒に。不登校の悩みを、AIと専門家と一緒に考えます。どうする先生に相談する。',
-  },
-  {
-    id: 'ask-3',
     href: '/ask',
     src: '/assets/home_cta_banner.jpg',
     alt: 'ひとりで抱えず、次の一手を一緒に。不登校の悩みを、AIと専門家と一緒に考えます。どうする先生に相談する。',
