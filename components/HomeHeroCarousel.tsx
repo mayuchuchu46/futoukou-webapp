@@ -29,6 +29,11 @@ const AUTOPLAY_MS = 5000;
  * ための区別。PC（960px以上）では、以前は.home-hero-pc-linkという1枚固定の
  * 静的バナーだったが、「PCも同じようにカルーセルバナーにする」との依頼を受けて
  * こちらに統一した。
+ *
+ * 前後の矢印ボタン（2026-11-03追加）：スマホはスワイプで手動送りができるが、
+ * PCにはその手段が無かったため、「PCも手動で次へ行けるようにしたい」との
+ * 依頼を受けて追加。CSS側（.home-hero-carousel-arrow）でPC幅（960px以上）
+ * だけに表示し、スマホではスワイプ・ドットのみのこれまでの見た目を保つ。
  */
 export default function HomeHeroCarousel({
   slides,
@@ -86,17 +91,35 @@ export default function HomeHeroCarousel({
         ))}
       </div>
       {slides.length > 1 && (
-        <div className="home-hero-carousel-dots">
-          {slides.map((slide, i) => (
-            <button
-              key={slide.id}
-              type="button"
-              aria-label={`バナー${i + 1}枚目を表示`}
-              className={`home-hero-carousel-dot${i === index ? ' is-active' : ''}`}
-              onClick={() => goTo(i)}
-            />
-          ))}
-        </div>
+        <>
+          <button
+            type="button"
+            aria-label="前のバナーを表示"
+            className="home-hero-carousel-arrow home-hero-carousel-arrow--prev"
+            onClick={() => goTo(index - 1)}
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            aria-label="次のバナーを表示"
+            className="home-hero-carousel-arrow home-hero-carousel-arrow--next"
+            onClick={() => goTo(index + 1)}
+          >
+            ›
+          </button>
+          <div className="home-hero-carousel-dots">
+            {slides.map((slide, i) => (
+              <button
+                key={slide.id}
+                type="button"
+                aria-label={`バナー${i + 1}枚目を表示`}
+                className={`home-hero-carousel-dot${i === index ? ' is-active' : ''}`}
+                onClick={() => goTo(i)}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

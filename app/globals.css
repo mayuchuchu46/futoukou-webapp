@@ -546,6 +546,35 @@ h2.pagetitle {
   border-radius: 4px;
 }
 
+/* 前後の矢印ボタン（2026-11-03追加）。「カルーセル、自動だけじゃなく手動でも
+   次へ行けるようにしたい（PCも）」との依頼を受けて追加。スマホはスワイプで
+   手動送りができるため、ここではPC幅（960px以上）だけに出す
+   （デフォルトはdisplay:noneで、下の@media内で上書きする）。 */
+.home-hero-carousel-arrow {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+.home-hero-carousel-arrow:hover { background: rgba(0, 0, 0, 0.55); }
+.home-hero-carousel-arrow--prev { left: 10px; }
+.home-hero-carousel-arrow--next { right: 10px; }
+@media (min-width: 960px) {
+  .home-hero-carousel-arrow { display: flex; }
+}
+
 .expertbanner,
 .recruitnote-banner {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
