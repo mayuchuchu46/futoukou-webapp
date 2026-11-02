@@ -516,14 +516,31 @@ export default function HomeClient({
               {([
                 { key: 'new', label: '新着順' },
                 { key: 'views', label: '閲覧数順' },
-                { key: 'senpai', label: '🙋 経験者回答' },
-                { key: 'expert', label: '🎓 専門家回答' },
+                { key: 'senpai', label: '経験者回答' },
+                { key: 'expert', label: '専門家回答' },
               ] as const).map((opt) => (
                 <button
                   key={opt.key}
                   className={`viewtabs-tab ${opt.key === 'expert' ? 'viewtabs-tab--expert' : ''} ${opt.key === 'senpai' ? 'viewtabs-tab--senpai' : ''} ${viewTab === opt.key ? 'active' : ''}`}
                   onClick={() => setViewTab(opt.key)}
                 >
+                  {opt.key === 'senpai' && (
+                    /* 経験者回答アイコン：ぽってり顔 + 吹き出し */
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4, marginTop: -1 }}>
+                      <circle cx="8" cy="6" r="3.2" stroke="currentColor" strokeWidth="1.5"/>
+                      <circle cx="6.6" cy="5.5" r="0.55" fill="currentColor"/>
+                      <circle cx="9.4" cy="5.5" r="0.55" fill="currentColor"/>
+                      <path d="M6.2 7.4c.4.7 1 1.1 1.8 1.1s1.4-.4 1.8-1.1" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+                      <path d="M5 10.5c0-1.7 1.3-3 3-3s3 1.3 3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                  )}
+                  {opt.key === 'expert' && (
+                    /* 専門家回答アイコン：星バッジ */
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: 4, marginTop: -1 }}>
+                      <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M8 3.5l1.1 3.3H12.5l-2.8 2 1.1 3.3L8 10.1l-2.8 2 1.1-3.3-2.8-2H6.9z" fill="currentColor"/>
+                    </svg>
+                  )}
                   {opt.label}
                 </button>
               ))}
