@@ -6,6 +6,7 @@ import { useState } from 'react';
 import type { FreeSchool } from '@/lib/data/freeSchools';
 import { getFreeSchoolCoverage } from '@/lib/data/freeschoolCoverage';
 import { PREFECTURES } from '@/lib/data/prefectures';
+import { notFoundText } from '@/lib/emptyStateText';
 
 // フリースクール（地域）タブの都道府県絞り込み＋結果一覧。
 //
@@ -43,10 +44,10 @@ export default function FreeSchoolExplorer({
           <div className="answer-label" style={{ fontSize: 14 }}>{pref}のフリースクール</div>
           {coverage?.tier === 'none' || coverage?.tier === 'unprocessed' ? (
             <div className="muted">
-              {pref}については、{coverage.note}フリースクールが無いという意味ではなく、公開された一覧が見つからなかったということです。お近くの教育委員会やスクールカウンセラーに直接お問い合わせください。
+              {notFoundText(pref, 'フリースクールの公開された一覧', `${coverage.note}お近くの教育委員会やスクールカウンセラーに直接お問い合わせください。`)}
             </div>
           ) : freeSchools.length === 0 ? (
-            <div className="muted">掲載できる情報が見つかりませんでした。</div>
+            <div className="muted">{notFoundText(pref, '掲載できるフリースクールの情報')}</div>
           ) : (
             <>
               {coverage && (

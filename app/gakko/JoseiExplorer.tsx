@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { getFreeschoolSubsidiesByPrefecture, FREESCHOOL_SUBSIDIES } from '@/lib/data/freeschoolSubsidies';
 import { PREFECTURES } from '@/lib/data/prefectures';
+import { notFoundText } from '@/lib/emptyStateText';
 
 // 助成金・支援制度タブの都道府県絞り込み＋結果一覧。
 //
@@ -34,7 +35,7 @@ export default function JoseiExplorer({ initialPref }: { initialPref: string | n
           <div className="answer-label" style={{ fontSize: 14 }}>{pref}のフリースクール等利用料助成</div>
           {subsidies.length === 0 ? (
             <div className="muted">
-              {pref}については、Web検索で確認できるフリースクール等の利用料助成制度が見つかりませんでした。制度が無いという意味ではなく、見つからなかったということです。お住まいの市区町村教育委員会に直接お問い合わせください。
+              {notFoundText(pref, 'Web検索で確認できるフリースクール等の利用料助成制度', 'お住まいの市区町村教育委員会に直接お問い合わせください。')}
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>

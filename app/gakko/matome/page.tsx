@@ -14,6 +14,7 @@ import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { FREESCHOOL_SUBSIDIES, getFreeschoolSubsidiesByPrefecture } from '@/lib/data/freeschoolSubsidies';
+import { notFoundText } from '@/lib/emptyStateText';
 import MatomePrefectureSelect from './MatomePrefectureSelect';
 import MatomeTypeFilter, { MatomeSection } from './MatomeTypeFilter';
 
@@ -90,14 +91,9 @@ function SelectPrefecturePrompt({ nationwideNote }: { nationwideNote: string }) 
   );
 }
 
-// カテゴリごとに「見つかりませんでした」「確認できませんでした」等、0件のときの
-// 言い回しがバラバラだった点を統一するための共通テンプレート（2026-11-02、
-// 「このページがわかりにくい」との指摘のうち「形式や文言がバラバラ」という点への対応）。
-// 必ず「無いという意味ではなく、確認できなかっただけ」という安心材料の一文を
-// 添える（カテゴリによって元々これが付いていたり無かったりしていた）。
-function notFoundText(selected: string, thingLabel: string, extra?: string): string {
-  return `${selected}については、${thingLabel}を確認できませんでした。${thingLabel}が無いという意味ではなく、確認できなかったということです。${extra || ''}`;
-}
+// 空状態の文言テンプレート（notFoundText）は、他タブ（FreeSchoolExplorer.tsx・
+// ShienExplorer.tsx・JoseiExplorer.tsx等）とも共有するため lib/emptyStateText.ts に
+// 切り出した（2026-11-02、学び場UI/UX見直しP3対応）。
 
 export default async function GakkoMatomePage({
   searchParams,
