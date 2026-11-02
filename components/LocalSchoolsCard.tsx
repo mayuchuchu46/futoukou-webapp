@@ -80,7 +80,7 @@ export default function LocalSchoolsCard({
           className="btn-secondary"
           style={{ flex: 1 }}
         >
-          {city}の助成金を見る
+          {prefecture}/{city}の助成金情報
         </Link>
       </div>
     </div>
