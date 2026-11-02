@@ -45,11 +45,16 @@ export default function ShienExplorer({
               <div className="muted" style={{ fontSize: 12 }}>
                 ※ {coverage.note} すべての施設・自治体を網羅したものではありません。
               </div>
+              {/* 個別施設ページ（app/gakko/shien/[no]/page.tsx）へのリンクに変更
+                  （2026-11-02追加、「個別施設への直リンクして欲しかった」との指摘を
+                  受けて。以前はここもLocalSchoolsCard.tsxと同様、どこにもリンクしない
+                  <div>のままだった）。 */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                {centers.map((s, i) => (
-                  <div
-                    key={`${s.city}-${s.name}-${i}`}
-                    style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}
+                {centers.map((s) => (
+                  <Link
+                    key={s.no}
+                    href={`/gakko/shien/${s.no}`}
+                    style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, color: 'inherit', textDecoration: 'none' }}
                   >
                     <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
                     <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
@@ -58,7 +63,7 @@ export default function ShienExplorer({
                       {s.contact ? `・${s.contact}` : ''}
                     </div>
                     {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>}
-                  </div>
+                  </Link>
                 ))}
               </div>
               <a

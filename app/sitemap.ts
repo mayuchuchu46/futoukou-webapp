@@ -9,6 +9,7 @@ import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
+import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import { NEWS_ITEMS } from '@/lib/data/news';
 import { MIMAMORI_RESULTS } from '@/lib/mimamoriShindan';
@@ -193,6 +194,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.3,
   }));
 
+  // 教育支援センター紹介ページ（/gakko/shien/[no]）。app/gakko/shien/[no]/page.tsxの
+  // hasEnoughInfoと同じ条件（addressが確認できている施設のみindex対象）に合わせる
+  // （2026-11-02追加、「個別施設への直リンクして欲しかった」との指摘を受けて個別
+  // ページを追加した際に合わせて追加）。
+  const shienEntries: MetadataRoute.Sitemap = EDUCATION_SUPPORT_CENTERS.filter(
+    (s) => s.address
+  ).map((s) => ({
+    url: `${SITE_URL}/gakko/shien/${s.no}`,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
   return [
     ...staticEntries,
     ...dictionaryEntries,
@@ -202,6 +215,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...onlineSchoolEntries,
     ...tsushinSchoolEntries,
     ...teijiSchoolEntries,
+    ...shienEntries,
     ...newsEntries,
     ...consultationEntries,
   ];

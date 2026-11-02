@@ -5,6 +5,10 @@
 // ケースのみ、個別に収集している（educationSupportCoverage.tsで都道府県ごとの網羅状況を管理）。
 // 2026年10月確認。
 export type EducationSupportCenter = {
+  // 個別施設ページ（app/gakko/shien/[no]/page.tsx）用の連番id（2026-11-02追加、
+  // 「個別施設への直リンクして欲しかった」との指摘を受けて）。配列内の並び順に
+  // 1から振った連番で、市区町村教育委員会側のIDではない。
+  no: number;
   prefecture: string;
   city: string;
   name: string;
@@ -17,6 +21,7 @@ export type EducationSupportCenter = {
 
 export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
   {
+    no: 1,
     prefecture: '青森県',
     city: '青森市',
     name: '青森市教育支援センター（フレンドリーダイヤル・フレンドリールーム「あおいもり」）',
@@ -27,6 +32,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 2,
     prefecture: '青森県',
     city: '弘前市',
     name: '弘前市教育センター相談支援チーム（フレンドシップルーム）',
@@ -37,6 +43,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 3,
     prefecture: '青森県',
     city: '八戸市',
     name: '八戸市こども支援センター',
@@ -47,6 +54,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 4,
     prefecture: '青森県',
     city: '黒石市',
     name: '黒石市学習適応指導教室',
@@ -57,6 +65,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 5,
     prefecture: '青森県',
     city: '十和田市',
     name: '十和田市教育相談室・教育支援室「わかこま」',
@@ -67,6 +76,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 6,
     prefecture: '青森県',
     city: '三沢市',
     name: '三沢市教育相談センター',
@@ -77,6 +87,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 7,
     prefecture: '青森県',
     city: 'むつ市',
     name: 'むつ市教育相談室',
@@ -87,6 +98,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 8,
     prefecture: '青森県',
     city: 'つがる市',
     name: 'つがる市教育支援センター',
@@ -97,6 +109,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 9,
     prefecture: '青森県',
     city: '平川市',
     name: '平川市教育相談・ステップルーム',
@@ -107,6 +120,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 10,
     prefecture: '青森県',
     city: '鰺ヶ沢町',
     name: '鰺ヶ沢町教育支援センター',
@@ -117,6 +131,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 11,
     prefecture: '青森県',
     city: '深浦町',
     name: '深浦町教育支援センター',
@@ -127,6 +142,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 12,
     prefecture: '青森県',
     city: '板柳町',
     name: '板柳町教育支援センター',
@@ -137,6 +153,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 13,
     prefecture: '青森県',
     city: '鶴田町',
     name: '鶴田町教育支援センター',
@@ -147,6 +164,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 14,
     prefecture: '青森県',
     city: '中泊町',
     name: '中泊町教育支援センター',
@@ -157,6 +175,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 15,
     prefecture: '青森県',
     city: '野辺地町',
     name: '野辺地町教育相談室',
@@ -167,6 +186,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 16,
     prefecture: '青森県',
     city: '七戸町',
     name: '中部上北教育相談室',
@@ -177,6 +197,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 17,
     prefecture: '青森県',
     city: '六戸町',
     name: '六戸町教育支援センター「メイプルルーム」',
@@ -187,6 +208,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 18,
     prefecture: '青森県',
     city: '六ケ所村',
     name: '六ケ所村教育相談室',
@@ -197,6 +219,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 19,
     prefecture: '青森県',
     city: '三戸町',
     name: '三戸地方教育相談室',
@@ -207,6 +230,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 20,
     prefecture: '青森県',
     city: '五所川原市',
     name: '五所川原市教育支援センター「ほっとルーム」',
@@ -217,6 +241,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 21,
     prefecture: '青森県',
     city: '五所川原市',
     name: '五所川原市教育支援センター「ネクストルーム」',
@@ -227,6 +252,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 22,
     prefecture: '埼玉県',
     city: 'さいたま市',
     name: '教育支援センター「はばたき」',
@@ -237,6 +263,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 23,
     prefecture: '埼玉県',
     city: 'さいたま市',
     name: '教育支援センター「ステップ」',
@@ -247,6 +274,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 24,
     prefecture: '埼玉県',
     city: 'さいたま市',
     name: '教育支援センター「あおぞら」',
@@ -257,6 +285,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 25,
     prefecture: '埼玉県',
     city: 'さいたま市',
     name: '教育支援センター「はぐくみ」',
@@ -267,6 +296,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 26,
     prefecture: '埼玉県',
     city: 'さいたま市',
     name: '教育支援センター「かけはし」',
@@ -277,6 +307,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 27,
     prefecture: '埼玉県',
     city: 'さいたま市',
     name: '教育支援センター「たいよう」',
@@ -287,6 +318,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 28,
     prefecture: '埼玉県',
     city: '川口市',
     name: '東教育支援センター（わくわくスクール・チャレンジスクール）',
@@ -297,6 +329,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 29,
     prefecture: '埼玉県',
     city: '川口市',
     name: '西教育支援センター（わくわくスクール・チャレンジスクール）',
@@ -307,6 +340,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 30,
     prefecture: '埼玉県',
     city: '川口市',
     name: '南教育支援センター（わくわくスクール・チャレンジスクール）',
@@ -317,6 +351,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 31,
     prefecture: '埼玉県',
     city: '川口市',
     name: '北教育支援センター（わくわくスクール・チャレンジスクール）',
@@ -327,6 +362,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 32,
     prefecture: '埼玉県',
     city: '川口市',
     name: '川口市立教育研究所上青木分室',
@@ -337,6 +373,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 33,
     prefecture: '埼玉県',
     city: '蕨市',
     name: '日々草学級',
@@ -347,6 +384,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 34,
     prefecture: '埼玉県',
     city: '戸田市',
     name: '教育支援センター「すてっぷ」',
@@ -357,6 +395,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 35,
     prefecture: '埼玉県',
     city: '戸田市',
     name: '教育支援センター「西すてっぷ」',
@@ -367,6 +406,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 36,
     prefecture: '埼玉県',
     city: '新座市',
     name: 'ふれあいルーム',
@@ -377,6 +417,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 37,
     prefecture: '埼玉県',
     city: '新座市',
     name: 'とことこぷらすのへや',
@@ -387,6 +428,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 38,
     prefecture: '埼玉県',
     city: '新座市',
     name: 'ムササビルーム',
@@ -397,6 +439,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 39,
     prefecture: '埼玉県',
     city: '草加市',
     name: 'ふれあい教室',
@@ -407,6 +450,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 40,
     prefecture: '埼玉県',
     city: '朝霞市',
     name: '朝霞市子ども相談室',
@@ -417,6 +461,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 41,
     prefecture: '埼玉県',
     city: '志木市',
     name: '志木市立教育サポートセンター ステップルーム',
@@ -427,6 +472,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 42,
     prefecture: '埼玉県',
     city: '和光市',
     name: '和光市教育支援センター',
@@ -437,6 +483,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 43,
     prefecture: '埼玉県',
     city: '鴻巣市',
     name: '鴻巣市立教育支援センター「Let\'s教室（適応指導教室）」',
@@ -447,6 +494,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 44,
     prefecture: '埼玉県',
     city: '北本市',
     name: 'ステップ学級',
@@ -457,6 +505,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 45,
     prefecture: '埼玉県',
     city: '上尾市',
     name: '教育センター「かもめ・けやき教室」',
@@ -467,6 +516,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 46,
     prefecture: '埼玉県',
     city: '桶川市',
     name: 'けやき教室',
@@ -477,6 +527,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 47,
     prefecture: '埼玉県',
     city: '伊奈町',
     name: '伊奈町教育センター',
@@ -487,6 +538,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 48,
     prefecture: '埼玉県',
     city: '川越市',
     name: '小学生学習支援室',
@@ -497,6 +549,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 49,
     prefecture: '埼玉県',
     city: '川越市',
     name: 'つばさ教室',
@@ -507,6 +560,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 50,
     prefecture: '埼玉県',
     city: '狭山市',
     name: '教育支援センター「ひだまり」',
@@ -517,6 +571,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 51,
     prefecture: '埼玉県',
     city: '所沢市',
     name: '教育支援センター「クウェスト」',
@@ -527,6 +582,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 52,
     prefecture: '埼玉県',
     city: '飯能市',
     name: '教育支援センター「杉っ子ルーム」',
@@ -537,6 +593,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 53,
     prefecture: '埼玉県',
     city: '日高市',
     name: 'ユリイカ',
@@ -547,6 +604,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 54,
     prefecture: '埼玉県',
     city: '越生町',
     name: '越生町適応指導教室',
@@ -557,6 +615,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 55,
     prefecture: '埼玉県',
     city: '毛呂山町',
     name: '教育支援センター（レインボー）',
@@ -567,6 +626,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 56,
     prefecture: '埼玉県',
     city: '坂戸市',
     name: '教育支援センター（ぱすてる）',
@@ -577,6 +637,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 57,
     prefecture: '埼玉県',
     city: '鶴ヶ島市',
     name: '教育支援室アペルト',
@@ -587,6 +648,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 58,
     prefecture: '埼玉県',
     city: '入間市',
     name: 'ひばり教室',
@@ -597,6 +659,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 59,
     prefecture: '埼玉県',
     city: '富士見市',
     name: 'あすなろ',
@@ -607,6 +670,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 60,
     prefecture: '埼玉県',
     city: 'ふじみ野市',
     name: 'ふじみ野市教育相談室',
@@ -617,6 +681,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 61,
     prefecture: '埼玉県',
     city: '三芳町',
     name: '三芳町教育支援室らるご',
@@ -627,6 +692,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 62,
     prefecture: '埼玉県',
     city: '東松山市',
     name: '教育支援センター「ふれあい教室」',
@@ -637,6 +703,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 63,
     prefecture: '埼玉県',
     city: '滑川町・嵐山町・小川町・ときがわ町・東秩父村',
     name: '小川町広域適応指導教室（広域）',
@@ -647,6 +714,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 64,
     prefecture: '埼玉県',
     city: '鳩山町',
     name: 'はーとん教室',
@@ -657,6 +725,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 65,
     prefecture: '埼玉県',
     city: '川島町',
     name: '川島町まなびのサポートセンター',
@@ -667,6 +736,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 66,
     prefecture: '埼玉県',
     city: '吉見町',
     name: '吉見町教育相談室「あすなろ教室」',
@@ -677,6 +747,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 67,
     prefecture: '埼玉県',
     city: '本庄市・上里町・美里町・神川町',
     name: '本庄市教育支援センター「ふれあい教室」（広域）',
@@ -687,6 +758,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 68,
     prefecture: '埼玉県',
     city: '熊谷市',
     name: '熊谷市教育支援センター「さくら教室」',
@@ -697,6 +769,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 69,
     prefecture: '埼玉県',
     city: '深谷市',
     name: '深谷市教育支援センター「いきいきスクール」',
@@ -707,6 +780,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 70,
     prefecture: '埼玉県',
     city: '深谷市',
     name: '深谷市教育支援センター「いきいきナイトスクール」',
@@ -717,6 +791,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 71,
     prefecture: '埼玉県',
     city: '深谷市',
     name: '深谷市教育支援センター「フリースペースえがお」',
@@ -727,6 +802,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 72,
     prefecture: '埼玉県',
     city: '寄居町',
     name: '寄居町かわせみ教室',
@@ -737,6 +813,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 73,
     prefecture: '埼玉県',
     city: '秩父市',
     name: '秩父市教育支援センター「ひまわり教室」',
@@ -747,6 +824,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 74,
     prefecture: '埼玉県',
     city: '横瀬町',
     name: '横瀬町教育支援センター（カワセミ教室）',
@@ -757,6 +835,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 75,
     prefecture: '埼玉県',
     city: '小鹿野町',
     name: 'おがの輝きスクール',
@@ -767,6 +846,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 76,
     prefecture: '埼玉県',
     city: '皆野町',
     name: 'み～な教室',
@@ -777,6 +857,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 77,
     prefecture: '埼玉県',
     city: '長瀞町',
     name: '長瀞町適応指導教室',
@@ -787,6 +868,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 78,
     prefecture: '埼玉県',
     city: '行田市',
     name: '適応指導教室ウイズ',
@@ -797,6 +879,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 79,
     prefecture: '埼玉県',
     city: '加須市',
     name: '加須市立教育センター「加須学びサポート『ピア』」',
@@ -807,6 +890,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 80,
     prefecture: '埼玉県',
     city: '羽生市',
     name: '羽生市教育支援センター',
@@ -817,6 +901,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 81,
     prefecture: '埼玉県',
     city: '春日部市',
     name: '教育相談センター',
@@ -827,6 +912,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 82,
     prefecture: '埼玉県',
     city: '春日部市',
     name: '適応指導教室 大沼分館「そよかぜ」',
@@ -837,6 +923,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 83,
     prefecture: '埼玉県',
     city: '春日部市',
     name: '適応指導教室 庄和分館「すくすく」',
@@ -847,6 +934,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 84,
     prefecture: '埼玉県',
     city: '蓮田市',
     name: '蓮田市教育センター 適応指導教室エコー',
@@ -857,6 +945,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 85,
     prefecture: '埼玉県',
     city: '越谷市',
     name: '教育支援教室「おあしす」中教室',
@@ -867,6 +956,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 86,
     prefecture: '埼玉県',
     city: '越谷市',
     name: '教育支援教室「おあしす」北教室',
@@ -877,6 +967,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 87,
     prefecture: '埼玉県',
     city: '越谷市',
     name: '教育支援教室「おあしす」南教室',
@@ -887,6 +978,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 88,
     prefecture: '埼玉県',
     city: '越谷市',
     name: '教育支援教室「おあしす」西教室',
@@ -897,6 +989,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 89,
     prefecture: '埼玉県',
     city: '八潮市',
     name: '八潮市教育相談所（フレンドスクール）',
@@ -907,6 +1000,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 90,
     prefecture: '埼玉県',
     city: '久喜市',
     name: '教育支援センター「さくらフレンドルーム」',
@@ -917,6 +1011,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 91,
     prefecture: '埼玉県',
     city: '久喜市',
     name: '教育支援センター「ポピーフレンドルーム」',
@@ -927,6 +1022,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 92,
     prefecture: '埼玉県',
     city: '久喜市',
     name: '教育支援センター「サルビアフレンドルーム」',
@@ -937,6 +1033,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 93,
     prefecture: '埼玉県',
     city: '久喜市',
     name: '教育支援センター「コスモスフレンドルーム」',
@@ -947,6 +1044,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 94,
     prefecture: '埼玉県',
     city: '白岡市',
     name: '白岡市教育支援センター',
@@ -957,6 +1055,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 95,
     prefecture: '埼玉県',
     city: '宮代町',
     name: '宮代町教育支援センター「みらい」',
@@ -967,6 +1066,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 96,
     prefecture: '埼玉県',
     city: '幸手市',
     name: '幸手市心すこやか支援室',
@@ -977,6 +1077,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 97,
     prefecture: '埼玉県',
     city: '杉戸町',
     name: '杉戸町教育相談所適応指導教室',
@@ -987,6 +1088,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 98,
     prefecture: '埼玉県',
     city: '松伏町',
     name: '松伏町教育支援センター「ひだまり」',
@@ -997,6 +1099,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 99,
     prefecture: '埼玉県',
     city: '吉川市',
     name: '教育支援センター「宇宙」',
@@ -1007,6 +1110,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 100,
     prefecture: '埼玉県',
     city: '三郷市',
     name: '第1教育相談室 適応指導教室「野のさと」',
@@ -1017,6 +1121,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 101,
     prefecture: '埼玉県',
     city: '三郷市',
     name: '第3教育相談室 適応指導教室「みずぬま」',
@@ -1027,6 +1132,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 102,
     prefecture: '千葉県',
     city: '千葉市',
     name: '千葉市不登校教育センター',
@@ -1037,6 +1143,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 103,
     prefecture: '千葉県',
     city: '市原市',
     name: '適応指導教室フレンド市原',
@@ -1047,6 +1154,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 104,
     prefecture: '千葉県',
     city: '市川市',
     name: '適応指導教室ふれんどルーム市川',
@@ -1057,6 +1165,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 105,
     prefecture: '千葉県',
     city: '船橋市',
     name: '適応指導教室「ひまわり」',
@@ -1067,6 +1176,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 106,
     prefecture: '千葉県',
     city: '習志野市',
     name: '不登校適応指導教室「フレンドあいあい」',
@@ -1077,6 +1187,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 107,
     prefecture: '千葉県',
     city: '八千代市',
     name: '不登校適応支援センター「フレンド八千代」',
@@ -1087,6 +1198,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 108,
     prefecture: '千葉県',
     city: '浦安市',
     name: 'いちょう学級猫実',
@@ -1097,6 +1209,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 109,
     prefecture: '千葉県',
     city: '浦安市',
     name: 'いちょう学級入船',
@@ -1107,6 +1220,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 110,
     prefecture: '千葉県',
     city: '松戸市',
     name: '教育支援センター「ふれあい学級」',
@@ -1117,6 +1231,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 111,
     prefecture: '千葉県',
     city: '松戸市',
     name: 'ほっとステーション 常盤平分室',
@@ -1127,6 +1242,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 112,
     prefecture: '千葉県',
     city: '松戸市',
     name: 'ほっとステーション 古ケ崎分室',
@@ -1137,6 +1253,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 113,
     prefecture: '千葉県',
     city: '野田市',
     name: '不登校適応指導学級',
@@ -1147,6 +1264,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 114,
     prefecture: '千葉県',
     city: '柏市',
     name: '不登校教育支援センター「きぼうの園」',
@@ -1157,6 +1275,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 115,
     prefecture: '千葉県',
     city: '柏市',
     name: '豊四季台学習相談室',
@@ -1167,6 +1286,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 116,
     prefecture: '千葉県',
     city: '柏市',
     name: '増尾台学習相談室',
@@ -1177,6 +1297,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 117,
     prefecture: '千葉県',
     city: '柏市',
     name: '大津ケ丘学習相談室',
@@ -1187,6 +1308,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 118,
     prefecture: '千葉県',
     city: '流山市',
     name: '教育支援センター「フレンドステーションエルズ」',
@@ -1197,6 +1319,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 119,
     prefecture: '千葉県',
     city: '流山市',
     name: '教育支援センター「フレンドステーションしんかわ」',
@@ -1207,6 +1330,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 120,
     prefecture: '千葉県',
     city: '我孫子市',
     name: '教育支援センター「かけはし」',
@@ -1217,6 +1341,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 121,
     prefecture: '千葉県',
     city: '我孫子市',
     name: '教育支援センター「ひだまり」',
@@ -1227,6 +1352,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 122,
     prefecture: '千葉県',
     city: '鎌ケ谷市',
     name: 'ふれあい談話室（教育相談室併設）',
@@ -1237,6 +1363,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 123,
     prefecture: '千葉県',
     city: '成田市',
     name: '適応指導教室「ふれあいるーむ21」',
@@ -1247,6 +1374,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 124,
     prefecture: '千葉県',
     city: '佐倉市',
     name: '適応指導教室「佐倉教室」',
@@ -1257,6 +1385,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 125,
     prefecture: '千葉県',
     city: '佐倉市',
     name: '適応指導教室「志津教室」',
@@ -1267,6 +1396,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 126,
     prefecture: '千葉県',
     city: '四街道市',
     name: '学校教育相談室「ルームよつば」',
@@ -1277,6 +1407,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 127,
     prefecture: '千葉県',
     city: '八街市',
     name: '教育支援センター「ナチュラル」',
@@ -1287,6 +1418,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 128,
     prefecture: '千葉県',
     city: '印西市',
     name: '適応指導教室「緑のまきば」',
@@ -1297,6 +1429,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 129,
     prefecture: '千葉県',
     city: '印西市',
     name: '適応指導教室「森のステーション」',
@@ -1307,6 +1440,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 130,
     prefecture: '千葉県',
     city: '白井市',
     name: 'ヤングハートしろい（教育支援課）',
@@ -1317,6 +1451,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 131,
     prefecture: '千葉県',
     city: '富里市',
     name: 'ふれあいセンター適応指導教室',
@@ -1327,6 +1462,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 132,
     prefecture: '千葉県',
     city: '酒々井町',
     name: '適応指導教室（ふれあいルーム）',
@@ -1337,6 +1473,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 133,
     prefecture: '千葉県',
     city: '栄町',
     name: '教育支援センター「ゆうがく館」',
@@ -1347,6 +1484,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 134,
     prefecture: '千葉県',
     city: '香取市',
     name: '学校教育課指導班（不登校担当）',
@@ -1357,6 +1495,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 135,
     prefecture: '千葉県',
     city: '東庄町',
     name: '適応指導教室「ふれあいルーム東庄」',
@@ -1367,6 +1506,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 136,
     prefecture: '千葉県',
     city: '銚子市',
     name: '銚子市教育支援センター',
@@ -1377,6 +1517,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 137,
     prefecture: '千葉県',
     city: '旭市',
     name: '適応指導教室「フレンドあさひ」',
@@ -1387,6 +1528,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 138,
     prefecture: '千葉県',
     city: '匝瑳市',
     name: '適応支援教室「さわやかルーム」',
@@ -1397,6 +1539,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 139,
     prefecture: '千葉県',
     city: '東金市',
     name: '適応指導教室「ハートフルさんぶ 東金教室」',
@@ -1407,6 +1550,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 140,
     prefecture: '千葉県',
     city: '山武市',
     name: '適応指導教室「ハートフルさんぶ 山武教室」',
@@ -1417,6 +1561,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 141,
     prefecture: '千葉県',
     city: '大網白里市',
     name: '適応指導教室「ハートフルさんぶ 大網白里教室」',
@@ -1427,6 +1572,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 142,
     prefecture: '千葉県',
     city: '九十九里町',
     name: '適応指導教室「ハートフルさんぶ 東金教室」',
@@ -1437,6 +1583,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 143,
     prefecture: '千葉県',
     city: '横芝光町',
     name: '適応指導教室「ハートフルさんぶ 横芝光教室」',
@@ -1447,6 +1594,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 144,
     prefecture: '千葉県',
     city: '茂原市',
     name: '適応指導教室（豊田教室）',
@@ -1457,6 +1605,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 145,
     prefecture: '千葉県',
     city: '茂原市',
     name: '適応指導教室（五郷教室）',
@@ -1467,6 +1616,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 146,
     prefecture: '千葉県',
     city: 'いすみ市',
     name: '適応指導教室「いすみほっとスクール」',
@@ -1477,6 +1627,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 147,
     prefecture: '千葉県',
     city: '館山市',
     name: '館山市教育支援センター',
@@ -1487,6 +1638,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 148,
     prefecture: '千葉県',
     city: '南房総市',
     name: '子ども教室「スマイル」',
@@ -1497,6 +1649,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 149,
     prefecture: '千葉県',
     city: '木更津市',
     name: '適応指導教室「あさひ学級」',
@@ -1507,6 +1660,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 150,
     prefecture: '千葉県',
     city: '君津市',
     name: '教育支援センター「きみつメイト」',
@@ -1517,6 +1671,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 151,
     prefecture: '千葉県',
     city: '富津市',
     name: '適応指導教室「さわやか教室」',
@@ -1527,6 +1682,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 152,
     prefecture: '千葉県',
     city: '袖ケ浦市',
     name: '教育支援教室「のぞみ学級」',
@@ -1537,6 +1693,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 153,
     prefecture: '福井県',
     city: '嶺南地域',
     name: 'フレンド学級',
@@ -1547,6 +1704,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 154,
     prefecture: '福井県',
     city: '福井市',
     name: 'チャレンジ教室',
@@ -1557,6 +1715,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 155,
     prefecture: '福井県',
     city: '敦賀市',
     name: 'スクール・ハートフル',
@@ -1567,6 +1726,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 156,
     prefecture: '福井県',
     city: '小浜市',
     name: 'ふれあいスクール',
@@ -1577,6 +1737,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 157,
     prefecture: '福井県',
     city: '大野市',
     name: 'フレッシュハウス',
@@ -1587,6 +1748,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 158,
     prefecture: '福井県',
     city: '勝山市',
     name: 'さわやか教室',
@@ -1597,6 +1759,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 159,
     prefecture: '福井県',
     city: '鯖江市',
     name: 'チャイルドセンター',
@@ -1607,6 +1770,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 160,
     prefecture: '福井県',
     city: 'あわら市',
     name: 'いきいき教室',
@@ -1617,6 +1781,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 161,
     prefecture: '福井県',
     city: '越前市',
     name: '希望学園',
@@ -1627,6 +1792,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 162,
     prefecture: '福井県',
     city: '越前市',
     name: 'ウイング',
@@ -1637,6 +1803,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 163,
     prefecture: '福井県',
     city: '坂井市',
     name: 'ステップスクールさかい',
@@ -1647,6 +1814,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 164,
     prefecture: '福井県',
     city: '永平寺町',
     name: 'フレッシュルーム',
@@ -1657,6 +1825,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 165,
     prefecture: '福井県',
     city: '永平寺町',
     name: 'チャレンジルーム',
@@ -1667,6 +1836,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 166,
     prefecture: '福井県',
     city: '永平寺町',
     name: 'ふれあいルーム',
@@ -1677,6 +1847,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 167,
     prefecture: '福井県',
     city: '南越前町',
     name: 'つばさ',
@@ -1687,6 +1858,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 168,
     prefecture: '福井県',
     city: '越前町',
     name: 'はばたき教室',
@@ -1697,6 +1869,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 169,
     prefecture: '福井県',
     city: '高浜町',
     name: 'はまなす教室',
@@ -1707,6 +1880,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 170,
     prefecture: '福井県',
     city: '若狭町',
     name: 'ふれあい教室',
@@ -1717,6 +1891,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 171,
     prefecture: '福井県',
     city: 'おおい町',
     name: 'おおい町適応指導教室',
@@ -1727,6 +1902,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし',
   },
   {
+    no: 172,
     prefecture: '静岡県',
     city: '沼津市',
     name: '青少年教育センター「はばたき教室」',
@@ -1737,6 +1913,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 173,
     prefecture: '静岡県',
     city: '熱海市',
     name: 'あすなろ教室',
@@ -1747,6 +1924,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 174,
     prefecture: '静岡県',
     city: '三島市',
     name: 'ふれあい教室',
@@ -1757,6 +1935,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 175,
     prefecture: '静岡県',
     city: '富士宮市',
     name: '富士宮市青少年相談センター',
@@ -1767,6 +1946,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 176,
     prefecture: '静岡県',
     city: '伊東市',
     name: '伊東市教育支援センター「なぎさ」',
@@ -1777,6 +1957,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 177,
     prefecture: '静岡県',
     city: '富士市',
     name: '富士市青少年相談センター',
@@ -1787,6 +1968,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 178,
     prefecture: '静岡県',
     city: '御殿場市',
     name: '御殿場市教育支援センター',
@@ -1797,6 +1979,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 179,
     prefecture: '静岡県',
     city: '下田市',
     name: 'あじさい教室',
@@ -1807,6 +1990,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 180,
     prefecture: '静岡県',
     city: '裾野市',
     name: 'ふれあい教室',
@@ -1817,6 +2001,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 181,
     prefecture: '静岡県',
     city: '伊豆市',
     name: '学習支援教室「いごこち」',
@@ -1827,6 +2012,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 182,
     prefecture: '静岡県',
     city: '伊豆の国市',
     name: 'わかあゆ教室',
@@ -1837,6 +2023,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 183,
     prefecture: '静岡県',
     city: '伊豆の国市',
     name: '韮山サテライト',
@@ -1847,6 +2034,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 184,
     prefecture: '静岡県',
     city: '西伊豆町',
     name: '適応指導教室',
@@ -1857,6 +2045,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 185,
     prefecture: '静岡県',
     city: '函南町',
     name: '函南町教育支援センター',
@@ -1867,6 +2056,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 186,
     prefecture: '静岡県',
     city: '清水町',
     name: 'かわせみ教室',
@@ -1877,6 +2067,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 187,
     prefecture: '静岡県',
     city: '長泉町',
     name: 'いずみ教室',
@@ -1887,6 +2078,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 188,
     prefecture: '静岡県',
     city: '小山町',
     name: '金太郎教室',
@@ -1897,6 +2089,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 189,
     prefecture: '静岡県',
     city: '焼津市',
     name: '焼津チャレンジ',
@@ -1907,6 +2100,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 190,
     prefecture: '静岡県',
     city: '焼津市',
     name: '大井川チャレンジ',
@@ -1917,6 +2111,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 191,
     prefecture: '静岡県',
     city: '焼津市',
     name: '東益津チャレンジ',
@@ -1927,6 +2122,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 192,
     prefecture: '静岡県',
     city: '藤枝市',
     name: '藤の子教室',
@@ -1937,6 +2133,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 193,
     prefecture: '静岡県',
     city: '島田市',
     name: '島田市教育センター',
@@ -1947,6 +2144,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 194,
     prefecture: '静岡県',
     city: '掛川市',
     name: '掛川市教育センター「みどり教室」',
@@ -1957,6 +2155,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 195,
     prefecture: '静岡県',
     city: '掛川市',
     name: '北分教室',
@@ -1967,6 +2166,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 196,
     prefecture: '静岡県',
     city: '御前崎市',
     name: '適応指導教室「サンルーム」',
@@ -1977,6 +2177,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 197,
     prefecture: '静岡県',
     city: '菊川市',
     name: '教育支援センター「このゆびと～まれ」',
@@ -1987,6 +2188,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 198,
     prefecture: '静岡県',
     city: '牧之原市',
     name: '教育支援センター「フルール」',
@@ -1997,6 +2199,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 199,
     prefecture: '静岡県',
     city: '牧之原市',
     name: 'サテライト教室（相良校）',
@@ -2007,6 +2210,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 200,
     prefecture: '静岡県',
     city: '磐田市',
     name: '教育支援センター（あすなろ）',
@@ -2017,6 +2221,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 201,
     prefecture: '静岡県',
     city: '磐田市',
     name: '教育支援センター（あすなろ2）',
@@ -2027,6 +2232,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 202,
     prefecture: '静岡県',
     city: '磐田市',
     name: '第3の教育支援センター',
@@ -2037,6 +2243,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 203,
     prefecture: '静岡県',
     city: '袋井市',
     name: '教育支援センター「ひまわり」',
@@ -2047,6 +2254,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 204,
     prefecture: '静岡県',
     city: '湖西市',
     name: '湖西市チャレンジ教室',
@@ -2057,6 +2265,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 205,
     prefecture: '静岡県',
     city: '吉田町',
     name: '教育支援センター「ステップルーム」',
@@ -2067,6 +2276,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 206,
     prefecture: '静岡県',
     city: '森町',
     name: '教育支援センター「わかば」',
@@ -2077,6 +2287,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 207,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'まつのき教室（校外まなびの教室）',
@@ -2087,6 +2298,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 208,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'ふれあい教室（校外まなびの教室）',
@@ -2097,6 +2309,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 209,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'くすのき教室（校外まなびの教室）',
@@ -2107,6 +2320,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 210,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'とびうお教室（校外まなびの教室）',
@@ -2117,6 +2331,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 211,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'くろーばー教室（校外まなびの教室）',
@@ -2127,6 +2342,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 212,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'すぎのこ教室（校外まなびの教室）',
@@ -2137,6 +2353,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 213,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'ひまわり教室（校外まなびの教室）',
@@ -2147,6 +2364,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 214,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'おれんぢ教室（校外まなびの教室）',
@@ -2157,6 +2375,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 215,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'かやの木教室（校外まなびの教室）',
@@ -2167,6 +2386,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 216,
     prefecture: '静岡県',
     city: '浜松市',
     name: 'おあしす教室（校外まなびの教室）',
@@ -2177,6 +2397,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 217,
     prefecture: '静岡県',
     city: '静岡市',
     name: '静岡市教育支援センター ふれあい教室',
@@ -2187,6 +2408,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 218,
     prefecture: '静岡県',
     city: '静岡市',
     name: '静岡市教育支援センター はばたく教室',
@@ -2197,6 +2419,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 219,
     prefecture: '静岡県',
     city: '静岡市',
     name: '静岡市教育支援センター かがやく教室',
@@ -2207,6 +2430,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 220,
     prefecture: '静岡県',
     city: '沼津市',
     name: '学習支援室「ステップバイステップ」沼津',
@@ -2217,6 +2441,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 221,
     prefecture: '静岡県',
     city: '掛川市',
     name: '学習支援室「ステップバイステップ」掛川',
@@ -2227,6 +2452,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 222,
     prefecture: '和歌山県',
     city: '和歌山市',
     name: '和歌山市立子ども支援センター ふれあい教室',
@@ -2237,6 +2463,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 223,
     prefecture: '和歌山県',
     city: '海南市',
     name: 'Happy Place "ひなた"',
@@ -2247,6 +2474,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 224,
     prefecture: '和歌山県',
     city: '橋本市',
     name: '橋本市教育相談センター 憩いの部屋',
@@ -2257,6 +2485,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 225,
     prefecture: '和歌山県',
     city: '有田市',
     name: '有田市教育支援センター ラ・ポール',
@@ -2267,6 +2496,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 226,
     prefecture: '和歌山県',
     city: '御坊市',
     name: 'メイト',
@@ -2277,6 +2507,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 227,
     prefecture: '和歌山県',
     city: '田辺市',
     name: 'ふれあい教室',
@@ -2287,6 +2518,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 228,
     prefecture: '和歌山県',
     city: '新宮市',
     name: 'はばたきの家',
@@ -2297,6 +2529,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 229,
     prefecture: '和歌山県',
     city: '紀の川市',
     name: 'ほほえみ粉河教室',
@@ -2307,6 +2540,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 230,
     prefecture: '和歌山県',
     city: '紀の川市',
     name: 'ほほえみ貴志川教室（火～金曜日）',
@@ -2317,6 +2551,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 231,
     prefecture: '和歌山県',
     city: '紀の川市',
     name: 'ほほえみ貴志川教室（月曜日）',
@@ -2327,6 +2562,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 232,
     prefecture: '和歌山県',
     city: '岩出市',
     name: '岩出市教育支援センター フレンド',
@@ -2337,6 +2573,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 233,
     prefecture: '和歌山県',
     city: 'かつらぎ町',
     name: 'かつらぎ町教育支援センター',
@@ -2347,6 +2584,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 234,
     prefecture: '和歌山県',
     city: '湯浅町',
     name: '湯浅町教育支援センター YES',
@@ -2357,6 +2595,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 235,
     prefecture: '和歌山県',
     city: '有田川町',
     name: 'ファイン',
@@ -2367,6 +2606,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 236,
     prefecture: '和歌山県',
     city: '由良町',
     name: 'かがやき',
@@ -2377,6 +2617,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 237,
     prefecture: '和歌山県',
     city: 'みなべ町',
     name: 'クレセール',
@@ -2387,6 +2628,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 238,
     prefecture: '和歌山県',
     city: '白浜町',
     name: 'ふれあいルーム',
@@ -2397,6 +2639,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 239,
     prefecture: '和歌山県',
     city: '上富田町',
     name: '上富田町教育支援センター ひだまり',
@@ -2407,6 +2650,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 240,
     prefecture: '和歌山県',
     city: 'すさみ町',
     name: 'すさみ町教育支援センター',
@@ -2417,6 +2661,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 241,
     prefecture: '和歌山県',
     city: '那智勝浦町',
     name: 'ほっこり',
@@ -2427,6 +2672,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 242,
     prefecture: '和歌山県',
     city: '串本町',
     name: '串本町教育支援ルーム とらいあんぐる',
@@ -2437,6 +2683,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 243,
     prefecture: '和歌山県',
     city: '古座川町',
     name: 'らるご古座川',
@@ -2447,6 +2694,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 244,
     prefecture: '鳥取県',
     city: '鳥取市',
     name: 'すなはま',
@@ -2457,6 +2705,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 245,
     prefecture: '鳥取県',
     city: '鳥取市',
     name: 'レインボー',
@@ -2467,6 +2716,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 246,
     prefecture: '鳥取県',
     city: '鳥取市',
     name: 'かわはら',
@@ -2477,6 +2727,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 247,
     prefecture: '鳥取県',
     city: '岩美町',
     name: 'くすのき教室',
@@ -2487,6 +2738,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 248,
     prefecture: '鳥取県',
     city: '八頭町',
     name: 'みどりヶ丘教室',
@@ -2497,6 +2749,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 249,
     prefecture: '鳥取県',
     city: '倉吉市・東伯郡',
     name: '中部子ども支援センター',
@@ -2507,6 +2760,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 250,
     prefecture: '鳥取県',
     city: '米子市',
     name: 'ぷらっとホーム',
@@ -2517,6 +2771,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 251,
     prefecture: '鳥取県',
     city: '境港市',
     name: 'やすらぎルーム',
@@ -2527,6 +2782,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 252,
     prefecture: '鳥取県',
     city: '南部町',
     name: 'さくらんぼ',
@@ -2537,6 +2793,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 253,
     prefecture: '鳥取県',
     city: '伯耆町',
     name: 'えがお',
@@ -2547,6 +2804,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 254,
     prefecture: '鳥取県',
     city: '大山町',
     name: '寺子屋',
@@ -2557,6 +2815,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 255,
     prefecture: '高知県',
     city: '室戸市',
     name: '室戸市教育支援センター「ふれあい教室」',
@@ -2567,6 +2826,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 256,
     prefecture: '高知県',
     city: '安芸市',
     name: '安芸市教育支援センター「ふれあい教室」',
@@ -2577,6 +2837,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 257,
     prefecture: '高知県',
     city: '北川村',
     name: '北川村教育支援センター',
@@ -2587,6 +2848,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 258,
     prefecture: '高知県',
     city: '田野町',
     name: '田野町教育センター「ふれあい教室」',
@@ -2597,6 +2859,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 259,
     prefecture: '高知県',
     city: '芸西村',
     name: '芸西村教育支援センター',
@@ -2607,6 +2870,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 260,
     prefecture: '高知県',
     city: '香南市',
     name: '香南市教育支援センター「森田村塾」',
@@ -2617,6 +2881,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 261,
     prefecture: '高知県',
     city: '香美市',
     name: '香美市教育支援センター「ふれんどるーむ」',
@@ -2627,6 +2892,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 262,
     prefecture: '高知県',
     city: '高知市',
     name: '高知市教育支援センター「みらい」',
@@ -2637,6 +2903,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 263,
     prefecture: '高知県',
     city: '南国市',
     name: '南国市教育支援センター「ふれあい」',
@@ -2647,6 +2914,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 264,
     prefecture: '高知県',
     city: '本山町',
     name: '本山町教育支援センター「みらい」',
@@ -2657,6 +2925,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 265,
     prefecture: '高知県',
     city: '土佐町',
     name: '土佐町教育支援センター',
@@ -2667,6 +2936,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 266,
     prefecture: '高知県',
     city: 'いの町',
     name: 'いの町総合教育支援センター「のぞみ教室」',
@@ -2677,6 +2947,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 267,
     prefecture: '高知県',
     city: '土佐市',
     name: '土佐市教育支援センター「あったか広場」',
@@ -2687,6 +2958,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 268,
     prefecture: '高知県',
     city: '須崎市',
     name: '須崎市教育支援センター「COCO」',
@@ -2697,6 +2969,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 269,
     prefecture: '高知県',
     city: '日高村',
     name: '日高村教育支援室「MOHEYA」',
@@ -2707,6 +2980,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 270,
     prefecture: '高知県',
     city: '佐川町',
     name: '佐川町教育支援センター「すまいるーむ」',
@@ -2717,6 +2991,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 271,
     prefecture: '高知県',
     city: '津野町',
     name: '津野町教育支援センター「ほっとるーむ」',
@@ -2727,6 +3002,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 272,
     prefecture: '高知県',
     city: '中土佐町',
     name: '中土佐町適応指導教室「あいあいルーム」',
@@ -2737,6 +3013,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 273,
     prefecture: '高知県',
     city: '四万十町',
     name: '四万十町教育支援センター「かげつ」「たのの」「とおわ」',
@@ -2747,6 +3024,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 274,
     prefecture: '高知県',
     city: '四万十市',
     name: '四万十市教育支援センター「ふれあい学級」',
@@ -2757,6 +3035,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 275,
     prefecture: '高知県',
     city: '土佐清水市',
     name: '土佐清水市教育センター「あすなろ教室」',
@@ -2767,6 +3046,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 276,
     prefecture: '高知県',
     city: '宿毛市',
     name: '宿毛市教育相談センター「ふれあい教室」',
@@ -2777,6 +3057,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 277,
     prefecture: '高知県',
     city: '黒潮町',
     name: '黒潮町適応指導教室「くじらるーむ」',
@@ -2787,6 +3068,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 278,
     prefecture: '高知県',
     city: '三原村',
     name: '三原村教育支援センター「森の里」',
@@ -2797,6 +3079,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 279,
     prefecture: '高知県',
     city: '大月町',
     name: '大月町教育支援センター',
@@ -2807,6 +3090,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 280,
     prefecture: '北海道',
     city: '岩見沢市',
     name: '登校支援室（緑が丘ルーム）',
@@ -2817,6 +3101,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 281,
     prefecture: '北海道',
     city: '岩見沢市',
     name: '登校支援室（であえーるルーム）',
@@ -2827,6 +3112,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 282,
     prefecture: '北海道',
     city: '美唄市',
     name: 'チャレンジ教室',
@@ -2837,6 +3123,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 283,
     prefecture: '北海道',
     city: '滝川市',
     name: 'ふれあいルーム',
@@ -2847,6 +3134,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 284,
     prefecture: '北海道',
     city: '深川市',
     name: '教育支援センター（しらかば教室）',
@@ -2857,6 +3145,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 285,
     prefecture: '北海道',
     city: '芦別市',
     name: '芦別市教育支援センター',
@@ -2867,6 +3156,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 286,
     prefecture: '北海道',
     city: '長沼町',
     name: 'ハマナスくらぶ',
@@ -2877,6 +3167,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 287,
     prefecture: '北海道',
     city: '秩父別町',
     name: '適応指導教室',
@@ -2887,6 +3178,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 288,
     prefecture: '北海道',
     city: '沼田町',
     name: '教育支援センター（ゆきの芽）',
@@ -2897,6 +3189,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 289,
     prefecture: '北海道',
     city: '赤平市',
     name: '教育支援室',
@@ -2907,6 +3200,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 290,
     prefecture: '北海道',
     city: '月形町',
     name: '適応指導教室（まなび野）',
@@ -2917,6 +3211,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 291,
     prefecture: '北海道',
     city: '砂川市',
     name: '砂川市教育支援センター',
@@ -2927,6 +3222,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 292,
     prefecture: '北海道',
     city: '三笠市',
     name: '教育支援センター（学びの森オアシス）',
@@ -2937,6 +3233,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 293,
     prefecture: '北海道',
     city: '恵庭市',
     name: 'ふれあいルーム',
@@ -2947,6 +3244,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 294,
     prefecture: '北海道',
     city: '恵庭市',
     name: '学びの森',
@@ -2957,6 +3255,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 295,
     prefecture: '北海道',
     city: '北広島市',
     name: 'みらい塾',
@@ -2967,6 +3266,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 296,
     prefecture: '北海道',
     city: '千歳市',
     name: 'おあしす',
@@ -2977,6 +3277,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 297,
     prefecture: '北海道',
     city: '石狩市',
     name: '教育支援センター「ふらっとくらぶ」',
@@ -2987,6 +3288,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 298,
     prefecture: '北海道',
     city: '当別町',
     name: '教育支援センター「レインボールーム」',
@@ -2997,6 +3299,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 299,
     prefecture: '北海道',
     city: '当別町',
     name: '教育支援センター「つなぐっとルーム」',
@@ -3007,6 +3310,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 300,
     prefecture: '北海道',
     city: '江別市',
     name: '教育支援センター「ねくすと」',
@@ -3017,6 +3321,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 301,
     prefecture: '北海道',
     city: '小樽市',
     name: 'ふれあいルーム',
@@ -3027,6 +3332,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 302,
     prefecture: '北海道',
     city: '余市町',
     name: 'しぃーがるず',
@@ -3037,6 +3343,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 303,
     prefecture: '北海道',
     city: '岩内町',
     name: 'つばさ教室',
@@ -3047,6 +3354,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 304,
     prefecture: '北海道',
     city: '共和町',
     name: 'すくーる',
@@ -3057,6 +3365,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 305,
     prefecture: '北海道',
     city: '倶知安町',
     name: '談',
@@ -3067,6 +3376,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 306,
     prefecture: '北海道',
     city: '京極町',
     name: 'あしすと',
@@ -3077,6 +3387,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 307,
     prefecture: '北海道',
     city: '真狩村',
     name: 'まっかりクラブ',
@@ -3087,6 +3398,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 308,
     prefecture: '北海道',
     city: '黒松内町',
     name: 'ふぁーがす',
@@ -3097,6 +3409,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 309,
     prefecture: '北海道',
     city: '室蘭市',
     name: '室蘭市教育サポートセンターくじらん',
@@ -3107,6 +3420,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 310,
     prefecture: '北海道',
     city: '苫小牧市',
     name: 'あおば学級',
@@ -3117,6 +3431,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 311,
     prefecture: '北海道',
     city: '苫小牧市',
     name: 'トピリカ学級',
@@ -3127,6 +3442,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 312,
     prefecture: '北海道',
     city: '苫小牧市',
     name: '山なみ学級',
@@ -3137,6 +3453,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 313,
     prefecture: '北海道',
     city: '白老町',
     name: '教育支援センター',
@@ -3147,6 +3464,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 314,
     prefecture: '北海道',
     city: '登別市',
     name: '鬼っ子広場',
@@ -3157,6 +3475,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 315,
     prefecture: '北海道',
     city: '伊達市',
     name: '不登校児童生徒サポートハウス 子どもの国フェニックス',
@@ -3167,6 +3486,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 316,
     prefecture: '北海道',
     city: '洞爺湖町',
     name: '洞爺湖町子どもサポート室',
@@ -3177,6 +3497,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 317,
     prefecture: '北海道',
     city: '豊浦町',
     name: '豊浦町教育支援センター　Raise',
@@ -3187,6 +3508,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 318,
     prefecture: '北海道',
     city: '厚真町',
     name: '厚真町教育サポートセンター',
@@ -3197,6 +3519,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 319,
     prefecture: '北海道',
     city: '新ひだか町',
     name: '新ひだか町教育支援センター「ステップ」',
@@ -3207,6 +3530,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 320,
     prefecture: '北海道',
     city: '北斗市',
     name: 'マイウェイ',
@@ -3217,6 +3541,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 321,
     prefecture: '北海道',
     city: '七飯町',
     name: '七飯町教育支援センター「レインボー」',
@@ -3227,6 +3552,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 322,
     prefecture: '北海道',
     city: '函館市',
     name: 'サポートベース函館',
@@ -3237,6 +3563,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 323,
     prefecture: '北海道',
     city: '鹿部町',
     name: '鹿部町教育支援センター「マイルーム」',
@@ -3247,6 +3574,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 324,
     prefecture: '北海道',
     city: 'せたな町',
     name: '陽だまり',
@@ -3257,6 +3585,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 325,
     prefecture: '北海道',
     city: '士別市',
     name: '適応指導教室「ウィズ」',
@@ -3267,6 +3596,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 326,
     prefecture: '北海道',
     city: '旭川市',
     name: '旭川市教育支援センター「ゆっくらす」',
@@ -3277,6 +3607,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 327,
     prefecture: '北海道',
     city: '富良野市',
     name: 'まいくらす',
@@ -3287,6 +3618,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 328,
     prefecture: '北海道',
     city: '名寄市',
     name: '教育支援センター',
@@ -3297,6 +3629,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 329,
     prefecture: '北海道',
     city: '東川町',
     name: '教育支援室「はぁとるぅむ」',
@@ -3307,6 +3640,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 330,
     prefecture: '北海道',
     city: '上富良野町',
     name: '上富良野町教育支援センター',
@@ -3317,6 +3651,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 331,
     prefecture: '北海道',
     city: '中富良野町',
     name: '教育支援センター「つながり」',
@@ -3327,6 +3662,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 332,
     prefecture: '北海道',
     city: '留萌市',
     name: 'ゆっくるも',
@@ -3337,6 +3673,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 333,
     prefecture: '北海道',
     city: '稚内市',
     name: '稚内市教育支援センター（つばさ学級）',
@@ -3347,6 +3684,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 334,
     prefecture: '北海道',
     city: '枝幸町',
     name: '枝幸町教育支援センター（ありのまま）',
@@ -3357,6 +3695,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 335,
     prefecture: '北海道',
     city: '中頓別町',
     name: '中頓別町教育支援センター（なかとんフリースクール）',
@@ -3367,6 +3706,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 336,
     prefecture: '北海道',
     city: '北見市',
     name: '教育支援センター「あおぞらくらぶ」',
@@ -3377,6 +3717,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 337,
     prefecture: '北海道',
     city: '網走市',
     name: '網走市教育支援センター「クリオネ学級」',
@@ -3387,6 +3728,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 338,
     prefecture: '北海道',
     city: '紋別市',
     name: '紋別市教育支援センター「ふれあい教室」',
@@ -3397,6 +3739,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 339,
     prefecture: '北海道',
     city: '遠軽町',
     name: '教育支援室',
@@ -3407,6 +3750,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 340,
     prefecture: '北海道',
     city: '斜里町',
     name: '教育支援センター「ひまわり教室」',
@@ -3417,6 +3761,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 341,
     prefecture: '北海道',
     city: '美幌町',
     name: '教育相談室',
@@ -3427,6 +3772,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 342,
     prefecture: '北海道',
     city: '佐呂間町',
     name: '佐呂間町教育支援センター「さこっと」',
@@ -3437,6 +3783,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 343,
     prefecture: '北海道',
     city: '帯広市',
     name: '帯広市教育支援センター ひろびろ',
@@ -3447,6 +3794,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 344,
     prefecture: '北海道',
     city: '音更町',
     name: 'ふれあい教室',
@@ -3457,6 +3805,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 345,
     prefecture: '北海道',
     city: '音更町',
     name: 'ふれあい柳町教室「ほっと」',
@@ -3467,6 +3816,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 346,
     prefecture: '北海道',
     city: '上士幌町',
     name: '上士幌町教育支援センターふらっと',
@@ -3477,6 +3827,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 347,
     prefecture: '北海道',
     city: '鹿追町',
     name: '鹿追町教育支援センター ひなたぼっこ',
@@ -3487,6 +3838,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 348,
     prefecture: '北海道',
     city: '芽室町',
     name: '教育支援センターゆうゆう',
@@ -3497,6 +3849,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 349,
     prefecture: '北海道',
     city: '幕別町',
     name: '子ども交流施設まっく・ざ・まっく',
@@ -3507,6 +3860,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 350,
     prefecture: '北海道',
     city: '足寄町',
     name: 'いきいきクラブ',
@@ -3517,6 +3871,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 351,
     prefecture: '北海道',
     city: '陸別町',
     name: '陸別町教育支援センター',
@@ -3527,6 +3882,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 352,
     prefecture: '北海道',
     city: '清水町',
     name: '清水町教育支援センター',
@@ -3537,6 +3893,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 353,
     prefecture: '北海道',
     city: '釧路市',
     name: 'まなびや（学び舎）城山',
@@ -3547,6 +3904,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 354,
     prefecture: '北海道',
     city: '釧路市',
     name: 'まなびや（学び舎）鳥取',
@@ -3557,6 +3915,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 355,
     prefecture: '北海道',
     city: '厚岸町',
     name: '厚岸町教育委員会 教育支援センター',
@@ -3567,6 +3926,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 356,
     prefecture: '北海道',
     city: '根室市',
     name: 'ふれあいくらぶ弥生',
@@ -3577,6 +3937,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 357,
     prefecture: '北海道',
     city: '中標津町',
     name: '教育相談センター',
@@ -3587,6 +3948,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 358,
     prefecture: '北海道',
     city: '別海町',
     name: 'ふれあいるーむ',
@@ -3597,6 +3959,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 359,
     prefecture: '北海道',
     city: '標津町',
     name: '標津町教育支援センター',
@@ -3607,6 +3970,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '',
   },
   {
+    no: 360,
     prefecture: '群馬県',
     city: '前橋市',
     name: 'にじの家',
@@ -3617,6 +3981,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 361,
     prefecture: '群馬県',
     city: '前橋市',
     name: 'かがやき',
@@ -3627,6 +3992,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 362,
     prefecture: '群馬県',
     city: '前橋市',
     name: 'あすなろ',
@@ -3637,6 +4003,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 363,
     prefecture: '群馬県',
     city: '高崎市',
     name: 'アクティブ並榎教室',
@@ -3647,6 +4014,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 364,
     prefecture: '群馬県',
     city: '高崎市',
     name: 'ユース台新田教室',
@@ -3657,6 +4025,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 365,
     prefecture: '群馬県',
     city: '高崎市',
     name: 'パブリック末広教室',
@@ -3667,6 +4036,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 366,
     prefecture: '群馬県',
     city: '高崎市',
     name: 'さわやか箕郷教室',
@@ -3677,6 +4047,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 367,
     prefecture: '群馬県',
     city: '高崎市',
     name: 'フレッシュ群馬教室',
@@ -3687,6 +4058,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 368,
     prefecture: '群馬県',
     city: '高崎市',
     name: 'すこやか新町教室',
@@ -3697,6 +4069,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 369,
     prefecture: '群馬県',
     city: '高崎市',
     name: 'ふれあい榛名教室',
@@ -3707,6 +4080,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 370,
     prefecture: '群馬県',
     city: '高崎市',
     name: 'うしぶせの家吉井教室',
@@ -3717,6 +4091,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 371,
     prefecture: '群馬県',
     city: '桐生市',
     name: 'あぷろーち',
@@ -3727,6 +4102,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 372,
     prefecture: '群馬県',
     city: '伊勢崎市',
     name: 'ほっとる～む 鹿島教室',
@@ -3737,6 +4113,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 373,
     prefecture: '群馬県',
     city: '伊勢崎市',
     name: 'ほっとる～む 赤堀教室',
@@ -3747,6 +4124,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 374,
     prefecture: '群馬県',
     city: '伊勢崎市',
     name: 'ほっとる～む あずま教室',
@@ -3757,6 +4135,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 375,
     prefecture: '群馬県',
     city: '伊勢崎市',
     name: 'ほっとる～む 境教室',
@@ -3767,6 +4146,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 376,
     prefecture: '群馬県',
     city: '太田市',
     name: '太田ふれあい教室',
@@ -3777,6 +4157,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 377,
     prefecture: '群馬県',
     city: '太田市',
     name: '太田第二ふれあい教室',
@@ -3787,6 +4168,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 378,
     prefecture: '群馬県',
     city: '沼田市',
     name: 'きずな',
@@ -3797,6 +4179,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 379,
     prefecture: '群馬県',
     city: '館林市',
     name: 'ふれあい学級',
@@ -3807,6 +4190,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 380,
     prefecture: '群馬県',
     city: '渋川市',
     name: 'かけはし',
@@ -3817,6 +4201,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 381,
     prefecture: '群馬県',
     city: '藤岡市',
     name: '藤岡市にじの家',
@@ -3827,6 +4212,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 382,
     prefecture: '群馬県',
     city: '富岡市・甘楽町',
     name: 'よもぎ教室',
@@ -3837,6 +4223,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 383,
     prefecture: '群馬県',
     city: '安中市',
     name: 'せせらぎの家',
@@ -3847,6 +4234,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 384,
     prefecture: '群馬県',
     city: 'みどり市',
     name: '教育支援センターなごみ教室（大間々・笠懸）',
@@ -3857,6 +4245,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 385,
     prefecture: '群馬県',
     city: '榛東村',
     name: 'すてっぷ榛東',
@@ -3867,6 +4256,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 386,
     prefecture: '群馬県',
     city: '吉岡町',
     name: '吉岡町ふれあい教室',
@@ -3877,6 +4267,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 387,
     prefecture: '群馬県',
     city: '下仁田町',
     name: 'ゆうゆう',
@@ -3887,6 +4278,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 388,
     prefecture: '群馬県',
     city: '中之条町',
     name: '虹',
@@ -3897,6 +4289,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 389,
     prefecture: '群馬県',
     city: '昭和村',
     name: '昭和村子ども未来塾',
@@ -3907,6 +4300,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 390,
     prefecture: '群馬県',
     city: '高山村',
     name: 'つぼみ',
@@ -3917,6 +4311,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 391,
     prefecture: '群馬県',
     city: 'みなかみ町',
     name: 'リエントリールーム',
@@ -3927,6 +4322,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 392,
     prefecture: '群馬県',
     city: '玉村町',
     name: 'ふれあい教室',
@@ -3937,6 +4333,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 393,
     prefecture: '群馬県',
     city: '明和町',
     name: 'ふれあい教室',
@@ -3947,6 +4344,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 394,
     prefecture: '群馬県',
     city: '千代田町',
     name: 'ひだまり',
@@ -3957,6 +4355,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 395,
     prefecture: '群馬県',
     city: '大泉町',
     name: 'あゆみ教室',
@@ -3967,6 +4366,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 396,
     prefecture: '群馬県',
     city: '邑楽町',
     name: 'ふれあい教室',
@@ -3977,6 +4377,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所は資料に記載なし（電話番号のみ）',
   },
   {
+    no: 397,
     prefecture: '長野県',
     city: '下諏訪町',
     name: '下諏訪町スマイル教室',
@@ -3987,6 +4388,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 398,
     prefecture: '長野県',
     city: '辰野町',
     name: '辰野町中間教室「わたげ」',
@@ -3997,6 +4399,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 399,
     prefecture: '長野県',
     city: '東御市',
     name: '東御市ふれあい教室',
@@ -4007,6 +4410,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 400,
     prefecture: '長野県',
     city: '諏訪市',
     name: '諏訪市フレンドリー教室',
@@ -4017,6 +4421,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 401,
     prefecture: '長野県',
     city: '岡谷市',
     name: '岡谷西部中学校中間教室',
@@ -4027,6 +4432,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 402,
     prefecture: '長野県',
     city: '岡谷市',
     name: '岡谷東部中学校中間教室',
@@ -4037,6 +4443,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 403,
     prefecture: '長野県',
     city: '岡谷市',
     name: '岡谷南部中学校中間教室',
@@ -4047,6 +4454,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 404,
     prefecture: '長野県',
     city: '岡谷市',
     name: '岡谷市フレンドリー教室',
@@ -4057,6 +4465,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 405,
     prefecture: '長野県',
     city: '岡谷市',
     name: '岡谷北部中学校中間教室',
@@ -4067,6 +4476,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 406,
     prefecture: '長野県',
     city: '御代田町',
     name: '御代田町ライフルーム',
@@ -4077,6 +4487,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 407,
     prefecture: '長野県',
     city: '上田市',
     name: '上田市武石ふれあい教室',
@@ -4087,6 +4498,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 408,
     prefecture: '長野県',
     city: '上田市',
     name: '上田市上田原ふれあい教室',
@@ -4097,6 +4509,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 409,
     prefecture: '長野県',
     city: '上田市',
     name: '上田市真田ふれあい教室',
@@ -4107,6 +4520,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 410,
     prefecture: '長野県',
     city: '上田市',
     name: '上田市常磐城ふれあい教室',
@@ -4117,6 +4531,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 411,
     prefecture: '長野県',
     city: '上田市',
     name: '上田市丸子ふれあい教室',
@@ -4127,6 +4542,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 412,
     prefecture: '長野県',
     city: '小諸市',
     name: '小諸市教育支援センター',
@@ -4137,6 +4553,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 413,
     prefecture: '長野県',
     city: '佐久穂町',
     name: '佐久穂町中間教室',
@@ -4147,6 +4564,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 414,
     prefecture: '長野県',
     city: '軽井沢町',
     name: '軽井沢町中間教室（スマイル・ステップ・センター）',
@@ -4157,6 +4575,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 415,
     prefecture: '長野県',
     city: '茅野市',
     name: '茅野市フレンドリー教室',
@@ -4167,6 +4586,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 416,
     prefecture: '長野県',
     city: '茅野市',
     name: '茅野市適応指導教室',
@@ -4177,6 +4597,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 417,
     prefecture: '長野県',
     city: '富士見町',
     name: '富士見町フレンドリー教室',
@@ -4187,6 +4608,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 418,
     prefecture: '長野県',
     city: '箕輪町',
     name: '箕輪町中間教室',
@@ -4197,6 +4619,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 419,
     prefecture: '長野県',
     city: '南箕輪村',
     name: '南箕輪村中間教室',
@@ -4207,6 +4630,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 420,
     prefecture: '長野県',
     city: '伊那市',
     name: '伊那市中間教室やまびこ学級',
@@ -4217,6 +4641,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 421,
     prefecture: '長野県',
     city: '宮田村',
     name: '宮田村中間教室',
@@ -4227,6 +4652,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 422,
     prefecture: '長野県',
     city: '飯島町',
     name: '飯島町教育相談室',
@@ -4237,6 +4663,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 423,
     prefecture: '長野県',
     city: '中川村',
     name: '中川村中間教室',
@@ -4247,6 +4674,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 424,
     prefecture: '長野県',
     city: '駒ヶ根市',
     name: '駒ヶ根市中間教室',
@@ -4257,6 +4685,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 425,
     prefecture: '長野県',
     city: '飯田市',
     name: '飯田市フレンドリールームやすらぎ',
@@ -4267,6 +4696,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 426,
     prefecture: '長野県',
     city: '飯田市',
     name: '飯田市フレンドリールームなかよし',
@@ -4277,6 +4707,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 427,
     prefecture: '長野県',
     city: '塩尻市',
     name: '塩尻市高ボッチ教室（小学部）',
@@ -4287,6 +4718,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 428,
     prefecture: '長野県',
     city: '塩尻市',
     name: '塩尻市高ボッチ教室（中学部）',
@@ -4297,6 +4729,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 429,
     prefecture: '長野県',
     city: '朝日村',
     name: '朝日村わくわく教室あさひっ子',
@@ -4307,6 +4740,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 430,
     prefecture: '長野県',
     city: '松本市',
     name: '松本市山辺教育支援センター',
@@ -4317,6 +4751,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 431,
     prefecture: '長野県',
     city: '松本市',
     name: '松本市鎌田教育支援センター',
@@ -4327,6 +4762,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 432,
     prefecture: '長野県',
     city: '松本市',
     name: '松本市波田教育支援センター',
@@ -4337,6 +4773,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 433,
     prefecture: '長野県',
     city: '松本市',
     name: '松本市寿教育支援センター',
@@ -4347,6 +4784,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 434,
     prefecture: '長野県',
     city: '安曇野市',
     name: '安曇野市教育支援センター（けやき）',
@@ -4357,6 +4795,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 435,
     prefecture: '長野県',
     city: '松川村',
     name: '松川村ありあけ教室',
@@ -4367,6 +4806,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 436,
     prefecture: '長野県',
     city: '松川村',
     name: '松川村支援室',
@@ -4377,6 +4817,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 437,
     prefecture: '長野県',
     city: '大町市',
     name: '大町市アルプスの家',
@@ -4387,6 +4828,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 438,
     prefecture: '長野県',
     city: '中野市',
     name: '中野市ハロールーム',
@@ -4397,6 +4839,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 439,
     prefecture: '長野県',
     city: '須坂市',
     name: '須坂市フレンドリールーム',
@@ -4407,6 +4850,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 440,
     prefecture: '長野県',
     city: '千曲市',
     name: '千曲市ひまわり',
@@ -4417,6 +4861,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 441,
     prefecture: '長野県',
     city: '千曲市',
     name: '千曲市つばさ教室',
@@ -4427,6 +4872,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 442,
     prefecture: '長野県',
     city: '千曲市',
     name: '千曲市ふれあいルーム',
@@ -4437,6 +4883,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 443,
     prefecture: '長野県',
     city: '千曲市',
     name: '千曲市たんぽぽ',
@@ -4447,6 +4894,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 444,
     prefecture: '長野県',
     city: '千曲市',
     name: '千曲市アプリコット',
@@ -4457,6 +4905,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 445,
     prefecture: '長野県',
     city: '佐久市',
     name: '佐久市チャレンジ教室',
@@ -4467,6 +4916,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 446,
     prefecture: '長野県',
     city: '松川町',
     name: '松川町教育相談室',
@@ -4477,6 +4927,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 447,
     prefecture: '長野県',
     city: '高森町',
     name: '高森町教育支援センターぱれっと',
@@ -4487,6 +4938,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 448,
     prefecture: '長野県',
     city: '阿智村',
     name: '阿智村教育支援センター',
@@ -4497,6 +4949,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 449,
     prefecture: '長野県',
     city: '坂城町',
     name: '坂城町大峰教室',
@@ -4507,6 +4960,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 450,
     prefecture: '長野県',
     city: '坂城町',
     name: '坂城町フレンドリールーム',
@@ -4517,6 +4971,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 451,
     prefecture: '長野県',
     city: '小布施町',
     name: 'アクティビティ・ベイス（小布施町AB教室）',
@@ -4527,6 +4982,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 452,
     prefecture: '長野県',
     city: '原村',
     name: '原村中間教室「たんぽぽ」',
@@ -4537,6 +4993,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 453,
     prefecture: '長野県',
     city: '長野市',
     name: '長野市ふれあい教育支援センター',
@@ -4547,6 +5004,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 454,
     prefecture: '長野県',
     city: '長野市',
     name: '長野市東北教育支援センター',
@@ -4557,6 +5015,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 455,
     prefecture: '長野県',
     city: '長野市',
     name: '長野市かがやき教育支援センター',
@@ -4567,6 +5026,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 456,
     prefecture: '長野県',
     city: '長野市',
     name: '長野市篠ノ井教育支援センター',
@@ -4577,6 +5037,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 457,
     prefecture: '長野県',
     city: '長野市',
     name: '長野市南部教育支援センター',
@@ -4587,6 +5048,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 458,
     prefecture: '長野県',
     city: '長野市',
     name: '長野市三輪教育支援センター',
@@ -4597,6 +5059,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 459,
     prefecture: '長野県',
     city: '長野市',
     name: '長野市川中島教育支援センター',
@@ -4607,6 +5070,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 460,
     prefecture: '長野県',
     city: '筑北村',
     name: '筑北村こどもスマイル教室',
@@ -4617,6 +5081,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 461,
     prefecture: '長野県',
     city: '南牧村',
     name: 'ほっとルーム（南牧村中間教室）',
@@ -4627,6 +5092,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 462,
     prefecture: '長野県',
     city: '木曽町',
     name: '木曽町学舎はるかぜ',
@@ -4637,6 +5103,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 463,
     prefecture: '長野県',
     city: '平谷村',
     name: '平谷村フリースペースままま',
@@ -4647,6 +5114,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 464,
     prefecture: '長野県',
     city: '池田町',
     name: '池田町にじいろ',
@@ -4657,6 +5125,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 465,
     prefecture: '長野県',
     city: '飯山市',
     name: '飯山市教育支援センター',
@@ -4667,6 +5136,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 466,
     prefecture: '長野県',
     city: '下條村',
     name: '下條村子ども第三の居場所',
@@ -4677,6 +5147,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '住所・電話番号は資料に記載なし（名称のみ確認）',
   },
   {
+    no: 467,
     prefecture: '鹿児島県',
     city: '鹿児島市',
     name: 'フレンドシップ長田',
@@ -4687,6 +5158,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '鹿児島市内のみの一覧（県全体ではない）',
   },
   {
+    no: 468,
     prefecture: '鹿児島県',
     city: '鹿児島市',
     name: 'フレンドシップ南',
@@ -4697,6 +5169,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '鹿児島市内のみの一覧（県全体ではない）',
   },
   {
+    no: 469,
     prefecture: '鹿児島県',
     city: '鹿児島市',
     name: 'フレンドシップ谷山',
@@ -4707,6 +5180,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '鹿児島市内のみの一覧（県全体ではない）',
   },
   {
+    no: 470,
     prefecture: '鹿児島県',
     city: '鹿児島市',
     name: 'フレンドシップ城西',
@@ -4717,6 +5191,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     note: '鹿児島市内のみの一覧（県全体ではない）',
   },
   {
+    no: 471,
     prefecture: '鹿児島県',
     city: '鹿児島市',
     name: 'フレンドシップ鴨池',
