@@ -50,7 +50,7 @@ const HERO_SLIDES: HeroSlide[] = [
   },
   {
     id: 'recruit',
-    href: '/expert/recruit',
+    href: '/recruit',
     src: '/assets/home_hero_recruit.jpg',
     alt: '経験者・専門家として、不登校のご家庭を一緒に支えませんか？不登校の経験者も歓迎、心理・教育・福祉の専門家、オンラインで無理なく参加、ご家庭の安心につながる。経験者・専門家として参加する。',
   },
