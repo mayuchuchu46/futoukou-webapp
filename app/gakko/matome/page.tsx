@@ -59,6 +59,14 @@ const ONLINE_GROUPS = [
 // （2026-10-22追加）。
 const ONLINE_PREVIEW_LIMIT = 6;
 
+// 都道府県未選択時、種類の絞り込みチップで1種類だけに絞った場合に「都道府県を
+// 選んでください」という文言だけが出て中身が空に見える、という指摘を受け
+// （2026-11-02）、学びの多様化学校・フリースクール・通信制高校・定時制高校・
+// 助成金の5カテゴリも、全国データの先頭からこの件数まではその場で一覧表示する
+// ようにした（オンラインフリースクールのONLINE_PREVIEW_LIMITと同じ考え方）。
+// 表示順は各データ配列の並び順そのまま（五十音順等に整列されているわけではない）。
+const NATIONWIDE_PREVIEW_LIMIT = 8;
+
 export async function generateMetadata(): Promise<Metadata> {
   const url = `${SITE_URL}/gakko/matome`;
   return {
@@ -78,17 +86,6 @@ export async function generateMetadata(): Promise<Metadata> {
       images: ['/og-image.png'],
     },
   };
-}
-
-// 都道府県が未選択の時に、場所に依存するカテゴリ（学びの多様化学校・フリースクール・
-// 通信制高校・助成金）の中身に出す案内。オンラインフリースクールだけは
-// 居住地を問わないため、この案内の対象外（常に実データを表示）。
-function SelectPrefecturePrompt({ nationwideNote }: { nationwideNote: string }) {
-  return (
-    <div className="muted">
-      {nationwideNote}都道府県を選ぶと、その都道府県に絞った一覧が表示されます。
-    </div>
-  );
 }
 
 // 空状態の文言テンプレート（notFoundText）は、他タブ（FreeSchoolExplorer.tsx・
@@ -157,7 +154,30 @@ export default async function GakkoMatomePage({
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt nationwideNote={`全国に${gakkoCountDisplay}校あります。`} />
+              <>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  全国に{gakkoCountDisplay}校あります（一部を抜粋して表示）。都道府県を選ぶと、その都道府県に絞った一覧に切り替わります。
+                </div>
+                {MANABI_TAYOUKA_GAKKO.slice(0, NATIONWIDE_PREVIEW_LIMIT).map((s) => (
+                  <Link
+                    key={s.no}
+                    href={`/gakko/school/${s.no}`}
+                    style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <div className="qtext" style={{ fontWeight: 700 }}>
+                      {s.name}{s.branchName ? `（${s.branchName}）` : ''}
+                    </div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                      {s.prefecture}{s.city}・{s.schoolType}・{s.publicPrivate}
+                    </div>
+                  </Link>
+                ))}
+                {MANABI_TAYOUKA_GAKKO.length > NATIONWIDE_PREVIEW_LIMIT && (
+                  <Link href="/gakko" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+                    ほか{MANABI_TAYOUKA_GAKKO.length - NATIONWIDE_PREVIEW_LIMIT}校・全国の一覧を見る ›
+                  </Link>
+                )}
+              </>
             ) : gakkoSchools.length === 0 ? (
               <div className="muted">{notFoundText(selected, '文部科学省指定の学びの多様化学校')}</div>
             ) : (
@@ -203,7 +223,28 @@ export default async function GakkoMatomePage({
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt nationwideNote={`全国に${freeCountDisplay}件掲載しています。`} />
+              <>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  全国に{freeCountDisplay}件掲載しています（一部を抜粋して表示）。都道府県を選ぶと、その都道府県に絞った一覧に切り替わります。
+                </div>
+                {FREE_SCHOOLS.slice(0, NATIONWIDE_PREVIEW_LIMIT).map((s) => (
+                  <Link
+                    key={s.no}
+                    href={`/gakko/free/${s.no}`}
+                    style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                      {s.prefecture}{s.city}
+                    </div>
+                  </Link>
+                ))}
+                {FREE_SCHOOLS.length > NATIONWIDE_PREVIEW_LIMIT && (
+                  <Link href="/gakko?type=free" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+                    ほか{FREE_SCHOOLS.length - NATIONWIDE_PREVIEW_LIMIT}件・全国の一覧を見る ›
+                  </Link>
+                )}
+              </>
             ) : freeCoverage?.tier === 'none' || freeCoverage?.tier === 'unprocessed' ? (
               <div className="muted">
                 {selected}については、{freeCoverage.note}フリースクールが無いという意味ではなく、確認できなかったということです。
@@ -244,7 +285,28 @@ export default async function GakkoMatomePage({
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt nationwideNote={`全国に${tsushinCountDisplay}校あります。`} />
+              <>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  全国に{tsushinCountDisplay}校あります（一部を抜粋して表示）。都道府県を選ぶと、その都道府県から入学できる学校の一覧に切り替わります。
+                </div>
+                {CORRESPONDENCE_HIGH_SCHOOLS.slice(0, NATIONWIDE_PREVIEW_LIMIT).map((s) => (
+                  <Link
+                    key={s.no}
+                    href={`/gakko/tsushin/${s.no}`}
+                    style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                      本校：{s.prefecture}{s.municipality}・設置者：{s.operator}
+                    </div>
+                  </Link>
+                ))}
+                {CORRESPONDENCE_HIGH_SCHOOLS.length > NATIONWIDE_PREVIEW_LIMIT && (
+                  <Link href="/gakko?type=tsushin" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+                    ほか{CORRESPONDENCE_HIGH_SCHOOLS.length - NATIONWIDE_PREVIEW_LIMIT}校・全国の一覧を見る ›
+                  </Link>
+                )}
+              </>
             ) : (
               <>
                 <div className="muted" style={{ fontSize: 12 }}>
@@ -320,7 +382,28 @@ export default async function GakkoMatomePage({
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt nationwideNote={`全国に${teijiCountDisplay}校あります。`} />
+              <>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  全国に{teijiCountDisplay}校あります（一部を抜粋して表示）。都道府県を選ぶと、その都道府県に絞った一覧に切り替わります。
+                </div>
+                {teijiseiHighSchools.slice(0, NATIONWIDE_PREVIEW_LIMIT).map((s) => (
+                  <Link
+                    key={s.no}
+                    href={`/gakko/teiji/${s.no}`}
+                    style={{ display: 'block', borderTop: '1px solid var(--border)', paddingTop: 10, textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                      {s.prefecture}{s.municipality ? s.municipality : ''}・{s.publicPrivate}
+                    </div>
+                  </Link>
+                ))}
+                {teijiseiHighSchools.length > NATIONWIDE_PREVIEW_LIMIT && (
+                  <Link href="/gakko?type=teiji" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+                    ほか{teijiseiHighSchools.length - NATIONWIDE_PREVIEW_LIMIT}校・全国の一覧を見る ›
+                  </Link>
+                )}
+              </>
             ) : teijiSchools.length === 0 ? (
               <div className="muted">{notFoundText(selected, '定時制高校')}</div>
             ) : (
@@ -364,7 +447,25 @@ export default async function GakkoMatomePage({
           </summary>
           <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {!selected ? (
-              <SelectPrefecturePrompt nationwideNote={`確認できている制度は全国に${joseiCountDisplay}件あります。`} />
+              <>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  確認できている制度は全国に{joseiCountDisplay}件あります（一部を抜粋して表示）。通信制高校の学費は国の「高等学校等就学支援金」が対象です（全国統一の制度のため一覧には含みません）。
+                </div>
+                {FREESCHOOL_SUBSIDIES.slice(0, NATIONWIDE_PREVIEW_LIMIT).map((s, i) => (
+                  <div key={`${s.entity}-${s.name}-${i}`} style={{ borderTop: '1px solid var(--border)', paddingTop: 10 }}>
+                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                      {s.prefecture}・実施主体：{s.entity}{s.entityLevel === 'city' ? '（市区町村独自の制度）' : ''}
+                    </div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.summary}</div>
+                  </div>
+                ))}
+                {FREESCHOOL_SUBSIDIES.length > NATIONWIDE_PREVIEW_LIMIT && (
+                  <Link href="/gakko?type=josei" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+                    ほか{FREESCHOOL_SUBSIDIES.length - NATIONWIDE_PREVIEW_LIMIT}件・全国の一覧を見る ›
+                  </Link>
+                )}
+              </>
             ) : (
               <>
                 <div className="muted" style={{ fontSize: 12 }}>
