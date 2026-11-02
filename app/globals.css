@@ -617,7 +617,7 @@ h2.pagetitle {
   display: flex;
   gap: 2px;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
   scrollbar-width: none;
   border-bottom: 1px solid var(--border);
   margin: 2px 0 0;
