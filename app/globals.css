@@ -623,18 +623,18 @@ h2.pagetitle {
 }
 .viewtabs {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   border-bottom: 1px solid var(--border);
-  padding: 10px 12px;
+  padding: 10px 8px;
 }
 .viewtabs::-webkit-scrollbar { display: none; }
 .viewtabs-tab {
   flex: 0 0 auto;
   white-space: nowrap;
-  padding: 7px 14px;
+  padding: 7px 11px;
   font-size: 13px;
   font-weight: 700;
   color: var(--muted);
