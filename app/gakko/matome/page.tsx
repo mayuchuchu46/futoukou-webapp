@@ -600,7 +600,7 @@ export default async function GakkoMatomePage({
             style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
           >
             <span>
-              <span style={{ display: 'block', fontWeight: 700 }}>🧭 学校タイプ診断</span>
+              <span style={{ display: 'block', fontWeight: 700 }}>学校タイプ診断</span>
               <span className="muted" style={{ display: 'block', fontSize: 12 }}>学年・好きなこと・通う頻度などを選んで、お子さんに合う学校を絞り込む</span>
             </span>
             <span className="muted">›</span>

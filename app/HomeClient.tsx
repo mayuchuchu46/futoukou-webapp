@@ -488,7 +488,6 @@ export default function HomeClient({
                 style={{ alignItems: 'stretch', gap: 8, margin: '0 0 10px', padding: '12px 14px', border: '2px solid var(--main)', background: 'var(--sub)' }}
               >
                 <Link href="/gakko/shindan" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}>
-                  <span aria-hidden="true" style={{ fontSize: 22 }}>🧭</span>
                   <span style={{ flex: 1 }}>
                     <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>学校タイプ診断</span>
                     <span style={{ display: 'block', fontSize: 12 }}>学年・好きなこと・通う頻度を選ぶだけ。お子さんに合う学校を絞り込めます</span>
