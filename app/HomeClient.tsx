@@ -82,9 +82,11 @@ export default function HomeClient({
   // だけだと一覧が画面下の方にあるため、クリックしても何も起きていないように見えると
   // の指摘を受けて修正）。
   const viewTabsRef = useRef<HTMLDivElement | null>(null);
-  // バナー・ランキングは絞り込みに関わらず「全体」の集計を出すので、
-  // category/q で動く items とは別に保持する。
-  const [allItems, setAllItems] = useState<Consultation[]>(initialItems);
+  // 「よく読まれている相談」ランキング専用のstate。
+  // allItems（以前は新着50件をクライアントソート）だと古い人気記事が入らなかった問題を
+  // 解消するため、mount時に sort=views で別途APIを叩いてサイト全体上位を取得する
+  // （2026-11-02修正）。
+  const [rankingItems, setRankingItems] = useState<Consultation[]>(initialItems);
   const [loading, setLoading] = useState(false);
   const supervised = initialSupervised;
   // チップの件数（「身体面（19）」等）。サーバー側の初期値（検索語を考慮しないサイト
@@ -102,6 +104,16 @@ export default function HomeClient({
   // サーバー取得済みのverified:trueな専門家をそのまま使う（PcSidebarは
   // 別途クライアント側で同じ/api/experts/listを取得しているため、ここで
   // 二重に取得しない）。
+
+  // mount時にサイト全体の閲覧数上位をランキング専用で取得する。
+  // 新着50件のクライアントソートでは古い人気記事が反映されなかったため（2026-11-02修正）。
+  useEffect(() => {
+    fetch(`/api/consultations?sort=views&viewer_id=${getUid()}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.consultations?.length) setRankingItems(d.consultations); })
+      .catch(() => {/* ランキング取得失敗時はinitialItemsのままにする */});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 旧「さがす」ページのタグ・ランキングなど、別のリンクから ?q= / ?category= 付きで
   // ホームに遷移してきたときに、URLの変化を拾って絞り込みを反映する。
@@ -134,9 +146,6 @@ export default function HomeClient({
       const res = await fetch(`/api/consultations?${params.toString()}`);
       const d = await res.json();
       setItems(d.consultations || []);
-      if (nextCategory === 'all' && !nextQ.trim() && nextTab === 'new') {
-        setAllItems(d.consultations || []);
-      }
     } finally {
       if (showLoading) setLoading(false);
     }
@@ -217,13 +226,15 @@ export default function HomeClient({
     return () => observer.disconnect();
   }, [loadMoreEl, items.length]);
 
-  const expertCount = allItems.filter(isExpertAnswered).length;
+  const expertCount = rankingItems.filter(isExpertAnswered).length;
   // ランキングは3件固定表示。.rank-listの枠内スクロールを廃止し（2026-10-21）、
   // ページスクロールとの干渉ストレスを解消した。
   // 同一 author_id の投稿は閲覧数が最も多い1件のみをランキングに含める。
   // 相談件数が少ない段階で同一ユーザーの投稿がワンツーを占めるのを防ぐため。
   const ranking = (() => {
-    const sorted = [...allItems].sort((a, b) => (b.views || 0) - (a.views || 0));
+    // rankingItems は mount 時に sort=views で取得済みなので、クライアントソートは
+    // 同一author_id の重複排除のためだけ（順序はAPIの降順のままでよい）。
+    const sorted = [...rankingItems].sort((a, b) => (b.views || 0) - (a.views || 0));
     const seen = new Set<string>();
     const deduped: typeof sorted = [];
     for (const item of sorted) {
@@ -309,7 +320,7 @@ export default function HomeClient({
                 返すため、何も表示されない。 */}
             {showExtras && <FeaturedGakkoRanking />}
 
-            {showExtras && allItems.length >= 3 && (
+            {showExtras && rankingItems.length >= 3 && (
               <div className="ranking home-ranking">
                 {/* タイトル文字（緑字）自体も「もっと見る」と同じ操作で押せるように
                     （2026-10-29、「緑の字おしてもいけるといいかも」との指摘を受けて）。 */}
