@@ -620,7 +620,6 @@ h2.pagetitle {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
-  overflow: hidden;
 }
 .viewtabs {
   display: flex;
@@ -644,7 +643,21 @@ h2.pagetitle {
   border-radius: 100px;
   cursor: pointer;
   transition: background 0.12s, color 0.12s;
+  position: relative;
 }
+/* 選択中タブの下に↓三角を表示してコンテンツとのつながりを示す */
+.viewtabs-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid var(--main);
+}
+.viewtabs-tab--senpai.active::after { border-top-color: var(--moss-text); }
+.viewtabs-tab--expert.active::after { border-top-color: var(--orange-text); }
 .viewtabs-tab:hover {
   background: var(--sub);
   color: var(--main);
