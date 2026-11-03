@@ -3,7 +3,6 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import BackButton from '@/components/BackButton';
 import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
-import ExpertContributionDiagram from '@/components/ExpertContributionDiagram';
 import ExpertProfilePreview from '@/components/ExpertProfilePreview';
 
 // 経験者専用の募集ページ。
@@ -68,7 +67,6 @@ export default async function SenpaiRecruitPage({
             設定していただく形にした（登録フォームの「オンライン相談のリンク」欄）。 */}
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>ご協力いただく内容</div>
-          <ExpertContributionDiagram />
           <div className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
             <strong>テキストでの回答</strong>：届いた相談の中から、答えたい質問を選んで、ご自身のタイミングで文章で回答します（すべてに回答する必要はありません）。
           </div>
