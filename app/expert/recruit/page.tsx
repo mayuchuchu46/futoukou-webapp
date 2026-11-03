@@ -42,7 +42,7 @@ export default function ExpertRecruitPage() {
           <div className="answer-label" style={{ fontSize: 14 }}>ご協力いただく内容</div>
           <ExpertContributionDiagram />
           <div className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
-            <strong>テキストでの回答</strong>：届いた相談文に、ご自身のタイミングで文章で回答します。
+            <strong>テキストでの回答</strong>：届いた相談の中から、答えたい質問を選んで、ご自身のタイミングで文章で回答します（すべてに回答する必要はありません）。
           </div>
           <div className="qtext">
             <strong>オンラインでの通話・チャット（任意）</strong>：もしLINE通話やチャット等でも相談対応をされたい場合は、ご自身がお使いの外部サービス（予約サイトなど）へのリンクをプロフィールに設定していただければ、プロフィールページに「オンラインで相談する」ボタンとして表示されます。予約や決済のやり取りは、そちらのサービス上でご本人が直接行ってください。
