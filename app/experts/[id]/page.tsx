@@ -145,7 +145,7 @@ export default async function ExpertProfilePublicPage({
                   className="btn-primary"
                   style={{ alignSelf: 'flex-start' }}
                 >
-                  オンラインで相談する →
+                  直接相談してみる →
                 </a>
               )}
             </div>
