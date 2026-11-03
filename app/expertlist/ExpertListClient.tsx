@@ -11,7 +11,11 @@ import { getUid } from '@/lib/uid';
 
 export default function ExpertListClient() {
   const [items, setItems] = useState<Consultation[] | null>(null);
-  const [stripeConfigured, setStripeConfigured] = useState(false);
+  // 会員登録が実際に案内できる状態かどうか。Stripeが設定済み、またはボランティア
+  // 期間中（EXPERT_VOLUNTEER_MODE、決済を挟まずその場で無料登録できる）のいずれか
+  // であれば案内できる（2026-11-03、stripeConfiguredだけを見ていたせいで、実際には
+  // 無料登録できるのに「準備中・近日公開」と表示されてしまっていた不具合を修正）。
+  const [membershipAvailable, setMembershipAvailable] = useState(false);
 
   useEffect(() => {
     fetch(`/api/consultations?expert_answered=1&viewer_id=${getUid()}`)
@@ -20,7 +24,7 @@ export default function ExpertListClient() {
       .catch(() => setItems([]));
     fetch('/api/me')
       .then((r) => r.json())
-      .then((d) => setStripeConfigured(!!d.stripeConfigured))
+      .then((d) => setMembershipAvailable(!!d.stripeConfigured || !!d.volunteerMode))
       .catch(() => {});
   }, []);
 
@@ -32,7 +36,7 @@ export default function ExpertListClient() {
         <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <h2 className="pagetitle" style={{ margin: 0 }}>専門家が回答した相談</h2>
-          {!stripeConfigured && <span className="comingsoon-badge">準備中・近日公開</span>}
+          {!membershipAvailable && <span className="comingsoon-badge">準備中・近日公開</span>}
         </div>
         <div className="muted" style={{ marginBottom: 10 }}>
           AIの自動回答とは別に、専門家（公認心理師など）・経験者本人が相談文を読んで直接回答したものです。
@@ -40,13 +44,13 @@ export default function ExpertListClient() {
               読めてしまう（現時点では本人確認済みの専門家は0人で、実際に質問できるのは
               経験者のみ）との指摘を受けて、経験者への質問も無料であることが
               伝わるよう書き換えた（2026-11-02）。 */}
-          {!stripeConfigured && '現在、読み放題会員の登録は準備中です。準備が整い次第ご利用いただけます（専門家・経験者への質問自体はどなたでも無料です）。'}
+          {!membershipAvailable && '現在、読み放題会員の登録は準備中です。準備が整い次第ご利用いただけます（専門家・経験者への質問自体はどなたでも無料です）。'}
         </div>
 
         <div className="card" style={{ gap: 8, alignItems: 'flex-start', marginBottom: 10 }}>
           <div style={{ fontWeight: 700, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
             読み放題会員になると
-            {!stripeConfigured && <span className="comingsoon-badge">準備中</span>}
+            {!membershipAvailable && <span className="comingsoon-badge">準備中</span>}
           </div>
           <div className="qtext" style={{ fontSize: 13 }}>✓ ここに並ぶ専門家回答が、すべて読めるようになる</div>
           {/* 伴走ノートの基本サマリー（状況整理・次の一手・言葉かけ等）は2026-10-12より
