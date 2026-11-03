@@ -117,7 +117,7 @@ export default async function SenpaiRecruitPage({
         </div>
 
         <Link href={registerHref} className="btn-primary" style={{ textAlign: 'center' }}>
-          経験者として登録する（事前登録受付）
+          経験者として登録する
         </Link>
         <Link href="/expert/login" className="backlink" style={{ margin: '0 0 4px', fontSize: 13 }}>
           すでに登録済みの方はこちらからログイン →

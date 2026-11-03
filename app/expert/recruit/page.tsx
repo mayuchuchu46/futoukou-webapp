@@ -78,7 +78,7 @@ export default function ExpertRecruitPage() {
         </div>
 
         <Link href="/expert/register" className="btn-primary" style={{ textAlign: 'center' }}>
-          専門家として登録する（事前登録受付）
+          専門家として登録する
         </Link>
         <Link href="/expert/login" className="backlink" style={{ margin: '0 0 4px', fontSize: 13 }}>
           すでに登録済みの専門家の方はこちらからログイン →
