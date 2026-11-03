@@ -327,7 +327,7 @@ function SenpaiRegisterForm() {
         />
         <input
           className="input"
-          placeholder="オンラインでの通話・チャット相談の予約ページURL（任意・MOSH等）"
+          placeholder="個別相談（対面・オンライン問わず）の予約ページURL（任意・MOSH等）"
           value={form.online_consult_url}
           onChange={(e) => setForm({ ...form, online_consult_url: e.target.value })}
         />

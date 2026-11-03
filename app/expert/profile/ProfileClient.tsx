@@ -251,7 +251,7 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
           <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
             プロフィールページに公開表示されます。
           </div>
-          <div className="muted">オンラインでの通話・チャット相談の予約ページURL（任意）</div>
+          <div className="muted">個別相談（対面・オンライン問わず）の予約ページURL（任意）</div>
           <input
             className="input"
             value={form.online_consult_url}
@@ -259,7 +259,7 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
             placeholder="https://mosh.jp/..."
           />
           <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
-            MOSHやストアカなど、ご自身で予約・決済ページをお持ちの場合はそのURLを入れてください。プロフィールページに「直接相談する」ボタンが表示されます（顔出し・顔出しなし・チャットのみは当日の通話内で選べます）。未入力の場合、このボタンは表示されません。
+            MOSHやストアカなど、ご自身で予約・決済ページをお持ちの場合はそのURLを入れてください。対面でのカウンセリングでもオンライン通話でも構いません。プロフィールページに「直接相談する」ボタンが表示されます（オンライン通話の場合、顔出し・顔出しなし・チャットのみは当日の通話内で選べます）。未入力の場合、このボタンは表示されません。
             <br />
             どうする先生での質問回答は無料ですが、個別に有料で対応されたい場合（テキストでの個別相談も含む）は、このリンク先でご自身で料金・やり取りを設定してください。予約・決済・返信期限等はすべてそちらのサービス上で完結し、どうする先生は関与しません。
           </div>
