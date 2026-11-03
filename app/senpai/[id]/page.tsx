@@ -128,13 +128,13 @@ export default async function SenpaiProfilePublicPage({
                   className="btn-primary"
                   style={{ alignSelf: 'flex-start' }}
                 >
-                  オンライン予約はこちら →
+                  オンラインで相談する →
                 </a>
               )}
             </div>
             {onlineConsultLink && (
               <div className="muted" style={{ fontSize: 12 }}>
-                予約ページへ移動します（内容・料金はご本人の設定によります）。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
+                ご本人が設定したページへ移動します（内容・料金はご本人の設定によります）。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
               </div>
             )}
           </div>

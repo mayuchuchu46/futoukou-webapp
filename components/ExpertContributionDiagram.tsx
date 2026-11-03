@@ -14,24 +14,27 @@ export default function ExpertContributionDiagram() {
   const mutedColor = 'var(--muted)';
 
   return (
-    <svg viewBox="0 0 320 240" width="100%" style={{ maxWidth: 320, margin: '0 auto', display: 'block' }} role="img" aria-label="ご協力いただく内容：テキストでの回答と、オンラインでの通話・チャット（任意）の図">
+    // ボックス幅が本文より広すぎて右側に大きな余白ができ、配置バランスが悪く
+    // 見えていたため（2026-11-03、指摘を受けて調整）、幅を280→250に詰め、
+    // 本文のフォントサイズも11→12に上げて中身の密度を上げた。
+    <svg viewBox="0 0 320 230" width="100%" style={{ maxWidth: 320, margin: '0 auto', display: 'block' }} role="img" aria-label="ご協力いただく内容：テキストでの回答と、オンラインでの通話・チャット（任意）の図">
       {/* テキストでの回答 */}
-      <rect x="20" y="10" width="280" height="78" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
-      <text x="36" y="36" fontSize="14" fill={textColor} fontWeight="700">テキストでの回答</text>
-      <text x="36" y="58" fontSize="11" fill={mutedColor}>答えたい質問を選んで、ご自身のタイミングで</text>
-      <text x="36" y="72" fontSize="11" fill={mutedColor}>文章で回答します</text>
+      <rect x="35" y="10" width="250" height="76" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
+      <text x="51" y="36" fontSize="14" fill={textColor} fontWeight="700">テキストでの回答</text>
+      <text x="51" y="58" fontSize="12" fill={mutedColor}>答えたい質問を選んで、ご自身の</text>
+      <text x="51" y="74" fontSize="12" fill={mutedColor}>タイミングで文章で回答します</text>
 
       {/* ＋記号（順番ではなく内訳であることを示す） */}
-      <text x="160" y="108" fontSize="20" fill={mutedColor} fontWeight="700" textAnchor="middle">＋</text>
+      <text x="160" y="104" fontSize="20" fill={mutedColor} fontWeight="700" textAnchor="middle">＋</text>
 
       {/* オンラインでの通話・チャット（任意） */}
-      <rect x="20" y="120" width="280" height="110" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
-      <rect x="36" y="134" width="40" height="20" rx="10" fill="var(--bg)" />
-      <text x="56" y="148" fontSize="10.5" fill={mutedColor} fontWeight="700" textAnchor="middle">任意</text>
-      <text x="36" y="176" fontSize="14" fill={textColor} fontWeight="700">オンラインでの通話・チャット</text>
-      <text x="36" y="195" fontSize="11" fill={mutedColor}>ご自身がお使いの外部サービス（予約サイト</text>
-      <text x="36" y="209" fontSize="11" fill={mutedColor}>など）へのリンクをプロフィールに設定すると、</text>
-      <text x="36" y="223" fontSize="11" fill={mutedColor}>「オンラインで相談する」ボタンが表示されます</text>
+      <rect x="35" y="116" width="250" height="104" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
+      <rect x="51" y="130" width="40" height="20" rx="10" fill="var(--bg)" />
+      <text x="71" y="144" fontSize="10.5" fill={mutedColor} fontWeight="700" textAnchor="middle">任意</text>
+      <text x="51" y="172" fontSize="14" fill={textColor} fontWeight="700">オンラインでの通話・チャット</text>
+      <text x="51" y="191" fontSize="12" fill={mutedColor}>ご自身がお使いの外部サービス（予約</text>
+      <text x="51" y="206" fontSize="12" fill={mutedColor}>サイトなど）へのリンクをプロフィールに</text>
+      <text x="51" y="221" fontSize="12" fill={mutedColor}>設定すると、専用ボタンが表示されます</text>
     </svg>
   );
 }
