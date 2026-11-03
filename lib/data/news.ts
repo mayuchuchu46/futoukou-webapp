@@ -70,6 +70,20 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'nhk-gakuen-futoko-hogosha-zadankai-2026-11',
+    date: '2026-11-03',
+    addedAt: '2026-11-03',
+    title:
+      '不登校の子を育てる保護者向け座談会、通信制高校のNHK学園が国立市で開催――経験者や心理専門家と交流',
+    summary:
+      '通信制高校のNHK学園高等学校（東京都国立市）は11月3日、不登校の子どもを育てる保護者同士が悩みを共有し合う座談会を開催しました。不登校を経験した子の保護者で著書もあるかとうまき氏がゲストとして参加し、同校のスクールソーシャルワーカーも交流に加わりました。同校はこの座談会を含む秋のプログラムの一環として、大学教授による講演会や生徒向けの体験会も11月6日に予定しています。',
+    sourceName: 'NHKニュース',
+    sourceUrl: 'https://news.web.nhk/newsweb/na/nd-20261103de70026',
+    category: 'other',
+    // 記事本文（NHKニュース）に「通信制の高校であるNHK学園」と明記されているため設定（2026-11-03）。
+    relatedThemeWord: '通信制高校',
+  },
+  {
     id: 'yokkaichi-futoko-1114nin-hogosyakai-2026-10',
     date: '2026-10-30',
     addedAt: '2026-10-31',
