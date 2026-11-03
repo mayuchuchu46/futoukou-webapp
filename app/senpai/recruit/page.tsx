@@ -4,6 +4,7 @@ import BottomNav from '@/components/BottomNav';
 import BackButton from '@/components/BackButton';
 import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
 import ExpertContributionDiagram from '@/components/ExpertContributionDiagram';
+import ExpertProfilePreview from '@/components/ExpertProfilePreview';
 
 // 経験者専用の募集ページ。
 // 専門家向け（/expert/recruit）とは入り口・ページを分けている（2026-10-30、
@@ -74,12 +75,20 @@ export default async function SenpaiRecruitPage({
           <div className="qtext">
             <strong>オンラインでの通話・チャット（任意）</strong>：もしLINE通話やチャット等でも相談対応をされたい場合は、ご自身がお使いの外部サービス（予約サイトなど）へのリンクをプロフィールに設定していただければ、プロフィールページに「オンラインで相談する」ボタンとして表示されます。予約や決済のやり取りは、そちらのサービス上でご本人が直接行ってください。
           </div>
+          {/* プロフィールページのイメージサンプル（2026-11-03追加）。「登録すればボタンが
+              表示されてるイメージがわかるといい」との要望を受けて追加。 */}
+          <ExpertProfilePreview credentialLabel="先輩保護者（経験者）" />
         </div>
 
+        {/* 「今とその後の流れ」を明示（2026-11-03追加）。/expert/recruitと同様、
+            具体的な金額・割合には触れずに概要のみ案内する。 */}
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>報酬について</div>
+          <div className="answer-label" style={{ fontSize: 14 }}>報酬について（今とこれから）</div>
           <div className="qtext">
-            質問への回答自体には、報酬・お支払いはありません。相談に回答すると、回答した方のプロフィールページへのリンクが表示され、ご自身の活動やサービスを知ってもらうきっかけになります（上記のオンライン通話等をご自身のサービスとして有料で提供されることは可能です。その場合の料金設定・やり取りはご本人にお任せします）。
+            <strong>今</strong>：質問への回答自体には、報酬・お支払いはありません。立ち上げ期間のご協力として、無償でお願いしています。相談に回答すると、回答した方のプロフィールページへのリンクが表示され、ご自身の活動やサービスを知ってもらうきっかけになります（上記のオンライン通話等をご自身のサービスとして有料で提供されることは可能です。その場合の料金設定・やり取りはご本人にお任せします）。
+          </div>
+          <div className="qtext">
+            <strong>これから</strong>：会員数・回答実績が増えてきた段階で、回答いただいた分に応じて報酬をお支払いする仕組みを導入する予定です。具体的な金額・時期はまだ検討中で、確定し次第あらためてご案内します。
           </div>
         </div>
 
