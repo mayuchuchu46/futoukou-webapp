@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import BackButton from '@/components/BackButton';
 import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
+import ExpertContributionDiagram from '@/components/ExpertContributionDiagram';
 
 // 一般利用者向けの/expertsとは別の、専門家（回答する側）募集専用ページ。
 // 一覧用の個人情報（会員数など）は含まないため、ビルド時に静的化してよい。
@@ -38,13 +39,12 @@ export default function ExpertRecruitPage() {
             （登録フォームの「オンライン相談のリンク」欄）。 */}
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>ご協力いただく内容</div>
-          <div className="qtext">
-            <strong>テキストでの回答</strong><br />
-            届いた相談文に、ご自身のタイミングで文章で回答します。
+          <ExpertContributionDiagram />
+          <div className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
+            <strong>テキストでの回答</strong>：届いた相談文に、ご自身のタイミングで文章で回答します。
           </div>
           <div className="qtext">
-            <strong>オンラインでの通話・チャット（任意）</strong><br />
-            もしLINE通話やチャット等でも相談対応をされたい場合は、ご自身がお使いの外部サービス（予約サイトなど）へのリンクをプロフィールに設定していただければ、プロフィールページに「オンラインで相談する」ボタンとして表示されます。予約や決済のやり取りは、そちらのサービス上でご本人が直接行ってください。
+            <strong>オンラインでの通話・チャット（任意）</strong>：もしLINE通話やチャット等でも相談対応をされたい場合は、ご自身がお使いの外部サービス（予約サイトなど）へのリンクをプロフィールに設定していただければ、プロフィールページに「オンラインで相談する」ボタンとして表示されます。予約や決済のやり取りは、そちらのサービス上でご本人が直接行ってください。
           </div>
         </div>
 
