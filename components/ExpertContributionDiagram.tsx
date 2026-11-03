@@ -17,11 +17,13 @@ export default function ExpertContributionDiagram() {
     // ボックス幅が本文より広すぎて右側に大きな余白ができ、配置バランスが悪く
     // 見えていたため（2026-11-03、指摘を受けて調整）、幅を280→250に詰め、
     // 本文のフォントサイズも11→12に上げて中身の密度を上げた。
-    // さらに、2つ目のボックス（バッジ＋3行）の高さが内容に対して不足しており、
-    // 最終行がボックス下端からはみ出して1つ目のボックスより窮屈に見えていた
-    // ため（2026-11-03再調整）、両ボックスとも「上余白26・行間16〜22・下余白14」
-    // で揃うよう高さを計算し直した。
-    <svg viewBox="0 0 320 252" width="100%" style={{ maxWidth: 320, margin: '0 auto', display: 'block' }} role="img" aria-label="ご協力いただく内容：テキストでの回答と、オンラインでの通話・チャット（任意）の図">
+    // 2つ目のボックス（バッジ＋3行）の高さが内容に対して不足し、最終行が
+    // ボックス下端からはみ出していた問題も修正済み（2026-11-03再調整）。
+    // さらに、「任意」バッジをタイトルの上に置いていたせいで、2つのボックスの
+    // タイトル開始位置（上から26px／56px）が揃っていなかったため（2026-11-03
+    // 再々調整）、バッジをタイトルの右横に移動し、両方のタイトルを同じ
+    // 「上余白26px」の位置に揃えた。
+    <svg viewBox="0 0 320 222" width="100%" style={{ maxWidth: 320, margin: '0 auto', display: 'block' }} role="img" aria-label="ご協力いただく内容：テキストでの回答と、オンラインでの通話・チャット（任意）の図">
       {/* テキストでの回答 */}
       <rect x="35" y="10" width="250" height="78" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
       <text x="51" y="36" fontSize="14" fill={textColor} fontWeight="700">テキストでの回答</text>
@@ -32,13 +34,13 @@ export default function ExpertContributionDiagram() {
       <text x="160" y="103" fontSize="20" fill={mutedColor} fontWeight="700" textAnchor="middle">＋</text>
 
       {/* オンラインでの通話・チャット（任意） */}
-      <rect x="35" y="118" width="250" height="124" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
-      <rect x="51" y="132" width="40" height="20" rx="10" fill="var(--bg)" />
-      <text x="71" y="146" fontSize="10.5" fill={mutedColor} fontWeight="700" textAnchor="middle">任意</text>
-      <text x="51" y="174" fontSize="14" fill={textColor} fontWeight="700">オンラインでの通話・チャット</text>
-      <text x="51" y="196" fontSize="12" fill={mutedColor}>ご自身がお使いの外部サービス（予約</text>
-      <text x="51" y="212" fontSize="12" fill={mutedColor}>サイトなど）へのリンクをプロフィールに</text>
-      <text x="51" y="228" fontSize="12" fill={mutedColor}>設定すると、専用ボタンが表示されます</text>
+      <rect x="35" y="118" width="250" height="94" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
+      <text x="51" y="144" fontSize="14" fill={textColor} fontWeight="700">オンライン通話・チャット</text>
+      <rect x="229" y="132" width="40" height="20" rx="10" fill="var(--bg)" />
+      <text x="249" y="146" fontSize="10.5" fill={mutedColor} fontWeight="700" textAnchor="middle">任意</text>
+      <text x="51" y="166" fontSize="12" fill={mutedColor}>ご自身がお使いの外部サービス（予約</text>
+      <text x="51" y="182" fontSize="12" fill={mutedColor}>サイトなど）へのリンクをプロフィールに</text>
+      <text x="51" y="198" fontSize="12" fill={mutedColor}>設定すると、専用ボタンが表示されます</text>
     </svg>
   );
 }
