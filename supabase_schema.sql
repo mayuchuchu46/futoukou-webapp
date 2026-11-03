@@ -448,6 +448,12 @@ create table if not exists experts (
   -- （先輩保護者）には資格前提の分野選択肢が合わないため、専門家のみが使う想定だが、
   -- カラム自体は共通のexpertsテーブルに置く（空配列のままでよい）。
   career_fields jsonb not null default '[]',
+  -- 保有資格（その他・複数可、2026-11-03追加）。creditentialは「専門家か経験者か」の
+  -- 判定フラグ（SENPAI_CREDENTIAL）としてもコード全体で使われているため単一値のまま
+  -- 残し、兼任資格はこちらの別カラムで表現する（例：公認心理師が主資格で、
+  -- スクールカウンセラーも兼任している場合、credential='公認心理師',
+  -- other_credentials=['スクールカウンセラー']）。
+  other_credentials text[] not null default '{}',
   created_at timestamptz not null default now()
 );
 -- アプリは常にservice_roleキー経由でのみ読み書きし、anon/authenticatedロールで
@@ -1057,3 +1063,7 @@ alter table outbound_clicks enable row level security;
 -- 専門家の「経歴確認」（実務分野・年数の自己申告、2026-11-03追加）を追加した場合、
 -- 既存DBでは次を実行してください。
 -- alter table experts add column if not exists career_fields jsonb not null default '[]';
+
+-- 専門家の「保有資格（その他・複数可）」を追加した場合（2026-11-03追加、兼任資格を
+-- 持つ方が多いとの指摘を受けて）、既存DBでは次を実行してください。
+-- alter table experts add column if not exists other_credentials text[] not null default '{}';

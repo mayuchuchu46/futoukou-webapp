@@ -28,13 +28,14 @@ type ExpertProfile = {
   online_consult_url: string | null;
   verified: boolean;
   career_fields: CareerField[] | null;
+  other_credentials: string[] | null;
 };
 
 async function getVerifiedExpert(id: string): Promise<ExpertProfile | null> {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('experts')
-    .select('id, name, display_name, credential, bio, photo_url, link_url, online_consult_url, verified, career_fields')
+    .select('id, name, display_name, credential, bio, photo_url, link_url, online_consult_url, verified, career_fields, other_credentials')
     .eq('id', id)
     .eq('verified', true)
     // 経験者はこの専門家向け個別ページの対象外（2026-10-31追加）。
@@ -91,6 +92,13 @@ export default async function ExpertProfilePublicPage({
               <ExpertAvatar photoUrl={expert.photo_url} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div style={{ fontWeight: 700, fontSize: 16 }}>{expert.credential}・{expert.name}</div>
+                {/* 保有資格（その他・複数可、2026-11-03追加）。主な資格（上の肩書き）
+                    以外に兼任している資格があれば併記する。 */}
+                {!!expert.other_credentials?.length && (
+                  <div className="muted" style={{ fontSize: 13 }}>
+                    保有資格：{expert.other_credentials.join('、')}
+                  </div>
+                )}
                 {expert.bio && (
                   <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
                     {expert.bio}

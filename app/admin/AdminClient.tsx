@@ -16,6 +16,7 @@ type UnverifiedExpert = {
   specialty_categories?: string[]; // 2026-10-30追加
   experienced_school_names?: string[]; // 2026-10-31追加（経験者が話せる学校名）
   career_fields?: CareerField[]; // 2026-11-03追加（経歴確認。本人の自己申告で、運営による裏付け確認は行わない）
+  other_credentials?: string[]; // 2026-11-03追加（保有資格・その他、複数可）
   review_status?: string; // 'pending' | 'needs_fix'（一覧に残るのはこの2つ。rejectedは一覧から除外済み）
   review_note?: string | null;
   created_at: string;
@@ -681,6 +682,11 @@ export default function AdminClient({
             {!!e.career_fields?.length && (
               <div className="muted">
                 経歴（自己申告）：{e.career_fields.map((c) => (c.years ? `${c.field}（${c.years}年）` : c.field)).join('・')}
+              </div>
+            )}
+            {!!e.other_credentials?.length && (
+              <div className="muted">
+                保有資格（その他）：{e.other_credentials.join('・')}
               </div>
             )}
             {e.review_status === 'needs_fix' && (

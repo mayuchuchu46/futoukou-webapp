@@ -59,9 +59,19 @@ export async function POST(req: NextRequest) {
   // 経歴確認（2026-11-03追加）。経験者側の登録フォームからは送られてこないため、
   // 常に空配列になる。
   const career_fields = parseCareerFields(String(form.get('career_fields') || '[]'));
+  // 保有資格（その他・複数可、2026-11-03追加）。「兼任してる人も多そう」との指摘を
+  // 受けて追加。経験者側の登録フォームからは送られてこないため、常に空配列になる。
+  const other_credentials = form.getAll('other_credentials').map((v) => String(v)).filter(Boolean);
 
   if (!email || !password || !name) {
     return NextResponse.json({ error: 'メールアドレス・パスワード・名前は必須です' }, { status: 400 });
+  }
+  // 専門家フォームでは資格の選択が必須（以前は未選択でも'公認心理師'にフォールバック
+  // してしまっており、本人が選んでいない資格で登録されてしまう不具合があったため、
+  // 2026-11-03に必須チェックへ変更）。経験者フォーム（/senpai/register）は固定で
+  // 「先輩保護者（経験者）」を送ってくるため、こちらのチェックには影響しない。
+  if (!credential) {
+    return NextResponse.json({ error: '資格を選択してください' }, { status: 400 });
   }
   if (password.length < 8) {
     return NextResponse.json({ error: 'パスワードは8文字以上にしてください' }, { status: 400 });
@@ -105,7 +115,7 @@ export async function POST(req: NextRequest) {
       password_hash,
       name,
       display_name: display_name.trim() || null,
-      credential: credential || '公認心理師',
+      credential,
       bio: bio || '',
       license_number: license_number.trim(),
       link_url: link_url.trim(),
@@ -114,6 +124,7 @@ export async function POST(req: NextRequest) {
       specialty_categories,
       experienced_school_names,
       career_fields,
+      other_credentials,
       verified: false,
     })
     .select('id')

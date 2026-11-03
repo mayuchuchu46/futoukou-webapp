@@ -4,43 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CATS } from '@/lib/categories';
 import { CAREER_FIELD_OPTIONS } from '@/lib/careerFields';
-
-// 想定する資格の候補。「その他」を選んだ場合のみ自由入力欄を出す（2026-10-13追加、
-// それまでは資格欄が自由入力のみでブレが出やすかったため）。
-// 保健師を追加（2026-10-30、田村さんの発案で心理分野以外の専門家も募ることにしたため）。
-// 「経験者」は、専門家とは入り口・ページを分けることにしたため
-// （2026-10-30）、この専門家向けフォームの選択肢からは外し、/senpai/register に
-// 専用フォームを新設した。
-// 教員を追加（2026-11-03）。募集バナーで「学校関係者（教員・SCなど）」と明示的に
-// 誘っていたにもかかわらず、選択肢に無く「その他」頼みになっていたため。教員免許状
-// （教育職員免許状）を登録証として提出でき、経歴確認（lib/careerFields.ts）の
-// 「教育分野」と組み合わせて実務経験も申告できる。
-// スクールソーシャルワーカー・作業療法士・言語聴覚士を追加（2026-11-03）。
-// スクールソーシャルワーカーは不登校支援（家庭環境・福祉制度との連携）の中核的な
-// 専門職であるにもかかわらず抜けていたため。作業療法士・言語聴覚士は、発達特性が
-// 絡む不登校ケースに対応する専門家として追加。いずれも国家資格で登録証を提出できる。
-// 臨床発達心理士・特別支援教育士を追加（2026-11-03）。不登校の相談には発達障害
-// 関連が多いとの指摘を受け、公認心理師・臨床心理士（汎用的な心理職）とは別に、
-// 発達心理・発達障害支援を専門領域とする認定資格を追加した。
-const CREDENTIAL_OPTIONS = [
-  '公認心理師',
-  '臨床心理士',
-  '臨床発達心理士',
-  '精神科医',
-  '小児科医',
-  '保健師',
-  '学校心理士',
-  'スクールカウンセラー',
-  'スクールソーシャルワーカー',
-  '特別支援教育士',
-  '教員',
-  '社会福祉士',
-  '精神保健福祉士',
-  '作業療法士',
-  '言語聴覚士',
-  'キャリアコンサルタント',
-  'その他',
-];
+import { CREDENTIAL_OPTIONS } from '@/lib/expertCredentials';
 
 // お悩み辞典の既存カテゴリ（lib/categories.ts）から、対応できるものを専門家自身に
 // 複数選んでもらう（2026-10-30追加）。資格種別と1対1対応ではなく、本人の判断に委ねる。
@@ -67,6 +31,7 @@ type DraftForm = {
   link_url: string;
   online_consult_url: string;
   specialtyCategories: string[];
+  otherCredentials: string[];
   verificationMethod: 'upload' | 'call';
   careerFields: Record<string, string>;
 };
@@ -87,7 +52,11 @@ export default function ExpertRegisterPage() {
     password: '',
     name: '',
     display_name: '',
-    credential: '公認心理師',
+    // 以前は'公認心理師'がデフォルトで選択された状態になっており、本人が資格欄を
+    // 一度も触らなくても「公認心理師として」登録できてしまっていた（2026-11-03、
+    // 指摘を受けて修正）。空文字＋プレースホルダー選択肢＋requiredにして、必ず
+    // 本人が選んだ資格が入るようにする。
+    credential: '',
     credentialOther: '',
     bio: '',
     license_number: '',
@@ -96,6 +65,10 @@ export default function ExpertRegisterPage() {
     specialtyCategories: [] as string[],
     verificationMethod: 'upload' as 'upload' | 'call',
   });
+  // 保有資格（その他・複数可、2026-11-03追加）。「兼任してる人も多そう」との指摘を
+  // 受けて、上のcredential（主資格・単一選択、SENPAI_CREDENTIAL判定にも使われる
+  // ため単一値のまま）とは別に、追加で持っている資格を複数選べるようにした。
+  const [otherCredentials, setOtherCredentials] = useState<string[]>([]);
   const [careerFields, setCareerFields] = useState<Record<string, string>>({});
   const [licenseDoc, setLicenseDoc] = useState<File | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
@@ -108,6 +81,7 @@ export default function ExpertRegisterPage() {
     if (Object.keys(draft).length > 0) {
       setForm((f) => ({ ...f, ...draft }));
       if (draft.careerFields) setCareerFields(draft.careerFields);
+      if (draft.otherCredentials) setOtherCredentials(draft.otherCredentials);
       setDraftRestored(true);
     }
   }, []);
@@ -124,6 +98,7 @@ export default function ExpertRegisterPage() {
       link_url: form.link_url,
       online_consult_url: form.online_consult_url,
       specialtyCategories: form.specialtyCategories,
+      otherCredentials,
       verificationMethod: form.verificationMethod,
       careerFields,
     };
@@ -132,10 +107,14 @@ export default function ExpertRegisterPage() {
     } catch {
       // 保存に失敗しても入力自体は継続できるよう、ここでは無視する。
     }
-  }, [form, careerFields]);
+  }, [form, careerFields, otherCredentials]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!form.credential) {
+      setError('資格を選択してください');
+      return;
+    }
     if (form.verificationMethod === 'upload' && !licenseDoc) {
       setError('登録証（画像またはPDF）を添付してください');
       return;
@@ -150,6 +129,7 @@ export default function ExpertRegisterPage() {
     if (form.credential === 'その他') body.set('credential', form.credentialOther);
     body.set('verification_method', form.verificationMethod);
     form.specialtyCategories.forEach((cat) => body.append('specialty_categories', cat));
+    otherCredentials.forEach((c) => body.append('other_credentials', c));
     if (form.verificationMethod === 'upload' && licenseDoc) body.set('license_doc', licenseDoc);
     // 経歴確認（2026-11-03追加）：選択した分野・年数を[{field, years}]のJSON文字列で送る。
     const careerFieldsArray = Object.entries(careerFields)
@@ -215,8 +195,20 @@ export default function ExpertRegisterPage() {
         <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
           相談者に公開される名前です。未入力の場合は上のお名前（本名）がそのまま表示されます。
         </div>
-        <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>資格（該当するものを選択してください）</div>
-        <select className="input" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })}>
+        <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>主な資格（該当するものを選択してください）</div>
+        <select
+          className="input"
+          value={form.credential}
+          onChange={(e) => {
+            const next = e.target.value;
+            setForm({ ...form, credential: next });
+            // 主な資格と保有資格（その他）が重複しないよう、主な資格に選び直した
+            // ものは保有資格側から外す。
+            setOtherCredentials((prev) => prev.filter((c) => c !== next));
+          }}
+          required
+        >
+          <option value="" disabled>選択してください</option>
           {CREDENTIAL_OPTIONS.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
@@ -230,6 +222,47 @@ export default function ExpertRegisterPage() {
             required
           />
         )}
+
+        {/* 保有資格（その他・複数可、2026-11-03追加）。「兼任してる人も多そう」との
+            指摘を受けて追加。主な資格（上・バッジ表示やSENPAI_CREDENTIAL判定に使う
+            単一値）とは別に、追加で持っている資格を複数選べるようにした。 */}
+        <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>保有資格（その他、複数選択可・任意）</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {CREDENTIAL_OPTIONS.filter((c) => c !== 'その他' && c !== form.credential).map((c) => {
+            const checked = otherCredentials.includes(c);
+            return (
+              <label
+                key={c}
+                className="muted"
+                style={{
+                  fontSize: 13,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  border: '1px solid var(--border)',
+                  borderRadius: 999,
+                  padding: '4px 10px',
+                  cursor: 'pointer',
+                  background: checked ? 'var(--bg)' : 'transparent',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={(e) => {
+                    setOtherCredentials((prev) =>
+                      e.target.checked ? [...prev, c] : prev.filter((k) => k !== c)
+                    );
+                  }}
+                />
+                {c}
+              </label>
+            );
+          })}
+        </div>
+        <div className="muted" style={{ fontSize: 12, marginTop: -4 }}>
+          主な資格以外にも保有している資格があれば選択してください。プロフィールページに併記されます。
+        </div>
 
         {/* 対応できる相談カテゴリ（2026-10-30追加）。資格種別を増やしていく前提で、
             「この資格ならこのカテゴリ」と決めつけず、本人に選んでもらう。 */}

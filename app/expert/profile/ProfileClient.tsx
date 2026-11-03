@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ExpertAvatar from '@/components/ExpertAvatar';
 import { CAREER_FIELD_OPTIONS, type CareerField } from '@/lib/careerFields';
+import { CREDENTIAL_OPTIONS } from '@/lib/expertCredentials';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 
 type Expert = {
@@ -20,6 +21,7 @@ type Expert = {
   stripe_account_id?: string | null;
   stripe_payouts_enabled?: boolean;
   career_fields?: CareerField[] | null;
+  other_credentials?: string[] | null;
 };
 
 export default function ProfileClient({ expert, stripeConfigured }: { expert: Expert; stripeConfigured: boolean }) {
@@ -36,6 +38,10 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
   const [careerFields, setCareerFields] = useState<Record<string, string>>(
     Object.fromEntries((expert.career_fields || []).map((c) => [c.field, c.years]))
   );
+  // 保有資格（その他・複数可、2026-11-03追加）。「兼任してる人も多そう」との指摘を
+  // 受けて、主資格（上のform.credential）とは別に、追加で持っている資格を複数
+  // 選べるようにした（登録フォーム/expert/register/page.tsxと同じ方式）。
+  const [otherCredentials, setOtherCredentials] = useState<string[]>(expert.other_credentials || []);
   const [photoUrl, setPhotoUrl] = useState(expert.photo_url || '');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoUploading, setPhotoUploading] = useState(false);
@@ -91,7 +97,7 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
     const res = await fetch('/api/expert/profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, career_fields }),
+      body: JSON.stringify({ ...form, career_fields, other_credentials: otherCredentials }),
     });
     if (!res.ok) {
       const data = await res.json();
@@ -138,8 +144,52 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
             onChange={(e) => setForm({ ...form, display_name: e.target.value })}
             placeholder={form.name}
           />
-          <div className="muted">資格</div>
+          <div className="muted">主な資格</div>
           <input className="input" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })} />
+
+          {/* 保有資格（その他・複数可、2026-11-03追加）。「兼任してる人も多そう」との
+              指摘を受けて追加。経験者には資格前提の一覧が合わないため、専門家のみ表示。 */}
+          {expert.credential !== SENPAI_CREDENTIAL && (
+            <>
+              <div className="muted">保有資格（その他、複数選択可・任意）</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {CREDENTIAL_OPTIONS.filter((c) => c !== 'その他' && c !== form.credential).map((c) => {
+                  const checked = otherCredentials.includes(c);
+                  return (
+                    <label
+                      key={c}
+                      className="muted"
+                      style={{
+                        fontSize: 13,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        border: '1px solid var(--border)',
+                        borderRadius: 999,
+                        padding: '4px 10px',
+                        cursor: 'pointer',
+                        background: checked ? 'var(--bg)' : 'transparent',
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(e) => {
+                          setOtherCredentials((prev) =>
+                            e.target.checked ? [...prev, c] : prev.filter((k) => k !== c)
+                          );
+                        }}
+                      />
+                      {c}
+                    </label>
+                  );
+                })}
+              </div>
+              <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
+                主な資格以外にも保有している資格があれば選択してください。プロフィールページに併記されます。
+              </div>
+            </>
+          )}
 
           {/* 経歴確認（2026-11-03追加、田村さんの提案）。登録時（/expert/register）と
               同じ分野・年数の自己申告欄を、あとから編集できるようにする。経験者
