@@ -66,6 +66,11 @@ function AskPageContent() {
   // そこでintro文だけをprefillし、案内文は本文の外（textareaの下）に別途表示する方式に
   // 変更し、このフラグで案内文の表示要否を判定する。
   const childHintParam = searchParams.get('childHint') === '1';
+  // 伴走ノート（/notebook）の「専門家・経験者にも回答してもらって相談する」ボタン等から
+  // 来た場合に、下の「専門家・経験者にも回答してもらう」チェックを最初からON にする
+  // （2026-11-03追加、「伴走ノートを読んで専門家や経験者への相談への誘導ができると
+  // いいかも」との指摘を受けて、ノート側から押しやすくするために追加）。
+  const expertParam = searchParams.get('expert') === '1';
   // 以前はCATEGORY_KEYS[0]（＝オブジェクトの先頭に書かれているだけの「身体的要因」）が
   // 何もしなくても選択済みになっていた。意図した選択ではないのに、選ばずに送信すると
   // 違うカテゴリで投稿・回答生成されてしまうため、未選択（''）を初期値にし、
@@ -82,7 +87,7 @@ function AskPageContent() {
   // あったが、「専門家が答えたい質問に勝手に答えてくる仕組みにしたい。質問者は
   // 専門家からの回答してほしいボタンを押しておく」との方針を受けて、通常の相談
   // 送信時にチェックするだけの単一フローに統合した。
-  const [wantExpertAnswer, setWantExpertAnswer] = useState(false);
+  const [wantExpertAnswer, setWantExpertAnswer] = useState(() => searchParams.get('expert') === '1');
   const [draftLoaded, setDraftLoaded] = useState(false);
   // 子どもプロフィール機能（2026-10-16追加）。ログインしていない、またはお子さんの
   // プロフィールを1人も登録していない会員には今まで通り何も表示されない
@@ -235,6 +240,14 @@ function AskPageContent() {
     }, 1200);
     return () => clearTimeout(timer);
   }, [text, draftLoaded]);
+
+  // 学校ページのprefillと同じ理由（上のuseEffectのコメント参照）で、Next.jsのルーター
+  // キャッシュによりページ自体が再マウントされずexpertParamだけが変わるケースにも
+  // 対応する（2026-11-03追加）。一度ONにした後に自分でOFFへ戻した場合まで強制的に
+  // 再ONにしてしまわないよう、trueになる方向にだけ反映する。
+  useEffect(() => {
+    if (expertParam) setWantExpertAnswer(true);
+  }, [expertParam]);
 
   useEffect(() => {
     fetch('/api/experts/available')

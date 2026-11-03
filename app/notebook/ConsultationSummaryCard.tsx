@@ -48,6 +48,31 @@ function NotebookPlaceholder({ tabClass, label, hint }: { tabClass: string; labe
   );
 }
 
+// ノートの内容（AIが整理した今の状況・次の一手等）を読んだ後、専門家や経験した
+// 先輩保護者に直接見てもらう流れへの誘導（2026-11-03追加）。以前は結果ページと同じ
+// 控えめな免責文の中の「専門家」という1リンクだけだったが、「伴走ノートを読んで
+// 専門家や経験者への相談への誘導ができるといいかも」との指摘を受けて強化した。
+// 「相談する」ボタン（/ask?expert=1）は、次の相談で最初から「専門家・経験者にも
+// 回答してもらう」をONにした状態で始められる。すでに回答済みの相談を読みたい人向けに
+// 専門家一覧（/expertlist）・先輩保護者一覧（/senpailist）へのリンクも添える。
+function ExpertConsultNudge({ expertAskHref }: { expertAskHref: string }) {
+  return (
+    <>
+      <div className="notebook-nudge">
+        <span className="notebook-nudge-icon">🙋</span>
+        ここまでの内容を、専門家や同じ経験をした先輩保護者に直接見てもらうこともできます。
+      </div>
+      <Link href={expertAskHref} className="btn-primary" style={{ width: '100%' }}>
+        専門家・経験者にも回答してもらって相談する →
+      </Link>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', width: '100%' }}>
+        <Link href="/expertlist" className="btn-secondary" style={{ flex: 1 }}>専門家の回答を見る</Link>
+        <Link href="/senpailist" className="btn-secondary" style={{ flex: 1 }}>先輩保護者の回答を見る</Link>
+      </div>
+    </>
+  );
+}
+
 const PREVIEW_ENTRIES = [
   { tabClass: 'tab-status', label: '今のお子さんの状況', hint: '相談の内容から、今の状況をどうする先生が整理します。' },
   { tabClass: 'tab-advice', label: '次にできそうなこと', hint: '次にできそうな、具体的な一歩の案が書かれます。' },
@@ -158,6 +183,11 @@ function ChildSwitcher({
 // 積み重ねの価値を伝える。
 export default function ConsultationSummaryCard({ ownCount }: { ownCount: number | null }) {
   const [data, setData] = useState<SummaryResponse | null>(null);
+  // ノートの内容を読んだ後、専門家・経験者（先輩保護者）への相談にもつなげたい
+  // （2026-11-03追加、「伴走ノートを読んで専門家や経験者への相談への誘導ができると
+  // いいかも」との指摘を受けて）。本人確認済みの専門家・経験者が1人もいない間は
+  // 誰も回答できないため、/ask同様このチェックで案内自体を出し分ける。
+  const [expertAvailable, setExpertAvailable] = useState(false);
   // 子どもプロフィール機能（2026-10-16追加）。未ログインの間はAPIが常に空配列を
   // 返すだけなので、ログイン状態を気にせず取得してよい。
   const [childrenList, setChildrenList] = useState<Child[] | null>(null);
@@ -167,6 +197,13 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
   // consultations.member_idがNULLのためgetOrGenerateMemberSummaryが0件を返してしまう
   // 問題への対処。詳細はapp/api/account/link-uid/route.tsのコメント参照）。
   const linkAttempted = useRef(false);
+
+  useEffect(() => {
+    fetch('/api/experts/available')
+      .then((r) => r.json())
+      .then((d) => setExpertAvailable(!!d.available))
+      .catch(() => setExpertAvailable(false));
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -248,6 +285,9 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
   // 特定の子どもを選んでいる場合、「相談する」の遷移先にも引き継いで、/askで
   // その子が選ばれた状態から始められるようにする（2026-10-16）。
   const askHref = selectedChildId ? `/ask?child=${encodeURIComponent(selectedChildId)}` : '/ask';
+  // 上のaskHrefに「専門家・経験者にも回答してもらう」チェックを最初からONにする
+  // expert=1を足したもの（2026-11-03追加、/ask側のexpertParam対応と合わせて追加）。
+  const expertAskHref = `${askHref}${askHref.includes('?') ? '&' : '?'}expert=1`;
 
   if (!data.loggedIn) {
     // 相談が0件の段階では、会員登録してもノートに書く材料が無く空のままになってしまう
@@ -352,6 +392,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
             さらに相談して、ノートの材料を増やす
           </Link>
           <SchoolMatchComingSoon />
+          {expertAvailable && <ExpertConsultNudge expertAskHref={expertAskHref} />}
         </>
       ) : (
         <>
@@ -402,6 +443,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
             新しく相談して、ノートを書き足す
           </Link>
           <SchoolMatchComingSoon />
+          {expertAvailable && <ExpertConsultNudge expertAskHref={expertAskHref} />}
         </>
       )}
 
@@ -413,7 +455,7 @@ export default function ConsultationSummaryCard({ ownCount }: { ownCount: number
           カードの一番下に移動した（2026-10-13）。 */}
       <div className="muted" style={{ fontSize: 12 }}>
         ⚠️ このノートの内容はAIが相談内容をもとに整理した一つの見方で、間違えることもあります。実際にどうするかはご家庭の状況に合わせてご判断ください。
-        <Link href="/ask" style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
+        <Link href={expertAskHref} style={{ color: 'var(--orange-text)', fontWeight: 700, textDecoration: 'underline' }}>
           専門家
         </Link>
         や
