@@ -145,7 +145,7 @@ export default async function ExpertProfilePublicPage({
                   className="btn-primary"
                   style={{ alignSelf: 'flex-start' }}
                 >
-                  ご本人のページへ →
+                  ご本人のサービスを見てみる →
                 </a>
               )}
             </div>
