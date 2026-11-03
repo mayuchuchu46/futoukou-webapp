@@ -14,7 +14,7 @@ import { findSchoolMentionsInBio, resolveSchoolName } from '@/lib/senpaiSchoolMe
 // と同じ構成（2026-10-31、「私の情報トップにだして」との依頼を受けて、トップのカードから
 // 遷移できるプロフィールページとして新規作成）。
 // オンライン通話・チャットリレーの予約・決済は自前で作らず、本人が用意した外部サービス
-// （MOSH等）へのリンク（online_consult_url）を「直接相談してみる」ボタンとして
+// （MOSH等）へのリンク（online_consult_url）を「ご本人のページへ」ボタンとして
 // 出す方式にした（2026-11-01追加。以前はこの仕組み自体が無かったため、ボタンを
 // 置いていなかった）。
 export const instant = false;
@@ -128,13 +128,13 @@ export default async function SenpaiProfilePublicPage({
                   className="btn-primary"
                   style={{ alignSelf: 'flex-start' }}
                 >
-                  直接相談してみる →
+                  ご本人のページへ →
                 </a>
               )}
             </div>
             {onlineConsultLink && (
               <div className="muted" style={{ fontSize: 12 }}>
-                ご本人が設定したページへ移動します（内容・料金はご本人の設定によります）。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
+                どうする先生とは別の、ご本人が設定した外部ページへ移動します（内容・料金はご本人の設定によります）。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
               </div>
             )}
           </div>

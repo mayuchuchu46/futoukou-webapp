@@ -145,13 +145,13 @@ export default async function ExpertProfilePublicPage({
                   className="btn-primary"
                   style={{ alignSelf: 'flex-start' }}
                 >
-                  直接相談してみる →
+                  ご本人のページへ →
                 </a>
               )}
             </div>
             {onlineConsultLink && (
               <div className="muted" style={{ fontSize: 12 }}>
-                ご本人が設定したページへ移動します（内容・料金はご本人の設定によります）。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
+                どうする先生とは別の、ご本人が設定した外部ページへ移動します（内容・料金はご本人の設定によります）。顔出し・顔出しなし・チャットのみは、通話開始後にその場で選べます。
               </div>
             )}
           </div>

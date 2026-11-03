@@ -50,11 +50,11 @@ export default function ExpertProfilePreview({ credentialLabel }: { credentialLa
             どうする先生で質問する
           </span>
           <span className="btn-primary" style={{ alignSelf: 'flex-start' }}>
-            直接相談してみる →
+            ご本人のページへ →
           </span>
         </div>
         <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
-          ↑ 「直接相談してみる」ボタンは、登録時またはプロフィール編集で予約ページのURLを設定すると表示されます（未設定の間はこのボタン自体が出ません）。
+          ↑ 「ご本人のページへ」ボタンは、登録時またはプロフィール編集で予約ページのURLを設定すると表示されます（未設定の間はこのボタン自体が出ません）。
         </div>
       </div>
     </div>
