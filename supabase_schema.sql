@@ -441,6 +441,13 @@ create table if not exists experts (
   -- 顔出し・顔出しなし・声のみ・チャットのみの選択は当日Zoom等の画面上で行うため、
   -- どうする先生側ではモード別にURLを分けない（1つのURLで足りる）。
   online_consult_url text not null default '',
+  -- 経歴確認（2026-11-03追加）。田村さんの提案を受けて、資格の確認（登録証アップロード）
+  -- とは別に、実務経験の分野・年数を本人の自己申告で入力してもらい、プロフィールに
+  -- 経歴として表示する。[{ "field": "児童福祉分野", "years": "5" }, ...] の形のJSON配列。
+  -- 分野の選択肢はlib/careerFields.ts（CAREER_FIELD_OPTIONS）で管理。経験者
+  -- （先輩保護者）には資格前提の分野選択肢が合わないため、専門家のみが使う想定だが、
+  -- カラム自体は共通のexpertsテーブルに置く（空配列のままでよい）。
+  career_fields jsonb not null default '[]',
   created_at timestamptz not null default now()
 );
 -- アプリは常にservice_roleキー経由でのみ読み書きし、anon/authenticatedロールで
@@ -1046,3 +1053,7 @@ alter table outbound_clicks enable row level security;
 -- 予約・決済・通話システム自体は自前で作らず、本人が用意した外部サービスにリンクするだけ
 -- にする方針）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists online_consult_url text not null default '';
+
+-- 専門家の「経歴確認」（実務分野・年数の自己申告、2026-11-03追加）を追加した場合、
+-- 既存DBでは次を実行してください。
+-- alter table experts add column if not exists career_fields jsonb not null default '[]';

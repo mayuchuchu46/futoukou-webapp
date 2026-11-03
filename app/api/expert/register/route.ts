@@ -4,6 +4,29 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { EXPERT_COOKIE_NAME } from '@/lib/expertAuth';
 import { EXPERT_LICENSE_DOC_BUCKET, MAX_LICENSE_DOC_BYTES, isAllowedLicenseDocType } from '@/lib/expertLicenseDoc';
 import { MAX_PHOTO_BYTES, isAllowedPhotoType, uploadExpertPhoto } from '@/lib/expertPhoto';
+import { CAREER_FIELD_OPTIONS, type CareerField } from '@/lib/careerFields';
+
+// 経歴確認（2026-11-03追加）：フォームから届いたJSON文字列を検証し、許可された分野
+// （CAREER_FIELD_OPTIONS）以外や、不正な形のデータは無視する（運営による裏付け確認は
+// 行わないため、ここでは「壊れたデータをDBに入れない」程度の最低限の検証のみ）。
+function parseCareerFields(raw: string): CareerField[] {
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter(
+        (item): item is CareerField =>
+          item &&
+          typeof item === 'object' &&
+          typeof item.field === 'string' &&
+          (CAREER_FIELD_OPTIONS as readonly string[]).includes(item.field) &&
+          typeof item.years === 'string'
+      )
+      .map((item) => ({ field: item.field, years: item.years.trim() }));
+  } catch {
+    return [];
+  }
+}
 
 // 専門家登録。資格の登録番号は自己申告の文字列だけでは真偽の確認ができないため
 // （公的な番号照会システムが見当たらないことを確認済み）、登録証（画像/PDF）の
@@ -33,6 +56,9 @@ export async function POST(req: NextRequest) {
   // 経験者が「保護者視点で話せる」学校名（複数・任意、2026-10-31追加）。
   // 専門家（資格保有者）側の登録フォームからは送られてこないため、常に空配列になる。
   const experienced_school_names = form.getAll('experienced_school_names').map((v) => String(v)).filter(Boolean);
+  // 経歴確認（2026-11-03追加）。経験者側の登録フォームからは送られてこないため、
+  // 常に空配列になる。
+  const career_fields = parseCareerFields(String(form.get('career_fields') || '[]'));
 
   if (!email || !password || !name) {
     return NextResponse.json({ error: 'メールアドレス・パスワード・名前は必須です' }, { status: 400 });
@@ -87,6 +113,7 @@ export async function POST(req: NextRequest) {
       verification_method,
       specialty_categories,
       experienced_school_names,
+      career_fields,
       verified: false,
     })
     .select('id')

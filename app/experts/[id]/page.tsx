@@ -9,6 +9,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
+import type { CareerField } from '@/lib/careerFields';
 
 // 専門家一覧（/experts）は専門家全員をまとめて表示するだけで、「この専門家が
 // 今までどう回答してきたか」を見られる個別ページが無かったため追加（2026-10-12、
@@ -26,13 +27,14 @@ type ExpertProfile = {
   link_url: string | null;
   online_consult_url: string | null;
   verified: boolean;
+  career_fields: CareerField[] | null;
 };
 
 async function getVerifiedExpert(id: string): Promise<ExpertProfile | null> {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('experts')
-    .select('id, name, display_name, credential, bio, photo_url, link_url, online_consult_url, verified')
+    .select('id, name, display_name, credential, bio, photo_url, link_url, online_consult_url, verified, career_fields')
     .eq('id', id)
     .eq('verified', true)
     // 経験者はこの専門家向け個別ページの対象外（2026-10-31追加）。
@@ -92,6 +94,16 @@ export default async function ExpertProfilePublicPage({
                 {expert.bio && (
                   <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
                     {expert.bio}
+                  </div>
+                )}
+                {/* 経歴確認（2026-11-03追加）。本人の自己申告（運営による裏付け確認は
+                    行わない）の実務分野・年数をそのまま経歴として表示する。 */}
+                {!!expert.career_fields?.length && (
+                  <div className="muted" style={{ fontSize: 13 }}>
+                    経歴：
+                    {expert.career_fields
+                      .map((c) => (c.years ? `${c.field}（${c.years}年）` : c.field))
+                      .join('、')}
                   </div>
                 )}
                 {link && (

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import ExpertAvatar from '@/components/ExpertAvatar';
+import { CAREER_FIELD_OPTIONS, type CareerField } from '@/lib/careerFields';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 
 type Expert = {
   id: string;
@@ -17,6 +19,7 @@ type Expert = {
   verified?: boolean;
   stripe_account_id?: string | null;
   stripe_payouts_enabled?: boolean;
+  career_fields?: CareerField[] | null;
 };
 
 export default function ProfileClient({ expert, stripeConfigured }: { expert: Expert; stripeConfigured: boolean }) {
@@ -28,6 +31,11 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
     link_url: expert.link_url || '',
     online_consult_url: expert.online_consult_url || '',
   });
+  // 経歴確認（2026-11-03追加）：field -> years のマップとして編集し、保存時に
+  // [{field, years}]の配列へ変換する（登録フォーム/expert/register/page.tsxと同じ方式）。
+  const [careerFields, setCareerFields] = useState<Record<string, string>>(
+    Object.fromEntries((expert.career_fields || []).map((c) => [c.field, c.years]))
+  );
   const [photoUrl, setPhotoUrl] = useState(expert.photo_url || '');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoUploading, setPhotoUploading] = useState(false);
@@ -79,10 +87,11 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
   async function save() {
     setError('');
     setSaved(false);
+    const career_fields: CareerField[] = Object.entries(careerFields).map(([field, years]) => ({ field, years }));
     const res = await fetch('/api/expert/profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, career_fields }),
     });
     if (!res.ok) {
       const data = await res.json();
@@ -131,6 +140,55 @@ export default function ProfileClient({ expert, stripeConfigured }: { expert: Ex
           />
           <div className="muted">資格</div>
           <input className="input" value={form.credential} onChange={(e) => setForm({ ...form, credential: e.target.value })} />
+
+          {/* 経歴確認（2026-11-03追加、田村さんの提案）。登録時（/expert/register）と
+              同じ分野・年数の自己申告欄を、あとから編集できるようにする。経験者
+              （先輩保護者）には資格前提の分野選択肢が合わないため、専門家のみに表示する。 */}
+          {expert.credential !== SENPAI_CREDENTIAL && (
+            <>
+              <div className="muted">経歴（実務分野・年数、複数選択可・任意）</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {CAREER_FIELD_OPTIONS.map((field) => {
+                  const checked = field in careerFields;
+                  return (
+                    <div key={field} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <label className="muted" style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', flex: 1 }}>
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={(e) => {
+                            setCareerFields((prev) => {
+                              const next = { ...prev };
+                              if (e.target.checked) next[field] = next[field] ?? '';
+                              else delete next[field];
+                              return next;
+                            });
+                          }}
+                        />
+                        {field}
+                      </label>
+                      {checked && (
+                        <>
+                          <input
+                            className="input"
+                            style={{ width: 64, flex: '0 0 auto', padding: '4px 8px' }}
+                            placeholder="年数"
+                            value={careerFields[field]}
+                            onChange={(e) => setCareerFields((prev) => ({ ...prev, [field]: e.target.value }))}
+                          />
+                          <span className="muted" style={{ fontSize: 13 }}>年</span>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="muted" style={{ fontSize: 12, marginTop: -8 }}>
+                実務で携わってきた分野にチェックし、年数を入力してください。プロフィールページに経歴として表示されます。
+              </div>
+            </>
+          )}
+
           <div className="muted">自己紹介</div>
           <textarea className="input" rows={5} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} />
           <div className="muted">ご自身のサイト・SNS（X、Instagramなど）へのリンク（任意）</div>

@@ -28,7 +28,7 @@ export default function ExpertRecruitPage() {
             「どうする先生」は、不登校のご家庭に向けたAI相談サービスです。AIの回答とは別に、公認心理師・臨床心理士など資格をお持ちの専門家本人が、利用者からの相談に直接回答する機能があります。この回答を担当していただける専門家の方を募集しています。
           </div>
           <div className="qtext">
-            ご入力いただいたプロフィール・資格・ご自身のサイト等へのリンクを運営が確認し、問題がなければそのまま承認します。
+            本人確認は、資格の登録証（画像またはPDF）のアップロード、またはオンライン通話で画面に見せて確認する方式のいずれかを選べます。
           </div>
         </div>
 
@@ -60,9 +60,10 @@ export default function ExpertRecruitPage() {
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>登録の流れ</div>
-          <ExpertRecruitFlowDiagram step2Detail="プロフィール・資格・リンク等を確認" />
+          <ExpertRecruitFlowDiagram step2Detail="プロフィール・資格・リンク等を確認" verificationDetail="登録証アップロード、または通話" />
           <ol className="qtext" style={{ margin: 0, paddingLeft: 18 }}>
             <li>登録フォームにプロフィール（資格・自己紹介・対応できる相談カテゴリ）を入力</li>
+            <li>本人確認の方法（アップロード／オンライン通話）を選択</li>
             <li>運営が内容を確認</li>
             <li>確認完了後、相談への回答が可能になります</li>
           </ol>
