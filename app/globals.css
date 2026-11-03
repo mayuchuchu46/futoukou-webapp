@@ -902,8 +902,13 @@ h2.pagetitle {
   .home-mimamori-mobile { display: none; }
   /* 「自分の地域登録」カードも同様に、PCでは右コラム（.pc-sidebar内、
      .home-myregion-side）に出すので、本流に出しているモバイル用の方は隠す
-     （2026-11-03、「PCの場合右サイドでよくない？」との指摘を受けて）。 */
-  .home-myregion-mobile { display: none; }
+     （2026-11-03、「PCの場合右サイドでよくない？」との指摘を受けて）。
+     登録済み状態のMyRegionCard（components/MyRegionCard.tsx）はルート要素に
+     インラインstyleで display: 'flex' を指定しており、インラインstyleの方が
+     詳細度で勝ってこのdisplay:noneが効かず、PCで本文側とサイド側の両方に
+     二重表示されてしまっていた（上の.home-theme-link/.home-gakko-linkと同じ
+     原因）。インラインstyleに勝つため!importantを付けた。 */
+  .home-myregion-mobile { display: none !important; }
   /* スマホ用カルーセル（variant="mobile"）は、PC（960px以上）では非表示にする。
      「相談する」への導線はPCサイドの.sidebar-ask-btn-pinkでカバーする
      （2026-10-15）。PC版のカルーセル（variant="pc"、.home-main-col先頭）は
