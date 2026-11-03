@@ -21,9 +21,11 @@ export default function ExpertContributionDiagram() {
     // ボックス下端からはみ出していた問題も修正済み（2026-11-03再調整）。
     // さらに、「任意」バッジをタイトルの上に置いていたせいで、2つのボックスの
     // タイトル開始位置（上から26px／56px）が揃っていなかったため（2026-11-03
-    // 再々調整）、バッジをタイトルの右横に移動し、両方のタイトルを同じ
-    // 「上余白26px」の位置に揃えた。
-    <svg viewBox="0 0 320 222" width="100%" style={{ maxWidth: 320, margin: '0 auto', display: 'block' }} role="img" aria-label="ご協力いただく内容：テキストでの回答と、オンラインでの通話・チャット（任意）の図">
+    // 再々調整）、バッジをタイトルの右横に移動した。数値上は両方26pxに揃えたが、
+    // バッジの塗りつぶされた角丸形状が上端近くにあると視覚的に詰まって見える
+    // ため（指摘を受けてさらに調整）、2つ目のボックスの上余白を26→32pxに
+    // 増やし、体感の開始位置を揃えた。
+    <svg viewBox="0 0 320 228" width="100%" style={{ maxWidth: 320, margin: '0 auto', display: 'block' }} role="img" aria-label="ご協力いただく内容：テキストでの回答と、オンラインでの通話・チャット（任意）の図">
       {/* テキストでの回答 */}
       <rect x="35" y="10" width="250" height="78" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
       <text x="51" y="36" fontSize="14" fill={textColor} fontWeight="700">テキストでの回答</text>
@@ -34,13 +36,13 @@ export default function ExpertContributionDiagram() {
       <text x="160" y="103" fontSize="20" fill={mutedColor} fontWeight="700" textAnchor="middle">＋</text>
 
       {/* オンラインでの通話・チャット（任意） */}
-      <rect x="35" y="118" width="250" height="94" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
-      <text x="51" y="144" fontSize="14" fill={textColor} fontWeight="700">オンライン通話・チャット</text>
-      <rect x="229" y="132" width="40" height="20" rx="10" fill="var(--bg)" />
-      <text x="249" y="146" fontSize="10.5" fill={mutedColor} fontWeight="700" textAnchor="middle">任意</text>
-      <text x="51" y="166" fontSize="12" fill={mutedColor}>ご自身がお使いの外部サービス（予約</text>
-      <text x="51" y="182" fontSize="12" fill={mutedColor}>サイトなど）へのリンクをプロフィールに</text>
-      <text x="51" y="198" fontSize="12" fill={mutedColor}>設定すると、専用ボタンが表示されます</text>
+      <rect x="35" y="118" width="250" height="100" rx="14" fill={stepFill} stroke={stepStroke} strokeWidth="1.5" />
+      <text x="51" y="150" fontSize="14" fill={textColor} fontWeight="700">オンライン通話・チャット</text>
+      <rect x="229" y="138" width="40" height="20" rx="10" fill="var(--bg)" />
+      <text x="249" y="152" fontSize="10.5" fill={mutedColor} fontWeight="700" textAnchor="middle">任意</text>
+      <text x="51" y="172" fontSize="12" fill={mutedColor}>ご自身がお使いの外部サービス（予約</text>
+      <text x="51" y="188" fontSize="12" fill={mutedColor}>サイトなど）へのリンクをプロフィールに</text>
+      <text x="51" y="204" fontSize="12" fill={mutedColor}>設定すると、専用ボタンが表示されます</text>
     </svg>
   );
 }
