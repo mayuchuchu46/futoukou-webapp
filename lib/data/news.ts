@@ -117,6 +117,22 @@ export const NEWS_ITEMS: NewsItem[] = [
     relatedThemeWord: '教育支援センター',
   },
   {
+    id: 'akita-miraigakuen-manabi-tayouka-2026-10',
+    date: '2026-10-30',
+    addedAt: '2026-11-04',
+    title:
+      '秋田市、県内初の公立「学びの多様化学校」来春開校へ――旧下北手小学校の校舎を活用',
+    summary:
+      '秋田市教育委員会は、不登校の児童生徒を対象とした「学びの多様化学校」秋田市立みらい学園小学校・中学校を2027年4月に開校する予定です。県内では私立の秋田修英高等学校に続く2校目で、公立校としては秋田県内初となります。校舎は旧下北手小学校を改修して使用し、一人ひとりの強み・弱みに取り組む時間「エンパワータイム」を設けるなど、柔軟な時間割と個別支援を特色としています。転入学を希望する家庭は、2027年2月上旬までに同教育委員会の担当者との相談を済ませる必要があるとしています。',
+    sourceName: '秋田魁新報',
+    sourceUrl: 'https://www.sakigake.jp/news/article/20261030AK0004/',
+    category: 'local',
+    // summaryに「学びの多様化学校」と明記しており、これはTHEME_SYNONYMS（lib/searchTags.ts）で
+    // 「不登校特例校」の同義語として扱われているため設定（2026-11-04）。
+    relatedThemeWord: '不登校特例校',
+    relatedMunicipality: { prefecture: '秋田県', city: '秋田市' },
+  },
+  {
     id: 'kanagawa-metaverse-futoko-soudankai-2026-10',
     date: '2026-10-28',
     addedAt: '2026-11-01',
