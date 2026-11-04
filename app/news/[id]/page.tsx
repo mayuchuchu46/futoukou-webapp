@@ -6,7 +6,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
-import { NEWS_ITEMS, getRelatedNews } from '@/lib/data/news';
+import { NEWS_ITEMS, getRelatedNews, getGakkoCategoryLink } from '@/lib/data/news';
 import NewsStatsChart from '@/components/NewsStatsChart';
 import RelatedConsultations from '@/app/gakko/RelatedConsultations';
 import LocalSchoolsCard from '@/components/LocalSchoolsCard';
@@ -63,6 +63,7 @@ export default async function NewsDetailPage({
 
   const url = `${SITE_URL}/news/${item.id}`;
   const relatedNews = getRelatedNews(item.id);
+  const gakkoLink = getGakkoCategoryLink(item.relatedThemeWord);
 
   return (
     <div className="app-shell">
@@ -132,6 +133,25 @@ export default async function NewsDetailPage({
               この記事をシェア
             </a>
           </div>
+
+          {/* ニュースの内容に関連する「学び場」カテゴリへの誘導（2026-11-04追加、
+              「ニュースの内容に関連するカテゴリへの誘導をしたい（例：通信制高校の
+              ニュースなら通信制高校のページへリンク）」との要望を受けて）。
+              item.relatedThemeWordがlib/data/news.tsのTHEME_WORD_TO_GAKKO_LINKに
+              対応する語の場合のみ表示する（該当しない記事では何も出さない）。 */}
+          {gakkoLink && (
+            <Link
+              href={gakkoLink.href}
+              className="card"
+              style={{ alignItems: 'flex-start', gap: 4, textDecoration: 'none', color: 'inherit' }}
+            >
+              <div className="muted" style={{ fontSize: 12 }}>関連する学び場を探す</div>
+              <div className="answer-label" style={{ fontSize: 14 }}>{gakkoLink.label}</div>
+              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+                {gakkoLink.label}を探す ›
+              </span>
+            </Link>
+          )}
 
           {/* マナプリ（manapri.net）の関連コラムへの導線（2026-10-29追加）。
               「このニュースに関連するコラムをマナプリで書いて、ここに貼るのが

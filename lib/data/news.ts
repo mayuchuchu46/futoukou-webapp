@@ -240,6 +240,29 @@ export const NEWS_ITEMS: NewsItem[] = [
   },
 ];
 
+// 記事ごとのrelatedThemeWordが「学び場」（/gakko系）のカテゴリそのものを指している
+// 場合に、その学び場ページへのリンクを個別記事ページに出すためのマッピング
+// （2026-11-04追加、「ニュースの内容に関連するカテゴリへの誘導をしたい（例：通信制
+// 高校のニュースなら通信制高校のページへリンク）」との要望を受けて）。
+// キーはSEARCH_TAG_CANDIDATES（lib/searchTags.ts）の語のうち、app/gakko/page.tsxの
+// GakkoType（type=クエリ）に対応するものだけ。対応しない語（ADHD等の状態・制度名）は
+// ここに含めず、その場合は個別記事ページ側でこのリンクカードを出さない。
+export const THEME_WORD_TO_GAKKO_LINK: Record<string, { type: string; label: string }> = {
+  通信制高校: { type: 'tsushin', label: '通信制高校' },
+  フリースクール: { type: 'free', label: 'フリースクール' },
+  教育支援センター: { type: 'shien', label: '教育支援センター' },
+  不登校特例校: { type: 'gakko', label: '学びの多様化学校' },
+};
+
+export function getGakkoCategoryLink(
+  themeWord?: string
+): { href: string; label: string } | null {
+  if (!themeWord) return null;
+  const entry = THEME_WORD_TO_GAKKO_LINK[themeWord];
+  if (!entry) return null;
+  return { href: `/gakko?type=${entry.type}`, label: entry.label };
+}
+
 // 個別記事ページ（/news/[id]）の下部に出す「関連ニュース」用（2026-11-01追加、
 // 「関連するニュースや質問をこの後に入れておきたい」との要望を受けて）。
 // 同じcategory（制度・施策／調査・統計／自治体の取組／その他）の記事を新しい順に
