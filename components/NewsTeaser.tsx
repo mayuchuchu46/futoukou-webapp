@@ -14,8 +14,18 @@ import { NEWS_ITEMS } from '@/lib/data/news';
 // 目立たない。「ニュース一覧への導線がまだ弱い」との指摘を受けて2026-10-29に修正）。
 // 一覧ページ自体が新しい順で最新記事をいちばん上に出すため、ここで一覧に飛んでも
 // 最新記事はすぐ見える。
+//
+// バナーに出す1件は、NEWS_ITEMS[0]（date＝記事・発表の公開日が最新のもの）ではなく、
+// addedAt（当サイトへの掲載日）が最新のものを選ぶ（2026-11-05修正）。dateだけで選ぶと、
+// 「公開は少し前だが、当サイトが見つけて載せたのは今日」という記事（1日2回のニュース
+// 収集タスクが見つけたもの）がバナーに反映されず、サイトを定期更新している手応えが
+// 画面に出ないため。一覧ページ（/news）の並び順はdate基準のまま変更しない。
 export default function NewsTeaser() {
-  const latest = NEWS_ITEMS[0];
+  const latest = NEWS_ITEMS.reduce<typeof NEWS_ITEMS[number] | undefined>(
+    (mostRecentlyAdded, item) =>
+      !mostRecentlyAdded || item.addedAt > mostRecentlyAdded.addedAt ? item : mostRecentlyAdded,
+    undefined
+  );
   if (!latest) return null;
 
   const titleLabel = latest.title.length > 32 ? `${latest.title.slice(0, 32)}…` : latest.title;
