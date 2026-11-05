@@ -268,6 +268,12 @@ export const THEME_WORD_TO_GAKKO_LINK: Record<string, { type: string; label: str
   フリースクール: { type: 'free', label: 'フリースクール' },
   教育支援センター: { type: 'shien', label: '教育支援センター' },
   不登校特例校: { type: 'gakko', label: '学びの多様化学校' },
+  // 2026-11-05追加（「追加して」との要望を受けて、残りの学び場タブにも対応）。
+  // 対応するテーマ語はlib/searchTags.tsのSEARCH_TAG_CANDIDATESに追加済み。
+  オンラインフリースクール: { type: 'online', label: 'オンラインフリースクール' },
+  定時制高校: { type: 'teiji', label: '定時制高校' },
+  '助成金・支援制度': { type: 'josei', label: '助成金・支援制度' },
+  オルタナティブスクール: { type: 'alternative', label: 'オルタナティブスクール' },
 };
 
 export function getGakkoCategoryLink(
