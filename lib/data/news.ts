@@ -70,6 +70,26 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'okayama-futoko-enquete-benkyo-2026-11',
+    date: '2026-11-04',
+    addedAt: '2026-11-06',
+    title:
+      '不登校の中学生、休んでいる間「勉強はしていない」が46.3%――岡山市が独自アンケート調査を公表',
+    summary:
+      '岡山市は2026年11月4日の市長記者会見で、不登校の児童生徒とその保護者を対象に実施した独自アンケート調査（2026年8月実施、有効回答522件）の結果を公表しました。学校を休んでいた間の勉強について「勉強はしていない」と答えた割合は中学生で46.3%、小学校高学年（4〜6年）で27.1%でした。保護者が期待する支援では「フリースクール等利用の経済的支援」が51.3%で最も多く、大森雅夫市長は会見で、来年度予算に向けて新たな支援策を検討する考えを示しました。',
+    sourceName: '岡山市',
+    sourceUrl: 'https://www.city.okayama.jp/shisei/0000086762.html',
+    category: 'research',
+    stats: [
+      { label: '小学校高学年（4〜6年）', value: 27.1, unit: '%' },
+      { label: '中学生', value: 46.3, unit: '%' },
+    ],
+    statsCaption: '不登校で30日以上休んだ児童生徒のうち、休んでいる間「勉強はしていない」と答えた割合（学年別）',
+    headline: { value: '46.3%', label: '不登校の中学生の46.3%が、休んでいる間「勉強はしていない」と回答' },
+    // summaryに「フリースクール等利用の経済的支援」と明記されているため設定（2026-11-06）。
+    relatedThemeWord: 'フリースクール',
+  },
+  {
     id: 'nhk-gakuen-futoko-hogosha-zadankai-2026-11',
     date: '2026-11-03',
     addedAt: '2026-11-03',
