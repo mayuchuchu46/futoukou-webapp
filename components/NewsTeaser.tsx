@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { NEWS_ITEMS } from '@/lib/data/news';
+import { todayJstDateString } from '@/lib/dailyQuestions';
 
 // TOPページに出す「不登校に関する最新ニュース」への誘導バナー（2026-10-29追加）。
 // 「助成金情報だけでなく最新ニュースも定期チェックして、できればサイトにも出したい」
@@ -30,11 +31,25 @@ export default function NewsTeaser() {
 
   const titleLabel = latest.title.length > 32 ? `${latest.title.slice(0, 32)}…` : latest.title;
 
+  // addedAt（当サイトへの掲載日）が今日・昨日（JST）のうちはNEWバッジを出す
+  // （2026-11-05追加、「NEWみたいなマークつけれる？」との要望を受けて）。
+  // ConsultationCard.tsxの.new-badge（投稿から1時間以内の相談に付けるもの）と
+  // 同じCSSクラスを流用し、新しいCSSは増やさない。こちらは1日2回のニュース
+  // 収集タスクの更新サイクルに合わせ、「今日・昨日に追加」を基準にする
+  // （1時間基準だと、朝7時台に追加した記事が昼にはもうNEWでなくなってしまう）。
+  const diffDays = Math.round(
+    (new Date(todayJstDateString()).getTime() - new Date(latest.addedAt).getTime()) / 86400000
+  );
+  const isNew = diffDays >= 0 && diffDays <= 1;
+
   return (
     <Link href="/news" className="expertbanner expertbanner-today">
       <span className="expertbanner-icon" aria-hidden="true" style={{ fontSize: 18, lineHeight: 1 }}>📰</span>
       <div className="expertbanner-body">
-        <div className="expertbanner-title">{titleLabel}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {isNew && <span className="new-badge">NEW</span>}
+          <div className="expertbanner-title">{titleLabel}</div>
+        </div>
         <div className="expertbanner-desc">不登校に関する最新ニュース</div>
       </div>
       <span className="expertbanner-cta">›</span>
