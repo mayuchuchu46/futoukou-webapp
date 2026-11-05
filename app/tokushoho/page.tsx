@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { cacheLife } from 'next/cache';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
@@ -19,7 +20,14 @@ import Footer from '@/components/Footer';
 // カードネットワーク側の事情により利用できなくなったため削除し、乗り換え先が未確定の
 // 現時点では社名を出さない一般的な表現にしている（2026-10-31）。乗り換え先が決まったら
 // 社名を明記する。
-export default function TokushohoPage() {
+//
+// 文言はコード変更（＝デプロイ）でしか変わらない完全な静的ページ。Cache Componentsの
+// キャッシュキーにはビルドIDが含まれるため、デプロイすれば自動的に最新内容に入れ替わる
+// （2026-11-04、Vercelの無料枠超過をきっかけに、クロールされるたび毎回サーバー側で
+// 再レンダーしていたページにキャッシュを入れる対応の一環）。
+export default async function TokushohoPage() {
+  'use cache';
+  cacheLife('max');
   return (
     <div className="app-shell">
       <Header supervised={false} />
