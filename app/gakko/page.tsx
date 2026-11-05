@@ -6,6 +6,7 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaGakko';
+import { PLANNED_MANABI_TAYOUKA_GAKKO } from '@/lib/data/plannedManabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { FREE_SCHOOL_COVERAGE } from '@/lib/data/freeschoolCoverage';
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
@@ -402,6 +403,42 @@ export default async function GakkoPage({
               initialSchoolType={selectedSchoolType}
             />
           )}
+
+          {/* 文科省の正式指定（上のMANABI_TAYOUKA_GAKKO、全国◯◯校）はまだ確認できて
+              いないが、自治体が開校を公表している学校（PLANNED_MANABI_TAYOUKA_GAKKO）。
+              上の一覧・件数には混ぜず、「まだ指定校ではない」ことが分かるよう別カードで
+              明示する（2026-11-05追加、「この学校情報も掲載したい」との要望を受けて。
+              文科省の指定校一覧を前提にした既存の仕組みに、開校前の学校を事実と混ぜて
+              入れてしまわないようにするため）。都道府県を選んでいる場合はその都道府県の
+              ものだけ、未選択時は全件を表示する。 */}
+          {showGakkoContent &&
+            PLANNED_MANABI_TAYOUKA_GAKKO.filter((s) => !selected || s.prefecture === selected).length > 0 && (
+              <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+                <div className="answer-label" style={{ fontSize: 14 }}>開校準備中の学びの多様化学校</div>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  まだ文部科学省の正式な指定校一覧には入っていませんが、自治体が「学びの多様化学校」としての開校を公表している学校です。入学・転入学の条件等は今後変わる可能性があるため、詳しくは各設置自治体の教育委員会に直接お問い合わせください。
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+                  {PLANNED_MANABI_TAYOUKA_GAKKO.filter((s) => !selected || s.prefecture === selected).map((s) => (
+                    <div key={s.id} style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}>
+                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                        {s.prefecture}{s.city}・{s.schoolType}・{s.publicPrivate}・{s.plannedOpening}
+                      </div>
+                      {s.note && <div className="qtext" style={{ fontSize: 13, marginTop: 4 }}>{s.note}</div>}
+                      <a
+                        href={s.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block', marginTop: 4 }}
+                      >
+                        出典：{s.sourceName}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
           {type === 'free' && (
             <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
