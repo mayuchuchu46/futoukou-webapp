@@ -165,15 +165,22 @@ export async function generateMetadata({
   const type = normalizeGakkoType(rawType);
   const { title, description, ogImage } = PAGE_CONTENT[type];
   const image = ogImage ?? '/og-image.png';
+  // canonical/og:urlが常に素の/gakko固定だったため、クローラーがこのURLを
+  // 参照してtype=を失い、どのタブでシェアしても「学びの多様化学校」タブの
+  // 画像・タイトルで表示される不具合があった（2026-11-06、定時制ページを
+  // シェアしたら学びの多様化学校のOGP画像になっていた、との報告を受けて修正）。
+  // デフォルトタブ（gakko）のみ従来通り素の/gakko、それ以外はtype=を含めて
+  // タブごとに一意なURLにする。
+  const pageUrl = type === 'gakko' ? `${SITE_URL}/gakko` : `${SITE_URL}/gakko?type=${type}`;
 
   return {
     title,
     description,
-    alternates: { canonical: `${SITE_URL}/gakko` },
+    alternates: { canonical: pageUrl },
     openGraph: {
       title,
       description,
-      url: `${SITE_URL}/gakko`,
+      url: pageUrl,
       images: [
         {
           url: image,
