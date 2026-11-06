@@ -132,7 +132,7 @@ export default function KotobaClient() {
         </>
       )}
 
-      {result && !result.is_crisis && !result.is_fallback && (
+      {result && !result.is_crisis && !result.is_fallback && result.interpretations?.length > 0 && (
         <>
           <div className="muted" style={{ fontSize: 13, margin: '14px 0 8px' }}>
             「{input.trim()}」には、こんな気持ちが隠れているかもしれません

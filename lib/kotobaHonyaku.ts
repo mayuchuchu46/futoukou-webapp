@@ -92,7 +92,13 @@ export type KotobaAnalysisResult = {
   interpretations: KotobaInterpretation[];
 };
 
-export async function analyzeKotoba(anthropic: Anthropic, text: string): Promise<KotobaAnalysisResult> {
+// TEMP DEBUG(2026-11-07): interpretationsが空で返る不具合を調査中のため、
+// 戻り値にデバッグ情報(stop_reason・tool_use.input生データ)を含める形にしている。
+// 原因特定後、通常の戻り値(KotobaAnalysisResultのみ)に戻すこと。
+export async function analyzeKotoba(
+  anthropic: Anthropic,
+  text: string
+): Promise<{ result: KotobaAnalysisResult; _debugStopReason: string | null; _debugRaw: unknown }> {
   const msg = await anthropic.messages.create({
     model: 'claude-haiku-5-5',
     thinking: { type: 'disabled' },
@@ -113,5 +119,12 @@ export async function analyzeKotoba(anthropic: Anthropic, text: string): Promise
   if (result.is_crisis) {
     result.crisis_message = CRISIS_FALLBACK_MESSAGE;
   }
-  return result;
+
+  // 解釈が空のまま返ってきた場合、クライアント側の.mapがクラッシュする不具合があったため、
+  // 防御的にfallback扱いにする（原因調査中。恒久対応はここを削除し根本原因を直す）。
+  if (!result.is_crisis && (!result.interpretations || result.interpretations.length === 0)) {
+    result.is_fallback = true;
+  }
+
+  return { result, _debugStopReason: msg.stop_reason, _debugRaw: toolUse.input };
 }
