@@ -92,19 +92,15 @@ export type KotobaAnalysisResult = {
   interpretations: KotobaInterpretation[];
 };
 
-// TEMP DEBUG(2026-11-07): interpretationsが空で返る不具合を調査中のため、
-// 戻り値にデバッグ情報(stop_reason・tool_use.input生データ)を含める形にしている。
-// 原因特定後、通常の戻り値(KotobaAnalysisResultのみ)に戻すこと。
-export async function analyzeKotoba(
-  anthropic: Anthropic,
-  text: string
-): Promise<{ result: KotobaAnalysisResult; _debugStopReason: string | null; _debugRaw: unknown }> {
+// 2026-11-07、max_tokens=800で運用を開始したところstop_reason=max_tokensで
+// 解釈JSONが途中で打ち切られ、interpretationsが空のまま返る不具合が発生した
+// （クライアント側の.mapが未定義配列に対して呼ばれ、ページごとクラッシュする
+// 二次被害も確認）。日本語で2件の解釈（各5フィールド）を構造化出力するには
+// 800トークンでは不足していたため1600に引き上げて解消した。
+export async function analyzeKotoba(anthropic: Anthropic, text: string): Promise<KotobaAnalysisResult> {
   const msg = await anthropic.messages.create({
     model: 'claude-haiku-5-5',
     thinking: { type: 'disabled' },
-    // TEMP DEBUG(2026-11-07): 800だとstop_reason=max_tokensで解釈JSONが尻切れに
-    // なる不具合を確認。日本語で2件の解釈(各5フィールド)を構造化出力するには
-    // 800では不足していたため引き上げた。実データで余裕を見て調整すること。
     max_tokens: 1600,
     system: KOTOBA_HONYAKU_SYSTEM_PROMPT,
     tools: [KOTOBA_HONYAKU_TOOL],
@@ -123,11 +119,13 @@ export async function analyzeKotoba(
     result.crisis_message = CRISIS_FALLBACK_MESSAGE;
   }
 
-  // 解釈が空のまま返ってきた場合、クライアント側の.mapがクラッシュする不具合があったため、
-  // 防御的にfallback扱いにする（原因調査中。恒久対応はここを削除し根本原因を直す）。
+  // max_tokensの引き上げで通常は解消したが、万一また解釈が空で返ってきた場合に
+  // クライアント側の.mapがクラッシュしないよう、念のためfallback扱いにしておく
+  // （防御的措置。KotobaClient.tsx側もresult.interpretations?.length>0を描画条件に
+  // しており二重の防御）。
   if (!result.is_crisis && (!result.interpretations || result.interpretations.length === 0)) {
     result.is_fallback = true;
   }
 
-  return { result, _debugStopReason: msg.stop_reason, _debugRaw: toolUse.input };
+  return result;
 }

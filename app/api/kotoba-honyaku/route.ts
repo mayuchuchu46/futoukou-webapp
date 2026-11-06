@@ -38,11 +38,8 @@ export async function POST(req: NextRequest) {
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   try {
-    const { result, _debugStopReason, _debugRaw } = await analyzeKotoba(anthropic, trimmed);
+    const result = await analyzeKotoba(anthropic, trimmed);
     recordKotobaHonyakuRequest(typeof uid === 'string' ? uid : null, ip);
-    if (req.nextUrl.searchParams.get('debug') === '1') {
-      return NextResponse.json({ ...result, _debugStopReason, _debugRaw });
-    }
     return NextResponse.json(result);
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'unknown error';
