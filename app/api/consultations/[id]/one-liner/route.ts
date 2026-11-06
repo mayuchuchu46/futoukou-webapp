@@ -60,8 +60,13 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
       (b): b is Extract<typeof b, { type: 'text' }> => b.type === 'text'
     );
     const raw = oneLinerBlock ? oneLinerBlock.text.trim() : '';
-    // 万一「」で囲って返ってきた場合に備えて剥がしておく。
-    oneLiner = raw ? raw.replace(/^[「『]|[」』]$/g, '').trim() : null;
+    // 万一全体を「」『』で囲って返ってきた場合に備えて剥がしておく。先頭と末尾を
+    // それぞれ独立に剥がす実装だと、「休みたい」は、〜のように文中の鍵かっこ
+    // （プロンプト側で許可している）まで巻き込んで先頭の「だけ消えてしまう
+    // 不具合があった（2026-11-07、シェア画像で確認）。先頭〜末尾が対応している
+    // 場合のみ剥がすようにする。
+    const stripped = raw.replace(/^「([^]*)」$/, '$1').replace(/^『([^]*)』$/, '$1');
+    oneLiner = stripped ? stripped.trim() : null;
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'unknown error';
     return NextResponse.json({ error: '一言要約の生成に失敗しました: ' + message }, { status: 502 });
