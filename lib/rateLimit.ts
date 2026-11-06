@@ -66,6 +66,60 @@ export async function countAiConsultationsAllTime(authorId: string): Promise<num
   return countSince({ authorId, requestType: 'ai', onlyType: true }, new Date(0).toISOString());
 }
 
+// 「子供の言葉、ほんとはこう」機能（ログイン不要のミニツール、2026-11-06追加）向け。
+// author_id（ログイン前提）ではなく、lib/uid.ts の匿名ブラウザID（uid）とIPで数える。
+// 専用の軽量テーブル（kotoba_honyaku_log）を使い、consultationsテーブルとは分ける。
+const KOTOBA_HONYAKU_USER_DAILY_LIMIT = 10;
+const KOTOBA_HONYAKU_IP_DAILY_LIMIT = 20;
+
+async function countKotobaHonyakuSince(filters: { uid?: string; ip?: string }, sinceIso: string) {
+  const supabase = getSupabaseAdmin();
+  let query = supabase.from('kotoba_honyaku_log').select('id', { count: 'exact', head: true }).gte('created_at', sinceIso);
+  if (filters.uid) query = query.eq('uid', filters.uid);
+  if (filters.ip) query = query.eq('client_ip', filters.ip);
+  const { count } = await query;
+  return count || 0;
+}
+
+export async function checkKotobaHonyakuRateLimit(uid: string | null, ip: string | null): Promise<LimitResult> {
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+  const globalCount = await countKotobaHonyakuSince({}, since);
+  if (globalCount >= 300) {
+    return { ok: false, message: '本日はご利用が集中しているため、しばらく時間をおいてから再度お試しください。' };
+  }
+
+  if (uid) {
+    const userCount = await countKotobaHonyakuSince({ uid }, since);
+    if (userCount >= KOTOBA_HONYAKU_USER_DAILY_LIMIT) {
+      return {
+        ok: false,
+        message: `1日にご利用いただける回数の上限（${KOTOBA_HONYAKU_USER_DAILY_LIMIT}回）に達しました。また明日お試しください。`,
+      };
+    }
+  }
+
+  if (ip) {
+    const ipCount = await countKotobaHonyakuSince({ ip }, since);
+    if (ipCount >= KOTOBA_HONYAKU_IP_DAILY_LIMIT) {
+      return { ok: false, message: '1日にご利用いただける回数の上限に達しました。また明日お試しください。' };
+    }
+  }
+
+  return { ok: true };
+}
+
+// 実際にAI呼び出しが発生したリクエストだけを記録する（危険信号の一次フィルタで
+// AIを呼ばずに済んだ場合は記録しない）。失敗してもレスポンスを遅らせたくないため
+// fire-and-forgetにする。
+export function recordKotobaHonyakuRequest(uid: string | null, ip: string | null) {
+  const supabase = getSupabaseAdmin();
+  supabase.from('kotoba_honyaku_log').insert({ uid, client_ip: ip }).then(
+    () => {},
+    () => {}
+  );
+}
+
 // 有料の専門家相談向け：決済が絡むため緩めだが、連打・スパムは防ぐ
 export async function checkExpertRequestRateLimit(authorId: string, ip: string | null): Promise<LimitResult> {
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();

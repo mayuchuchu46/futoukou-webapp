@@ -586,6 +586,24 @@ export default function HomeClient({
               </div>
             ) : null}
 
+            {/* 「子供の言葉、ほんとはこう」への入口バナー（2026-11-06追加）。入力の心理的
+                障壁が低い（状況説明不要、子の一言をそのまま入れるだけ）ため、学校タイプ
+                診断と並ぶ主要な入口として、同じ見た目で学校タイプ診断の直下に置く。
+                相談フォーム（/ask）への自然なブリッジとしても機能させる狙い。 */}
+            {showExtras && (
+              <Link
+                href="/kotoba"
+                className="card home-gakko-link"
+                style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '0 0 10px', padding: '12px 14px', border: '2px solid var(--main)', background: 'var(--sub)', textDecoration: 'none', color: 'inherit' }}
+              >
+                <span style={{ flex: 1 }}>
+                  <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>子供の言葉、ほんとはこう</span>
+                  <span style={{ display: 'block', fontSize: 12 }}>お子さんが言った言葉を入れるだけ。考えられる気持ちと返し方の例がわかります</span>
+                </span>
+                <span style={{ color: 'var(--main)', fontWeight: 700 }}>›</span>
+              </Link>
+            )}
+
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。
                 「参考になった順」は各カードの「参考になった◯人」と同じlikesで並べている。
                 専門家回答の絞り込みは、以前は/expertlistへの別バナーのみで案内していたが、

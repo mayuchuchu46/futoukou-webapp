@@ -814,6 +814,19 @@ create table if not exists ai_limit_hits (
 );
 alter table ai_limit_hits enable row level security;
 
+-- 「子供の言葉、ほんとはこう」機能（トップの入口ミニツール、2026-11-06追加）専用の
+-- レート制限用ログ。ログイン不要で使える想定のため author_id ではなく、
+-- lib/uid.ts の匿名ブラウザID（uid）とIPの両方で数える。危険信号（自殺念慮等）の
+-- 一次フィルタに当たった場合はAI呼び出し自体を行わないため、ここには記録しない
+-- （実際にAPIコストが発生したリクエストだけを数える）。
+create table if not exists kotoba_honyaku_log (
+  id uuid primary key default gen_random_uuid(),
+  uid text,
+  client_ip text,
+  created_at timestamptz not null default now()
+);
+alter table kotoba_honyaku_log enable row level security;
+
 -- [旧モデル・現在は未使用] かつては専門家への都度質問（¥500）を一度払うと、その日から
 -- 30日間、他の人の専門家回答も読み放題になる特典を、匿名のブラウザID（author_id）単位で
 -- このテーブルに記録していた。2026-10-10 決定の価格体系（月¥800の会員登録／都度¥500の
