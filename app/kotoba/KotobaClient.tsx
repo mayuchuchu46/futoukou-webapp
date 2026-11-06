@@ -148,7 +148,7 @@ export default function KotobaClient() {
               </div>
               <div className="card-answerbox" style={{ width: '100%' }}>
                 <div style={{ fontSize: 12, fontWeight: 700 }} className="muted">避けたい返し方</div>
-                <div className="qtext muted" style={{ textDecoration: 'line-through' }}>{interp.response_avoid}</div>
+                <div className="qtext muted">{interp.response_avoid}</div>
               </div>
             </div>
           ))}
