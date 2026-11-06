@@ -589,11 +589,18 @@ export default function HomeClient({
             {/* 「子供の言葉、ほんとはこう」への入口バナー（2026-11-06追加）。入力の心理的
                 障壁が低い（状況説明不要、子の一言をそのまま入れるだけ）ため、学校タイプ
                 診断と並ぶ主要な入口として、同じ見た目で学校タイプ診断の直下に置く。
-                相談フォーム（/ask）への自然なブリッジとしても機能させる狙い。 */}
+                相談フォーム（/ask）への自然なブリッジとしても機能させる狙い。
+                2026-11-07、class名を学校タイプ診断と同じ「home-gakko-link」にしていた
+                ため、PC（960px以上）ではapp/globals.cssの
+                「.home-main-col .home-gakko-link { display: none !important; }」
+                （学校タイプ診断はPCヘッダー・サイドに重複導線があるためPCで隠す
+                ルール）に巻き込まれ、このバナーごとPCで非表示になっていた
+                （「PCからだと入り口がどこにある？」との指摘を受けて発覚）。kotobaには
+                PC側に代わりの導線が無いため、別クラス名にしてPCでも表示されるようにした。 */}
             {showExtras && (
               <Link
                 href="/kotoba"
-                className="card home-gakko-link"
+                className="card home-kotoba-link"
                 style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '0 0 10px', padding: '12px 14px', border: '2px solid var(--main)', background: 'var(--sub)', textDecoration: 'none', color: 'inherit' }}
               >
                 <span style={{ flex: 1 }}>
