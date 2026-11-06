@@ -22,9 +22,17 @@ import { todayJstDateString } from '@/lib/dailyQuestions';
 // 収集タスクが見つけたもの）がバナーに反映されず、サイトを定期更新している手応えが
 // 画面に出ないため。一覧ページ（/news）の並び順はdate基準のまま変更しない。
 export default function NewsTeaser() {
+  // addedAtが同じ日付（1日2回のニュース収集タスクが同じ日に2件追加した場合など）の
+  // ときは「>=」でタイブレークし、NEWS_ITEMS配列の中でより後ろにある方を選ぶ
+  // （2026-11-06修正、「でもTOPに出てないよ」との指摘を受けて。単純な「>」だと配列の
+  // 先頭寄り＝記事自体のdateが新しい方が常に勝ってしまい、同じ日の2回目の実行で
+  // 見つけた記事（dateは前の記事より古いがaddedAtは同じ今日）がバナーに反映されない
+  // 不具合があった。addedAtはYYYY-MM-DDのみで追加した時刻までは記録していないため、
+  // この配列内の前後関係によるタイブレークは厳密な解決ではないが、実際の運用
+  // （1日2回、見つかった記事をその都度追記していく）に対しては妥当な近似になる）。
   const latest = NEWS_ITEMS.reduce<typeof NEWS_ITEMS[number] | undefined>(
     (mostRecentlyAdded, item) =>
-      !mostRecentlyAdded || item.addedAt > mostRecentlyAdded.addedAt ? item : mostRecentlyAdded,
+      !mostRecentlyAdded || item.addedAt >= mostRecentlyAdded.addedAt ? item : mostRecentlyAdded,
     undefined
   );
   if (!latest) return null;
