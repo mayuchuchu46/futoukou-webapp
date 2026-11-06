@@ -8,6 +8,7 @@ import PcSidebar from '@/components/PcSidebar';
 import { CATS, Category, CATEGORY_EXAMPLES } from '@/lib/categories';
 import { GRADE_OPTIONS, GENDER_OPTIONS, Child } from '@/lib/types';
 import { getUid, hasAgreedTerms, setAgreedTerms, getAskDraft, setAskDraft, clearAskDraft } from '@/lib/uid';
+import { trackEvent } from '@/lib/gtag';
 
 const CATEGORY_KEYS = Object.keys(CATS) as Category[];
 
@@ -356,6 +357,16 @@ function AskPageContent() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '失敗しました');
+      // GA4の拡張計測機能（form_submit）は実際の<form>要素のsubmitイベントでしか
+      // 発火しないため、<form>を使わずfetchで送信しているこの画面の相談投稿は
+      // 自動計測の対象外になっている。相談送信というもっとも重要なコンバージョンが
+      // GA4上で一切計測できていなかったため、送信成功のタイミングで明示的に
+      // カスタムイベントを送る（2026-11-06追加）。相談本文はGA4に送らない
+      // （個人情報を含みうるため、またGA4のイベントパラメータに適さないため）。
+      trackEvent('ask_submit', {
+        category: resolvedCategory,
+        want_expert: wantExpertAnswer,
+      });
       clearAskDraft();
       // 「もう一度相談する」で/askに戻ってきたとき、Next.jsのルーターキャッシュにより
       // このページのコンポーネント自体が再マウントされず（マウント時のuseEffectが
