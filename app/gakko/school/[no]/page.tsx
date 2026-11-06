@@ -58,8 +58,30 @@ export async function generateMetadata({
   }
   const fullName = school.branchName ? `${school.name}（${school.branchName}）` : school.name;
   const title = `${fullName}｜学びの多様化学校 - ${SITE_NAME}`;
-  const baseDescription = `${school.prefecture}${school.city}にある学びの多様化学校「${fullName}」（${school.schoolType}・${school.publicPrivate}・${school.designatedYear}指定）の情報です。`;
-  const description = school.note ? `${baseDescription}${school.note}` : baseDescription;
+  // 2026-11-07：Search Consoleのデータで、表示回数が多い（順位6〜10位台）のに
+  // CTRが低いページが複数見つかった。従来のdescriptionは「〇〇県〇〇市にある
+  // 学びの多様化学校「校名」（種別・公私・指定年）の情報です。」という84校共通の
+  // 定型文を先頭に置き、その学校固有の情報（note）は末尾に続ける構成だったため、
+  // (1) noteが長い学校では合計文字数がGoogleの表示上限（150〜160字程度）を超え、
+  //     固有情報が検索結果で途中から見えなくなる、(2) 定型文が先頭にあるため、
+  //     検索結果のスニペット冒頭が他校ページと似た文言になりがちで差別化しにくい、
+  // という2点の問題があった。そのため、学校名・地域・分類情報をまとめて短く
+  // 冒頭に置いたうえで、固有情報（note）をできるだけ早い位置に出し、全体を
+  // MAX_DESCRIPTION_LENGTH文字以内に収める構成に変更する。
+  const classification = `${school.schoolType}・${school.publicPrivate}・${school.designatedYear}指定`;
+  const intro = `「${fullName}」（${school.prefecture}${school.city}・${classification}）`;
+  const MAX_DESCRIPTION_LENGTH = 160;
+  let description: string;
+  if (school.note) {
+    const noteBudget = MAX_DESCRIPTION_LENGTH - intro.length - 1; // 1は句点「。」分
+    const noteText =
+      noteBudget > 0 && school.note.length > noteBudget
+        ? `${school.note.slice(0, Math.max(noteBudget - 1, 0))}…`
+        : school.note;
+    description = `${intro}。${noteText}`;
+  } else {
+    description = `${intro}の学びの多様化学校（旧：不登校特例校）の情報です。`;
+  }
   const url = `${SITE_URL}/gakko/school/${school.no}`;
   const hasEnoughInfo = !!(school.officialUrl || school.address);
   // 2026-10-19：学校ごとに学校名入りのOGP画像を動的生成するopengraph-image.tsxを
