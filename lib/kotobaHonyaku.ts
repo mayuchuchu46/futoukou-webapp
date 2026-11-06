@@ -154,3 +154,27 @@ export async function analyzeKotoba(anthropic: Anthropic, text: string): Promise
 
   return result;
 }
+
+// 2026-11-07追加。「どうする先生」の価値（相談が増えるほどコンテンツが増える）を
+// kotoba機能にも持たせるため、crisisでも空振り（is_fallback）でもない通常の解釈結果は
+// 全件、通常の相談（consultations）と同じ形で「みんなの相談」に自動公開する。
+// 子供の生の言葉だけがquestionに入ると文脈が分からないため、誰が見ても状況が伝わる
+// 一文に整形する。answerはAIの解釈をそのまま使い、/api/consultのような別の回答生成は
+// 行わない（コスト・待ち時間を増やさないため）。
+export function buildKotobaConsultationText(childText: string, result: KotobaAnalysisResult): { question: string; answer: string } {
+  const question = `子どもが「${childText}」と言いました。どう受け止めたらいいでしょうか。`;
+  const answer =
+    result.interpretations
+      .map((interp) =>
+        [
+          `【${interp.tag}】`,
+          interp.psychology,
+          `見分けるヒント：${interp.sign}`,
+          `こう返すとよい：${interp.response_do}`,
+          `避けたい返し方：${interp.response_avoid}`,
+        ].join('\n')
+      )
+      .join('\n\n') +
+    '\n\n※これはAIによる一般的な解釈で、診断ではありません。心配な様子が続く場合は、学校や専門家にご相談ください。';
+  return { question, answer };
+}

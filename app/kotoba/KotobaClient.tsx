@@ -20,6 +20,7 @@ type AnalysisResult = {
   is_crisis: boolean;
   is_fallback: boolean;
   interpretations: Interpretation[];
+  consultation_id?: string | null;
 };
 
 export default function KotobaClient() {
@@ -84,6 +85,15 @@ export default function KotobaClient() {
         </div>
       </div>
 
+      {/* kotobaの結果は「みんなの相談」に匿名で自動公開されるようになったため（2026-11-07）、
+          /askの入力欄上にある注意書きと同じ内容を、入力前に必ず目に入る位置に表示する。 */}
+      <div className="privacy-notice">
+        <span className="privacy-notice-icon">⚠️</span>
+        <span>
+          入力した言葉と結果は、匿名のまま「みんなの相談」に自動で公開されます。お名前・住所・学校名など個人を特定できる情報は書かないでください。
+        </span>
+      </div>
+
       <div className="card" style={{ alignItems: 'stretch', gap: 10 }}>
         <textarea
           className="input"
@@ -120,7 +130,10 @@ export default function KotobaClient() {
             </div>
           </div>
           <div className="card home-gakko-link" style={{ alignItems: 'stretch', gap: 8, margin: '10px 0', border: '2px solid var(--main)', background: 'var(--sub)' }}>
-            <Link href="/ask" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}>
+            <Link
+              href={`/ask?prefill=${encodeURIComponent(`子どもが「${input.trim()}」と言いました。`)}`}
+              style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}
+            >
               <span style={{ flex: 1 }}>
                 <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>どうする先生に相談する</span>
                 <span style={{ display: 'block', fontSize: 12 }}>状況を詳しく書いて相談すると、もっと具体的なアドバイスが受けられます</span>
@@ -152,11 +165,25 @@ export default function KotobaClient() {
               </div>
             </div>
           ))}
+          {/* 入力時点で「みんなの相談」に自動公開済み（上の注意書き参照）のため、公開済みの
+              その投稿をそのまま見られるようにするリンク（2026-11-07追加）。 */}
+          {result.consultation_id && (
+            <Link
+              href={`/result/${result.consultation_id}`}
+              className="muted"
+              style={{ fontSize: 12, textDecoration: 'underline', display: 'block', margin: '0 0 10px' }}
+            >
+              この結果は「みんなの相談」に公開されました。投稿を見る ›
+            </Link>
+          )}
           <div className="card home-gakko-link" style={{ alignItems: 'stretch', gap: 8, margin: '0 0 10px', border: '2px solid var(--main)', background: 'var(--sub)' }}>
-            <Link href="/ask" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}>
+            <Link
+              href={`/ask?prefill=${encodeURIComponent(`子どもが「${input.trim()}」と言いました。`)}`}
+              style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}
+            >
               <span style={{ flex: 1 }}>
                 <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>この状況、もっと詳しく相談したい方へ</span>
-                <span style={{ display: 'block', fontSize: 12 }}>どうする先生に相談する</span>
+                <span style={{ display: 'block', fontSize: 12 }}>どうする先生に相談する（状況を書き足して送れます）</span>
               </span>
               <span style={{ color: 'var(--main)', fontWeight: 700 }}>›</span>
             </Link>

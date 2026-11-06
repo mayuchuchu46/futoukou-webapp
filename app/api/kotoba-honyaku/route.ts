@@ -1,7 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
-import { analyzeKotoba, CRISIS_PRECHECK_WORDS, CRISIS_FALLBACK_MESSAGE } from '@/lib/kotobaHonyaku';
+import { analyzeKotoba, buildKotobaConsultationText, CRISIS_PRECHECK_WORDS, CRISIS_FALLBACK_MESSAGE } from '@/lib/kotobaHonyaku';
 import { checkKotobaHonyakuRateLimit, recordKotobaHonyakuRequest, getClientIp } from '@/lib/rateLimit';
+import { getSupabaseAdmin } from '@/lib/supabase';
+import { buildCategoryClassificationPrompt } from '@/lib/prompt';
+import { CATS, Category } from '@/lib/categories';
+
+const CATEGORY_KEYS = Object.keys(CATS) as Category[];
+
+// crisisでも空振りでもない通常の解釈結果を、/api/classify-categoryと同じ方式でテーマを
+// 判定した上で「みんなの相談」（consultationsテーブル）に公開投稿する（2026-11-07追加、
+// 「相談するページに統合」「TOPの一覧にも流せられるといいな」との要望を受けて、kotoba
+// 単独では閉じていたコンテンツをサイト本体の相談一覧に合流させる）。失敗しても解釈結果
+// 自体の表示は止めたくないため、ここで起きた例外は呼び出し側で握りつぶす。
+async function publishKotobaAsConsultation(
+  anthropic: Anthropic,
+  childText: string,
+  result: Parameters<typeof buildKotobaConsultationText>[1],
+  uid: string | null,
+  ip: string | null
+): Promise<string | null> {
+  const { question, answer } = buildKotobaConsultationText(childText, result);
+
+  let category: Category = 'other';
+  try {
+    const msg = await anthropic.messages.create({
+      model: 'claude-haiku-5-5',
+      thinking: { type: 'disabled' },
+      max_tokens: 10,
+      messages: [{ role: 'user', content: buildCategoryClassificationPrompt(question) }],
+    });
+    const textBlock = msg.content.find((b): b is Extract<typeof b, { type: 'text' }> => b.type === 'text');
+    const raw = (textBlock ? textBlock.text : '').trim();
+    const matched = CATEGORY_KEYS.find((key) => raw === key || raw.startsWith(key));
+    if (matched) category = matched;
+  } catch {
+    // 判定に失敗しても「その他」のまま投稿自体は続ける（/ask のresolveCategoryと同じ考え方）。
+  }
+
+  const supabase = getSupabaseAdmin();
+  const { data: row, error } = await supabase
+    .from('consultations')
+    .insert({
+      category,
+      question,
+      answer,
+      author_id: uid || 'kotoba_anon',
+      client_ip: ip,
+    })
+    .select('id')
+    .single();
+
+  if (error) throw error;
+  return row?.id || null;
+}
 
 // 「子供の言葉、ほんとはこう」機能のAPI（2026-11-06追加）。ログイン不要のミニツールの
 // ため author_id は必須にせず、lib/uid.ts の匿名ブラウザID（uid、任意）とIPで
@@ -40,7 +92,23 @@ export async function POST(req: NextRequest) {
   try {
     const result = await analyzeKotoba(anthropic, trimmed);
     recordKotobaHonyakuRequest(typeof uid === 'string' ? uid : null, ip);
-    return NextResponse.json(result);
+
+    let consultationId: string | null = null;
+    if (!result.is_crisis && !result.is_fallback && result.interpretations.length > 0) {
+      try {
+        consultationId = await publishKotobaAsConsultation(
+          anthropic,
+          trimmed,
+          result,
+          typeof uid === 'string' ? uid : null,
+          ip
+        );
+      } catch {
+        // 公開投稿が失敗しても、入力した本人への解釈結果の表示は妨げない。
+      }
+    }
+
+    return NextResponse.json({ ...result, consultation_id: consultationId });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'unknown error';
     return NextResponse.json({ error: '判定に失敗しました: ' + message }, { status: 502 });

@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
@@ -424,6 +425,12 @@ function AskPageContent() {
             入力いただいた内容はそのまま「みんなの相談」に公開されます。お名前・住所・学校名など個人を特定できる情報は書かないでください。
           </span>
         </div>
+        {/* 状況を書くほどの余裕がなく、子供が言った一言だけをまず知りたい人向けの入口
+            （2026-11-07追加、「子供の言葉、ほんとはこう」からこのページへの誘導と対になる
+            導線として、こちら側にも設置）。 */}
+        <Link href="/kotoba" className="muted" style={{ fontSize: 12, textDecoration: 'underline', marginBottom: 10, display: 'inline-block' }}>
+          状況を書くのが大変な方へ：子供の一言だけで気持ちを読む「子供の言葉、ほんとはこう」
+        </Link>
         <textarea
           className="input"
           rows={8}
