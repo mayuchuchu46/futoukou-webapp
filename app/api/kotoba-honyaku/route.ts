@@ -1,10 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { analyzeKotoba, buildKotobaConsultationText, CRISIS_PRECHECK_WORDS, CRISIS_FALLBACK_MESSAGE } from '@/lib/kotobaHonyaku';
-import { checkKotobaHonyakuRateLimit, recordKotobaHonyakuRequest, getClientIp } from '@/lib/rateLimit';
+import { checkKotobaHonyakuRateLimit, recordKotobaHonyakuRequest, checkExpertRequestRateLimit, getClientIp } from '@/lib/rateLimit';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { buildCategoryClassificationPrompt } from '@/lib/prompt';
 import { CATS, Category } from '@/lib/categories';
+import { notifyExpertsOfNewPending } from '@/lib/expertNotify';
 
 const CATEGORY_KEYS = Object.keys(CATS) as Category[];
 
@@ -18,7 +19,8 @@ async function publishKotobaAsConsultation(
   childText: string,
   result: Parameters<typeof buildKotobaConsultationText>[1],
   uid: string | null,
-  ip: string | null
+  ip: string | null,
+  wantExpert: boolean
 ): Promise<string | null> {
   const { question, answer } = buildKotobaConsultationText(childText, result);
 
@@ -47,6 +49,12 @@ async function publishKotobaAsConsultation(
       answer,
       author_id: uid || 'kotoba_anon',
       client_ip: ip,
+      // 「専門家への導線を強化したい」（2026-11-07）を受けて、/askの
+      // 「専門家・経験者にも回答してもらう」チェックと同じ仕組みをkotobaにも追加。
+      // チェックされていれば、通常の相談と同じ回答待ちキューに乗せる。
+      ...(wantExpert
+        ? { request_type: 'expert', expert_status: 'pending', paid: true, price_jpy: 0, expert_funding: 'volunteer' }
+        : {}),
     })
     .select('id')
     .single();
@@ -61,7 +69,7 @@ async function publishKotobaAsConsultation(
 // と同じものをサーバー側でも実施し、ヒットした場合はAIを呼ばずに即時応答する
 // （コスト削減 + クライアント側フィルタが何らかの理由で効かなかった場合の保険）。
 export async function POST(req: NextRequest) {
-  const { text, uid } = await req.json();
+  const { text, uid, wantExpert } = await req.json();
 
   if (!text || typeof text !== 'string' || !text.trim()) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 });
@@ -72,6 +80,7 @@ export async function POST(req: NextRequest) {
 
   const trimmed = text.trim().slice(0, 300);
   const ip = getClientIp(req);
+  const uidStr = typeof uid === 'string' ? uid : null;
 
   const precheckHit = CRISIS_PRECHECK_WORDS.some((w) => trimmed.includes(w));
   if (precheckHit) {
@@ -83,29 +92,39 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const limit = await checkKotobaHonyakuRateLimit(typeof uid === 'string' ? uid : null, ip);
+  const limit = await checkKotobaHonyakuRateLimit(uidStr, ip);
   if (!limit.ok) {
     return NextResponse.json({ error: limit.message }, { status: 429 });
+  }
+
+  // /api/consultと同様、専門家・経験者への質問は乱用防止のため専用のレート制限も
+  // かける（2026-11-07追加）。uidが無い場合はこの機能自体を使えないよう扱う。
+  if (wantExpert) {
+    const expertLimit = await checkExpertRequestRateLimit(uidStr || 'kotoba_anon', ip);
+    if (!expertLimit.ok) {
+      return NextResponse.json({ error: expertLimit.message }, { status: 429 });
+    }
   }
 
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   try {
     const result = await analyzeKotoba(anthropic, trimmed);
-    recordKotobaHonyakuRequest(typeof uid === 'string' ? uid : null, ip);
+    recordKotobaHonyakuRequest(uidStr, ip);
 
     let consultationId: string | null = null;
+    let published = false;
     if (!result.is_crisis && !result.is_fallback && result.interpretations.length > 0) {
       try {
-        consultationId = await publishKotobaAsConsultation(
-          anthropic,
-          trimmed,
-          result,
-          typeof uid === 'string' ? uid : null,
-          ip
-        );
+        consultationId = await publishKotobaAsConsultation(anthropic, trimmed, result, uidStr, ip, !!wantExpert);
+        published = true;
       } catch {
         // 公開投稿が失敗しても、入力した本人への解釈結果の表示は妨げない。
       }
+    }
+
+    if (published && wantExpert && consultationId) {
+      const { question } = buildKotobaConsultationText(trimmed, result);
+      after(() => notifyExpertsOfNewPending(question));
     }
 
     return NextResponse.json({ ...result, consultation_id: consultationId });

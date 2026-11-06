@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CrisisModal from '@/components/CrisisModal';
 import { getUid } from '@/lib/uid';
 import { CRISIS_PRECHECK_WORDS } from '@/lib/kotobaHonyaku';
@@ -29,6 +29,18 @@ export default function KotobaClient() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [showCrisisModal, setShowCrisisModal] = useState(false);
+  // 専門家への導線強化（2026-11-07追加）。/askの「専門家・経験者にも回答してもらう」
+  // チェックと同じ仕組み。本人確認済みの専門家が1人もいない間はチェック自体を出さない
+  // （/askのexpertAvailableと同じ考え方）。
+  const [expertAvailable, setExpertAvailable] = useState(false);
+  const [wantExpert, setWantExpert] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/experts/available')
+      .then((r) => r.json())
+      .then((d) => setExpertAvailable(!!d.available))
+      .catch(() => setExpertAvailable(false));
+  }, []);
 
   async function analyze() {
     const text = input.trim();
@@ -51,7 +63,7 @@ export default function KotobaClient() {
       const res = await fetch('/api/kotoba-honyaku', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, uid: getUid() }),
+        body: JSON.stringify({ text, uid: getUid(), wantExpert }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -115,6 +127,27 @@ export default function KotobaClient() {
             </button>
           ))}
         </div>
+        {/* 専門家・経験者への導線強化（2026-11-07追加）。/askの同名チェックと同じ役割。
+            本人確認済みの専門家・経験者が1人もいない間は表示しない。 */}
+        {expertAvailable && (
+          <label className="card" style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={wantExpert}
+              onChange={(e) => setWantExpert(e.target.checked)}
+              style={{ marginTop: 3 }}
+            />
+            <span>
+              <span style={{ fontWeight: 700 }}>専門家・経験者にも見てもらう（無料）</span>
+              <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+                登録している専門家・経験者がこの内容を見て、テキストで回答を追加してくれることがあります。回答を読むには会員登録が必要です。
+              </div>
+              <div className="muted" style={{ fontSize: 12, marginTop: 6 }}>
+                <a href="/experts">どんな専門家が回答していますか？</a>
+              </div>
+            </span>
+          </label>
+        )}
         {error && <div style={{ color: 'var(--seal-text)', fontSize: 13 }}>{error}</div>}
         <button className="btn-primary" onClick={analyze} disabled={loading}>
           {loading ? '気持ちを読んでいます…' : '気持ちを読んでみる'}
@@ -131,7 +164,7 @@ export default function KotobaClient() {
           </div>
           <div className="card home-gakko-link" style={{ alignItems: 'stretch', gap: 8, margin: '10px 0', border: '2px solid var(--main)', background: 'var(--sub)' }}>
             <Link
-              href={`/ask?prefill=${encodeURIComponent(`子どもが「${input.trim()}」と言いました。`)}`}
+              href={`/ask?prefill=${encodeURIComponent(`子どもが「${input.trim()}」と言いました。`)}${wantExpert ? '&expert=1' : ''}`}
               style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}
             >
               <span style={{ flex: 1 }}>
@@ -171,14 +204,21 @@ export default function KotobaClient() {
             <Link
               href={`/result/${result.consultation_id}`}
               className="muted"
-              style={{ fontSize: 12, textDecoration: 'underline', display: 'block', margin: '0 0 10px' }}
+              style={{ fontSize: 12, textDecoration: 'underline', display: 'block', margin: '0 0 4px' }}
             >
               この結果は「みんなの相談」に公開されました。投稿を見る ›
             </Link>
           )}
+          {/* 専門家チェックをONにして送った場合、公開した投稿がそのまま回答待ちキューに
+              乗っていることを伝える（2026-11-07追加）。 */}
+          {result.consultation_id && wantExpert && (
+            <div className="muted" style={{ fontSize: 12, margin: '0 0 10px' }}>
+              専門家・経験者からの回答もお待ちください。届いた回答は上のリンクから確認できます（会員登録が必要です）。
+            </div>
+          )}
           <div className="card home-gakko-link" style={{ alignItems: 'stretch', gap: 8, margin: '0 0 10px', border: '2px solid var(--main)', background: 'var(--sub)' }}>
             <Link
-              href={`/ask?prefill=${encodeURIComponent(`子どもが「${input.trim()}」と言いました。`)}`}
+              href={`/ask?prefill=${encodeURIComponent(`子どもが「${input.trim()}」と言いました。`)}${wantExpert ? '&expert=1' : ''}`}
               style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}
             >
               <span style={{ flex: 1 }}>
