@@ -102,7 +102,10 @@ export async function analyzeKotoba(
   const msg = await anthropic.messages.create({
     model: 'claude-haiku-5-5',
     thinking: { type: 'disabled' },
-    max_tokens: 800,
+    // TEMP DEBUG(2026-11-07): 800だとstop_reason=max_tokensで解釈JSONが尻切れに
+    // なる不具合を確認。日本語で2件の解釈(各5フィールド)を構造化出力するには
+    // 800では不足していたため引き上げた。実データで余裕を見て調整すること。
+    max_tokens: 1600,
     system: KOTOBA_HONYAKU_SYSTEM_PROMPT,
     tools: [KOTOBA_HONYAKU_TOOL],
     tool_choice: { type: 'tool', name: 'submit_kotoba_analysis' },
