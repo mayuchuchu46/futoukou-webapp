@@ -1,3 +1,5 @@
+import type { KotobaInterpretation } from './kotobaHonyaku';
+
 export type Consultation = {
   id: string;
   category: 'body' | 'social' | 'school' | 'will' | 'approach' | 'course' | 'dev' | 'home' | 'other';
@@ -44,6 +46,9 @@ export type Consultation = {
   // 回答の一言要約（格言シェアカード用、2026-10-17追加）。crisis_detectedな回答や、
   // この機能の追加前に投稿された相談ではnull。
   one_liner?: string | null;
+  // 「子供の言葉、ほんとはこう」（/kotoba）由来の投稿にだけ入る構造化解釈データ
+  // （2026-11-07追加）。あれば結果ページ・一覧でタグ付きカード表示に切り替える。
+  kotoba_interpretations?: KotobaInterpretation[] | null;
 };
 
 // 子どもプロフィール（2026-10-16追加）。「兄弟で不登校のパターンが多い」ため、

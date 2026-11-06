@@ -664,7 +664,15 @@ create table if not exists consultations (
   -- crisis_detectedな回答（安全上書き）では生成しない＝nullのまま
   -- （命に関わる場面でシェア導線を出さない方針、isCrisis分岐と同じ考え方）。
   -- 生成に失敗してもnullのままにして本回答の保存は妨げない（app/api/consult/route.ts参照）。
-  one_liner text
+  one_liner text,
+
+  -- 「子供の言葉、ほんとはこう」（/kotoba）由来の投稿にだけ入る、構造化された解釈データ
+  -- （2026-11-07追加）。answer列には従来通り一覧プレビュー・SEO用にプレーンテキストの
+  -- 全文を入れておくが、結果ページ（app/result/[id]/page.tsx）はこの列があれば
+  -- タグ・見分けるヒント・返し方を分けたカード表示に切り替える（「テキストが長すぎる」
+  -- との指摘を受けて、/kotobaの入力画面と同じ整理された見た目にするため）。
+  -- 通常の相談（/ask経由）ではnullのまま。
+  kotoba_interpretations jsonb
 );
 alter table consultations enable row level security;
 
@@ -1080,3 +1088,8 @@ alter table outbound_clicks enable row level security;
 -- 専門家の「保有資格（その他・複数可）」を追加した場合（2026-11-03追加、兼任資格を
 -- 持つ方が多いとの指摘を受けて）、既存DBでは次を実行してください。
 -- alter table experts add column if not exists other_credentials text[] not null default '{}';
+
+-- kotoba（/kotoba）由来の投稿を、結果ページでタグ・見分けるヒント・返し方に分けた
+-- カード表示にするための構造化データ列を追加した場合（2026-11-07追加、「テキストの
+-- 返事が長すぎる」との指摘を受けて）、既存DBでは次を実行してください。
+-- alter table consultations add column if not exists kotoba_interpretations jsonb;

@@ -47,6 +47,10 @@ async function publishKotobaAsConsultation(
       category,
       question,
       answer,
+      // 結果ページでタグ・見分けるヒント・返し方を分けたカード表示に切り替えるための
+      // 構造化データ（2026-11-07追加、「テキストが長すぎる」との指摘を受けて）。
+      // answerは従来通りプレーンテキストの全文のまま、一覧プレビュー・SEO用に残す。
+      kotoba_interpretations: result.interpretations,
       author_id: uid || 'kotoba_anon',
       client_ip: ip,
       // 「専門家への導線を強化したい」（2026-11-07）を受けて、/askの

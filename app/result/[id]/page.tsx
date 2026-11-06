@@ -583,9 +583,42 @@ export default async function ResultPage({
             <img src="/assets/sensei_logo.png" alt="" />
             {isCrisis ? 'どうする先生からのお返事' : 'どうする先生の回答・次にできそうなこと'}
           </div>
-          <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
-            {item.answer}
-          </div>
+          {/* 「子供の言葉、ほんとはこう」（/kotoba）由来の投稿は、answerの全文プレーン
+              テキストの代わりに、/kotobaの入力画面と同じタグ付きカード表示にする
+              （2026-11-07追加、「テキストの返事が長すぎる」との指摘を受けて）。 */}
+          {item.kotoba_interpretations && item.kotoba_interpretations.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+              {item.kotoba_interpretations.map((interp, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    gap: 8,
+                    padding: i > 0 ? '10px 0 0' : 0,
+                    borderTop: i > 0 ? '1px solid var(--border)' : undefined,
+                  }}
+                >
+                  <span className="cat-badge" style={{ background: 'var(--sub)', color: '#1F4A3C' }}>{interp.tag}</span>
+                  <div className="qtext-main">{interp.psychology}</div>
+                  <div className="muted" style={{ fontSize: 13 }}>見分けるヒント：{interp.sign}</div>
+                  <div className="card-answerbox" style={{ background: 'var(--teal-bg)', width: '100%' }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--teal-text)' }}>こう返すとよい</div>
+                    <div className="qtext">{interp.response_do}</div>
+                  </div>
+                  <div className="card-answerbox" style={{ width: '100%' }}>
+                    <div style={{ fontSize: 12, fontWeight: 700 }} className="muted">避けたい返し方</div>
+                    <div className="qtext muted">{interp.response_avoid}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
+              {item.answer}
+            </div>
+          )}
           {/* AIは一般論ベースの回答で外れることもあるという前提を明示しつつ、
               「個別の状況は専門家へ」という差別化の文脈で専門家相談への導線も
               兼ねる一文。AiUsageUpsell（利用回数の閾値後に出る導線）とは別に、
