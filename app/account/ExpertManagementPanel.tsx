@@ -31,6 +31,13 @@ export default function ExpertManagementPanel({
   hasEarningsHistory?: boolean;
 }) {
   const router = useRouter();
+  // 経験者が回答するとき、専門家と全く同じ入力欄しか見えないと「専門的な判断を
+  // しなきゃいけないのでは」と不安になりやすい（2026-11-07、「経験者からすると、
+  // 専門家じゃないのに答えていいのだろうか…という不安がよぎったりする」との
+  // 指摘を受けて）。読む側には既に「あくまで個人の経験・感想です」という免責が
+  // あるが、書く側（この画面）には何も無かったため、回答者が経験者の場合だけ
+  // 入力欄の近くに一言添える。
+  const isSenpai = expert.credential === SENPAI_CREDENTIAL;
   const [items, setItems] = useState(pending);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState<string | null>(null);
@@ -150,10 +157,15 @@ export default function ExpertManagementPanel({
                 </button>
               )
             )}
+            {isSenpai && (
+              <div className="muted" style={{ fontSize: 12 }}>
+                専門的な判断ではなく、ご自身の経験に基づいてお答えいただければ十分です。
+              </div>
+            )}
             <textarea
               className="input"
               rows={6}
-              placeholder="回答を入力してください"
+              placeholder={isSenpai ? 'ご自身の経験を書いてください' : '回答を入力してください'}
               value={drafts[item.id] || ''}
               onChange={(e) => setDrafts({ ...drafts, [item.id]: e.target.value })}
             />
