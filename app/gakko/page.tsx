@@ -283,6 +283,10 @@ export default async function GakkoPage({
         <div className="page-main">
           <Link href="/" className="backlink" style={{ margin: '14px 0' }}>‹ もどる</Link>
 
+          {/* サイト全体に<h1>が1つも無かったため追加（2026-11-08）。見た目は変えず
+              （.sr-only、globals.css）、タブごとのmetadata.titleと同じ文言を使う。 */}
+          <h1 className="sr-only">{PAGE_CONTENT[type].title}</h1>
+
           {/* 全カテゴリ合計の掲載件数バッジ。「この数もうちょっとアピールした方がいいかな」
               との指摘を受けて追加（2026-11-07）。種類が混在した数字を一枚看板にすると
               誤解を招くため、内訳を小さく併記する。どのタブ・都道府県選択状態でも

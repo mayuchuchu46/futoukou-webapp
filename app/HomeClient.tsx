@@ -385,6 +385,11 @@ export default function HomeClient({
     <div className="app-shell">
       <Header supervised={supervised} />
       <div className="main">
+        {/* サイト全体に<h1>が1つも無かったため追加（2026-11-08）。デザインは崩さず、
+            スクリーンリーダー・検索エンジン向けのみ（.sr-only、globals.css）。
+            既存のヒーローバナー等はあくまで装飾画像のため、ページの主題を示す
+            本来のh1としてここに置く。 */}
+        <h1 className="sr-only">不登校のお子さんの次の一手をAI・専門家に相談、フリースクールなど学びの場・居場所も検索できる｜どうする先生</h1>
         {/* チャッピー（ChatGPT）に描いてもらったバナー画像（.home-cta、
             /assets/home_cta_banner.jpg）。「TOPの今おいてるチャッピーに作ってもらった
             バナーははずしてね」との指摘を受けて一度スマホ含め全撤去したが、その指摘は

@@ -794,6 +794,20 @@ h2.pagetitle {
    （padding上端・ブロック間のgap）を詰めた。左右のpaddingは20pxのまま
    だと相対的に広く感じたため18pxに少し寄せてバランスを取っている
    （PCでは下の@media内で元の値に戻す。2026-10-15）。 */
+/* SEO/アクセシビリティ用のh1など、見た目には出さないが読み上げ・クローラー向けには
+   残したいテキスト用（2026-11-08追加、サイト全体にh1が1つも無かったことへの対応）。 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .main {
   flex: 1;
   overflow-y: auto;
