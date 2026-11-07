@@ -103,7 +103,7 @@ export default function ConsultationCard({
   const isNew = !!item.created_at && isRecentPost(item.created_at);
 
   return (
-    <Link href={`/result/${item.id}`} className="card">
+    <Link href={`/result/${item.id}`} className="card consultation-card">
       <div className="row">
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
