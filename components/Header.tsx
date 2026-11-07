@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import CrisisModal from './CrisisModal';
 import { CATS } from '@/lib/categories';
@@ -166,7 +167,7 @@ export default function Header({
                 margin: '-10px -10px -10px 0',
               }}
             >
-              <img src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" />
+              <Image src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" width={220} height={58} priority />
               <span className="badge">不登校編</span>
             </Link>
             <nav className="header-globalnav">

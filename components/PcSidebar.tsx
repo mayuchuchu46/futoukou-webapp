@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import EyeIcon from './EyeIcon';
 import TagChips from './TagChips';
@@ -209,7 +210,7 @@ export default function PcSidebar({
           渡され、他ページのPcSidebarでは渡されない（undefinedなら非表示）。 */}
       {typeof expertCount === 'number' && (
         <div className="expertbanner" role="button" tabIndex={0} onClick={() => router.push('/expertlist')} style={{ cursor: 'pointer' }}>
-          <img src="/assets/icon_lock.png" alt="" className="expertbanner-icon" />
+          <Image src="/assets/icon_lock.png" alt="" className="expertbanner-icon" width={22} height={22} />
           <div className="expertbanner-body">
             <div className="expertbanner-title">専門家が回答した相談{expertCount ? `（${expertCount}件）` : ''}</div>
             <div className="expertbanner-desc">専門家（公認心理師など）本人が直接回答。読み放題会員限定</div>
@@ -220,6 +221,11 @@ export default function PcSidebar({
 
       {showBanner && (
         <a className="home-adbanner" href={banner!.link_url} target="_blank" rel="noopener sponsored">
+          {/* これは管理画面から設定する外部URL（Supabaseストレージ等）の画像で、
+              next/imageを使うにはnext.config.tsのimages.remotePatternsに
+              そのホストを登録する必要がある（未設定だと実行時エラーになる）。
+              2026-11-08、他のアイコン（ローカルファイル）をnext/image化した際に、
+              設定変更が必要なこの画像だけは安全のため対象外にした。 */}
           <img src={banner!.image_url} alt={banner!.alt_text} />
         </a>
       )}

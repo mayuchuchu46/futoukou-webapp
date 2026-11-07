@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -84,10 +85,10 @@ export default function BottomNav() {
               <button className={`${active ? 'active' : ''} ${item.highlight ? 'nav-highlight' : ''}`}>
                 {item.highlight ? (
                   <span className="navicon-badge">
-                    <img className="navicon" src={item.icon} alt="" />
+                    <Image className="navicon" src={item.icon} alt="" width={22} height={22} />
                   </span>
                 ) : (
-                  <img className="navicon" src={item.icon} alt="" />
+                  <Image className="navicon" src={item.icon} alt="" width={22} height={22} />
                 )}
                 {item.label}
               </button>
