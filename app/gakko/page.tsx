@@ -292,8 +292,14 @@ export default async function GakkoPage({
           {/* 全カテゴリ合計の掲載件数バッジ。「この数もうちょっとアピールした方がいいかな」
               との指摘を受けて追加（2026-11-07）。種類が混在した数字を一枚看板にすると
               誤解を招くため、内訳を小さく併記する。どのタブ・都道府県選択状態でも
-              ページ最上部に固定で表示する（全カテゴリ共通の訴求のため）。 */}
-          <div className="card" style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
+              ページ最上部に固定で表示する（全カテゴリ共通の訴求のため）。
+              2026-11-08、「この数字おすと、学び場のトップ行くといいリンクつけて」との
+              指摘を受けて、カード全体を/gakko/matome（学び場トップ）へのリンクにした。 */}
+          <Link
+            href="/gakko/matome"
+            className="card"
+            style={{ alignItems: 'center', gap: 4, textAlign: 'center', textDecoration: 'none', color: 'inherit' }}
+          >
             <div className="muted" style={{ fontSize: 12 }}>全国の不登校の進路選択肢を掲載</div>
             <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
               {TOTAL_FACILITY_COUNT.toLocaleString()}件
@@ -301,7 +307,7 @@ export default async function GakkoPage({
             <div className="muted" style={{ fontSize: 11, lineHeight: 1.6 }}>
               フリースクール{FREE_SCHOOLS.length}・定時制高校{teijiseiHighSchools.length}・教育支援センター{EDUCATION_SUPPORT_CENTERS.length}・通信制高校{CORRESPONDENCE_HIGH_SCHOOLS.length}・学びの多様化学校{MANABI_TAYOUKA_GAKKO.length}・オルタナティブスクール{ALTERNATIVE_SCHOOLS.length}・オンラインフリースクール{ONLINE_FREE_SCHOOLS.length}
             </div>
-          </div>
+          </Link>
 
           {/* タブ冒頭のトップバナー（PAGE_CONTENT[type].heroBanner参照）。チャッピー
               （ChatGPT）に描いてもらった画像の上下の白い余白をタイトにクロップして使用

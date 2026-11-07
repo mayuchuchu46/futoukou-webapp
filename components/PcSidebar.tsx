@@ -11,6 +11,7 @@ import MimamoriShindanTeaser from './MimamoriShindanTeaser';
 import MyRegionCard from './MyRegionCard';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
+import { TOTAL_FACILITY_COUNT, FACILITY_COUNT_BREAKDOWN } from '@/lib/facilityCount';
 
 type SidebarBanner = {
   enabled: boolean;
@@ -256,6 +257,27 @@ export default function PcSidebar({
           <MyRegionCard />
         </div>
       )}
+
+      {/* 掲載件数バッジ（2026-11-08追加）。もとはホーム本文側（PC・モバイル共通）に
+          置いていたが、「PCの数おいてるところ、サイドでもいいがね」との指摘を受けて
+          PC版はこちらに移設。幅が狭いサイド向けに本文版より一回り小さい文字サイズに
+          している。「この数字おすと、学び場のトップ行くといいリンクつけて」との
+          指摘を受けて、カード全体を/gakko/matome（学び場トップ）へのリンクにした。
+          gakkoLinks（学び場カテゴリ一覧）の直前に置き、学び場関連の導線同士を
+          隣接させる。 */}
+      <Link
+        href="/gakko/matome"
+        className="card"
+        style={{ alignItems: 'center', gap: 3, textAlign: 'center', textDecoration: 'none', color: 'inherit' }}
+      >
+        <div className="muted" style={{ fontSize: 10 }}>全国の不登校の進路選択肢を掲載</div>
+        <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
+          {TOTAL_FACILITY_COUNT.toLocaleString()}件
+        </div>
+        <div className="muted" style={{ fontSize: 10, lineHeight: 1.5 }}>
+          フリースクール{FACILITY_COUNT_BREAKDOWN.free}・定時制高校{FACILITY_COUNT_BREAKDOWN.teiji}・教育支援センター{FACILITY_COUNT_BREAKDOWN.shien}・通信制高校{FACILITY_COUNT_BREAKDOWN.tsushin}・学びの多様化学校{FACILITY_COUNT_BREAKDOWN.gakko}・オルタナティブスクール{FACILITY_COUNT_BREAKDOWN.alternative}・オンラインフリースクール{FACILITY_COUNT_BREAKDOWN.online}
+        </div>
+      </Link>
 
       {gakkoLinks}
     </div>

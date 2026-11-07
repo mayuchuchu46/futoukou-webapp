@@ -31,11 +31,13 @@ function isExpertAnswered(item: Consultation) {
   return item.request_type === 'expert' && item.expert_status === 'answered' && item.experts?.credential !== SENPAI_CREDENTIAL;
 }
 
-// トップページの「全国の学び場・居場所を掲載」件数バッジ（2026-11-07追加、
-// app/gakko/page.tsxに置いたものと同じ内容をトップページにも設置）。
-// モバイル用・PC用の2箇所で同じ中身を使うため、ここで共通化する
-// （className側で.home-count-badge-mobile/pcを切り替え、globals.cssの
-// 960px@mediaで表示を入れ替える）。
+// トップページ（モバイルの本文側）の「全国の学び場・居場所を掲載」件数バッジ
+// （2026-11-07追加、app/gakko/page.tsxに置いたものと同じ内容をトップページにも設置）。
+// 2026-11-08、「PCの数おいてるところ、サイドでもいいがね」との指摘を受けて、
+// PC版はこちらの本文側から撤去しPcSidebar.tsx側に移設（テキストサイズもそちらで
+// 小さく調整）。モバイル用はこれまで通りこの位置に残す。
+// 同日、「この数字おすと、学び場のトップ行くといいリンクつけて」との指摘を受けて、
+// バッジ全体を/gakko/matome（学び場トップ・都道府県から探す）へのリンクにした。
 function FacilityCountBadge({
   total,
   breakdown,
@@ -54,7 +56,11 @@ function FacilityCountBadge({
   className: string;
 }) {
   return (
-    <div className={`card ${className}`} style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
+    <Link
+      href="/gakko/matome"
+      className={`card ${className}`}
+      style={{ alignItems: 'center', gap: 4, textAlign: 'center', textDecoration: 'none', color: 'inherit' }}
+    >
       <div className="muted" style={{ fontSize: 12 }}>全国の不登校の進路選択肢を掲載</div>
       <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
         {total.toLocaleString()}件
@@ -62,7 +68,7 @@ function FacilityCountBadge({
       <div className="muted" style={{ fontSize: 11, lineHeight: 1.6 }}>
         フリースクール{breakdown.free}・定時制高校{breakdown.teiji}・教育支援センター{breakdown.shien}・通信制高校{breakdown.tsushin}・学びの多様化学校{breakdown.gakko}・オルタナティブスクール{breakdown.alternative}・オンラインフリースクール{breakdown.online}
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -450,15 +456,10 @@ export default function HomeClient({
                 .home-hero-carousel--pc側（globals.css）で非表示にする。 */}
             <HomeHeroCarousel slides={PC_HERO_SLIDES} variant="pc" />
 
-            {/* 掲載件数バッジ（PC用）。モバイル用は上の showExtras && <HomeHeroCarousel
-                slides={HERO_SLIDES} /> の直後に同じ内容を別途置いている（2026-11-07）。 */}
-            {showExtras && (
-              <FacilityCountBadge
-                total={facilityTotalCount}
-                breakdown={facilityCountBreakdown}
-                className="home-count-badge-pc"
-              />
-            )}
+            {/* 掲載件数バッジのPC版は2026-11-08にPcSidebar.tsxへ移設した
+                （「PCの数おいてるところ、サイドでもいいがね」との指摘）。
+                モバイル用は上の showExtras && <HomeHeroCarousel slides={HERO_SLIDES} />
+                の直後に同じ内容を別途置いている（2026-11-07）。 */}
 
             {/* 「注目の学び場」ランキング（2026-10-29追加）。「よく読まれている相談」より
                 上、ホーム最上部のランキングとして置く（「トップに」との要望）。

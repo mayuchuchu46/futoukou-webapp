@@ -6,36 +6,8 @@ import { expertDisplayName } from '@/lib/expertDisplay';
 import { CATS } from '@/lib/categories';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
-import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
-import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
-import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
-import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
-import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
-import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
-import { ALTERNATIVE_SCHOOLS } from '@/lib/data/alternativeSchools';
+import { TOTAL_FACILITY_COUNT, FACILITY_COUNT_BREAKDOWN } from '@/lib/facilityCount';
 import HomeClient from './HomeClient';
-
-// トップページの「全国の学び場・居場所を掲載」件数バッジ（2026-11-07追加、
-// 「この数もうちょっとアピールした方がいいかな」との指摘を受けて、/gakkoページに
-// 続けてトップページにも設置）。app/gakko/page.tsxのTOTAL_FACILITY_COUNTと
-// 同じ計算（開校準備中の学校・助成金情報は性質が異なるため含めない）。
-const TOTAL_FACILITY_COUNT =
-  MANABI_TAYOUKA_GAKKO.length +
-  FREE_SCHOOLS.length +
-  ONLINE_FREE_SCHOOLS.length +
-  EDUCATION_SUPPORT_CENTERS.length +
-  CORRESPONDENCE_HIGH_SCHOOLS.length +
-  teijiseiHighSchools.length +
-  ALTERNATIVE_SCHOOLS.length;
-const FACILITY_COUNT_BREAKDOWN = {
-  free: FREE_SCHOOLS.length,
-  teiji: teijiseiHighSchools.length,
-  shien: EDUCATION_SUPPORT_CENTERS.length,
-  tsushin: CORRESPONDENCE_HIGH_SCHOOLS.length,
-  gakko: MANABI_TAYOUKA_GAKKO.length,
-  alternative: ALTERNATIVE_SCHOOLS.length,
-  online: ONLINE_FREE_SCHOOLS.length,
-};
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
