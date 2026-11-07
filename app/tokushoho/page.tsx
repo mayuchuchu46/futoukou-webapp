@@ -1,8 +1,17 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cacheLife } from 'next/cache';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
+
+// 2026-11-08、app/terms/page.tsxと同じ理由で追加。
+export const metadata: Metadata = {
+  title: `特定商取引法に基づく表記 | ${SITE_NAME}`,
+  description: `${SITE_NAME}の特定商取引法に基づく表記です。`,
+  alternates: { canonical: `${SITE_URL}/tokushoho` },
+};
 
 // 特定商取引法に基づく表記ページ（2026-10-19追加）。
 // 「WEBサイトの下にコピーライトとかないけど大丈夫？」との指摘を受けた確認の中で、

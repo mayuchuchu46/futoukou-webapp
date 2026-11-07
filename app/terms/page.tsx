@@ -1,8 +1,18 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cacheLife } from 'next/cache';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
+
+// 2026-11-08、「SEO最優先で」との指摘を受けて確認したところ、metadataが無く
+// 全ページ共通のデフォルトtitleのままだった（/privacy・/tokushohoも同様）ため追加。
+export const metadata: Metadata = {
+  title: `利用規約 | ${SITE_NAME}`,
+  description: `${SITE_NAME}のご利用にあたっての利用規約です。`,
+  alternates: { canonical: `${SITE_URL}/terms` },
+};
 
 // 文言はコード変更（＝デプロイ）でしか変わらない完全な静的ページ。Cache Componentsの
 // キャッシュキーにはビルドIDが含まれるため、デプロイすれば自動的に最新内容に入れ替わる

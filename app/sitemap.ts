@@ -74,6 +74,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     { url: `${SITE_URL}/terms`, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${SITE_URL}/privacy`, changeFrequency: 'yearly', priority: 0.2 },
+    // 特定商取引法に基づく表記（2026-11-08追加。metadataが無く、sitemapにも
+    // 入っていなかった）。
+    { url: `${SITE_URL}/tokushoho`, changeFrequency: 'yearly', priority: 0.2 },
   ];
 
   const { data } = await supabase

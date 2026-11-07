@@ -1,7 +1,16 @@
+import type { Metadata } from 'next';
 import { cacheLife } from 'next/cache';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
+
+// 2026-11-08、app/terms/page.tsxと同じ理由で追加。
+export const metadata: Metadata = {
+  title: `プライバシーポリシー | ${SITE_NAME}`,
+  description: `${SITE_NAME}における個人情報の取り扱いについてのプライバシーポリシーです。`,
+  alternates: { canonical: `${SITE_URL}/privacy` },
+};
 
 // 文言はコード変更（＝デプロイ）でしか変わらない完全な静的ページ。Cache Componentsの
 // キャッシュキーにはビルドIDが含まれるため、デプロイすれば自動的に最新内容に入れ替わる

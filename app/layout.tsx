@@ -40,6 +40,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // サイト全体のOrganization/WebSite構造化データ（2026-11-08、「SEO最優先で」との
+  // 指摘を受けて追加。従来このサイトには構造化データが学校詳細ページ等の個別ページ
+  // にしか無く、サイト全体の名前・ロゴ・検索窓を示すものが無かった）。
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: SITE_URL,
+        logo: `${SITE_URL}/assets/sensei_logo.png`,
+      },
+      {
+        "@type": "WebSite",
+        name: SITE_NAME,
+        url: SITE_URL,
+        potentialAction: {
+          "@type": "SearchAction",
+          target: `${SITE_URL}/?q={search_term_string}`,
+          "query-input": "required name=search_term_string",
+        },
+      },
+    ],
+  };
+
   return (
     <html lang="ja">
       <head>
@@ -48,6 +73,10 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body>
