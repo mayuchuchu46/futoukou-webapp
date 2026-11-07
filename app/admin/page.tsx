@@ -23,98 +23,163 @@ async function AdminPageContent() {
 
   const supabase = getSupabaseAdmin();
 
-  // 運営の確認完了から一定期間が過ぎた登録証（本人確認書類）を自動削除する。
-  // 専用のスケジューラは設けず、運営がこの管理画面を開いたタイミングで実行する。
-  await deleteExpiredLicenseDocs();
-
-  // 'rejected'（却下済み）は運営側でこれ以上やることが無いので、一覧から外す
-  // （2026-10-13、却下した相手がいつまでも「本人確認待ち」に残り続けていたのを修正）。
-  // 'needs_fix'（差し戻し・本人の再提出待ち）は、今は運営側のアクション待ちではないが、
-  // 状況を把握できるよう引き続き一覧に残す。
-  const { data: unverifiedExperts } = await supabase
-    .from('experts')
-    .select('id, name, display_name, email, credential, license_number, license_doc_path, verification_method, specialty_categories, experienced_school_names, career_fields, other_credentials, review_status, review_note, created_at')
-    .in('review_status', ['pending', 'needs_fix'])
-    .order('created_at', { ascending: true });
-
-  // 確認済みの専門家は上の一覧から外れてしまい、連絡先（メールアドレス）を
-  // 確認する手段が無くなっていたため追加（2026-10-13、Stripe設定案内などを
-  // 運営から直接メールする運用にしたことに伴う）。
-  const { data: verifiedExperts } = await supabase
-    .from('experts')
-    .select('id, name, display_name, email, credential, created_at')
-    .eq('verified', true)
-    .order('created_at', { ascending: true });
-
-  const { data: recentConsultations } = await supabase
-    .from('consultations')
-    .select('id, category, question, author_id, hidden, request_type, created_at, reports')
-    .order('created_at', { ascending: false })
-    .limit(50);
-
-  // 通報が1件以上ある相談は、直近50件の中に埋もれて見逃されないよう、
-  // 直近50件とは別に新着順で取得して画面の先頭に出す（2026-10-12）。
-  const { data: reportedConsultations } = await supabase
-    .from('consultations')
-    .select('id, category, question, author_id, hidden, request_type, created_at, reports')
-    .gt('reports', 0)
-    .order('reports', { ascending: false })
-    .limit(50);
-
-  // 「みんなのデータ」の任意コメントで通報されたものを、通報された相談と同じ考え方で
-  // 別枠表示する（2026-10-17追加。コメント機能自体の説明はapp/api/daily-question/
-  // route.tsのコメント参照）。
-  const { data: reportedDailyComments } = await supabase
-    .from('daily_answers')
-    .select('id, question_slug, value, comment, comment_reports, comment_hidden, created_at')
-    .gt('comment_reports', 0)
-    .order('comment_reports', { ascending: false })
-    .limit(50);
-
   const fiveDaysAgo = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString();
-  const { data: overdueExpertRequests } = await supabase
-    .from('consultations')
-    .select('id, question, price_jpy, created_at, stripe_session_id')
-    .eq('request_type', 'expert')
-    .eq('paid', true)
-    .eq('expert_status', 'pending')
-    .eq('refunded', false)
-    .lt('created_at', fiveDaysAgo)
-    .order('created_at', { ascending: true });
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
-  // 専門家への報酬の未振込分を、管理画面で一括振込ボタンを押す前に件数・金額で把握できるよう集計する。
-  const { data: unpaidPayoutRows } = await supabase
-    .from('consultations')
-    .select('expert_payout_jpy')
-    .eq('payout_status', 'unpaid')
-    .eq('expert_status', 'answered')
-    .not('expert_id', 'is', null)
-    .gt('expert_payout_jpy', 0);
+  // 以下のクエリは互いの結果に依存しない独立したものなので、1本ずつawaitして
+  // 直列実行するのではなくPromise.allでまとめて投げ、Supabaseとの往復待ち時間を
+  // 足し合わせない（管理画面を開くたび/更新するたびに重かった問題への対処、2026-11-07）。
+  const [
+    licenseDocsResult,
+    unverifiedExpertsResult,
+    verifiedExpertsResult,
+    recentConsultationsResult,
+    reportedConsultationsResult,
+    reportedDailyCommentsResult,
+    overdueExpertRequestsResult,
+    unpaidPayoutRowsResult,
+    aiLimitHitRowsResult,
+    crisisCheckRowsResult,
+    viewRowsResult,
+    topViewedConsultationsResult,
+    sidebarBannerResult,
+    recentExpertAnswersRawResult,
+  ] = await Promise.all([
+    // 運営の確認完了から一定期間が過ぎた登録証（本人確認書類）を自動削除する。
+    // 専用のスケジューラは設けず、運営がこの管理画面を開いたタイミングで実行する。
+    deleteExpiredLicenseDocs(),
+
+    // 'rejected'（却下済み）は運営側でこれ以上やることが無いので、一覧から外す
+    // （2026-10-13、却下した相手がいつまでも「本人確認待ち」に残り続けていたのを修正）。
+    // 'needs_fix'（差し戻し・本人の再提出待ち）は、今は運営側のアクション待ちではないが、
+    // 状況を把握できるよう引き続き一覧に残す。
+    supabase
+      .from('experts')
+      .select('id, name, display_name, email, credential, license_number, license_doc_path, verification_method, specialty_categories, experienced_school_names, career_fields, other_credentials, review_status, review_note, created_at')
+      .in('review_status', ['pending', 'needs_fix'])
+      .order('created_at', { ascending: true }),
+
+    // 確認済みの専門家は上の一覧から外れてしまい、連絡先（メールアドレス）を
+    // 確認する手段が無くなっていたため追加（2026-10-13、Stripe設定案内などを
+    // 運営から直接メールする運用にしたことに伴う）。
+    supabase
+      .from('experts')
+      .select('id, name, display_name, email, credential, created_at')
+      .eq('verified', true)
+      .order('created_at', { ascending: true }),
+
+    supabase
+      .from('consultations')
+      .select('id, category, question, author_id, hidden, request_type, created_at, reports')
+      .order('created_at', { ascending: false })
+      .limit(50),
+
+    // 通報が1件以上ある相談は、直近50件の中に埋もれて見逃されないよう、
+    // 直近50件とは別に新着順で取得して画面の先頭に出す（2026-10-12）。
+    supabase
+      .from('consultations')
+      .select('id, category, question, author_id, hidden, request_type, created_at, reports')
+      .gt('reports', 0)
+      .order('reports', { ascending: false })
+      .limit(50),
+
+    // 「みんなのデータ」の任意コメントで通報されたものを、通報された相談と同じ考え方で
+    // 別枠表示する（2026-10-17追加。コメント機能自体の説明はapp/api/daily-question/
+    // route.tsのコメント参照）。
+    supabase
+      .from('daily_answers')
+      .select('id, question_slug, value, comment, comment_reports, comment_hidden, created_at')
+      .gt('comment_reports', 0)
+      .order('comment_reports', { ascending: false })
+      .limit(50),
+
+    supabase
+      .from('consultations')
+      .select('id, question, price_jpy, created_at, stripe_session_id')
+      .eq('request_type', 'expert')
+      .eq('paid', true)
+      .eq('expert_status', 'pending')
+      .eq('refunded', false)
+      .lt('created_at', fiveDaysAgo)
+      .order('created_at', { ascending: true }),
+
+    // 専門家への報酬の未振込分を、管理画面で一括振込ボタンを押す前に件数・金額で把握できるよう集計する。
+    supabase
+      .from('consultations')
+      .select('expert_payout_jpy')
+      .eq('payout_status', 'unpaid')
+      .eq('expert_status', 'answered')
+      .not('expert_id', 'is', null)
+      .gt('expert_payout_jpy', 0),
+
+    // 無料AI相談の1日10回の上限に、直近30日でどれだけの人が当たっているかを把握する
+    // （「もっと使いたい人」向け有料プランを作るかどうかの判断材料、2026-10-13追加）。
+    supabase
+      .from('ai_limit_hits')
+      .select('author_id')
+      .gte('created_at', thirtyDaysAgo),
+
+    // 希死念慮・自傷等の安全上書きが、実際にどのくらいの頻度で発動しているかの確認用
+    // （「AIがいつもその手の回答ばかりになっていないか」を実数で見られるようにする、
+    // 2026-10-14追加）。自動投稿（auto-seed）分は実ユーザーの相談と性質が異なるため分けて集計する。
+    supabase
+      .from('consultations')
+      .select('author_id, crisis_detected')
+      .eq('request_type', 'ai')
+      .gte('created_at', thirtyDaysAgo),
+
+    // 閲覧数（views）は各相談カード・詳細ページに個別には出ているが、全体の合計や
+    // 上位をまとめて見られる場所が無かったため追加（2026-10-14、「どこで閲覧数見れる
+    // んだっけ」という質問をきっかけに）。非表示（hidden）の相談は除く。
+    supabase.from('consultations').select('views').eq('hidden', false),
+
+    supabase
+      .from('consultations')
+      .select('id, question, category, views, request_type')
+      .eq('hidden', false)
+      .order('views', { ascending: false })
+      .limit(10),
+
+    supabase
+      .from('sidebar_banners')
+      .select('enabled, image_url, link_url, alt_text')
+      .eq('id', 'default')
+      .single(),
+
+    // 専門家の回答は送信後すぐに公開されるため、運営が後から質をチェックできるよう、
+    // 直近の回答を一覧表示する（事前審査はしない＝公開を遅らせない）。
+    // consultationsからexpertsへの参照はexpert_id／requested_expert_idの2つあるため、
+    // experts!expert_id と明示する（指定しないとPostgRESTがどちらか判断できずエラーになる）。
+    supabase
+      .from('consultations')
+      .select('id, question, expert_answer, expert_answer_helpful, created_at, experts!expert_id(name, credential)')
+      .eq('request_type', 'expert')
+      .eq('expert_status', 'answered')
+      .order('created_at', { ascending: false })
+      .limit(30),
+  ]);
+  void licenseDocsResult;
+
+  const { data: unverifiedExperts } = unverifiedExpertsResult;
+  const { data: verifiedExperts } = verifiedExpertsResult;
+  const { data: recentConsultations } = recentConsultationsResult;
+  const { data: reportedConsultations } = reportedConsultationsResult;
+  const { data: reportedDailyComments } = reportedDailyCommentsResult;
+  const { data: overdueExpertRequests } = overdueExpertRequestsResult;
+
+  const { data: unpaidPayoutRows } = unpaidPayoutRowsResult;
   const unpaidPayoutSummary = {
     count: (unpaidPayoutRows || []).length,
     total: (unpaidPayoutRows || []).reduce((sum, r) => sum + (r.expert_payout_jpy || 0), 0),
   };
 
-  // 無料AI相談の1日10回の上限に、直近30日でどれだけの人が当たっているかを把握する
-  // （「もっと使いたい人」向け有料プランを作るかどうかの判断材料、2026-10-13追加）。
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-  const { data: aiLimitHitRows } = await supabase
-    .from('ai_limit_hits')
-    .select('author_id')
-    .gte('created_at', thirtyDaysAgo);
+  const { data: aiLimitHitRows } = aiLimitHitRowsResult;
   const aiLimitHitSummary = {
     hitCount: (aiLimitHitRows || []).length,
     uniqueUserCount: new Set((aiLimitHitRows || []).map((r) => r.author_id)).size,
   };
 
-  // 希死念慮・自傷等の安全上書きが、実際にどのくらいの頻度で発動しているかの確認用
-  // （「AIがいつもその手の回答ばかりになっていないか」を実数で見られるようにする、
-  // 2026-10-14追加）。自動投稿（auto-seed）分は実ユーザーの相談と性質が異なるため分けて集計する。
-  const { data: crisisCheckRows } = await supabase
-    .from('consultations')
-    .select('author_id, crisis_detected')
-    .eq('request_type', 'ai')
-    .gte('created_at', thirtyDaysAgo);
+  const { data: crisisCheckRows } = crisisCheckRowsResult;
   const realCrisisRows = (crisisCheckRows || []).filter((r) => r.author_id !== 'auto-seed');
   const autoSeedCrisisRows = (crisisCheckRows || []).filter((r) => r.author_id === 'auto-seed');
   const crisisDetectedSummary = {
@@ -124,36 +189,12 @@ async function AdminPageContent() {
     autoSeedTotal: autoSeedCrisisRows.length,
   };
 
-  // 閲覧数（views）は各相談カード・詳細ページに個別には出ているが、全体の合計や
-  // 上位をまとめて見られる場所が無かったため追加（2026-10-14、「どこで閲覧数見れる
-  // んだっけ」という質問をきっかけに）。非表示（hidden）の相談は除く。
-  const { data: viewRows } = await supabase.from('consultations').select('views').eq('hidden', false);
+  const { data: viewRows } = viewRowsResult;
   const totalViews = (viewRows || []).reduce((sum, r) => sum + (r.views || 0), 0);
 
-  const { data: topViewedConsultations } = await supabase
-    .from('consultations')
-    .select('id, question, category, views, request_type')
-    .eq('hidden', false)
-    .order('views', { ascending: false })
-    .limit(10);
-
-  const { data: sidebarBanner } = await supabase
-    .from('sidebar_banners')
-    .select('enabled, image_url, link_url, alt_text')
-    .eq('id', 'default')
-    .single();
-
-  // 専門家の回答は送信後すぐに公開されるため、運営が後から質をチェックできるよう、
-  // 直近の回答を一覧表示する（事前審査はしない＝公開を遅らせない）。
-  // consultationsからexpertsへの参照はexpert_id／requested_expert_idの2つあるため、
-  // experts!expert_id と明示する（指定しないとPostgRESTがどちらか判断できずエラーになる）。
-  const { data: recentExpertAnswersRaw } = await supabase
-    .from('consultations')
-    .select('id, question, expert_answer, expert_answer_helpful, created_at, experts!expert_id(name, credential)')
-    .eq('request_type', 'expert')
-    .eq('expert_status', 'answered')
-    .order('created_at', { ascending: false })
-    .limit(30);
+  const { data: topViewedConsultations } = topViewedConsultationsResult;
+  const { data: sidebarBanner } = sidebarBannerResult;
+  const { data: recentExpertAnswersRaw } = recentExpertAnswersRawResult;
 
   // supabase-jsはこの形のjoinを配列型として推論するため、1件のオブジェクト（またはnull）に正規化する。
   const recentExpertAnswers = (recentExpertAnswersRaw || []).map((row) => ({
