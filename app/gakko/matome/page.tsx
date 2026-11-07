@@ -67,22 +67,44 @@ const ONLINE_PREVIEW_LIMIT = 6;
 // 表示順は各データ配列の並び順そのまま（五十音順等に整列されているわけではない）。
 const NATIONWIDE_PREVIEW_LIMIT = 8;
 
-export async function generateMetadata(): Promise<Metadata> {
-  const url = `${SITE_URL}/gakko/matome`;
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ pref?: string }>;
+}): Promise<Metadata> {
+  // 2026-11-08修正：以前はprefを見ずに常に/gakko/matome（pref無し）を返していたため、
+  // sitemap.tsが都道府県ごとに個別URL（?pref=XXX）をインデックス対象として登録している
+  // にもかかわらず、各ページのcanonicalが全部pref無しの基本URLを指す、という矛盾した
+  // シグナルをGoogleに送っていた（都道府県別ページが実質インデックスされない状態に
+  // なっていた可能性が高い）。都道府県が選択されている場合はそのURLをcanonicalにし、
+  // タイトル・descriptionも都道府県名を含む内容に変える。
+  const { pref } = await searchParams;
+  const selected = pref && PREFECTURES.includes(pref) ? pref : null;
+
+  const title = selected
+    ? `${selected}の学校以外の学びの場・居場所まとめ｜${SITE_NAME}`
+    : PAGE_TITLE;
+  const description = selected
+    ? `${selected}で不登校のお子さんが学校以外に過ごせる場所・学べる場所（学びの多様化学校・フリースクール・通信制高校・助成金制度・オンラインフリースクール）をまとめて一覧できます。`
+    : PAGE_DESCRIPTION;
+  const url = selected
+    ? `${SITE_URL}/gakko/matome?pref=${encodeURIComponent(selected)}`
+    : `${SITE_URL}/gakko/matome`;
+
   return {
-    title: PAGE_TITLE,
-    description: PAGE_DESCRIPTION,
+    title,
+    description,
     alternates: { canonical: url },
     openGraph: {
-      title: PAGE_TITLE,
-      description: PAGE_DESCRIPTION,
+      title,
+      description,
       url,
-      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: PAGE_TITLE }],
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: PAGE_TITLE,
-      description: PAGE_DESCRIPTION,
+      title,
+      description,
       images: ['/og-image.png'],
     },
   };
