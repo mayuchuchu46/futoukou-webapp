@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import CrisisModal from '@/components/CrisisModal';
 import { getUid } from '@/lib/uid';
 import { CRISIS_PRECHECK_WORDS } from '@/lib/kotobaHonyaku';
+import { SITE_URL } from '@/lib/site';
 
 const EXAMPLES = ['もう学校行きたくない', 'お腹痛い', 'どうせ私なんて', 'うるさい、あっち行って'];
 
@@ -286,6 +287,50 @@ export default function KotobaClient() {
             >
               この結果は「みんなの相談」に公開されました。投稿を見る ›
             </Link>
+          )}
+          {/* /kotobaページ自体にシェアボタンが無く、/result/[id]まで遷移しないとシェア
+              できない状態だった（2026-11-07、「このページにシェアするボタんがないよ」との
+              報告を受けて追加）。公開先の投稿ページ（/result/[id]。OGP画像も設定済み）を
+              共有先URLにし、/result/[id]の.share-btn-rowと同じ見た目・パターンにしている。 */}
+          {result.consultation_id && (
+            <div className="share-btn-row" style={{ margin: '0 0 10px' }}>
+              <a
+                className="share-btn"
+                href={`https://twitter.com/intent/tweet?${new URLSearchParams({
+                  text: `「${input.trim()}」には、こんな気持ちが隠れているかもしれません。`,
+                  url: `${SITE_URL}/result/${result.consultation_id}`,
+                  hashtags: 'どうする先生,不登校',
+                })}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="share-btn-icon">𝕏</span>
+                この結果をシェア
+              </a>
+              <a
+                className="share-btn share-btn-facebook"
+                href={`https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({
+                  u: `${SITE_URL}/result/${result.consultation_id}`,
+                })}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="share-btn-icon">f</span>
+                Facebookでシェア
+              </a>
+              <a
+                className="share-btn share-btn-line"
+                href={`https://social-plugins.line.me/lineit/share?${new URLSearchParams({
+                  url: `${SITE_URL}/result/${result.consultation_id}`,
+                  text: `「${input.trim()}」には、こんな気持ちが隠れているかもしれません。`,
+                })}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="share-btn-icon">L</span>
+                LINEでシェアする
+              </a>
+            </div>
           )}
           {/* 専門家チェックをONにして送った場合、公開した投稿がそのまま回答待ちキューに
               乗っていることを伝える（2026-11-07追加）。以前はmutedの1行テキストだけ
