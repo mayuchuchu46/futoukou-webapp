@@ -596,7 +596,7 @@ function AskPageContent() {
               style={{ marginTop: 3 }}
             />
             <span>
-              <span style={{ fontWeight: 700 }}>専門家・経験者にも回答してもらう（無料）</span>
+              <span style={{ fontWeight: 700 }}>専門家・経験者にも回答をリクエストする（無料）</span>
               <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
                 登録している専門家・経験者がこの質問を見て、テキストで回答を追加してくれることがあります。回答を読むには会員登録が必要です。
               </div>

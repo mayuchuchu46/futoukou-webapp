@@ -95,7 +95,7 @@ export default function AiUsageUpsell({
               disabled={requestState === 'sending'}
               onClick={requestExpert}
             >
-              {requestState === 'sending' ? '送信中…' : '専門家・経験者にこの相談を見てもらう'}
+              {requestState === 'sending' ? '送信中…' : '専門家・経験者に回答をリクエストする'}
             </button>
           )}
           {requestState === 'error' && (
