@@ -22,7 +22,7 @@ export type FreeSchoolCoverage = {
 
 export const FREE_SCHOOL_COVERAGE: FreeSchoolCoverage[] = [
   { prefecture: '北海道', tier: 'good', note: '札幌市・旭川市・函館市が公開している一覧より掲載（道全体ではなく、この3市の情報です）。' },
-  { prefecture: '青森県', tier: 'none', note: '公開リストが見つかりませんでした。' },
+  { prefecture: '青森県', tier: 'partial', note: '「フリースクール」専用の一覧は見つかりませんでしたが、県こども家庭部公開の「支援機関マップ」（不登校関連の相談先・民間団体を含む資料）より7件を掲載しています。' },
   { prefecture: '岩手県', tier: 'partial', note: 'フリースクール全国ネットワーク加盟団体一覧より2件を掲載。県全体の網羅ではありません。' },
   { prefecture: '宮城県', tier: 'good', note: '仙台市の学校が運営するサイト（.ed.jpドメイン）で公開されている一覧より掲載。放課後等デイサービス等も一部含みます。' },
   { prefecture: '秋田県', tier: 'good', note: '県公開の「居場所」一覧より掲載（フリースクール以外の相談窓口等も含みます）。' },
@@ -65,7 +65,7 @@ export const FREE_SCHOOL_COVERAGE: FreeSchoolCoverage[] = [
   { prefecture: '長崎県', tier: 'good', note: '県公開の資料より、住所・連絡先つきで掲載（件数は多くありません）。' },
   { prefecture: '熊本県', tier: 'good', note: '県公開の参考資料より掲載（県教育委員会所管ではない参考情報とのことです）。' },
   { prefecture: '大分県', tier: 'partial', note: '県総合教育会議の資料（住所・連絡先はほとんど確認できず）に加え、フリースクール全国ネットワーク加盟団体一覧より住所つきの1件を追加掲載しています。' },
-  { prefecture: '宮崎県', tier: 'none', note: '公開リストが見つかりませんでした。' },
+  { prefecture: '宮崎県', tier: 'partial', note: '都道府県レベルの公開リストは見つかりませんでしたが、個別に公式サイト・報道で確認できた2件を掲載しています。県全体の網羅ではありません。' },
   { prefecture: '鹿児島県', tier: 'good', note: '県公開の不登校支援ガイドより掲載（県内全てを網羅したものではないとの注記あり）。住所は番地までの記載はありません。' },
   { prefecture: '沖縄県', tier: 'partial', note: 'フリースクール全国ネットワーク加盟団体一覧より1件を掲載。県全体の網羅ではありません。' },
 ];
