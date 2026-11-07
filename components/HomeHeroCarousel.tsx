@@ -84,9 +84,24 @@ export default function HomeHeroCarousel({
         className="home-hero-carousel-track"
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
-        {slides.map((slide) => (
+        {slides.map((slide, i) => (
           <Link key={slide.id} href={slide.href} className="card home-cta home-hero-carousel-slide">
-            <img src={slide.src} alt={slide.alt} className="home-cta-banner" />
+            {/* width/height属性（実画像の比率、CSS側はwidth:100%; height:autoのまま）を
+                明示することで、画像読み込み前にブラウザが高さを確保できるようにし、
+                CLS（レイアウトずれ）を防ぐ（2026-11-08、「SEO最優先で」との指摘を
+                受けたCore Web Vitals対応の一環）。variant="mobile"はhome_hero_*系
+                （1774×887＝比率2:1）、variant="pc"はhome_hero_pc_*系（約2172×724＝
+                比率3:1）で統一されている。1枚目（LCP候補）だけ優先読み込みにし、
+                以降は遅延読み込みにする。 */}
+            <img
+              src={slide.src}
+              alt={slide.alt}
+              className="home-cta-banner"
+              width={variant === 'pc' ? 2172 : 1774}
+              height={variant === 'pc' ? 724 : 887}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchPriority={i === 0 ? 'high' : undefined}
+            />
           </Link>
         ))}
       </div>

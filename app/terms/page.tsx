@@ -51,7 +51,7 @@ export default async function TermsPage() {
               直ちに下記の窓口や医療機関、警察（110）・救急（119）に連絡してください。<br />
               24時間子供SOSダイヤル：0120-0-78310<br />
               よりそいホットライン：0120-279-338<br />
-              その他の相談窓口は<Link href="/support">こちら</Link>にまとめています。
+              <Link href="/support">その他の相談窓口の一覧</Link>もご確認ください。
             </div>
           </div>
 
