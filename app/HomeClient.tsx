@@ -31,6 +31,41 @@ function isExpertAnswered(item: Consultation) {
   return item.request_type === 'expert' && item.expert_status === 'answered' && item.experts?.credential !== SENPAI_CREDENTIAL;
 }
 
+// トップページの「全国の学び場・居場所を掲載」件数バッジ（2026-11-07追加、
+// app/gakko/page.tsxに置いたものと同じ内容をトップページにも設置）。
+// モバイル用・PC用の2箇所で同じ中身を使うため、ここで共通化する
+// （className側で.home-count-badge-mobile/pcを切り替え、globals.cssの
+// 960px@mediaで表示を入れ替える）。
+function FacilityCountBadge({
+  total,
+  breakdown,
+  className,
+}: {
+  total: number;
+  breakdown: {
+    free: number;
+    teiji: number;
+    shien: number;
+    tsushin: number;
+    gakko: number;
+    alternative: number;
+    online: number;
+  };
+  className: string;
+}) {
+  return (
+    <div className={`card ${className}`} style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
+      <div className="muted" style={{ fontSize: 12 }}>全国の学び場・居場所を掲載</div>
+      <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
+        {total.toLocaleString()}件
+      </div>
+      <div className="muted" style={{ fontSize: 11, lineHeight: 1.6 }}>
+        フリースクール{breakdown.free}・定時制高校{breakdown.teiji}・教育支援センター{breakdown.shien}・通信制高校{breakdown.tsushin}・学びの多様化学校{breakdown.gakko}・オルタナティブスクール{breakdown.alternative}・オンラインフリースクール{breakdown.online}
+      </div>
+    </div>
+  );
+}
+
 // スマホトップの自動スライドバナー（2026-11-03追加、4枚とも画像差し替え済み）。
 // 1枚目：相談する（AI＋専門家）訴求、2枚目：学びの場を探す訴求、3枚目：伴走ノートの
 // 訴求、4枚目：経験者・専門家の募集訴求、という順番（2026-11-03、「2番目に学び場の
@@ -131,6 +166,8 @@ export default function HomeClient({
   initialSidebarBanner,
   initialExperts,
   initialSenpai,
+  facilityTotalCount,
+  facilityCountBreakdown,
 }: {
   initialItems: Consultation[];
   initialSupervised: boolean;
@@ -139,6 +176,16 @@ export default function HomeClient({
   initialSidebarBanner: SidebarBanner;
   initialExperts: ExpertProfile[];
   initialSenpai: ExpertProfile[];
+  facilityTotalCount: number;
+  facilityCountBreakdown: {
+    free: number;
+    teiji: number;
+    shien: number;
+    tsushin: number;
+    gakko: number;
+    alternative: number;
+    online: number;
+  };
 }) {
   const router = useRouter();
   const urlParams = useSearchParams();
@@ -349,6 +396,17 @@ export default function HomeClient({
             HERO_SLIDES（このファイル冒頭）参照。 */}
         {showExtras && <HomeHeroCarousel slides={HERO_SLIDES} />}
 
+        {/* 「この数もうちょっとアピールした方がいいかな」との指摘を受けて追加
+            （2026-11-07）。モバイル用。PC用は左カラム側（home-main-col内、
+            PC版ヒーローの直後）に同じ内容を別途置いている。 */}
+        {showExtras && (
+          <FacilityCountBadge
+            total={facilityTotalCount}
+            breakdown={facilityCountBreakdown}
+            className="home-count-badge-mobile"
+          />
+        )}
+
         {/* 「専門家が回答した相談」のモバイル用バナーは、この位置（検索・一覧より上）
             からは削除した（2026-10-16、「トップのこの場所はいらない」との指摘）。
             PC（960px以上）の右コラム（PcSidebar）側には引き続き表示する。 */}
@@ -386,6 +444,16 @@ export default function HomeClient({
                 variant="pc"で使う形に変更した（2026-11-03）。スマホ幅では
                 .home-hero-carousel--pc側（globals.css）で非表示にする。 */}
             <HomeHeroCarousel slides={PC_HERO_SLIDES} variant="pc" />
+
+            {/* 掲載件数バッジ（PC用）。モバイル用は上の showExtras && <HomeHeroCarousel
+                slides={HERO_SLIDES} /> の直後に同じ内容を別途置いている（2026-11-07）。 */}
+            {showExtras && (
+              <FacilityCountBadge
+                total={facilityTotalCount}
+                breakdown={facilityCountBreakdown}
+                className="home-count-badge-pc"
+              />
+            )}
 
             {/* 「注目の学び場」ランキング（2026-10-29追加）。「よく読まれている相談」より
                 上、ホーム最上部のランキングとして置く（「トップに」との要望）。

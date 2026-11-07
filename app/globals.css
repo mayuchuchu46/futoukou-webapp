@@ -512,6 +512,13 @@ h2.pagetitle {
   display: none;
   border-radius: 16px;
 }
+/* トップページの「全国の学び場・居場所を掲載」件数バッジ（2026-11-07追加）。
+   モバイル用・PC用の2箇所に同じ内容を置いており、他のモバイル／PC切り替え要素と
+   同じパターン（.home-hero-carousel--mobile/pc）に合わせて、デフォルトでは
+   モバイル版を表示・PC版を非表示にし、960px以上の@media側で入れ替える。 */
+.home-count-badge-pc {
+  display: none;
+}
 .home-hero-carousel-track {
   display: flex;
   transition: transform 0.5s ease;
@@ -917,6 +924,9 @@ h2.pagetitle {
      display:noneをやめた。スライドが.card.home-ctaクラスを共有しているため、
      それだとPC版カルーセルの中身まで消えてしまう）。 */
   .home-hero-carousel--mobile { display: none; }
+  /* 件数バッジも同様にモバイル版を隠してPC版に入れ替える（2026-11-07追加）。 */
+  .home-count-badge-mobile { display: none; }
+  .home-count-badge-pc { display: block; }
   /* PC版カルーセルはここで初めて表示する（デフォルトでは下の非メディアクエリ側で
      display:noneにしてある）。クリックできることが伝わるよう、ホバー時に少し
      拡大＋影を付ける（旧.home-hero-pc-linkの挙動を踏襲）。 */
