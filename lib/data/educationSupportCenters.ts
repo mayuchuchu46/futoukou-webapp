@@ -4,6 +4,10 @@
 // データベースは存在しないため、都道府県（教育委員会）が市区町村分をまとめて公開している
 // ケースのみ、個別に収集している（educationSupportCoverage.tsで都道府県ごとの網羅状況を管理）。
 // 2026年10月確認。
+//
+// officialUrl（2026-11-08追加）は、市区町村公式サイト内でその施設専用に案内している
+// ページ・PDF（リーフレット等）のURL。市のトップページや無関係な一覧ページは入れない。
+// 専用ページ・PDFが見つからなかった施設はnull（推測で埋めていない）。
 export type EducationSupportCenter = {
   // 個別施設ページ（app/gakko/shien/[no]/page.tsx）用の連番id（2026-11-02追加、
   // 「個別施設への直リンクして欲しかった」との指摘を受けて）。配列内の並び順に
@@ -17,6 +21,7 @@ export type EducationSupportCenter = {
   sourceUrl: string;
   asOf: string;
   note: string;
+  officialUrl?: string;
 };
 
 export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
@@ -29,7 +34,8 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '017-743-3600',
     sourceUrl: 'https://www.pref.aomori.lg.jp/soshiki/kodomo/kenmin/files/R8_shiennkikannmapu.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '学校に行きたくても行けない不登校の児童生徒を対象に、カウンセリングや学習支援、集団生活への適応指導などを行い、学校復帰を目指す。不登校等特認校との連携・交流も進めている。',
+    officialUrl: 'https://www.city.aomori.aomori.jp/_res/projects/default_project/_page_/001/010/079/bunkyo-080121-01-09.pdf',
   },
   {
     no: 2,
@@ -260,7 +266,8 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '048-661-0050',
     sourceUrl: 'https://www.pref.saitama.lg.jp/documents/180350/r8itirann.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: 'さいたま市内6か所の教育支援センターの一つ（北教育相談室）。学校に通うことが難しい市内在住の小中学生を対象に、学習の場の確保と体験活動を通じた社会性育成を目的とする。午前中は個別学習、ほかに芸術活動・協働的な活動、生活リズム改善のためのバドミントンや卓球などの運動を行う。利用は申込後、見学・体験（30分〜1時間程度）を経て入室する。',
+    officialUrl: 'https://www.city.saitama.lg.jp/003/002/010/p130058_d/fil/R8Kyouikushiencenter.pdf',
   },
   {
     no: 23,
@@ -1140,7 +1147,8 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '043-255-3702',
     sourceUrl: 'https://www.pref.chiba.lg.jp/kkbunka/kenzenikusei/kodomowakamono/documents/sityousonibasyo.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '千葉市教育センターが行う事業の一つで、来所相談を経て参加するグループ活動（小中学生対象）により自己肯定感や集団適応力を高める。市内6か所に設置された教育支援センター「ライトポート」では小集団での学習や体験的活動を行い、学習のつまずきを補い集団適応力を高める。家庭訪問相談員による週1回程度の訪問支援や、自然の中での体験活動「長柄ジョイントキャンプ」も実施している。受付時間は平日午前9時〜午後5時。',
+    officialUrl: 'https://www.city.chiba.jp/faq/kyoiku/gakkokyoiku/kyoiku/20240105.html',
   },
   {
     no: 103,
@@ -1910,7 +1918,8 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '相談指導学級として、小集団での個別学習・運動・創作・調理などの体験活動を通じて学校復帰や社会的自立に向けた支援を行う。利用児童生徒が自分で立てた計画・日課に沿って過ごす。開室は月〜金曜9時〜16時（年末年始・祝日を除く）で、1時間のみ・午前のみ・午後のみ・週1日のみなど柔軟な利用が可能。利用には見学と体験が必要。',
+    officialUrl: 'https://city.numazu.shizuoka.jp/kurashi/kyoiku/kyoiku/center/panf.pdf',
   },
   {
     no: 173,
@@ -2460,7 +2469,8 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '073-402-7830',
     sourceUrl: 'https://www.pref.wakayama.lg.jp/prefg/501200/support_center.html',
     asOf: '2026-10-18',
-    note: '',
+    note: '不登校が継続している小中学生を対象とした適応指導教室。様々な理由で学校に行きづらい子どもが安心して過ごせる心の居場所を提供することを目的とし、通級生とのふれあいや体験活動、学力補充を通じて「生きる力」を身につけることを目指す。保護者や学校と連携し、社会的自立と学校復帰に向けた支援を行う。平成7年4月1日に「ふれあい教室（適応指導教室）」として開設され、平成14年4月1日に教育相談事業とともに子ども支援センターへ移管された。開室日は月〜金曜（祝日・春休み中は閉室、夏休み中は期間を定めて開室）。',
+    officialUrl: 'https://www.city.wakayama.wakayama.jp/_res/projects/default_project/_page_/001/013/197/kyoikuR5.pdf',
   },
   {
     no: 223,
@@ -2702,7 +2712,8 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '0857-36-6060',
     sourceUrl: 'https://www.pref.tottori.lg.jp/315969.htm',
     asOf: '2026-10-18',
-    note: '',
+    note: '鳥取市教育委員会が設置する、登校しぶりや不登校などで欠席日数の多い児童生徒を対象とした施設。「心の安らぎと元気の回復」と「自立を助ける活動」を目的とし、小学1年生から中学3年生までが通っている。午前は自主学習、午後はソーシャルスキルトレーニングや創作活動などの学び合い活動、火曜日には市内施設での社会体験・自然体験、金曜午後には個別設定のチャレンジ登校を行う。開室は月〜金曜9時30分〜14時30分（金曜は正午まで）、最終金曜日と長期休業中は閉室。',
+    officialUrl: 'https://www.city.tottori.lg.jp/www/contents/1190788717391/simple/r6sunahamaleaflet.pdf',
   },
   {
     no: 245,
@@ -3098,7 +3109,8 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '0126-31-4030',
     sourceUrl: 'https://www.dokyoi.pref.hokkaido.lg.jp/fs/1/3/1/6/6/9/2/8/_/01%20%E7%A9%BA%E7%9F%A5.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '岩見沢市教育支援センターが運営する、学校へ行けない子どもの居場所。学習活動のほか、スポーツ、調理実習、菜園作りなど心を元気にする体験活動を行う。相談対象は18歳以下の子ども。所在地は緑が丘2（北海道教育大学岩見沢校構内）。',
+    officialUrl: 'https://www.city.iwamizawa.hokkaido.jp/material/files/group/1/2026navi_P11-P12.pdf',
   },
   {
     no: 281,

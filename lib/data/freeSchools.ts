@@ -46,7 +46,7 @@ export type FreeSchool = {
 };
 
 export const FREE_SCHOOLS: FreeSchool[] = [
-  { no: 1, name: 'フリースクールＫＯＵ', prefecture: '秋田県', city: '秋田市', address: '秋田市山王中島町1-1 秋田県生涯学習センター研修室', contact: '018-853-4367', ageRange: '記載なし', sourceUrl: 'https://www.pref.akita.lg.jp/uploads/public/archive_0000070935_00/居場所一覧（R7.6現在）.pdf', asOf: '令和7年6月' },
+  { no: 1, name: 'フリースクールＫＯＵ', prefecture: '秋田県', city: '秋田市', address: '秋田市山王中島町1-1 秋田県生涯学習センター研修室', contact: '018-853-4367', ageRange: '記載なし', sourceUrl: 'https://www.pref.akita.lg.jp/uploads/public/archive_0000070935_00/居場所一覧（R7.6現在）.pdf', asOf: '令和7年6月', note: 'NPO法人「KOU」が運営し、不登校や引きこもりなど社会になじめず困難を抱える若者を対象に、週2回、秋田市の県生涯学習センターで居場所の集いを開いている。同法人は国の委託を受けた就職支援「あきた若者サポートステーション」も運営している。' },
   { no: 2, name: '若者の語り場～Vinculo de la vida', prefecture: '秋田県', city: '秋田市', address: '秋田市上北手荒巻字堺切24-2 秋田県ゆとり生活創造センター「遊学舎」', contact: 'solsubir8@yahoo.co.jp', ageRange: '記載なし', sourceUrl: 'https://www.pref.akita.lg.jp/uploads/public/archive_0000070935_00/居場所一覧（R7.6現在）.pdf', asOf: '令和7年6月' },
   { no: 3, name: 'ゆうスペースＡＫＩＴＡ', prefecture: '秋田県', city: '秋田市', address: '秋田市寺内神屋敷3-1 秋田県青少年交流センターユースパル', contact: '018-880-2303', ageRange: '記載なし', sourceUrl: 'https://www.pref.akita.lg.jp/uploads/public/archive_0000070935_00/居場所一覧（R7.6現在）.pdf', asOf: '令和7年6月' },
   { no: 4, name: 'KHJ秋田ばっけの会', prefecture: '秋田県', city: '秋田市', address: '秋田市山王一丁目1-1 秋田市中央市民サービスセンター', contact: '090-9539-2365', ageRange: '記載なし', sourceUrl: 'https://www.pref.akita.lg.jp/uploads/public/archive_0000070935_00/居場所一覧（R7.6現在）.pdf', asOf: '令和7年6月' },
