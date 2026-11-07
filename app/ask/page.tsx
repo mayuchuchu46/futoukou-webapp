@@ -428,7 +428,8 @@ function AskPageContent() {
             だったが、「相談するページからも気軽にこの流れいけるといいけど」との指摘を
             受けて、TOPのkotobaバナーと揃えた軽量なカード型バナーに変更し、目に留まり
             やすくした（ただし/askの入力フォームに主役を譲る形で、TOP版よりさらに
-            コンパクトな1行サイズに抑えている）。 */}
+            コンパクトな1行サイズに抑えている）。同日、機能名「子どもの本音翻訳」の
+            導入に合わせてリンク文言もそれに差し替えた。 */}
         <Link
           href="/kotoba"
           className="card"
@@ -447,7 +448,7 @@ function AskPageContent() {
         >
           <span style={{ flex: '0 0 auto', fontSize: 16, lineHeight: 1 }}>💬</span>
           <span style={{ flex: 1, minWidth: 0, fontSize: 12 }}>
-            状況を書くのが大変な方へ：子供の一言だけで気持ちを読む「子供の言葉、ほんとはこう」
+            状況を書くのが大変な方へ：子供の一言だけで気持ちを読む「子どもの本音翻訳」
           </span>
           <span style={{ flex: '0 0 auto', color: 'var(--main)', fontWeight: 700 }}>›</span>
         </Link>

@@ -601,7 +601,9 @@ export default function HomeClient({
                 受けて再調整。.cardのflex-direction: columnが上書きされておらず、中の
                 テキストとチェバロンが縦積みになって不必要に背が高くなっていたのが主因
                 だったため、flexDirectionを明示的にrow指定。合わせてアイコンを添えて
-                視認性を上げつつ、paddingと説明文を短くして全体の占有を抑えた。 */}
+                視認性を上げつつ、paddingと説明文を短くして全体の占有を抑えた。
+                同日、「誘導のテキストがわかりにくい」との指摘を受けて機能名
+                「子どもの本音翻訳」を導入し、タイトルをそれに差し替えた。 */}
             {showExtras && (
               <Link
                 href="/kotoba"
@@ -621,8 +623,8 @@ export default function HomeClient({
               >
                 <span style={{ flex: '0 0 auto', fontSize: 22, lineHeight: 1 }}>💬</span>
                 <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: 'block', fontWeight: 800, fontSize: 14, color: 'var(--main)' }}>子供の言葉、ほんとはこう</span>
-                  <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted)' }}>一言を入れるだけで気持ちと返し方がわかります</span>
+                  <span style={{ display: 'block', fontWeight: 800, fontSize: 14, color: 'var(--main)' }}>子どもの本音翻訳</span>
+                  <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted)' }}>子供が言った一言を、気持ちと返し方に変換します</span>
                 </span>
                 <span style={{ flex: '0 0 auto', color: 'var(--main)', fontWeight: 700 }}>›</span>
               </Link>
