@@ -91,17 +91,58 @@ export default async function ExpertsPage() {
 
         {experts.length === 0 ? (
           <>
-            <div className="empty">現在、運営の確認が完了した専門家の登録がありません。準備が整い次第、ここに掲載されます。</div>
-            <div className="muted" style={{ margin: '4px 0 2px', fontSize: 12 }}>掲載イメージ（サンプル）</div>
+            {/* 以前はplain textの.emptyクラス1行だけで、サイト全体のカード調デザインから
+                浮いていた。「専門家一覧ページ、ととのえて」との指摘を受けて、他の空状態・
+                バナーと揃えたカード表示に変更（2026-11-07）。 */}
             <div
               className="card"
-              style={{ flexDirection: 'row', gap: 14, alignItems: 'flex-start', opacity: 0.6 }}
+              style={{
+                alignItems: 'center',
+                textAlign: 'center',
+                gap: 6,
+                padding: '28px 16px',
+                border: '2px dashed var(--border)',
+                background: 'var(--bg)',
+              }}
             >
-              <ExpertAvatar photoUrl={null} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontWeight: 700 }}>公認心理師・（例）山田 花子</div>
-                <div className="qtext">
-                  スクールカウンセラーとして10年。不登校のご家庭への対応を専門にしています。（運営の確認が完了した専門家の自己紹介がここに表示されます）
+              <span style={{ fontSize: 28, lineHeight: 1 }}>🧑‍⚕️</span>
+              <div style={{ fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>専門家を準備中です</div>
+              <div className="muted" style={{ fontSize: 13, lineHeight: 1.7 }}>
+                運営の確認が完了した専門家の登録が整い次第、ここに掲載されます。
+              </div>
+            </div>
+
+            {/* サンプルカードは「本物の掲載」と見分けがつきにくいとの反省を踏まえ
+                （2026-11-07）、破線枠＋「サンプル」バッジで一目でダミーと分かるようにした。
+                以前は.card内の小さなmutedテキスト1行だけで、ぱっと見では実在の専門家の
+                掲載と区別しにくかった。 */}
+            <div style={{ position: 'relative', marginTop: 16 }}>
+              <span
+                style={{
+                  position: 'absolute',
+                  top: -10,
+                  left: 14,
+                  background: 'var(--main)',
+                  color: '#fff',
+                  fontSize: 11,
+                  fontWeight: 700,
+                  padding: '2px 10px',
+                  borderRadius: 999,
+                  letterSpacing: '0.02em',
+                }}
+              >
+                サンプル
+              </span>
+              <div
+                className="card"
+                style={{ flexDirection: 'row', gap: 14, alignItems: 'flex-start', border: '2px dashed var(--border)', opacity: 0.7 }}
+              >
+                <ExpertAvatar photoUrl={null} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <div style={{ fontWeight: 700 }}>公認心理師・（例）山田 花子</div>
+                  <div className="qtext">
+                    スクールカウンセラーとして10年。不登校のご家庭への対応を専門にしています。（運営の確認が完了した専門家の自己紹介がここに表示されます）
+                  </div>
                 </div>
               </div>
             </div>
@@ -149,10 +190,50 @@ export default async function ExpertsPage() {
 
         {/* 専門家の募集・ログインは運営・専門家向けの導線で、相談に来た保護者が主役の
             このページの本題ではないため、以前は他の導線と同じ太さのbacklinkで並んでいた
-            ものを、区切り線を挟んでより控えめな位置づけに整理した（2026-10-14）。 */}
-        <div style={{ borderTop: '1px solid var(--border)', marginTop: 8, paddingTop: 10 }}>
-          <Link href="/expert/recruit" className="backlink" style={{ margin: '0 0 4px', fontSize: 12 }}>
-            専門家として登録を希望される方はこちら →
+            ものを、区切り線を挟んでより控えめな位置づけに整理した（2026-10-14）。
+            2026-11-07、「ととのえて」との指摘を受けて再調整。専門家がまだ0人の状態
+            （上のサンプルカード）では「登録を希望される方はこちら」がこのページの
+            数少ない実質的なアクションになるため、backlinkのまま埋もれさせず、TOPの
+            募集バナーと同系統のカードバナーに格上げした。ログインは専門家本人だけが
+            使う導線のため、従来通りbacklinkのまま控えめに残している。 */}
+        <div style={{ borderTop: '1px solid var(--border)', marginTop: 8, paddingTop: 14 }}>
+          <Link
+            href="/expert/recruit"
+            className="card"
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 10,
+              padding: '12px 14px',
+              marginBottom: 8,
+              border: '2px solid var(--main)',
+              background: 'linear-gradient(135deg, #ffffff 0%, var(--sub) 160%)',
+              textDecoration: 'none',
+              color: 'inherit',
+            }}
+          >
+            <span style={{ flex: '0 0 auto', fontSize: 22, lineHeight: 1 }}>🧑‍⚕️</span>
+            <span style={{ flex: 1, minWidth: 0 }}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  fontWeight: 800,
+                  fontSize: 13,
+                  color: '#fff',
+                  background: 'var(--main)',
+                  padding: '2px 9px',
+                  borderRadius: 6,
+                  letterSpacing: '0.02em',
+                }}
+              >
+                専門家の方へ
+              </span>
+              <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted)', marginTop: 4 }}>
+                公認心理師・臨床心理士などの方は、こちらから掲載を申し込めます
+              </span>
+            </span>
+            <span style={{ flex: '0 0 auto', color: 'var(--main)', fontWeight: 700 }}>›</span>
           </Link>
           <Link href="/expert/login" className="backlink" style={{ margin: '0 0 14px', fontSize: 12 }}>
             すでに登録済みの専門家の方はこちらからログイン →
