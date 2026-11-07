@@ -36,6 +36,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/news`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/experts`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/expertlist`, changeFrequency: 'weekly', priority: 0.4 },
+    // 経験者・専門家の募集ページ（2026-11-08追加。3ページとも元々sitemapに
+    // 含まれておらず、/expert/recruitはrobots.ts側のブロックにも巻き込まれていた）。
+    { url: `${SITE_URL}/recruit`, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${SITE_URL}/expert/recruit`, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${SITE_URL}/senpai/recruit`, changeFrequency: 'monthly', priority: 0.4 },
     // 経験者が回答した相談の一覧（2026-11-02追加、/expertlistの経験者版）。
     { url: `${SITE_URL}/senpailist`, changeFrequency: 'weekly', priority: 0.4 },
     // 学びの多様化学校（旧：不登校特例校）の都道府県別一覧ページ（2026-10-18追加）。

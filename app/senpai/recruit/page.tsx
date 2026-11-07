@@ -1,13 +1,23 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import BackButton from '@/components/BackButton';
 import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
 import ExpertProfilePreview from '@/components/ExpertProfilePreview';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 // 経験者専用の募集ページ。
 // 専門家向け（/expert/recruit）とは入り口・ページを分けている（2026-10-30、
 // 「保護者と、専門家の入り口とページは別にしたい」との方針を受けて）。
+//
+// 2026-11-08、「SEO最優先で」との指摘を受けて、metadataが無かったため追加。
+export const metadata: Metadata = {
+  title: `経験者募集 - 不登校を経験したご家庭からの体験談を探しています | ${SITE_NAME}`,
+  description:
+    '不登校を経験されたご家庭ご自身（経験者）に、その体験に基づいて相談に回答していただく「経験者」を募集しています。資格は不要です。',
+  alternates: { canonical: `${SITE_URL}/senpai/recruit` },
+};
 //
 // 学校の各紹介ページ（FacilityExperiencedParents.tsx・SchoolExperiencedParents.tsx）に
 // 「この学校について話せる経験者を募集しています」という導線を置くようになったのに

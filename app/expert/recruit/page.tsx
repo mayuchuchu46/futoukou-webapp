@@ -1,9 +1,11 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import BackButton from '@/components/BackButton';
 import ExpertRecruitFlowDiagram from '@/components/ExpertRecruitFlowDiagram';
 import ExpertProfilePreview from '@/components/ExpertProfilePreview';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 // 一般利用者向けの/expertsとは別の、専門家（回答する側）募集専用ページ。
 // 一覧用の個人情報（会員数など）は含まないため、ビルド時に静的化してよい。
@@ -11,6 +13,16 @@ import ExpertProfilePreview from '@/components/ExpertProfilePreview';
 // 「保護者と、専門家の入り口とページは別にしたい」との方針を受けて（2026-10-30）、
 // 経験者向けの内容は /senpai/recruit に専用ページとして分離した。
 // このページは専門家（資格をお持ちの方）専用に戻している。
+//
+// 2026-11-08、「SEO最優先で」との指摘を受けて確認したところ、metadataが無いうえ
+// robots.ts側の「/expert/*」ブロックに巻き込まれて検索エンジンから見えない状態に
+// なっていたため、両方修正した（robots.ts側は別途修正）。
+export const metadata: Metadata = {
+  title: `専門家募集 - 不登校の家庭を支える専門家を探しています | ${SITE_NAME}`,
+  description:
+    '公認心理師・臨床心理士・スクールカウンセラー・社会福祉士など、不登校のご家庭を一緒に支えてくださる専門家の方を募集しています。',
+  alternates: { canonical: `${SITE_URL}/expert/recruit` },
+};
 
 export default function ExpertRecruitPage() {
   return (
