@@ -212,6 +212,21 @@ function gakkoCount(pref: string, schoolType: SchoolTypeFilter | null = null) {
   return MANABI_TAYOUKA_GAKKO.filter((s) => s.prefecture === pref && (!schoolType || s.schoolType === schoolType)).length;
 }
 
+// ページ冒頭に出す「掲載件数」の合計（学びの多様化学校・フリースクール・オンライン
+// フリースクール・教育支援センター・通信制高校・定時制高校・オルタナティブスクールの
+// 合計）。「この数もうちょっとアピールした方がいいかな」との指摘を受けて追加
+// （2026-11-07）。開校準備中の学校（PLANNED_MANABI_TAYOUKA_GAKKO）・助成金情報
+// （FREESCHOOL_SUBSIDIES）は「掲載件数」の趣旨（学び場・居場所の件数）と性質が異なる
+// ため合計には含めない。
+const TOTAL_FACILITY_COUNT =
+  MANABI_TAYOUKA_GAKKO.length +
+  FREE_SCHOOLS.length +
+  ONLINE_FREE_SCHOOLS.length +
+  EDUCATION_SUPPORT_CENTERS.length +
+  CORRESPONDENCE_HIGH_SCHOOLS.length +
+  teijiseiHighSchools.length +
+  ALTERNATIVE_SCHOOLS.length;
+
 export default async function GakkoPage({
   searchParams,
 }: {
@@ -267,6 +282,20 @@ export default async function GakkoPage({
       <div className="main page-with-sidebar">
         <div className="page-main">
           <Link href="/" className="backlink" style={{ margin: '14px 0' }}>‹ もどる</Link>
+
+          {/* 全カテゴリ合計の掲載件数バッジ。「この数もうちょっとアピールした方がいいかな」
+              との指摘を受けて追加（2026-11-07）。種類が混在した数字を一枚看板にすると
+              誤解を招くため、内訳を小さく併記する。どのタブ・都道府県選択状態でも
+              ページ最上部に固定で表示する（全カテゴリ共通の訴求のため）。 */}
+          <div className="card" style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
+            <div className="muted" style={{ fontSize: 12 }}>全国の学び場・居場所を掲載</div>
+            <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
+              {TOTAL_FACILITY_COUNT.toLocaleString()}件
+            </div>
+            <div className="muted" style={{ fontSize: 11, lineHeight: 1.6 }}>
+              フリースクール{FREE_SCHOOLS.length}・定時制高校{teijiseiHighSchools.length}・教育支援センター{EDUCATION_SUPPORT_CENTERS.length}・通信制高校{CORRESPONDENCE_HIGH_SCHOOLS.length}・学びの多様化学校{MANABI_TAYOUKA_GAKKO.length}・オルタナティブスクール{ALTERNATIVE_SCHOOLS.length}・オンラインフリースクール{ONLINE_FREE_SCHOOLS.length}
+            </div>
+          </div>
 
           {/* タブ冒頭のトップバナー（PAGE_CONTENT[type].heroBanner参照）。チャッピー
               （ChatGPT）に描いてもらった画像の上下の白い余白をタイトにクロップして使用
