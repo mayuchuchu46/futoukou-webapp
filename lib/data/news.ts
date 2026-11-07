@@ -70,6 +70,20 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'nijin-narita-alternative-school-2026-11',
+    date: '2026-11-06',
+    addedAt: '2026-11-07',
+    title:
+      '不登校の子ども向けオルタナティブスクール「NIJINアカデミー」、千葉・成田に新教室開校へ――週1日通学＋メタバース学習の少人数制',
+    summary:
+      '不登校の小中学生を対象としたオルタナティブスクール「NIJINアカデミー」を運営する株式会社NIJIN（東京都江東区）は、2026年12月1日から千葉県成田市に新教室「成田校」を開校すると発表しました。対象は小学1年生から中学3年生で、定員5名の少人数制です。週1日（火・金）は教室に通い、他の日はメタバース上で全国の生徒と学ぶハイブリッド形式で、発達障害などの特性により集団生活が難しい子どもにも対応するとしています。',
+    sourceName: '株式会社NIJIN（PR TIMES）',
+    sourceUrl: 'https://prtimes.jp/main/html/rd/p/000000942.000099150.html',
+    category: 'other',
+    // 発表内容に「オルタナティブスクール」と明記されているため設定（2026-11-07）。
+    relatedThemeWord: 'オルタナティブスクール',
+  },
+  {
     id: 'okayama-futoko-enquete-benkyo-2026-11',
     date: '2026-11-04',
     addedAt: '2026-11-06',
