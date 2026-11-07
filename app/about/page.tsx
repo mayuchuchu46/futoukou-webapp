@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
@@ -44,10 +45,12 @@ export default async function AboutPage() {
         <Link href="/account" className="backlink">← もどる</Link>
 
         <div className="card" style={{ alignItems: 'center', textAlign: 'center', gap: 10 }}>
-          <img
+          <Image
             src="/assets/sensei_logo.png"
             alt="どうする先生"
-            style={{ width: 88, height: 88, borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--sub)' }}
+            width={88}
+            height={88}
+            style={{ borderRadius: '50%', objectFit: 'cover', border: '2px solid var(--sub)' }}
           />
           <div style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontSize: 18, fontWeight: 800, color: 'var(--main)' }}>
             どうする先生
@@ -122,7 +125,7 @@ export default async function AboutPage() {
 
         <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>
-            <img src="/assets/icon_lock.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
+            <Image src="/assets/icon_lock.png" alt="" width={18} height={18} style={{ objectFit: 'contain', borderRadius: 0, border: 'none' }} />
             専門家による回答について
           </div>
           <div className="qtext">

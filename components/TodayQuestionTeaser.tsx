@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getUid } from '@/lib/uid';
 
 type QuestionChoice = { value: string; label: string };
@@ -67,7 +68,7 @@ export default function TodayQuestionTeaser() {
     return (
       <div className="today-teaser">
         <div className="today-teaser-label">
-          <img src="/assets/icon_comment.png" alt="" />
+          <Image src="/assets/icon_comment.png" alt="" width={11} height={11} />
           きょうの質問
         </div>
         <div className="today-teaser-q">{questionLabel}</div>
@@ -92,7 +93,7 @@ export default function TodayQuestionTeaser() {
   // 集計グラフへ、未ログインならぼかしグラフ＋会員登録への誘導へ（/today側で分岐）。
   return (
     <Link href="/today" className="expertbanner expertbanner-today">
-      <img src="/assets/icon_comment.png" alt="" className="expertbanner-icon" />
+      <Image src="/assets/icon_comment.png" alt="" className="expertbanner-icon" width={22} height={22} />
       <div className="expertbanner-body">
         <div className="expertbanner-title">{questionLabel}</div>
         <div className="expertbanner-desc">{loggedIn ? '回答済み・みんなの集計を見る' : '回答ありがとうございます'}</div>

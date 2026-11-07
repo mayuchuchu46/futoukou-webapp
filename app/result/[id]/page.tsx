@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { cacheLife } from 'next/cache';
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
@@ -582,7 +583,7 @@ export default async function ResultPage({
             追加で付く）。 */}
         <div className="card">
           <div className="answer-label">
-            <img src="/assets/sensei_logo.png" alt="" />
+            <Image src="/assets/sensei_logo.png" alt="" width={20} height={20} />
             {isCrisis ? 'どうする先生からのお返事' : 'どうする先生の回答・次にできそうなこと'}
           </div>
           {/* 「子供の言葉、ほんとはこう」（/kotoba）由来の投稿は、answerの全文プレーン

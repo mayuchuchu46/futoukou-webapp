@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Child } from '@/lib/types';
 
 type SummaryResponse = {
@@ -95,7 +96,7 @@ function NotebookHead({ count, childId }: { count: number; childId?: string | nu
     <div className="notebook-head">
       <div className="notebook-head-text">
         <div className="answer-label" style={{ fontSize: 14 }}>
-          <img src="/assets/icon_book.png" alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
+          <Image src="/assets/icon_book.png" alt="" width={18} height={18} style={{ objectFit: 'contain', borderRadius: 0, border: 'none' }} />
           伴走ノート
         </div>
         <div className="notebook-progress">

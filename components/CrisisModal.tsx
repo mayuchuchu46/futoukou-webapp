@@ -1,6 +1,7 @@
 'use client';
 
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 
 export default function CrisisModal({ onClose }: { onClose: () => void }) {
   // Headerコンポーネント（呼び出し元）の.headerに transform: translateZ(0)
@@ -13,7 +14,7 @@ export default function CrisisModal({ onClose }: { onClose: () => void }) {
   return createPortal(
     <div className="crisis-overlay" onClick={onClose}>
       <div className="crisis-box" onClick={(e) => e.stopPropagation()}>
-        <img src="/assets/crisis_illustration.png" style={{ width: 150, height: 'auto' }} alt="" />
+        <Image src="/assets/crisis_illustration.png" width={260} height={254} style={{ width: 150, height: 'auto' }} alt="" />
         <div style={{ fontWeight: 700, fontSize: 15 }}>一人で抱え込まないでください</div>
         <div className="hotline">
           <div className="muted">24時間子供SOSダイヤル</div>

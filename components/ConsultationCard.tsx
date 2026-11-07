@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
@@ -147,7 +148,7 @@ export default function ConsultationCard({
       {answerPreview && (
         <div className="card-answerbox">
           <div className="answer-label">
-            <img src="/assets/sensei_logo.png" alt="" />
+            <Image src="/assets/sensei_logo.png" alt="" width={20} height={20} />
             どうする先生（AI）
           </div>
           <div className="qtext qtext-clamp-3">{answerPreview}</div>
@@ -156,7 +157,7 @@ export default function ConsultationCard({
       {item.request_type === 'expert' && item.expert_status === 'answered' && item.locked && (
         <div className="card-answerbox">
           <div className="locked-badge">
-            <img src="/assets/icon_lock.png" alt="" className="locked-badge-icon" />
+            <Image src="/assets/icon_lock.png" alt="" className="locked-badge-icon" width={16} height={16} />
             {schoolAwareAnswerSectionLabel(item.question, item.experts?.credential, item.experts?.experienced_school_names)}
           </div>
           {/* 最初の1行だけ実際の文面を見せる（2026-10-31、result/[id]/ResultClient.tsx
@@ -176,7 +177,7 @@ export default function ConsultationCard({
       {item.request_type === 'expert' && item.expert_status === 'answered' && !item.locked && item.expert_answer && (
         <div className="card-answerbox">
           <div className="answer-label">
-            <img src="/assets/icon_bulb.png" alt="" />
+            <Image src="/assets/icon_bulb.png" alt="" width={20} height={20} />
             {schoolAwareAnswerSectionLabel(item.question, item.experts?.credential, item.experts?.experienced_school_names)}
           </div>
           <div className="qtext qtext-clamp-3" style={{ fontSize: 13 }}>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
@@ -81,7 +82,7 @@ export default async function DictionaryCategoryPage({
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
-              <img src={cat.icon} alt="" style={{ width: 18, height: 18, objectFit: 'contain', borderRadius: 0, border: 'none' }} />
+              <Image src={cat.icon} alt="" width={18} height={18} style={{ objectFit: 'contain', borderRadius: 0, border: 'none' }} />
               不登校と「{cat.label}」
             </div>
             {overview ? (

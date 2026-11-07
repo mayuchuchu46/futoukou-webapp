@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Suspense } from 'react';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
@@ -58,7 +59,7 @@ export default function AccountPage() {
           {/* 伴走ノートを見る（旧マイページ内のリンクを移設）。 */}
           <Link href="/notebook" className="card" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <img src="/assets/icon_book.png" alt="" style={{ width: 20, height: 20, objectFit: 'contain' }} />
+              <Image src="/assets/icon_book.png" alt="" width={20} height={20} style={{ objectFit: 'contain' }} />
               伴走ノートを見る
             </span>
             <span className="muted">›</span>

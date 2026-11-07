@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, Suspense } from 'react';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 function LoginForm() {
@@ -32,7 +33,7 @@ function LoginForm() {
   return (
     <div className="login-wrap">
       <form onSubmit={submit} className="card" style={{ width: '100%', maxWidth: 360, gap: 16 }}>
-        <img src="/assets/wordmark_logo.png" alt="どうする先生" style={{ height: 32, width: 'auto', alignSelf: 'center' }} />
+        <Image src="/assets/wordmark_logo.png" alt="どうする先生" width={220} height={58} style={{ height: 32, width: 'auto', alignSelf: 'center' }} />
         <div className="muted" style={{ textAlign: 'center', fontSize: 13 }}>
           このアプリは関係者限定の試験公開中です。<br />パスワードを入力してください。
         </div>

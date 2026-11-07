@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
 import { schoolAwareAnswerSectionLabel } from '@/lib/expertDisplay';
@@ -148,7 +149,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
       {!item.refunded && item.expert_status !== 'answered' && (
         <>
           <div className="answer-label">
-            <img src="/assets/icon_bulb.png" alt="" />
+            <Image src="/assets/icon_bulb.png" alt="" width={20} height={20} />
             専門家・経験者から回答コメントが届くことがあります
           </div>
           <div className="muted">
@@ -160,7 +161,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
       {!item.refunded && item.expert_status === 'answered' && item.locked && (
         <>
           <div className="answer-label">
-            <img src="/assets/icon_bulb.png" alt="" />
+            <Image src="/assets/icon_bulb.png" alt="" width={20} height={20} />
             {schoolAwareAnswerSectionLabel(item.question, item.experts?.credential, item.experts?.experienced_school_names)}
           </div>
           {/* 本文は見せないが、最初の1行だけ実際の文面を見せて「続きが気になる」
@@ -205,7 +206,7 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
       {!item.refunded && item.expert_status === 'answered' && !item.locked && (
         <>
           <div className="answer-label">
-            <img src="/assets/icon_bulb.png" alt="" />
+            <Image src="/assets/icon_bulb.png" alt="" width={20} height={20} />
             {item.experts
               ? `${item.experts.credential === SENPAI_CREDENTIAL ? '経験者' : item.experts.credential}・${item.experts.name}さんの回答`
               : '専門家の回答'}
