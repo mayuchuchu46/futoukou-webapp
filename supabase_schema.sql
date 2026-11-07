@@ -1151,3 +1151,23 @@ insert into storage.buckets (id, name, public)
 values ('facility-photos', 'facility-photos', true)
 on conflict (id) do nothing;
 create index if not exists expert_consultation_reviews_expert_id_idx on expert_consultation_reviews (expert_id);
+
+-- 公開側の結果ページから、まだ登録していない専門家・経験者がその場で回答を書き、
+-- その場で簡易登録（先輩保護者は資格・登録証不要）もできるようにする機能（2026-11-07
+-- 追加）。「これを読んだ経験者や専門家がコメント入れるみたいな、その流れで登録する
+-- みたいな」との要望を受けて追加。「登録のハードルが高い」という懸念に対しては、
+-- 書く行為自体は登録前でもできるようにしつつ、本人確認（verified化）が済むまでは
+-- 内容を公開しない設計にすることで対応した（運営の確認を経ないまま、不特定多数が
+-- 書いた回答が保護者の目に触れることを避ける）。運営が本人確認を承認した時点で、
+-- この行の内容をconsultations.expert_answerへ反映し、この行は削除する
+-- （app/api/admin/experts/verify/route.ts参照）。
+create table if not exists expert_pending_answers (
+  id uuid primary key default gen_random_uuid(),
+  expert_id uuid not null references experts(id) on delete cascade,
+  consultation_id uuid not null references consultations(id) on delete cascade,
+  answer text not null,
+  created_at timestamptz not null default now(),
+  unique (expert_id, consultation_id)
+);
+alter table expert_pending_answers enable row level security;
+create index if not exists expert_pending_answers_consultation_id_idx on expert_pending_answers (consultation_id);

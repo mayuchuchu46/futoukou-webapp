@@ -14,6 +14,7 @@ import { expertDisplayName, schoolAwareAnswererName, answerFirstLineSnippet } fr
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 import ResultClient from './ResultClient';
+import PublicAnswerInvite from './PublicAnswerInvite';
 import QuoteShareCard from './QuoteShareCard';
 import ViewPing from './ViewPing';
 import LikeButton from './LikeButton';
@@ -679,6 +680,17 @@ export default async function ResultPage({
             <ResultClient id={id} initialItem={item} />
           </Suspense>
         )}
+
+        {/* まだ登録していない専門家・経験者が、検索・シェアなどでこの相談ページに
+            たどり着いた際に、その場で回答を書けるようにする導線（2026-11-07追加、
+            「これを読んだ経験者や専門家がコメント入れるみたいな、その流れで登録する
+            みたいな」との要望を受けて）。相談者向けの案内（request_type==='expert'の
+            場合のみ出る回答待ち・ロック中・公開済みの表示）とは独立しており、
+            どの相談ページにも出す（「回答まちというか、各質問ページね」との
+            指摘を受けて、request_type==='expert'限定にはしていない）。
+            すでに専門家・経験者の回答が公開済みの相談は、1相談につき回答欄が
+            1つしかない現在のデータ構造上、追加の回答を載せられないため出さない。 */}
+        {!isCrisis && !expertHasAnswered && <PublicAnswerInvite consultationId={item.id} />}
 
         {!isCrisis && (
           <FollowupThread parentId={item.id} authorId={item.author_id} initialFollowups={followups} />
