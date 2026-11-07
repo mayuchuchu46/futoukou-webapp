@@ -79,7 +79,8 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '0176-24-2400',
     sourceUrl: 'https://www.pref.aomori.lg.jp/soshiki/kodomo/kenmin/files/R8_shiennkikannmapu.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '十和田市教育研修センター内の教育相談室「トワハート」と教育支援室「わかこま」の専用リーフレットがある。対象は市内小中学校在籍の児童生徒で、通室には本人・保護者の希望、支援効果の見込み、在籍校長の承認が必要。活動内容はAIドリル学習、ALTとの学習、運動、調理実習、季節行事（ハロウィーン、クリスマス、書き初め等）、中3対象の「巣立ちの会」など。開室は月〜金10:00〜15:00（教育相談室は8:30〜17:00）。',
+    officialUrl: 'https://www.city.towada.lg.jp/bunka/gakkou/files/r8ri-huretto.pdf',
   },
   {
     no: 6,

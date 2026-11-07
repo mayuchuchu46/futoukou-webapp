@@ -360,6 +360,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     schoolType: '小学生',
     method: 'other',
     isAccredited: false,
+    officialUrl: 'https://mapisfullofknots.wixsite.com/-site-1',
     address: '徳島県名西郡神山町神領字南上角257番地',
     note: '特定非営利活動法人みっけが運営。大人から提案するプランもあるが、子どもの意欲・主体性を尊重し、1日の過ごし方を子どもたちと一緒にデザインする。長期休みや土曜日の自然体験プログラムもあり。',
   },
