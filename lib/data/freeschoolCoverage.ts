@@ -56,7 +56,7 @@ export const FREE_SCHOOL_COVERAGE: FreeSchoolCoverage[] = [
   { prefecture: '岡山県', tier: 'good', note: '岡山市公開の登録施設一覧より掲載。' },
   { prefecture: '広島県', tier: 'good', note: '県公開の連携団体一覧より掲載。' },
   { prefecture: '山口県', tier: 'none', note: '公開リストが見つかりませんでした。' },
-  { prefecture: '徳島県', tier: 'none', note: '公開リストが見つかりませんでした。' },
+  { prefecture: '徳島県', tier: 'partial', note: '県の不登校児童生徒支援協議会と連携する民間団体一覧（徳島市・鳴門市の2件）より掲載。県全体の網羅ではありません。' },
   { prefecture: '香川県', tier: 'none', note: '公開リストが見つかりませんでした。' },
   { prefecture: '愛媛県', tier: 'partial', note: '今治市が認定した施設の一覧より掲載（今治市在住者向けの認定制度で、県全体ではありません）。' },
   { prefecture: '高知県', tier: 'none', note: '公開リストが見つかりませんでした（フリースクール以外の子どもの居場所情報のみ確認）。' },
