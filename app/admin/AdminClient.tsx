@@ -112,6 +112,7 @@ type PendingFacilityInfo = {
   facility_name: string;
   fee: string | null;
   features: FacilityFeatureTag[];
+  photo_url: string | null;
   submitter_role: 'staff' | 'parent';
   submitter_contact: string | null;
   note: string | null;
@@ -585,6 +586,10 @@ export default function AdminClient({
                   </a>
                   <span className="muted" style={{ fontWeight: 400, marginLeft: 6 }}>（{FACILITY_TYPE_LABEL[f.facility_type]}）</span>
                 </div>
+                {f.photo_url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={f.photo_url} alt="提案された写真" style={{ maxWidth: 240, borderRadius: 8, display: 'block' }} />
+                )}
                 {f.fee && <div style={{ fontSize: 13 }}>費用：{f.fee}</div>}
                 {f.features.length > 0 && (
                   <div style={{ fontSize: 13 }}>

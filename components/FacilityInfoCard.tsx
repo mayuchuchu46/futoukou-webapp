@@ -14,10 +14,18 @@ export default async function FacilityInfoCard({
   facilityNo: number;
 }) {
   const info = await getApprovedFacilityInfo(facilityType, facilityNo);
-  if (!info || (!info.fee && info.features.length === 0)) return null;
+  if (!info || (!info.fee && info.features.length === 0 && !info.photoUrl)) return null;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+      {info.photoUrl && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={info.photoUrl}
+          alt="施設から提供された写真"
+          style={{ width: '100%', borderRadius: 12, display: 'block', objectFit: 'cover', maxHeight: 280 }}
+        />
+      )}
       {info.fee && (
         <div
           style={{

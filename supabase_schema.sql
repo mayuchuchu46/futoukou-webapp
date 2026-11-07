@@ -1126,6 +1126,13 @@ create table if not exists facility_info_submissions (
   submitter_role text not null default 'parent', -- 'staff'（運営関係者）| 'parent'（利用者・保護者）
   submitter_contact text, -- 確認が必要な場合のみ運営が利用。一般には公開しない
   note text, -- 自由記述の補足
+  -- 施設自身が提供する写真（2026-11-07追加、「スクールの写真イメージを入れたい」との
+  -- 要望を受けて）。施設・学校自体の写真は、公式サイト等からの無断転載も、AI生成による
+  -- 実在校の見た目の再現もできない（app/gakko/school/[no]/page.tsx等のコメント参照）
+  -- ため、唯一正確に出せる方法として、施設自身にこの提案フォームからアップロードして
+  -- もらい、運営の承認を経て公開する。facility-photos（公開バケット）に保存し、
+  -- 公開URLをそのまま入れる。
+  photo_url text,
   status text not null default 'pending', -- 'pending' | 'approved' | 'rejected'
   created_at timestamptz not null default now(),
   reviewed_at timestamptz
@@ -1133,4 +1140,9 @@ create table if not exists facility_info_submissions (
 create index if not exists facility_info_submissions_lookup_idx
   on facility_info_submissions (facility_type, facility_no, status);
 alter table facility_info_submissions enable row level security;
+
+-- 施設提供の写真用の公開バケット（施設ページで誰でも閲覧する前提）。
+insert into storage.buckets (id, name, public)
+values ('facility-photos', 'facility-photos', true)
+on conflict (id) do nothing;
 create index if not exists expert_consultation_reviews_expert_id_idx on expert_consultation_reviews (expert_id);

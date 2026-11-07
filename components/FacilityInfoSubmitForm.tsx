@@ -22,6 +22,8 @@ export default function FacilityInfoSubmitForm({
   const [role, setRole] = useState<'staff' | 'parent'>('staff');
   const [contact, setContact] = useState('');
   const [note, setNote] = useState('');
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoError, setPhotoError] = useState('');
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState('');
@@ -30,26 +32,47 @@ export default function FacilityInfoSubmitForm({
     setFeatures((list) => (list.includes(f) ? list.filter((x) => x !== f) : [...list, f]));
   }
 
+  const MAX_PHOTO_MB = 5;
+  function onPhotoChange(file: File | null) {
+    setPhotoError('');
+    if (!file) {
+      setPhoto(null);
+      return;
+    }
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setPhotoError('写真はjpg・png・webpのいずれかで添付してください');
+      setPhoto(null);
+      return;
+    }
+    if (file.size > MAX_PHOTO_MB * 1024 * 1024) {
+      setPhotoError(`写真のファイルサイズは${MAX_PHOTO_MB}MB以内にしてください`);
+      setPhoto(null);
+      return;
+    }
+    setPhoto(file);
+  }
+
   async function submit() {
-    if (!fee.trim() && features.length === 0) {
-      setError('費用または特徴タグのいずれかを入力してください');
+    if (!fee.trim() && features.length === 0 && !photo) {
+      setError('費用・特徴タグ・写真のいずれかを入力してください');
       return;
     }
     setError('');
     setSending(true);
+    const form = new FormData();
+    form.set('facility_type', facilityType);
+    form.set('facility_no', String(facilityNo));
+    form.set('facility_name', facilityName);
+    if (fee.trim()) form.set('fee', fee.trim());
+    form.set('features', JSON.stringify(features));
+    form.set('submitter_role', role);
+    if (contact.trim()) form.set('submitter_contact', contact.trim());
+    if (note.trim()) form.set('note', note.trim());
+    if (photo) form.set('photo', photo);
+
     const res = await fetch('/api/facility-info/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        facility_type: facilityType,
-        facility_no: facilityNo,
-        facility_name: facilityName,
-        fee: fee.trim() || null,
-        features,
-        submitter_role: role,
-        submitter_contact: contact.trim() || null,
-        note: note.trim() || null,
-      }),
+      body: form,
     });
     setSending(false);
     if (res.ok) {
@@ -78,7 +101,7 @@ export default function FacilityInfoSubmitForm({
         style={{ fontSize: 12, textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         onClick={() => setOpen(true)}
       >
-        この施設の費用・特徴の情報を提案する ›
+        この施設の費用・特徴・写真の情報を提案する ›
       </button>
     );
   }
@@ -153,6 +176,20 @@ export default function FacilityInfoSubmitForm({
           rows={3}
           style={{ width: '100%', marginTop: 4, padding: 8, borderRadius: 8, border: '1px solid var(--border)', boxSizing: 'border-box' }}
         />
+      </label>
+
+      <label className="muted" style={{ fontSize: 12, width: '100%', display: 'block' }}>
+        施設の写真（任意。jpg・png・webp、5MBまで）
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={(e) => onPhotoChange(e.target.files?.[0] || null)}
+          style={{ display: 'block', marginTop: 4, width: '100%' }}
+        />
+        <div style={{ fontSize: 11, marginTop: 4 }}>
+          施設・学校の実際の様子が分かる、ご自身で撮影・所有する写真のみお送りください。他サイトの転載や生成AIの画像は掲載できません。
+        </div>
+        {photoError && <div style={{ color: 'crimson', fontSize: 12, marginTop: 4 }}>{photoError}</div>}
       </label>
 
       {error && <div style={{ color: 'crimson', fontSize: 12 }}>{error}</div>}

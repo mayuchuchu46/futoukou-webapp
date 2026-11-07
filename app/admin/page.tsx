@@ -162,7 +162,7 @@ async function AdminPageContent() {
     // 施設・学校からの費用・特徴タグ提案（未確認分）。2026-11-07追加。
     supabase
       .from('facility_info_submissions')
-      .select('id, facility_type, facility_no, facility_name, fee, features, submitter_role, submitter_contact, note, created_at')
+      .select('id, facility_type, facility_no, facility_name, fee, features, photo_url, submitter_role, submitter_contact, note, created_at')
       .eq('status', 'pending')
       .order('created_at', { ascending: true }),
   ]);

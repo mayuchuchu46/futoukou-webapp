@@ -9,6 +9,7 @@ export type FacilityType = 'free' | 'alternative' | 'online';
 export type ApprovedFacilityInfo = {
   fee: string | null;
   features: FacilityFeatureTag[];
+  photoUrl: string | null;
   updatedAt: string;
 };
 
@@ -22,7 +23,7 @@ export async function getApprovedFacilityInfo(
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('facility_info_submissions')
-    .select('fee, features, reviewed_at, created_at')
+    .select('fee, features, photo_url, reviewed_at, created_at')
     .eq('facility_type', facilityType)
     .eq('facility_no', facilityNo)
     .eq('status', 'approved')
@@ -34,6 +35,7 @@ export async function getApprovedFacilityInfo(
   return {
     fee: data.fee || null,
     features: (data.features || []) as FacilityFeatureTag[],
+    photoUrl: data.photo_url || null,
     updatedAt: data.reviewed_at || data.created_at,
   };
 }
