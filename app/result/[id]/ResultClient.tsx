@@ -149,10 +149,10 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
         <>
           <div className="answer-label">
             <img src="/assets/icon_bulb.png" alt="" />
-            専門家・経験者が回答します
+            専門家・経験者から回答コメントが届くことがあります
           </div>
           <div className="muted">
-            登録している専門家・経験者が内容を確認し、テキストで回答します。回答が届くとこのページに表示されます。
+            登録している専門家・経験者が内容を確認し、任意のタイミングでテキストの回答を追加してくれることがあります。回答が届いた場合、このページに表示されます。
           </div>
         </>
       )}
