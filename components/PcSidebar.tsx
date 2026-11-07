@@ -165,6 +165,27 @@ export default function PcSidebar({
         どうする先生に相談する →
       </Link>
 
+      {/* 掲載件数バッジ（2026-11-08追加）。もとはホーム本文側（PC・モバイル共通）に
+          置いていたが、「PCの数おいてるところ、サイドでもいいがね」との指摘を受けて
+          PC版はこちらに移設。幅が狭いサイド向けに本文版より一回り小さい文字サイズに
+          している。「この数字おすと、学び場のトップ行くといいリンクつけて」との
+          指摘を受けて、カード全体を/gakko/matome（学び場トップ）へのリンクにした。
+          当初はgakkoLinksの直前（サイド最下部）に置いていたが、「上の方において」
+          との指摘を受けて、スクロールせず見える「相談する」ボタン直下に移動した。 */}
+      <Link
+        href="/gakko/matome"
+        className="card"
+        style={{ alignItems: 'center', gap: 3, textAlign: 'center', textDecoration: 'none', color: 'inherit' }}
+      >
+        <div className="muted" style={{ fontSize: 10 }}>全国の不登校の進路選択肢を掲載</div>
+        <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
+          {TOTAL_FACILITY_COUNT.toLocaleString()}件
+        </div>
+        <div className="muted" style={{ fontSize: 10, lineHeight: 1.5 }}>
+          フリースクール{FACILITY_COUNT_BREAKDOWN.free}・定時制高校{FACILITY_COUNT_BREAKDOWN.teiji}・教育支援センター{FACILITY_COUNT_BREAKDOWN.shien}・通信制高校{FACILITY_COUNT_BREAKDOWN.tsushin}・学びの多様化学校{FACILITY_COUNT_BREAKDOWN.gakko}・オルタナティブスクール{FACILITY_COUNT_BREAKDOWN.alternative}・オンラインフリースクール{FACILITY_COUNT_BREAKDOWN.online}
+        </div>
+      </Link>
+
       {/* 「今日の質問」。以前はホーム左カラム上部にあったが、PC（960px以上）では
           この右コラムに移動した（2026-10-16、「今日の質問は右コラムの中においてみて」
           との指摘を受けて）。モバイルではHomeClient.tsx側に残している。 */}
@@ -257,27 +278,6 @@ export default function PcSidebar({
           <MyRegionCard />
         </div>
       )}
-
-      {/* 掲載件数バッジ（2026-11-08追加）。もとはホーム本文側（PC・モバイル共通）に
-          置いていたが、「PCの数おいてるところ、サイドでもいいがね」との指摘を受けて
-          PC版はこちらに移設。幅が狭いサイド向けに本文版より一回り小さい文字サイズに
-          している。「この数字おすと、学び場のトップ行くといいリンクつけて」との
-          指摘を受けて、カード全体を/gakko/matome（学び場トップ）へのリンクにした。
-          gakkoLinks（学び場カテゴリ一覧）の直前に置き、学び場関連の導線同士を
-          隣接させる。 */}
-      <Link
-        href="/gakko/matome"
-        className="card"
-        style={{ alignItems: 'center', gap: 3, textAlign: 'center', textDecoration: 'none', color: 'inherit' }}
-      >
-        <div className="muted" style={{ fontSize: 10 }}>全国の不登校の進路選択肢を掲載</div>
-        <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
-          {TOTAL_FACILITY_COUNT.toLocaleString()}件
-        </div>
-        <div className="muted" style={{ fontSize: 10, lineHeight: 1.5 }}>
-          フリースクール{FACILITY_COUNT_BREAKDOWN.free}・定時制高校{FACILITY_COUNT_BREAKDOWN.teiji}・教育支援センター{FACILITY_COUNT_BREAKDOWN.shien}・通信制高校{FACILITY_COUNT_BREAKDOWN.tsushin}・学びの多様化学校{FACILITY_COUNT_BREAKDOWN.gakko}・オルタナティブスクール{FACILITY_COUNT_BREAKDOWN.alternative}・オンラインフリースクール{FACILITY_COUNT_BREAKDOWN.online}
-        </div>
-      </Link>
 
       {gakkoLinks}
     </div>
