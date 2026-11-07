@@ -288,7 +288,7 @@ export default async function GakkoPage({
               誤解を招くため、内訳を小さく併記する。どのタブ・都道府県選択状態でも
               ページ最上部に固定で表示する（全カテゴリ共通の訴求のため）。 */}
           <div className="card" style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
-            <div className="muted" style={{ fontSize: 12 }}>全国の不登校の学び場・居場所を掲載</div>
+            <div className="muted" style={{ fontSize: 12 }}>全国の不登校の進路選択肢を掲載</div>
             <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
               {TOTAL_FACILITY_COUNT.toLocaleString()}件
             </div>

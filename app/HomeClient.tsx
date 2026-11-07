@@ -55,7 +55,7 @@ function FacilityCountBadge({
 }) {
   return (
     <div className={`card ${className}`} style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
-      <div className="muted" style={{ fontSize: 12 }}>全国の不登校の学び場・居場所を掲載</div>
+      <div className="muted" style={{ fontSize: 12 }}>全国の不登校の進路選択肢を掲載</div>
       <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
         {total.toLocaleString()}件
       </div>
