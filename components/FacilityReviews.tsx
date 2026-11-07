@@ -1,6 +1,8 @@
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { getCurrentExpert } from '@/lib/expertAuth';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import FacilityReviewForm from './FacilityReviewForm';
+import ReviewItem from './ReviewItem';
 
 // 各学校・施設の詳細ページに出す「口コミ」カード（2026-11-07追加）。
 // 「この学校の口コミを書く、みたいな流れにして気軽にかける動線作れるといいのかな」
@@ -19,14 +21,17 @@ export default async function FacilityReviews({
   facilityName: string;
 }) {
   const supabase = getSupabaseAdmin();
-  const { data: rows } = await supabase
-    .from('school_reviews')
-    .select('id, body, created_at, experts(id, name, display_name, credential)')
-    .eq('facility_type', facilityType)
-    .eq('facility_no', String(facilityNo))
-    .eq('published', true)
-    .order('created_at', { ascending: false })
-    .limit(10);
+  const [{ data: rows }, currentExpert] = await Promise.all([
+    supabase
+      .from('school_reviews')
+      .select('id, body, created_at, experts(id, name, display_name, credential)')
+      .eq('facility_type', facilityType)
+      .eq('facility_no', String(facilityNo))
+      .eq('published', true)
+      .order('created_at', { ascending: false })
+      .limit(10),
+    getCurrentExpert(),
+  ]);
 
   return (
     <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
@@ -39,16 +44,13 @@ export default async function FacilityReviews({
           {rows.map((r) => {
             const reviewer = Array.isArray(r.experts) ? r.experts[0] : r.experts;
             return (
-              <div key={r.id} style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}>
-                {reviewer && (
-                  <div className="qtext" style={{ fontWeight: 700, fontSize: 13 }}>
-                    👤 {expertDisplayName(reviewer)}（経験者）
-                  </div>
-                )}
-                <div className="qtext" style={{ fontSize: 13, whiteSpace: 'pre-wrap', marginTop: 4 }}>
-                  {r.body}
-                </div>
-              </div>
+              <ReviewItem
+                key={r.id}
+                id={r.id}
+                authorLabel={reviewer ? `${expertDisplayName(reviewer)}（経験者）` : '経験者'}
+                initialBody={r.body}
+                isOwner={!!currentExpert && !!reviewer && reviewer.id === currentExpert.id}
+              />
             );
           })}
         </div>

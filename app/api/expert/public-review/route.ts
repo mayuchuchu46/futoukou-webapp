@@ -121,3 +121,64 @@ export async function POST(req: NextRequest) {
   });
   return res;
 }
+
+// アカウントページ（/account）から、自分が投稿済みの口コミを編集・削除できるように
+// 追加（2026-11-07）。「口コミを書いたら名前が出ると知らなかった／ネガティブな内容を
+// 書いてしまったので直したい」という声を受けて、学校ページの投稿フォームに再入力する
+// （＝上書きされることに気づきにくい）以外の、本人にとって分かりやすい編集導線として
+// アカウントページ側に一覧を出す。PUTは本文の編集、DELETEは投稿の削除。どちらも
+// ログイン中の本人（expert_id一致）の口コミのみ操作できる。
+export async function PUT(req: NextRequest) {
+  const expert = await getCurrentExpert();
+  if (!expert) {
+    return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 });
+  }
+
+  const body = await req.json();
+  const id = String(body.id || '');
+  const reviewBody = String(body.body || '').trim();
+  if (!id || !reviewBody) {
+    return NextResponse.json({ error: '口コミを入力してください' }, { status: 400 });
+  }
+
+  const supabase = getSupabaseAdmin();
+  // 公開済み・未公開のどちらでも編集できる。公開状態（published）はそのまま変えない
+  // （本人確認済みの経験者ならpublished=trueのまま、未確認ならfalseのまま）。
+  const { data, error } = await supabase
+    .from('school_reviews')
+    .update({ body: reviewBody })
+    .eq('id', id)
+    .eq('expert_id', expert.id)
+    .select('id')
+    .maybeSingle();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!data) return NextResponse.json({ error: '口コミが見つかりませんでした' }, { status: 404 });
+  return NextResponse.json({ ok: true });
+}
+
+export async function DELETE(req: NextRequest) {
+  const expert = await getCurrentExpert();
+  if (!expert) {
+    return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id') || '';
+  if (!id) {
+    return NextResponse.json({ error: 'invalid request' }, { status: 400 });
+  }
+
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from('school_reviews')
+    .delete()
+    .eq('id', id)
+    .eq('expert_id', expert.id)
+    .select('id')
+    .maybeSingle();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!data) return NextResponse.json({ error: '口コミが見つかりませんでした' }, { status: 404 });
+  return NextResponse.json({ ok: true });
+}
