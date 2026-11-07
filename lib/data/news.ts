@@ -84,6 +84,20 @@ export const NEWS_ITEMS: NewsItem[] = [
     relatedThemeWord: 'オルタナティブスクール',
   },
   {
+    id: 'nijin-yoshikawa-minami-alternative-school-2026-11',
+    date: '2026-11-06',
+    addedAt: '2026-11-07',
+    title:
+      '不登校の子ども向けオルタナティブスクール「NIJINアカデミー」、埼玉・吉川に新教室開校へ――週1日通学＋メタバース学習、定員10名',
+    summary:
+      '不登校の小中学生を対象としたオルタナティブスクール「NIJINアカデミー」を運営する株式会社NIJIN（東京都江東区）は、2026年12月7日から埼玉県吉川市に新教室「吉川美南校」を開校すると発表しました。対象は小学1年生から中学3年生で、定員10名の少人数制です。週1日（月曜日）は教室に通い、他の日はメタバース上で全国の生徒と学ぶハイブリッド形式で、運動を取り入れた体験的な活動を重視するとしています。',
+    sourceName: '株式会社NIJIN（PR TIMES）',
+    sourceUrl: 'https://prtimes.jp/main/html/rd/p/000000946.000099150.html',
+    category: 'other',
+    // 発表内容に「オルタナティブスクール」と明記されているため設定（2026-11-07）。
+    relatedThemeWord: 'オルタナティブスクール',
+  },
+  {
     id: 'okayama-futoko-enquete-benkyo-2026-11',
     date: '2026-11-04',
     addedAt: '2026-11-06',
