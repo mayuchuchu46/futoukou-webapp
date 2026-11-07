@@ -35,6 +35,9 @@ export default function ShindanPage() {
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
+          {/* Headerのhero-catchをpに戻した（2026-11-08）ことで、固有のh1を持たない
+              ページがh1無しになるため追加。見た目は変えずsr-only。 */}
+          <h1 className="sr-only">{TITLE}</h1>
           <div style={{ margin: '14px 0' }}>
             <Link href="/gakko" className="backlink">‹ 学校さがしトップへ</Link>
           </div>

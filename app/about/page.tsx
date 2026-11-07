@@ -42,6 +42,9 @@ export default async function AboutPage() {
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
+        {/* Headerのhero-catchをpに戻した（2026-11-08）ことで、固有のh1を持たない
+            ページがh1無しになるため追加。見た目は変えずsr-only。 */}
+        <h1 className="sr-only">どうする先生とは？</h1>
         <Link href="/account" className="backlink">← もどる</Link>
 
         <div className="card" style={{ alignItems: 'center', textAlign: 'center', gap: 10 }}>
