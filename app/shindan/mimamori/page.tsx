@@ -52,6 +52,8 @@ export default function MimamoriShindanPage() {
             alt={TITLE}
             width={1600}
             height={534}
+            loading="eager"
+            fetchPriority="high"
             style={{ width: '100%', height: 'auto', borderRadius: 12 }}
           />
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>

@@ -83,6 +83,8 @@ export default async function MimamoriResultPage({
               alt={`${result.name}：${result.catch}`}
               width={1200}
               height={675}
+              loading="eager"
+              fetchPriority="high"
               style={{ width: '100%', height: 'auto', borderRadius: 12, border: '1px solid var(--border)' }}
             />
             <div className="qtext">{result.desc}</div>

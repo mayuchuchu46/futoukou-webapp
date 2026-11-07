@@ -91,7 +91,9 @@ type GakkoPageContent = {
   // 白い余白を切り落として使っている）。ファイル名は中身を差し替えるたびに
   // _v1, _v2…と変えること。同じファイル名のまま中身だけ差し替えると、ブラウザ・CDNの
   // キャッシュにより古い画像が配信され続ける問題が実際に起きた（2026-10-18）。
-  heroBanner?: { src: string; alt: string };
+  // width/height（2026-11-08追加）：imgタグのレイアウトずれ（CLS）防止用。
+  // 実画像のピクセルサイズをそのまま入れる（CSS側はwidth:100%; height:autoのまま）。
+  heroBanner?: { src: string; alt: string; width: number; height: number };
 };
 
 const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
@@ -102,7 +104,7 @@ const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
     tweetText:
       '不登校のお子さんがいるご家庭へ。文部科学省が指定する「学びの多様化学校」（旧：不登校特例校）を都道府県から探せます。フリースクールや助成金情報も。',
     ogImage: '/og-image-gakko.jpg',
-    heroBanner: { src: '/assets/gakko_hero_banner_v6.jpg', alt: '全国の学びの多様化学校一覧' },
+    heroBanner: { src: '/assets/gakko_hero_banner_v6.jpg', alt: '全国の学びの多様化学校一覧', width: 2035, height: 489 },
   },
   free: {
     title: `フリースクール（地域）を都道府県から探す｜${SITE_NAME}`,
@@ -111,7 +113,7 @@ const PAGE_CONTENT: Record<GakkoType, GakkoPageContent> = {
     tweetText:
       '不登校のお子さんがいるご家庭へ。お住まいの地域のフリースクールを都道府県から探せます。オンラインフリースクールや助成金情報も。',
     ogImage: '/og-image-free.jpg',
-    heroBanner: { src: '/assets/free_hero_banner_v1.jpg', alt: '全国のフリースクール一覧' },
+    heroBanner: { src: '/assets/free_hero_banner_v1.jpg', alt: '全国のフリースクール一覧', width: 2103, height: 479 },
   },
   online: {
     title: `オンラインフリースクールを探す｜${SITE_NAME}`,
@@ -308,6 +310,10 @@ export default async function GakkoPage({
             <img
               src={PAGE_CONTENT[type].heroBanner!.src}
               alt={PAGE_CONTENT[type].heroBanner!.alt}
+              width={PAGE_CONTENT[type].heroBanner!.width}
+              height={PAGE_CONTENT[type].heroBanner!.height}
+              loading="eager"
+              fetchPriority="high"
               style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16, margin: '0 0 12px' }}
             />
           )}

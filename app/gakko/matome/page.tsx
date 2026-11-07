@@ -578,6 +578,10 @@ export default async function GakkoMatomePage({
           <img
             src="/assets/matome_hero_banner_v3.jpg"
             alt="学校以外の学びの選択肢（フリースクール・通信制高校・定時制高校・学びの多様化学校・オルタナティブスクール・オンラインフリースクール）"
+            width={2172}
+            height={724}
+            loading="eager"
+            fetchPriority="high"
             style={{ display: 'block', width: '100%', height: 'auto', borderRadius: 16, margin: '0 0 12px' }}
           />
 
