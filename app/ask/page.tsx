@@ -427,9 +427,32 @@ function AskPageContent() {
         </div>
         {/* 状況を書くほどの余裕がなく、子供が言った一言だけをまず知りたい人向けの入口
             （2026-11-07追加、「子供の言葉、ほんとはこう」からこのページへの誘導と対になる
-            導線として、こちら側にも設置）。 */}
-        <Link href="/kotoba" className="muted" style={{ fontSize: 12, textDecoration: 'underline', marginBottom: 10, display: 'inline-block' }}>
-          状況を書くのが大変な方へ：子供の一言だけで気持ちを読む「子供の言葉、ほんとはこう」
+            導線として、こちら側にも設置）。当初は下線付きの地味なテキストリンクのみ
+            だったが、「相談するページからも気軽にこの流れいけるといいけど」との指摘を
+            受けて、TOPのkotobaバナーと揃えた軽量なカード型バナーに変更し、目に留まり
+            やすくした（ただし/askの入力フォームに主役を譲る形で、TOP版よりさらに
+            コンパクトな1行サイズに抑えている）。 */}
+        <Link
+          href="/kotoba"
+          className="card"
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+            marginBottom: 10,
+            padding: '8px 12px',
+            border: '1.5px solid var(--main)',
+            background: 'var(--sub)',
+            textDecoration: 'none',
+            color: 'inherit',
+          }}
+        >
+          <span style={{ flex: '0 0 auto', fontSize: 16, lineHeight: 1 }}>💬</span>
+          <span style={{ flex: 1, minWidth: 0, fontSize: 12 }}>
+            状況を書くのが大変な方へ：子供の一言だけで気持ちを読む「子供の言葉、ほんとはこう」
+          </span>
+          <span style={{ flex: '0 0 auto', color: 'var(--main)', fontWeight: 700 }}>›</span>
         </Link>
         <textarea
           className="input"
