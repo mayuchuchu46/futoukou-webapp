@@ -15,6 +15,7 @@ import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
 import { Suspense } from 'react';
 import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
+import { buildBreadcrumbJsonLd } from '@/lib/breadcrumbs';
 
 // オルタナティブスクール、1件ごとの紹介ページ（2026-10-29追加）。
 // 一覧（/gakko?type=alternative）の施設名を押すとここに来る。
@@ -104,6 +105,16 @@ export default async function AlternativeSchoolPage({
       }
     : null;
 
+  // /gakko/matomeにはオルタナティブスクールは出していないため、パンくずの
+  // 「学び場」階層は実際の一覧先である/gakko?type=alternativeにする
+  // （shien/[no]/page.tsxと同じ理由）。
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'ホーム', url: SITE_URL },
+    { name: '学び場', url: `${SITE_URL}/gakko?type=alternative` },
+    { name: `${school.prefecture}の学び場`, url: `${SITE_URL}/gakko?type=alternative&pref=${encodeURIComponent(school.prefecture)}` },
+    { name: school.name, url: schoolUrl },
+  ]);
+
   // 同じ都道府県の他のオルタナティブスクール（最大3件）を「関連一覧」として表示。
   const relatedSchools = ALTERNATIVE_SCHOOLS.filter(
     (s) => s.no !== school.no && s.prefecture === school.prefecture
@@ -124,6 +135,11 @@ export default async function AlternativeSchoolPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">

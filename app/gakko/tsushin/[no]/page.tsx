@@ -12,6 +12,7 @@ import {
 } from '@/lib/data/correspondenceHighSchools';
 import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
 import { findSimilarCorrespondenceHighSchools } from '@/lib/similarSchools';
+import { buildBreadcrumbJsonLd } from '@/lib/breadcrumbs';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import TrackedOutLink from '@/components/TrackedOutLink';
 import FavoriteButton from '@/components/FavoriteButton';
@@ -115,6 +116,13 @@ export default async function TsushinSchoolPage({
       }
     : null;
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'ホーム', url: SITE_URL },
+    { name: '学び場', url: `${SITE_URL}/gakko/matome` },
+    { name: `${school.prefecture}の学び場`, url: `${SITE_URL}/gakko/matome?pref=${encodeURIComponent(school.prefecture)}` },
+    { name: school.name, url: schoolUrl },
+  ]);
+
   return (
     <div className="app-shell">
       {jsonLd && (
@@ -124,6 +132,11 @@ export default async function TsushinSchoolPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">

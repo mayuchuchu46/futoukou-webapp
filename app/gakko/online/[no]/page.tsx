@@ -17,6 +17,7 @@ import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
 import { Suspense } from 'react';
 import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
+import { buildBreadcrumbJsonLd } from '@/lib/breadcrumbs';
 // オンラインフリースクール、1校ごとの紹介ページ（2026-10-21追加）。
 //
 // これまでオンラインフリースクールだけは、一覧（/gakko?type=online・/gakko/matome）の
@@ -111,12 +112,24 @@ export default async function OnlineSchoolPage({
     mainEntityOfPage: schoolUrl,
   };
 
+  // オンラインフリースクールは居住地を問わないため、都道府県の階層は挟まない。
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'ホーム', url: SITE_URL },
+    { name: '学び場', url: `${SITE_URL}/gakko/matome` },
+    { name: school.name, url: schoolUrl },
+  ]);
+
   return (
     <div className="app-shell">
       {/* eslint-disable-next-line react/no-danger */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">

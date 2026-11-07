@@ -15,6 +15,7 @@ import SchoolExperiencedParents from './SchoolExperiencedParents';
 import FacilityReviews from '@/components/FacilityReviews';
 import SchoolFitCard from './SchoolFitCard';
 import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
+import { buildBreadcrumbJsonLd } from '@/lib/breadcrumbs';
 // 学びの多様化学校、1校ごとの紹介ページ。一覧（/gakko）の学校名を押すとここに来る
 // （2026-10-18、「学校名を押したらその学校の紹介ページに行くようにできる？」との
 // 指摘を受けて追加）。
@@ -158,6 +159,14 @@ export default async function GakkoSchoolPage({
         }
       : null;
 
+  // パンくず構造化データ（ホーム→学び場→都道府県→個別校）。
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'ホーム', url: SITE_URL },
+    { name: '学び場', url: `${SITE_URL}/gakko/matome` },
+    { name: `${school.prefecture}の学び場`, url: `${SITE_URL}/gakko/matome?pref=${encodeURIComponent(school.prefecture)}` },
+    { name: fullName, url: schoolUrl },
+  ]);
+
   return (
     <div className="app-shell">
       {jsonLd && (
@@ -167,6 +176,11 @@ export default async function GakkoSchoolPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">

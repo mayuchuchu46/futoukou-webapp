@@ -8,6 +8,7 @@ import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
 import FacilityConsultations from '@/components/FacilityConsultations';
+import { buildBreadcrumbJsonLd } from '@/lib/breadcrumbs';
 
 // 教育支援センター（適応指導教室）、1件ごとの紹介ページ（2026-11-02追加）。
 // 「（個別施設への直リンクして欲しかった）」との指摘を受けて追加した。
@@ -88,6 +89,16 @@ export default async function EducationSupportCenterPage({
       }
     : null;
 
+  // /gakko/matomeからは2026-10-28に教育支援センターのカードを撤去済みのため、
+  // パンくずの「学び場」階層は実際の一覧先である/gakko?type=shienにする
+  // （school/free等の他カテゴリとは一覧先が異なる）。
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'ホーム', url: SITE_URL },
+    { name: '学び場', url: `${SITE_URL}/gakko?type=shien` },
+    { name: `${center.prefecture}の教育支援センター`, url: `${SITE_URL}/gakko?type=shien&pref=${encodeURIComponent(center.prefecture)}` },
+    { name: center.name, url: centerUrl },
+  ]);
+
   return (
     <div className="app-shell">
       {jsonLd && (
@@ -97,6 +108,11 @@ export default async function EducationSupportCenterPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">

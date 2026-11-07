@@ -16,6 +16,7 @@ import FacilityInfoCard from '@/components/FacilityInfoCard';
 import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
 import { Suspense } from 'react';
+import { buildBreadcrumbJsonLd } from '@/lib/breadcrumbs';
 // フリースクール（地域）、1件ごとの紹介ページ。一覧（/gakko?type=free）の施設名を
 // 押すとここに来る（2026-10-21、「学びの多様化学校と同じ仕組みでフリースクールも
 // 詳細ページにつなげたい」との要望を受けて、app/gakko/school/[no]/page.tsxと
@@ -111,6 +112,13 @@ export default async function FreeSchoolPage({
       }
     : null;
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'ホーム', url: SITE_URL },
+    { name: '学び場', url: `${SITE_URL}/gakko/matome` },
+    { name: `${school.prefecture}の学び場`, url: `${SITE_URL}/gakko/matome?pref=${encodeURIComponent(school.prefecture)}` },
+    { name: school.name, url: schoolUrl },
+  ]);
+
   return (
     <div className="app-shell">
       {jsonLd && (
@@ -120,6 +128,11 @@ export default async function FreeSchoolPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">

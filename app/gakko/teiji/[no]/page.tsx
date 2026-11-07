@@ -13,6 +13,7 @@ import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
 import FacilityReviews from '@/components/FacilityReviews';
 import { Suspense } from 'react';
+import { buildBreadcrumbJsonLd } from '@/lib/breadcrumbs';
 
 // 定時制高校、1件ごとの紹介ページ（2026-10-29追加）。他カテゴリ
 // （app/gakko/free/[no]/page.tsx等）と同じ構成にしている。
@@ -107,6 +108,13 @@ export default async function TeijiSchoolPage({
       }
     : null;
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'ホーム', url: SITE_URL },
+    { name: '学び場', url: `${SITE_URL}/gakko/matome` },
+    { name: `${school.prefecture}の学び場`, url: `${SITE_URL}/gakko/matome?pref=${encodeURIComponent(school.prefecture)}` },
+    { name: school.name, url: schoolUrl },
+  ]);
+
   return (
     <div className="app-shell">
       {jsonLd && (
@@ -116,6 +124,11 @@ export default async function TeijiSchoolPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
+      {/* eslint-disable-next-line react/no-danger */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
