@@ -146,17 +146,35 @@ export default function ExpertsTeaser({
           </div>
         </>
       )}
-      <a
-        href="/experts"
-        className="backlink"
-        style={{ margin: '2px 0 0', fontSize: 13 }}
-        onClick={(e) => {
-          e.preventDefault();
-          router.push('/experts');
-        }}
-      >
-        専門家一覧をすべて見る →
-      </a>
+      {/* 以前はこのリンク1本だけで、クリック先は専門家一覧（/experts）固定だった。
+          上に経験者のカードも並べて出している以上、「一覧をすべて見る」の遷移先も
+          専門家・経験者それぞれに分けないと、経験者のカードから専門家一覧に
+          連れて行かれてしまう（2026-11-07、「専門家と経験者それぞれの一覧が出てきて、
+          そこから直接選ぶ」との指摘を受けて、/senpai一覧ページの新設に合わせて修正）。 */}
+      <div style={{ display: 'flex', gap: 14, margin: '2px 0 0' }}>
+        <a
+          href="/experts"
+          className="backlink"
+          style={{ margin: 0, fontSize: 13 }}
+          onClick={(e) => {
+            e.preventDefault();
+            router.push('/experts');
+          }}
+        >
+          専門家一覧をすべて見る →
+        </a>
+        <a
+          href="/senpai"
+          className="backlink"
+          style={{ margin: 0, fontSize: 13 }}
+          onClick={(e) => {
+            e.preventDefault();
+            router.push('/senpai');
+          }}
+        >
+          経験者一覧をすべて見る →
+        </a>
+      </div>
     </div>
   );
 }

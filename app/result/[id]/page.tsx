@@ -754,7 +754,7 @@ export default async function ResultPage({
             {quoteShareBlock}
             {item.request_type !== 'expert' && (
               <Suspense fallback={null}>
-                <AiUsageUpsell />
+                <AiUsageUpsell consultationId={item.id} authorId={item.author_id} />
               </Suspense>
             )}
           </>
