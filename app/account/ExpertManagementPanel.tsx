@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { CATS } from '@/lib/categories';
 import { Consultation, metaLabel } from '@/lib/types';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
+import { relativeTimeLabel } from '@/lib/relativeTime';
 
 type Expert = { id: string; name: string; credential: string };
 
@@ -130,8 +131,24 @@ export default function ExpertManagementPanel({
             <span className="muted" style={{ fontWeight: 700 }}>あなた指名の相談</span>
           )}
           {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
+          {/* 「専門家・経験者が見たときに回答したくなるような誘導」の一環
+              （2026-11-07追加）。投稿からの経過時間を添えることで、「今まさに
+              困っている人がいる」という実感を持ちやすくする（ホームの一覧で
+              使っているrelativeTimeLabelと同じ表示）。 */}
+          {item.created_at && <span className="muted">{relativeTimeLabel(item.created_at)}</span>}
         </div>
         <div className="qtext">{item.question}</div>
+        {/* すでにAIの回答がこのページで読まれている（＝困っている人に実際に
+            届いている）ことが伝わると、「ここに専門家・経験者としての一言を
+            足すと、誰かの役に立つ」という実感につながりやすい。views/likesは
+            selectで既に取得済みのため、ここでは表示のみ追加（2026-11-07）。 */}
+        {(item.views > 0 || item.likes > 0) && (
+          <div className="muted" style={{ fontSize: 12 }}>
+            {item.views > 0 && `すでに${item.views}回読まれています`}
+            {item.views > 0 && item.likes > 0 && '・'}
+            {item.likes > 0 && `「参考になった」が${item.likes}件付いています`}
+          </div>
+        )}
         {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AIが
             既にどう答えているかをここに表示する（以前はrequest_type==='expert'の
             相談にAI回答が存在しなかったため、質問文だけが出ていた）。専門家・
@@ -172,6 +189,13 @@ export default function ExpertManagementPanel({
             専門的な判断ではなく、ご自身の経験に基づいてお答えいただければ十分です。
           </div>
         )}
+        {/* 募集ページ（/expert/recruit・/senpai/recruit）では「回答がプロフィールへの
+            露出・集客になる」と説明しているが、実際に回答する画面（ここ）には
+            その一言が無く、書く直前に思い出せなかった。「回答したくなるような
+            誘導」の一環として、送信直前の場所に短く再掲する（2026-11-07）。 */}
+        <div className="muted" style={{ fontSize: 12 }}>
+          回答すると、あなたのプロフィールへのリンクが表示されます。
+        </div>
         <textarea
           className="input"
           rows={6}
