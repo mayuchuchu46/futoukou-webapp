@@ -13,6 +13,7 @@ import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
 import FacilityInfoCard from '@/components/FacilityInfoCard';
 import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
+import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
 import { Suspense } from 'react';
 // フリースクール（地域）、1件ごとの紹介ページ。一覧（/gakko?type=free）の施設名を
 // 押すとここに来る（2026-10-21、「学びの多様化学校と同じ仕組みでフリースクールも
@@ -276,6 +277,8 @@ export default async function FreeSchoolPage({
               meta: `${s.prefecture}${s.city}`,
             }))}
           />
+
+          <FacilityCategoryInfo type="free" />
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>

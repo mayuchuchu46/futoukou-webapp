@@ -13,6 +13,7 @@ import FavoriteButton from '@/components/FavoriteButton';
 import SchoolConsultations from './SchoolConsultations';
 import SchoolExperiencedParents from './SchoolExperiencedParents';
 import SchoolFitCard from './SchoolFitCard';
+import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
 // 学びの多様化学校、1校ごとの紹介ページ。一覧（/gakko）の学校名を押すとここに来る
 // （2026-10-18、「学校名を押したらその学校の紹介ページに行くようにできる？」との
 // 指摘を受けて追加）。
@@ -368,6 +369,8 @@ export default async function GakkoSchoolPage({
               meta: `${s.prefecture}${s.city}`,
             }))}
           />
+
+          <FacilityCategoryInfo type="school" />
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>

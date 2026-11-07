@@ -11,6 +11,7 @@ import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityInfoCard from '@/components/FacilityInfoCard';
 import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
+import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
 import { Suspense } from 'react';
 import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
 
@@ -289,6 +290,8 @@ export default async function AlternativeSchoolPage({
               }))}
             />
           )}
+
+          <FacilityCategoryInfo type="alternative" />
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>このページについて</div>
