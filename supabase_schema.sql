@@ -1201,3 +1201,10 @@ create table if not exists school_reviews (
 alter table school_reviews enable row level security;
 create index if not exists school_reviews_facility_idx on school_reviews (facility_type, facility_no);
 create index if not exists school_reviews_expert_id_idx on school_reviews (expert_id);
+
+-- 学校ページの口コミに表示する名前を、経験者プロフィール（experts.name/display_name）
+-- とは別に持てるようにする（2026-11-08追加）。「口コミに実名・プロフィールと同じ
+-- 名前が出ると、学校名（そのページ自体が特定の学校のページ）と組み合わさって
+-- 子どもが特定されるのが嫌」との指摘を受けて追加。未入力ならこれまでどおり
+-- プロフィールの表示名にフォールバックする（既存の投稿にも影響しない）。
+alter table school_reviews add column if not exists author_label text;

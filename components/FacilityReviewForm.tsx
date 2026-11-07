@@ -24,6 +24,11 @@ export default function FacilityReviewForm({
   const [verified, setVerified] = useState(false);
 
   const [body, setBody] = useState('');
+  // この口コミに表示する名前（2026-11-08追加）。専門家・経験者プロフィールの
+  // 名前（reg.name/display_name）とは別の、口コミ専用のニックネーム欄。
+  // 「学校名＋プロフィールの実名の組み合わせで子どもが特定される」との懸念を
+  // 受けて、投稿の入り口の時点から別の名前を選べるようにする。
+  const [authorLabel, setAuthorLabel] = useState('');
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [reg, setReg] = useState({ email: '', password: '', name: '', display_name: '', bio: '' });
 
@@ -74,7 +79,7 @@ export default function FacilityReviewForm({
       const res = await fetch('/api/expert/public-review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ facility_type: facilityType, facility_no: facilityNo, facility_name: facilityName, body }),
+        body: JSON.stringify({ facility_type: facilityType, facility_no: facilityNo, facility_name: facilityName, body, author_label: authorLabel }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -108,6 +113,7 @@ export default function FacilityReviewForm({
           facility_no: facilityNo,
           facility_name: facilityName,
           body,
+          author_label: authorLabel,
           registration: reg,
         }),
       });
@@ -147,6 +153,21 @@ export default function FacilityReviewForm({
         value={body}
         onChange={(e) => updateBody(e.target.value)}
       />
+
+      {/* 口コミに表示する名前（2026-11-08追加）。プロフィールの名前（お名前・表示名）
+          とは別に、口コミごとに名乗れるようにする。学校ページ＝特定の学校という
+          文脈の強いページなので、プロフィールと同じ名前だと「どこの子か」が
+          特定されやすいという懸念への対応。空欄のままでもよい（その場合は
+          プロフィールの表示名が使われる）。 */}
+      <input
+        className="input"
+        placeholder="この口コミに表示する名前（空ならプロフィールの表示名を使用）"
+        value={authorLabel}
+        onChange={(e) => setAuthorLabel(e.target.value)}
+      />
+      <div className="muted" style={{ fontSize: 12, marginTop: -4 }}>
+        プロフィールの表示名と変えておくと、学校名と組み合わせてもご本人・お子さんが特定されにくくなります。
+      </div>
 
       {errorMessage && (
         <div className="muted" style={{ color: '#C0392B', fontSize: 12 }}>

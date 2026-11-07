@@ -11,17 +11,23 @@ import { useState } from 'react';
 export default function ReviewItem({
   id,
   authorLabel,
+  initialAuthorLabel,
   initialBody,
   isOwner,
 }: {
   id: string;
   authorLabel: string;
+  // 口コミ専用の表示名の生データ（空なら未設定＝プロフィールの表示名に
+  // フォールバック中、という意味。2026-11-08追加）。編集欄の初期値に使う。
+  initialAuthorLabel: string;
   initialBody: string;
   isOwner: boolean;
 }) {
   const [editing, setEditing] = useState(false);
   const [body, setBody] = useState(initialBody);
   const [draft, setDraft] = useState(initialBody);
+  const [label, setLabel] = useState(authorLabel);
+  const [labelDraft, setLabelDraft] = useState(initialAuthorLabel);
   const [saving, setSaving] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -34,7 +40,7 @@ export default function ReviewItem({
       const res = await fetch('/api/expert/public-review', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, body: draft }),
+        body: JSON.stringify({ id, body: draft, author_label: labelDraft }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -43,6 +49,7 @@ export default function ReviewItem({
         return;
       }
       setBody(draft);
+      setLabel(labelDraft.trim() || authorLabel);
       setEditing(false);
       setSaving(false);
     } catch {
@@ -78,7 +85,7 @@ export default function ReviewItem({
     <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10 }}>
       <div className="row" style={{ justifyContent: 'space-between' }}>
         <div className="qtext" style={{ fontWeight: 700, fontSize: 13 }}>
-          👤 {authorLabel}
+          👤 {label}
         </div>
         {isOwner && !editing && (
           <button
@@ -87,6 +94,7 @@ export default function ReviewItem({
             style={{ fontSize: 12, padding: '2px 8px' }}
             onClick={() => {
               setDraft(body);
+              setLabelDraft(initialAuthorLabel);
               setEditing(true);
             }}
           >
@@ -97,6 +105,16 @@ export default function ReviewItem({
 
       {editing ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 4 }}>
+          {/* 口コミに表示する名前を、経験者プロフィールの名前とは別に設定できる
+              欄（2026-11-08追加）。「学校名＋プロフィールの実名の組み合わせで
+              子どもが特定される」との懸念を受けて、プロフィールとは切り離した
+              ニックネームを口コミごとに設定できるようにした。 */}
+          <input
+            className="input"
+            placeholder="この口コミに表示する名前（空ならプロフィールの表示名を使用）"
+            value={labelDraft}
+            onChange={(e) => setLabelDraft(e.target.value)}
+          />
           <textarea
             className="input"
             rows={3}

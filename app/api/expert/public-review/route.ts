@@ -22,6 +22,10 @@ export async function POST(req: NextRequest) {
   const facility_no = String(body.facility_no || '');
   const facility_name = String(body.facility_name || '').trim();
   const reviewBody = String(body.body || '').trim();
+  // 口コミに表示する名前（2026-11-08追加）。経験者プロフィール（experts.name/
+  // display_name）とは別に持てるようにする。空なら従来どおりプロフィールの
+  // 表示名にフォールバックする（FacilityReviews.tsx側）。
+  const authorLabel = String(body.author_label || '').trim() || null;
 
   if (!ALLOWED_FACILITY_TYPES.includes(facility_type as FacilityType)) {
     return NextResponse.json({ error: 'invalid request' }, { status: 400 });
@@ -41,6 +45,7 @@ export async function POST(req: NextRequest) {
         facility_no,
         facility_name,
         body: reviewBody,
+        author_label: authorLabel,
         published: !!expert.verified,
       },
       { onConflict: 'expert_id,facility_type,facility_no' }
@@ -105,6 +110,7 @@ export async function POST(req: NextRequest) {
     facility_no,
     facility_name,
     body: reviewBody,
+    author_label: authorLabel,
     published: false,
   });
   if (reviewErr) {
@@ -137,6 +143,10 @@ export async function PUT(req: NextRequest) {
   const body = await req.json();
   const id = String(body.id || '');
   const reviewBody = String(body.body || '').trim();
+  // author_labelは未指定（キー自体が無い）なら変更しない。空文字が明示的に
+  // 送られた場合は「プロフィールの表示名に戻す」として扱う（nullを書き込む）。
+  const hasAuthorLabel = Object.prototype.hasOwnProperty.call(body, 'author_label');
+  const authorLabel = hasAuthorLabel ? String(body.author_label || '').trim() || null : undefined;
   if (!id || !reviewBody) {
     return NextResponse.json({ error: '口コミを入力してください' }, { status: 400 });
   }
@@ -146,7 +156,7 @@ export async function PUT(req: NextRequest) {
   // （本人確認済みの経験者ならpublished=trueのまま、未確認ならfalseのまま）。
   const { data, error } = await supabase
     .from('school_reviews')
-    .update({ body: reviewBody })
+    .update({ body: reviewBody, ...(hasAuthorLabel ? { author_label: authorLabel } : {}) })
     .eq('id', id)
     .eq('expert_id', expert.id)
     .select('id')

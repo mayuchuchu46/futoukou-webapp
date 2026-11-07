@@ -24,7 +24,7 @@ export default async function FacilityReviews({
   const [{ data: rows }, currentExpert] = await Promise.all([
     supabase
       .from('school_reviews')
-      .select('id, body, created_at, experts(id, name, display_name, credential)')
+      .select('id, body, author_label, created_at, experts(id, name, display_name, credential)')
       .eq('facility_type', facilityType)
       .eq('facility_no', String(facilityNo))
       .eq('published', true)
@@ -43,11 +43,21 @@ export default async function FacilityReviews({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%' }}>
           {rows.map((r) => {
             const reviewer = Array.isArray(r.experts) ? r.experts[0] : r.experts;
+            // 口コミ専用の表示名（author_label）があればそちらを優先する
+            // （2026-11-08追加）。経験者プロフィールの名前とは切り離すための
+            // 項目で、未設定の投稿（これまでの投稿）だけ従来どおりプロフィールの
+            // 表示名にフォールバックする。
+            const label = r.author_label?.trim()
+              ? r.author_label.trim()
+              : reviewer
+                ? `${expertDisplayName(reviewer)}（経験者）`
+                : '経験者';
             return (
               <ReviewItem
                 key={r.id}
                 id={r.id}
-                authorLabel={reviewer ? `${expertDisplayName(reviewer)}（経験者）` : '経験者'}
+                authorLabel={label}
+                initialAuthorLabel={r.author_label || ''}
                 initialBody={r.body}
                 isOwner={!!currentExpert && !!reviewer && reviewer.id === currentExpert.id}
               />
