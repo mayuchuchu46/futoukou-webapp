@@ -787,4 +787,13 @@ export const FREE_SCHOOLS: FreeSchool[] = [
   // 群馬県（2026-11-08追加）。既存15件を群馬県「フリースクール等支援事業補助金」対象一覧
   // （令和7年度版PDF）で住所・連絡先を更新し、新たに確認できたぱれっと渋川校を追加。
   { no: 726, name: 'フリースクールぱれっと渋川校', prefecture: '群馬県', city: '渋川市', address: '渋川市渋川1816-22', contact: '070-3277-0605', ageRange: '小学生・中学生・高校生', sourceUrl: 'https://www.pref.gunma.jp/uploaded/attachment/673242.pdf', asOf: '令和7年度（群馬県フリースクール等支援事業補助金対象一覧）' },
+  // 新潟市（2026-11-08追加）。県全体の公開リストは見つからなかったが、新潟市
+  // こども・若者支援ガイド（令和7年3月発行、新潟市フリースクール等連携協議会
+  // 加盟施設一覧）より、既存のOHANA（no.687）以外の施設を追加。
+  { no: 727, name: '第一学院中等部 新潟キャンパス', prefecture: '新潟県', city: '新潟市中央区', address: '新潟市中央区万代4-1-6 新潟あおばビル', contact: '025-241-5705', ageRange: '記載なし', sourceUrl: 'https://www.city.niigata.lg.jp/kosodate/seisyonen/wakamonoshien/index.files/R7gaido.pdf', asOf: '令和7年3月（新潟市こども・若者支援ガイド）', note: '平日9:00〜17:00、土曜9:00〜15:00開室（日・祝休）。' },
+  { no: 728, name: 'フリースクール「ロビオキ」', prefecture: '新潟県', city: '新潟市西区', address: '新潟市西区松海が丘3-9-24', contact: '050-3746-1614', ageRange: '記載なし', sourceUrl: 'https://www.city.niigata.lg.jp/kosodate/seisyonen/wakamonoshien/index.files/R7gaido.pdf', asOf: '令和7年3月（新潟市こども・若者支援ガイド）' },
+  { no: 729, name: '遊YOU学舎', prefecture: '新潟県', city: '新発田市', address: '新発田市城北町2丁目1-12-1', contact: '090-2089-6587（代表直通）', ageRange: '記載なし', sourceUrl: 'https://www.city.niigata.lg.jp/kosodate/seisyonen/wakamonoshien/index.files/R7gaido.pdf', asOf: '令和7年3月（新潟市こども・若者支援ガイド）', note: '新発田市に所在するが、新潟市フリースクール等連携協議会の加盟施設として掲載されている。' },
+  { no: 730, name: 'トライ式中等部 新潟キャンパス', prefecture: '新潟県', city: '新潟市中央区', address: '新潟市中央区東大通1-7-7 IMAⅢビル', contact: '0120-919-439', ageRange: '記載なし', sourceUrl: 'https://www.city.niigata.lg.jp/kosodate/seisyonen/wakamonoshien/index.files/R7gaido.pdf', asOf: '令和7年3月（新潟市こども・若者支援ガイド）' },
+  { no: 731, name: 'こころの学習支援室「イロドリ」', prefecture: '新潟県', city: '新潟市中央区', address: '新潟市中央区湖南21-5', contact: '080-9712-9867', ageRange: '記載なし', sourceUrl: 'https://www.city.niigata.lg.jp/kosodate/seisyonen/wakamonoshien/index.files/R7gaido.pdf', asOf: '令和7年3月（新潟市こども・若者支援ガイド）', note: '月・火・水9:00〜18:00、金・土9:00〜13:30開室（木・日休）。' },
+  { no: 732, name: 'こどもおとな基地「イロトリドリ」', prefecture: '新潟県', city: '新潟市西区', address: '新潟市西区上新栄町5-17-3', contact: '025-201-8920、080-3708-8385', ageRange: '記載なし', sourceUrl: 'https://www.city.niigata.lg.jp/kosodate/seisyonen/wakamonoshien/index.files/R7gaido.pdf', asOf: '令和7年3月（新潟市こども・若者支援ガイド）', note: '9:00〜18:00開室。' },
 ];
