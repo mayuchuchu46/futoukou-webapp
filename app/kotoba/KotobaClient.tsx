@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CrisisModal from '@/components/CrisisModal';
 import { getUid } from '@/lib/uid';
 import { CRISIS_PRECHECK_WORDS } from '@/lib/kotobaHonyaku';
@@ -34,6 +34,10 @@ export default function KotobaClient() {
   // （/askのexpertAvailableと同じ考え方）。
   const [expertAvailable, setExpertAvailable] = useState(false);
   const [wantExpert, setWantExpert] = useState(false);
+  // 「回答が質問と同じページの下の方に出てきて、出てるのかどうか分かりにくい」との
+  // 指摘を受けて追加（2026-11-07）。結果（fallbackも含む）が表示されたタイミングで、
+  // 結果の先頭まで自動スクロールする。
+  const resultRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     fetch('/api/experts/available')
@@ -41,6 +45,12 @@ export default function KotobaClient() {
       .then((d) => setExpertAvailable(!!d.available))
       .catch(() => setExpertAvailable(false));
   }, []);
+
+  useEffect(() => {
+    if (result) {
+      resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [result]);
 
   async function analyze() {
     const text = input.trim();
@@ -155,7 +165,7 @@ export default function KotobaClient() {
       </div>
 
       {result && !result.is_crisis && result.is_fallback && (
-        <>
+        <div ref={resultRef} style={{ scrollMarginTop: 16 }}>
           <div className="card" style={{ alignItems: 'flex-start', gap: 8, marginTop: 10 }}>
             <div className="qtext-main">この言葉だけでは、まだ読み取れませんでした</div>
             <div className="muted" style={{ fontSize: 13 }}>
@@ -175,11 +185,11 @@ export default function KotobaClient() {
             </Link>
           </div>
           <button className="btn-secondary" style={{ width: '100%' }} onClick={reset}>別の言葉を入れてみる</button>
-        </>
+        </div>
       )}
 
       {result && !result.is_crisis && !result.is_fallback && result.interpretations?.length > 0 && (
-        <>
+        <div ref={resultRef} style={{ scrollMarginTop: 16 }}>
           <div className="muted" style={{ fontSize: 13, margin: '14px 0 8px' }}>
             「{input.trim()}」には、こんな気持ちが隠れているかもしれません
           </div>
@@ -229,7 +239,7 @@ export default function KotobaClient() {
             </Link>
           </div>
           <button className="btn-secondary" style={{ width: '100%' }} onClick={reset}>別の言葉を入れてみる</button>
-        </>
+        </div>
       )}
 
       <div className="muted" style={{ fontSize: 11.5, textAlign: 'center', margin: '20px 0' }}>
