@@ -11,6 +11,8 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
+import FacilityInfoCard from '@/components/FacilityInfoCard';
+import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import { Suspense } from 'react';
 // フリースクール（地域）、1件ごとの紹介ページ。一覧（/gakko?type=free）の施設名を
 // 押すとここに来る（2026-10-21、「学びの多様化学校と同じ仕組みでフリースクールも
@@ -158,6 +160,11 @@ export default async function FreeSchoolPage({
                 </div>
               )}
             </div>
+
+            {/* 費用・特徴タグ（施設からの自己申告、承認済みのみ表示。2026-11-07追加）。 */}
+            <Suspense fallback={null}>
+              <FacilityInfoCard facilityType="free" facilityNo={school.no} />
+            </Suspense>
             {/* 学びの多様化学校の詳細ページと同じ考え方（app/gakko/school/[no]/page.tsx参照）。
                 施設の写真は無断転載・AI生成どちらも避け、実際の所在地の地図で代替する。 */}
             <div style={{ width: '100%' }}>
@@ -295,6 +302,8 @@ export default async function FreeSchoolPage({
               出典を見る ›
             </a>
           </div>
+
+          <FacilityInfoSubmitForm facilityType="free" facilityNo={school.no} facilityName={school.name} />
         </div>
         <PcSidebar />
       </div>

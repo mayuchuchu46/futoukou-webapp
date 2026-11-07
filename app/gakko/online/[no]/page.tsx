@@ -11,6 +11,8 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
+import FacilityInfoCard from '@/components/FacilityInfoCard';
+import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import { Suspense } from 'react';
 import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
 // オンラインフリースクール、1校ごとの紹介ページ（2026-10-21追加）。
@@ -144,6 +146,11 @@ export default async function OnlineSchoolPage({
             {school.note && (
               <div className="muted" style={{ fontSize: 12 }}>{school.note}</div>
             )}
+
+            {/* 費用・特徴タグ（施設からの自己申告、承認済みのみ表示。2026-11-07追加）。 */}
+            <Suspense fallback={null}>
+              <FacilityInfoCard facilityType="online" facilityNo={school.no} />
+            </Suspense>
             {school.specialties && school.specialties.length > 0 && (
               <div style={{ width: '100%' }}>
                 <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
@@ -282,6 +289,8 @@ export default async function OnlineSchoolPage({
               出典を見る ›
             </a>
           </div>
+
+          <FacilityInfoSubmitForm facilityType="online" facilityNo={school.no} facilityName={school.name} />
         </div>
         <PcSidebar />
       </div>

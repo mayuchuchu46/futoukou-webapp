@@ -9,6 +9,8 @@ import { ALTERNATIVE_SCHOOLS, METHOD_LABEL } from '@/lib/data/alternativeSchools
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
+import FacilityInfoCard from '@/components/FacilityInfoCard';
+import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import { Suspense } from 'react';
 import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
 
@@ -184,6 +186,11 @@ export default async function AlternativeSchoolPage({
               ))}
             </div>
 
+            {/* 費用・特徴タグ（施設からの自己申告、承認済みのみ表示。2026-11-07追加）。 */}
+            <Suspense fallback={null}>
+              <FacilityInfoCard facilityType="alternative" facilityNo={school.no} />
+            </Suspense>
+
             {/* 地図 */}
             <div style={{ width: '100%' }}>
               <iframe
@@ -299,6 +306,8 @@ export default async function AlternativeSchoolPage({
               「{school.name}」をWebで調べる ›
             </a>
           </div>
+
+          <FacilityInfoSubmitForm facilityType="alternative" facilityNo={school.no} facilityName={school.name} />
         </div>
         <PcSidebar />
       </div>

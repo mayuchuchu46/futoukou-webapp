@@ -1107,4 +1107,30 @@ create table if not exists expert_consultation_reviews (
   unique (consultation_id, expert_id)
 );
 alter table expert_consultation_reviews enable row level security;
+
+-- 施設・学校の「費用」「特徴タグ」の自己申告（2026-11-07追加）。競合の不登校支援
+-- ポータル（CoCon等）には費用・特徴タグがあるが、どうする先生には無かった。運営が
+-- Web調査で全施設分を埋めるのは非現実的なため、施設・学校の関係者・利用経験者本人に
+-- 申告してもらい、運営が内容を確認（承認）したものだけをページに表示する
+-- （lib/facilityInfo.ts, lib/data/facilityFeatures.ts参照）。expertsのreview_status
+-- と同じ考え方で3状態（pending/approved/rejected）を持つ。1つの施設に複数回
+-- 提案されることもあるため、施設単位でユニーク制約は設けず、表示側（getApprovedFacilityInfo）
+-- で最新の承認済み1件だけを採用する。
+create table if not exists facility_info_submissions (
+  id uuid primary key default gen_random_uuid(),
+  facility_type text not null, -- 'free' | 'alternative' | 'online'
+  facility_no int not null, -- 各lib/data/*.tsのno（FREE_SCHOOLS等）
+  facility_name text not null default '', -- 表示用に保存（データ更新で名称が変わった場合の手掛かり）
+  fee text, -- 費用（自由記述。例：「月額20,000円〜」）
+  features text[] not null default '{}', -- lib/data/facilityFeatures.tsの固定語彙のみ
+  submitter_role text not null default 'parent', -- 'staff'（運営関係者）| 'parent'（利用者・保護者）
+  submitter_contact text, -- 確認が必要な場合のみ運営が利用。一般には公開しない
+  note text, -- 自由記述の補足
+  status text not null default 'pending', -- 'pending' | 'approved' | 'rejected'
+  created_at timestamptz not null default now(),
+  reviewed_at timestamptz
+);
+create index if not exists facility_info_submissions_lookup_idx
+  on facility_info_submissions (facility_type, facility_no, status);
+alter table facility_info_submissions enable row level security;
 create index if not exists expert_consultation_reviews_expert_id_idx on expert_consultation_reviews (expert_id);

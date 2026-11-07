@@ -44,6 +44,7 @@ async function AdminPageContent() {
     topViewedConsultationsResult,
     sidebarBannerResult,
     recentExpertAnswersRawResult,
+    pendingFacilityInfoResult,
   ] = await Promise.all([
     // 運営の確認完了から一定期間が過ぎた登録証（本人確認書類）を自動削除する。
     // 専用のスケジューラは設けず、運営がこの管理画面を開いたタイミングで実行する。
@@ -157,6 +158,13 @@ async function AdminPageContent() {
       .eq('expert_status', 'answered')
       .order('created_at', { ascending: false })
       .limit(30),
+
+    // 施設・学校からの費用・特徴タグ提案（未確認分）。2026-11-07追加。
+    supabase
+      .from('facility_info_submissions')
+      .select('id, facility_type, facility_no, facility_name, fee, features, submitter_role, submitter_contact, note, created_at')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: true }),
   ]);
   void licenseDocsResult;
 
@@ -195,6 +203,7 @@ async function AdminPageContent() {
   const { data: topViewedConsultations } = topViewedConsultationsResult;
   const { data: sidebarBanner } = sidebarBannerResult;
   const { data: recentExpertAnswersRaw } = recentExpertAnswersRawResult;
+  const { data: pendingFacilityInfo } = pendingFacilityInfoResult;
 
   // supabase-jsはこの形のjoinを配列型として推論するため、1件のオブジェクト（またはnull）に正規化する。
   const recentExpertAnswers = (recentExpertAnswersRaw || []).map((row) => ({
@@ -220,6 +229,7 @@ async function AdminPageContent() {
       }
       unpaidPayoutSummary={unpaidPayoutSummary}
       stripeConfigured={isStripeConfigured()}
+      pendingFacilityInfo={pendingFacilityInfo || []}
     />
   );
 }

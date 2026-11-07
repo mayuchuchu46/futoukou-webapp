@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { CATS } from '@/lib/categories';
 import type { CareerField } from '@/lib/careerFields';
+import { FACILITY_FEATURE_LABEL, type FacilityFeatureTag } from '@/lib/data/facilityFeatures';
 
 type UnverifiedExpert = {
   id: string;
@@ -103,6 +104,32 @@ type PayoutResult = {
   errors: { expertName: string; message: string }[];
 };
 
+// 施設・学校からの費用・特徴タグ提案（未確認分、2026-11-07追加）。
+type PendingFacilityInfo = {
+  id: string;
+  facility_type: 'free' | 'alternative' | 'online';
+  facility_no: number;
+  facility_name: string;
+  fee: string | null;
+  features: FacilityFeatureTag[];
+  submitter_role: 'staff' | 'parent';
+  submitter_contact: string | null;
+  note: string | null;
+  created_at: string;
+};
+
+const FACILITY_TYPE_LABEL: Record<PendingFacilityInfo['facility_type'], string> = {
+  free: 'フリースクール',
+  alternative: 'オルタナティブスクール',
+  online: 'オンラインフリースクール',
+};
+
+const FACILITY_DETAIL_PATH: Record<PendingFacilityInfo['facility_type'], string> = {
+  free: '/gakko/free',
+  alternative: '/gakko/alternative',
+  online: '/gakko/online',
+};
+
 type RecentExpertAnswer = {
   id: string;
   question: string;
@@ -127,7 +154,9 @@ export default function AdminClient({
   totalViews,
   topViewedConsultations,
   stripeConfigured,
+  pendingFacilityInfo,
 }: {
+  pendingFacilityInfo: PendingFacilityInfo[];
   unverifiedExperts: UnverifiedExpert[];
   verifiedExperts: VerifiedExpert[];
   recentConsultations: RecentConsultation[];
@@ -158,6 +187,23 @@ export default function AdminClient({
   const [payoutError, setPayoutError] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [facilityInfoList, setFacilityInfoList] = useState(pendingFacilityInfo);
+
+  async function reviewFacilityInfo(id: string, action: 'approve' | 'reject') {
+    setBusy(id);
+    const res = await fetch('/api/admin/facility-info/review', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, action }),
+    });
+    setBusy(null);
+    if (res.ok) {
+      setFacilityInfoList((list) => list.filter((f) => f.id !== id));
+    } else {
+      const data = await res.json();
+      alert(data.error || '失敗しました');
+    }
+  }
 
   async function viewLicenseDoc(id: string) {
     setBusy(id);
@@ -526,7 +572,50 @@ export default function AdminClient({
         <div style={{ fontWeight: 700, fontSize: 16 }}>管理画面</div>
       </div>
       <div className="main">
-        <div style={{ fontWeight: 700 }}>専門家への報酬振込</div>
+        <div style={{ fontWeight: 700 }}>施設・学校からの情報提案（未確認：{facilityInfoList.length}件）</div>
+        <div className="card" style={{ gap: 10, alignItems: 'stretch' }}>
+          {facilityInfoList.length === 0 ? (
+            <div className="muted" style={{ fontSize: 13 }}>未確認の提案はありません。</div>
+          ) : (
+            facilityInfoList.map((f) => (
+              <div key={f.id} style={{ borderBottom: '1px solid var(--border)', paddingBottom: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ fontSize: 13, fontWeight: 700 }}>
+                  <a href={`${FACILITY_DETAIL_PATH[f.facility_type]}/${f.facility_no}`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>
+                    {f.facility_name || `(no.${f.facility_no})`}
+                  </a>
+                  <span className="muted" style={{ fontWeight: 400, marginLeft: 6 }}>（{FACILITY_TYPE_LABEL[f.facility_type]}）</span>
+                </div>
+                {f.fee && <div style={{ fontSize: 13 }}>費用：{f.fee}</div>}
+                {f.features.length > 0 && (
+                  <div style={{ fontSize: 13 }}>
+                    特徴タグ：{f.features.map((tag) => FACILITY_FEATURE_LABEL[tag]).join('、')}
+                  </div>
+                )}
+                <div className="muted" style={{ fontSize: 12 }}>
+                  提案者：{f.submitter_role === 'staff' ? '施設・学校の運営関係者' : '利用者・保護者（利用経験者）'}
+                  {f.submitter_contact ? `（連絡先：${f.submitter_contact}）` : ''}
+                </div>
+                {f.note && <div className="muted" style={{ fontSize: 12 }}>補足：{f.note}</div>}
+                <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+                  <button className="btn-primary" disabled={busy === f.id} onClick={() => reviewFacilityInfo(f.id, 'approve')}>
+                    承認して掲載
+                  </button>
+                  <button
+                    className="btn-secondary"
+                    disabled={busy === f.id}
+                    onClick={() => {
+                      if (window.confirm('この提案を却下します。よろしいですか？')) reviewFacilityInfo(f.id, 'reject');
+                    }}
+                  >
+                    却下
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div style={{ fontWeight: 700, marginTop: 16 }}>専門家への報酬振込</div>
         <div className="card" style={{ gap: 10, alignItems: 'flex-start' }}>
           {!stripeConfigured ? (
             <div className="muted" style={{ fontSize: 13 }}>決済機能の準備中のため、振込はまだ実行できません（STRIPE_SECRET_KEY未設定）。</div>
