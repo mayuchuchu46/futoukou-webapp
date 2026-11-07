@@ -75,10 +75,18 @@ export default async function ExpertSection() {
 
   // 「あとで見る」に退避済みの相談ID（本人ごと、2026-11-07追加）。回答待ちバッジの
   // 件数は「未確認」のものだけにしたいとの要望を受けて、pendingをここで分ける。
-  const { data: deferredRows } = await supabase
+  // 2026-11-07、errorを無視していたバグを修正：テーブル未作成等でこのクエリが
+  // エラーになった場合、dataがnullになりdeferredIdsが常に空になる＝「あとで見る」で
+  // 退避したはずの相談が毎回全部「未確認」に戻って見えてしまっていた（実際に報告
+  // された不具合）。エラー時はログに残し、退避なし（従来どおり全件を未確認扱い）
+  // にフォールバックする。
+  const { data: deferredRows, error: deferredError } = await supabase
     .from('expert_consultation_reviews')
     .select('consultation_id')
     .eq('expert_id', expert.id);
+  if (deferredError) {
+    console.error('[ExpertSection] expert_consultation_reviews の取得に失敗:', deferredError.message);
+  }
   const deferredIds = new Set((deferredRows || []).map((r) => r.consultation_id));
   const newPending = (pending || []).filter((item) => !deferredIds.has(item.id));
   const deferredPending = (pending || []).filter((item) => deferredIds.has(item.id));

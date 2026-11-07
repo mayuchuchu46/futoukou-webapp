@@ -93,7 +93,10 @@ export default function ExpertManagementPanel({
         return list.filter((it) => it.id !== id);
       });
     } else {
-      alert('あとで見るへの移動に失敗しました');
+      // 2026-11-07、失敗理由が分からず原因調査しづらかったため、サーバーからの
+      // エラーメッセージをそのまま出すように変更。
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'あとで見るへの移動に失敗しました');
     }
   }
 
@@ -112,7 +115,8 @@ export default function ExpertManagementPanel({
         return list.filter((it) => it.id !== id);
       });
     } else {
-      alert('一覧への呼び戻しに失敗しました');
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || '一覧への呼び戻しに失敗しました');
     }
   }
 
