@@ -8,7 +8,6 @@ import PcSidebar from '@/components/PcSidebar';
 import { CATS, Category } from '@/lib/categories';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { getCategoryDictionaryData, DICTIONARY_INDEX_THRESHOLD } from '@/lib/categorySummary';
-import { FACILITY_COUNT_BREAKDOWN } from '@/lib/facilityCount';
 
 // カテゴリ別「お悩み辞典」ページ。実際に寄せられた相談を集約し、AIがまとめた解説文＋
 // 実際の相談の抜粋一覧を表示する、SEO向けの入り口ページ（2026-10-15追加）。
@@ -123,7 +122,7 @@ export default async function DictionaryCategoryPage({
             <Link href="/gakko/matome" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
               <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びの場という選択肢もあります</div>
               <div className="qtext">
-                文部科学省指定の「学びの多様化学校」（全国約{FACILITY_COUNT_BREAKDOWN.gakko}校）のほか、フリースクール・教育支援センター・通信制高校など、お住まいの都道府県で選べる学びの場・居場所をまとめて調べられます。
+                文部科学省指定の「学びの多様化学校」のほか、フリースクール・教育支援センター・通信制高校など、お住まいの都道府県で選べる学びの場・居場所をまとめて調べられます。
               </div>
               <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
                 都道府県から探す ›

@@ -14,7 +14,6 @@ import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName, schoolAwareAnswererName, answerFirstLineSnippet } from '@/lib/expertDisplay';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
-import { FACILITY_COUNT_BREAKDOWN } from '@/lib/facilityCount';
 import ResultClient from './ResultClient';
 import PublicAnswerInvite from './PublicAnswerInvite';
 import QuoteShareCard from './QuoteShareCard';
@@ -379,7 +378,7 @@ export default async function ResultPage({
     <Link href="/gakko/matome" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
       <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びの場という選択肢もあります</div>
       <div className="qtext">
-        文部科学省指定の「学びの多様化学校」（全国約{FACILITY_COUNT_BREAKDOWN.gakko}校）のほか、フリースクール・教育支援センター・通信制高校など、お住まいの都道府県で選べる学びの場・居場所をまとめて調べられます。
+        文部科学省指定の「学びの多様化学校」のほか、フリースクール・教育支援センター・通信制高校など、お住まいの都道府県で選べる学びの場・居場所をまとめて調べられます。
       </div>
       <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
         都道府県から探す ›

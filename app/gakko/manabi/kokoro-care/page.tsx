@@ -5,7 +5,6 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
-import { FACILITY_COUNT_BREAKDOWN } from '@/lib/facilityCount';
 
 // 学びの多様化学校（旧：不登校特例校）のうち、「スクールカウンセラー・公認心理師・
 // 学校心理士・精神保健福祉士・スクールソーシャルワーカー等の専門職の常駐・配置」が
@@ -49,7 +48,7 @@ export default function ManabiKokoroCarePage() {
               公式サイト・学校案内等で、スクールカウンセラー・公認心理師・学校心理士・精神保健福祉士・スクールソーシャルワーカーといった心理の専門職の常駐または配置が明記されている学びの多様化学校だけを集めました。「少人数制で手厚くサポート」といった一般的な説明のみの学校は、専門職の配置が未確認のため含めていません。
             </div>
             <div className="muted" style={{ fontSize: 12 }}>
-              現時点で確認できているのは{schools.length}校です（全{FACILITY_COUNT_BREAKDOWN.gakko}校を調査済み）。これは「他の学校に専門職がいない」という意味ではなく、公式情報だけでは確認できていない学校も多いという状況です。今後、新たな一次情報が見つかれば対象校が増える可能性があります。
+              現時点で確認できているのは{schools.length}校です。これは「他の学校に専門職がいない」という意味ではなく、公式情報だけでは確認できていない学校も多いという状況です。今後、新たな一次情報が見つかれば対象校が増える可能性があります。
             </div>
           </div>
 
