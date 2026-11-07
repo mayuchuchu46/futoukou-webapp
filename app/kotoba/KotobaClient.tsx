@@ -23,6 +23,54 @@ type AnalysisResult = {
   consultation_id?: string | null;
 };
 
+// 結果画面から「専門家に相談する」への導線を独立した強いバナーとして出す
+// ための共通パーツ（2026-11-07追加）。「専門家へ相談するの導線もあるといいかもね、
+// もっと強化して」との指摘を受けて、結果直後の目立つ位置に設置した。hrefBaseは
+// クエリ文字列を含まない/askへのパス（prefillまでは組み立て済み）で、ここで
+// &expert=1を付けて専門家チェックを自動でONにした状態で/askに遷移させる。
+function ExpertCta({ hrefBase }: { hrefBase: string }) {
+  return (
+    <Link
+      href={`${hrefBase}&expert=1`}
+      className="card"
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        margin: '0 0 10px',
+        padding: '12px 14px',
+        border: '2px solid var(--main)',
+        background: 'linear-gradient(135deg, #ffffff 0%, var(--sub) 160%)',
+        textDecoration: 'none',
+        color: 'inherit',
+      }}
+    >
+      <span style={{ flex: '0 0 auto', fontSize: 22, lineHeight: 1 }}>🧑‍⚕️</span>
+      <span style={{ flex: 1, minWidth: 0 }}>
+        <span
+          style={{
+            display: 'inline-block',
+            fontWeight: 800,
+            fontSize: 13,
+            color: '#fff',
+            background: 'var(--main)',
+            padding: '2px 9px',
+            borderRadius: 6,
+            letterSpacing: '0.02em',
+          }}
+        >
+          専門家に相談する
+        </span>
+        <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted)', marginTop: 4 }}>
+          公認心理師などの専門家・経験者が、この内容に無料で回答することがあります
+        </span>
+      </span>
+      <span style={{ flex: '0 0 auto', color: 'var(--main)', fontWeight: 700 }}>›</span>
+    </Link>
+  );
+}
+
 export default function KotobaClient() {
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
@@ -198,6 +246,12 @@ export default function KotobaClient() {
               <span style={{ color: 'var(--main)', fontWeight: 700 }}>›</span>
             </Link>
           </div>
+          {/* 空振り（is_fallback）時は何も公開・保存されないため、wantExpertを
+              チェックしていても何も起こらない。この先、より詳しく書く以外の
+              選択肢として、専門家への相談だけを独立した強い導線として用意する
+              （2026-11-07、「専門家へ相談するの導線もあるといいかもね、もっと
+              強化して」との指摘を受けて追加）。 */}
+          <ExpertCta hrefBase={`/ask?prefill=${encodeURIComponent(`子どもが「${input.trim()}」と言いました。`)}`} />
           <button className="btn-secondary" style={{ width: '100%' }} onClick={reset}>別の言葉を入れてみる</button>
         </div>
       )}
@@ -234,11 +288,35 @@ export default function KotobaClient() {
             </Link>
           )}
           {/* 専門家チェックをONにして送った場合、公開した投稿がそのまま回答待ちキューに
-              乗っていることを伝える（2026-11-07追加）。 */}
+              乗っていることを伝える（2026-11-07追加）。以前はmutedの1行テキストだけ
+              だったが、「専門家へ相談するの導線もあるといいかもね、もっと強化して」
+              との指摘を受けて、見逃しにくいカード表示に変更した。 */}
           {result.consultation_id && wantExpert && (
-            <div className="muted" style={{ fontSize: 12, margin: '0 0 10px' }}>
-              専門家・経験者からの回答もお待ちください。届いた回答は上のリンクから確認できます（会員登録が必要です）。
+            <div className="card" style={{ alignItems: 'flex-start', gap: 6, margin: '0 0 10px', border: '2px solid var(--main)', background: 'var(--sub)' }}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  fontWeight: 800,
+                  fontSize: 13,
+                  color: '#fff',
+                  background: 'var(--main)',
+                  padding: '2px 9px',
+                  borderRadius: 6,
+                  letterSpacing: '0.02em',
+                }}
+              >
+                専門家・経験者の回答待ち
+              </span>
+              <div className="muted" style={{ fontSize: 12 }}>
+                登録している専門家・経験者がこの内容を見て、回答を追加してくれることがあります。届いた回答は上のリンクから確認できます（会員登録が必要です）。
+              </div>
             </div>
+          )}
+          {/* 送信時に「専門家・経験者にも見てもらう」をチェックしなかった人にも、
+              結果を見た後で専門家の意見を求める選択肢をその場で出す
+              （2026-11-07、同上の指摘を受けて追加）。 */}
+          {result.consultation_id && !wantExpert && (
+            <ExpertCta hrefBase={`/ask?prefill=${encodeURIComponent(`子どもが「${input.trim()}」と言いました。`)}`} />
           )}
           <div className="card home-gakko-link" style={{ alignItems: 'stretch', gap: 8, margin: '0 0 10px', border: '2px solid var(--main)', background: 'var(--sub)' }}>
             <Link
