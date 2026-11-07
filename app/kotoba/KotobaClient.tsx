@@ -101,8 +101,21 @@ export default function KotobaClient() {
   return (
     <>
       <div style={{ margin: '14px 0 10px' }}>
-        <div style={{ fontWeight: 800, fontSize: 18, color: 'var(--main)' }}>子どもの本音翻訳</div>
-        <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>子供の言葉、ほんとはこう</div>
+        <div
+          style={{
+            display: 'inline-block',
+            fontWeight: 800,
+            fontSize: 19,
+            color: '#fff',
+            background: 'var(--main)',
+            padding: '3px 12px',
+            borderRadius: 8,
+            letterSpacing: '0.02em',
+          }}
+        >
+          子どもの本音翻訳
+        </div>
+        <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>子供の言葉、ほんとはこう</div>
         <div className="qtext" style={{ marginTop: 8 }}>
           お子さんが言った言葉をそのまま入れてみてください。考えられる気持ちと、親としての返し方の例を確認できます。
         </div>

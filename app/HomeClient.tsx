@@ -603,7 +603,10 @@ export default function HomeClient({
                 だったため、flexDirectionを明示的にrow指定。合わせてアイコンを添えて
                 視認性を上げつつ、paddingと説明文を短くして全体の占有を抑えた。
                 同日、「誘導のテキストがわかりにくい」との指摘を受けて機能名
-                「子どもの本音翻訳」を導入し、タイトルをそれに差し替えた。 */}
+                「子どもの本音翻訳」を導入し、タイトルをそれに差し替えた。さらに
+                「もっとそのネーミングが目立つように」との指摘を受け、名称部分だけ
+                色文字から塗りつぶしバッジ（var(--main)背景＋白文字）に変え、他の
+                テキストより一段強いコントラストを持たせた。 */}
             {showExtras && (
               <Link
                 href="/kotoba"
@@ -623,8 +626,21 @@ export default function HomeClient({
               >
                 <span style={{ flex: '0 0 auto', fontSize: 22, lineHeight: 1 }}>💬</span>
                 <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: 'block', fontWeight: 800, fontSize: 14, color: 'var(--main)' }}>子どもの本音翻訳</span>
-                  <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted)' }}>子供が言った一言を、気持ちと返し方に変換します</span>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      fontWeight: 800,
+                      fontSize: 15,
+                      color: '#fff',
+                      background: 'var(--main)',
+                      padding: '2px 9px',
+                      borderRadius: 6,
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    子どもの本音翻訳
+                  </span>
+                  <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted)', marginTop: 4 }}>子供が言った一言を、気持ちと返し方に変換します</span>
                 </span>
                 <span style={{ flex: '0 0 auto', color: 'var(--main)', fontWeight: 700 }}>›</span>
               </Link>
