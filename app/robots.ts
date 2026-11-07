@@ -29,6 +29,13 @@ export default function robots(): MetadataRoute.Robots {
           // 経験者版の登録フォーム（2026-11-08追加）。専門家版（/expert/register）は
           // 既にブロック対象、経験者版だけ漏れていた。
           '/senpai/register',
+          // 個人用ページ（質問投稿・今日の質問・相談ノート・お気に入り）。
+          // 固有metadataが無く、ブロックしないとトップページと同じtitle/descriptionで
+          // クロールされ重複コンテンツになるため追加（2026-11-08）。
+          '/ask',
+          '/today',
+          '/notebook',
+          '/gakko/favorites',
           '/api/*',
         ],
       },
