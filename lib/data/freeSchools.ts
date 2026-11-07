@@ -717,4 +717,7 @@ export const FREE_SCHOOLS: FreeSchool[] = [
   { no: 669, name: 'NPO法人ビーンズふくしま', prefecture: '福島県', city: '福島市', address: '', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
   { no: 670, name: 'フリースクールわくわく（特定非営利活動法人わくわく）', prefecture: '福島県', city: '白河市', address: '', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
   { no: 671, name: 'WILLBE高等学院（フリースクールウィル・ビー）', prefecture: '福井県', city: '福井市', address: '福井市中央3丁目1-3', contact: '0776-25-3261', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
+  { no: 672, name: 'NPO法人はぁとぴあ21（フリースクールフレンズ）', prefecture: '富山県', city: '射水市', address: '射水市三ケ2467-2F', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
+  { no: 673, name: 'NPO法人Nest（旧フリースクール下関）', prefecture: '山口県', city: '下関市', address: '下関市生野町2-27-7-4F', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
+  { no: 674, name: '特定非営利活動法人フリースペースコティ', prefecture: '山口県', city: '下松市', address: '下松市末武上1790番地', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
 ];
