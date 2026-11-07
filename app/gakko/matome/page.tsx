@@ -581,6 +581,13 @@ export default async function GakkoMatomePage({
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
+          {/* このページに<h1>が無かったため追加（2026-11-08、app/gakko/page.tsx・
+              app/HomeClient.tsxと同じ「サイト全体に<h1>が1つも無かった」対応の
+              続き。見た目は変えず.sr-onlyにし、generateMetadataのtitleと同じ
+              文言を使う）。 */}
+          <h1 className="sr-only">
+            {selected ? `${selected}の学校以外の学びの場・居場所まとめ` : '学校以外の学びの場・居場所を都道府県からまとめて探す'}
+          </h1>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '14px 0' }}>
             <Link href="/" className="backlink" style={{ margin: 0 }}>‹ もどる</Link>
             {/* 学校詳細ページで保存したお気に入りの一覧への入口（2026-10-22追加）。以前は
