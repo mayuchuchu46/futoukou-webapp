@@ -34,6 +34,9 @@ export default function ExpertManagementPanel({
   const [items, setItems] = useState(pending);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState<string | null>(null);
+  // AIの回答は初期状態では畳んでおく（2026-11-07、「専門家が自分の判断を
+  // 先に作れるように、AI回答にすぐ引きずられない見せ方にしたい」との方針）。
+  const [aiAnswerOpen, setAiAnswerOpen] = useState<Record<string, boolean>>({});
   const ANSWERED_PAGE_SIZE = 3;
   const [answeredVisibleCount, setAnsweredVisibleCount] = useState(ANSWERED_PAGE_SIZE);
 
@@ -115,12 +118,37 @@ export default function ExpertManagementPanel({
             {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AIが
                 既にどう答えているかをここに表示する（以前はrequest_type==='expert'の
                 相談にAI回答が存在しなかったため、質問文だけが出ていた）。専門家・
-                経験者がAIの回答を踏まえて、それに付け足す形で回答しやすくする。 */}
+                経験者がAIの回答を踏まえて、それに付け足す形で回答しやすくする。
+                2026-11-07、初期状態では畳んでおき、ボタンで展開する形に変更。
+                先にAIの回答を読むと専門家の判断がそれに引っ張られやすいため、
+                まず相談文だけを見て自分の考えを作ってから、必要に応じて
+                AIの回答と照合できるようにする。 */}
             {item.answer && (
-              <div className="muted" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px', whiteSpace: 'pre-wrap' }}>
-                <span style={{ fontWeight: 700 }}>AIの回答：</span>
-                {item.answer}
-              </div>
+              aiAnswerOpen[item.id] ? (
+                <div className="muted" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px', whiteSpace: 'pre-wrap' }}>
+                  <div className="row" style={{ justifyContent: 'space-between', marginBottom: 4 }}>
+                    <span style={{ fontWeight: 700 }}>AIの回答：</span>
+                    <button
+                      type="button"
+                      className="btn-ghost"
+                      style={{ fontSize: 12 }}
+                      onClick={() => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: false })}
+                    >
+                      閉じる
+                    </button>
+                  </div>
+                  {item.answer}
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  style={{ fontSize: 13, alignSelf: 'flex-start' }}
+                  onClick={() => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: true })}
+                >
+                  AIの回答を見る
+                </button>
+              )
             )}
             <textarea
               className="input"
