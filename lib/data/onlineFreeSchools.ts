@@ -296,4 +296,17 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     sourceUrl: 'https://wialis.co.jp/',
     category: 'community',
   },
+  // 2026-11-07追加。
+  {
+    no: 22,
+    name: '夢中カレッジ',
+    operator: 'ワオフル株式会社',
+    ageRange: '小学生・中学生・高校生',
+    contact: '公式サイトの相談窓口より',
+    url: 'https://wowfull.jp/',
+    note: '少人数制のオンラインフリースクール（2024年2月開校）。メタバース空間にアバターで「登校」し、SEL（社会性と情動の学習）を組み合わせたプログラムを実践。同社のマンツーマン型オンライン家庭教師サービス「夢中教室」の利用者が、交流の場としてステップアップする形で利用することも多い。東京学芸大学との共同研究で教育効果の検証も行っている。',
+    sourceKind: 'official-site',
+    sourceUrl: 'https://toyokeizai.net/articles/-/934229?display=b',
+    category: 'community',
+  },
 ];
