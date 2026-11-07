@@ -21,13 +21,24 @@ export async function GET() {
   const isSenpai = expert.credential === SENPAI_CREDENTIAL;
 
   const supabase = getSupabaseAdmin();
-  const { count } = await supabase
+  const { data: pendingRows } = await supabase
     .from('consultations')
-    .select('id', { count: 'exact', head: true })
+    .select('id')
     .eq('request_type', 'expert')
     .eq('paid', true)
     .eq('expert_status', 'pending')
     .or(`requested_expert_id.is.null,requested_expert_id.eq.${expert.id}`);
 
-  return NextResponse.json({ loggedIn: true, verified: true, pendingCount: count || 0, isSenpai });
+  // 2026-11-07、「あとで見る」に退避した相談はヘッダーのバッジ件数にも含めない
+  // ようにする（アカウントページ側の「回答待ちの相談」バッジは退避分を除いた
+  // 未確認件数で表示しているのに、こちらのヘッダーバッジだけ退避前の総数の
+  // ままだったため、「あとで見るにしまっても数字が減らない」ように見えていた）。
+  const { data: deferredRows } = await supabase
+    .from('expert_consultation_reviews')
+    .select('consultation_id')
+    .eq('expert_id', expert.id);
+  const deferredIds = new Set((deferredRows || []).map((r) => r.consultation_id));
+  const pendingCount = (pendingRows || []).filter((r) => !deferredIds.has(r.id)).length;
+
+  return NextResponse.json({ loggedIn: true, verified: true, pendingCount, isSenpai });
 }
