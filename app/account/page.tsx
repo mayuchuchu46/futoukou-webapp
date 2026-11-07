@@ -26,7 +26,7 @@ export default function AccountPage() {
       <Header supervised={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <h2 className="pagetitle">アカウント</h2>
+          <h1 className="pagetitle">アカウント</h1>
 
           {/* 自分が投稿した相談一覧（旧マイページ）。以前はここに直接一覧を展開していたが、
               アカウントページが縦長になりすぎるため、「別ページに飛ばして見れるのがいい」

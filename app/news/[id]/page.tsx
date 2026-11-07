@@ -76,7 +76,7 @@ export default async function NewsDetailPage({
             {item.date || item.addedAt}
             {CATEGORY_LABEL[item.category] ? `・${CATEGORY_LABEL[item.category]}` : ''}
           </div>
-          <h2 className="pagetitle" style={{ marginBottom: 4 }}>{item.title}</h2>
+          <h1 className="pagetitle" style={{ marginBottom: 4 }}>{item.title}</h1>
 
           {/* インパクト数字（2026-10-29追加）。「わかりやすいインパクトある数字を
               見せつつ、バズりを意識した画像がいい」との要望を受けて、記事の一番

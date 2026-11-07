@@ -272,7 +272,7 @@ export default function TodayPage() {
       <Header supervised={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <h2 className="pagetitle">みんなのデータ</h2>
+          <h1 className="pagetitle">みんなのデータ</h1>
           <div className="muted" style={{ marginBottom: 12 }}>
             毎日かわる簡単な質問に答えるだけの、選択式アンケートです。回答は会員登録なしでもできます。あなたの回答は非公開ですが、回答すると「この質問に、みんなはどう答えているか」の累計の集計グラフが見られます。
           </div>

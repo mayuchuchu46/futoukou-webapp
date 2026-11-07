@@ -401,7 +401,7 @@ function AskPageContent() {
 
   return (
         <div className="page-main">
-        <h2 className="pagetitle">相談する</h2>
+        <h1 className="pagetitle">相談する</h1>
         {/* 「書く前にどんな回答が返ってくるか見せる」ための「こんな回答が届きます
             （みんなの相談を見る）」リンクは、2026-11-07に「いらないかも」との指摘を
             受けて削除。下のkotobaバナーがこのページの実例代わりの入口を兼ねている

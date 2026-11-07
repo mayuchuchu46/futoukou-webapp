@@ -51,7 +51,7 @@ function RegisterForm() {
 
   return (
     <>
-      <h2 className="pagetitle">アカウント登録</h2>
+      <h1 className="pagetitle">アカウント登録</h1>
         <div className="muted" style={{ marginBottom: 4 }}>
           メールアドレスとパスワードでアカウントを作成します。
         </div>

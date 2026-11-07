@@ -36,7 +36,7 @@ export default function NewsPage() {
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <h2 className="pagetitle">不登校に関する最新ニュース</h2>
+          <h1 className="pagetitle">不登校に関する最新ニュース</h1>
           <div className="muted" style={{ marginBottom: 12 }}>
             不登校に関する制度・調査・自治体の取組などのニュースを、確認できたものだけまとめています。タップすると詳細（出典リンク付き）をご覧いただけます。
           </div>

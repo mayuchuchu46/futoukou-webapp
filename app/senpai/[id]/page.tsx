@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
@@ -9,6 +10,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 import { findSchoolMentionsInBio, resolveSchoolName } from '@/lib/senpaiSchoolMentions';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 // 経験者の公開プロフィールページ。app/experts/[id]/page.tsx（専門家向け）
 // と同じ構成（2026-10-31、「私の情報トップにだして」との依頼を受けて、トップのカードから
@@ -46,6 +48,33 @@ function safeHttpUrl(url: string | null | undefined): string | null {
   if (!url) return null;
   const trimmed = url.trim();
   return /^https?:\/\//i.test(trimmed) ? trimmed : null;
+}
+
+// 2026-11-08、「SEO最優先で」との指摘を受けて追加。従来このページにはmetadataが
+// 無く、全ページ共通のレイアウトのtitle（layout.tsxのdefault）がそのまま使われて
+// いたため、経験者ごとに固有のtitle・descriptionが出ない状態だった。
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const senpai = await getVerifiedSenpaiById(id);
+  if (!senpai) {
+    return { title: `ページが見つかりません | ${SITE_NAME}` };
+  }
+  const title = `経験者・${senpai.name}さんのプロフィール | ${SITE_NAME}`;
+  const description = senpai.bio
+    ? senpai.bio.slice(0, 120)
+    : `不登校を経験した「経験者」として登録している${senpai.name}さんのプロフィールです。`;
+  const url = `${SITE_URL}/senpai/${id}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url },
+    twitter: { card: 'summary', title, description },
+  };
 }
 
 export default async function SenpaiProfilePublicPage({
@@ -86,7 +115,7 @@ export default async function SenpaiProfilePublicPage({
                 {/* senpai.credentialはDB上の識別値（SENPAI_CREDENTIAL）のままなので、
                     表示文言の「経験者」統一に合わせてここは固定文言で出す
                     （2026-11-03、「先輩保護者じゃなく経験者に統一して」との指示）。 */}
-                <div style={{ fontWeight: 700, fontSize: 16 }}>経験者・{senpai.name}</div>
+                <h1 style={{ fontWeight: 700, fontSize: 16, margin: 0 }}>経験者・{senpai.name}</h1>
                 {senpai.bio && (
                   <div className="qtext" style={{ whiteSpace: 'pre-wrap' }}>
                     {senpai.bio}

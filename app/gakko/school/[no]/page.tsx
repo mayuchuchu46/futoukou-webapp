@@ -188,7 +188,7 @@ export default async function GakkoSchoolPage({
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>{fullName}</div>
+            <h1 className="answer-label" style={{ fontSize: 14, margin: 0 }}>{fullName}</h1>
             <div className="qtext">
               {school.prefecture}{school.city}にある、{school.publicPrivate}の{school.schoolType}の学びの多様化学校（旧：不登校特例校）です。{school.designatedYear}に指定を受けた、設置形態「{school.type}」の学校です。
               {school.note && <> {school.note}</>}

@@ -132,14 +132,14 @@ export default async function TeijiSchoolPage({
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>
+            <h1 className="answer-label" style={{ fontSize: 14, margin: 0 }}>
               {school.name}
               {school.nickname && (
                 <span className="chip chip-tag" style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', marginLeft: 8 }}>
                   {school.nickname}
                 </span>
               )}
-            </div>
+            </h1>
             <div className="qtext">
               {school.prefecture}{school.municipality || ''}にある{school.publicPrivate}の定時制高校です。
               {school.note && <> {school.note}</>}

@@ -138,7 +138,7 @@ export default async function FreeSchoolPage({
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>{school.name}</div>
+            <h1 className="answer-label" style={{ fontSize: 14, margin: 0 }}>{school.name}</h1>
             <div className="qtext">
               {school.prefecture}{school.city}にあるフリースクール（民間施設）です。
               {school.note && <> {school.note}</>}

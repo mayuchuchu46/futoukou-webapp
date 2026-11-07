@@ -38,7 +38,7 @@ export default async function GakkoRankingPage() {
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <h2 className="pagetitle">注目の学び場ランキング</h2>
+          <h1 className="pagetitle">注目の学び場ランキング</h1>
           <div className="muted" style={{ marginBottom: 4 }}>
             実際に寄せられた相談の中で、学校名・施設名が話題になった件数のランキングです（閲覧数ではありません）。
           </div>

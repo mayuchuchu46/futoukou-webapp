@@ -28,7 +28,7 @@ export default function NotebookPage() {
       <Header supervised={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-        <h2 className="pagetitle">伴走ノート</h2>
+        <h1 className="pagetitle">伴走ノート</h1>
         {/* 伴走ノートは本人の相談内容（子どもの状況）を踏み込んでまとめるものなので、
             安心して相談を重ねてもらえるよう、他の人には見えないことも同じ文に
             含めて伝える（2026-10-13、独立した行だと座りが悪かったため1文にまとめた）。 */}

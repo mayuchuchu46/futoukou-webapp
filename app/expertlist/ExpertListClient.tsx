@@ -35,7 +35,7 @@ export default function ExpertListClient() {
         <div className="page-main">
         <Link href="/" className="backlink" style={{ margin: '14px 0' }}>← もどる</Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <h2 className="pagetitle" style={{ margin: 0 }}>専門家が回答した相談</h2>
+          <h1 className="pagetitle" style={{ margin: 0 }}>専門家が回答した相談</h1>
           {!membershipAvailable && <span className="comingsoon-badge">準備中・近日公開</span>}
         </div>
         <div className="muted" style={{ marginBottom: 10 }}>

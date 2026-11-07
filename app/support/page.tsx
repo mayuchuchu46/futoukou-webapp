@@ -19,7 +19,7 @@ export default function SupportPage() {
     <div className="app-shell">
       <Header supervised={false} />
       <div className="main">
-        <h2 className="pagetitle">相談窓口のご案内</h2>
+        <h1 className="pagetitle">相談窓口のご案内</h1>
         <div className="muted" style={{ marginTop: -8, marginBottom: 4 }}>
           「どうする先生」のAI・専門家への相談とあわせて、公的な相談機関もご活用ください。すべて無料で、匿名での相談も可能です。
         </div>

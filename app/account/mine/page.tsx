@@ -15,7 +15,7 @@ export default function MyConsultationsPage() {
       <Header supervised={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <h2 className="pagetitle">自分の相談一覧</h2>
+          <h1 className="pagetitle">自分の相談一覧</h1>
           <MyConsultationsPanel />
         </div>
         <PcSidebar />

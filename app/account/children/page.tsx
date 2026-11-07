@@ -122,7 +122,7 @@ export default function ChildrenPage() {
     <div className="app-shell">
       <Header supervised={false} />
       <div className="main">
-        <h2 className="pagetitle">お子さんのプロフィール</h2>
+        <h1 className="pagetitle">お子さんのプロフィール</h1>
         <div className="muted" style={{ marginBottom: 4 }}>
           兄弟・姉妹それぞれで伴走ノートを分けたい場合に使います。登録しなくても、今まで通りアカウント全体で1つのノートとして使えます。
         </div>

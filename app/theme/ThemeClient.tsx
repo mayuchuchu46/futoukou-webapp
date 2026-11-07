@@ -34,7 +34,7 @@ export default function ThemeClient() {
       <Header supervised={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <h2 className="pagetitle">不登校お悩み辞典</h2>
+          <h1 className="pagetitle">不登校お悩み辞典</h1>
 
           {/* カードの遷移先は、相談一覧（/?category=）ではなく「お悩み辞典」ページ
               （/dictionary/[category]）にした。実際の相談の集約＋AI解説文を先に見せ、

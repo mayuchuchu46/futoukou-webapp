@@ -356,6 +356,11 @@ button:active,
   line-height: 1.4;
 }
 
+/* 2026-11-08、サイト全体でページ見出しに.pagetitleクラスのh2を使っていたが、
+   h1が1つも無いページが大半だったため、各ページ1箇所だけ使われている.pagetitleを
+   h1に昇格した（SEO対応）。旧h2のままのページが万一残っても崩れないよう、
+   セレクタ側はh1・h2両方に対応させておく。 */
+h1.pagetitle,
 h2.pagetitle {
   font-family: "M PLUS Rounded 1c", sans-serif;
   font-size: 20px;

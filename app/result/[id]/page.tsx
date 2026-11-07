@@ -556,7 +556,7 @@ export default async function ResultPage({
         </div>
 
         <div className="card">
-          <div className="qtext qtext-main">💬 {item.question}</div>
+          <h1 className="qtext qtext-main" style={{ margin: 0 }}>💬 {item.question}</h1>
         </div>
 
         {/* 「参考になった」「わかる・うちも同じ・応援」の4つを同じ行にまとめて表示

@@ -142,7 +142,7 @@ export default async function TsushinSchoolPage({
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>
+            <h1 className="answer-label" style={{ fontSize: 14, margin: 0 }}>
               {school.name}
               {school.hasDedicatedMentalCareStaff && (
                 <span
@@ -152,7 +152,7 @@ export default async function TsushinSchoolPage({
                   心のケア専門職常駐
                 </span>
               )}
-            </div>
+            </h1>
             <div className="qtext">
               本校が{school.prefecture}{school.municipality}にある、「広域」通信制高校です。本校の都道府県以外からも入学できます。
               {school.note && <> {school.note}</>}

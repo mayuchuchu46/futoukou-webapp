@@ -61,7 +61,7 @@ export default async function SenpaiListPage() {
       <div className="main page-with-sidebar">
         <div className="page-main">
         <BackButton />
-        <h2 className="pagetitle">経験者一覧</h2>
+        <h1 className="pagetitle">経験者一覧</h1>
         <div className="muted" style={{ marginBottom: 14 }}>
           無料でご質問いただける経験者（先輩保護者）です。不登校を実際に経験され、運営が内容を確認した方のみ掲載しています。
         </div>

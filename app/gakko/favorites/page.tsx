@@ -68,7 +68,7 @@ export default function FavoritesPage() {
       <Header supervised={false} showBack={false} />
       <div className="main page-with-sidebar">
         <div className="page-main">
-          <h2 className="pagetitle">お気に入り</h2>
+          <h1 className="pagetitle">お気に入り</h1>
 
           {items === null ? (
             <div className="muted">読み込み中…</div>

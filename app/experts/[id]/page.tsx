@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
@@ -10,6 +11,7 @@ import { getConsultationsList } from '@/lib/consultations';
 import { expertDisplayName } from '@/lib/expertDisplay';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 import type { CareerField } from '@/lib/careerFields';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 // 専門家一覧（/experts）は専門家全員をまとめて表示するだけで、「この専門家が
 // 今までどう回答してきたか」を見られる個別ページが無かったため追加（2026-10-12、
@@ -54,6 +56,33 @@ function safeHttpUrl(url: string | null | undefined): string | null {
   return /^https?:\/\//i.test(trimmed) ? trimmed : null;
 }
 
+// 2026-11-08、「SEO最優先で」との指摘を受けて追加。従来このページにはmetadataが
+// 無く、全ページ共通のレイアウトのtitle（layout.tsxのdefault）がそのまま使われて
+// いたため、専門家ごとに固有のtitle・descriptionが出ない状態だった。
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const expert = await getVerifiedExpert(id);
+  if (!expert) {
+    return { title: `ページが見つかりません | ${SITE_NAME}` };
+  }
+  const title = `${expert.credential}・${expert.name}さんのプロフィール | ${SITE_NAME}`;
+  const description = expert.bio
+    ? expert.bio.slice(0, 120)
+    : `${expert.credential}として登録している${expert.name}さんのプロフィールです。`;
+  const url = `${SITE_URL}/experts/${id}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url },
+    twitter: { card: 'summary', title, description },
+  };
+}
+
 export default async function ExpertProfilePublicPage({
   params,
 }: {
@@ -91,7 +120,7 @@ export default async function ExpertProfilePublicPage({
             <div style={{ display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
               <ExpertAvatar photoUrl={expert.photo_url} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ fontWeight: 700, fontSize: 16 }}>{expert.credential}・{expert.name}</div>
+                <h1 style={{ fontWeight: 700, fontSize: 16, margin: 0 }}>{expert.credential}・{expert.name}</h1>
                 {/* 保有資格（その他・複数可、2026-11-03追加）。主な資格（上の肩書き）
                     以外に兼任している資格があれば併記する。 */}
                 {!!expert.other_credentials?.length && (

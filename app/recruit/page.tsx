@@ -32,7 +32,7 @@ export default function RecruitPage() {
             行き先固定のLinkではなくBackButton（router.back()）にしている
             （他の募集系ページと同じ考え方、2026-11-03）。 */}
         <BackButton />
-        <h2 className="pagetitle">経験者・専門家として、不登校のご家庭を一緒に支えませんか？</h2>
+        <h1 className="pagetitle">経験者・専門家として、不登校のご家庭を一緒に支えませんか？</h1>
 
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="qtext">

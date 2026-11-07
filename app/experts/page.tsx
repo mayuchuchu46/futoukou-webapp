@@ -69,7 +69,7 @@ export default async function ExpertsPage() {
             /result/[id]の危機対応カードの「専門家に相談する」からも来るため、固定だと
             来た場所と違うページに戻ってしまっていた（2026-10-27に指摘を受けて修正）。 */}
         <BackButton />
-        <h2 className="pagetitle">専門家一覧</h2>
+        <h1 className="pagetitle">専門家一覧</h1>
         <div className="muted" style={{ marginBottom: 14 }}>
           無料でご質問いただける専門家です。公認心理師・臨床心理士など、運営が内容を確認した方のみ掲載しています。
         </div>

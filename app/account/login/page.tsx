@@ -39,7 +39,7 @@ export default function AccountLoginPage() {
     <div className="app-shell">
       <Header supervised={false} />
       <div className="main">
-        <h2 className="pagetitle">ログイン</h2>
+        <h1 className="pagetitle">ログイン</h1>
         <form onSubmit={submit} className="card" style={{ gap: 14 }}>
           <input
             className="input"

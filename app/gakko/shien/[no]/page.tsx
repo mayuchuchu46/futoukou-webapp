@@ -113,7 +113,7 @@ export default async function EducationSupportCenterPage({
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>{center.name}</div>
+            <h1 className="answer-label" style={{ fontSize: 14, margin: 0 }}>{center.name}</h1>
             <div className="qtext">
               {center.prefecture}{center.city}にある、市区町村教育委員会が設置する公的・無料の不登校支援施設（教育支援センター／適応指導教室）です。
               {center.note && <> {center.note}</>}

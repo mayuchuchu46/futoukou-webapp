@@ -130,7 +130,7 @@ export default async function FaqPage() {
       <div className="main page-with-sidebar">
         <div className="page-main">
           <Link href="/about" className="backlink">← どうする先生とはに戻る</Link>
-          <h2 className="pagetitle">よくあるご質問</h2>
+          <h1 className="pagetitle">よくあるご質問</h1>
 
           {FAQS.map((item) => (
             <div key={item.q} className="card" style={{ alignItems: 'flex-start', gap: 8 }}>

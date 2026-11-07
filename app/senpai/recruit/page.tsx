@@ -32,7 +32,7 @@ export default async function SenpaiRecruitPage({
             違う/aboutに戻ってしまう問題があった。BackButton（router.back()）に
             変更して、実際に直前にいた画面へ戻るようにした。 */}
         <BackButton />
-        <h2 className="pagetitle">経験者募集</h2>
+        <h1 className="pagetitle">経験者募集</h1>
 
         {school && (
           <div className="card" style={{ alignItems: 'flex-start', gap: 4, background: 'var(--sub)', border: '2px solid var(--main)' }}>

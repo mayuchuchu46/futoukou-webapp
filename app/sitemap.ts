@@ -10,6 +10,8 @@ import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchool
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
+import { ALTERNATIVE_SCHOOLS } from '@/lib/data/alternativeSchools';
+import { SENPAI_CREDENTIAL } from '@/lib/config';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import { NEWS_ITEMS } from '@/lib/data/news';
 import { MIMAMORI_RESULTS } from '@/lib/mimamoriShindan';
@@ -187,6 +189,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.3,
   }));
 
+  // オルタナティブスクール紹介ページ（/gakko/alternative/[no]）。他カテゴリと
+  // 同じ考え方（app/gakko/alternative/[no]/page.tsxのhasEnoughInfoと同じ条件）だが、
+  // これまでsitemapへの追加自体が漏れていた（2026-11-08、「SEO最優先で」との
+  // 指摘を受けて確認したところ発覚）。
+  const alternativeSchoolEntries: MetadataRoute.Sitemap = ALTERNATIVE_SCHOOLS.filter(
+    (s) => s.officialUrl || s.address
+  ).map((s) => ({
+    url: `${SITE_URL}/gakko/alternative/${s.no}`,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
+  // 専門家・経験者の個別プロフィールページ（/experts/[id]、/senpai/[id]）。
+  // 2026-11-08、両ページにmetadataを追加したのに合わせてsitemapにも追加
+  // （それまではmetadataが無くsitemapにも含めていなかった）。
+  const { data: expertRows } = await supabase
+    .from('experts')
+    .select('id, credential')
+    .eq('verified', true);
+  const expertEntries: MetadataRoute.Sitemap = (expertRows || [])
+    .filter((e) => e.credential !== SENPAI_CREDENTIAL)
+    .map((e) => ({
+      url: `${SITE_URL}/experts/${e.id}`,
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    }));
+  const senpaiEntries: MetadataRoute.Sitemap = (expertRows || [])
+    .filter((e) => e.credential === SENPAI_CREDENTIAL)
+    .map((e) => ({
+      url: `${SITE_URL}/senpai/${e.id}`,
+      changeFrequency: 'monthly',
+      priority: 0.3,
+    }));
+
   // ニュース個別記事ページ（/news/[id]）。2026-10-29追加。
   const newsEntries: MetadataRoute.Sitemap = NEWS_ITEMS.map((n) => ({
     url: `${SITE_URL}/news/${n.id}`,
@@ -216,6 +252,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...tsushinSchoolEntries,
     ...teijiSchoolEntries,
     ...shienEntries,
+    ...alternativeSchoolEntries,
+    ...expertEntries,
+    ...senpaiEntries,
     ...newsEntries,
     ...consultationEntries,
   ];
