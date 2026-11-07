@@ -1171,3 +1171,33 @@ create table if not exists expert_pending_answers (
 );
 alter table expert_pending_answers enable row level security;
 create index if not exists expert_pending_answers_consultation_id_idx on expert_pending_answers (consultation_id);
+
+-- 各学校・施設の詳細ページに、その施設について気軽に書ける「口コミ」機能（2026-11-07
+-- 追加）。「この学校の口コミを書く、みたいな流れにして気軽にかける動線作れると
+-- いいのかな」との提案を受けて追加。既存の経験者プロフィール（experts.bio・
+-- experienced_school_names）に学校名を書いてもらう仕組みとは別に、施設ごとに
+-- 書き込める口コミを独立したデータとして持つ（1人のbioは1つしかないため、複数の
+-- 施設について別々の内容を書きたい場合に対応できない）。学校の種類（school・
+-- alternative・free・teiji・tsushin・online）ごとにデータセット（no）が分かれている
+-- ため、facility_type・facility_noの組で特定の1件を指す。facility_nameは投稿時点の
+-- 施設名のスナップショット（一覧データの名称が変わっても口コミ自体の文脈が
+-- 分かるように保持する）。
+-- 公開側の結果ページの回答（expert_pending_answers）と同じ理由で、未登録のまま
+-- 書いた口コミも、運営の本人確認（verified化）が完了するまではpublished=falseの
+-- まま非公開にしておく（app/api/expert/public-review/route.ts参照）。本人確認済みの
+-- 専門家・経験者が書いた場合はpublished=trueで即時公開する。運営が承認した時点で、
+-- その人のpublished=falseの行をまとめてtrueにする（app/api/admin/experts/verify/route.ts参照）。
+create table if not exists school_reviews (
+  id uuid primary key default gen_random_uuid(),
+  expert_id uuid not null references experts(id) on delete cascade,
+  facility_type text not null,
+  facility_no text not null,
+  facility_name text not null,
+  body text not null,
+  published boolean not null default false,
+  created_at timestamptz not null default now(),
+  unique (expert_id, facility_type, facility_no)
+);
+alter table school_reviews enable row level security;
+create index if not exists school_reviews_facility_idx on school_reviews (facility_type, facility_no);
+create index if not exists school_reviews_expert_id_idx on school_reviews (expert_id);

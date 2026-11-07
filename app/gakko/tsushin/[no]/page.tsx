@@ -17,6 +17,7 @@ import TrackedOutLink from '@/components/TrackedOutLink';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
+import FacilityReviews from '@/components/FacilityReviews';
 import { Suspense } from 'react';
 // 通信制高校（広域）、1校ごとの紹介ページ（2026-10-21、「学びの多様化学校と同じ仕組みで
 // 通信制高校も詳細ページにつなげたい」との要望を受けて、app/gakko/school/[no]/page.tsxと
@@ -335,6 +336,9 @@ export default async function TsushinSchoolPage({
           </Suspense>
           <Suspense fallback={null}>
             <FacilityExperiencedParents name={school.name} label="経験者からこの学校の話を聞く" />
+          </Suspense>
+          <Suspense fallback={null}>
+            <FacilityReviews facilityType="tsushin" facilityNo={school.no} facilityName={school.name} />
           </Suspense>
 
           {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との

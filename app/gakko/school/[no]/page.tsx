@@ -12,6 +12,7 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import SchoolConsultations from './SchoolConsultations';
 import SchoolExperiencedParents from './SchoolExperiencedParents';
+import FacilityReviews from '@/components/FacilityReviews';
 import SchoolFitCard from './SchoolFitCard';
 import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
 // 学びの多様化学校、1校ごとの紹介ページ。一覧（/gakko）の学校名を押すとここに来る
@@ -354,6 +355,9 @@ export default async function GakkoSchoolPage({
               この学校名・愛称が含まれていれば表示する。 */}
           <Suspense fallback={null}>
             <SchoolExperiencedParents schoolName={school.name} branchName={school.branchName} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <FacilityReviews facilityType="school" facilityNo={school.no} facilityName={school.name} />
           </Suspense>
 
           {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との

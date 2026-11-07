@@ -9,6 +9,7 @@ import { ALTERNATIVE_SCHOOLS, METHOD_LABEL } from '@/lib/data/alternativeSchools
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
+import FacilityReviews from '@/components/FacilityReviews';
 import FacilityInfoCard from '@/components/FacilityInfoCard';
 import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
@@ -272,6 +273,11 @@ export default async function AlternativeSchoolPage({
           {/* この施設名を含む実際の相談 */}
           <Suspense fallback={null}>
             <FacilityConsultations name={school.name} label={`「${school.name}」についての相談`} />
+          </Suspense>
+
+          {/* 口コミ（2026-11-07追加） */}
+          <Suspense fallback={null}>
+            <FacilityReviews facilityType="alternative" facilityNo={school.no} facilityName={school.name} />
           </Suspense>
 
           {/* 同じ都道府県または同じメソッドの他校 */}

@@ -52,6 +52,11 @@ export async function POST(req: NextRequest) {
   // （2026-11-07追加。/api/expert/public-answer参照）。承認前に書かれた回答は
   // 本人確認が済むまで非公開のため、ここが唯一の公開タイミングになる。
   if (action === 'approve') {
+    // 学校・施設の口コミ（school_reviews）も同じタイミングでまとめて公開する
+    // （2026-11-07追加）。回答と違い1施設1行ではなく複数件を持てるテーブルなので、
+    // 行を書き換えるだけで済み、expert_pending_answersのような削除・コピーは不要。
+    await supabase.from('school_reviews').update({ published: true }).eq('expert_id', expert_id).eq('published', false);
+
     const { data: pendingAnswers } = await supabase
       .from('expert_pending_answers')
       .select('id, consultation_id, answer')

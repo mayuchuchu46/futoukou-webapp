@@ -11,6 +11,7 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
+import FacilityReviews from '@/components/FacilityReviews';
 import { Suspense } from 'react';
 
 // 定時制高校、1件ごとの紹介ページ（2026-10-29追加）。他カテゴリ
@@ -242,6 +243,9 @@ export default async function TeijiSchoolPage({
           </Suspense>
           <Suspense fallback={null}>
             <FacilityExperiencedParents name={school.name} label="経験者からこの学校の話を聞く" />
+          </Suspense>
+          <Suspense fallback={null}>
+            <FacilityReviews facilityType="teiji" facilityNo={school.no} facilityName={school.name} />
           </Suspense>
 
           <RelatedListingsCard

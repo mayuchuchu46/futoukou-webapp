@@ -11,6 +11,7 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
+import FacilityReviews from '@/components/FacilityReviews';
 import FacilityInfoCard from '@/components/FacilityInfoCard';
 import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
@@ -263,6 +264,9 @@ export default async function FreeSchoolPage({
           </Suspense>
           <Suspense fallback={null}>
             <FacilityExperiencedParents name={school.name} label="経験者からこの学校の話を聞く" />
+          </Suspense>
+          <Suspense fallback={null}>
+            <FacilityReviews facilityType="free" facilityNo={school.no} facilityName={school.name} />
           </Suspense>
 
           {/* 「似ている学校というか、それを見た人が次に見たくなるような掲載」との
