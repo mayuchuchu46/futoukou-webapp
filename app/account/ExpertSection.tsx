@@ -73,6 +73,16 @@ export default async function ExpertSection() {
     .or(`requested_expert_id.is.null,requested_expert_id.eq.${expert.id}`)
     .order('created_at', { ascending: true });
 
+  // 「あとで見る」に退避済みの相談ID（本人ごと、2026-11-07追加）。回答待ちバッジの
+  // 件数は「未確認」のものだけにしたいとの要望を受けて、pendingをここで分ける。
+  const { data: deferredRows } = await supabase
+    .from('expert_consultation_reviews')
+    .select('consultation_id')
+    .eq('expert_id', expert.id);
+  const deferredIds = new Set((deferredRows || []).map((r) => r.consultation_id));
+  const newPending = (pending || []).filter((item) => !deferredIds.has(item.id));
+  const deferredPending = (pending || []).filter((item) => deferredIds.has(item.id));
+
   const { data: answeredByMe } = await supabase
     .from('consultations')
     .select('*')
@@ -104,7 +114,8 @@ export default async function ExpertSection() {
   return (
     <ExpertManagementPanel
       expert={{ id: expert.id, name: expert.name, credential: expert.credential }}
-      pending={pending || []}
+      pending={newPending}
+      deferredPending={deferredPending}
       answeredByMe={answeredByMe || []}
       consultRequestCount={!expert.online_consult_url ? consultRequestCount || 0 : 0}
       hasEarningsHistory={!!paidAnswerCount}

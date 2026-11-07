@@ -15,12 +15,16 @@ type Expert = { id: string; name: string; credential: string };
 export default function ExpertManagementPanel({
   expert,
   pending,
+  deferredPending,
   answeredByMe,
   consultRequestCount = 0,
   hasEarningsHistory = false,
 }: {
   expert: Expert;
   pending: Consultation[];
+  // 「あとで見る」に退避済みの相談（2026-11-07追加）。本人ごとの退避状態なので、
+  // 他の専門家・経験者のキューには影響しない。
+  deferredPending: Consultation[];
   answeredByMe: Consultation[];
   // 「この方に直接相談をリクエストする」が押された件数。オンライン相談リンク
   // （online_consult_url）を設定済みの場合は常に0（呼び出し側で判定済み）。
@@ -39,13 +43,18 @@ export default function ExpertManagementPanel({
   // 入力欄の近くに一言添える。
   const isSenpai = expert.credential === SENPAI_CREDENTIAL;
   const [items, setItems] = useState(pending);
+  const [deferredItems, setDeferredItems] = useState(deferredPending);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState<string | null>(null);
+  const [deferring, setDeferring] = useState<string | null>(null);
   // AIの回答は初期状態では畳んでおく（2026-11-07、「専門家が自分の判断を
   // 先に作れるように、AI回答にすぐ引きずられない見せ方にしたい」との方針）。
   const [aiAnswerOpen, setAiAnswerOpen] = useState<Record<string, boolean>>({});
   const ANSWERED_PAGE_SIZE = 3;
   const [answeredVisibleCount, setAnsweredVisibleCount] = useState(ANSWERED_PAGE_SIZE);
+  // 「あとで見る」セクションはデフォルト畳んでおく（最初から全部開くと、結局
+  // バッジの数字と同じ分量が画面に出てしまい、今回の目的＝スッキリ見せる、に反するため）。
+  const [deferredOpen, setDeferredOpen] = useState(false);
 
   async function submitAnswer(id: string) {
     const answer = drafts[id];
@@ -59,15 +68,150 @@ export default function ExpertManagementPanel({
     setSubmitting(null);
     if (res.ok) {
       setItems((list) => list.filter((it) => it.id !== id));
+      setDeferredItems((list) => list.filter((it) => it.id !== id));
     } else {
       const data = await res.json();
       alert(data.error || '送信に失敗しました');
     }
   }
 
+  // 「あとで見る」へ退避／呼び戻し（2026-11-07追加）。回答そのものには触れず、
+  // 表示上の仕分け（expert_consultation_reviews）だけを更新する。
+  async function deferItem(id: string) {
+    setDeferring(id);
+    const res = await fetch('/api/expert/review', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ consultation_id: id, action: 'defer' }),
+    });
+    setDeferring(null);
+    if (res.ok) {
+      setItems((list) => {
+        const moved = list.find((it) => it.id === id);
+        if (moved) setDeferredItems((d) => [...d, moved]);
+        return list.filter((it) => it.id !== id);
+      });
+    } else {
+      alert('あとで見るへの移動に失敗しました');
+    }
+  }
+
+  async function undeferItem(id: string) {
+    setDeferring(id);
+    const res = await fetch('/api/expert/review', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ consultation_id: id, action: 'undefer' }),
+    });
+    setDeferring(null);
+    if (res.ok) {
+      setDeferredItems((list) => {
+        const moved = list.find((it) => it.id === id);
+        if (moved) setItems((d) => [...d, moved]);
+        return list.filter((it) => it.id !== id);
+      });
+    } else {
+      alert('一覧への呼び戻しに失敗しました');
+    }
+  }
+
   async function logout() {
     await fetch('/api/expert/logout', { method: 'POST' });
     router.refresh();
+  }
+
+  function PendingCard({ item, deferred }: { item: Consultation; deferred: boolean }) {
+    const cat = CATS[item.category] || CATS.other;
+    return (
+      <div className="card">
+        <div className="row">
+          <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
+          {item.requested_expert_id === expert.id && (
+            <span className="muted" style={{ fontWeight: 700 }}>あなた指名の相談</span>
+          )}
+          {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
+        </div>
+        <div className="qtext">{item.question}</div>
+        {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AIが
+            既にどう答えているかをここに表示する（以前はrequest_type==='expert'の
+            相談にAI回答が存在しなかったため、質問文だけが出ていた）。専門家・
+            経験者がAIの回答を踏まえて、それに付け足す形で回答しやすくする。
+            2026-11-07、初期状態では畳んでおき、ボタンで展開する形に変更。
+            先にAIの回答を読むと専門家の判断がそれに引っ張られやすいため、
+            まず相談文だけを見て自分の考えを作ってから、必要に応じて
+            AIの回答と照合できるようにする。 */}
+        {item.answer && (
+          aiAnswerOpen[item.id] ? (
+            <div className="muted" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px', whiteSpace: 'pre-wrap' }}>
+              <div className="row" style={{ justifyContent: 'space-between', marginBottom: 4 }}>
+                <span style={{ fontWeight: 700 }}>AIの回答：</span>
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  style={{ fontSize: 12 }}
+                  onClick={() => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: false })}
+                >
+                  閉じる
+                </button>
+              </div>
+              {item.answer}
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="btn-ghost"
+              style={{ fontSize: 13, alignSelf: 'flex-start' }}
+              onClick={() => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: true })}
+            >
+              AIの回答を見る
+            </button>
+          )
+        )}
+        {isSenpai && (
+          <div className="muted" style={{ fontSize: 12 }}>
+            専門的な判断ではなく、ご自身の経験に基づいてお答えいただければ十分です。
+          </div>
+        )}
+        <textarea
+          className="input"
+          rows={6}
+          placeholder={isSenpai ? 'ご自身の経験を書いてください' : '回答を入力してください'}
+          value={drafts[item.id] || ''}
+          onChange={(e) => setDrafts({ ...drafts, [item.id]: e.target.value })}
+        />
+        <div className="row" style={{ gap: 8 }}>
+          <button
+            className="btn-primary"
+            disabled={submitting === item.id || !(drafts[item.id] || '').trim()}
+            onClick={() => submitAnswer(item.id)}
+          >
+            {submitting === item.id ? '送信中…' : '回答を送信する'}
+          </button>
+          {/* 「一度確認したものは確認済みにして、バッジの数字は未確認のものだけにしたい」
+              との要望を受けて追加（2026-11-07）。回答するつもりがない／まだ決めて
+              いない相談を、削除ではなく「あとで見る」として仕分けできるようにする。 */}
+          {deferred ? (
+            <button
+              type="button"
+              className="btn-ghost"
+              disabled={deferring === item.id}
+              onClick={() => undeferItem(item.id)}
+            >
+              一覧に戻す
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn-ghost"
+              disabled={deferring === item.id}
+              onClick={() => deferItem(item.id)}
+            >
+              あとで見る
+            </button>
+          )}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -110,75 +254,27 @@ export default function ExpertManagementPanel({
 
       <div style={{ fontWeight: 700, marginTop: 8 }}>回答待ちの相談（{items.length}件）</div>
       {items.length === 0 && <div className="muted">今は回答待ちの相談はありません。</div>}
-      {items.map((item) => {
-        const cat = CATS[item.category] || CATS.other;
-        return (
-          <div key={item.id} className="card">
-            <div className="row">
-              <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
-              {item.requested_expert_id === expert.id && (
-                <span className="muted" style={{ fontWeight: 700 }}>あなた指名の相談</span>
-              )}
-              {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
-            </div>
-            <div className="qtext">{item.question}</div>
-            {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AIが
-                既にどう答えているかをここに表示する（以前はrequest_type==='expert'の
-                相談にAI回答が存在しなかったため、質問文だけが出ていた）。専門家・
-                経験者がAIの回答を踏まえて、それに付け足す形で回答しやすくする。
-                2026-11-07、初期状態では畳んでおき、ボタンで展開する形に変更。
-                先にAIの回答を読むと専門家の判断がそれに引っ張られやすいため、
-                まず相談文だけを見て自分の考えを作ってから、必要に応じて
-                AIの回答と照合できるようにする。 */}
-            {item.answer && (
-              aiAnswerOpen[item.id] ? (
-                <div className="muted" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px', whiteSpace: 'pre-wrap' }}>
-                  <div className="row" style={{ justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ fontWeight: 700 }}>AIの回答：</span>
-                    <button
-                      type="button"
-                      className="btn-ghost"
-                      style={{ fontSize: 12 }}
-                      onClick={() => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: false })}
-                    >
-                      閉じる
-                    </button>
-                  </div>
-                  {item.answer}
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  className="btn-ghost"
-                  style={{ fontSize: 13, alignSelf: 'flex-start' }}
-                  onClick={() => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: true })}
-                >
-                  AIの回答を見る
-                </button>
-              )
-            )}
-            {isSenpai && (
-              <div className="muted" style={{ fontSize: 12 }}>
-                専門的な判断ではなく、ご自身の経験に基づいてお答えいただければ十分です。
-              </div>
-            )}
-            <textarea
-              className="input"
-              rows={6}
-              placeholder={isSenpai ? 'ご自身の経験を書いてください' : '回答を入力してください'}
-              value={drafts[item.id] || ''}
-              onChange={(e) => setDrafts({ ...drafts, [item.id]: e.target.value })}
-            />
-            <button
-              className="btn-primary"
-              disabled={submitting === item.id || !(drafts[item.id] || '').trim()}
-              onClick={() => submitAnswer(item.id)}
-            >
-              {submitting === item.id ? '送信中…' : '回答を送信する'}
-            </button>
-          </div>
-        );
-      })}
+      {items.map((item) => (
+        <PendingCard key={item.id} item={item} deferred={false} />
+      ))}
+
+      {/* 「あとで見る」に退避した相談（2026-11-07追加）。バッジの件数には含めず、
+          見たい時だけ開く形にして、画面の情報量を増やさないようにする。 */}
+      {deferredItems.length > 0 && (
+        <>
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{ alignSelf: 'flex-start', marginTop: 8 }}
+            onClick={() => setDeferredOpen((v) => !v)}
+          >
+            {deferredOpen ? '閉じる' : `あとで見る（${deferredItems.length}件）を開く`}
+          </button>
+          {deferredOpen && deferredItems.map((item) => (
+            <PendingCard key={item.id} item={item} deferred />
+          ))}
+        </>
+      )}
 
       <div style={{ fontWeight: 700, marginTop: 16 }}>自分が回答した相談（直近20件）</div>
       {answeredByMe.length === 0 && <div className="muted">まだ回答した相談はありません。</div>}

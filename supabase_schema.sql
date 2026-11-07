@@ -1093,3 +1093,18 @@ alter table outbound_clicks enable row level security;
 -- カード表示にするための構造化データ列を追加した場合（2026-11-07追加、「テキストの
 -- 返事が長すぎる」との指摘を受けて）、既存DBでは次を実行してください。
 -- alter table consultations add column if not exists kotoba_interpretations jsonb;
+
+-- 専門家・先輩保護者が、共有の回答待ちキューにある相談を「あとで見る」として一旦
+-- 除外できる仕組み（2026-11-07追加）。「数字がずっと残っているより、一度確認した
+-- ものは確認済みとして扱い、バッジの件数は未確認のものだけにしたい」との要望を
+-- 受けて追加。共有キュー（誰でも拾える）なので、誰か1人が「あとで見る」にしても
+-- 他の専門家・先輩保護者のキューからは消えない＝本人ごとの状態として持つ。
+create table if not exists expert_consultation_reviews (
+  id uuid primary key default gen_random_uuid(),
+  consultation_id uuid not null references consultations(id) on delete cascade,
+  expert_id uuid not null references experts(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  unique (consultation_id, expert_id)
+);
+alter table expert_consultation_reviews enable row level security;
+create index if not exists expert_consultation_reviews_expert_id_idx on expert_consultation_reviews (expert_id);
