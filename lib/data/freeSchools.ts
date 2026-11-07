@@ -779,4 +779,9 @@ export const FREE_SCHOOLS: FreeSchool[] = [
   // 栃木県（2026-11-08追加）。住所・連絡先はNPO支援プラットフォーム（syncable）掲載情報で、
   // 佐野市議会への陳情文書（運営団体の住所記載）とも一致することを確認した上で掲載。
   { no: 722, name: 'フリースクールここあっと', prefecture: '栃木県', city: '佐野市', address: '佐野市植下町442-12', contact: '080-5229-1377', ageRange: '記載なし', sourceUrl: 'https://syncable.biz/en/associate/cocoat', asOf: '令和8年11月確認', officialUrl: 'https://chimoli.org/', note: '運営はNPO法人ちもり。学校になじみにくいと感じている子どもとその家族に「第3の居場所」を提供することを目的とする団体。' },
+  // 奈良県（2026-11-08追加）。奈良県「生きづらさを感じる子ども・若者のための
+  // 支援機関ガイド」の個別施設PDF、および上牧町公式パンフレットより確認できた施設を追加。
+  { no: 723, name: '奈良教育大学 居場所 ねいらく', prefecture: '奈良県', city: '奈良市', address: '奈良市高畑町（番地なし）', contact: '0742-27-9384', ageRange: 'おおむね6歳〜18歳の不登校・引きこもりの子ども・若者', sourceUrl: 'https://www.pref.nara.jp/secure/315373/4-1neiraku.pdf', asOf: '奈良県「支援機関ガイド」（令和8年11月確認）' },
+  { no: 724, name: '公設フリースクール「Smile Farm かんまき」', prefecture: '奈良県', city: '北葛城郡上牧町', address: '北葛城郡上牧町大字上牧3347番地', contact: '0745-76-2528（内線135）', ageRange: '記載なし（不登校の状態にある小学生・中学生対象）', sourceUrl: 'https://www.town.kanmaki.nara.jp/material/files/group/15/punphlet20241009.pdf', asOf: '上牧町公式パンフレット（令和8年11月確認）', note: '上牧町とNPO法人らくまちの公私連携により令和4年度に開設。' },
+  { no: 725, name: 'NPO法人T-seed（SW〜そよ風さん〜）', prefecture: '奈良県', city: '香芝市', address: '香芝市真美ケ丘1-15-15', contact: '090-8382-9966（受付 月〜金9時〜17時）', ageRange: '小中学生（学校へ行きづらい子どもと保護者。訪問支援は主に小学3年生程度まで）', sourceUrl: 'https://www.pref.nara.jp/secure/315373/4-11Tseed.pdf', asOf: '奈良県「支援機関ガイド」（令和8年11月確認）' },
 ];

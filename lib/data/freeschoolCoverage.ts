@@ -49,7 +49,7 @@ export const FREE_SCHOOL_COVERAGE: FreeSchoolCoverage[] = [
   { prefecture: '京都府', tier: 'partial', note: '京都市が個別に公開している施設資料に加え、フリースクール全国ネットワーク加盟団体一覧より5件（木津川市・亀岡市・京都市内）を追加掲載していますが、府全体の網羅ではありません。' },
   { prefecture: '大阪府', tier: 'good', note: '府教育委員会公開の一覧より掲載。' },
   { prefecture: '兵庫県', tier: 'partial', note: '神戸市公開の一覧のみ確認できました（市内の一部施設はフリースクール全国ネットワーク加盟団体一覧より住所を補いましたが、県全体ではありません）。' },
-  { prefecture: '奈良県', tier: 'partial', note: '奈良市公開の資料のみ確認できました（市内のみ、情報も限られます）。' },
+  { prefecture: '奈良県', tier: 'partial', note: '奈良県「生きづらさを感じる子ども・若者のための支援機関ガイド」等から一部施設を確認できましたが、同ガイドに掲載の全施設はまだ反映できていません。' },
   { prefecture: '和歌山県', tier: 'partial', note: 'フリースクール全国ネットワーク加盟団体一覧より2件を住所つきで掲載。県全体の網羅ではありません。' },
   { prefecture: '鳥取県', tier: 'good', note: '県公開の施設マップより掲載。' },
   { prefecture: '島根県', tier: 'partial', note: '県フリースクール等連絡協議会の資料より掲載。PDFの体裁上、施設名と住所の対応が一部不確実です。' },
