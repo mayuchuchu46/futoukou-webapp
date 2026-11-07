@@ -20,12 +20,17 @@ import { notFoundText } from '@/lib/emptyStateText';
 export default function FreeSchoolExplorer({
   allSchools,
   initialPref,
+  featuredNos = [],
 }: {
   allSchools: FreeSchool[];
   initialPref: string | null;
+  // 学校側課金プラン（優先表示）の土台：優先掲載フラグが立っている施設番号
+  // （2026-11-07追加）。Server Componentからの受け渡しのため配列で持つ。
+  featuredNos?: number[];
 }) {
   const router = useRouter();
   const [pref, setPref] = useState<string | null>(initialPref);
+  const featuredSet = new Set(featuredNos);
 
   function selectPref(p: string | null) {
     // 画面の更新はここで即座に完了する（ネットワーク待ちなし）。
@@ -34,7 +39,11 @@ export default function FreeSchoolExplorer({
     router.replace(href, { scroll: false });
   }
 
-  const freeSchools = pref ? allSchools.filter((s) => s.prefecture === pref) : [];
+  const freeSchools = pref
+    ? [...allSchools.filter((s) => s.prefecture === pref)].sort(
+        (a, b) => Number(featuredSet.has(b.no)) - Number(featuredSet.has(a.no))
+      )
+    : [];
   const coverage = pref ? getFreeSchoolCoverage(pref) : undefined;
 
   return (
@@ -111,7 +120,14 @@ export default function FreeSchoolExplorer({
                     href={`/gakko/free/${s.no}`}
                     style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
                   >
-                    <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                    <div className="qtext" style={{ fontWeight: 700 }}>
+                      {s.name}
+                      {featuredSet.has(s.no) && (
+                        <span className="chip chip-tag" style={{ fontSize: 10, fontWeight: 700, marginLeft: 6, background: '#FFE49A' }}>
+                          PR
+                        </span>
+                      )}
+                    </div>
                     <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
                       {s.city}
                       {s.address ? `・${s.address}` : ''}

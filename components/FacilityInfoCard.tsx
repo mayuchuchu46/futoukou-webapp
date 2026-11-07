@@ -18,6 +18,14 @@ export default async function FacilityInfoCard({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+      {info.featured && (
+        <span
+          className="chip chip-tag"
+          style={{ fontSize: 11, fontWeight: 700, alignSelf: 'flex-start', background: '#FFE49A' }}
+        >
+          PR・優先掲載
+        </span>
+      )}
       {info.photoUrl && (
         // eslint-disable-next-line @next/next/no-img-element
         <img

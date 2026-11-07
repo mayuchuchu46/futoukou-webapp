@@ -10,6 +10,7 @@ export type ApprovedFacilityInfo = {
   fee: string | null;
   features: FacilityFeatureTag[];
   photoUrl: string | null;
+  featured: boolean;
   updatedAt: string;
 };
 
@@ -23,7 +24,7 @@ export async function getApprovedFacilityInfo(
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
     .from('facility_info_submissions')
-    .select('fee, features, photo_url, reviewed_at, created_at')
+    .select('fee, features, photo_url, featured, reviewed_at, created_at')
     .eq('facility_type', facilityType)
     .eq('facility_no', facilityNo)
     .eq('status', 'approved')
@@ -36,6 +37,20 @@ export async function getApprovedFacilityInfo(
     fee: data.fee || null,
     features: (data.features || []) as FacilityFeatureTag[],
     photoUrl: data.photo_url || null,
+    featured: !!data.featured,
     updatedAt: data.reviewed_at || data.created_at,
   };
+}
+
+// 一覧ページの並び順・バッジ表示用。学校側課金プランの土台（2026-11-07追加）。
+// 承認済み（approved）かつ運営が優先掲載（featured）に設定した施設のno一覧を返す。
+export async function getFeaturedFacilityNos(facilityType: FacilityType): Promise<Set<number>> {
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from('facility_info_submissions')
+    .select('facility_no')
+    .eq('facility_type', facilityType)
+    .eq('status', 'approved')
+    .eq('featured', true);
+  return new Set((data || []).map((r) => r.facility_no as number));
 }

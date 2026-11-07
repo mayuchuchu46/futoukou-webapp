@@ -21,6 +21,7 @@ import { FREESCHOOL_SUBSIDIES } from '@/lib/data/freeschoolSubsidies';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { ALTERNATIVE_SCHOOLS, METHOD_LABEL } from '@/lib/data/alternativeSchools';
 import { PREFECTURES } from '@/lib/data/prefectures';
+import { getFeaturedFacilityNos } from '@/lib/facilityInfo';
 import SchoolTypeExplorer from './SchoolTypeExplorer';
 import FreeSchoolExplorer from './FreeSchoolExplorer';
 import ShienExplorer from './ShienExplorer';
@@ -254,6 +255,12 @@ export default async function GakkoPage({
   // gakkoタブの絞り込み・結果一覧（都道府県・学校種とも）はSchoolTypeExplorer
   // （クライアントコンポーネント）側で行うため、ここではschoolTypeQuery
   // （他タブのhref組み立てに必要）だけ残す。
+  // 学校側課金プラン（優先表示）の土台：承認済みで「優先掲載」フラグが立っている
+  // 施設番号の一覧を、表示中のタブに該当する分だけ取得する（2026-11-07追加）。
+  const featuredAlternativeNos =
+    type === 'alternative' ? await getFeaturedFacilityNos('alternative') : new Set<number>();
+  const featuredOnlineNos = type === 'online' ? await getFeaturedFacilityNos('online') : new Set<number>();
+  const featuredFreeNos = type === 'free' ? await getFeaturedFacilityNos('free') : new Set<number>();
   return (
     <div className="app-shell">
       <Header supervised={false} showBack={false} />
@@ -565,7 +572,11 @@ export default async function GakkoPage({
               理由（押すたびにページが作り直される「反応が遅い」との指摘、2026-10-24）で
               FreeSchoolExplorer（クライアントコンポーネント）に統合した。 */}
           {type === 'free' && (
-            <FreeSchoolExplorer allSchools={FREE_SCHOOLS} initialPref={selected} />
+            <FreeSchoolExplorer
+              allSchools={FREE_SCHOOLS}
+              initialPref={selected}
+              featuredNos={Array.from(featuredFreeNos)}
+            />
           )}
 
           {/* 教育支援センタータブも同様にShienExplorerへ統合（2026-10-24）。 */}
@@ -585,7 +596,10 @@ export default async function GakkoPage({
                 { key: 'tutoring' as const, title: '学習サポート中心（個別指導・家庭教師タイプ）', desc: '交流の場というより、1対1の学習指導が中心のサービスです。' },
                 { key: 'referral' as const, title: '利用に条件があるもの', desc: '自治体等からの紹介がないと利用できず、個人が直接申し込めるわけではないものです。' },
               ]).map((group) => {
-                const items = ONLINE_FREE_SCHOOLS.filter((s) => s.category === group.key);
+                // 優先掲載（学校側課金プランの土台）の施設を先頭に並べる（2026-11-07追加）。
+                const items = [...ONLINE_FREE_SCHOOLS.filter((s) => s.category === group.key)].sort(
+                  (a, b) => Number(featuredOnlineNos.has(b.no)) - Number(featuredOnlineNos.has(a.no))
+                );
                 if (items.length === 0) return null;
                 return (
                   <div key={group.key} style={{ width: '100%' }}>
@@ -602,7 +616,14 @@ export default async function GakkoPage({
                           href={`/gakko/online/${s.no}`}
                           style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
                         >
-                          <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                          <div className="qtext" style={{ fontWeight: 700 }}>
+                            {s.name}
+                            {featuredOnlineNos.has(s.no) && (
+                              <span className="chip chip-tag" style={{ fontSize: 10, fontWeight: 700, marginLeft: 6, background: '#FFE49A' }}>
+                                PR
+                              </span>
+                            )}
+                          </div>
                           <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
                             {s.operator}・対象：{s.ageRange}
                           </div>
@@ -649,13 +670,23 @@ export default async function GakkoPage({
                   学校教育法第一条に基づく認可を受けた私立学校です。公的な卒業資格が取得できます。
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                  {ALTERNATIVE_SCHOOLS.filter((s) => s.isAccredited).map((s) => (
+                  {/* 優先掲載（学校側課金プランの土台）の施設を先頭に並べる（2026-11-07追加）。 */}
+                  {[...ALTERNATIVE_SCHOOLS.filter((s) => s.isAccredited)]
+                    .sort((a, b) => Number(featuredAlternativeNos.has(b.no)) - Number(featuredAlternativeNos.has(a.no)))
+                    .map((s) => (
                     <Link
                       key={s.no}
                       href={`/gakko/alternative/${s.no}`}
                       style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
                     >
-                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="qtext" style={{ fontWeight: 700 }}>
+                        {s.name}
+                        {featuredAlternativeNos.has(s.no) && (
+                          <span className="chip chip-tag" style={{ fontSize: 10, fontWeight: 700, marginLeft: 6, background: '#FFE49A' }}>
+                            PR
+                          </span>
+                        )}
+                      </div>
                       <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
                         {s.prefecture}{s.city}・{s.schoolType}・{METHOD_LABEL[s.method]}
                       </div>
@@ -673,13 +704,22 @@ export default async function GakkoPage({
                   学校教育法上の「学校」ではありませんが、独自の教育哲学に基づいて運営されている民間施設です。
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-                  {ALTERNATIVE_SCHOOLS.filter((s) => !s.isAccredited).map((s) => (
+                  {[...ALTERNATIVE_SCHOOLS.filter((s) => !s.isAccredited)]
+                    .sort((a, b) => Number(featuredAlternativeNos.has(b.no)) - Number(featuredAlternativeNos.has(a.no)))
+                    .map((s) => (
                     <Link
                       key={s.no}
                       href={`/gakko/alternative/${s.no}`}
                       style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
                     >
-                      <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                      <div className="qtext" style={{ fontWeight: 700 }}>
+                        {s.name}
+                        {featuredAlternativeNos.has(s.no) && (
+                          <span className="chip chip-tag" style={{ fontSize: 10, fontWeight: 700, marginLeft: 6, background: '#FFE49A' }}>
+                            PR
+                          </span>
+                        )}
+                      </div>
                       <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
                         {s.prefecture}{s.city}・{s.schoolType}・{METHOD_LABEL[s.method]}
                       </div>

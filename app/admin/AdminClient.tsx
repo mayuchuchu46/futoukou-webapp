@@ -131,6 +131,18 @@ const FACILITY_DETAIL_PATH: Record<PendingFacilityInfo['facility_type'], string>
   online: '/gakko/online',
 };
 
+// 承認済みの施設・学校情報（学校側課金プランの土台＝優先掲載のON/OFF管理用、2026-11-07追加）。
+type ApprovedFacilityInfo = {
+  id: string;
+  facility_type: 'free' | 'alternative' | 'online';
+  facility_no: number;
+  facility_name: string;
+  fee: string | null;
+  features: FacilityFeatureTag[];
+  featured: boolean;
+  reviewed_at: string | null;
+};
+
 type RecentExpertAnswer = {
   id: string;
   question: string;
@@ -156,8 +168,10 @@ export default function AdminClient({
   topViewedConsultations,
   stripeConfigured,
   pendingFacilityInfo,
+  approvedFacilityInfo,
 }: {
   pendingFacilityInfo: PendingFacilityInfo[];
+  approvedFacilityInfo: ApprovedFacilityInfo[];
   unverifiedExperts: UnverifiedExpert[];
   verifiedExperts: VerifiedExpert[];
   recentConsultations: RecentConsultation[];
@@ -189,6 +203,7 @@ export default function AdminClient({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [facilityInfoList, setFacilityInfoList] = useState(pendingFacilityInfo);
+  const [featuredList, setFeaturedList] = useState(approvedFacilityInfo);
 
   async function reviewFacilityInfo(id: string, action: 'approve' | 'reject') {
     setBusy(id);
@@ -200,6 +215,24 @@ export default function AdminClient({
     setBusy(null);
     if (res.ok) {
       setFacilityInfoList((list) => list.filter((f) => f.id !== id));
+    } else {
+      const data = await res.json();
+      alert(data.error || '失敗しました');
+    }
+  }
+
+  async function toggleFeatured(id: string, action: 'set_featured' | 'unset_featured') {
+    setBusy(id);
+    const res = await fetch('/api/admin/facility-info/review', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, action }),
+    });
+    setBusy(null);
+    if (res.ok) {
+      setFeaturedList((list) =>
+        list.map((f) => (f.id === id ? { ...f, featured: action === 'set_featured' } : f))
+      );
     } else {
       const data = await res.json();
       alert(data.error || '失敗しました');
@@ -614,6 +647,75 @@ export default function AdminClient({
                   >
                     却下
                   </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div style={{ fontWeight: 700, marginTop: 16 }}>
+          施設・学校の優先掲載管理（学校側課金プランの土台・現在は手動ON/OFF）
+        </div>
+        <div className="card" style={{ gap: 10, alignItems: 'stretch' }}>
+          {featuredList.length === 0 ? (
+            <div className="muted" style={{ fontSize: 13 }}>承認済みの施設・学校情報はまだありません。</div>
+          ) : (
+            featuredList.map((f) => (
+              <div
+                key={f.id}
+                style={{
+                  borderBottom: '1px solid var(--border)',
+                  paddingBottom: 10,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 4,
+                }}
+              >
+                <div style={{ fontSize: 13, fontWeight: 700 }}>
+                  <a
+                    href={`${FACILITY_DETAIL_PATH[f.facility_type]}/${f.facility_no}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    {f.facility_name || `(no.${f.facility_no})`}
+                  </a>
+                  <span className="muted" style={{ fontWeight: 400, marginLeft: 6 }}>
+                    （{FACILITY_TYPE_LABEL[f.facility_type]}）
+                  </span>
+                  {f.featured && (
+                    <span
+                      className="chip chip-tag"
+                      style={{ fontSize: 11, fontWeight: 700, marginLeft: 8, background: '#FFE49A' }}
+                    >
+                      PR・優先掲載中
+                    </span>
+                  )}
+                </div>
+                {f.fee && <div style={{ fontSize: 13 }}>費用：{f.fee}</div>}
+                {f.features.length > 0 && (
+                  <div style={{ fontSize: 13 }}>
+                    特徴タグ：{f.features.map((tag) => FACILITY_FEATURE_LABEL[tag]).join('、')}
+                  </div>
+                )}
+                <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+                  {f.featured ? (
+                    <button
+                      className="btn-secondary"
+                      disabled={busy === f.id}
+                      onClick={() => toggleFeatured(f.id, 'unset_featured')}
+                    >
+                      優先掲載を解除
+                    </button>
+                  ) : (
+                    <button
+                      className="btn-primary"
+                      disabled={busy === f.id}
+                      onClick={() => toggleFeatured(f.id, 'set_featured')}
+                    >
+                      優先掲載にする
+                    </button>
+                  )}
                 </div>
               </div>
             ))

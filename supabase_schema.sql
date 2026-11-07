@@ -1134,6 +1134,11 @@ create table if not exists facility_info_submissions (
   -- 公開URLをそのまま入れる。
   photo_url text,
   status text not null default 'pending', -- 'pending' | 'approved' | 'rejected'
+  -- 学校側課金プランの土台（2026-11-07追加）。承認済み（approved）の提案に対して
+  -- 運営が手動でON/OFFする「優先掲載」フラグ。決済の自動化はまだ行わず、運営の
+  -- 判断で手動運用する（/admin）。trueの施設は一覧で上位表示・バッジ表示になる
+  -- （lib/facilityInfo.ts の getFeaturedFacilityNos 参照）。
+  featured boolean not null default false,
   created_at timestamptz not null default now(),
   reviewed_at timestamptz
 );
