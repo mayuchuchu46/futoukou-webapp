@@ -154,6 +154,28 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
           <div className="muted">
             登録している専門家・経験者が内容を確認し、任意のタイミングでテキストの回答を追加してくれることがあります。回答が届いた場合、このページに表示されます。
           </div>
+          {/* まだ登録していない専門家・経験者が、検索やシェアなどでこのページに
+              たどり着いた時にその場で回答したくなるような誘導（2026-11-07追加、
+              「公開側の結果ページに入れる案だった。まだ登録してない経験者や
+              専門家が読んだときに、その場で返信したくなるかも」との指摘を受けて）。
+              相談者向けの上の案内とは読み手が違うため、「専門家・経験者の方へ」で
+              明確に呼びかけ対象を分ける。登録後すぐに回答できるわけではなく、
+              運営の確認を挟む（/expert/recruit・/senpai/recruitと同じ案内）ため、
+              過大な期待を持たせないようその旨も添える。 */}
+          <div className="card" style={{ background: 'var(--sub)', gap: 6, marginTop: 10 }}>
+            <div style={{ fontWeight: 700, fontSize: 14 }}>専門家・経験者の方へ</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              この相談に、あなたの言葉で回答してみませんか。登録後、運営の確認を経て、こうした相談への回答ができるようになります。
+            </div>
+            <div className="row" style={{ gap: 8 }}>
+              <a href="/expert/register" className="btn-secondary" style={{ fontSize: 13, padding: '6px 14px' }}>
+                専門家として登録する →
+              </a>
+              <a href="/senpai/register" className="btn-secondary" style={{ fontSize: 13, padding: '6px 14px' }}>
+                経験者として登録する →
+              </a>
+            </div>
+          </div>
         </>
       )}
 
