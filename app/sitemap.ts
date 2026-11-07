@@ -23,6 +23,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, changeFrequency: 'daily', priority: 1 },
     { url: `${SITE_URL}/ask`, changeFrequency: 'monthly', priority: 0.6 },
+    // 「みんなのデータ」。2026-11-08、layout.tsx追加でmetadataを持たせたのに
+    // 合わせてsitemapにも追加（それまではmetadataが無くsitemapにも含めていなかった）。
+    { url: `${SITE_URL}/today`, changeFrequency: 'daily', priority: 0.4 },
     // about・support・theme・experts・expertlistは、以前はページ固有のmetadataが
     // 無くsitemapにも含めていなかったが、metadataを追加したのに合わせて
     // 追加した（2026-10-14、SEO対策の一環）。
