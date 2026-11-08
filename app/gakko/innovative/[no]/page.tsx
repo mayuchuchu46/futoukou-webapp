@@ -11,6 +11,7 @@ import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityReviews from '@/components/FacilityReviews';
+import SchoolQuotedReviews from '@/components/SchoolQuotedReviews';
 import FacilityInfoCard from '@/components/FacilityInfoCard';
 import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
@@ -285,6 +286,10 @@ export default async function InnovativeSchoolPage({
           <Suspense fallback={null}>
             <FacilityConsultations name={school.name} label={`「${school.name}」についての相談`} />
           </Suspense>
+
+          {/* 行政資料・メディア取材記事・学校公式資料等からの実在の引用口コミ
+              （2026-11-08追加）。データがある学校のみ表示（大多数は非表示）。 */}
+          <SchoolQuotedReviews facilityType="innovative" facilityNo={school.no} />
 
           {/* 口コミ */}
           <Suspense fallback={null}>
