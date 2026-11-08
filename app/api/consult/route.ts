@@ -12,6 +12,7 @@ import {
   buildFreeSchoolFactsBlock,
   findMentionedOnlineFreeSchool,
   buildAlternativeFactsBlockFor,
+  buildInnovativeFactsBlockFor,
   buildOnlineFreeSchoolFactsBlock,
   buildTeijiFactsBlockFor,
 } from '@/lib/facilityLinkMatch';
@@ -116,7 +117,22 @@ export async function POST(req: NextRequest) {
   // （lib/institutionFacts.ts参照、2026-10-21追加）。
   const mentionedInstitutions = findMentionedInstitutions([text]);
   const institutionFactsBlock = buildInstitutionFactsBlock(mentionedInstitutions);
-  const factsBlock = [schoolFactsBlock, correspondenceSchoolFactsBlock, freeSchoolFactsBlock, onlineFreeSchoolFactsBlock, buildAlternativeFactsBlockFor([text]), buildTeijiFactsBlockFor([text]), institutionFactsBlock]
+  // 2026-11-08、独自教育の私立学校（lib/data/innovativeSchools.ts）が
+  // alternativeSchools.tsから分割された際、buildInnovativeFactsBlockFor自体は
+  // lib/facilityLinkMatch.tsに作られていたが、この一覧（factsBlock）に組み込むのを
+  // 忘れており、分割後の対象校（きのくに子どもの村小中学校・本校／南アルプス校／
+  // かつやま校等）について相談しても確認済み情報が一切AIに渡らなくなっていた
+  // （「せっかくきのくにの情報をページに色々追加したのに」との指摘を受けて発覚）。
+  const factsBlock = [
+    schoolFactsBlock,
+    correspondenceSchoolFactsBlock,
+    freeSchoolFactsBlock,
+    onlineFreeSchoolFactsBlock,
+    buildAlternativeFactsBlockFor([text]),
+    buildInnovativeFactsBlockFor([text]),
+    buildTeijiFactsBlockFor([text]),
+    institutionFactsBlock,
+  ]
     .filter(Boolean)
     .join('\n');
 
