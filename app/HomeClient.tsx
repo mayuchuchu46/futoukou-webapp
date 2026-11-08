@@ -60,6 +60,7 @@ const FACILITY_COUNT_ITEMS: {
   { key: 'tsushin', label: '通信制高校', href: '/gakko?type=tsushin', icon: '📮', bg: 'var(--clay-bg)', text: 'var(--clay-text)' },
   { key: 'gakko', label: '学びの多様化学校', href: '/gakko', icon: '🏫', bg: 'var(--orange-bg)', text: 'var(--orange-text)' },
   { key: 'alternative', label: 'オルタナティブスクール', href: '/gakko?type=alternative', icon: '🎨', bg: 'var(--lilac-bg)', text: 'var(--lilac-text)' },
+  { key: 'innovative', label: '独自教育の私立学校', href: '/gakko?type=innovative', icon: '🌱', bg: 'var(--rose-bg)', text: 'var(--rose-text)' },
   { key: 'online', label: 'オンラインフリースクール', href: '/gakko?type=online', icon: '💻', bg: 'var(--yellow-bg)', text: 'var(--yellow-text)' },
 ];
 
@@ -72,6 +73,7 @@ type FacilityCountBadgeProps = {
     tsushin: number;
     gakko: number;
     alternative: number;
+    innovative: number;
     online: number;
   };
   className: string;
@@ -225,6 +227,7 @@ export default function HomeClient({
     tsushin: number;
     gakko: number;
     alternative: number;
+    innovative: number;
     online: number;
   };
 }) {

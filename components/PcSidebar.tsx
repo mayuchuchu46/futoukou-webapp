@@ -217,6 +217,11 @@ export default function PcSidebar({
             <span className="facility-count-item-label">オルタナティブスクール</span>
             <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.alternative}</span>
           </Link>
+          <Link href="/gakko?type=innovative" className="facility-count-item" style={{ background: 'var(--rose-bg)', color: 'var(--rose-text)' }}>
+            <span className="facility-count-item-icon">🌱</span>
+            <span className="facility-count-item-label">独自教育の私立学校</span>
+            <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.innovative}</span>
+          </Link>
           <Link href="/gakko?type=online" className="facility-count-item" style={{ background: 'var(--yellow-bg)', color: 'var(--yellow-text)' }}>
             <span className="facility-count-item-icon">💻</span>
             <span className="facility-count-item-label">オンラインフリースクール</span>

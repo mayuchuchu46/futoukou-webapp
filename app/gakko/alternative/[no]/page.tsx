@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { ALTERNATIVE_SCHOOLS, METHOD_LABEL } from '@/lib/data/alternativeSchools';
+import { INNOVATIVE_SCHOOLS } from '@/lib/data/innovativeSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
@@ -73,6 +74,12 @@ export default async function AlternativeSchoolPage({
   const { no } = await params;
   const school = findAlternativeSchool(no);
   if (!school) {
+    // 旧 no.1-11 は 2026-11-08 に「独自教育の私立学校」へ移動したため、
+    // SEO リンク切れを防ぐために /gakko/innovative/{no} へ 308 相当でリダイレクト。
+    const noNum = Number(no);
+    if (Number.isInteger(noNum) && INNOVATIVE_SCHOOLS.some((s) => s.no === noNum)) {
+      redirect(`/gakko/innovative/${noNum}`);
+    }
     return notFound();
   }
 

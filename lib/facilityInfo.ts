@@ -2,9 +2,10 @@ import { getSupabaseAdmin } from './supabase';
 import type { FacilityFeatureTag } from './data/facilityFeatures';
 
 // フリースクール（free）・オルタナティブスクール（alternative）・
-// オンラインフリースクール（online）の3カテゴリのみ対象。学びの多様化学校（school）は
-// 公立校で費用が発生しないため対象外（2026-11-07、CoCon等の競合比較を受けて追加）。
-export type FacilityType = 'free' | 'alternative' | 'online';
+// オンラインフリースクール（online）・独自教育の私立学校（innovative）の4カテゴリが対象。
+// 学びの多様化学校（school）は公立校で費用が発生しないため対象外
+// （2026-11-07、CoCon等の競合比較を受けて追加。innovativeは2026-11-08追加）。
+export type FacilityType = 'free' | 'alternative' | 'online' | 'innovative';
 
 export type ApprovedFacilityInfo = {
   fee: string | null;

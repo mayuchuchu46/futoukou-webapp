@@ -10,6 +10,7 @@ import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
 import { CORRESPONDENCE_HIGH_SCHOOLS } from '@/lib/data/correspondenceHighSchools';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { ALTERNATIVE_SCHOOLS } from '@/lib/data/alternativeSchools';
+import { INNOVATIVE_SCHOOLS } from '@/lib/data/innovativeSchools';
 
 export const FACILITY_COUNT_BREAKDOWN = {
   free: FREE_SCHOOLS.length,
@@ -18,6 +19,7 @@ export const FACILITY_COUNT_BREAKDOWN = {
   tsushin: CORRESPONDENCE_HIGH_SCHOOLS.length,
   gakko: MANABI_TAYOUKA_GAKKO.length,
   alternative: ALTERNATIVE_SCHOOLS.length,
+  innovative: INNOVATIVE_SCHOOLS.length,
   online: ONLINE_FREE_SCHOOLS.length,
 };
 
@@ -28,4 +30,5 @@ export const TOTAL_FACILITY_COUNT =
   FACILITY_COUNT_BREAKDOWN.tsushin +
   FACILITY_COUNT_BREAKDOWN.gakko +
   FACILITY_COUNT_BREAKDOWN.alternative +
+  FACILITY_COUNT_BREAKDOWN.innovative +
   FACILITY_COUNT_BREAKDOWN.online;

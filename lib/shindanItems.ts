@@ -4,6 +4,7 @@ import { MANABI_TAYOUKA_GAKKO } from '@/lib/data/manabiTayoukaGakko';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { ALTERNATIVE_SCHOOLS } from '@/lib/data/alternativeSchools';
+import { INNOVATIVE_SCHOOLS } from '@/lib/data/innovativeSchools';
 import { parseTargetGrades } from '@/lib/schoolGrade';
 
 // 選択式診断（app/gakko/shindan）で使う、サイト掲載の全種類の学校を共通の形にそろえたデータ。
@@ -15,7 +16,7 @@ import { parseTargetGrades } from '@/lib/schoolGrade';
 // - care: 心のケア専門職の配置を確認できた学校（通信制・学びの多様化学校のフィールドのみ。
 //   他の種類にはこの調査データが無いのでfalse＝未確認）
 
-export type ShindanType = 'tsushin' | 'teiji' | 'manabi' | 'free' | 'online' | 'alternative';
+export type ShindanType = 'tsushin' | 'teiji' | 'manabi' | 'free' | 'online' | 'alternative' | 'innovative';
 
 export const SHINDAN_TYPE_LABEL: Record<ShindanType, string> = {
   tsushin: '通信制高校',
@@ -24,6 +25,7 @@ export const SHINDAN_TYPE_LABEL: Record<ShindanType, string> = {
   free: 'フリースクール等',
   online: 'オンラインのフリースクール',
   alternative: 'オルタナティブスクール',
+  innovative: '独自教育の私立学校',
 };
 
 export type ShindanItem = {
@@ -175,7 +177,27 @@ export function buildShindanItems(): ShindanItem[] {
       attendanceNote: null,
       care: false,
       specialties: Array.from(new Set((s.specialties || []).map((x) => x.tag))),
-      sub: s.isAccredited ? '一条校（認可私立学校）' : '',
+      sub: '',
+    });
+  }
+
+  for (const s of INNOVATIVE_SCHOOLS) {
+    items.push({
+      id: `innovative-${s.no}`,
+      type: 'innovative',
+      name: s.name,
+      href: `/gakko/innovative/${s.no}`,
+      pref: s.prefecture,
+      city: s.city,
+      campusPrefs: [],
+      grades: parseTargetGrades(s.schoolType),
+      ageText: s.schoolType,
+      styles: [],
+      flexible: false,
+      attendanceNote: null,
+      care: false,
+      specialties: Array.from(new Set((s.specialties || []).map((x) => x.tag))),
+      sub: '一条校（認可私立学校）',
     });
   }
 

@@ -21,6 +21,7 @@ const TYPE_PATH: Record<FavoriteType, string> = {
   online: 'online',
   teiji: 'teiji',
   alternative: 'alternative',
+  innovative: 'innovative',
 };
 
 const TYPE_LABEL: Record<FavoriteType, string> = {
@@ -30,6 +31,7 @@ const TYPE_LABEL: Record<FavoriteType, string> = {
   online: 'オンラインフリースクール',
   teiji: '定時制高校',
   alternative: 'オルタナティブスクール',
+  innovative: '独自教育の私立学校',
 };
 
 export default function FavoritesPage() {

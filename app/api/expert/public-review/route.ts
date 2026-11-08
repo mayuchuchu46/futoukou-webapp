@@ -4,7 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { getCurrentExpert, EXPERT_COOKIE_NAME } from '@/lib/expertAuth';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 
-const ALLOWED_FACILITY_TYPES = ['school', 'alternative', 'free', 'teiji', 'tsushin', 'online'] as const;
+const ALLOWED_FACILITY_TYPES = ['school', 'alternative', 'free', 'teiji', 'tsushin', 'online', 'innovative'] as const;
 type FacilityType = (typeof ALLOWED_FACILITY_TYPES)[number];
 
 // 各学校・施設の詳細ページから、口コミを書き込む（＋まだ登録していない場合は

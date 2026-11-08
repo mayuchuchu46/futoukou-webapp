@@ -16,7 +16,7 @@ export default async function FacilityReviews({
   facilityNo,
   facilityName,
 }: {
-  facilityType: 'school' | 'alternative' | 'free' | 'teiji' | 'tsushin' | 'online';
+  facilityType: 'school' | 'alternative' | 'free' | 'teiji' | 'tsushin' | 'online' | 'innovative';
   facilityNo: string | number;
   facilityName: string;
 }) {

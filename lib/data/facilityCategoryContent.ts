@@ -12,7 +12,7 @@
 // 「一般的には」「多くの場合」等でヘッジし、断定を避ける。各施設固有の
 // 事実（費用・特徴タグ・写真）は従来どおりFacilityInfoCard
 // （施設からの自己申告・運営承認制）側で扱う。
-export type FacilityCategoryKey = 'school' | 'free' | 'alternative' | 'online';
+export type FacilityCategoryKey = 'school' | 'free' | 'alternative' | 'online' | 'innovative';
 
 export type FacilityCategoryContent = {
   categoryLabel: string;
@@ -83,6 +83,29 @@ export const FACILITY_CATEGORY_CONTENT: Record<FacilityCategoryKey, FacilityCate
       {
         q: '学費はどのくらいですか？',
         a: '一条校・認可外施設ともに、学校ごとに学費は大きく異なります。公式サイトや説明会で直接確認することをおすすめします。',
+      },
+    ],
+  },
+  innovative: {
+    categoryLabel: '独自教育の私立学校',
+    admissionFlow: [
+      '学校説明会・見学会に参加する（時期は学校によって異なります）',
+      '体験入学・面談を受ける',
+      '出願・入学試験（書類審査・面接等）を受ける',
+      '入学手続きを行い、入学する',
+    ],
+    faq: [
+      {
+        q: '卒業資格は得られますか？',
+        a: '一条校（学校教育法第一条に定める認可私立学校）のため、正式な学歴・卒業資格が得られます。高校卒業資格も付与されます。',
+      },
+      {
+        q: '学費はどのくらいですか？',
+        a: '学校ごとに大きく異なります。就学支援金の対象となる場合もあります。最新の学費情報は各校の公式サイトや説明会でご確認ください。',
+      },
+      {
+        q: '不登校の子どもでも入学できますか？',
+        a: '受け入れ方針は学校によって異なります。まずは学校説明会や個別相談に参加して、お子さんの状況を直接相談してみることをおすすめします。',
       },
     ],
   },

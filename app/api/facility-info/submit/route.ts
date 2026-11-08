@@ -11,7 +11,7 @@ import {
 // multipart/form-data に変更）。誰でも送信できる（ログイン不要）が、即時には公開
 // されない。運営が/adminで承認するまでは表示されない
 // （app/api/admin/facility-info/review/route.ts）。
-const FACILITY_TYPES = ['free', 'alternative', 'online'] as const;
+const FACILITY_TYPES = ['free', 'alternative', 'online', 'innovative'] as const;
 type FacilityType = (typeof FACILITY_TYPES)[number];
 
 function isFacilityType(value: unknown): value is FacilityType {

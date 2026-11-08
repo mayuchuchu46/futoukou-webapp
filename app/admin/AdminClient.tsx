@@ -107,7 +107,7 @@ type PayoutResult = {
 // 施設・学校からの費用・特徴タグ提案（未確認分、2026-11-07追加）。
 type PendingFacilityInfo = {
   id: string;
-  facility_type: 'free' | 'alternative' | 'online';
+  facility_type: 'free' | 'alternative' | 'online' | 'innovative';
   facility_no: number;
   facility_name: string;
   fee: string | null;
@@ -123,18 +123,20 @@ const FACILITY_TYPE_LABEL: Record<PendingFacilityInfo['facility_type'], string> 
   free: 'フリースクール',
   alternative: 'オルタナティブスクール',
   online: 'オンラインフリースクール',
+  innovative: '独自教育の私立学校',
 };
 
 const FACILITY_DETAIL_PATH: Record<PendingFacilityInfo['facility_type'], string> = {
   free: '/gakko/free',
   alternative: '/gakko/alternative',
   online: '/gakko/online',
+  innovative: '/gakko/innovative',
 };
 
 // 承認済みの施設・学校情報（学校側課金プランの土台＝優先掲載のON/OFF管理用、2026-11-07追加）。
 type ApprovedFacilityInfo = {
   id: string;
-  facility_type: 'free' | 'alternative' | 'online';
+  facility_type: 'free' | 'alternative' | 'online' | 'innovative';
   facility_no: number;
   facility_name: string;
   fee: string | null;

@@ -11,6 +11,7 @@ import { ONLINE_FREE_SCHOOLS } from '@/lib/data/onlineFreeSchools';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
 import { ALTERNATIVE_SCHOOLS } from '@/lib/data/alternativeSchools';
+import { INNOVATIVE_SCHOOLS } from '@/lib/data/innovativeSchools';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import { NEWS_ITEMS } from '@/lib/data/news';
@@ -212,6 +213,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.3,
   }));
 
+  const innovativeSchoolEntries: MetadataRoute.Sitemap = INNOVATIVE_SCHOOLS.filter(
+    (s) => s.officialUrl || s.address
+  ).map((s) => ({
+    url: `${SITE_URL}/gakko/innovative/${s.no}`,
+    changeFrequency: 'monthly',
+    priority: 0.3,
+  }));
+
   // 専門家・経験者の個別プロフィールページ（/experts/[id]、/senpai/[id]）。
   // 2026-11-08、両ページにmetadataを追加したのに合わせてsitemapにも追加
   // （それまではmetadataが無くsitemapにも含めていなかった）。
@@ -264,6 +273,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...teijiSchoolEntries,
     ...shienEntries,
     ...alternativeSchoolEntries,
+    ...innovativeSchoolEntries,
     ...expertEntries,
     ...senpaiEntries,
     ...newsEntries,

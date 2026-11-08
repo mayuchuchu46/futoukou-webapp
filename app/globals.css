@@ -34,6 +34,9 @@
      使い切っていた）と被らない、淡いライラック系。 */
   --lilac-bg: #ECE4F2;
   --lilac-text: #5C4A73;
+  /* 独自教育の私立学校タブ用に追加（2026-11-08）。淡いローズ系。 */
+  --rose-bg: #F9E4EA;
+  --rose-text: #8B3A52;
 }
 
 * { box-sizing: border-box; }
