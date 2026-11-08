@@ -299,4 +299,6 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 154, prefecture: '熊本県', municipality: '熊本市中央区', name: '熊本県立湧心館高等学校', operator: '熊本県', officialUrl: 'http://sh.higo.ed.jp/yusinkan/', note: '定時制・通信制を併置した独立型高校。' },
   { no: 155, prefecture: '鹿児島県', municipality: '鹿児島市', name: '鹿児島県立開陽高等学校', operator: '鹿児島県', officialUrl: 'http://www.edu.pref.kagoshima.jp/sh/Kaiyo/', note: '全日制・定時制・通信制を併置。単位制高校。' },
   { no: 156, prefecture: '沖縄県', municipality: '沖縄市', name: '沖縄県立美里工業高等学校', operator: '沖縄県', officialUrl: 'https://www.misato-h.open.ed.jp/', note: '通信制課程（工業系）を設置。機械科・電気科・建築科・設備工業科・調理科を置く。1970年開校。' },
+  { no: 157, prefecture: '三重県', municipality: '四日市市', name: '三重県立北星高等学校', operator: '三重県', officialUrl: 'http://www.mie-c.ed.jp/hhokus/', note: '定時制（昼間部）・通信制を併置。' },
+  { no: 158, prefecture: '香川県', municipality: '高松市', name: '香川県立高松高等学校', operator: '香川県', officialUrl: 'https://www.kagawa-edu.jp/takah02/', note: '全日制・通信制を併置。令和9年度も通信制課程で生徒募集。' },
 ];
