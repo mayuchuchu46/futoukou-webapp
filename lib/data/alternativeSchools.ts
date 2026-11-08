@@ -53,6 +53,13 @@ export type AlternativeSchool = {
   note?: string;
   /** 入学・入試の方法（公式サイト等で確認できた事実のみ。無い＝未確認） */
   admission?: { text: string; sourceUrl: string };
+  /**
+   * 相談文中のマッチング用の別名（2026-11-08追加）。保護者が学校名ではなく、
+   * 運営法人・グループ名で書くケース（例：「きのくに子どもの村学園」＝
+   * 「きのくに子どもの村小中学校」の運営法人名）に対応するため。
+   * lib/facilityLinkMatch.tsのfindByNameがnameと同様に完全一致（部分文字列）で見る。
+   */
+  aliases?: readonly string[];
 };
 
 export const METHOD_LABEL: Record<AlternativeSchool['method'], string> = {

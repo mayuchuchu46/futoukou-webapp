@@ -50,7 +50,7 @@ export function coreNameBySuffix(name: string): string | null {
   return core.length > 3 ? core : null;
 }
 
-function findByName<T extends { name: string }>(
+function findByName<T extends { name: string; aliases?: readonly string[] }>(
   texts: (string | null | undefined)[],
   items: readonly T[]
 ): T | null {
@@ -64,12 +64,26 @@ function findByName<T extends { name: string }>(
     // 同じ閾値）。
     if (!item.name || item.name.length <= 3) continue;
     const core = coreNameBySuffix(item.name);
-    const matched = haystack.includes(item.name) || (!!core && haystack.includes(core));
-    if (!matched) continue;
+    let matchedLen = -1;
+    if (haystack.includes(item.name)) matchedLen = item.name.length;
+    else if (core && haystack.includes(core)) matchedLen = item.name.length;
+    // 運営法人・グループ名など、正式な学校名とは異なる言い方で書かれるケースに
+    // 対応する別名（2026-11-08追加。「きのくに子どもの村学園」で聞かれても、
+    // データ上の正式名称「きのくに子どもの村小中学校」とは一致せず、確認済み情報が
+    // 一切AIに渡らなかったことを受けて追加）。別名はそれ単体では短すぎて誤マッチ
+    // しやすいものもあるため、長さの下限チェックはせず、別名自体の長さで候補を絞る。
+    if (matchedLen < 0 && item.aliases) {
+      for (const alias of item.aliases) {
+        if (alias && haystack.includes(alias) && alias.length > matchedLen) {
+          matchedLen = alias.length;
+        }
+      }
+    }
+    if (matchedLen < 0) continue;
     // 同時に複数件一致した場合は、より長い（＝より具体的な）名称が一致した方を優先する。
-    if (item.name.length > bestLen) {
+    if (matchedLen > bestLen) {
       best = item;
-      bestLen = item.name.length;
+      bestLen = matchedLen;
     }
   }
   return best;
