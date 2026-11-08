@@ -15,6 +15,7 @@ import { INNOVATIVE_SCHOOLS } from '@/lib/data/innovativeSchools';
 import { SENPAI_CREDENTIAL } from '@/lib/config';
 import { PREFECTURES } from '@/lib/data/prefectures';
 import { NEWS_ITEMS } from '@/lib/data/news';
+import { FUTOUKOU_DATA_CARDS } from '@/lib/data/futoukouDataCards';
 import { MIMAMORI_RESULTS } from '@/lib/mimamoriShindan';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -38,6 +39,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 「データで見る不登校」ページ（2026-11-08追加）。文部科学省の公的統計を
     // まとめた、全国網羅のシェア向けコンテンツ。
     { url: `${SITE_URL}/data/futoukou`, changeFrequency: 'yearly', priority: 0.5 },
+    // 「データで見る不登校」の個別シェア用ページ（2026-11-08追加）。1つの数字・
+    // グラフだけを主役にした、Xシェア専用のページ（app/data/futoukou/[slug]参照）。
+    ...FUTOUKOU_DATA_CARDS.map((c) => ({
+      url: `${SITE_URL}/data/futoukou/${c.slug}`,
+      changeFrequency: 'yearly' as const,
+      priority: 0.4,
+    })),
     { url: `${SITE_URL}/experts`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/expertlist`, changeFrequency: 'weekly', priority: 0.4 },
     // 経験者・専門家の募集ページ（2026-11-08追加。3ページとも元々sitemapに

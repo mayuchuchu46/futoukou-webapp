@@ -83,6 +83,9 @@ export default function FutoukouDataPage() {
             <div className="qtext" style={{ fontSize: 13 }}>
               平成26年度の122,897人から、{FUTOUKOU_LATEST.label}には{FUTOUKOU_LATEST.total.toLocaleString()}人へ。12年連続で増加していますが、増加率そのものは{FUTOUKOU_LATEST.prevIncreaseRateTotal}%（前年度）から{FUTOUKOU_LATEST.increaseRateTotal}%（{FUTOUKOU_LATEST.label}）に低下しています。
             </div>
+            <Link href="/data/futoukou/total" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このグラフだけをシェアする →
+            </Link>
           </div>
 
           {/* 意外性のあるファクト：新規は9年ぶり減少 */}
@@ -97,12 +100,18 @@ export default function FutoukouDataPage() {
                 { label: `新規（${FUTOUKOU_LATEST.label}）`, value: FUTOUKOU_LATEST.newTotal, unit: '人' },
               ]}
             />
+            <Link href="/data/futoukou/shinki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
           </div>
 
           {/* 学年別 */}
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>学年別の不登校児童生徒数（{FUTOUKOU_LATEST.label}）</div>
             <NewsStatsChart stats={gradeStats} caption="学年が上がるほど多くなる傾向。小6→中1で大きく増えています。" />
+            <Link href="/data/futoukou/gakunen" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このグラフだけをシェアする →
+            </Link>
           </div>
 
           {/* 都道府県別 */}
@@ -120,6 +129,9 @@ export default function FutoukouDataPage() {
                 </div>
               ))}
             </div>
+            <Link href="/data/futoukou/todouhuken" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このランキングだけをシェアする →
+            </Link>
           </div>
 
           {/* 要因別：いじめより多い要因があるというギャップ */}
@@ -129,6 +141,9 @@ export default function FutoukouDataPage() {
               最も多いのは「学校生活に対してやる気が出ない等」（{FUTOUKOU_FACTORS[0].total.toLocaleString()}件）。「いじめ被害の情報や相談」は{FUTOUKOU_FACTORS[FUTOUKOU_FACTORS.length - 1].total.toLocaleString()}件で最も少なく、不登校の要因は一般的なイメージより幅広いことがわかります（1人に複数の項目が該当する場合があるため、合計は不登校児童生徒数とは一致しません）。
             </div>
             <NewsStatsChart stats={factorStats} />
+            <Link href="/data/futoukou/youin" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このグラフだけをシェアする →
+            </Link>
           </div>
 
           {/* 出席扱い制度 */}
@@ -137,9 +152,16 @@ export default function FutoukouDataPage() {
             <div className="qtext" style={{ fontSize: 13 }}>
               学校外の機関等で相談・指導を受け、指導要録上「出席扱い」となった児童生徒は{FUTOUKOU_LATEST.attendanceCountedOutsideSchool.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedOutsideSchool.toLocaleString()}人）、自宅でのICT等を活用した学習を出席扱いとされた児童生徒は{FUTOUKOU_LATEST.attendanceCountedIctHome.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedIctHome.toLocaleString()}人）で、どちらも前年度より増えています。
             </div>
+            <Link href="/data/futoukou/shusseki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
           </div>
 
-          {/* シェアボタン（app/news/[id]/page.tsxと同じ仕組み） */}
+          {/* ページ全体（まとめ）をシェアするボタン（app/news/[id]/page.tsxと同じ仕組み）。
+              各セクション内の「このグラフだけをシェアする →」は、1つの数字・グラフだけを
+              主役にした個別ページ（/data/futoukou/[slug]）へのリンク（2026-11-08追加、
+              「それぞれのページを作ってシェアするときは一つのグラフや数字のインパクトで
+              拡散を狙いたい」との要望を受けて）。こちらはまとめ全体をシェアしたい場合用。 */}
           <a
             className="share-btn"
             style={{ width: '100%' }}
@@ -152,7 +174,7 @@ export default function FutoukouDataPage() {
             rel="noopener noreferrer"
           >
             <span className="share-btn-icon">𝕏</span>
-            このデータをシェア
+            まとめ全体をシェア
           </a>
 
           {/* 相談・学校検索への誘導 */}
