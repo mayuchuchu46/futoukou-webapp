@@ -40,14 +40,21 @@ function isExpertAnswered(item: Consultation) {
 // バッジ全体を/gakko/matome（学び場トップ・都道府県から探す）へのリンクにした。
 // 2026-11-08、「数字の下の内訳、テキストじゃなく小さなカードにしてそれぞれリンク
 // できるようにするといい？」との相談を受けて、内訳をチップ状の個別リンクに変更。
-// 件数＋タイトル部分は従来通り/gakko/matomeへのリンクのまま残し、内訳チップは
-// それぞれ該当タブ（/gakko?type=…）に直接飛べるようにした。<a>の入れ子を避けるため、
-// 外側はLinkではなく通常のdivにし、タイトル部分と内訳チップ行をそれぞれ別のLinkにした。
-function FacilityCountBadge({
-  total,
-  breakdown,
-  className,
-}: {
+// その後「高さの幅とりすぎ」「もっとセンス良く」との指摘を受けて、チップが
+// 折り返して何段も重なる見た目から、2列の静かなミニ統計リスト（.facility-count-grid、
+// app/globals.css）に変更した。ラベル・件数とも最初から件数の多い順に並んでいるため、
+// そのままの並び順を使っている。
+const FACILITY_COUNT_ITEMS: { key: keyof FacilityCountBadgeProps['breakdown']; label: string; href: string }[] = [
+  { key: 'free', label: 'フリースクール', href: '/gakko?type=free' },
+  { key: 'teiji', label: '定時制高校', href: '/gakko?type=teiji' },
+  { key: 'shien', label: '教育支援センター', href: '/gakko?type=shien' },
+  { key: 'tsushin', label: '通信制高校', href: '/gakko?type=tsushin' },
+  { key: 'gakko', label: '学びの多様化学校', href: '/gakko' },
+  { key: 'alternative', label: 'オルタナティブスクール', href: '/gakko?type=alternative' },
+  { key: 'online', label: 'オンラインフリースクール', href: '/gakko?type=online' },
+];
+
+type FacilityCountBadgeProps = {
   total: number;
   breakdown: {
     free: number;
@@ -59,14 +66,11 @@ function FacilityCountBadge({
     online: number;
   };
   className: string;
-}) {
-  // チップの共通スタイル。デフォルトの.chip（padding: 6px 12px）のままだと、
-  // 7つ並べた時に折り返しで縦に何段も重なり高さを取りすぎるため、一回り
-  // コンパクトな余白・文字サイズにしている（2026-11-08、「高さの幅とりすぎ」との
-  // 指摘を受けて調整）。
-  const chipStyle = { textDecoration: 'none', fontSize: 10, padding: '3px 9px', lineHeight: 1.4 } as const;
+};
+
+function FacilityCountBadge({ total, breakdown, className }: FacilityCountBadgeProps) {
   return (
-    <div className={`card ${className}`} style={{ alignItems: 'center', gap: 3, textAlign: 'center' }}>
+    <div className={`card ${className}`} style={{ alignItems: 'center', gap: 6, textAlign: 'center' }}>
       <Link
         href="/gakko/matome"
         style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
@@ -76,28 +80,13 @@ function FacilityCountBadge({
           {total.toLocaleString()}件
         </div>
       </Link>
-      <div className="chip-row chip-row-wrap" style={{ justifyContent: 'center', gap: 4 }}>
-        <Link href="/gakko?type=free" className="chip chip-tag" style={chipStyle}>
-          フリースクール{breakdown.free}
-        </Link>
-        <Link href="/gakko?type=teiji" className="chip chip-tag" style={chipStyle}>
-          定時制高校{breakdown.teiji}
-        </Link>
-        <Link href="/gakko?type=shien" className="chip chip-tag" style={chipStyle}>
-          教育支援センター{breakdown.shien}
-        </Link>
-        <Link href="/gakko?type=tsushin" className="chip chip-tag" style={chipStyle}>
-          通信制高校{breakdown.tsushin}
-        </Link>
-        <Link href="/gakko" className="chip chip-tag" style={chipStyle}>
-          学びの多様化学校{breakdown.gakko}
-        </Link>
-        <Link href="/gakko?type=alternative" className="chip chip-tag" style={chipStyle}>
-          オルタナティブスクール{breakdown.alternative}
-        </Link>
-        <Link href="/gakko?type=online" className="chip chip-tag" style={chipStyle}>
-          オンラインフリースクール{breakdown.online}
-        </Link>
+      <div className="facility-count-grid" style={{ fontSize: 11 }}>
+        {FACILITY_COUNT_ITEMS.map((item) => (
+          <Link key={item.key} href={item.href} className="facility-count-item">
+            <span className="facility-count-item-label">{item.label}</span>
+            <span className="facility-count-item-count">{breakdown[item.key]}</span>
+          </Link>
+        ))}
       </div>
     </div>
   );

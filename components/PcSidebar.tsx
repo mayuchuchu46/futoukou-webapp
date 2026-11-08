@@ -174,36 +174,45 @@ export default function PcSidebar({
           当初はgakkoLinksの直前（サイド最下部）に置いていたが、「上の方において」
           との指摘を受けて、スクロールせず見える「相談する」ボタン直下に移動した。
           2026-11-08、HomeClient.tsx側と同じ理由で、内訳をそれぞれの学び場タブへ
-          直接飛べるチップに変更した（件数＋タイトル部分は引き続き/gakko/matomeへの
-          リンク）。サイドの幅が狭いため、本文側よりさらに一回り小さいチップにしている。 */}
-      <div className="card" style={{ alignItems: 'center', gap: 2, textAlign: 'center' }}>
+          直接飛べるリンクに変更した（件数＋タイトル部分は引き続き/gakko/matomeへの
+          リンク）。その後「高さの幅とりすぎ」「もっとセンス良く」との指摘を受けて、
+          HomeClient.tsx側と同じ2列のミニ統計リスト（.facility-count-grid、
+          app/globals.css）に変更した。 */}
+      <div className="card" style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
         <Link href="/gakko/matome" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
           <div className="muted" style={{ fontSize: 10 }}>全国の不登校の進路選択肢を掲載</div>
           <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
             {TOTAL_FACILITY_COUNT.toLocaleString()}件
           </div>
         </Link>
-        <div className="chip-row chip-row-wrap" style={{ justifyContent: 'center', gap: 4 }}>
-          <Link href="/gakko?type=free" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
-            フリースクール{FACILITY_COUNT_BREAKDOWN.free}
+        <div className="facility-count-grid" style={{ fontSize: 10 }}>
+          <Link href="/gakko?type=free" className="facility-count-item">
+            <span className="facility-count-item-label">フリースクール</span>
+            <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.free}</span>
           </Link>
-          <Link href="/gakko?type=teiji" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
-            定時制高校{FACILITY_COUNT_BREAKDOWN.teiji}
+          <Link href="/gakko?type=teiji" className="facility-count-item">
+            <span className="facility-count-item-label">定時制高校</span>
+            <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.teiji}</span>
           </Link>
-          <Link href="/gakko?type=shien" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
-            教育支援センター{FACILITY_COUNT_BREAKDOWN.shien}
+          <Link href="/gakko?type=shien" className="facility-count-item">
+            <span className="facility-count-item-label">教育支援センター</span>
+            <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.shien}</span>
           </Link>
-          <Link href="/gakko?type=tsushin" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
-            通信制高校{FACILITY_COUNT_BREAKDOWN.tsushin}
+          <Link href="/gakko?type=tsushin" className="facility-count-item">
+            <span className="facility-count-item-label">通信制高校</span>
+            <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.tsushin}</span>
           </Link>
-          <Link href="/gakko" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
-            学びの多様化学校{FACILITY_COUNT_BREAKDOWN.gakko}
+          <Link href="/gakko" className="facility-count-item">
+            <span className="facility-count-item-label">学びの多様化学校</span>
+            <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.gakko}</span>
           </Link>
-          <Link href="/gakko?type=alternative" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
-            オルタナティブスクール{FACILITY_COUNT_BREAKDOWN.alternative}
+          <Link href="/gakko?type=alternative" className="facility-count-item">
+            <span className="facility-count-item-label">オルタナティブスクール</span>
+            <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.alternative}</span>
           </Link>
-          <Link href="/gakko?type=online" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
-            オンラインフリースクール{FACILITY_COUNT_BREAKDOWN.online}
+          <Link href="/gakko?type=online" className="facility-count-item">
+            <span className="facility-count-item-label">オンラインフリースクール</span>
+            <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.online}</span>
           </Link>
         </div>
       </div>
