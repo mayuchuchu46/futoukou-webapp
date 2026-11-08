@@ -717,8 +717,8 @@ export const FREE_SCHOOLS: FreeSchool[] = [
   { no: 670, name: 'フリースクールわくわく（特定非営利活動法人わくわく）', prefecture: '福島県', city: '白河市', address: '', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
   { no: 671, name: 'WILLBE高等学院（フリースクールウィル・ビー）', prefecture: '福井県', city: '福井市', address: '福井市中央3丁目1-3 太田屋ビル', contact: '0776-25-3261', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
   { no: 672, name: 'NPO法人はぁとぴあ21（フリースクールフレンズ）', prefecture: '富山県', city: '射水市', address: '射水市三ケ2467-2F', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
-  { no: 673, name: 'NPO法人Nest（旧フリースクール下関）', prefecture: '山口県', city: '下関市', address: '下関市生野町2-27-7-4F', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
-  { no: 674, name: '特定非営利活動法人フリースペースコティ', prefecture: '山口県', city: '下松市', address: '下松市末武上1790番地', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
+  { no: 673, name: 'NPO法人Nest（旧フリースクール下関）', prefecture: '山口県', city: '下関市', address: '下関市生野町2-27-7-4F', contact: '083-255-1026 / nest-free@polka.ocn.ne.jp', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
+  { no: 674, name: '特定非営利活動法人フリースペースコティ', prefecture: '山口県', city: '下松市', address: '下松市末武上1790番地', contact: 'freespace.koti@gmail.com', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
   { no: 675, name: '特定非営利活動法人マナビダネ', prefecture: '埼玉県', city: '入間市', address: '入間市下藤沢1071-21', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
   { no: 676, name: 'つばさ高等学院／つばさスクール', prefecture: '埼玉県', city: '吉川市', address: '吉川市きよみ野2-25-1 2階', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
   // 埼玉県（2026-11-08追加）。埼玉県教育委員会公開の「不登校の子供とその保護者を
@@ -787,6 +787,9 @@ export const FREE_SCHOOLS: FreeSchool[] = [
   { no: 784, name: '波の家福祉会', prefecture: '兵庫県', city: '明石市', address: '明石市魚住町錦が丘1-19-15', contact: '078-946-7692', ageRange: '記載なし', sourceUrl: 'https://web.pref.hyogo.lg.jp/kk16/minkan.html', asOf: '令和8年11月確認（兵庫県「支援機関ナビ」）' },
   { no: 785, name: '神戸オレンジの会', prefecture: '兵庫県', city: '神戸市兵庫区', address: '神戸市兵庫区羽坂通4-2-22', contact: '078-515-8060', ageRange: '記載なし', sourceUrl: 'https://web.pref.hyogo.lg.jp/kk16/minkan.html', asOf: '令和8年11月確認（兵庫県「支援機関ナビ」）' },
   { no: 786, name: 'NPO法人グローバル・シップスこうべ（NOAH）', prefecture: '兵庫県', city: 'たつの市', address: 'たつの市立野町2-18', contact: '', ageRange: '記載なし', sourceUrl: 'https://web.pref.hyogo.lg.jp/kk16/minkan.html', asOf: '令和8年11月確認（兵庫県「支援機関ナビ」）', note: 'オンラインを主体とした活動。' },
+  // 愛媛県（2026-11-08追加）。既存の今治市認定施設一覧以外に、愛媛県公式サイト
+  // （nv.pref.ehime.jp）掲載資料より確認できた1件を追加。
+  { no: 787, name: '特定非営利活動法人ホームスクール愛媛', prefecture: '愛媛県', city: '松山市', address: '松山市湯の山2丁目1番地15', contact: '090-8210-6120 / kawachi@manabinomadogichi.com', ageRange: '記載なし', sourceUrl: 'https://nv.pref.ehime.jp/data/html/202500000024/2.pdf', asOf: '令和8年11月確認（愛媛県公式サイト）', officialUrl: 'https://homeschool-ehime.com/', note: '訪問支援・LINE・オンライン相談や家庭学習支援が中心で、通所型フリースクールとは運営形態が異なる。' },
   { no: 677, name: '一般社団法人セントアイヴス フリースクールスパンアカデミー', prefecture: '千葉県', city: '市原市', address: '市原市五井中央東2-25-1 小倉ビル2階', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
   { no: 678, name: 'フリースクールJAT', prefecture: '千葉県', city: '千葉市中央区', address: '千葉市中央区汐見丘町14-5', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
   { no: 679, name: 'NPO法人ネモちば（不登校・ひきこもりネットワーク）', prefecture: '千葉県', city: '習志野市', address: '習志野市谷津2-18-33', contact: '', ageRange: '記載なし', sourceUrl: 'https://freeschoolnetwork.jp/member', asOf: '令和8年現在（フリースクール全国ネットワーク加盟団体一覧）' },
