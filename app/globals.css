@@ -1153,9 +1153,10 @@ h2.pagetitle {
    あることが伝わるようにしている。 */
 .facility-count-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 5px;
   width: 100%;
+  max-width: 100%;
 }
 .facility-count-item {
   display: flex;
@@ -1164,6 +1165,10 @@ h2.pagetitle {
   text-decoration: none;
   padding: 4px 7px;
   border-radius: 9px;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
   transition: filter 0.15s ease, transform 0.15s ease;
 }
 .facility-count-item:hover { filter: brightness(0.96); transform: translateY(-1px); }
