@@ -176,7 +176,7 @@ export default function PcSidebar({
           2026-11-08、HomeClient.tsx側と同じ理由で、内訳をそれぞれの学び場タブへ
           直接飛べるチップに変更した（件数＋タイトル部分は引き続き/gakko/matomeへの
           リンク）。サイドの幅が狭いため、本文側よりさらに一回り小さいチップにしている。 */}
-      <div className="card" style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
+      <div className="card" style={{ alignItems: 'center', gap: 2, textAlign: 'center' }}>
         <Link href="/gakko/matome" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
           <div className="muted" style={{ fontSize: 10 }}>全国の不登校の進路選択肢を掲載</div>
           <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>

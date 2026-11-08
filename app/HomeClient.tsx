@@ -60,8 +60,13 @@ function FacilityCountBadge({
   };
   className: string;
 }) {
+  // チップの共通スタイル。デフォルトの.chip（padding: 6px 12px）のままだと、
+  // 7つ並べた時に折り返しで縦に何段も重なり高さを取りすぎるため、一回り
+  // コンパクトな余白・文字サイズにしている（2026-11-08、「高さの幅とりすぎ」との
+  // 指摘を受けて調整）。
+  const chipStyle = { textDecoration: 'none', fontSize: 10, padding: '3px 9px', lineHeight: 1.4 } as const;
   return (
-    <div className={`card ${className}`} style={{ alignItems: 'center', gap: 6, textAlign: 'center' }}>
+    <div className={`card ${className}`} style={{ alignItems: 'center', gap: 3, textAlign: 'center' }}>
       <Link
         href="/gakko/matome"
         style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
@@ -71,26 +76,26 @@ function FacilityCountBadge({
           {total.toLocaleString()}件
         </div>
       </Link>
-      <div className="chip-row chip-row-wrap" style={{ justifyContent: 'center' }}>
-        <Link href="/gakko?type=free" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+      <div className="chip-row chip-row-wrap" style={{ justifyContent: 'center', gap: 4 }}>
+        <Link href="/gakko?type=free" className="chip chip-tag" style={chipStyle}>
           フリースクール{breakdown.free}
         </Link>
-        <Link href="/gakko?type=teiji" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+        <Link href="/gakko?type=teiji" className="chip chip-tag" style={chipStyle}>
           定時制高校{breakdown.teiji}
         </Link>
-        <Link href="/gakko?type=shien" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+        <Link href="/gakko?type=shien" className="chip chip-tag" style={chipStyle}>
           教育支援センター{breakdown.shien}
         </Link>
-        <Link href="/gakko?type=tsushin" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+        <Link href="/gakko?type=tsushin" className="chip chip-tag" style={chipStyle}>
           通信制高校{breakdown.tsushin}
         </Link>
-        <Link href="/gakko" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+        <Link href="/gakko" className="chip chip-tag" style={chipStyle}>
           学びの多様化学校{breakdown.gakko}
         </Link>
-        <Link href="/gakko?type=alternative" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+        <Link href="/gakko?type=alternative" className="chip chip-tag" style={chipStyle}>
           オルタナティブスクール{breakdown.alternative}
         </Link>
-        <Link href="/gakko?type=online" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+        <Link href="/gakko?type=online" className="chip chip-tag" style={chipStyle}>
           オンラインフリースクール{breakdown.online}
         </Link>
       </div>
