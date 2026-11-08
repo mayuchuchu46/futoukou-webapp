@@ -290,4 +290,9 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 145, prefecture: '福岡県', municipality: '福岡市博多区', name: '福岡県立博多青松高等学校', operator: '福岡県', officialUrl: 'https://hakataseisho.fku.ed.jp/', note: '通信制のみの独立型公立通信制高校。北九州（ひびき高校内）・筑後（大牟田北高校内）・筑豊（西田川高校内）に協力校あり。' },
   { no: 146, prefecture: '高知県', municipality: '高知市', name: '高知県立高知北高等学校', operator: '高知県', officialUrl: 'https://www.kochinet.ed.jp/kitakou-h/' },
   { no: 147, prefecture: '高知県', municipality: '幡多郡黒潮町', name: '高知県立大方高等学校', operator: '高知県', officialUrl: 'https://www.kochinet.ed.jp/ogata-h/', note: '多部制単位制（昼間部・夜間部・通信制を併置）。平成17年度開校。' },
+  { no: 148, prefecture: '山形県', municipality: '山形市', name: '山形県立霞城学園高等学校', operator: '山形県', officialUrl: 'https://www.kajogakuen-h.ed.jp/', note: '定時制（午前・午後・夜間）・通信制を併置した単位制高校。JR山形駅西口直結の霞城セントラル5〜10階に所在。スクーリング支部は山形・米沢・新庄・鶴岡・酒田の5か所。' },
+  { no: 149, prefecture: '福島県', municipality: '郡山市', name: '福島県立郡山萌世高等学校', operator: '福島県', officialUrl: 'https://housei-h.fcs.ed.jp/', note: '通信制・定時制を併置。福島県唯一の公立通信制高校。JR郡山駅前のビッグアイ内に所在。2001年開校。' },
+  { no: 150, prefecture: '栃木県', municipality: '宇都宮市', name: '栃木県立宇都宮高等学校', operator: '栃木県', officialUrl: 'https://www.tochigi-edu.ed.jp/utsunomiya/nct3/', note: '通信制課程のみ。令和10（2028）年度末で閉課程予定。' },
+  { no: 151, prefecture: '千葉県', municipality: '千葉市若葉区', name: '千葉県立千葉大宮高等学校', operator: '千葉県', officialUrl: 'https://cms1.chiba-c.ed.jp/chibaohmiya-h/', note: '千葉県唯一の公立通信制高校。協力校として銚子商業・館山総合を指定。' },
+  { no: 152, prefecture: '新潟県', municipality: '上越市', name: '新潟県立高田南城高等学校', operator: '新潟県', officialUrl: 'https://takadammsr-h.nein.ed.jp/', note: '定時制・通信制を併置。昭和43年創立。' },
 ];
