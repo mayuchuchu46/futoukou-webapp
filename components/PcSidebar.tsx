@@ -177,7 +177,8 @@ export default function PcSidebar({
           直接飛べるリンクに変更した（件数＋タイトル部分は引き続き/gakko/matomeへの
           リンク）。その後「高さの幅とりすぎ」「もっとセンス良く」との指摘を受けて、
           HomeClient.tsx側と同じ2列のミニ統計リスト（.facility-count-grid、
-          app/globals.css）に変更した。 */}
+          app/globals.css）に変更し、さらに「地味すぎる」との指摘を受けて
+          種類ごとにアイコン＋パステル背景色を付けた（2026-11-08）。 */}
       <div className="card" style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
         <Link href="/gakko/matome" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
           <div className="muted" style={{ fontSize: 10 }}>全国の不登校の進路選択肢を掲載</div>
@@ -186,31 +187,38 @@ export default function PcSidebar({
           </div>
         </Link>
         <div className="facility-count-grid" style={{ fontSize: 10 }}>
-          <Link href="/gakko?type=free" className="facility-count-item">
+          <Link href="/gakko?type=free" className="facility-count-item" style={{ background: 'var(--moss-bg)', color: 'var(--moss-text)' }}>
+            <span className="facility-count-item-icon">🏠</span>
             <span className="facility-count-item-label">フリースクール</span>
             <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.free}</span>
           </Link>
-          <Link href="/gakko?type=teiji" className="facility-count-item">
+          <Link href="/gakko?type=teiji" className="facility-count-item" style={{ background: 'var(--slate-bg)', color: 'var(--slate-text)' }}>
+            <span className="facility-count-item-icon">🌙</span>
             <span className="facility-count-item-label">定時制高校</span>
             <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.teiji}</span>
           </Link>
-          <Link href="/gakko?type=shien" className="facility-count-item">
+          <Link href="/gakko?type=shien" className="facility-count-item" style={{ background: 'var(--teal-bg)', color: 'var(--teal-text)' }}>
+            <span className="facility-count-item-icon">🏛️</span>
             <span className="facility-count-item-label">教育支援センター</span>
             <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.shien}</span>
           </Link>
-          <Link href="/gakko?type=tsushin" className="facility-count-item">
+          <Link href="/gakko?type=tsushin" className="facility-count-item" style={{ background: 'var(--clay-bg)', color: 'var(--clay-text)' }}>
+            <span className="facility-count-item-icon">📮</span>
             <span className="facility-count-item-label">通信制高校</span>
             <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.tsushin}</span>
           </Link>
-          <Link href="/gakko" className="facility-count-item">
+          <Link href="/gakko" className="facility-count-item" style={{ background: 'var(--orange-bg)', color: 'var(--orange-text)' }}>
+            <span className="facility-count-item-icon">🏫</span>
             <span className="facility-count-item-label">学びの多様化学校</span>
             <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.gakko}</span>
           </Link>
-          <Link href="/gakko?type=alternative" className="facility-count-item">
+          <Link href="/gakko?type=alternative" className="facility-count-item" style={{ background: 'var(--lilac-bg)', color: 'var(--lilac-text)' }}>
+            <span className="facility-count-item-icon">🎨</span>
             <span className="facility-count-item-label">オルタナティブスクール</span>
             <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.alternative}</span>
           </Link>
-          <Link href="/gakko?type=online" className="facility-count-item">
+          <Link href="/gakko?type=online" className="facility-count-item" style={{ background: 'var(--yellow-bg)', color: 'var(--yellow-text)' }}>
+            <span className="facility-count-item-icon">💻</span>
             <span className="facility-count-item-label">オンラインフリースクール</span>
             <span className="facility-count-item-count">{FACILITY_COUNT_BREAKDOWN.online}</span>
           </Link>

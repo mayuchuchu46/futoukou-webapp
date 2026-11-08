@@ -42,16 +42,25 @@ function isExpertAnswered(item: Consultation) {
 // できるようにするといい？」との相談を受けて、内訳をチップ状の個別リンクに変更。
 // その後「高さの幅とりすぎ」「もっとセンス良く」との指摘を受けて、チップが
 // 折り返して何段も重なる見た目から、2列の静かなミニ統計リスト（.facility-count-grid、
-// app/globals.css）に変更した。ラベル・件数とも最初から件数の多い順に並んでいるため、
-// そのままの並び順を使っている。
-const FACILITY_COUNT_ITEMS: { key: keyof FacilityCountBadgeProps['breakdown']; label: string; href: string }[] = [
-  { key: 'free', label: 'フリースクール', href: '/gakko?type=free' },
-  { key: 'teiji', label: '定時制高校', href: '/gakko?type=teiji' },
-  { key: 'shien', label: '教育支援センター', href: '/gakko?type=shien' },
-  { key: 'tsushin', label: '通信制高校', href: '/gakko?type=tsushin' },
-  { key: 'gakko', label: '学びの多様化学校', href: '/gakko' },
-  { key: 'alternative', label: 'オルタナティブスクール', href: '/gakko?type=alternative' },
-  { key: 'online', label: 'オンラインフリースクール', href: '/gakko?type=online' },
+// app/globals.css）に変更した。さらに「地味すぎる（テキストだけで映えがない）」との
+// 指摘を受けて、種類ごとに絵文字アイコン＋パステル背景色（既存のカラートークンを
+// 再利用）を付けて視覚的に区別できるようにした（2026-11-08）。ラベル・件数とも
+// 最初から件数の多い順に並んでいるため、そのままの並び順を使っている。
+const FACILITY_COUNT_ITEMS: {
+  key: keyof FacilityCountBadgeProps['breakdown'];
+  label: string;
+  href: string;
+  icon: string;
+  bg: string;
+  text: string;
+}[] = [
+  { key: 'free', label: 'フリースクール', href: '/gakko?type=free', icon: '🏠', bg: 'var(--moss-bg)', text: 'var(--moss-text)' },
+  { key: 'teiji', label: '定時制高校', href: '/gakko?type=teiji', icon: '🌙', bg: 'var(--slate-bg)', text: 'var(--slate-text)' },
+  { key: 'shien', label: '教育支援センター', href: '/gakko?type=shien', icon: '🏛️', bg: 'var(--teal-bg)', text: 'var(--teal-text)' },
+  { key: 'tsushin', label: '通信制高校', href: '/gakko?type=tsushin', icon: '📮', bg: 'var(--clay-bg)', text: 'var(--clay-text)' },
+  { key: 'gakko', label: '学びの多様化学校', href: '/gakko', icon: '🏫', bg: 'var(--orange-bg)', text: 'var(--orange-text)' },
+  { key: 'alternative', label: 'オルタナティブスクール', href: '/gakko?type=alternative', icon: '🎨', bg: 'var(--lilac-bg)', text: 'var(--lilac-text)' },
+  { key: 'online', label: 'オンラインフリースクール', href: '/gakko?type=online', icon: '💻', bg: 'var(--yellow-bg)', text: 'var(--yellow-text)' },
 ];
 
 type FacilityCountBadgeProps = {
@@ -82,7 +91,13 @@ function FacilityCountBadge({ total, breakdown, className }: FacilityCountBadgeP
       </Link>
       <div className="facility-count-grid" style={{ fontSize: 11 }}>
         {FACILITY_COUNT_ITEMS.map((item) => (
-          <Link key={item.key} href={item.href} className="facility-count-item">
+          <Link
+            key={item.key}
+            href={item.href}
+            className="facility-count-item"
+            style={{ background: item.bg, color: item.text }}
+          >
+            <span className="facility-count-item-icon">{item.icon}</span>
             <span className="facility-count-item-label">{item.label}</span>
             <span className="facility-count-item-count">{breakdown[item.key]}</span>
           </Link>
