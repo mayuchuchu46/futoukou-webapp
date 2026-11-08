@@ -321,7 +321,7 @@ export default async function GakkoPage({
           <Link href="/gakko/shindan" className="card" style={{ textDecoration: 'none', color: 'inherit', alignItems: 'flex-start', gap: 4 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>学校タイプ診断 ›</div>
             <div className="muted" style={{ fontSize: 12 }}>
-              都道府県から一覧を見るのではなく、学年・好きなこと・通う頻度などの条件を選んで、お子さんに合う学校の候補を絞り込めます。
+              学年・好きなこと・通う頻度から、お子さんに合う学校を絞り込めます。
             </div>
           </Link>
 
@@ -332,7 +332,7 @@ export default async function GakkoPage({
           <Link href="/gakko/matome" className="card" style={{ textDecoration: 'none', color: 'inherit', alignItems: 'flex-start', gap: 4 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>都道府県からまとめて探す ›</div>
             <div className="muted" style={{ fontSize: 12 }}>
-              お住まいの都道府県を1回選ぶだけで、学びの多様化学校・フリースクール・通信制高校・定時制高校・助成金・支援制度など、すべてのカテゴリをまとめて一覧できます。
+              都道府県を1つ選ぶだけで、全カテゴリをまとめて一覧できます。
             </div>
           </Link>
 
