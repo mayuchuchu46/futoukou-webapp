@@ -12,6 +12,7 @@ import TagChips from '@/components/TagChips';
 import PcSidebar from '@/components/PcSidebar';
 import TodayQuestionTeaser from '@/components/TodayQuestionTeaser';
 import NewsTeaser from '@/components/NewsTeaser';
+import FutoukouDataTeaser from '@/components/FutoukouDataTeaser';
 import MimamoriShindanTeaser from '@/components/MimamoriShindanTeaser';
 import FeaturedGakkoRanking from '@/components/FeaturedGakkoRanking';
 import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
@@ -567,6 +568,11 @@ export default function HomeClient({
                 PcSidebar側には別途置いていない）。ニュースが1件もないうちは
                 NewsTeaser内部でnullを返し、何も表示されない。 */}
             {showExtras && <NewsTeaser />}
+
+            {/* 「データで見る不登校」誘導バナー（2026-11-08追加）。ニュースバナーの
+                直下に置く。PC・モバイル両方で同じ位置に出す（上のNewsTeaserと同じ
+                理由）。 */}
+            {showExtras && <FutoukouDataTeaser />}
 
             {/* 拡散をメインに置いた「見守り力タイプ診断」への誘導バナー（2026-11-01追加）。
                 ニュースバナーの直下、専門家一覧の上に置く。
