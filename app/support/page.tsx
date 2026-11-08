@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { PREFECTURE_SUPPORT_LINKS } from '@/lib/data/prefectureSupportLinks';
+import { TOKYO_ADOLESCENT_CLINICS } from '@/lib/data/tokyoAdolescentClinics';
 
 // 検索結果でトップページと同じtitle/descriptionになっていたため、ページ固有の
 // metadataを追加（2026-10-14、SEO対策の一環）。
@@ -140,6 +141,68 @@ export default function SupportPage() {
           </details>
           <div className="muted" style={{ fontSize: 12 }}>
             各ページの内容・URLは2026年11月時点で確認したものです。自治体のサイトは変更されることがあるため、最新情報は各都道府県の公式サイトでご確認ください。
+          </div>
+        </div>
+
+        {/* 思春期外来（児童精神科等）の個別リスト・東京都パイロット（2026-11-08追加）。
+            公式ソースで確認できた3件のみを掲載。口コミ・患者レビューは掲載しない
+            （lib/data/tokyoAdolescentClinics.tsのコメント参照）。 */}
+        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>思春期外来（児童精神科など）- 東京都</div>
+          <div className="qtext">
+            思春期のお子さんのこころの不調を専門にみている医療機関です。受診には予約が必要な場合がほとんどです。まずは電話や公式サイトでご確認ください。
+          </div>
+          <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 10, width: '100%' }}>
+            {TOKYO_ADOLESCENT_CLINICS.map((c) => (
+              <li key={c.name} style={{ borderBottom: '1px solid #eee', paddingBottom: 10 }}>
+                <div style={{ fontWeight: 700 }}>{c.name}</div>
+                <div className="qtext" style={{ fontSize: 13 }}>{c.departments}</div>
+                <div className="muted" style={{ fontSize: 12 }}>{c.address}</div>
+                {c.phone && (
+                  <div className="muted" style={{ fontSize: 12 }}>
+                    <a href={`tel:${c.phone.replace(/[^0-9]/g, '')}`}>{c.phone}</a>
+                  </div>
+                )}
+                <div className="qtext" style={{ fontSize: 13, marginTop: 4 }}>{c.note}</div>
+                <div className="muted" style={{ fontSize: 11 }}>
+                  出典：{c.sourceLabel}（{c.sourceNote}）
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="muted" style={{ fontSize: 12 }}>
+            東京都内で、公式サイト等で確認できた医療機関のみを掲載した小規模な試験的リストです。他地域・他施設への拡充は今後検討します。掲載内容は変更される場合があるため、受診前に必ず各医療機関の公式サイト等でご確認ください。
+          </div>
+        </div>
+
+        {/* 発達検査・WISCなどの相談窓口（2026-11-08追加）。医療機関ごとの実施状況を
+            精密調査するのではなく、まずは東京都の公式な入口窓口（TOSCA）のみを案内する
+            方針（ユーザー確認済み）。 */}
+        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>発達検査（WISCなど）の相談窓口</div>
+          <div className="qtext">
+            発達検査を受けられる場所は地域（児童相談所・医療機関など）によって異なります。まずは東京都の公式な相談窓口にご相談いただくと、お住まいの地域に合った案内が受けられます。
+          </div>
+          <div>
+            <div style={{ fontWeight: 700 }}>東京都発達障害者支援センター（こどもTOSCA）｜18歳未満</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              <a href="tel:0364130231" style={{ fontWeight: 700 }}>03-6413-0231</a>（電話・FAX・メールで予約制）
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              〒156-0055 東京都世田谷区船橋1-30-9／受付：月・火・水・木・金 9:00〜17:00
+            </div>
+          </div>
+          <div>
+            <div style={{ fontWeight: 700 }}>東京都発達障害者支援センター（おとなTOSCA）｜18歳以上</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              <a href="tel:0355798207" style={{ fontWeight: 700 }}>03-5579-8207</a>（電話で予約制）
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              〒162-0851 東京都新宿区弁天町91番地
+            </div>
+          </div>
+          <div className="muted" style={{ fontSize: 12 }}>
+            出典：東京都福祉局公式サイト（fukushi.metro.tokyo.lg.jp）、港区公式サイト掲載情報（2026年11月時点）。TOSCAは相談・情報提供の窓口であり、発達検査そのものを実施する機関ではない場合があります。検査の実施場所については窓口にご相談ください。
           </div>
         </div>
 
