@@ -306,4 +306,10 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 161, prefecture: '三重県', municipality: '松阪市', name: '三重県立松阪高等学校', operator: '三重県', officialUrl: 'https://www.mie-c.ed.jp/hmatus/', note: '通信制課程を設置。三重県内の公立通信制2校のうちの1校（もう1校は北星高校）。Instagram公式アカウント（matsusaka_tusin）で情報発信中。' },
   { no: 162, prefecture: '長崎県', municipality: '長崎市', name: '長崎県立鳴滝高等学校', operator: '長崎県', note: '定時制（昼間部・夜間部）・通信制を併置。令和7年度も通信制で生徒募集。長崎県内の通信制を持つ県立高校は鳴滝と佐世保中央の2校のみ。' },
   { no: 163, prefecture: '長崎県', municipality: '佐世保市', name: '長崎県立佐世保中央高等学校', operator: '長崎県', note: '定時制（昼間部・夜間部）・通信制を併置。令和7年度も通信制で生徒募集。' },
+  { no: 164, prefecture: '滋賀県', municipality: '大津市', name: '滋賀県立大津清陵高等学校', operator: '滋賀県', officialUrl: 'https://www.ohtsuseiryo-h.shiga-ec.ed.jp/', note: '定時制（昼間部・夜間部）・通信制（通信部）を併置した単位制高校。大津市内に昼間部・通信部と夜間部（馬場分校）が所在。' },
+  { no: 165, prefecture: '奈良県', municipality: '天理市', name: '奈良県立山辺高等学校', operator: '奈良県', officialUrl: 'https://yamabe-hs.e-net.nara.jp/', note: '令和6（2024）年4月に通信制課程を新設。全日制・定時制・通信制を併置。' },
+  { no: 166, prefecture: '和歌山県', municipality: '和歌山市', name: '和歌山県立きのくに青雲高等学校', operator: '和歌山県', officialUrl: 'https://www.seiun-h.wakayama-c.ed.jp/', note: '通信制課程（Aコース）・定時制課程を設置。不登校生徒向けの全通併修・定通併修制度（Dコース）もあり。和歌山県内の公立通信制3校のうちの1校。' },
+  { no: 167, prefecture: '和歌山県', municipality: '橋本市', name: '和歌山県立伊都中央高等学校', operator: '和歌山県', officialUrl: 'https://www.itochuo-h.wakayama-c.ed.jp/', note: '平成27（2015）年開校。定時制（昼間・夜間）・通信制を設置する普通科高校。紀北地域の学習拠点として、幅広い年齢層を受け入れる。和歌山県内の公立通信制3校のうちの1校。' },
+  { no: 168, prefecture: '和歌山県', municipality: '田辺市', name: '和歌山県立南紀高等学校', operator: '和歌山県', officialUrl: 'https://www.nanki-h.wakayama-c.ed.jp/', note: '通信制課程を設置。田辺学級・新宮学級の2学級体制でスクーリングを実施。和歌山県内の公立通信制3校のうちの1校。' },
+  { no: 169, prefecture: '鳥取県', municipality: '鳥取市', name: '鳥取県立鳥取緑風高等学校', operator: '鳥取県', note: '定時制（総合学科）・通信制（普通科）を併置した単位制高校。平成16（2004）年開校。特別支援教育の重点校としても指定されている。' },
 ];
