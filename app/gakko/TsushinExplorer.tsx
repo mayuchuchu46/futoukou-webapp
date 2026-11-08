@@ -24,12 +24,21 @@ export default function TsushinExplorer({
 }) {
   const router = useRouter();
   const [pref, setPref] = useState<string | null>(initialPref);
+  const [keyword, setKeyword] = useState('');
 
   function selectPref(p: string | null) {
     setPref(p);
     const href = p ? `/gakko?type=tsushin&pref=${encodeURIComponent(p)}` : '/gakko?type=tsushin';
     router.replace(href, { scroll: false });
   }
+
+  // キーワード検索は都道府県の絞り込みより優先する（2026-11-08追加、FreeSchoolExplorer.tsxと同じ理由）。
+  const trimmedKeyword = keyword.trim();
+  const keywordResults = trimmedKeyword
+    ? allSchools.filter((s) =>
+        `${s.name}${s.prefecture}${s.municipality ?? ''}${s.operator}`.includes(trimmedKeyword)
+      )
+    : [];
 
   // app/gakko/matome/page.tsxの同じ分岐と同じ理由（2026-10-27）：このデータの出典自体が
   // 「通信教育を行う区域に東京都を含む」学校の一覧のため、東京都が選ばれた場合は
@@ -55,8 +64,54 @@ export default function TsushinExplorer({
   );
   return (
     <>
+      {/* キーワード検索（2026-11-08追加）。都道府県を選ばなくても学校名で全国から
+          検索できるようにした。 */}
+      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <div className="answer-label" style={{ fontSize: 14 }}>学校名・地域名で検索</div>
+        <input
+          className="input"
+          type="search"
+          placeholder="学校名や地域名を入力…（全国から検索）"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+      </div>
+
+      {trimmedKeyword && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>「{trimmedKeyword}」の検索結果（{keywordResults.length}件）</div>
+          {keywordResults.length === 0 ? (
+            <div className="muted">「{trimmedKeyword}」に一致する通信制高校は見つかりませんでした。</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+              {keywordResults.map((s) => (
+                <Link
+                  key={s.no}
+                  href={`/gakko/tsushin/${s.no}`}
+                  style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="qtext" style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                    {s.name}
+                    {s.note && (
+                      <span className="chip chip-tag" style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px' }}>
+                        支援情報あり
+                      </span>
+                    )}
+                  </div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                    本校：{s.prefecture}{s.municipality ? `${s.municipality}` : ''}・設置者：{s.operator}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 都道府県の選択を結果一覧より先（上）に表示する（2026-11-01、他タブ共通で
-          選ぶ→結果が下に出る順番に変更）。 */}
+          選ぶ→結果が下に出る順番に変更）。検索語がある間は重複表示を避けるため隠す。 */}
+      {!trimmedKeyword && (
+      <>
       <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
         <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
         <select
@@ -186,6 +241,8 @@ export default function TsushinExplorer({
             {pref}の助成金・支援制度を見る ›
           </Link>
         </div>
+      )}
+      </>
       )}
     </>
   );

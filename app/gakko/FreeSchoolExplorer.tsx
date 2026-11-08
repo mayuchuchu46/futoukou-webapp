@@ -30,6 +30,7 @@ export default function FreeSchoolExplorer({
 }) {
   const router = useRouter();
   const [pref, setPref] = useState<string | null>(initialPref);
+  const [keyword, setKeyword] = useState('');
   const featuredSet = new Set(featuredNos);
 
   function selectPref(p: string | null) {
@@ -38,6 +39,17 @@ export default function FreeSchoolExplorer({
     const href = p ? `/gakko?type=free&pref=${encodeURIComponent(p)}` : '/gakko?type=free';
     router.replace(href, { scroll: false });
   }
+
+  // キーワード検索（施設名・市区町村・都道府県）は都道府県の絞り込みより優先する。
+  // 都道府県を選ばなくても全国から施設名で探せるようにしたいとの要望を受けて追加
+  // （2026-11-08）。都道府県を選んでいても、検索語があればそちらを優先して全国から
+  // 検索する（都道府県の選択状態自体は保持し、検索語を消せば元の一覧表示に戻る）。
+  const trimmedKeyword = keyword.trim();
+  const keywordResults = trimmedKeyword
+    ? [...allSchools.filter((s) => `${s.name}${s.city}${s.prefecture}`.includes(trimmedKeyword))].sort(
+        (a, b) => Number(featuredSet.has(b.no)) - Number(featuredSet.has(a.no))
+      )
+    : [];
 
   const freeSchools = pref
     ? [...allSchools.filter((s) => s.prefecture === pref)].sort(
@@ -48,9 +60,58 @@ export default function FreeSchoolExplorer({
 
   return (
     <>
+      {/* キーワード検索（2026-11-08追加）。都道府県を選ばなくても施設名・市区町村名で
+          全国から検索できるようにした。 */}
+      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <div className="answer-label" style={{ fontSize: 14 }}>施設名・地域名で検索</div>
+        <input
+          className="input"
+          type="search"
+          placeholder="施設名や市区町村名を入力…（全国から検索）"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+      </div>
+
+      {trimmedKeyword && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>「{trimmedKeyword}」の検索結果（{keywordResults.length}件）</div>
+          {keywordResults.length === 0 ? (
+            <div className="muted">「{trimmedKeyword}」に一致するフリースクールは見つかりませんでした。</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+              {keywordResults.map((s) => (
+                <Link
+                  key={s.no}
+                  href={`/gakko/free/${s.no}`}
+                  style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="qtext" style={{ fontWeight: 700 }}>
+                    {s.name}
+                    {featuredSet.has(s.no) && (
+                      <span className="chip chip-tag" style={{ fontSize: 10, fontWeight: 700, marginLeft: 6, background: '#FFE49A' }}>
+                        PR
+                      </span>
+                    )}
+                  </div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                    {s.prefecture}{s.city}
+                    {s.address ? `・${s.address}` : ''}
+                    {s.contact ? `・${s.contact}` : ''}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 都道府県の選択を結果一覧より先（上）に表示する（2026-11-01、選んだ直後に
           結果が選択UIより上に出て見つけにくいとの指摘を受けて、他タブ共通で
-          選ぶ→結果が下に出る順番に変更）。 */}
+          選ぶ→結果が下に出る順番に変更）。検索語がある間は下の都道府県別一覧を
+          隠す（検索結果と重複して見えるのを避けるため）。 */}
+      {!trimmedKeyword && (
+      <>
       <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
         <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
         <select
@@ -149,6 +210,8 @@ export default function FreeSchoolExplorer({
             </>
           )}
         </div>
+      )}
+      </>
       )}
     </>
   );

@@ -20,6 +20,7 @@ export default function ShienExplorer({
 }) {
   const router = useRouter();
   const [pref, setPref] = useState<string | null>(initialPref);
+  const [keyword, setKeyword] = useState('');
 
   function selectPref(p: string | null) {
     setPref(p);
@@ -27,13 +28,61 @@ export default function ShienExplorer({
     router.replace(href, { scroll: false });
   }
 
+  // キーワード検索は都道府県の絞り込みより優先する（2026-11-08追加、FreeSchoolExplorer.tsxと同じ理由）。
+  const trimmedKeyword = keyword.trim();
+  const keywordResults = trimmedKeyword
+    ? allCenters.filter((s) => `${s.name}${s.city}${s.prefecture}`.includes(trimmedKeyword))
+    : [];
+
   const centers = pref ? allCenters.filter((s) => s.prefecture === pref) : [];
   const coverage = pref ? getEducationSupportCoverage(pref) : undefined;
 
   return (
     <>
+      {/* キーワード検索（2026-11-08追加）。都道府県を選ばなくても施設名・市区町村名で
+          全国から検索できるようにした。 */}
+      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <div className="answer-label" style={{ fontSize: 14 }}>施設名・地域名で検索</div>
+        <input
+          className="input"
+          type="search"
+          placeholder="施設名や市区町村名を入力…（全国から検索）"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+      </div>
+
+      {trimmedKeyword && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>「{trimmedKeyword}」の検索結果（{keywordResults.length}件）</div>
+          {keywordResults.length === 0 ? (
+            <div className="muted">「{trimmedKeyword}」に一致する教育支援センターは見つかりませんでした。</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+              {keywordResults.map((s) => (
+                <Link
+                  key={s.no}
+                  href={`/gakko/shien/${s.no}`}
+                  style={{ display: 'block', borderBottom: '1px solid var(--border)', paddingBottom: 10, color: 'inherit', textDecoration: 'none' }}
+                >
+                  <div className="qtext" style={{ fontWeight: 700 }}>{s.name}</div>
+                  <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>
+                    {s.prefecture}{s.city}
+                    {s.address ? `・${s.address}` : ''}
+                    {s.contact ? `・${s.contact}` : ''}
+                  </div>
+                  {s.note && <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{s.note}</div>}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 都道府県の選択を結果一覧より先（上）に表示する（2026-11-01、他タブ共通で
-          選ぶ→結果が下に出る順番に変更）。 */}
+          選ぶ→結果が下に出る順番に変更）。検索語がある間は重複表示を避けるため隠す。 */}
+      {!trimmedKeyword && (
+      <>
       <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
         <div className="answer-label" style={{ fontSize: 14 }}>{pref ? '都道府県を選び直す' : '都道府県から探す'}</div>
         <select
@@ -122,6 +171,8 @@ export default function ShienExplorer({
             </>
           )}
         </div>
+      )}
+      </>
       )}
     </>
   );

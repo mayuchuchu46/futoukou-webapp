@@ -79,6 +79,24 @@ export default async function DictionaryCategoryPage({
         <div className="page-main">
           <Link href="/theme" className="backlink">← テーマ一覧へ</Link>
 
+          {/* キーワード検索（2026-11-08追加）。「{cat.label}」の相談の中から探せるよう、
+              このカテゴリに絞り込んだ状態でTOPページの検索（q）に渡す。JS無しでも
+              動作するよう、通常のGETフォームにしている（サーバーコンポーネントのため）。 */}
+          <form action="/" method="get" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>「{cat.short}」の相談をキーワードで検索</div>
+            <input type="hidden" name="category" value={category} />
+            <div style={{ display: 'flex', gap: 8, width: '100%' }}>
+              <input
+                className="input"
+                type="search"
+                name="q"
+                placeholder="キーワードで検索…"
+                style={{ flex: 1 }}
+              />
+              <button type="submit" className="btn-secondary" style={{ whiteSpace: 'nowrap' }}>検索</button>
+            </div>
+          </form>
+
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>
               <Image src={cat.icon} alt="" width={18} height={18} style={{ objectFit: 'contain', borderRadius: 0, border: 'none' }} />

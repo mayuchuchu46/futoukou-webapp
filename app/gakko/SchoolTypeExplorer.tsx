@@ -62,6 +62,7 @@ export default function SchoolTypeExplorer({
   const router = useRouter();
   const [schoolType, setSchoolType] = useState<SchoolTypeFilter | null>(initialSchoolType);
   const [pref, setPref] = useState<string | null>(initialPref);
+  const [keyword, setKeyword] = useState('');
 
   function syncUrl(nextPref: string | null, nextSchoolType: SchoolTypeFilter | null) {
     const params = [
@@ -97,8 +98,45 @@ export default function SchoolTypeExplorer({
   const schoolsInPref = pref ? allSchools.filter((s) => s.prefecture === pref) : [];
   const filteredInPref = schoolType ? schoolsInPref.filter((s) => s.schoolType === schoolType) : schoolsInPref;
 
+  // キーワード検索は学校種・都道府県の絞り込みより優先する（2026-11-08追加、
+  // FreeSchoolExplorer.tsxと同じ理由）。
+  const trimmedKeyword = keyword.trim();
+  const keywordResults = trimmedKeyword
+    ? allSchools.filter((s) => `${s.name}${s.branchName ?? ''}${s.city}${s.prefecture}`.includes(trimmedKeyword))
+    : [];
+
   return (
     <>
+      {/* キーワード検索（2026-11-08追加）。都道府県・学校種を選ばなくても学校名で
+          全国から検索できるようにした。 */}
+      <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+        <div className="answer-label" style={{ fontSize: 14 }}>学校名・地域名で検索</div>
+        <input
+          className="input"
+          type="search"
+          placeholder="学校名や市区町村名を入力…（全国から検索）"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+      </div>
+
+      {trimmedKeyword && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>「{trimmedKeyword}」の検索結果（{keywordResults.length}件）</div>
+          {keywordResults.length === 0 ? (
+            <div className="muted">「{trimmedKeyword}」に一致する学びの多様化学校は見つかりませんでした。</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
+              {keywordResults.map((s) => (
+                <SchoolRow key={s.no} school={s} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {!trimmedKeyword && (
+      <>
       <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
         <div className="answer-label" style={{ fontSize: 14 }}>学校種で絞り込む</div>
         <div className="chip-row chip-row-wrap">
@@ -225,7 +263,8 @@ export default function SchoolTypeExplorer({
           </Link>
         </div>
       )}
-
+      </>
+      )}
     </>
   );
 }
