@@ -301,4 +301,9 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 156, prefecture: '沖縄県', municipality: '沖縄市', name: '沖縄県立美里工業高等学校', operator: '沖縄県', officialUrl: 'https://www.misato-h.open.ed.jp/', note: '通信制課程（工業系）を設置。機械科・電気科・建築科・設備工業科・調理科を置く。1970年開校。' },
   { no: 157, prefecture: '三重県', municipality: '四日市市', name: '三重県立北星高等学校', operator: '三重県', officialUrl: 'http://www.mie-c.ed.jp/hhokus/', note: '定時制（昼間部）・通信制を併置。' },
   { no: 158, prefecture: '香川県', municipality: '高松市', name: '香川県立高松高等学校', operator: '香川県', officialUrl: 'https://www.kagawa-edu.jp/takah02/', note: '全日制・通信制を併置。令和9年度も通信制課程で生徒募集。' },
+  { no: 159, prefecture: '香川県', municipality: '丸亀市', name: '香川県立丸亀高等学校', operator: '香川県', note: '全日制・定時制・通信制を併置。令和8年度も通信制課程で生徒募集（普通科）。令和7年度時点で通信制在籍約175名。' },
+  { no: 160, prefecture: '山梨県', municipality: '甲府市', name: '山梨県立中央高等学校', operator: '山梨県', note: '定時制・通信制を併置した独立型高校。昭和46（1971）年開校。普通科・衛生看護科の通信制を設置。令和8年度も通信制で生徒募集。' },
+  { no: 161, prefecture: '三重県', municipality: '松阪市', name: '三重県立松阪高等学校', operator: '三重県', officialUrl: 'https://www.mie-c.ed.jp/hmatus/', note: '通信制課程を設置。三重県内の公立通信制2校のうちの1校（もう1校は北星高校）。Instagram公式アカウント（matsusaka_tusin）で情報発信中。' },
+  { no: 162, prefecture: '長崎県', municipality: '長崎市', name: '長崎県立鳴滝高等学校', operator: '長崎県', note: '定時制（昼間部・夜間部）・通信制を併置。令和7年度も通信制で生徒募集。長崎県内の通信制を持つ県立高校は鳴滝と佐世保中央の2校のみ。' },
+  { no: 163, prefecture: '長崎県', municipality: '佐世保市', name: '長崎県立佐世保中央高等学校', operator: '長崎県', note: '定時制（昼間部・夜間部）・通信制を併置。令和7年度も通信制で生徒募集。' },
 ];
