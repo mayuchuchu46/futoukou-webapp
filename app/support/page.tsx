@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
+import { PREFECTURE_SUPPORT_LINKS } from '@/lib/data/prefectureSupportLinks';
 
 // 検索結果でトップページと同じtitle/descriptionになっていたため、ページ固有の
 // metadataを追加（2026-10-14、SEO対策の一環）。
@@ -90,6 +91,55 @@ export default function SupportPage() {
               <a href="tel:0120189783" style={{ fontWeight: 700 }}>0120-189-783</a>（無料）
             </div>
             <div className="muted" style={{ fontSize: 12 }}>虐待以外の、子育て全般に関する相談も受け付けています。</div>
+          </div>
+        </div>
+
+        {/* 都道府県別の自治体相談窓口案内（2026-11-08追加）。claude/futoukou-event-links-research.md
+            の調査結果（2026-11-02時点、47都道府県中27件でURL確認済み）をもとにしている。
+            未確認の20都道府県は、市区町村の教育委員会への問い合わせを促す汎用案内にしている。 */}
+        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>お住まいの都道府県の相談窓口</div>
+          <div className="qtext">
+            都道府県の教育委員会等が案内する、不登校に関する相談窓口・支援情報のページです。お住まいの都道府県を選んでください。
+          </div>
+          <details style={{ width: '100%' }}>
+            <summary style={{ cursor: 'pointer', fontWeight: 700, padding: '4px 0' }}>
+              都道府県一覧を見る
+            </summary>
+            <ul style={{ margin: '8px 0 0', padding: 0, listStyle: 'none', display: 'grid', gap: 4 }}>
+              {PREFECTURE_SUPPORT_LINKS.map((p) => (
+                <li
+                  key={p.prefecture}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
+                    gap: 8,
+                    borderBottom: '1px solid #eee',
+                    padding: '6px 0',
+                  }}
+                >
+                  <span style={{ fontWeight: 700, minWidth: '5em' }}>{p.prefecture}</span>
+                  {p.url ? (
+                    <a
+                      href={p.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: 13, textAlign: 'right' }}
+                    >
+                      {p.department}の案内ページへ
+                    </a>
+                  ) : (
+                    <span className="muted" style={{ fontSize: 12, textAlign: 'right' }}>
+                      お住まいの市区町村の教育委員会にお問い合わせください
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </details>
+          <div className="muted" style={{ fontSize: 12 }}>
+            各ページの内容・URLは2026年11月時点で確認したものです。自治体のサイトは変更されることがあるため、最新情報は各都道府県の公式サイトでご確認ください。
           </div>
         </div>
 
