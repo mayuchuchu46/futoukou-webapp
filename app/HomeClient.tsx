@@ -38,6 +38,11 @@ function isExpertAnswered(item: Consultation) {
 // 小さく調整）。モバイル用はこれまで通りこの位置に残す。
 // 同日、「この数字おすと、学び場のトップ行くといいリンクつけて」との指摘を受けて、
 // バッジ全体を/gakko/matome（学び場トップ・都道府県から探す）へのリンクにした。
+// 2026-11-08、「数字の下の内訳、テキストじゃなく小さなカードにしてそれぞれリンク
+// できるようにするといい？」との相談を受けて、内訳をチップ状の個別リンクに変更。
+// 件数＋タイトル部分は従来通り/gakko/matomeへのリンクのまま残し、内訳チップは
+// それぞれ該当タブ（/gakko?type=…）に直接飛べるようにした。<a>の入れ子を避けるため、
+// 外側はLinkではなく通常のdivにし、タイトル部分と内訳チップ行をそれぞれ別のLinkにした。
 function FacilityCountBadge({
   total,
   breakdown,
@@ -56,19 +61,40 @@ function FacilityCountBadge({
   className: string;
 }) {
   return (
-    <Link
-      href="/gakko/matome"
-      className={`card ${className}`}
-      style={{ alignItems: 'center', gap: 4, textAlign: 'center', textDecoration: 'none', color: 'inherit' }}
-    >
-      <div className="muted" style={{ fontSize: 12 }}>全国の不登校の進路選択肢を掲載</div>
-      <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
-        {total.toLocaleString()}件
+    <div className={`card ${className}`} style={{ alignItems: 'center', gap: 6, textAlign: 'center' }}>
+      <Link
+        href="/gakko/matome"
+        style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+      >
+        <div className="muted" style={{ fontSize: 12 }}>全国の不登校の進路選択肢を掲載</div>
+        <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
+          {total.toLocaleString()}件
+        </div>
+      </Link>
+      <div className="chip-row chip-row-wrap" style={{ justifyContent: 'center' }}>
+        <Link href="/gakko?type=free" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+          フリースクール{breakdown.free}
+        </Link>
+        <Link href="/gakko?type=teiji" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+          定時制高校{breakdown.teiji}
+        </Link>
+        <Link href="/gakko?type=shien" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+          教育支援センター{breakdown.shien}
+        </Link>
+        <Link href="/gakko?type=tsushin" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+          通信制高校{breakdown.tsushin}
+        </Link>
+        <Link href="/gakko" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+          学びの多様化学校{breakdown.gakko}
+        </Link>
+        <Link href="/gakko?type=alternative" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+          オルタナティブスクール{breakdown.alternative}
+        </Link>
+        <Link href="/gakko?type=online" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 11 }}>
+          オンラインフリースクール{breakdown.online}
+        </Link>
       </div>
-      <div className="muted" style={{ fontSize: 11, lineHeight: 1.6 }}>
-        フリースクール{breakdown.free}・定時制高校{breakdown.teiji}・教育支援センター{breakdown.shien}・通信制高校{breakdown.tsushin}・学びの多様化学校{breakdown.gakko}・オルタナティブスクール{breakdown.alternative}・オンラインフリースクール{breakdown.online}
-      </div>
-    </Link>
+    </div>
   );
 }
 

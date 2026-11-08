@@ -172,20 +172,41 @@ export default function PcSidebar({
           している。「この数字おすと、学び場のトップ行くといいリンクつけて」との
           指摘を受けて、カード全体を/gakko/matome（学び場トップ）へのリンクにした。
           当初はgakkoLinksの直前（サイド最下部）に置いていたが、「上の方において」
-          との指摘を受けて、スクロールせず見える「相談する」ボタン直下に移動した。 */}
-      <Link
-        href="/gakko/matome"
-        className="card"
-        style={{ alignItems: 'center', gap: 3, textAlign: 'center', textDecoration: 'none', color: 'inherit' }}
-      >
-        <div className="muted" style={{ fontSize: 10 }}>全国の不登校の進路選択肢を掲載</div>
-        <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
-          {TOTAL_FACILITY_COUNT.toLocaleString()}件
+          との指摘を受けて、スクロールせず見える「相談する」ボタン直下に移動した。
+          2026-11-08、HomeClient.tsx側と同じ理由で、内訳をそれぞれの学び場タブへ
+          直接飛べるチップに変更した（件数＋タイトル部分は引き続き/gakko/matomeへの
+          リンク）。サイドの幅が狭いため、本文側よりさらに一回り小さいチップにしている。 */}
+      <div className="card" style={{ alignItems: 'center', gap: 4, textAlign: 'center' }}>
+        <Link href="/gakko/matome" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+          <div className="muted" style={{ fontSize: 10 }}>全国の不登校の進路選択肢を掲載</div>
+          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--orange-text)', lineHeight: 1.2 }}>
+            {TOTAL_FACILITY_COUNT.toLocaleString()}件
+          </div>
+        </Link>
+        <div className="chip-row chip-row-wrap" style={{ justifyContent: 'center', gap: 4 }}>
+          <Link href="/gakko?type=free" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
+            フリースクール{FACILITY_COUNT_BREAKDOWN.free}
+          </Link>
+          <Link href="/gakko?type=teiji" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
+            定時制高校{FACILITY_COUNT_BREAKDOWN.teiji}
+          </Link>
+          <Link href="/gakko?type=shien" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
+            教育支援センター{FACILITY_COUNT_BREAKDOWN.shien}
+          </Link>
+          <Link href="/gakko?type=tsushin" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
+            通信制高校{FACILITY_COUNT_BREAKDOWN.tsushin}
+          </Link>
+          <Link href="/gakko" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
+            学びの多様化学校{FACILITY_COUNT_BREAKDOWN.gakko}
+          </Link>
+          <Link href="/gakko?type=alternative" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
+            オルタナティブスクール{FACILITY_COUNT_BREAKDOWN.alternative}
+          </Link>
+          <Link href="/gakko?type=online" className="chip chip-tag" style={{ textDecoration: 'none', fontSize: 10, padding: '2px 8px' }}>
+            オンラインフリースクール{FACILITY_COUNT_BREAKDOWN.online}
+          </Link>
         </div>
-        <div className="muted" style={{ fontSize: 10, lineHeight: 1.5 }}>
-          フリースクール{FACILITY_COUNT_BREAKDOWN.free}・定時制高校{FACILITY_COUNT_BREAKDOWN.teiji}・教育支援センター{FACILITY_COUNT_BREAKDOWN.shien}・通信制高校{FACILITY_COUNT_BREAKDOWN.tsushin}・学びの多様化学校{FACILITY_COUNT_BREAKDOWN.gakko}・オルタナティブスクール{FACILITY_COUNT_BREAKDOWN.alternative}・オンラインフリースクール{FACILITY_COUNT_BREAKDOWN.online}
-        </div>
-      </Link>
+      </div>
 
       {/* 「今日の質問」。以前はホーム左カラム上部にあったが、PC（960px以上）では
           この右コラムに移動した（2026-10-16、「今日の質問は右コラムの中においてみて」
