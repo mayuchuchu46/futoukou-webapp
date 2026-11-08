@@ -51,6 +51,13 @@ export async function generateConsultAnswer(
 ): Promise<string> {
   const msg = await anthropic.messages.create({
     model: MODEL,
+    // 2026-11-08、claude-sonnet-5はthinkingパラメータを省略するとデフォルトでadaptive
+    // thinkingが有効になり、thinkingトークンもmax_tokensの枠を消費する仕様と判明。本番で
+    // 「AI回答の生成に失敗しました: empty response (stop_reason=max_tokens,
+    // blocks=thinking)」が発生（thinkingだけでmax_tokensを使い切り、本文が1文字も
+    // 生成されなかったケース）。軽量タスク側（schoolFit等）では同様の問題が10/30時点で
+    // 判明・対応済みだったが、本回答生成はこの時点で未対応だったため追従した。
+    thinking: { type: 'disabled' },
     max_tokens: MAX_TOKENS,
     messages: [{ role: 'user', content: prompt }],
   });
