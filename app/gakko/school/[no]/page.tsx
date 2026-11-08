@@ -9,6 +9,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { MANABI_TAYOUKA_GAKKO, MEXT_SOURCE_URL } from '@/lib/data/manabiTayoukaGakko';
 import { findSimilarManabiSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import { NoteParagraphs } from '@/components/NoteParagraphs';
 import FavoriteButton from '@/components/FavoriteButton';
 import SchoolConsultations from './SchoolConsultations';
 import SchoolExperiencedParents from './SchoolExperiencedParents';
@@ -205,8 +206,12 @@ export default async function GakkoSchoolPage({
             <h1 className="answer-label" style={{ fontSize: 14, margin: 0 }}>{fullName}</h1>
             <div className="qtext">
               {school.prefecture}{school.city}にある、{school.publicPrivate}の{school.schoolType}の学びの多様化学校（旧：不登校特例校）です。{school.designatedYear}に指定を受けた、設置形態「{school.type}」の学校です。
-              {school.note && <> {school.note}</>}
             </div>
+            {school.note && (
+              <div className="qtext">
+                <NoteParagraphs text={school.note} />
+              </div>
+            )}
             {school.admission && (
               <div style={{ width: '100%' }}>
                 <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>

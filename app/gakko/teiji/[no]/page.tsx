@@ -8,6 +8,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { teijiseiHighSchools } from '@/lib/data/teijiseiHighSchools';
 import { findSimilarTeijiseiHighSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import { NoteParagraphs } from '@/components/NoteParagraphs';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
@@ -155,8 +156,12 @@ export default async function TeijiSchoolPage({
             </h1>
             <div className="qtext">
               {school.prefecture}{school.municipality || ''}にある{school.publicPrivate}の定時制高校です。
-              {school.note && <> {school.note}</>}
             </div>
+            {school.note && (
+              <div className="qtext">
+                <NoteParagraphs text={school.note} />
+              </div>
+            )}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
               {[
                 { label: '所在地', value: school.municipality ? `${school.prefecture}${school.municipality}` : school.prefecture },

@@ -14,6 +14,7 @@ import { SPECIALTY_TAG_LABEL } from '@/lib/data/correspondenceHighSchools';
 import { findSimilarCorrespondenceHighSchools } from '@/lib/similarSchools';
 import { buildBreadcrumbJsonLd } from '@/lib/breadcrumbs';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import { NoteParagraphs } from '@/components/NoteParagraphs';
 import TrackedOutLink from '@/components/TrackedOutLink';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
@@ -169,8 +170,12 @@ export default async function TsushinSchoolPage({
             </h1>
             <div className="qtext">
               本校が{school.prefecture}{school.municipality}にある、「広域」通信制高校です。本校の都道府県以外からも入学できます。
-              {school.note && <> {school.note}</>}
             </div>
+            {school.note && (
+              <div className="qtext">
+                <NoteParagraphs text={school.note} />
+              </div>
+            )}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
               {[
                 { label: '本校所在地（所轄庁）', value: `${school.prefecture}${school.municipality}` },

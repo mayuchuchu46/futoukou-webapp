@@ -8,6 +8,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { FREE_SCHOOLS } from '@/lib/data/freeSchools';
 import { findSimilarFreeSchools } from '@/lib/similarSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import { NoteParagraphs } from '@/components/NoteParagraphs';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
@@ -154,8 +155,12 @@ export default async function FreeSchoolPage({
             <h1 className="answer-label" style={{ fontSize: 14, margin: 0 }}>{school.name}</h1>
             <div className="qtext">
               {school.prefecture}{school.city}にあるフリースクール（民間施設）です。
-              {school.note && <> {school.note}</>}
             </div>
+            {school.note && (
+              <div className="qtext">
+                <NoteParagraphs text={school.note} />
+              </div>
+            )}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
               {[
                 { label: '所在地', value: school.address || `${school.prefecture}${school.city}` },

@@ -8,6 +8,7 @@ import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { EDUCATION_SUPPORT_CENTERS } from '@/lib/data/educationSupportCenters';
 import FacilityConsultations from '@/components/FacilityConsultations';
+import { NoteParagraphs } from '@/components/NoteParagraphs';
 import { buildBreadcrumbJsonLd } from '@/lib/breadcrumbs';
 
 // 教育支援センター（適応指導教室）、1件ごとの紹介ページ（2026-11-02追加）。
@@ -132,8 +133,12 @@ export default async function EducationSupportCenterPage({
             <h1 className="answer-label" style={{ fontSize: 14, margin: 0 }}>{center.name}</h1>
             <div className="qtext">
               {center.prefecture}{center.city}にある、市区町村教育委員会が設置する公的・無料の不登校支援施設（教育支援センター／適応指導教室）です。
-              {center.note && <> {center.note}</>}
             </div>
+            {center.note && (
+              <div className="qtext">
+                <NoteParagraphs text={center.note} />
+              </div>
+            )}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
               {[
                 { label: '所在地', value: center.address || `${center.prefecture}${center.city}` },

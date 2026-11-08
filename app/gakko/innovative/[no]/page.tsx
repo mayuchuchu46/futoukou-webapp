@@ -8,6 +8,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { METHOD_LABEL } from '@/lib/data/alternativeSchools';
 import { INNOVATIVE_SCHOOLS } from '@/lib/data/innovativeSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
+import { NoteParagraphs } from '@/components/NoteParagraphs';
 import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityReviews from '@/components/FacilityReviews';
@@ -154,8 +155,12 @@ export default async function InnovativeSchoolPage({
             <div className="qtext">
               {school.prefecture}{school.city}にある認可私立学校（一条校）です（{methodLabel}）。
               {school.schoolType && <> 対象学年は{school.schoolType}です。</>}
-              {school.note && <> {school.note}</>}
             </div>
+            {school.note && (
+              <div className="qtext">
+                <NoteParagraphs text={school.note} />
+              </div>
+            )}
             {school.specialties && school.specialties.length > 0 && (
               <div style={{ width: '100%' }}>
                 <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
