@@ -171,6 +171,41 @@ export const FUTOUKOU_FACTORS: FutoukouFactor[] = [
   { label: 'いじめ被害の情報や相談', elementary: 2533, juniorHigh: 2380, total: 4913 },
 ];
 
+// ---- 高等学校の不登校生徒数の経年推移（H26〜R6） ----
+// 確認済み：表構造（年度ごとの行）がそのままテキストとして読み取れた。
+// 小・中学校と違い、増減を繰り返している（H26 53,156人→R2 43,051人まで減少した後、
+// R4以降に急増しR5 68,770人、R6はわずかに減って67,782人）。
+export type YearlyCount = { year: string; value: number };
+
+export const FUTOUKOU_HIGH_SCHOOL_TREND: YearlyCount[] = [
+  { year: 'H26', value: 53156 },
+  { year: 'H27', value: 49563 },
+  { year: 'H28', value: 48565 },
+  { year: 'H29', value: 49643 },
+  { year: 'H30', value: 52723 },
+  { year: 'R1', value: 50100 },
+  { year: 'R2', value: 43051 },
+  { year: 'R3', value: 50985 },
+  { year: 'R4', value: 60575 },
+  { year: 'R5', value: 68770 },
+  { year: 'R6', value: 67782 },
+];
+
+// ---- 不登校継続率（前回調査で不登校だった児童生徒のうち、今回調査でも
+//      不登校に計上された人の割合） ----
+// 確認済み。資料にはR1〜R6のみ掲載（H26〜H30は資料になし）。高等学校は、
+// 学年別に調査していない単位制の生徒を含むため算出されていない（資料の記載どおり）。
+export type ContinuationRateByYear = { year: string; elementary: number; juniorHigh: number };
+
+export const FUTOUKOU_CONTINUATION_RATE: ContinuationRateByYear[] = [
+  { year: 'R1', elementary: 71.0, juniorHigh: 78.9 },
+  { year: 'R2', elementary: 67.4, juniorHigh: 75.1 },
+  { year: 'R3', elementary: 74.0, juniorHigh: 79.9 },
+  { year: 'R4', elementary: 73.7, juniorHigh: 79.4 },
+  { year: 'R5', elementary: 75.2, juniorHigh: 80.7 },
+  { year: 'R6', elementary: 71.7, juniorHigh: 77.1 },
+];
+
 export const FUTOUKOU_SOURCE = {
   name: '文部科学省「令和6年度 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する調査結果」',
   publishedAt: '令和7年10月29日（令和8年1月16日一部修正）',

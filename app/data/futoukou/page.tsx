@@ -13,6 +13,8 @@ import {
   FUTOUKOU_BY_PREFECTURE,
   FUTOUKOU_NATIONAL_AVG_PER_1000,
   FUTOUKOU_FACTORS,
+  FUTOUKOU_HIGH_SCHOOL_TREND,
+  FUTOUKOU_CONTINUATION_RATE,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -52,6 +54,9 @@ export default function FutoukouDataPage() {
   const gradeStats = FUTOUKOU_BY_GRADE.map((g) => ({ label: g.grade, value: g.r6, unit: '人' }));
   const factorStats = FUTOUKOU_FACTORS.map((f) => ({ label: f.label, value: f.total, unit: '件' }));
   const prefRanked = [...FUTOUKOU_BY_PREFECTURE].sort((a, b) => b.per1000 - a.per1000);
+  const highSchoolTrendData = FUTOUKOU_HIGH_SCHOOL_TREND.map((d) => ({ label: d.year, value: d.value }));
+  const continuationLatest = FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1];
+  const continuationPrev = FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 2];
 
   const url = `${SITE_URL}/data/futoukou`;
 
@@ -153,6 +158,39 @@ export default function FutoukouDataPage() {
               学校外の機関等で相談・指導を受け、指導要録上「出席扱い」となった児童生徒は{FUTOUKOU_LATEST.attendanceCountedOutsideSchool.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedOutsideSchool.toLocaleString()}人）、自宅でのICT等を活用した学習を出席扱いとされた児童生徒は{FUTOUKOU_LATEST.attendanceCountedIctHome.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedIctHome.toLocaleString()}人）で、どちらも前年度より増えています。
             </div>
             <Link href="/data/futoukou/shusseki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 高校の不登校（2026-11-08追加）。小・中学校が一貫して増加しているのとの
+              対比で、高校は増減を繰り返している点を見せる。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>高等学校の不登校生徒数の推移</div>
+            <YearTrendChart data={highSchoolTrendData} unit="人" />
+            <div className="qtext" style={{ fontSize: 13 }}>
+              小・中学校と違い、高校生の不登校生徒数は増減を繰り返しています。令和2年度に43,051人まで減った後、令和5年度には68,770人まで急増し、{FUTOUKOU_LATEST.label}はわずかに減って{FUTOUKOU_HIGH_SCHOOL_TREND[FUTOUKOU_HIGH_SCHOOL_TREND.length - 1].value.toLocaleString()}人でした。
+            </div>
+            <Link href="/data/futoukou/koukou" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このグラフだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 不登校継続率（2026-11-08追加）。「新規は9年ぶり減少」と合わせ、「続く」
+              割合自体も下がっていることを見せる。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校が「続く」割合（継続率）も下がった</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              前回調査で不登校だった児童生徒のうち、今回調査でも不登校だった割合（継続率）は、小学校{continuationLatest.elementary}%（前年度{continuationPrev.elementary}%）、中学校{continuationLatest.juniorHigh}%（前年度{continuationPrev.juniorHigh}%）で、どちらも前年度より低下しました。新規の減少だけでなく、継続率自体も下がっています。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: '小学校（前年度）', value: continuationPrev.elementary, unit: '%' },
+                { label: '小学校（今年度）', value: continuationLatest.elementary, unit: '%' },
+                { label: '中学校（前年度）', value: continuationPrev.juniorHigh, unit: '%' },
+                { label: '中学校（今年度）', value: continuationLatest.juniorHigh, unit: '%' },
+              ]}
+            />
+            <Link href="/data/futoukou/keizoku" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>

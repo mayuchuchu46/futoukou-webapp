@@ -16,6 +16,8 @@ import {
   FUTOUKOU_BY_PREFECTURE,
   FUTOUKOU_NATIONAL_AVG_PER_1000,
   FUTOUKOU_FACTORS,
+  FUTOUKOU_HIGH_SCHOOL_TREND,
+  FUTOUKOU_CONTINUATION_RATE,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -121,6 +123,43 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         { label: '学校外の機関（今年度）', value: FUTOUKOU_LATEST.attendanceCountedOutsideSchool, unit: '人' },
         { label: '自宅ICT学習（前年度）', value: FUTOUKOU_LATEST.prevAttendanceCountedIctHome, unit: '人' },
         { label: '自宅ICT学習（今年度）', value: FUTOUKOU_LATEST.attendanceCountedIctHome, unit: '人' },
+      ],
+    },
+  },
+  {
+    // 2026-11-08追加（「今の調査でまだ使ってないデータを追加」との要望を受けて）。
+    // 小・中学校は一貫して増加している一方、高校は増減を繰り返している点が
+    // 小・中学校の推移（'total'カード）との対比になる。
+    slug: 'koukou',
+    title: '高校生の不登校は増減を繰り返している',
+    headlineValue: `${FUTOUKOU_HIGH_SCHOOL_TREND[FUTOUKOU_HIGH_SCHOOL_TREND.length - 1].value.toLocaleString()}人`,
+    headlineLabel: `高等学校の不登校生徒数（${FUTOUKOU_LATEST.label}）`,
+    description:
+      '小・中学校の不登校児童生徒数が12年連続で増加しているのに対し、高校生の不登校生徒数は増減を繰り返しています。令和2年度に43,051人まで減った後、令和5年度には68,770人まで急増し、令和6年度はわずかに減少しました。',
+    tweetText: `小・中学校の不登校は12年連続で増加。一方、高校生の不登校生徒数（${FUTOUKOU_HIGH_SCHOOL_TREND[FUTOUKOU_HIGH_SCHOOL_TREND.length - 1].value.toLocaleString()}人）は増減を繰り返しています。`,
+    chart: {
+      type: 'trend',
+      unit: '人',
+      data: FUTOUKOU_HIGH_SCHOOL_TREND.map((d) => ({ label: d.year, value: d.value })),
+    },
+  },
+  {
+    // 2026-11-08追加（同上）。「新規は9年ぶり減少」カードと合わせ、「前年度も不登校
+    // だった子の割合（継続率）」もR5から低下したことを見せる。学校に戻る・別の
+    // 学びの場につながるなど、不登校から抜けるケースが増えている可能性を示す数字。
+    slug: 'keizoku',
+    title: '不登校が「続く」割合も下がった',
+    headlineValue: `${FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1].juniorHigh}%`,
+    headlineLabel: `中学校の不登校継続率（${FUTOUKOU_LATEST.label}、前年度も不登校だった生徒の割合）`,
+    description: `小学校の継続率は${FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1].elementary}%（前年度${FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 2].elementary}%）、中学校は${FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1].juniorHigh}%（前年度${FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 2].juniorHigh}%）で、どちらも前年度より低下しました。不登校の「新規」が減っただけでなく、「続く」割合自体も下がっています。`,
+    tweetText: `不登校の「継続率」（前年度も不登校だった割合）は中学校77.1%・小学校71.7%で、どちらも前年度より低下。新規の減少だけでなく、継続率も下がっています。`,
+    chart: {
+      type: 'bars',
+      stats: [
+        { label: '小学校（前年度）', value: FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 2].elementary, unit: '%' },
+        { label: '小学校（今年度）', value: FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1].elementary, unit: '%' },
+        { label: '中学校（前年度）', value: FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 2].juniorHigh, unit: '%' },
+        { label: '中学校（今年度）', value: FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1].juniorHigh, unit: '%' },
       ],
     },
   },
