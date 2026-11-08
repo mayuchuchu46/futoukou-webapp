@@ -27,7 +27,7 @@ export const FREE_SCHOOL_COVERAGE: FreeSchoolCoverage[] = [
   { prefecture: '宮城県', tier: 'good', note: '仙台市の学校が運営するサイト（.ed.jpドメイン）で公開されている一覧より掲載。放課後等デイサービス等も一部含みます。' },
   { prefecture: '秋田県', tier: 'good', note: '県公開の「居場所」一覧より掲載（フリースクール以外の相談窓口等も含みます）。' },
   { prefecture: '山形県', tier: 'good', note: '県公開の不登校対応ハンドブックより掲載。' },
-  { prefecture: '福島県', tier: 'partial', note: 'フリースクール全国ネットワーク加盟団体一覧より3件を掲載。県全体の網羅ではありません。' },
+  { prefecture: '福島県', tier: 'partial', note: 'フリースクール全国ネットワーク加盟団体一覧の3件に、いわき市公式資料より3件を追加していますが、県全体の網羅ではありません。' },
   { prefecture: '茨城県', tier: 'good', note: '県教育委員会公開の一覧より掲載（学習塾・サポート校等も含みます）。' },
   { prefecture: '栃木県', tier: 'partial', note: 'フリースクール全国ネットワーク加盟団体一覧より1件、個別に確認できた1件を追加掲載していますが、県全体の網羅ではありません。県が民間団体への調査を実施していますが、施設名を含む公開リストはまだありません。' },
   { prefecture: '群馬県', tier: 'partial', note: '県の補助事業で採択された施設のみの一覧です。住所・連絡先の記載はありません。' },
@@ -42,7 +42,7 @@ export const FREE_SCHOOL_COVERAGE: FreeSchoolCoverage[] = [
   { prefecture: '山梨県', tier: 'good', note: '山梨県教育委員会公式サイトの「フリースクール等」「フリースペース・居場所」一覧より、住所・連絡先つきで掲載しています（一部、住所未記載のものもあります）。' },
   { prefecture: '長野県', tier: 'partial', note: '県が認証した「信州型フリースクール」（認証マップでは合計52施設）のうち、住所・連絡先を確認できた約31施設のみ掲載しています。' },
   { prefecture: '岐阜県', tier: 'partial', note: '県の調査結果（住所・連絡先の記載なし）に加え、フリースクール全国ネットワーク加盟団体一覧より住所つきの1件を追加掲載しています。' },
-  { prefecture: '静岡県', tier: 'unprocessed', note: '県公開の一覧の存在は確認できましたが、画像PDFのため内容を読み取れませんでした。' },
+  { prefecture: '静岡県', tier: 'partial', note: '浜松市公式のテキストベース名簿で16施設の住所・連絡先を確認し掲載。県全体版の「民間施設等連携名簿」には72施設名が市町名のみで掲載されていますが、住所・連絡先は未記載で今回は未反映です。「ふじのくにiマップ」は画像PDFのため内容を正確に読み取れていません。' },
   { prefecture: '愛知県', tier: 'good', note: '県の連絡協議会参加団体一覧より掲載。' },
   { prefecture: '三重県', tier: 'good', note: '県の運営支援補助金交付対象施設一覧より掲載。' },
   { prefecture: '滋賀県', tier: 'good', note: '県公開のリーフレットより掲載。' },
@@ -67,7 +67,7 @@ export const FREE_SCHOOL_COVERAGE: FreeSchoolCoverage[] = [
   { prefecture: '大分県', tier: 'partial', note: '県総合教育会議の資料（住所・連絡先はほとんど確認できず）に加え、フリースクール全国ネットワーク加盟団体一覧より住所つきの1件を追加掲載しています。' },
   { prefecture: '宮崎県', tier: 'partial', note: '都道府県レベルの公開リストは見つかりませんでしたが、個別に公式サイト・報道で確認できた2件を掲載しています。県全体の網羅ではありません。' },
   { prefecture: '鹿児島県', tier: 'good', note: '県公開の不登校支援ガイドより掲載（県内全てを網羅したものではないとの注記あり）。住所は番地までの記載はありません。' },
-  { prefecture: '沖縄県', tier: 'partial', note: 'フリースクール全国ネットワーク加盟団体一覧より1件を掲載。県全体の網羅ではありません。' },
+  { prefecture: '沖縄県', tier: 'partial', note: 'フリースクール全国ネットワーク加盟団体一覧より1件、運営団体公式PDFより「せいさフリースクール『ちゅら海』」1件の合計2件を掲載。県全体の網羅ではありません。' },
 ];
 
 export function getFreeSchoolCoverage(prefecture: string): FreeSchoolCoverage | undefined {
