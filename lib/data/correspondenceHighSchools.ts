@@ -295,4 +295,8 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 150, prefecture: '栃木県', municipality: '宇都宮市', name: '栃木県立宇都宮高等学校', operator: '栃木県', officialUrl: 'https://www.tochigi-edu.ed.jp/utsunomiya/nct3/', note: '通信制課程のみ。令和10（2028）年度末で閉課程予定。' },
   { no: 151, prefecture: '千葉県', municipality: '千葉市若葉区', name: '千葉県立千葉大宮高等学校', operator: '千葉県', officialUrl: 'https://cms1.chiba-c.ed.jp/chibaohmiya-h/', note: '千葉県唯一の公立通信制高校。協力校として銚子商業・館山総合を指定。' },
   { no: 152, prefecture: '新潟県', municipality: '上越市', name: '新潟県立高田南城高等学校', operator: '新潟県', officialUrl: 'https://takadammsr-h.nein.ed.jp/', note: '定時制・通信制を併置。昭和43年創立。' },
+  { no: 153, prefecture: '愛媛県', municipality: '松山市', name: '愛媛県立松山東高等学校', operator: '愛媛県', officialUrl: 'https://matsuyamahigashi-h-c.esnet.ed.jp/', note: '通信制課程。令和8（2026）年度から生徒募集停止。' },
+  { no: 154, prefecture: '熊本県', municipality: '熊本市中央区', name: '熊本県立湧心館高等学校', operator: '熊本県', officialUrl: 'http://sh.higo.ed.jp/yusinkan/', note: '定時制・通信制を併置した独立型高校。' },
+  { no: 155, prefecture: '鹿児島県', municipality: '鹿児島市', name: '鹿児島県立開陽高等学校', operator: '鹿児島県', officialUrl: 'http://www.edu.pref.kagoshima.jp/sh/Kaiyo/', note: '全日制・定時制・通信制を併置。単位制高校。' },
+  { no: 156, prefecture: '沖縄県', municipality: '沖縄市', name: '沖縄県立美里工業高等学校', operator: '沖縄県', officialUrl: 'https://www.misato-h.open.ed.jp/', note: '通信制課程（工業系）を設置。機械科・電気科・建築科・設備工業科・調理科を置く。1970年開校。' },
 ];
