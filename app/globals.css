@@ -134,6 +134,12 @@ button:active,
      PCのグローバルメニュー（プルダウン）パネルが.header内の絶対配置のため、
      .headerの高さを超える分がここで切れて操作できなくなっていた
      （2026-10-18、「プルダウンがうまく操作できない」との報告を受けて削除）。 */
+  /* 上記のtransformが.headerに新しい重なりコンテキストを作ってしまい、
+     DOM上で後に来る.main（ヒーローバナー等）がその中のプルダウンパネル
+     （.header-navdropdown-panel、z-index:20）より上に描画され、PCのプルダウン
+     メニューが下半分だけ隠れて見える不具合があった（2026-11-08）。
+     .headerに明示的なz-indexを与えて重なり順で.mainより上に固定することで解消。 */
+  z-index: 2;
 }
 .header-accent {
   position: absolute;
