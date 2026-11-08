@@ -120,6 +120,9 @@ export default function Header({
     // ホームのNewsTeaserバナー（showExtras時のみ表示・最新記事1件への直リンク）
     // だけが唯一の入り口で、グローバルナビ・下部固定ナビのどこにも出ていなかった。
     { type: 'link', href: '/news', label: 'ニュース' },
+    // 公的統計を紹介する「データで見る不登校」ページへの導線（2026-11-08追加）。
+    // ニュースと同じ「公的データの紹介」系コンテンツのため、ニュースの直後に置いた。
+    { type: 'link', href: '/data/futoukou', label: 'データで見る不登校' },
     { type: 'link', href: '/notebook', label: '伴走ノート' },
     { type: 'link', href: '/today', label: 'みんなのデータ' },
   ];

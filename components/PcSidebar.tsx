@@ -130,6 +130,9 @@ export default function PcSidebar({
         // ほぼ全ページに出るため、ホーム限定のNewsTeaserバナーよりも
         // 恒常的な導線になる。
         { href: '/news', icon: '📰', label: 'ニュース' },
+        // 「データで見る不登校」ページへの導線（2026-11-08追加）。ニュースと同じ
+        // 「公的データを紹介する」系のコンテンツのため、ニュースの直後に置いた。
+        { href: '/data/futoukou', icon: '📊', label: 'データで見る不登校' },
       ].map((item, i, arr) => (
         <Link
           key={item.href}

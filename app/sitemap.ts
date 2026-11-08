@@ -35,6 +35,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/theme`, changeFrequency: 'weekly', priority: 0.5 },
     // 不登校に関する最新ニュースまとめページ（2026-10-29追加）。
     { url: `${SITE_URL}/news`, changeFrequency: 'weekly', priority: 0.4 },
+    // 「データで見る不登校」ページ（2026-11-08追加）。文部科学省の公的統計を
+    // まとめた、全国網羅のシェア向けコンテンツ。
+    { url: `${SITE_URL}/data/futoukou`, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${SITE_URL}/experts`, changeFrequency: 'weekly', priority: 0.4 },
     { url: `${SITE_URL}/expertlist`, changeFrequency: 'weekly', priority: 0.4 },
     // 経験者・専門家の募集ページ（2026-11-08追加。3ページとも元々sitemapに
