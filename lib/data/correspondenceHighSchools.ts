@@ -317,4 +317,6 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 172, prefecture: '徳島県', municipality: '徳島市', name: '徳島県立徳島中央高等学校', operator: '徳島県', officialUrl: 'https://tokushimachuo.tokushima-ec.ed.jp/', note: '徳島県内唯一の定時制（昼間部・夜間部）・通信制併置校。普通科・衛生看護科を設置。しらさぎ中学校と連携。徳島市北矢三町1-3-8所在。' },
   { no: 173, prefecture: '佐賀県', municipality: '佐賀市', name: '佐賀県立佐賀北高等学校', operator: '佐賀県', officialUrl: 'https://www.education.saga.jp/hp/sagakitakoukou-c/', note: '佐賀県唯一の公立通信制高校。全日制と通信制を併置。普通科・被服科を設置。協力校として唐津西高校を指定。日曜コース・平日コースを用意。' },
   { no: 174, prefecture: '宮崎県', municipality: '宮崎市', name: '宮崎県立宮崎東高等学校', operator: '宮崎県', note: '昭和49（1974）年開校。定時制（昼間部・夜間部）・通信制を併置。宮崎県内で唯一の公立通信制高校（現在）。宮崎市神宮東1丁目2番42号所在。協力校として都城泉ヶ丘・小林・日南高校を指定。令和9（2027）年度から通信制新入生募集停止（延岡青朋高校へ移管）。' },
+  { no: 175, prefecture: '沖縄県', municipality: '那覇市', name: '沖縄県立泊高等学校', operator: '沖縄県', officialUrl: 'https://tsushin.tomari-h.open.ed.jp/', note: '那覇市泊3丁目19番地の2所在。沖縄県内唯一の通信制のみの公立単独校（定時制・全日制との併置なし）。普通科・単位制。収容定員250名。スクーリングは日曜または月曜に本校で実施。協力校として八重山高校（八重山地区）・宮古高校（宮古地区）・久米島高校（久米島）を指定。' },
+  { no: 176, prefecture: '沖縄県', municipality: '宜野湾市', name: '沖縄県立宜野湾高等学校', operator: '沖縄県', officialUrl: 'https://tsushin.ginowan-h.open.ed.jp/', note: '宜野湾市真志喜2丁目25番1号所在（全日制・通信制で共通）。全日制と通信制課程を併置。通信制は普通科。電話：098-942-2363（通信制専用）。' },
 ];
