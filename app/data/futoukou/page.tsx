@@ -5,6 +5,7 @@ import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import NewsStatsChart from '@/components/NewsStatsChart';
 import YearTrendChart from '@/components/YearTrendChart';
+import FutoukouSummaryGrid from '@/components/FutoukouSummaryGrid';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import {
   FUTOUKOU_YEARLY_TREND,
@@ -29,6 +30,14 @@ import {
 // 【データの正確性について】掲載する数値はすべて文部科学省「令和6年度 児童生徒の
 // 問題行動・不登校等生徒指導上の諸課題に関する調査結果」（公表：令和7年10月29日）
 // から確認したもの（lib/data/futoukouStats.ts参照）。推測の数値は載せない。
+//
+// 【構成（2026-11-08見直し）】「1ページに羅列だけどもっと整理したUIにして」との
+// 指摘を受けて、以下の2段構成にした：
+// 1. 冒頭のFutoukouSummaryGrid（全データの数字タイル一覧、タップで個別シェア
+//    ページ/data/futoukou/[slug]に飛べる）で、まず全体を見渡せるようにする。
+// 2. その下に、詳細セクションを「①数の変化」「②誰が・どこで」「③なぜ・そして
+//    どうする」の3グループに分けて並べる（.futoukou-section-heading見出し）。
+//    以前は8セクションを単純に縦へ並べているだけだった。
 export const metadata: Metadata = {
   title: `データで見る不登校｜不登校児童生徒数は過去最多353,970人 - ${SITE_NAME}`,
   description:
@@ -67,8 +76,10 @@ export default function FutoukouDataPage() {
         <div className="page-main">
           <h1 className="pagetitle">データで見る不登校</h1>
           <div className="muted" style={{ marginBottom: 4 }}>
-            文部科学省「{FUTOUKOU_LATEST.label} 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する調査結果」（公表：{FUTOUKOU_SOURCE.publishedAt}）をもとに、不登校に関する統計データをまとめました。
+            文部科学省「{FUTOUKOU_LATEST.label} 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する調査結果」（公表：{FUTOUKOU_SOURCE.publishedAt}）をもとに、不登校に関する統計データをまとめました。気になるものをタップすると、その数字だけのシェア用ページに飛べます。
           </div>
+
+          <FutoukouSummaryGrid />
 
           {/* 一番伝えたい数字を主役にする（app/news/[id]/page.tsxのheadlineカードと
               同じ考え方）。 */}
@@ -81,7 +92,9 @@ export default function FutoukouDataPage() {
             </div>
           </div>
 
-          {/* 経年推移グラフ */}
+          {/* ① 数の変化：経年推移／新規減少／継続率 */}
+          <div className="futoukou-section-heading">① 数はどう変わった？</div>
+
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>不登校児童生徒数の推移（小・中学校合計）</div>
             <YearTrendChart data={trendData} unit="人" />
@@ -93,7 +106,6 @@ export default function FutoukouDataPage() {
             </Link>
           </div>
 
-          {/* 意外性のあるファクト：新規は9年ぶり減少 */}
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>「増え続けている」わけではない数字も</div>
             <div className="qtext">
@@ -110,7 +122,27 @@ export default function FutoukouDataPage() {
             </Link>
           </div>
 
-          {/* 学年別 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校が「続く」割合（継続率）も下がった</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              前回調査で不登校だった児童生徒のうち、今回調査でも不登校だった割合（継続率）は、小学校{continuationLatest.elementary}%（前年度{continuationPrev.elementary}%）、中学校{continuationLatest.juniorHigh}%（前年度{continuationPrev.juniorHigh}%）で、どちらも前年度より低下しました。新規の減少だけでなく、継続率自体も下がっています。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: '小学校（前年度）', value: continuationPrev.elementary, unit: '%' },
+                { label: '小学校（今年度）', value: continuationLatest.elementary, unit: '%' },
+                { label: '中学校（前年度）', value: continuationPrev.juniorHigh, unit: '%' },
+                { label: '中学校（今年度）', value: continuationLatest.juniorHigh, unit: '%' },
+              ]}
+            />
+            <Link href="/data/futoukou/keizoku" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* ② 誰が・どこで：学年別／都道府県別／高校 */}
+          <div className="futoukou-section-heading">② 誰が・どこで多い？</div>
+
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>学年別の不登校児童生徒数（{FUTOUKOU_LATEST.label}）</div>
             <NewsStatsChart stats={gradeStats} caption="学年が上がるほど多くなる傾向。小6→中1で大きく増えています。" />
@@ -119,7 +151,6 @@ export default function FutoukouDataPage() {
             </Link>
           </div>
 
-          {/* 都道府県別 */}
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>都道府県別 1,000人当たりの不登校児童生徒数</div>
             <div className="qtext" style={{ fontSize: 13 }}>
@@ -139,31 +170,6 @@ export default function FutoukouDataPage() {
             </Link>
           </div>
 
-          {/* 要因別：いじめより多い要因があるというギャップ */}
-          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>不登校について学校が把握した事実（{FUTOUKOU_LATEST.label}、小・中学校合計）</div>
-            <div className="qtext" style={{ fontSize: 13 }}>
-              最も多いのは「学校生活に対してやる気が出ない等」（{FUTOUKOU_FACTORS[0].total.toLocaleString()}件）。「いじめ被害の情報や相談」は{FUTOUKOU_FACTORS[FUTOUKOU_FACTORS.length - 1].total.toLocaleString()}件で最も少なく、不登校の要因は一般的なイメージより幅広いことがわかります（1人に複数の項目が該当する場合があるため、合計は不登校児童生徒数とは一致しません）。
-            </div>
-            <NewsStatsChart stats={factorStats} />
-            <Link href="/data/futoukou/youin" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
-              このグラフだけをシェアする →
-            </Link>
-          </div>
-
-          {/* 出席扱い制度 */}
-          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びも「出席」として認められる制度</div>
-            <div className="qtext" style={{ fontSize: 13 }}>
-              学校外の機関等で相談・指導を受け、指導要録上「出席扱い」となった児童生徒は{FUTOUKOU_LATEST.attendanceCountedOutsideSchool.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedOutsideSchool.toLocaleString()}人）、自宅でのICT等を活用した学習を出席扱いとされた児童生徒は{FUTOUKOU_LATEST.attendanceCountedIctHome.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedIctHome.toLocaleString()}人）で、どちらも前年度より増えています。
-            </div>
-            <Link href="/data/futoukou/shusseki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
-              このデータだけをシェアする →
-            </Link>
-          </div>
-
-          {/* 高校の不登校（2026-11-08追加）。小・中学校が一貫して増加しているのとの
-              対比で、高校は増減を繰り返している点を見せる。 */}
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>高等学校の不登校生徒数の推移</div>
             <YearTrendChart data={highSchoolTrendData} unit="人" />
@@ -175,22 +181,26 @@ export default function FutoukouDataPage() {
             </Link>
           </div>
 
-          {/* 不登校継続率（2026-11-08追加）。「新規は9年ぶり減少」と合わせ、「続く」
-              割合自体も下がっていることを見せる。 */}
+          {/* ③ なぜ・そしてどうする：要因別／出席扱い制度 */}
+          <div className="futoukou-section-heading">③ なぜ・そしてどうする？</div>
+
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>不登校が「続く」割合（継続率）も下がった</div>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校について学校が把握した事実（{FUTOUKOU_LATEST.label}、小・中学校合計）</div>
             <div className="qtext" style={{ fontSize: 13 }}>
-              前回調査で不登校だった児童生徒のうち、今回調査でも不登校だった割合（継続率）は、小学校{continuationLatest.elementary}%（前年度{continuationPrev.elementary}%）、中学校{continuationLatest.juniorHigh}%（前年度{continuationPrev.juniorHigh}%）で、どちらも前年度より低下しました。新規の減少だけでなく、継続率自体も下がっています。
+              最も多いのは「学校生活に対してやる気が出ない等」（{FUTOUKOU_FACTORS[0].total.toLocaleString()}件）。「いじめ被害の情報や相談」は{FUTOUKOU_FACTORS[FUTOUKOU_FACTORS.length - 1].total.toLocaleString()}件で最も少なく、不登校の要因は一般的なイメージより幅広いことがわかります（1人に複数の項目が該当する場合があるため、合計は不登校児童生徒数とは一致しません）。
             </div>
-            <NewsStatsChart
-              stats={[
-                { label: '小学校（前年度）', value: continuationPrev.elementary, unit: '%' },
-                { label: '小学校（今年度）', value: continuationLatest.elementary, unit: '%' },
-                { label: '中学校（前年度）', value: continuationPrev.juniorHigh, unit: '%' },
-                { label: '中学校（今年度）', value: continuationLatest.juniorHigh, unit: '%' },
-              ]}
-            />
-            <Link href="/data/futoukou/keizoku" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+            <NewsStatsChart stats={factorStats} />
+            <Link href="/data/futoukou/youin" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このグラフだけをシェアする →
+            </Link>
+          </div>
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>学校以外の学びも「出席」として認められる制度</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              学校外の機関等で相談・指導を受け、指導要録上「出席扱い」となった児童生徒は{FUTOUKOU_LATEST.attendanceCountedOutsideSchool.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedOutsideSchool.toLocaleString()}人）、自宅でのICT等を活用した学習を出席扱いとされた児童生徒は{FUTOUKOU_LATEST.attendanceCountedIctHome.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedIctHome.toLocaleString()}人）で、どちらも前年度より増えています。
+            </div>
+            <Link href="/data/futoukou/shusseki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>

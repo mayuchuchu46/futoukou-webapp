@@ -1186,6 +1186,67 @@ h2.pagetitle {
 }
 .facility-count-item-count { font-weight: 800; flex: 0 0 auto; }
 
+/* 「データで見る不登校」(/data/futoukou) の数字タイル一覧（2026-11-08追加）。
+   「1ページに羅列だけどもっと整理したUIにして」との指摘を受けて、全部のグラフを
+   縦に並べるだけだった構成に、最初に全体を見渡せるタップ可能なタイルグリッドを
+   追加した。見た目は.facility-count-gridに近いが、件数バッジ一覧ではなく
+   「数字そのもの」を主役にするため、ラベルより数字を大きく・太く見せる専用クラスに
+   した。スマホは2列、PC（960px以上）は4列に広げる。 */
+.futoukou-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+}
+@media (min-width: 960px) {
+  .futoukou-tile-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.futoukou-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.futoukou-tile:hover { filter: brightness(0.97); transform: translateY(-1px); }
+.futoukou-tile-value {
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  font-weight: 800;
+  font-size: 19px;
+  color: var(--main);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.futoukou-tile-label {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 「データで見る不登校」のセクション見出し（2026-11-08追加）。.cardの外側に置く
+   「章」の見出しなので、カード内のラベル（.answer-label）とは別に、一覧
+   ランキングの見出し（.ranking-title）と同じトーン（丸ゴシック・太字・main色）を
+   流用し、新しい配色は増やさない。 */
+.futoukou-section-heading {
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--main);
+  margin: 6px 0 -4px;
+}
+
 /* カテゴリメニュー（大分類の切り替え）。キーワードタグ（.chip-tag）とは
    意図的に見た目を変え、角丸四角で「固定の大分類メニュー」であることを
    一目でわかるようにする。ただし色自体はカードのバッジ（cat-*）ほど
