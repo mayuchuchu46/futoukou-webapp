@@ -53,14 +53,12 @@ export default function RootLayout({
         logo: `${SITE_URL}/assets/sensei_logo.png`,
       },
       {
+        // SearchActionは「/」に?qを処理する検索機能が実在しないため削除
+        // （2026-11-08。機能しないアクションを構造化データに書くと無効なデータに
+        // なるだけで、サイトリンク検索ボックスの前提を満たさない）。
         "@type": "WebSite",
         name: SITE_NAME,
         url: SITE_URL,
-        potentialAction: {
-          "@type": "SearchAction",
-          target: `${SITE_URL}/?q={search_term_string}`,
-          "query-input": "required name=search_term_string",
-        },
       },
     ],
   };
