@@ -70,6 +70,20 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'hr-koto-gakuin-dropout-event-2026-11',
+    date: '2026-11-06',
+    addedAt: '2026-11-09',
+    title:
+      '不登校の経験を「人生の味」に――通信制高校サポート校「HR高等学院」、大阪・梅田で体験型キャンディショップイベントを11月28日から開催',
+    summary:
+      '通信制高校のサポート校の仕組みを活用した教育機関「HR高等学院」（運営：株式会社RePlayce、東京都渋谷区）は、2026年11月28日から12月6日までの土日に、大阪・梅田のルクア イーレで体験型イベント「人生味のキャンディショップ DROP OUT」を開催すると発表しました。在校生から社会人までの不登校経験者から集めたエピソードを「あまい」「さわやか」「刺激的」「ほろ苦い」の4つの味に見立て、来場者が好きなエピソードの包み紙でキャンディを包んで持ち帰れる企画で、入場は無料です。不登校を「終わり」ではなく新しい人生の入口として捉え直してもらうことを目的としているとしています。',
+    sourceName: '株式会社RePlayce（PR TIMES）',
+    sourceUrl: 'https://prtimes.jp/main/html/rd/p/000000114.000139448.html',
+    category: 'other',
+    // summaryに「通信制高校のサポート校」と明記されているため設定（2026-11-09）。
+    relatedThemeWord: '通信制高校',
+  },
+  {
     id: 'nijin-narita-alternative-school-2026-11',
     date: '2026-11-06',
     addedAt: '2026-11-07',
