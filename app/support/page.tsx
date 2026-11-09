@@ -26,9 +26,9 @@ export default function SupportPage() {
           「どうする先生」のAI・専門家への相談とあわせて、公的な相談機関もご活用ください。すべて無料で、匿名での相談も可能です。
         </div>
 
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8, borderLeft: '4px solid #C0392B' }}>
+        <div id="emergency" className="card" style={{ alignItems: 'flex-start', gap: 8, borderLeft: '4px solid #C0392B' }}>
           <div className="answer-label" style={{ fontSize: 14, color: '#C0392B' }}>
-            緊急性が高いとき・お子さんの安全に関わるとき
+            🚨 緊急性が高いとき・お子さんの安全に関わるとき
           </div>
           <div className="qtext">
             AIの回答を待たず、まずこちらにご連絡ください。
@@ -53,6 +53,22 @@ export default function SupportPage() {
           </div>
         </div>
 
+        {/* ページ内ジャンプナビ（2026-11-10追加）。カードが9個まで増え、スマホで目的の
+            窓口（例：発達検査、都道府県別）にたどり着くまでのスクロール量が多くなって
+            いたため、「このページのUI改善」の一環として追加。既存の.chip-row/.chipを
+            そのまま流用し、新規CSSは足していない。緊急カードは常に最初に見えるべき
+            なので、ジャンプナビ自体はそのカードの後（＝AI相談カードの前）に置く。 */}
+        <div className="chip-row" style={{ margin: '-2px 0 0' }}>
+          <a href="#ask-dosuru" className="chip chip-tag">💬 相談する</a>
+          <a href="#child" className="chip chip-tag">🧒 子ども本人</a>
+          <a href="#school-life" className="chip chip-tag">🏫 学校生活</a>
+          <a href="#prefecture" className="chip chip-tag">📍 都道府県別</a>
+          <a href="#adolescent-clinic" className="chip chip-tag">🏥 思春期外来</a>
+          <a href="#development-test" className="chip chip-tag">🧩 発達検査</a>
+          <a href="#attendance-system" className="chip chip-tag">📚 出席扱い制度</a>
+          <a href="#materials" className="chip chip-tag">✏️ 教材・サービス</a>
+        </div>
+
         {/* 「どうする先生」自身のAI・専門家・経験者への相談への案内（2026-11-09追加）。
             困っている人を早めに相談の機会につなげることがサービス最大の目的であり、
             学び場（学校情報）はその入り口の一つに過ぎないという位置づけの明確化を
@@ -60,8 +76,8 @@ export default function SupportPage() {
             どうする先生自身の相談手段もまとめて置く。下の公的窓口と並べることで、
             「まずどうする先生で相談しつつ、必要なら公的窓口にもつながれる」という
             全体像を1ページで見せる。 */}
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8, border: '2px solid var(--main)', background: 'var(--sub)' }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>まず「どうする先生」に相談する</div>
+        <div id="ask-dosuru" className="card" style={{ alignItems: 'flex-start', gap: 8, border: '2px solid var(--main)', background: 'var(--sub)' }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>💬 まず「どうする先生」に相談する</div>
           <div className="qtext">
             登録不要・匿名で、今の状況を相談できます。AIがすぐに答え、必要に応じて専門家・経験者（先輩保護者）からの回答も届きます。
           </div>
@@ -82,8 +98,8 @@ export default function SupportPage() {
           </div>
         </div>
 
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>子ども本人が相談したいとき</div>
+        <div id="child" className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>🧒 子ども本人が相談したいとき</div>
           <div>
             <div style={{ fontWeight: 700 }}>チャイルドライン</div>
             <div className="qtext">
@@ -100,8 +116,8 @@ export default function SupportPage() {
           </div>
         </div>
 
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>学校生活・育児全般の相談</div>
+        <div id="school-life" className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>🏫 学校生活・育児全般の相談</div>
           <div>
             <div style={{ fontWeight: 700 }}>教育支援センター（適応指導教室）</div>
             <div className="qtext">
@@ -127,8 +143,8 @@ export default function SupportPage() {
         {/* 都道府県別の自治体相談窓口案内（2026-11-08追加）。claude/futoukou-event-links-research.md
             の調査結果（2026-11-02時点、47都道府県中27件でURL確認済み）をもとにしている。
             未確認の20都道府県は、市区町村の教育委員会への問い合わせを促す汎用案内にしている。 */}
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>お住まいの都道府県の相談窓口</div>
+        <div id="prefecture" className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>📍 お住まいの都道府県の相談窓口</div>
           <div className="qtext">
             都道府県の教育委員会等が案内する、不登校に関する相談窓口・支援情報のページです。お住まいの都道府県を選んでください。
           </div>
@@ -176,17 +192,23 @@ export default function SupportPage() {
         {/* 思春期外来（児童精神科等）の個別リスト・小規模パイロット（2026-11-08追加、
             同日中に大阪府を追加）。公式ソースで確認できたものだけを掲載。口コミ・患者
             レビューは掲載しない（lib/data/adolescentClinics.tsのコメント参照）。 */}
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>思春期外来（児童精神科など）</div>
+        <div id="adolescent-clinic" className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>🏥 思春期外来（児童精神科など）</div>
           <div className="qtext">
             思春期のお子さんのこころの不調を専門にみている医療機関です。受診には予約が必要な場合がほとんどです。まずは電話や公式サイトでご確認ください。
           </div>
+          {/* 件数（都道府県×医療機関）が増えたため、プレーンな箇条書きだと1件ずつの
+              境界が見えにくくなっていた。1件ずつを薄い背景のカード状にして視認性を
+              上げた（2026-11-10、UI改善の一環）。 */}
           {Array.from(new Set(ADOLESCENT_CLINICS.map((c) => c.prefecture))).map((pref) => (
             <div key={pref} style={{ width: '100%' }}>
               <div style={{ fontWeight: 700, fontSize: 13, margin: '8px 0 4px' }}>{pref}</div>
-              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 10, width: '100%' }}>
+              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8, width: '100%' }}>
                 {ADOLESCENT_CLINICS.filter((c) => c.prefecture === pref).map((c) => (
-                  <li key={c.name} style={{ borderBottom: '1px solid #eee', paddingBottom: 10 }}>
+                  <li
+                    key={c.name}
+                    style={{ background: 'var(--sub)', borderRadius: 10, padding: '10px 12px' }}
+                  >
                     <div style={{ fontWeight: 700 }}>{c.name}</div>
                     <div className="qtext" style={{ fontSize: 13 }}>{c.departments}</div>
                     <div className="muted" style={{ fontSize: 12 }}>{c.address}</div>
@@ -212,8 +234,8 @@ export default function SupportPage() {
         {/* 発達検査・WISCなどの相談窓口（2026-11-08追加）。医療機関ごとの実施状況を
             精密調査するのではなく、まずは東京都の公式な入口窓口（TOSCA）のみを案内する
             方針（ユーザー確認済み）。 */}
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>発達検査（WISCなど）の相談窓口</div>
+        <div id="development-test" className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>🧩 発達検査（WISCなど）の相談窓口</div>
           <div className="qtext">
             発達検査を受けられる場所は地域（児童相談所・医療機関など）によって異なります。まずは東京都の公式な相談窓口にご相談いただくと、お住まいの地域に合った案内が受けられます。
           </div>
@@ -244,8 +266,8 @@ export default function SupportPage() {
             正確に伝え、対応教材は中立的な事実列記にとどめる（優劣判断・ランキングは
             しない）。令和元年通知（出欠の取扱い）と令和6年通知（成績評価）を混同しない
             よう明記。 */}
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>自宅での学習を「出席」として扱ってもらう制度</div>
+        <div id="attendance-system" className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>📚 自宅での学習を「出席」として扱ってもらう制度</div>
           <div className="qtext">
             文部科学省の通知（令和元年10月25日付）により、一定の要件を満たせば、自宅でのICT等を使った学習を学校長の判断で「出席」として記録できる場合があります。
           </div>
@@ -260,8 +282,8 @@ export default function SupportPage() {
           </div>
         </div>
 
-        <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
-          <div className="answer-label" style={{ fontSize: 14 }}>出席扱い制度への対応をアピールしている教材・サービス</div>
+        <div id="materials" className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>✏️ 出席扱い制度への対応をアピールしている教材・サービス</div>
           <div className="qtext">
             上記の制度への対応を公式にアピールしているサービスの例です。特定のサービスを推奨するものではなく、事実の紹介にとどめています。料金・対応状況は変わることがあるため、各社公式サイトで最新情報をご確認ください。
           </div>
