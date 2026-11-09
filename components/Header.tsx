@@ -124,7 +124,11 @@ export default function Header({
     // ニュースと同じ「公的データの紹介」系コンテンツのため、ニュースの直後に置いた。
     { type: 'link', href: '/data/futoukou', label: 'データで見る不登校' },
     { type: 'link', href: '/notebook', label: '伴走ノート' },
-    { type: 'link', href: '/today', label: 'みんなのデータ' },
+    // 「みんなのデータ」は下部固定ナビを5タブに絞った際（2026-11-09）に外した項目。
+    // PC版グローバルメニューも、ロゴと同じ行に収まりきらず折り返す原因の1つだった
+    // ため、「位置は元のまま（ロゴの隣）で、代わりに項目を絞る」方針（同日、
+    // ユーザーからの指摘）に合わせてここでも外した。/todayページ自体は
+    // TodayQuestionTeaser経由で引き続き辿れる。
   ];
   // 開いているプルダウンのkey（同時に1つだけ開く）。ホバーで開き、ホバーが外れたら
   // 閉じる。マウスの無いタッチ操作（スマホ）ではこのメニュー自体を表示しないため
@@ -173,57 +177,58 @@ export default function Header({
               <Image src="/assets/wordmark_logo.png" className="wordmark" alt="どうする先生" width={220} height={58} priority />
               <span className="badge">不登校編</span>
             </Link>
-          </div>
-          {/* PC向けグローバルメニューは元々ロゴの隣（.header-brand-row内）に置いていたが、
-              項目数（7個）が増えたことで、PCの一般的な画面幅でもロゴ＋ナビが1行に収まりきらず
-              折り返してしまい、ロゴとの区切り線のつもりだったborder-leftが宙に浮いて見える
-              「表示が崩れてる」状態になっていた（2026-11-09、スクリーンショット付きの指摘を
-              受けて発覚）。ロゴの直下に独立した行として最初から出す形に変更し、どの画面幅でも
-              崩れて見えないようにした。 */}
-          <nav className="header-globalnav">
-            {GLOBAL_NAV_ITEMS.map((item) => {
-              if (item.type === 'link') {
-                // クエリ文字列を含むhref（例：/gakko?type=josei）は完全一致、
-                // 含まないhref（例：/notebook）は従来通りprefix一致で判定する。
-                const active = item.href.includes('?')
-                  ? currentUrl === item.href
-                  : pathname.startsWith(item.href);
+            {/* PC向けグローバルメニュー。項目数（7個）がロゴと同じ行に収まりきらず折り返すと、
+                区切り線のつもりだったborder-leftが宙に浮いて見える「表示が崩れてる」状態に
+                なっていた（2026-11-09、スクリーンショット付きの指摘を受けて発覚）。
+                一度ロゴ直下の独立行に変更したが、「位置はこれまでと同じ（ロゴの隣）が
+                よかった」とのことで元の位置に戻し、代わりに項目を6個に絞り、間隔も詰めて
+                1行に収まりやすくした。区切り線（border-left）は、万一収まらず折り返した
+                場合にも浮いて見えないよう廃止した（同日）。 */}
+            <nav className="header-globalnav">
+              {GLOBAL_NAV_ITEMS.map((item) => {
+                if (item.type === 'link') {
+                  // クエリ文字列を含むhref（例：/gakko?type=josei）は完全一致、
+                  // 含まないhref（例：/notebook）は従来通りprefix一致で判定する。
+                  const active = item.href.includes('?')
+                    ? currentUrl === item.href
+                    : pathname.startsWith(item.href);
+                  return (
+                    <Link key={item.href} href={item.href} className={active ? 'active' : ''}>
+                      {item.label}
+                    </Link>
+                  );
+                }
+                const active = pathname.startsWith(item.basePath);
                 return (
-                  <Link key={item.href} href={item.href} className={active ? 'active' : ''}>
-                    {item.label}
-                  </Link>
+                  <div
+                    key={item.key}
+                    className="header-navdropdown"
+                    onMouseEnter={() => setOpenNav(item.key)}
+                    onMouseLeave={() => setOpenNav((cur) => (cur === item.key ? null : cur))}
+                  >
+                    {/* ラベル文字自体もリンクにし、プルダウンを開かず直接basePathに
+                        遷移できるようにした（2026-10-18、「テキストも押せるといいな」
+                        との指摘を受けて）。 */}
+                    <Link href={item.labelHref ?? item.basePath} className={active ? 'active' : ''} onClick={() => setOpenNav(null)}>
+                      {item.label}
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </Link>
+                    {openNav === item.key && (
+                      <div className="header-navdropdown-panel">
+                        {item.items.map((sub) => (
+                          <Link key={sub.href} href={sub.href} onClick={() => setOpenNav(null)}>
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 );
-              }
-              const active = pathname.startsWith(item.basePath);
-              return (
-                <div
-                  key={item.key}
-                  className="header-navdropdown"
-                  onMouseEnter={() => setOpenNav(item.key)}
-                  onMouseLeave={() => setOpenNav((cur) => (cur === item.key ? null : cur))}
-                >
-                  {/* ラベル文字自体もリンクにし、プルダウンを開かず直接basePathに
-                      遷移できるようにした（2026-10-18、「テキストも押せるといいな」
-                      との指摘を受けて）。 */}
-                  <Link href={item.labelHref ?? item.basePath} className={active ? 'active' : ''} onClick={() => setOpenNav(null)}>
-                    {item.label}
-                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </Link>
-                  {openNav === item.key && (
-                    <div className="header-navdropdown-panel">
-                      {item.items.map((sub) => (
-                        <Link key={sub.href} href={sub.href} onClick={() => setOpenNav(null)}>
-                          {sub.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
+              })}
+            </nav>
+          </div>
           {/* 2026-10-14、当時「サイト全体でh1が1つも無かった」ため、このキャッチコピーを
               暫定的にh1にしていた。しかしその後、各ページに.pagetitleのh1昇格（同じ
               2026-10-14の対応）や個別ページ用のsr-only h1が追加され、今は57ページ中

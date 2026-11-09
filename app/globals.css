@@ -982,26 +982,26 @@ h2.pagetitle {
   }
   .page-with-sidebar > .page-main { flex: 1; min-width: 0; }
 
-  /* PC向けグローバルメニュー本体。一時期はロゴと同じ行（.header-brand-row、左に
-     border-leftの区切り線）に並べていたが、項目数が増えてロゴ＋ナビが1行に収まらず
-     折り返すと、区切り線だけが宙に浮いて見える「表示が崩れてる」状態になっていた
-     （2026-11-09に指摘を受けて発覚）。ロゴ直下の独立した行に変更し、区切りは
-     border-leftではなくborder-topにした。これで項目数や画面幅に関わらず崩れて
-     見えない。 */
+  /* PC向けグローバルメニュー本体。ロゴと同じ行（.header-brand-row）に並べているが、
+     項目数が増えるとロゴ＋ナビが1行に収まらず折り返し、区切り線用だったborder-leftが
+     宙に浮いて見える「表示が崩れてる」状態になっていた（2026-11-09に指摘を受けて発覚）。
+     一度ロゴ直下の独立行に変更したが、「位置は元のまま（ロゴの隣）がよかった」との
+     ことで元の位置に戻した。代わりに項目数を6個に絞り（Header.tsx側）、gapも詰めて
+     1行に収まりやすくした。区切り線（border-left）は、万一収まらず折り返した場合にも
+     浮いて見えないよう廃止し、ロゴとの間隔（gap）のみで区切りを表現する。 */
   .header-brand-row {
     display: flex;
     align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
   }
   .header-globalnav {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 18px;
+    gap: 14px;
     position: relative;
     z-index: 1;
-    margin-top: 8px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
   }
   .header-globalnav a {
     font-size: 13px;
