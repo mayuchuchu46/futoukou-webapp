@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "verify:futoukou": "tsx scripts/verify-futoukou-cards.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1",
@@ -23,6 +24,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }
