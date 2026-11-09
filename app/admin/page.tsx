@@ -123,10 +123,10 @@ async function AdminPageContent() {
 
     // 希死念慮・自傷等の安全上書きが、実際にどのくらいの頻度で発動しているかの確認用
     // （「AIがいつもその手の回答ばかりになっていないか」を実数で見られるようにする、
-    // 2026-10-14追加）。自動投稿（auto-seed）分は実ユーザーの相談と性質が異なるため分けて集計する。
+    // 2026-10-14追加）。
     supabase
       .from('consultations')
-      .select('author_id, crisis_detected')
+      .select('crisis_detected')
       .eq('request_type', 'ai')
       .gte('created_at', thirtyDaysAgo),
 
@@ -198,13 +198,9 @@ async function AdminPageContent() {
   };
 
   const { data: crisisCheckRows } = crisisCheckRowsResult;
-  const realCrisisRows = (crisisCheckRows || []).filter((r) => r.author_id !== 'auto-seed');
-  const autoSeedCrisisRows = (crisisCheckRows || []).filter((r) => r.author_id === 'auto-seed');
   const crisisDetectedSummary = {
-    realCount: realCrisisRows.filter((r) => r.crisis_detected).length,
-    realTotal: realCrisisRows.length,
-    autoSeedCount: autoSeedCrisisRows.filter((r) => r.crisis_detected).length,
-    autoSeedTotal: autoSeedCrisisRows.length,
+    realCount: (crisisCheckRows || []).filter((r) => r.crisis_detected).length,
+    realTotal: (crisisCheckRows || []).length,
   };
 
   const { data: viewRows } = viewRowsResult;
