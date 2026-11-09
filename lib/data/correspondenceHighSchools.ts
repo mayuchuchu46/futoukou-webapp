@@ -466,4 +466,8 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 358, prefecture: '大阪府', municipality: '枚方市', name: '長尾谷高等学校', operator: '学校法人東洋学園' },
   { no: 359, prefecture: '岡山県', municipality: '岡山市東区', name: '岡山学芸館高等学校', operator: '学校法人おかやま山陽学園' },
   { no: 360, prefecture: '福岡県', municipality: '田川市', name: '福智高等学校', operator: '学校法人福智学園' },
+  // 第22バッチ: 愛知県の私立通信制高校（2026年11月）
+  // 出典: 愛知県私立学校審議会資料・愛知県補助対象校リスト・東京都通信制高校一覧
+  { no: 361, prefecture: '愛知県', municipality: '名古屋市守山区', name: '菊華高等学校', operator: '学校法人菊武学園' },
+  { no: 362, prefecture: '愛知県', municipality: '名古屋市昭和区', name: '中京大学附属中京高等学校', operator: '学校法人梅村学園' },
 ];
