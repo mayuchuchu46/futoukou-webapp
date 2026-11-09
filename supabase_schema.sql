@@ -835,6 +835,18 @@ create table if not exists kotoba_honyaku_log (
 );
 alter table kotoba_honyaku_log enable row level security;
 
+-- 「親のご褒美クラブ」機能（トップの入口ミニツール、2026-11-10追加）専用のレート制限用
+-- ログ。kotoba_honyaku_logと同じ考え方で、ログイン不要のため author_id ではなく
+-- lib/uid.ts の匿名ブラウザID（uid）とIPの両方で数える。危険信号（自殺念慮等）の
+-- 一次フィルタに当たった場合はAI呼び出し自体を行わないため、ここには記録しない。
+create table if not exists gohoubi_log (
+  id uuid primary key default gen_random_uuid(),
+  uid text,
+  client_ip text,
+  created_at timestamptz not null default now()
+);
+alter table gohoubi_log enable row level security;
+
 -- [旧モデル・現在は未使用] かつては専門家への都度質問（¥500）を一度払うと、その日から
 -- 30日間、他の人の専門家回答も読み放題になる特典を、匿名のブラウザID（author_id）単位で
 -- このテーブルに記録していた。2026-10-10 決定の価格体系（月¥800の会員登録／都度¥500の

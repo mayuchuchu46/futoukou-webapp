@@ -11,6 +11,7 @@ import TodayQuestionTeaser from './TodayQuestionTeaser';
 import MimamoriShindanTeaser from './MimamoriShindanTeaser';
 import FutoukouDataTeaser from './FutoukouDataTeaser';
 import KotobaTeaser from './KotobaTeaser';
+import GohoubiTeaser from './GohoubiTeaser';
 import MyRegionCard from './MyRegionCard';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -272,6 +273,11 @@ export default function PcSidebar({
       {isDesktop && (
         <div className="home-kotoba-side">
           <KotobaTeaser />
+        </div>
+      )}
+      {isDesktop && (
+        <div className="home-gohoubi-side">
+          <GohoubiTeaser />
         </div>
       )}
 

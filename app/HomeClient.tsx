@@ -14,6 +14,7 @@ import TodayQuestionTeaser from '@/components/TodayQuestionTeaser';
 import NewsTeaser from '@/components/NewsTeaser';
 import FutoukouDataTeaser from '@/components/FutoukouDataTeaser';
 import KotobaTeaser from '@/components/KotobaTeaser';
+import GohoubiTeaser from '@/components/GohoubiTeaser';
 import MimamoriShindanTeaser from '@/components/MimamoriShindanTeaser';
 import FeaturedGakkoRanking from '@/components/FeaturedGakkoRanking';
 import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
@@ -743,6 +744,17 @@ export default function HomeClient({
             {showExtras && (
               <div className="home-kotoba-mobile">
                 <KotobaTeaser />
+              </div>
+            )}
+
+            {/* 「親のご褒美クラブ」（/gohoubi）への入口バナー（2026-11-10追加）。保護者への
+                ねぎらい・自己開示のハードルが低いミニツールとして、子どもの本音翻訳の
+                直下に同じ見た目で置く。PC（960px以上）ではPcSidebar側
+                （.home-gohoubi-side）に出すため、こちらはモバイル専用にする
+                （FutoukouDataTeaser・KotobaTeaserと同じ出し分けパターン）。 */}
+            {showExtras && (
+              <div className="home-gohoubi-mobile">
+                <GohoubiTeaser />
               </div>
             )}
 
