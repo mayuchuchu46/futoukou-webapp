@@ -18,6 +18,7 @@ import {
   FUTOUKOU_CONTINUATION_RATE,
   FUTOUKOU_BUDGET_ESTIMATE,
   FUTOUKOU_NO_SUPPORT_TREND,
+  FUTOUKOU_ABSENCE_OVER_90DAYS,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -70,6 +71,9 @@ export default function FutoukouDataPage() {
   const continuationPrev = FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 2];
   const noSupportTrendData = FUTOUKOU_NO_SUPPORT_TREND.map((d) => ({ label: d.year, value: d.receivedNonePercent }));
   const noSupportLatest = FUTOUKOU_NO_SUPPORT_TREND[FUTOUKOU_NO_SUPPORT_TREND.length - 1];
+  const over90TrendData = FUTOUKOU_ABSENCE_OVER_90DAYS.map((d) => ({ label: d.year, value: d.percent }));
+  const over90Latest = FUTOUKOU_ABSENCE_OVER_90DAYS[FUTOUKOU_ABSENCE_OVER_90DAYS.length - 1];
+  const over90Prev = FUTOUKOU_ABSENCE_OVER_90DAYS[FUTOUKOU_ABSENCE_OVER_90DAYS.length - 2];
 
   const url = `${SITE_URL}/data/futoukou`;
 
@@ -141,6 +145,21 @@ export default function FutoukouDataPage() {
             />
             <Link href="/data/futoukou/keizoku" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-09追加（2回目）。「新規は9年ぶり減少」「継続率も下がった」という
+              好転ぎみの数字が並ぶこのグループの中で、「それでも長期化の深刻さ自体は
+              ほとんど変わっていない」という対比を示すカード（出典・検証経緯は
+              lib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>欠席90日以上の割合は55%前後で高止まり</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              不登校児童生徒のうち欠席日数90日以上（ほぼ通えていない状態）の割合は、{FUTOUKOU_LATEST.label}は{over90Latest.percent}%（前年度{over90Prev.percent}%）。令和元年度の55.6%から6年間、ずっと55%前後で変わっていません。新規・継続率が下がっても、「長期化の深刻さの比率」自体は改善していないことがわかります。
+            </div>
+            <YearTrendChart data={over90TrendData} unit="%" />
+            <Link href="/data/futoukou/chouki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このグラフだけをシェアする →
             </Link>
           </div>
 

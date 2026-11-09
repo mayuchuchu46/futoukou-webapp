@@ -20,6 +20,7 @@ import {
   FUTOUKOU_CONTINUATION_RATE,
   FUTOUKOU_BUDGET_ESTIMATE,
   FUTOUKOU_NO_SUPPORT_TREND,
+  FUTOUKOU_ABSENCE_OVER_90DAYS,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -217,6 +218,25 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
       type: 'trend',
       unit: '%',
       data: FUTOUKOU_NO_SUPPORT_TREND.map((d) => ({ label: d.year, value: d.receivedNonePercent })),
+    },
+  },
+  {
+    // 2026-11-09追加（2回目）。不登校児童生徒のうち欠席日数90日以上（ほぼ全く学校に
+    // 通えていない状態）の割合が、R1〜R6にかけて55%前後で高止まりしていることを見せる
+    // カード（出典・検証経緯はfutoukouStats.tsのコメント参照）。「新規は9年ぶり減少」
+    // 「継続率も下がった」という好転ぎみの数字が並ぶ①グループの中で、「それでも長期化の
+    // 深刻さ自体はほとんど変わっていない」という対比を示す。
+    slug: 'chouki',
+    addedAt: '2026-11-09',
+    title: '欠席90日以上の割合は55%前後で高止まり',
+    headlineValue: `${FUTOUKOU_ABSENCE_OVER_90DAYS[FUTOUKOU_ABSENCE_OVER_90DAYS.length - 1].percent}%`,
+    headlineLabel: `不登校児童生徒のうち欠席日数90日以上の者の割合（${FUTOUKOU_LATEST.label}、前年度${FUTOUKOU_ABSENCE_OVER_90DAYS[FUTOUKOU_ABSENCE_OVER_90DAYS.length - 2].percent}%）`,
+    description: `不登校児童生徒数全体は増え続けていますが、そのうち欠席日数90日以上（ほぼ通えていない状態）の割合は、令和元年度の55.6%から${FUTOUKOU_LATEST.label}の${FUTOUKOU_ABSENCE_OVER_90DAYS[FUTOUKOU_ABSENCE_OVER_90DAYS.length - 1].percent}%まで、6年間ずっと55%前後で変わっていません。人数は増えても、「長期化の深刻さの比率」自体は改善していないことがわかります。`,
+    tweetText: `不登校児童生徒のうち欠席日数90日以上の割合は${FUTOUKOU_ABSENCE_OVER_90DAYS[FUTOUKOU_ABSENCE_OVER_90DAYS.length - 1].percent}%。令和元年度から6年間、ずっと55%前後で高止まりしています。`,
+    chart: {
+      type: 'trend',
+      unit: '%',
+      data: FUTOUKOU_ABSENCE_OVER_90DAYS.map((d) => ({ label: d.year, value: d.percent })),
     },
   },
 ];

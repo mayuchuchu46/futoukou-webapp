@@ -286,6 +286,29 @@ export const FUTOUKOU_NO_SUPPORT_TREND: NoSupportByYear[] = [
   { year: 'R6', receivedNone: 135724, received: 218246, receivedNonePercent: 38.3 },
 ];
 
+// ---- 不登校児童生徒のうち欠席日数90日以上の者の割合（R1〜R6） ----
+// 2026-11-09追加（2回目）。出典：
+// ・R5・R6：文部科学省「令和6年度 児童生徒の問題行動・不登校等生徒指導上の諸課題に
+//   関する調査結果の概要（不登校抜粋版）」https://www.mext.go.jp/content/20251106-mxt_jidou01-000045738_3.pdf
+//   本文に「不登校児童生徒全体に占める割合は54.2％（前年度55.0％）であった。」と明記
+//   されている（確認済み）。
+// ・R1〜R4：上記PDFのグラフ（スライド6、年度ラベルとの対応がテキスト抽出では不確か
+//   だったため「要目視確認」扱い）を、文部科学省の別資料「令和4年度」版調査結果
+//   （2024-08-29公表、mext.go.jp/content/20240829-mxt_jidou02-000037766_08.pdf）の
+//   同じグラフ（H28〜R4）と2回・別のプロンプトで独立抽出して比較したところ、R1〜R4の
+//   4年分がどちらも完全に一致した（R1 55.6%／R2 54.9%／R3 55.0%／R4 55.4%）。
+//   2つの独立した資料・抽出で一致したため、相互確認済みとして採用する。
+export type AbsenceOver90DaysByYear = { year: string; percent: number };
+
+export const FUTOUKOU_ABSENCE_OVER_90DAYS: AbsenceOver90DaysByYear[] = [
+  { year: 'R1', percent: 55.6 },
+  { year: 'R2', percent: 54.9 },
+  { year: 'R3', percent: 55.0 },
+  { year: 'R4', percent: 55.4 },
+  { year: 'R5', percent: 55.0 },
+  { year: 'R6', percent: 54.2 },
+];
+
 export const FUTOUKOU_SOURCE = {
   name: '文部科学省「令和6年度 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する調査結果」',
   publishedAt: '令和7年10月29日（令和8年1月16日一部修正）',
