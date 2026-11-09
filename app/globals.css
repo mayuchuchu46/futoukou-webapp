@@ -1238,6 +1238,20 @@ h2.pagetitle {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+/* 新着タイルの🆕バッジ（2026-11-10追加）。「新しく追加されたものは🆕で、トップに
+   出したい」との要望を受けて、FutoukouSummaryGridを新着順に並べ替えた上で、
+   追加から日の浅いタイルの左上にこのバッジを出す。既存の.card系バッジ色を流用せず、
+   目立たせるために差し色（オレンジ系）を使う唯一の箇所とする。 */
+.futoukou-tile-new {
+  align-self: flex-start;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  background: #E8804D;
+  border-radius: 999px;
+  padding: 1px 7px;
+  line-height: 1.6;
+}
 
 /* 「データで見る不登校」のセクション見出し（2026-11-08追加）。.cardの外側に置く
    「章」の見出しなので、カード内のラベル（.answer-label）とは別に、一覧

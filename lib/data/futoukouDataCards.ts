@@ -23,8 +23,15 @@ import {
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
 
+// カードを🆕扱いする期間（日数）。この日数以内に追加されたカードは、
+// タイル一覧（FutoukouSummaryGrid）で🆕バッジ付きで先頭に表示される。
+// 2026-11-10追加：「新しく追加されたものは🆕で、トップに出したい」との要望を受けて。
+export const FUTOUKOU_NEW_BADGE_DAYS = 3;
+
 export type FutoukouDataCard = {
   slug: string;
+  // このカードを追加した日（YYYY-MM-DD）。新着順ソート・🆕バッジの判定に使う。
+  addedAt: string;
   // 一覧(/data/futoukou)・OGP画像で使う短いタイトル
   title: string;
   // ページ本文・OGP画像で主役にする大きな数字
@@ -44,6 +51,7 @@ export type FutoukouDataCard = {
 export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
   {
     slug: 'total',
+    addedAt: '2026-11-08',
     title: '不登校児童生徒数は過去最多',
     headlineValue: `${FUTOUKOU_LATEST.total.toLocaleString()}人`,
     headlineLabel: `小・中学校の不登校児童生徒数（${FUTOUKOU_LATEST.label}）— 過去最多、12年連続で増加`,
@@ -57,6 +65,7 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
   },
   {
     slug: 'shinki',
+    addedAt: '2026-11-08',
     title: '新規の不登校は9年ぶりに減少',
     headlineValue: `${FUTOUKOU_LATEST.newTotal.toLocaleString()}人`,
     headlineLabel: `新規不登校児童生徒数（${FUTOUKOU_LATEST.label}）— 9年ぶりの減少`,
@@ -73,6 +82,7 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
   },
   {
     slug: 'gakunen',
+    addedAt: '2026-11-08',
     title: '学年別で見ると中学2年生が最多',
     headlineValue: `${FUTOUKOU_BY_GRADE.reduce((m, g) => (g.r6 > m.r6 ? g : m)).r6.toLocaleString()}人`,
     headlineLabel: `学年別で最も多いのは${FUTOUKOU_BY_GRADE.reduce((m, g) => (g.r6 > m.r6 ? g : m)).grade}（${FUTOUKOU_LATEST.label}）`,
@@ -86,6 +96,7 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
   },
   {
     slug: 'todouhuken',
+    addedAt: '2026-11-08',
     title: '都道府県別ランキング',
     headlineValue: `${[...FUTOUKOU_BY_PREFECTURE].sort((a, b) => b.per1000 - a.per1000)[0].per1000}人`,
     headlineLabel: `1,000人当たりの不登校児童生徒数が最も多いのは${[...FUTOUKOU_BY_PREFECTURE].sort((a, b) => b.per1000 - a.per1000)[0].prefecture}（全国平均${FUTOUKOU_NATIONAL_AVG_PER_1000}人）`,
@@ -100,6 +111,7 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
   },
   {
     slug: 'youin',
+    addedAt: '2026-11-08',
     title: '不登校の要因、最多は「やる気が出ない等」',
     headlineValue: `${FUTOUKOU_FACTORS[0].total.toLocaleString()}件`,
     headlineLabel: `不登校について学校が把握した事実で最も多いのは「${FUTOUKOU_FACTORS[0].label}」`,
@@ -112,6 +124,7 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
   },
   {
     slug: 'shusseki',
+    addedAt: '2026-11-08',
     title: '学校以外の学びも「出席」扱いに',
     headlineValue: `${FUTOUKOU_LATEST.attendanceCountedOutsideSchool.toLocaleString()}人`,
     headlineLabel: '学校外の機関等での相談・指導を「出席扱い」とされた児童生徒数',
@@ -132,6 +145,7 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
     // 小・中学校は一貫して増加している一方、高校は増減を繰り返している点が
     // 小・中学校の推移（'total'カード）との対比になる。
     slug: 'koukou',
+    addedAt: '2026-11-08',
     title: '高校生の不登校は増減を繰り返している',
     headlineValue: `${FUTOUKOU_HIGH_SCHOOL_TREND[FUTOUKOU_HIGH_SCHOOL_TREND.length - 1].value.toLocaleString()}人`,
     headlineLabel: `高等学校の不登校生徒数（${FUTOUKOU_LATEST.label}）`,
@@ -149,6 +163,7 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
     // だった子の割合（継続率）」もR5から低下したことを見せる。学校に戻る・別の
     // 学びの場につながるなど、不登校から抜けるケースが増えている可能性を示す数字。
     slug: 'keizoku',
+    addedAt: '2026-11-08',
     title: '不登校が「続く」割合も下がった',
     headlineValue: `${FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1].juniorHigh}%`,
     headlineLabel: `中学校の不登校継続率（${FUTOUKOU_LATEST.label}、前年度も不登校だった生徒の割合）`,
@@ -170,6 +185,7 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
     // 調査の児童生徒数、義務教育費国庫負担金、COCOLOプラン予算）だけを使って
     // どうする先生独自に試算し直した数字（詳細はfutoukouStats.tsのコメント参照）。
     slug: 'yosan',
+    addedAt: '2026-11-10',
     title: '不登校対策予算は「人数比」に見合っている？',
     headlineValue: `約${Math.round(FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku / FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku * 100)}%`,
     headlineLabel: `不登校対策予算は、人数比で按分した額（試算）の約${Math.round(FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku / FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku * 100)}%（どうする先生による独自試算）`,
@@ -188,4 +204,18 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
 
 export function getFutoukouDataCard(slug: string): FutoukouDataCard | null {
   return FUTOUKOU_DATA_CARDS.find((c) => c.slug === slug) || null;
+}
+
+// 新着順（addedAtが新しい順）に並べ替えたカード一覧。FutoukouSummaryGridが使う。
+// 2026-11-10追加：「新しく追加されたものは🆕で、トップに出したい」との要望を受けて。
+export function getFutoukouDataCardsSortedByNewest(): FutoukouDataCard[] {
+  return [...FUTOUKOU_DATA_CARDS].sort((a, b) => (a.addedAt < b.addedAt ? 1 : a.addedAt > b.addedAt ? -1 : 0));
+}
+
+// addedAtがFUTOUKOU_NEW_BADGE_DAYS日以内なら🆕扱い。
+export function isFutoukouCardNew(addedAt: string): boolean {
+  const added = new Date(`${addedAt}T00:00:00+09:00`).getTime();
+  const now = Date.now();
+  const diffDays = (now - added) / (1000 * 60 * 60 * 24);
+  return diffDays >= 0 && diffDays < FUTOUKOU_NEW_BADGE_DAYS;
 }
