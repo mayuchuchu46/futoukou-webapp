@@ -470,4 +470,8 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   // 出典: 愛知県私立学校審議会資料・愛知県補助対象校リスト・東京都通信制高校一覧
   { no: 361, prefecture: '愛知県', municipality: '名古屋市守山区', name: '菊華高等学校', operator: '学校法人菊武学園' },
   { no: 362, prefecture: '愛知県', municipality: '名古屋市昭和区', name: '中京大学附属中京高等学校', operator: '学校法人梅村学園' },
+  // 第23バッチ: 東京都リスト2025年6月版との差分（2026年11月）
+  // 出典: 東京都生活文化局「通信教育を行う区域に東京都を含む広域・狭域通信制高校の一覧」2025年6月版
+  // 文科省データ（令和2年）: 学校法人どんぐり向方学園 / https://www.mext.go.jp/content/20200624-mxt_koukou02-000008185_12.pdf
+  { no: 363, prefecture: '長野県', municipality: '下伊那郡天龍村', name: '天龍興譲高等学校', operator: '学校法人どんぐり向方学園' },
 ];
