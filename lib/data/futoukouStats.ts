@@ -251,7 +251,11 @@ export const FUTOUKOU_BUDGET_ESTIMATE = {
   juniorHighStudents: 3141132,
   totalStudents: 5941733 + 3141132,
   futoukouCount: 353970,
-  futoukouSharePercent: Math.round((353970 / (5941733 + 3141132)) * 1000) / 1000,
+  // 注：2026-11-10、本番公開後にXシェア文言が「約0.039%」と表示される不具合に気づいた
+  // （割合を100倍し忘れており、正しくは約3.9%）。按分額・実予算の計算自体には影響しない
+  // （下のproportionalBudgetOkuは割合の生値から直接計算しており、この表示用の値とは
+  // 独立している）が、表示上誤った数字を公開していたため修正した。
+  futoukouSharePercent: Math.round((353970 / (5941733 + 3141132)) * 100 * 10) / 10,
   compulsoryEducationBudgetOku: 16210, // 義務教育費国庫負担金（億円）
   proportionalBudgetOku: Math.round((16210 * (353970 / (5941733 + 3141132))) * 10) / 10,
   actualCocoloBudgetOku: 95, // COCOLOプラン関連予算（億円）
