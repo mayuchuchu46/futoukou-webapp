@@ -459,4 +459,11 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 353, prefecture: '東京都', municipality: '渋谷区', name: '東海大学付属望星高等学校', operator: '学校法人東海大学' },
   { no: 354, prefecture: '東京都', municipality: '墨田区', name: '立志舎高等学校', operator: '学校法人立志舎' },
   { no: 355, prefecture: '埼玉県', municipality: '', name: 'ヒューマンキャンパス高等学校', operator: '学校法人佐藤学園' },
+  // 第21バッチ: 私通協リスト照合により追加（2026年11月）
+  // 出典: 全国私立通信制高等学校協会（shitsukyo.jp）加盟校リストと照合し、未収録の広域通信制高校を追加
+  { no: 356, prefecture: '茨城県', municipality: '常総市', name: 'わせがくPURE高等学校', operator: '学校法人早稲田学園' },
+  { no: 357, prefecture: '東京都', municipality: '目黒区', name: '目黒日本大学高等学校', operator: '学校法人日出学園' },
+  { no: 358, prefecture: '大阪府', municipality: '枚方市', name: '長尾谷高等学校', operator: '学校法人東洋学園' },
+  { no: 359, prefecture: '岡山県', municipality: '岡山市東区', name: '岡山学芸館高等学校', operator: '学校法人おかやま山陽学園' },
+  { no: 360, prefecture: '福岡県', municipality: '田川市', name: '福智高等学校', operator: '学校法人福智学園' },
 ];
