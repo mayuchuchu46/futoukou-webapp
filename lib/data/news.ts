@@ -126,6 +126,20 @@ export const NEWS_ITEMS: NewsItem[] = [
     relatedThemeWord: 'フリースクール',
   },
   {
+    id: 'miraiz-hankyu-tsukaguchi-freeschool-2026-11',
+    date: '2026-11-05',
+    addedAt: '2026-11-10',
+    title:
+      '不登校の子ども向けフリースクール「MIRAIZ阪急塚口校」、尼崎市認定施設として開校――神戸大学大学院教授監修のプロジェクト型学習を導入',
+    summary:
+      '兵庫県尼崎市の阪急神戸線・伊丹線「塚口駅」近くに、不登校の子ども向けフリースクール「尼崎市認定フリースクールMIRAIZ阪急塚口校」が開校しました。運営する株式会社プラスイノベーションは、神戸大学大学院の佐藤正和特命教授が監修するプロジェクト型学習や、在籍学年にとらわれない教科の学び直し、公認心理師・臨床心理士への相談対応などを行うとしています。対象は小学1年生から中学3年生で定員20名、在籍校・教育委員会と連携した「出席扱い」への対応や、尼崎市のフリースクール等利用料補助金の対象にもなるとしています。',
+    sourceName: 'SOFI株式会社（PR TIMES）',
+    sourceUrl: 'https://prtimes.jp/main/html/rd/p/000000002.000189122.html',
+    category: 'other',
+    // summaryに「フリースクール」と明記されているため設定（2026-11-10）。
+    relatedThemeWord: 'フリースクール',
+  },
+  {
     id: 'okayama-futoko-enquete-benkyo-2026-11',
     date: '2026-11-04',
     addedAt: '2026-11-06',
