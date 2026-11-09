@@ -299,7 +299,7 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 157, prefecture: '三重県', municipality: '四日市市', name: '三重県立北星高等学校', operator: '三重県', officialUrl: 'http://www.mie-c.ed.jp/hhokus/', note: '定時制（昼間部）・通信制を併置。' },
   { no: 158, prefecture: '香川県', municipality: '高松市', name: '香川県立高松高等学校', operator: '香川県', officialUrl: 'https://www.kagawa-edu.jp/takah02/', note: '全日制・通信制を併置。令和9年度も通信制課程で生徒募集。' },
   { no: 159, prefecture: '香川県', municipality: '丸亀市', name: '香川県立丸亀高等学校', operator: '香川県', note: '丸亀市六番丁1番地所在。電話：0877-23-6003（通信制直通）。全日制・定時制・通信制を併置。香川県内の公立通信制高校2校のうちの1校（高松市以外の地域をカバー）。普通科・単位制。在籍約175名（令和7年度時点）。令和8年度も通信制課程で生徒募集。' },
-  { no: 160, prefecture: '山梨県', municipality: '甲府市', name: '山梨県立中央高等学校', operator: '山梨県', note: '定時制・通信制を併置した独立型高校。昭和46（1971）年開校。普通科・衛生看護科の通信制を設置。令和8年度も通信制で生徒募集。' },
+  { no: 160, prefecture: '山梨県', municipality: '甲府市', name: '山梨県立中央高等学校', operator: '山梨県', note: '定時制・通信制を併置した独立型高校。昭和46（1971）年開校。普通科・衛生看護科の通信制を設置。令和8年度も通信制で生徒募集。', officialUrl: 'https://www.chuouh.kai.ed.jp/' },
   { no: 161, prefecture: '三重県', municipality: '松阪市', name: '三重県立松阪高等学校', operator: '三重県', officialUrl: 'https://www.mie-c.ed.jp/hmatus/', note: '通信制課程を設置。三重県内の公立通信制2校のうちの1校（もう1校は北星高校）。Instagram公式アカウント（matsusaka_tusin）で情報発信中。' },
   { no: 162, prefecture: '長崎県', municipality: '長崎市', name: '長崎県立鳴滝高等学校', operator: '長崎県', note: '長崎市鳴滝1丁目4番1号（〒850-0011）所在。電話：095-820-0056。昭和27年開校。長崎県内の公立通信制高校2校のうちの1校（長崎市内）。多部制単位制（定時制・通信制を組み合わせた課程）を採用。普通科。3年以上の在籍で卒業可能。' },
   { no: 163, prefecture: '長崎県', municipality: '佐世保市', name: '長崎県立佐世保中央高等学校', operator: '長崎県', note: '佐世保市梅田町10-14（〒857-0017）所在。電話：0956-22-7719。長崎県内の公立通信制高校2校のうちの1校（佐世保市内、県北地域をカバー）。多部制単位制（定時制・通信制）を採用。普通科。3年以上の在籍で卒業可能。' },
