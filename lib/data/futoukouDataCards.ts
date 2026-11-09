@@ -18,6 +18,7 @@ import {
   FUTOUKOU_FACTORS,
   FUTOUKOU_HIGH_SCHOOL_TREND,
   FUTOUKOU_CONTINUATION_RATE,
+  FUTOUKOU_BUDGET_ESTIMATE,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -160,6 +161,26 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         { label: '小学校（今年度）', value: FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1].elementary, unit: '%' },
         { label: '中学校（前年度）', value: FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 2].juniorHigh, unit: '%' },
         { label: '中学校（今年度）', value: FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1].juniorHigh, unit: '%' },
+      ],
+    },
+  },
+  {
+    // 2026-11-10追加。SNSで見かけた「不登校対策予算は人数比の6分の1しかない」との
+    // 投稿がきっかけだが、元記事の按分根拠が確認できなかったため、一次資料（学校基本
+    // 調査の児童生徒数、義務教育費国庫負担金、COCOLOプラン予算）だけを使って
+    // どうする先生独自に試算し直した数字（詳細はfutoukouStats.tsのコメント参照）。
+    slug: 'yosan',
+    title: '不登校対策予算は「人数比」に見合っている？',
+    headlineValue: `約${Math.round(FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku / FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku * 100)}%`,
+    headlineLabel: `不登校対策予算は、人数比で按分した額（試算）の約${Math.round(FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku / FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku * 100)}%（どうする先生による独自試算）`,
+    description: `全国の小中学生${FUTOUKOU_BUDGET_ESTIMATE.totalStudents.toLocaleString()}人のうち、不登校児童生徒は${FUTOUKOU_BUDGET_ESTIMATE.futoukouCount.toLocaleString()}人（約${FUTOUKOU_BUDGET_ESTIMATE.futoukouSharePercent}%）。この割合で義務教育費国庫負担金（${FUTOUKOU_BUDGET_ESTIMATE.fiscalYear}予算案、1兆6,210億円）を按分すると約${FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku}億円になりますが、実際の不登校対策（COCOLOプラン）予算は${FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku}億円でした。`,
+    tweetText: `不登校の小中学生は全体の約${FUTOUKOU_BUDGET_ESTIMATE.futoukouSharePercent}%。この割合で教育予算を按分すると約${FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku}億円のはずですが、実際の不登校対策予算は${FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku}億円（どうする先生による試算）。`,
+    chart: {
+      type: 'bars',
+      caption: '人数比で按分した額（試算）と、実際のCOCOLOプラン予算の比較。',
+      stats: [
+        { label: '人数比で按分した額（試算）', value: FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku, unit: '億円' },
+        { label: '実際のCOCOLOプラン予算', value: FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku, unit: '億円' },
       ],
     },
   },

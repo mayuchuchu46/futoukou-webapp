@@ -16,6 +16,7 @@ import {
   FUTOUKOU_FACTORS,
   FUTOUKOU_HIGH_SCHOOL_TREND,
   FUTOUKOU_CONTINUATION_RATE,
+  FUTOUKOU_BUDGET_ESTIMATE,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -201,6 +202,34 @@ export default function FutoukouDataPage() {
               学校外の機関等で相談・指導を受け、指導要録上「出席扱い」となった児童生徒は{FUTOUKOU_LATEST.attendanceCountedOutsideSchool.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedOutsideSchool.toLocaleString()}人）、自宅でのICT等を活用した学習を出席扱いとされた児童生徒は{FUTOUKOU_LATEST.attendanceCountedIctHome.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedIctHome.toLocaleString()}人）で、どちらも前年度より増えています。
             </div>
             <Link href="/data/futoukou/shusseki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* ④ お金の話：不登校対策予算は人数比に見合っているか（2026-11-10追加）。
+              「こういうデータをどんどん出したい、1日1個くらい」との要望を受けて、
+              文科省の調査データだけでなく予算・政策系の一次資料も使った新しいカードを
+              追加した。元ネタはSNSで見かけた「予算は人数比の6分の1」という趣旨の投稿
+              だが、計算根拠が確認できなかったため、学校基本調査・義務教育費国庫負担金・
+              COCOLOプラン予算という一次資料だけを使ってどうする先生独自に試算し直した
+              （詳細はlib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="futoukou-section-heading">④ お金の話</div>
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校対策予算は「人数比」に見合っている？（どうする先生による試算）</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              全国の小中学生{FUTOUKOU_BUDGET_ESTIMATE.totalStudents.toLocaleString()}人のうち、不登校児童生徒は{FUTOUKOU_BUDGET_ESTIMATE.futoukouCount.toLocaleString()}人（約{FUTOUKOU_BUDGET_ESTIMATE.futoukouSharePercent}%）。この割合で義務教育費国庫負担金（{FUTOUKOU_BUDGET_ESTIMATE.fiscalYear}予算案、1兆6,210億円）を按分すると約{FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku}億円になりますが、実際の不登校対策（COCOLOプラン）予算は{FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku}億円で、按分額の約{Math.round((FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku / FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku) * 100)}%にとどまります。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: '人数比で按分した額（試算）', value: FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku, unit: '億円' },
+                { label: '実際のCOCOLOプラン予算', value: FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku, unit: '億円' },
+              ]}
+            />
+            <div className="muted" style={{ fontSize: 11 }}>
+              ※この按分計算は文部科学省の公式見解ではなく、どうする先生が一次資料をもとに独自に試算したものです。
+            </div>
+            <Link href="/data/futoukou/yosan" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>
