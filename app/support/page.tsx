@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
+import SupportJumpNav from '@/components/SupportJumpNav';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
 import { PREFECTURE_SUPPORT_LINKS } from '@/lib/data/prefectureSupportLinks';
 import { ADOLESCENT_CLINICS } from '@/lib/data/adolescentClinics';
@@ -55,19 +56,13 @@ export default function SupportPage() {
 
         {/* ページ内ジャンプナビ（2026-11-10追加）。カードが9個まで増え、スマホで目的の
             窓口（例：発達検査、都道府県別）にたどり着くまでのスクロール量が多くなって
-            いたため、「このページのUI改善」の一環として追加。既存の.chip-row/.chipを
-            そのまま流用し、新規CSSは足していない。緊急カードは常に最初に見えるべき
-            なので、ジャンプナビ自体はそのカードの後（＝AI相談カードの前）に置く。 */}
-        <div className="chip-row" style={{ margin: '-2px 0 0' }}>
-          <a href="#ask-dosuru" className="chip chip-tag">💬 相談する</a>
-          <a href="#child" className="chip chip-tag">🧒 子ども本人</a>
-          <a href="#school-life" className="chip chip-tag">🏫 学校生活</a>
-          <a href="#prefecture" className="chip chip-tag">📍 都道府県別</a>
-          <a href="#adolescent-clinic" className="chip chip-tag">🏥 思春期外来</a>
-          <a href="#development-test" className="chip chip-tag">🧩 発達検査</a>
-          <a href="#attendance-system" className="chip chip-tag">📚 出席扱い制度</a>
-          <a href="#materials" className="chip chip-tag">✏️ 教材・サービス</a>
-        </div>
+            いたため、「このページのUI改善」の一環として追加。緊急カードは常に最初に
+            見えるべきなので、ジャンプナビ自体はそのカードの後（＝AI相談カードの前）に
+            置く。実体はSupportJumpNav（クライアントコンポーネント）— 素のaタグの
+            href="#id"だと、.main（スクロールする内側のdiv）の祖先にtransformが
+            付いているためのSafari既知の不具合で反応しないことが判明したため、
+            scrollIntoView()を使う実装に変更した経緯がある。 */}
+        <SupportJumpNav />
 
         {/* 「どうする先生」自身のAI・専門家・経験者への相談への案内（2026-11-09追加）。
             困っている人を早めに相談の機会につなげることがサービス最大の目的であり、
