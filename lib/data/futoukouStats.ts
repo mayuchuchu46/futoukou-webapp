@@ -261,6 +261,31 @@ export const FUTOUKOU_BUDGET_ESTIMATE = {
   actualCocoloBudgetOku: 95, // COCOLOプラン関連予算（億円）
 };
 
+// ---- 学校内外で専門的な相談・指導等を受けていない不登校児童生徒数の推移（R1〜R6） ----
+// 2026-11-09追加。出典：文部科学省「令和6年度 児童生徒の問題行動・不登校等生徒指導上の
+// 諸課題に関する調査結果の概要（不登校抜粋版）」
+// https://www.mext.go.jp/content/20251106-mxt_jidou01-000045738_3.pdf
+//
+// 相互確認済み：このPDFを2回、別のプロンプトで独立して読み取り、両方で同じ数値
+// （R1〜R6の「受けていない」人数・「受けた」人数）が得られた。さらに、各年度で
+// 「受けていない」＋「受けた」の合計が、本ファイル既存のFUTOUKOU_YEARLY_TREND.total
+// （別の資料から確認済みの不登校児童生徒数、R1 181,272人〜R6 353,970人）と全年度で
+// 完全に一致することを確認した（例：R6 135,724+218,246=353,970）。
+// 割合（receivedNonePercent）は人数から算出した値。R1〜R4分は、文部科学省の別資料
+// 「令和4年度」版調査結果（2024-08-29公表、mext.go.jp/content/20240829-mxt_jidou02-
+// 000037766_08.pdf）に明記されている「受けていない」割合（R1 29.6%／R2 34.3%／
+// R3 36.3%／R4 38.2%）とも一致し、二重に確認できている。R6は38.3%とPDFに明記。
+export type NoSupportByYear = { year: string; receivedNone: number; received: number; receivedNonePercent: number };
+
+export const FUTOUKOU_NO_SUPPORT_TREND: NoSupportByYear[] = [
+  { year: 'R1', receivedNone: 53593, received: 127679, receivedNonePercent: 29.6 },
+  { year: 'R2', receivedNone: 67294, received: 128833, receivedNonePercent: 34.3 },
+  { year: 'R3', receivedNone: 88931, received: 156009, receivedNonePercent: 36.3 },
+  { year: 'R4', receivedNone: 114217, received: 184831, receivedNonePercent: 38.2 },
+  { year: 'R5', receivedNone: 134368, received: 212114, receivedNonePercent: 38.8 },
+  { year: 'R6', receivedNone: 135724, received: 218246, receivedNonePercent: 38.3 },
+];
+
 export const FUTOUKOU_SOURCE = {
   name: '文部科学省「令和6年度 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する調査結果」',
   publishedAt: '令和7年10月29日（令和8年1月16日一部修正）',

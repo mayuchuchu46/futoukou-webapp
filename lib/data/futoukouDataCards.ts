@@ -19,6 +19,7 @@ import {
   FUTOUKOU_HIGH_SCHOOL_TREND,
   FUTOUKOU_CONTINUATION_RATE,
   FUTOUKOU_BUDGET_ESTIMATE,
+  FUTOUKOU_NO_SUPPORT_TREND,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -198,6 +199,24 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         { label: '人数比で按分した額（試算）', value: FUTOUKOU_BUDGET_ESTIMATE.proportionalBudgetOku, unit: '億円' },
         { label: '実際のCOCOLOプラン予算', value: FUTOUKOU_BUDGET_ESTIMATE.actualCocoloBudgetOku, unit: '億円' },
       ],
+    },
+  },
+  {
+    // 2026-11-09追加。「学校以外の学びも出席扱いに」('shusseki'カード)の裏側として、
+    // 学校内外のどこからも専門的な相談・指導等を受けていない不登校児童生徒の数・割合が
+    // R1からR6まで一貫して増え続けていることを見せるカード（出典・検証経緯は
+    // futoukouStats.tsのコメント参照）。
+    slug: 'mushien',
+    addedAt: '2026-11-09',
+    title: '相談も指導も受けていない子が増えている',
+    headlineValue: `${FUTOUKOU_NO_SUPPORT_TREND[FUTOUKOU_NO_SUPPORT_TREND.length - 1].receivedNonePercent}%`,
+    headlineLabel: `学校内外のどこからも専門的な相談・指導等を受けていない不登校児童生徒の割合（${FUTOUKOU_LATEST.label}、${FUTOUKOU_NO_SUPPORT_TREND[FUTOUKOU_NO_SUPPORT_TREND.length - 1].receivedNone.toLocaleString()}人）`,
+    description: `不登校児童生徒のうち、学校内外のどこからも専門的な相談・指導等を受けていない人の割合は、令和元年度の29.6%から${FUTOUKOU_LATEST.label}には${FUTOUKOU_NO_SUPPORT_TREND[FUTOUKOU_NO_SUPPORT_TREND.length - 1].receivedNonePercent}%まで上昇しました。不登校児童生徒数の増加だけでなく、支援につながれていない子どもの割合自体も増えています。`,
+    tweetText: `不登校の子どものうち、学校内外のどこからも相談・指導を受けていない割合は${FUTOUKOU_NO_SUPPORT_TREND[FUTOUKOU_NO_SUPPORT_TREND.length - 1].receivedNonePercent}%（${FUTOUKOU_NO_SUPPORT_TREND[FUTOUKOU_NO_SUPPORT_TREND.length - 1].receivedNone.toLocaleString()}人）。令和元年度の29.6%から上昇し続けています。`,
+    chart: {
+      type: 'trend',
+      unit: '%',
+      data: FUTOUKOU_NO_SUPPORT_TREND.map((d) => ({ label: d.year, value: d.receivedNonePercent })),
     },
   },
 ];

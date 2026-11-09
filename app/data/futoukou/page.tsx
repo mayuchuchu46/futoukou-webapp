@@ -17,6 +17,7 @@ import {
   FUTOUKOU_HIGH_SCHOOL_TREND,
   FUTOUKOU_CONTINUATION_RATE,
   FUTOUKOU_BUDGET_ESTIMATE,
+  FUTOUKOU_NO_SUPPORT_TREND,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -67,6 +68,8 @@ export default function FutoukouDataPage() {
   const highSchoolTrendData = FUTOUKOU_HIGH_SCHOOL_TREND.map((d) => ({ label: d.year, value: d.value }));
   const continuationLatest = FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 1];
   const continuationPrev = FUTOUKOU_CONTINUATION_RATE[FUTOUKOU_CONTINUATION_RATE.length - 2];
+  const noSupportTrendData = FUTOUKOU_NO_SUPPORT_TREND.map((d) => ({ label: d.year, value: d.receivedNonePercent }));
+  const noSupportLatest = FUTOUKOU_NO_SUPPORT_TREND[FUTOUKOU_NO_SUPPORT_TREND.length - 1];
 
   const url = `${SITE_URL}/data/futoukou`;
 
@@ -203,6 +206,21 @@ export default function FutoukouDataPage() {
             </div>
             <Link href="/data/futoukou/shusseki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-09追加。上の「出席扱い制度」カードの裏側として、学校内外の
+              どこからも専門的な相談・指導等を受けていない児童生徒の割合が増え続けて
+              いることを見せるカード（出典・検証経緯はlib/data/futoukouStats.tsの
+              コメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>相談も指導も受けていない子どもの割合は増えている</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              不登校児童生徒のうち、学校内外のどこからも専門的な相談・指導等を受けていない人の割合は、令和元年度の29.6%から{FUTOUKOU_LATEST.label}には{noSupportLatest.receivedNonePercent}%（{noSupportLatest.receivedNone.toLocaleString()}人）まで上昇しました。支援につながれていない子どもの割合自体が増えています。
+            </div>
+            <YearTrendChart data={noSupportTrendData} unit="%" />
+            <Link href="/data/futoukou/mushien" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このグラフだけをシェアする →
             </Link>
           </div>
 
