@@ -13,6 +13,7 @@ import PcSidebar from '@/components/PcSidebar';
 import TodayQuestionTeaser from '@/components/TodayQuestionTeaser';
 import NewsTeaser from '@/components/NewsTeaser';
 import FutoukouDataTeaser from '@/components/FutoukouDataTeaser';
+import KotobaTeaser from '@/components/KotobaTeaser';
 import MimamoriShindanTeaser from '@/components/MimamoriShindanTeaser';
 import FeaturedGakkoRanking from '@/components/FeaturedGakkoRanking';
 import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
@@ -570,9 +571,16 @@ export default function HomeClient({
             {showExtras && <NewsTeaser />}
 
             {/* 「データで見る不登校」誘導バナー（2026-11-08追加）。ニュースバナーの
-                直下に置く。PC・モバイル両方で同じ位置に出す（上のNewsTeaserと同じ
-                理由）。 */}
-            {showExtras && <FutoukouDataTeaser />}
+                直下に置く。
+                2026-11-09、「PCはこの２つはサイドにおくのでいいかも」との指摘を
+                受けて、PC（960px以上）ではPcSidebar側（.home-datateaser-side）に
+                移動したため、こちらはモバイル専用にした（他の
+                見守り力診断・自分の地域登録等と同じPC／モバイル出し分けパターン）。 */}
+            {showExtras && (
+              <div className="home-datateaser-mobile">
+                <FutoukouDataTeaser />
+              </div>
+            )}
 
             {/* 拡散をメインに置いた「見守り力タイプ診断」への誘導バナー（2026-11-01追加）。
                 ニュースバナーの直下、専門家一覧の上に置く。
@@ -726,44 +734,16 @@ export default function HomeClient({
                 「子どもの本音翻訳」を導入し、タイトルをそれに差し替えた。さらに
                 「もっとそのネーミングが目立つように」との指摘を受け、名称部分だけ
                 色文字から塗りつぶしバッジ（var(--main)背景＋白文字）に変え、他の
-                テキストより一段強いコントラストを持たせた。 */}
+                テキストより一段強いコントラストを持たせた。
+                2026-11-09、見た目・文言はそのままcomponents/KotobaTeaser.tsxへ
+                切り出した。「PCはこの２つはサイドにおくのでいいかも」との指摘を
+                受けて、PC（960px以上）ではPcSidebar側（.home-kotoba-side）に
+                移動したため、こちらはモバイル専用にした（FutoukouDataTeaserと
+                同じ出し分けパターン）。 */}
             {showExtras && (
-              <Link
-                href="/kotoba"
-                className="card home-kotoba-link"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 10,
-                  margin: '0 0 10px',
-                  padding: '10px 14px',
-                  border: '2px solid var(--main)',
-                  background: 'linear-gradient(135deg, #ffffff 0%, var(--sub) 160%)',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                }}
-              >
-                <span style={{ flex: '0 0 auto', fontSize: 22, lineHeight: 1 }}>💬</span>
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      fontWeight: 800,
-                      fontSize: 15,
-                      color: '#fff',
-                      background: 'var(--main)',
-                      padding: '2px 9px',
-                      borderRadius: 6,
-                      letterSpacing: '0.02em',
-                    }}
-                  >
-                    子どもの本音翻訳
-                  </span>
-                  <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted)', marginTop: 4 }}>子供が言った一言を、気持ちと返し方に変換します</span>
-                </span>
-                <span style={{ flex: '0 0 auto', color: 'var(--main)', fontWeight: 700 }}>›</span>
-              </Link>
+              <div className="home-kotoba-mobile">
+                <KotobaTeaser />
+              </div>
             )}
 
             {/* 一覧の並び替え・「専門家回答のみ」絞り込み（2026-10-15追加）。

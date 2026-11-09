@@ -9,6 +9,8 @@ import TagChips from './TagChips';
 import ExpertsTeaser, { ExpertProfile } from './ExpertsTeaser';
 import TodayQuestionTeaser from './TodayQuestionTeaser';
 import MimamoriShindanTeaser from './MimamoriShindanTeaser';
+import FutoukouDataTeaser from './FutoukouDataTeaser';
+import KotobaTeaser from './KotobaTeaser';
 import MyRegionCard from './MyRegionCard';
 import { Consultation } from '@/lib/types';
 import { getUid } from '@/lib/uid';
@@ -237,6 +239,23 @@ export default function PcSidebar({
           この右コラムに移動した（2026-10-16、「今日の質問は右コラムの中においてみて」
           との指摘を受けて）。モバイルではHomeClient.tsx側に残している。 */}
       {isDesktop && <TodayQuestionTeaser />}
+
+      {/* 「データで見る不登校」「子どもの本音翻訳」の2つの誘導バナー（2026-11-09）。
+          以前はホーム本文（.home-main-col）にPC・モバイル共通で出していたが、
+          「PCはこの２つはサイドにおくのでいいかも」との指摘を受けてこちらに移動。
+          本文側（app/HomeClient.tsx）はモバイル専用
+          （.home-datateaser-mobile／.home-kotoba-mobile）にした。他の
+          見守り力診断・自分の地域登録と同じPC／モバイル出し分けパターン。 */}
+      {isDesktop && (
+        <div className="home-datateaser-side">
+          <FutoukouDataTeaser />
+        </div>
+      )}
+      {isDesktop && (
+        <div className="home-kotoba-side">
+          <KotobaTeaser />
+        </div>
+      )}
 
       {/* 拡散をメインに置いた「見守り力タイプ診断」への誘導バナー（2026-11-01追加）。
           以前はHomeClient.tsx本文側（PC・モバイル共通）にのみ出していたが、
