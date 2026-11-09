@@ -53,6 +53,35 @@ export default function SupportPage() {
           </div>
         </div>
 
+        {/* 「どうする先生」自身のAI・専門家・経験者への相談への案内（2026-11-09追加）。
+            困っている人を早めに相談の機会につなげることがサービス最大の目的であり、
+            学び場（学校情報）はその入り口の一つに過ぎないという位置づけの明確化を
+            受けて、このページ（下部ナビ「相談窓口」タブの行き先）の最上部寄りに
+            どうする先生自身の相談手段もまとめて置く。下の公的窓口と並べることで、
+            「まずどうする先生で相談しつつ、必要なら公的窓口にもつながれる」という
+            全体像を1ページで見せる。 */}
+        <div className="card" style={{ alignItems: 'flex-start', gap: 8, border: '2px solid var(--main)', background: 'var(--sub)' }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>まず「どうする先生」に相談する</div>
+          <div className="qtext">
+            登録不要・匿名で、今の状況を相談できます。AIがすぐに答え、必要に応じて専門家・経験者（先輩保護者）からの回答も届きます。
+          </div>
+          <a href="/ask" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit', width: '100%' }}>
+            <span style={{ flex: 1 }}>
+              <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>AIに相談する</span>
+              <span style={{ display: 'block', fontSize: 12 }}>今の状況を入力するだけ。すぐに回答が返ってきます</span>
+            </span>
+            <span style={{ color: 'var(--main)', fontWeight: 700 }}>›</span>
+          </a>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
+            <a href="/experts" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              専門家に相談する ›
+            </a>
+            <a href="/senpai" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+              経験者（先輩保護者）に相談する ›
+            </a>
+          </div>
+        </div>
+
         <div className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>子ども本人が相談したいとき</div>
           <div>
