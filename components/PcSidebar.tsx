@@ -235,6 +235,24 @@ export default function PcSidebar({
         </div>
       </div>
 
+      {/* 「自分の地域登録」カード。以前はホーム本文（.home-main-col）に
+          PC・モバイル共通で出していたが、PCでは本文の相談一覧を押し下げてしまう
+          との指摘（2026-11-03）を受けて、他の専門家一覧・見守り力診断と同じ
+          パターンでこちらの右コラムに移動した。本文側（HomeClient.tsx）は
+          モバイル専用（.home-myregion-mobile）にしてある。
+          2026-11-09、「お住まいの地域を登録するの箇所は、全国の不登校の進路
+          選択肢を掲載／2,148件の箇所の下に配置して」との指摘を受けて、
+          以前の位置（gakkoLinksの直前、サイド最下部）から掲載件数カードの
+          直後（サイド最上部寄り）に移動した。
+          localStorageのみの読み出しでAPIを叩かないため、isDesktopでの
+          ゲーティングは必須ではないが、他のサイド専用コンポーネントとの
+          一貫性のため揃えておく。 */}
+      {isDesktop && (
+        <div className="home-myregion-side">
+          <MyRegionCard />
+        </div>
+      )}
+
       {/* 「今日の質問」。以前はホーム左カラム上部にあったが、PC（960px以上）では
           この右コラムに移動した（2026-10-16、「今日の質問は右コラムの中においてみて」
           との指摘を受けて）。モバイルではHomeClient.tsx側に残している。 */}
@@ -334,21 +352,6 @@ export default function PcSidebar({
       )}
 
       {!hideExperts && <ExpertsTeaser experts={experts} senpai={senpai} className="home-experts-side" />}
-
-      {/* 「自分の地域登録」カード。以前はホーム本文（.home-main-col）に
-          PC・モバイル共通で出していたが、PCでは本文の相談一覧を押し下げてしまう
-          との指摘（2026-11-03）を受けて、他の専門家一覧・見守り力診断と同じ
-          パターンでこちらの右コラムに移動した。本文側（HomeClient.tsx）は
-          モバイル専用（.home-myregion-mobile）にしてある。gakkoLinks（学びの場
-          カテゴリ一覧）の直前に置き、学びの場関連の導線同士を隣接させる。
-          localStorageのみの読み出しでAPIを叩かないため、isDesktopでの
-          ゲーティングは必須ではないが、他のサイド専用コンポーネントとの
-          一貫性のため揃えておく。 */}
-      {isDesktop && (
-        <div className="home-myregion-side">
-          <MyRegionCard />
-        </div>
-      )}
 
       {gakkoLinks}
     </div>
