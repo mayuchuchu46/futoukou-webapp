@@ -51,6 +51,9 @@ export const getCategoryDictionaryData = cache(async function getCategoryDiction
     // AIの回答への返信（ラリー）の続きは件数・サンプルに含めない（lib/consultations.ts参照、
     // 2026-10-16追加）。
     .is('parent_id', null)
+    // 希死念慮・自傷等の安全上書きが発動した相談は除外（ホームのカテゴリチップと件数を揃えるため）。
+    // getConsultationCounts（lib/consultations.ts）と同じ条件（2026-11-10追加）。
+    .or('crisis_detected.is.null,crisis_detected.eq.false')
     .eq('category', category);
 
   const consultationCount = count || 0;
@@ -60,6 +63,7 @@ export const getCategoryDictionaryData = cache(async function getCategoryDiction
     .select('id, category, question, created_at')
     .eq('hidden', false)
     .is('parent_id', null)
+    .or('crisis_detected.is.null,crisis_detected.eq.false')
     .eq('category', category)
     .order('created_at', { ascending: false })
     .limit(SAMPLE_LIMIT);
