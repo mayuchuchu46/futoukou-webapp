@@ -474,4 +474,8 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   // 出典: 東京都生活文化局「通信教育を行う区域に東京都を含む広域・狭域通信制高校の一覧」2025年6月版
   // 文科省データ（令和2年）: 学校法人どんぐり向方学園 / https://www.mext.go.jp/content/20200624-mxt_koukou02-000008185_12.pdf
   { no: 363, prefecture: '長野県', municipality: '下伊那郡天龍村', name: '天龍興譲高等学校', operator: '学校法人どんぐり向方学園' },
+  // 第24バッチ: 東京都リスト未掲載の広域通信制高校（2026年11月）
+  // 出典: 琉球新報PR TIMES（digitalpr.jp/r/71000）「学校法人中央国際学園が沖縄中央高等学校を2025年10月1日に開校」
+  // 2025年9月26日付で沖縄県知事より設置認可。広域通信制課程・普通科（単位制）。
+  { no: 364, prefecture: '沖縄県', municipality: '宮古島市', name: '沖縄中央高等学校', operator: '学校法人中央国際学園' },
 ];
