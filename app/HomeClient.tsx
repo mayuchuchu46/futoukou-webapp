@@ -700,6 +700,13 @@ export default function HomeClient({
                   <Link href="/gakko?type=josei" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
                     💴 助成金・支援制度を見る ›
                   </Link>
+                  {/* /support（相談窓口のご案内：都道府県別窓口・思春期外来・発達検査・
+                      出席扱い制度等）への入口。これまでCrisisModal（緊急時モーダル）経由
+                      のみで、トップから1タップで行ける導線が無かった。「トップのどこから
+                      見れる？」との指摘を受けて追加（2026-11-09）。 */}
+                  <Link href="/support" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
+                    📞 相談窓口のご案内を見る ›
+                  </Link>
                 </div>
               </div>
             ) : null}
