@@ -316,10 +316,11 @@ export default async function GakkoPage({
               同じカードに収めた1本のチップ列に統合した（2026-10-18）。 */}
           {/* 全種類の学校を学年・地域・通う頻度などで絞り込むページへの入口（2026-10-30追加）。
               旧名称「条件から学校を探す」は機能の説明そのままで誘導力が弱いとの指摘を受け、
-              「診断」ワードを使った名称に変更（2026-11-03）。選択式で絞り込むだけで個別最適化
+              「診断」ワードを使った名称「学校タイプ診断」に変更（2026-11-03）→さらに
+              「学び場マッチング」に変更（2026-11-09）。選択式で絞り込むだけで個別最適化
               まではしていないため、「ぴったり」等の言い過ぎは避けた。 */}
           <Link href="/gakko/shindan" className="card" style={{ textDecoration: 'none', color: 'inherit', alignItems: 'flex-start', gap: 4 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>学校タイプ診断 ›</div>
+            <div className="answer-label" style={{ fontSize: 14 }}>学び場マッチング ›</div>
             <div className="muted" style={{ fontSize: 12 }}>
               学年・好きなこと・通う頻度から、お子さんに合う学校を絞り込めます。
             </div>

@@ -692,7 +692,7 @@ export default function HomeClient({
               >
                 <Link href="/gakko/shindan" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}>
                   <span style={{ flex: 1 }}>
-                    <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>学校タイプ診断</span>
+                    <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--main)' }}>学び場マッチング</span>
                     <span style={{ display: 'block', fontSize: 12 }}>学年・好きなこと・通う頻度を選ぶだけ。お子さんに合う学校を絞り込めます</span>
                   </span>
                   <span style={{ color: 'var(--main)', fontWeight: 700 }}>›</span>
@@ -708,20 +708,20 @@ export default function HomeClient({
                   <Link href="/gakko?type=josei" className="muted" style={{ fontSize: 12, textDecoration: 'underline' }}>
                     💴 助成金・支援制度を見る ›
                   </Link>
-                  {/* /supportへのテキストリンクはここに追加したが、学校タイプ診断
+                  {/* /supportへのテキストリンクはここに追加したが、学び場マッチング
                       （/gakko/shindan）側に入口を移したため削除（2026-11-09）。 */}
                 </div>
               </div>
             ) : null}
 
             {/* 「子供の言葉、ほんとはこう」への入口バナー（2026-11-06追加）。入力の心理的
-                障壁が低い（状況説明不要、子の一言をそのまま入れるだけ）ため、学校タイプ
-                診断と並ぶ主要な入口として、同じ見た目で学校タイプ診断の直下に置く。
+                障壁が低い（状況説明不要、子の一言をそのまま入れるだけ）ため、学び場
+                マッチングと並ぶ主要な入口として、同じ見た目で学び場マッチングの直下に置く。
                 相談フォーム（/ask）への自然なブリッジとしても機能させる狙い。
-                2026-11-07、class名を学校タイプ診断と同じ「home-gakko-link」にしていた
+                2026-11-07、class名を学び場マッチングと同じ「home-gakko-link」にしていた
                 ため、PC（960px以上）ではapp/globals.cssの
                 「.home-main-col .home-gakko-link { display: none !important; }」
-                （学校タイプ診断はPCヘッダー・サイドに重複導線があるためPCで隠す
+                （学び場マッチングはPCヘッダー・サイドに重複導線があるためPCで隠す
                 ルール）に巻き込まれ、このバナーごとPCで非表示になっていた
                 （「PCからだと入り口がどこにある？」との指摘を受けて発覚）。kotobaには
                 PC側に代わりの導線が無いため、別クラス名にしてPCでも表示されるようにした。
