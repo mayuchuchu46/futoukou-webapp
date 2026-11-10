@@ -509,4 +509,12 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   //              studychain.jp「2025年（令和7年）より通信制課程を新たに開設、定員1学年80名、富山県・石川県対象」
   // 注: 狭域（富山県・石川県）。令和7年4月1日設置認可済み・開設確認済み
   { no: 374, prefecture: '富山県', municipality: '高岡市', name: '高岡龍谷高等学校', operator: '学校法人清光学園' },
+  // 第29バッチ: 福島県私立通信制（広域2校＋狭域1校）
+  // 出典: 福島県私立学校一覧PDF（pref.fukushima.lg.jp/uploaded/attachment/598705.pdf）
+  //       尚志=学校法人尚志学園・郡山市大槻町字坦ノ腰2・広域（同PDF「通信制課程（広域）」欄）
+  //       昌平=学校法人昌平黌・いわき市平上片寄字上ノ内152・広域（同PDF）・福島県+栃木県
+  //       桜の聖母学院=学校法人コングレガシオン・ド・ノートルダム・福島市野田町7-11-1・狭域（福島県のみ・女子）
+  { no: 375, prefecture: '福島県', municipality: '郡山市', name: '尚志高等学校', operator: '学校法人尚志学園' },
+  { no: 376, prefecture: '福島県', municipality: 'いわき市', name: '東日本国際大学附属昌平高等学校', operator: '学校法人昌平黌' },
+  { no: 377, prefecture: '福島県', municipality: '福島市', name: '桜の聖母学院高等学校', operator: '学校法人コングレガシオン・ド・ノートルダム' },
 ];
