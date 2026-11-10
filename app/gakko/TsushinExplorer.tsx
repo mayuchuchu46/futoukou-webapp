@@ -155,6 +155,34 @@ export default function TsushinExplorer({
         </div>
       </div>
 
+      {/* 都道府県も検索語も未選択の初期状態で、個別ページへのリンクが一件も存在しない
+          状態を避けるための全件ディレクトリ（2026-11-10追加、TeijiExplorer.tsxと同じ理由）。
+          本校所在地のみで都道府県分けする（キャンパス展開等の複雑な絞り込みロジックは
+          ここでは使わず、全校が必ずどこかの都道府県に出るようにする）。 */}
+      {!pref && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>すべての通信制高校を本校所在地（都道府県）別に見る（{allSchools.length}校）</div>
+          {PREFECTURES.map((p) => {
+            const list = allSchools.filter((s) => s.prefecture === p);
+            if (list.length === 0) return null;
+            return (
+              <details key={p} style={{ width: '100%' }}>
+                <summary style={{ cursor: 'pointer', fontWeight: 700, padding: '6px 0' }}>
+                  {p}（{list.length}）
+                </summary>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '4px 0 8px' }}>
+                  {list.map((s) => (
+                    <Link key={s.no} href={`/gakko/tsushin/${s.no}`} style={{ fontSize: 13, color: 'inherit' }}>
+                      {s.name}
+                    </Link>
+                  ))}
+                </div>
+              </details>
+            );
+          })}
+        </div>
+      )}
+
       {pref && (
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>

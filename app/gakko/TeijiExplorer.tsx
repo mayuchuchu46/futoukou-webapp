@@ -129,6 +129,35 @@ export default function TeijiExplorer({
         </div>
       </div>
 
+      {/* 都道府県も検索語も未選択の初期状態で、個別ページへのリンクが一件も存在しない
+          状態を避けるための全件ディレクトリ（2026-11-10追加）。検索ボットの初回クロールで
+          個別ページへの内部リンクが見つからず、サイトマップ経由でしか発見できない
+          （GSC「検出 - インデックス未登録」）ページが大量発生していたための対応。
+          <details>で都道府県ごとに折りたたみ、見た目は変えずにHTML上は全リンクを出す。 */}
+      {!pref && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>すべての定時制高校を都道府県別に見る（{allSchools.length}校）</div>
+          {PREFECTURES.map((p) => {
+            const list = allSchools.filter((s) => s.prefecture === p);
+            if (list.length === 0) return null;
+            return (
+              <details key={p} style={{ width: '100%' }}>
+                <summary style={{ cursor: 'pointer', fontWeight: 700, padding: '6px 0' }}>
+                  {p}（{list.length}）
+                </summary>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '4px 0 8px' }}>
+                  {list.map((s) => (
+                    <Link key={s.no} href={`/gakko/teiji/${s.no}`} style={{ fontSize: 13, color: 'inherit' }}>
+                      {s.name}{s.municipality ? `（${s.municipality}）` : ''}
+                    </Link>
+                  ))}
+                </div>
+              </details>
+            );
+          })}
+        </div>
+      )}
+
       {pref && (
         <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
           <div className="answer-label" style={{ fontSize: 14 }}>{pref}の定時制高校</div>
