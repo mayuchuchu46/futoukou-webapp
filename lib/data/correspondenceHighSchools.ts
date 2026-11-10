@@ -221,7 +221,7 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 78, prefecture: '大阪府', municipality: '', name: 'ルネサンス大阪高等学校', operator: 'ブロードメディア株式会社', specialties: [{ tag: 'it', course: 'eスポーツコース', sourceUrl: 'https://www.r-ac.jp/campus/osaka/' }], attendanceStyles: ['schooling','online'], attendanceNote: '年4日程度の登校（スクーリング）で卒業でき、オンライン中心で学習を進められる', note: '年4日程度の登校（スクーリング）で卒業できる通信制高校で、「時間と場所にとらわれることなく」オンライン中心に学習を進められる独自のオンライン学習ツールを使用している。校舎への通学は必須ではなく、健康面・メンタル面の事情がある生徒は自宅学習型・オンライン中心のコースで学ぶこともできる（提携するトライ式高等学院の在籍生の例）。転校の場合は在籍期間や修得単位を引き継げるため、同級生と同じタイミングで卒業できる可能性がある。', officialUrl: 'https://www.r-ac.jp/campus/osaka/', campuses: [{ prefecture: '大阪府', municipality: '大阪市北区' }], campusesIncomplete: true , hasDedicatedMentalCareStaff: true},
   { no: 79, admission: { text: '2027年度募集要項。入学願書と作文「私の夢」を提出。面接は全選抜区分で実施（専願は事前面談で免除可）、基礎学力検査（国数英）は4・5期のみ。出願は1期2026/10/1〜10/21から5期2027/3/16〜3/24。転編入は書類選考と面接で、年度途中は個別に日程設定。', sourceUrl: 'https://fight.aigaku.gr.jp/entrance-guide.html' }, prefecture: '兵庫県', municipality: '相生市', name: '相生学院高等学校', operator: '富士コンピューター株式会社', specialties: [{ tag: 'sports', course: 'スポーツコース', sourceUrl: 'https://aigaku.gr.jp/course/sports.html' }, { tag: 'it', course: 'IT・クリエイティブコース／ドローンコース', sourceUrl: 'https://aigaku.gr.jp/course.html' }], attendanceStyles: ['schooling'], attendanceNote: '本校（兵庫県相生市）に年間約10日程度通学（遠方は宿泊）して面接指導を受ける。週の登校日数の記載はなし。', attendanceSourceUrl: 'https://aigaku.gr.jp/guide/schoolong.html', tuitionNote: '授業料は1単位10,000円。就学支援金適用前の年間費用は進学コース360,000円〜、情報処理コース420,000円〜、個別対応コース360,000円など。適用後の実質学費の計算例は高校初入学で1年目275,750円。', tuitionSourceUrl: 'https://aigaku.gr.jp/entrance/expenses.html', note: '2007年に相生市の教育特区認定を受けて準備が進み、2008年に正式開校した。', officialUrl: 'https://aigaku.gr.jp/', campuses: [{ prefecture: '兵庫県', municipality: '揖保郡太子町' }, { prefecture: '広島県', municipality: '尾道市' }, { prefecture: '北海道', municipality: '札幌市' }, { prefecture: '鳥取県', municipality: '米子市' }], campusesIncomplete: true },
   { no: 80, prefecture: '兵庫県', municipality: '淡路市', name: 'AIE国際高等学校', operator: '株式会社エーアイイー', note: '本校では年1回6日間の集中スクーリング（少人数制の参加型クラスで単位認定試験を実施）があり、通信スタイルは年2回の通学とレポート学習が中心。英語教育・リベラルアーツ教育・全人格教育を特色として掲げている。', officialUrl: 'https://www.aie.ed.jp/' },
-  { no: 81, prefecture: '奈良県', municipality: '', name: '飛鳥未来高等学校', operator: '学校法人三幸学園', specialties: [{ tag: 'beauty', course: 'ネイルライセンスコース／メイクコース', sourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/' }, { tag: 'art', course: 'アニメ・マンガコース／オンラインイラストコース', sourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/' }, { tag: 'sports', course: 'ダンスコース', sourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/' }, { tag: 'performing', course: 'ダンスコース', sourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/' }], attendanceStyles: ['weekly1','part','daily'], attendanceFlexible: true, attendanceNote: '奈良本校は週1日〜5日までの通学スタイル（ベーシック、スタンダード、3DAY、5DAY）から選べると記載。', attendanceSourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/', officialUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/', campuses: [{ prefecture: '愛知県', municipality: '名古屋市' }, { prefecture: '大阪府', municipality: '大阪市' }], campusesIncomplete: true , hasDedicatedMentalCareStaff: true},
+  { no: 81, prefecture: '奈良県', municipality: '天理市', name: '飛鳥未来高等学校', operator: '学校法人三幸学園', specialties: [{ tag: 'beauty', course: 'ネイルライセンスコース／メイクコース', sourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/' }, { tag: 'art', course: 'アニメ・マンガコース／オンラインイラストコース', sourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/' }, { tag: 'sports', course: 'ダンスコース', sourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/' }, { tag: 'performing', course: 'ダンスコース', sourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/' }], attendanceStyles: ['weekly1','part','daily'], attendanceFlexible: true, attendanceNote: '奈良本校は週1日〜5日までの通学スタイル（ベーシック、スタンダード、3DAY、5DAY）から選べると記載。', attendanceSourceUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/', officialUrl: 'https://www.sanko.ac.jp/asuka/asukamirai/nara/', campuses: [{ prefecture: '愛知県', municipality: '名古屋市' }, { prefecture: '大阪府', municipality: '大阪市' }], campusesIncomplete: true , hasDedicatedMentalCareStaff: true},
   { no: 82, prefecture: '和歌山県', municipality: '', name: '慶風高等学校', operator: '学校法人田原学園', attendanceStyles: ['schooling'], attendanceNote: '通信型は自宅学習コースで、レポート・スクーリングに取り組み単位認定考査を受けると記載(回数の記載なし)。', attendanceSourceUrl: 'https://keifu.ac.jp/', note: '4コース体系で、通信コース（自宅学習＋レポート添削）、通学学習コース（支援センターに週5日午前中通学）、スポーツコース（午前授業＋午後部活動）、学習支援コース（週2日午前中の学習支援教室）がある。「高野山スクーリング」という行事名で学校行事が行われる。', officialUrl: 'https://keifu.ac.jp/', campuses: [{ prefecture: '和歌山県', municipality: '和歌山市' }], campusesIncomplete: true },
   { no: 83, prefecture: '和歌山県', municipality: '', name: '高野山高等学校', operator: '学校法人高野山学園', attendanceStyles: ['schooling'], attendanceNote: 'マイ・ウェイコース(広域通信制)は、年1〜2回・3〜5日間、高野山の本校でスクーリング。', attendanceSourceUrl: 'https://www.koyasan-h.ed.jp/myway/schooling/', note: '母体校（高野山中学校・高等学校全体）は1886年設立。通信制は「広域通信制：普通科」と明記されている。', officialUrl: 'https://koyasan-h.ed.jp/' },
   { no: 84, prefecture: '和歌山県', municipality: '日高郡日高川町', name: '和歌山南陵高等学校', operator: '学校法人南陵学園', attendanceStyles: ['schooling'], attendanceNote: '年に1〜2回（前期・後期各1回の集中）のスクーリングを南陵高校で実施。履修科目により実習施設へ定期的に通う必要がある。', attendanceSourceUrl: 'https://w-nanryo.ed.jp/tsushin/', note: '2026年度から、全日制・通信制の両方で卒業単位として認められる「オンライン音楽レッスン」選択授業を全国初で開始予定。「全通併修制度」を活用し全国どこからでもオンラインで受講でき、年間35回のレッスンが単位認定対象。', officialUrl: 'https://www.w-nanryo.ed.jp/' },
@@ -419,7 +419,8 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 314, prefecture: '大阪府', municipality: '', name: 'ルネサンス大阪高等学校', operator: 'ブロードメディア株式会社' },
   { no: 315, prefecture: '兵庫県', municipality: '相生市', name: '相生学院高等学校', operator: '富士コンピューター株式会社' },
   { no: 316, prefecture: '兵庫県', municipality: '', name: 'AIE国際高等学校', operator: '株式会社エーアイイー' },
-  { no: 317, prefecture: '奈良県', municipality: '天理市', name: '飛鳥未来高等学校', operator: '学校法人三幸学園' },
+  // no.317: 飛鳥未来高等学校（学校法人三幸学園）はno.81と重複のため削除
+  //   no.81（奈良県、天理市）が正エントリ（令和8年度奈良県高校学校名簿No.19で天理市確認）
   { no: 318, prefecture: '和歌山県', municipality: '', name: '慶風高等学校', operator: '学校法人田原学園' },
   { no: 319, prefecture: '和歌山県', municipality: '', name: '高野山高等学校', operator: '学校法人高野山学園' },
   { no: 320, prefecture: '和歌山県', municipality: '', name: '和歌山南陵高等学校', operator: '学校法人南陵学園' },
@@ -487,8 +488,9 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 366, prefecture: '宮城県', municipality: '仙台市若林区', name: 'クラークNEXT高等学校', operator: '学校法人クラーク記念国際学院' },
   // 北越高等学校: 新潟県私立学校名簿および公式サイトより新潟市中央区（米山五丁目12番1号）を確認
   { no: 367, prefecture: '新潟県', municipality: '新潟市中央区', name: '北越高等学校', operator: '学校法人北越学館' },
-  // 智辯学園奈良カレッジ高等部: 公式サイトより奈良県香芝市（田尻265番地）を確認
-  { no: 368, prefecture: '奈良県', municipality: '香芝市', name: '智辯学園奈良カレッジ高等部', operator: '学校法人智辯学園' },
+  // no.368: 智辯学園奈良カレッジ高等部（学校法人智辯学園）は誤収録のため削除
+  //   令和8年度奈良県高校学校名簿および2025年4月作成の奈良県高校配置図に通信制課程の記載なし
+  //   智辯学園奈良カレッジは全日制のみ（中等教育学校・高等部）
   // 誠英高等学校: 山口県私立学校一覧および公式サイトより山口県防府市（東三田尻1-2-14）を確認
   // 注: 文科省データの設置者名は「学校法人誠英学園」だが、複数ソースで「学校法人三田尻学園」と確認。正式名は三田尻学園を採用
   { no: 369, prefecture: '山口県', municipality: '防府市', name: '誠英高等学校', operator: '学校法人三田尻学園' },
@@ -637,4 +639,23 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   //   通信制開設：2013年4月（studychain.jp記載）
   //   入学可能エリア：福井県・石川県（studychain.jp「石川県と福井県が中心」） → 狭域確定
   { no: 399, prefecture: '福井県', municipality: '福井市', name: '啓新高等学校', operator: '学校法人福井精華学園' },
+  // 奈良女子高等学校（広域通信制、全日制・通信制併置）
+  //   本校所在地：奈良市三条宮前町3-6（令和8年度奈良県高校学校名簿No.17記載）
+  //   設置者：学校法人白藤学園（同名簿・minkou.jp記載）
+  //   通信教育区域：滋賀・京都・大阪・兵庫・奈良・三重（6府県、minkou.jp記載）→ 広域（3府県以上）確定
+  //   文科省令和2年4月時点の広域通信制一覧（no.76）でも確認
+  { no: 400, prefecture: '奈良県', municipality: '奈良市', name: '奈良女子高等学校', operator: '学校法人白藤学園' },
+  // 関西文化芸術高等学校（広域通信制、通信制独立校）
+  //   本校所在地：奈良市山陵町1179（令和8年度奈良県高校学校名簿No.18・studychain.jp記載）
+  //   設置者：学校法人奈良立正芸術学院（同名簿・studychain.jp記載）
+  //   開校：1980年（昭和55年）4月（studychain.jp記載）
+  //   通信教育区域：奈良・大阪・京都・滋賀・三重など近畿圏7都道府県（文科省令和2年4月一覧no.78で7都道府県）→ 広域確定
+  //   本校のみでスクーリング実施（studychain.jp記載）
+  { no: 401, prefecture: '奈良県', municipality: '奈良市', name: '関西文化芸術高等学校', operator: '学校法人奈良立正芸術学院' },
+  // 日本教育学院高等学校（広域通信制、通信制独立校）
+  //   本校所在地：宇陀市大宇陀上片岡194-6（令和8年度奈良県高校学校名簿No.20記載）
+  //   設置者：学校法人奈良岡村学園（同名簿・studychain.jp記載）
+  //   開校：2015年（平成27年）（文科省令和2年4月広域一覧no.77・studychain.jp記載）
+  //   通信教育区域：7都道府県（文科省令和2年4月一覧no.77）→ 広域確定
+  { no: 402, prefecture: '奈良県', municipality: '宇陀市', name: '日本教育学院高等学校', operator: '学校法人奈良岡村学園' },
 ];
