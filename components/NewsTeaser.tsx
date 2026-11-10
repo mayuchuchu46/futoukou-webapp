@@ -29,6 +29,10 @@ import { getSparkHeights } from '@/lib/sparkline';
 // headline・statsのどちらも無い記事では従来どおりアイコンにフォールバックする
 // （FutoukouDataTeaserは全カードが必ずheadlineValueを持つため常に数字表示だが、
 // こちらは記事ごとに有無が分かれる）。
+// 2026-11-10再修正：「バナーのデザインの配置バランス改善して」との指摘を受けて、
+// FutoukouDataTeaser.tsxと同じく、数字とミニグラフを離して置かず、数字の真下に
+// グラフを添えた1つの塊（.expertbanner-stat内）にまとめた（詳細はapp/globals.cssの
+// .expertbanner-statコメント参照）。
 export default function NewsTeaser() {
   // addedAtが同じ日付（1日2回のニュース収集タスクが同じ日に2件追加した場合など）の
   // ときは「>=」でタイブレークし、NEWS_ITEMS配列の中でより後ろにある方を選ぶ
@@ -69,6 +73,19 @@ export default function NewsTeaser() {
       {latest.headline ? (
         <div className="expertbanner-stat" aria-hidden="true">
           <span className="expertbanner-stat-value">{latest.headline.value}</span>
+          {sparkHeights.length >= 2 && (
+            <div className="expertbanner-stat-spark">
+              {sparkHeights.map((h, i) => (
+                <span
+                  key={i}
+                  style={{
+                    height: `${Math.round(h)}%`,
+                    background: i === sparkHeights.length - 1 ? 'var(--main)' : 'var(--sub)',
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         <span className="expertbanner-icon" aria-hidden="true" style={{ fontSize: 18, lineHeight: 1 }}>📰</span>
@@ -80,19 +97,6 @@ export default function NewsTeaser() {
         </div>
         <div className="expertbanner-desc">不登校に関する最新ニュース</div>
       </div>
-      {sparkHeights.length >= 2 && (
-        <div className="expertbanner-today-graph expertbanner-today-graph--real" aria-hidden="true">
-          {sparkHeights.map((h, i) => (
-            <span
-              key={i}
-              style={{
-                height: `${Math.round(h)}%`,
-                background: i === sparkHeights.length - 1 ? 'var(--main)' : 'var(--sub)',
-              }}
-            />
-          ))}
-        </div>
-      )}
       <span className="expertbanner-cta">›</span>
     </Link>
   );

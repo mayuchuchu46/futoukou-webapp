@@ -22,9 +22,12 @@ import { getSparkHeights } from '@/lib/sparkline';
 // 2026-11-10再修正：「アイコンじゃなく、グラフや数字をこのバナーにも入れたい」との
 // 要望を受けて、絵文字アイコン（📊）を見出し数字（headlineValue、.futoukou-tile-value
 // と同じスタイル）に差し替え、カード自身のchartデータ（trend/bars/ranking問わず）から
-// 実データのミニ棒グラフを生成してCTA矢印の手前に追加した。TodayQuestionTeaser.tsxの
-// .expertbanner-today-graphは「ぼかした見本グラフ」だったが、こちらは実データをそのまま
-// 高さに反映する（.expertbanner-today-graph--realで、ぼかし・不透明度を解除）。
+// 実データのミニ棒グラフを生成して添えた。
+// 2026-11-10再々修正：「バナーのデザインの配置バランス改善して」との指摘を受けて、
+// 数字（左端）とグラフ（右端、CTA矢印の手前）を離して置いていたレイアウトを見直し、
+// 数字の真下にミニグラフを小さく添える1つの塊（.expertbanner-stat内）にまとめた。
+// 本文（.expertbanner-body）が間に不自然に伸びきって余白ができる問題を解消している
+// （詳細はapp/globals.cssの.expertbanner-statコメント参照）。
 function getSparkValues(chart: ReturnType<typeof getFutoukouDataCardsSortedByNewest>[number]['chart']): number[] {
   if (chart.type === 'trend') return chart.data.slice(-5).map((d) => d.value);
   if (chart.type === 'bars') return chart.stats.slice(0, 5).map((s) => s.value);
@@ -48,6 +51,19 @@ export default function FutoukouDataTeaser() {
     <Link href="/data/futoukou" className="expertbanner expertbanner-today">
       <div className="expertbanner-stat" aria-hidden="true">
         <span className="expertbanner-stat-value">{latest.headlineValue}</span>
+        {sparkHeights.length >= 2 && (
+          <div className="expertbanner-stat-spark">
+            {sparkHeights.map((h, i) => (
+              <span
+                key={i}
+                style={{
+                  height: `${Math.round(h)}%`,
+                  background: i === sparkHeights.length - 1 ? 'var(--main)' : 'var(--sub)',
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
       <div className="expertbanner-body">
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -56,19 +72,6 @@ export default function FutoukouDataTeaser() {
         </div>
         <div className="expertbanner-desc">データで見る不登校（文部科学省調査より）</div>
       </div>
-      {sparkHeights.length >= 2 && (
-        <div className="expertbanner-today-graph expertbanner-today-graph--real" aria-hidden="true">
-          {sparkHeights.map((h, i) => (
-            <span
-              key={i}
-              style={{
-                height: `${Math.round(h)}%`,
-                background: i === sparkHeights.length - 1 ? 'var(--main)' : 'var(--sub)',
-              }}
-            />
-          ))}
-        </div>
-      )}
       <span className="expertbanner-cta">›</span>
     </Link>
   );
