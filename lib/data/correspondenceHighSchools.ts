@@ -395,7 +395,7 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 290, prefecture: '神奈川県', municipality: '', name: '鹿島山北高等学校', operator: '株式会社山北学園' },
   { no: 291, prefecture: '新潟県', municipality: '', name: '新潟産業大学附属高等学校', operator: '学校法人柏専学院' },
   { no: 292, prefecture: '石川県', municipality: '白山市', name: 'アットマーク国際高等学校', operator: '株式会社アットマーク・ラーニング' },
-  { no: 293, prefecture: '福井県', municipality: '', name: 'AOIKE高等学校', operator: '学校法人青池学園' },
+  // no.293: AOIKE高等学校（学校法人青池学園）はno.55と重複のため削除
   { no: 294, prefecture: '山梨県', municipality: '甲斐市', name: '日本航空高等学校', operator: '学校法人日本航空学園' },
   { no: 295, prefecture: '山梨県', municipality: '甲府市', name: '駿台甲府高等学校', operator: '学校法人駿台甲府学園' },
   { no: 296, prefecture: '山梨県', municipality: '北杜市', name: '自然学園高等学校', operator: '学校法人自然学園' },
@@ -630,4 +630,11 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   //   設置者：学校法人扇城学園（zyuken.net記載）
   //   通信制開設：2026年春（令和8年4月）※文科省令和7年5月時点の統計には未計上の可能性あり
   { no: 398, prefecture: '大分県', municipality: '中津市', name: '東九州龍谷高等学校', operator: '学校法人扇城学園' },
+  // 啓新高等学校（狭域通信制、全日制・通信制併置）
+  //   本校所在地：福井県福井市文京4-15-1（zyuken.net記載）
+  //   通信制所在地：福井市大手3-1-1 システム大手ビル7F（studychain.jp記載）
+  //   設置者：学校法人福井精華学園（studychain.jp、minkou.jp記載）
+  //   通信制開設：2013年4月（studychain.jp記載）
+  //   入学可能エリア：福井県・石川県（studychain.jp「石川県と福井県が中心」） → 狭域確定
+  { no: 399, prefecture: '福井県', municipality: '福井市', name: '啓新高等学校', operator: '学校法人福井精華学園' },
 ];
