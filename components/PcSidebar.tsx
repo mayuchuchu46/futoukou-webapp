@@ -9,7 +9,6 @@ import TagChips from './TagChips';
 import ExpertsTeaser, { ExpertProfile } from './ExpertsTeaser';
 import TodayQuestionTeaser from './TodayQuestionTeaser';
 import MimamoriShindanTeaser from './MimamoriShindanTeaser';
-import FutoukouDataTeaser from './FutoukouDataTeaser';
 import KotobaTeaser from './KotobaTeaser';
 import GohoubiTeaser from './GohoubiTeaser';
 import MyRegionCard from './MyRegionCard';
@@ -259,17 +258,16 @@ export default function PcSidebar({
           との指摘を受けて）。モバイルではHomeClient.tsx側に残している。 */}
       {isDesktop && <TodayQuestionTeaser />}
 
-      {/* 「データで見る不登校」「子どもの本音翻訳」の2つの誘導バナー（2026-11-09）。
+      {/* 「データで見る不登校」バナーは、2026-11-10に「ニュースの横に2つ並べられない？
+          毎日変わるから更新性高いし」との指摘を受けて、こちらのPCサイドから
+          ホーム本文（app/HomeClient.tsx）側に移動し、PCでは「不登校に関する最新
+          ニュース」バナーと横並び（2カラム）で表示するようにした（.home-news-data-row、
+          app/globals.css）。モバイルは引き続き本文側で単独スタック表示。 */}
+      {/* 「子どもの本音翻訳」の誘導バナー（2026-11-09）。
           以前はホーム本文（.home-main-col）にPC・モバイル共通で出していたが、
           「PCはこの２つはサイドにおくのでいいかも」との指摘を受けてこちらに移動。
-          本文側（app/HomeClient.tsx）はモバイル専用
-          （.home-datateaser-mobile／.home-kotoba-mobile）にした。他の
-          見守り力診断・自分の地域登録と同じPC／モバイル出し分けパターン。 */}
-      {isDesktop && (
-        <div className="home-datateaser-side">
-          <FutoukouDataTeaser />
-        </div>
-      )}
+          本文側（app/HomeClient.tsx）はモバイル専用（.home-kotoba-mobile）にした。
+          他の見守り力診断・自分の地域登録と同じPC／モバイル出し分けパターン。 */}
       {isDesktop && (
         <div className="home-kotoba-side">
           <KotobaTeaser />

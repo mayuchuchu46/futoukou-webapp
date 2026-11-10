@@ -564,19 +564,31 @@ export default function HomeClient({
               </div>
             )}
 
-            {/* 「不登校に関する最新ニュース」誘導バナー（2026-10-29追加）。ランキングの
-                直下、カテゴリ・テーマ用のチップ列より上に置く。PC・モバイル両方で
-                同じ位置に出す（home-main-colはPC/モバイル共通の1カラムのため、
-                PcSidebar側には別途置いていない）。ニュースが1件もないうちは
-                NewsTeaser内部でnullを返し、何も表示されない。 */}
-            {showExtras && <NewsTeaser />}
+            {/* 「不登校に関する最新ニュース」「データで見る不登校」の2つの誘導バナー
+                （ニュースは2026-10-29追加、データは2026-11-08追加）。ランキングの
+                直下、カテゴリ・テーマ用のチップ列より上に置く。
+                2026-11-10、「PCの場合、ニュースの横に2つ並べられない？毎日変わるから
+                更新性高いし」との指摘を受けて、PC（960px以上）ではこの2つを
+                .home-news-data-rowで横並び（2カラム）表示にした
+                （どちらも更新性の高いコンテンツという共通点があるため）。
+                モバイルでは引き続き縦積み（.home-news-data-rowがブロック要素のまま
+                流れるため、特別なCSSなしで単純に縦に並ぶ）。
+                ニュースが1件もないうちはNewsTeaser内部でnullを返し、何も表示されない。
+                データ側（.home-datateaser-pc）はPC専用の表示で、モバイルでは
+                下の.home-datateaser-mobile側のみ表示する（CSSで出し分け）。 */}
+            {showExtras && (
+              <div className="home-news-data-row">
+                <NewsTeaser />
+                <div className="home-datateaser-pc">
+                  <FutoukouDataTeaser />
+                </div>
+              </div>
+            )}
 
-            {/* 「データで見る不登校」誘導バナー（2026-11-08追加）。ニュースバナーの
-                直下に置く。
-                2026-11-09、「PCはこの２つはサイドにおくのでいいかも」との指摘を
-                受けて、PC（960px以上）ではPcSidebar側（.home-datateaser-side）に
-                移動したため、こちらはモバイル専用にした（他の
-                見守り力診断・自分の地域登録等と同じPC／モバイル出し分けパターン）。 */}
+            {/* 「データで見る不登校」誘導バナーのモバイル版。PC（960px以上）では
+                上の.home-news-data-row内（.home-datateaser-pc）に出すため、
+                モバイル専用にしてある（他の見守り力診断・自分の地域登録等と同じ
+                PC／モバイル出し分けパターン）。 */}
             {showExtras && (
               <div className="home-datateaser-mobile">
                 <FutoukouDataTeaser />

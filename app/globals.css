@@ -851,6 +851,12 @@ h2.pagetitle {
    PC側は下の@media内で16pxのまま。） */
 .home-main-col { display: flex; flex-direction: column; gap: 8px; }
 
+/* 「データで見る不登校」バナーのPC専用コピー（.home-news-data-row内）。
+   モバイルではデフォルトで隠し、960px以上の中でのみ表示する（下の@media内で
+   display:blockに上書き。このルールが@media内のものより前に来るように、
+   @media (min-width: 960px)ブロックの直前に置いている）。 */
+.home-datateaser-pc { display: none; }
+
 @media (min-width: 960px) {
   /* PCの広い画面では、ホーム以外のページも同じ幅・配置に揃える
      （以前は.home-shellだけ広がり、他のページは480pxのまま中央に
@@ -940,12 +946,27 @@ h2.pagetitle {
      二重表示されてしまっていた（上の.home-theme-link/.home-gakko-linkと同じ
      原因）。インラインstyleに勝つため!importantを付けた。 */
   .home-myregion-mobile { display: none !important; }
-  /* 「データで見る不登校」「子どもの本音翻訳」バナーも同様に、PCでは右コラム
-     （.pc-sidebar内、.home-datateaser-side／.home-kotoba-side）に出すので、
-     本流に出しているモバイル用の方は隠す（2026-11-09、「PCはこの２つはサイドに
-     おくのでいいかも」との指摘を受けて）。 */
+  /* 「子どもの本音翻訳」バナーも同様に、PCでは右コラム（.pc-sidebar内、
+     .home-kotoba-side）に出すので、本流に出しているモバイル用の方は隠す
+     （2026-11-09、「PCはこの２つはサイドにおくのでいいかも」との指摘を受けて）。
+     「データで見る不登校」バナーは2026-11-10に本文側（.home-news-data-row内、
+     .home-datateaser-pc）でのPC表示に変更したため、こちらの.home-datateaser-mobile
+     （同じ本文側のモバイル専用コピー）だけを隠す。 */
   .home-datateaser-mobile { display: none; }
   .home-kotoba-mobile { display: none; }
+  /* 「不登校に関する最新ニュース」「データで見る不登校」の2バナーを、PC
+     （960px以上）では横並び（2カラム）にする（2026-11-10、「ニュースの横に2つ
+     並べられない？毎日変わるから更新性高いし」との指摘を受けて）。モバイルでは
+     このmin-width:960pxブロック自体が効かないため、通常のブロック要素として
+     縦に並ぶ（.home-datateaser-pcもモバイルではデフォルトで非表示）。 */
+  .home-news-data-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .home-news-data-row .expertbanner { height: 100%; }
+  .home-datateaser-pc { display: block; }
   /* 「親のご褒美クラブ」バナーも同様に、PCでは右コラム（.pc-sidebar内、
      .home-gohoubi-side）に出すので、本流に出しているモバイル用の方は隠す
      （2026-11-10）。 */
