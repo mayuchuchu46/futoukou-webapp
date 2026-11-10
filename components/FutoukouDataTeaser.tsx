@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getFutoukouDataCardsSortedByNewest } from '@/lib/data/futoukouDataCards';
+import { getSparkHeights } from '@/lib/sparkline';
 
 // TOPページに出す「データで見る不登校」への誘導バナー（2026-11-08追加）。
 // 「トップのどこから見れる？」との指摘を受けて追加——/data/futoukouへの導線は
@@ -40,15 +41,8 @@ export default function FutoukouDataTeaser() {
   const diffDays = Math.round((Date.now() - new Date(`${latest.addedAt}T00:00:00+09:00`).getTime()) / 86400000);
   const isNew = diffDays >= 0 && diffDays <= 3;
 
-  // 最大5点に絞り、最小〜最大を20%〜100%の高さに正規化する（0%だと見えなくなるため
-  // 下限を20%にしている）。全点が同じ値の場合は全バーを70%の高さで揃える。
-  const sparkValues = getSparkValues(latest.chart);
-  const min = Math.min(...sparkValues);
-  const max = Math.max(...sparkValues);
-  const sparkHeights =
-    sparkValues.length >= 2
-      ? sparkValues.map((v) => (max === min ? 70 : 20 + ((v - min) / (max - min)) * 80))
-      : [];
+  // 最大5点に絞り、lib/sparkline.tsの共通ロジックで高さ（%）に正規化する。
+  const sparkHeights = getSparkHeights(getSparkValues(latest.chart));
 
   return (
     <Link href="/data/futoukou" className="expertbanner expertbanner-today">
