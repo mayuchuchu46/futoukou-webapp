@@ -553,4 +553,9 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   //               設置者：学校法人両洋学園（studychain.jp記載）
   //               所在地：京都府京都市上京区元真如堂町358（minkou.jp記載）
   { no: 385, prefecture: '京都府', municipality: '京都市上京区', name: '京都美山高等学校', operator: '学校法人両洋学園' },
+  // 第35バッチ: 佐賀県の私立通信制狭域校1校
+  // 出典: 2shin.jp「私立狭域」（文科省オープンデータ令和7年5月1日時点引用）
+  //       所在地：佐賀県伊万里市立花町86番地
+  //       設置者：学校法人伊万里学園（2shin.jp記載）
+  { no: 386, prefecture: '佐賀県', municipality: '伊万里市', name: '敬徳高等学校', operator: '学校法人伊万里学園' },
 ];
