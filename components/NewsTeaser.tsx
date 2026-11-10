@@ -75,7 +75,7 @@ export default function NewsTeaser() {
       )}
       <div className="expertbanner-body">
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          {isNew && <span className="new-badge">新着</span>}
+          {isNew && <span className="new-badge">NEW</span>}
           <div className="expertbanner-title">{titleLabel}</div>
         </div>
         <div className="expertbanner-desc">不登校に関する最新ニュース</div>
