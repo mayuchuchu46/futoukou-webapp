@@ -70,6 +70,20 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'future-education-support-spot-riyou-2026-11',
+    date: '2026-11-10',
+    addedAt: '2026-11-10',
+    title:
+      'ギフテッド特性・行き渋りのある小学生向け「スポット利用」制度、大阪のオルタナティブスクールが開始――入会せず月単位で通学し「見立て」を保護者に提供',
+    summary:
+      'ギフテッド児とその家庭を支援するNPO法人Future Education Support（大阪市北区）は、ギフテッド特性や行き渋り、不登校傾向のある小学生を対象に、入会手続きなしで1か月単位（週1回または週2回）で通える「スポット利用」制度を2026年11月10日に発表しました。同法人が運営するオルタナティブスクール「MARBLE WORLD シティスクール」（大阪市天王寺区）に平日の火・水・木、10時から16時の時間帯で通学でき、在籍校の籍はそのまま保持されます。利用期間中はスタッフが子どもの学び方や人との関わりなどを観察し、1か月後に「見立て」として文書化して保護者に渡すとしています。',
+    sourceName: 'NPO法人Future Education Support（PR TIMES）',
+    sourceUrl: 'https://prtimes.jp/main/html/rd/p/000000012.000145504.html',
+    category: 'other',
+    // summaryに「オルタナティブスクール」と明記されているため設定（2026-11-10）。
+    relatedThemeWord: 'オルタナティブスクール',
+  },
+  {
     id: 'hr-koto-gakuin-dropout-event-2026-11',
     date: '2026-11-06',
     addedAt: '2026-11-09',
