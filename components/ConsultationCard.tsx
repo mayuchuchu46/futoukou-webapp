@@ -108,7 +108,7 @@ export default function ConsultationCard({
       <div className="row">
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
-          {isNew && <span className="new-badge">NEW</span>}
+          {isNew && <span className="new-badge">新着</span>}
         </div>
         <span className="muted card-time">
           {[metaLabel(item), timeLabel].filter(Boolean).join('・')}

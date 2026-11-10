@@ -1393,7 +1393,11 @@ a.card:hover {
 .cat-badge { display: inline-flex; align-self: flex-start; padding: 5px 13px; border-radius: 999px; font-size: 11px; font-weight: 700; }
 /* 投稿から1時間以内のカードに付けるNEWバッジ。一覧に「今動いている」感を
    出すための軽い演出（2026-10-15）。 */
-.new-badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: 0.02em; color: #fff; background: var(--logo-pink); }
+/* 2026-11-10、「NEW」から「新着」に文言変更した際、幅の狭いバナー（PC2カラムの
+   データ誘導バナー等）でこのバッジが「新／着」の2行に折り返ってしまう不具合が
+   発覚（英字3文字より全角2文字の方が折り返しやすいため）。white-space:nowrapと
+   flex-shrink:0で、隣のタイトルに押されても必ず1行で収まるようにした。 */
+.new-badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: 0.02em; color: #fff; background: var(--logo-pink); white-space: nowrap; flex-shrink: 0; }
 .card-time { flex: 0 0 auto; white-space: nowrap; font-size: 11px; }
 .cat-body { background: var(--sub); color: #1F4A3C; }
 .cat-social { background: var(--orange-bg); color: var(--orange-text); }

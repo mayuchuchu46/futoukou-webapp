@@ -28,7 +28,7 @@ export default async function FutoukouSummaryGrid() {
     <div className="futoukou-tile-grid">
       {cards.map((c) => (
         <Link key={c.slug} href={`/data/futoukou/${c.slug}`} className="futoukou-tile">
-          {isFutoukouCardNew(c.addedAt) && <span className="futoukou-tile-new">🆕 NEW</span>}
+          {isFutoukouCardNew(c.addedAt) && <span className="futoukou-tile-new">🆕 新着</span>}
           <span className="futoukou-tile-value">{c.headlineValue}</span>
           <span className="futoukou-tile-label">{c.title}</span>
         </Link>

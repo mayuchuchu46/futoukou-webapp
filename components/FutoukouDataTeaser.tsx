@@ -51,7 +51,7 @@ export default function FutoukouDataTeaser() {
       </div>
       <div className="expertbanner-body">
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          {isNew && <span className="new-badge">NEW</span>}
+          {isNew && <span className="new-badge">新着</span>}
           <div className="expertbanner-title">{latest.title}</div>
         </div>
         <div className="expertbanner-desc">データで見る不登校（文部科学省調査より）</div>
