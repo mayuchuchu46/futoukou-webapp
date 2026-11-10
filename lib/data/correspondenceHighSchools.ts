@@ -517,4 +517,13 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 375, prefecture: '福島県', municipality: '郡山市', name: '尚志高等学校', operator: '学校法人尚志学園' },
   { no: 376, prefecture: '福島県', municipality: 'いわき市', name: '東日本国際大学附属昌平高等学校', operator: '学校法人昌平黌' },
   { no: 377, prefecture: '福島県', municipality: '福島市', name: '桜の聖母学院高等学校', operator: '学校法人コングレガシオン・ド・ノートルダム' },
+  // 第30バッチ: 鳥取県・高知県の私立通信制狭域校
+  // 出典（鳥取）: 鳥取県私立学校法人一覧（R5.4.1）「学校法人松柏学院 倉吉市福庭町1-180」
+  //               studychain.jp「2015年通信制課程開設。鳥取県内のみならず近隣地域の生徒も対象」→狭域
+  //               学校所在地: 東伯郡湯梨浜町田畑32-1
+  { no: 378, prefecture: '鳥取県', municipality: '東伯郡湯梨浜町', name: '湯梨浜学園高等学校', operator: '学校法人松柏学院' },
+  // 出典（高知）: 文科省第3回高校教育WG資料（2022年12月12日）「通信制課程（狭域）を併設」と明記
+  //               minkou.jp「住所: 高知県高知市栄田町1-3-8、入学可能エリア: 高知」→狭域確定
+  //               studychain.jp「学校法人太平洋学園が運営。1965年設立」
+  { no: 379, prefecture: '高知県', municipality: '高知市', name: '太平洋学園高等学校', operator: '学校法人太平洋学園' },
 ];
