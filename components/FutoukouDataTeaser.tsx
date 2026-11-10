@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { getFutoukouDataCardsSortedByNewest } from '@/lib/data/futoukouDataCards';
-import { getSparkHeights } from '@/lib/sparkline';
 
 // TOPページに出す「データで見る不登校」への誘導バナー（2026-11-08追加）。
 // 「トップのどこから見れる？」との指摘を受けて追加——/data/futoukouへの導線は
@@ -21,19 +20,10 @@ import { getSparkHeights } from '@/lib/sparkline';
 //
 // 2026-11-10再修正：「アイコンじゃなく、グラフや数字をこのバナーにも入れたい」との
 // 要望を受けて、絵文字アイコン（📊）を見出し数字（headlineValue、.futoukou-tile-value
-// と同じスタイル）に差し替え、カード自身のchartデータ（trend/bars/ranking問わず）から
-// 実データのミニ棒グラフを生成して添えた。
-// 2026-11-10再々修正：「バナーのデザインの配置バランス改善して」との指摘を受けて、
-// 数字（左端）とグラフ（右端、CTA矢印の手前）を離して置いていたレイアウトを見直し、
-// 数字の真下にミニグラフを小さく添える1つの塊（.expertbanner-stat内）にまとめた。
-// 本文（.expertbanner-body）が間に不自然に伸びきって余白ができる問題を解消している
-// （詳細はapp/globals.cssの.expertbanner-statコメント参照）。
-function getSparkValues(chart: ReturnType<typeof getFutoukouDataCardsSortedByNewest>[number]['chart']): number[] {
-  if (chart.type === 'trend') return chart.data.slice(-5).map((d) => d.value);
-  if (chart.type === 'bars') return chart.stats.slice(0, 5).map((s) => s.value);
-  return chart.items.slice(0, 5).map((i) => i.value);
-}
-
+// と同じスタイル）に差し替え、カード自身のchartデータから実データのミニ棒グラフも
+// 添えた。その後「バナーのデザインの配置バランス改善して」との指摘で、数字の真下に
+// グラフを添える1つの塊に整理したが、最終的に「数字だけでいいかも」との判断で
+// グラフ自体を削除し、見出し数字のみのシンプルな構成に戻した（2026-11-10）。
 export default function FutoukouDataTeaser() {
   const latest = getFutoukouDataCardsSortedByNewest()[0];
   if (!latest) return null;
@@ -44,26 +34,10 @@ export default function FutoukouDataTeaser() {
   const diffDays = Math.round((Date.now() - new Date(`${latest.addedAt}T00:00:00+09:00`).getTime()) / 86400000);
   const isNew = diffDays >= 0 && diffDays <= 3;
 
-  // 最大5点に絞り、lib/sparkline.tsの共通ロジックで高さ（%）に正規化する。
-  const sparkHeights = getSparkHeights(getSparkValues(latest.chart));
-
   return (
     <Link href="/data/futoukou" className="expertbanner expertbanner-today">
       <div className="expertbanner-stat" aria-hidden="true">
         <span className="expertbanner-stat-value">{latest.headlineValue}</span>
-        {sparkHeights.length >= 2 && (
-          <div className="expertbanner-stat-spark">
-            {sparkHeights.map((h, i) => (
-              <span
-                key={i}
-                style={{
-                  height: `${Math.round(h)}%`,
-                  background: i === sparkHeights.length - 1 ? 'var(--main)' : 'var(--sub)',
-                }}
-              />
-            ))}
-          </div>
-        )}
       </div>
       <div className="expertbanner-body">
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

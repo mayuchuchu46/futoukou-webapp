@@ -621,26 +621,16 @@ h2.pagetitle {
    棒3本だけの見本で、実際の集計ではない（本物は/todayで答えた人だけに見せる）。 */
 .expertbanner-today-graph { flex: 0 0 auto; display: flex; align-items: flex-end; gap: 4px; width: 56px; height: 48px; filter: blur(2px); opacity: 0.75; }
 .expertbanner-today-graph span { flex: 1; background: var(--sub); border-radius: 2px; }
-/* FutoukouDataTeaser.tsx・NewsTeaser.tsx共通：絵文字アイコンに代わる「見出し数字＋
-   ミニグラフ」の塊（2026-11-10追加、「アイコンじゃなく、グラフや数字を入れたい」との
-   要望を受けて）。
-   2026-11-10再修正：「バナーのデザインの配置バランス改善して」との指摘を受けて見直し。
-   当初は数字をアイコンの位置（左端）に、グラフをCTA矢印の手前（右端）に離して置いて
-   いたが、幅の広いPC2カラムバナーだと本文（.expertbanner-body、flex:1）が間に
-   伸びきってしまい、数字とグラフの間・本文とグラフの間に不自然な余白ができていた。
-   グラフを数字の真下に小さくまとめて1つの塊（縦積み）にし、左端1箇所にだけ置くことで、
-   本文が余白を含めて自然に右端（矢印の手前）まで伸びる、1つのバランスの良いレイアウトに
-   なるよう変更した。.futoukou-tile-valueと同じ丸ゴシック・太字・main色の数字を使う。
-   数字の桁数がカードによって変わる（「38.3%」〜「353,970人」）ため、幅は固定せず
-   最大72pxまでで折り返す（中身を省略せず、全桁が必ず見えるようにするため）。 */
-.expertbanner-stat { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; max-width: 72px; text-align: center; }
+/* FutoukouDataTeaser.tsx・NewsTeaser.tsx共通：絵文字アイコンに代わる「見出し数字」
+   （2026-11-10追加、「アイコンじゃなく、グラフや数字を入れたい」との要望を受けて）。
+   一時期はこの数字の下にミニ棒グラフを添えていたが（配置バランス改善のため縦積みに
+   した経緯もあった）、最終的に「数字だけでいいかも」との判断でグラフ自体を削除し、
+   数字のみのシンプルな構成にした（2026-11-10）。.futoukou-tile-valueと同じ丸ゴシック・
+   太字・main色の数字を使う。数字の桁数がカードによって変わる（「38.3%」〜
+   「353,970人」）ため、幅は固定せず最大72pxまでで折り返す（中身を省略せず、全桁が
+   必ず見えるようにするため）。 */
+.expertbanner-stat { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; max-width: 72px; text-align: center; }
 .expertbanner-stat-value { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 15px; line-height: 1.15; color: var(--main); word-break: break-word; }
-/* 数字の下に添える実データのミニ棒グラフ（2026-11-10、上記の配置バランス改善に伴い
-   新設）。TodayQuestionTeaser.tsxの.expertbanner-today-graph（ぼかした見本グラフ、
-   行の右端に単独配置）とは役割が異なるため、別クラスとして持つ。実データをそのまま
-   高さに反映し、ぼかしはかけない。 */
-.expertbanner-stat-spark { display: flex; align-items: flex-end; gap: 2px; width: 100%; max-width: 56px; height: 14px; }
-.expertbanner-stat-spark span { flex: 1; border-radius: 1px; }
 
 /* TOPページ「みんなのデータ」誘導カード・未回答時のデザイン（2026-10-16、
    「もっとスタイリッシュに」との要望で、.cardと.chipの流用から専用デザインに

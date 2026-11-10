@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { NEWS_ITEMS } from '@/lib/data/news';
 import { todayJstDateString } from '@/lib/dailyQuestions';
-import { getSparkHeights } from '@/lib/sparkline';
 
 // TOPページに出す「不登校に関する最新ニュース」への誘導バナー（2026-10-29追加）。
 // 「助成金情報だけでなく最新ニュースも定期チェックして、できればサイトにも出したい」
@@ -23,16 +22,14 @@ import { getSparkHeights } from '@/lib/sparkline';
 // 収集タスクが見つけたもの）がバナーに反映されず、サイトを定期更新している手応えが
 // 画面に出ないため。一覧ページ（/news）の並び順はdate基準のまま変更しない。
 // 2026-11-10追加：「ニュース記事の方は？」との指摘を受けて、隣に並ぶ
-// FutoukouDataTeaser（データ誘導バナー）と同じく、記事が見出し数字（headline）・
-// グラフ用数値（stats）を持つ場合はアイコン（📰）の代わりにそれを表示するように
-// した。ただしニュース記事は数字の無いもの（施設開校のお知らせ等）も多いため、
-// headline・statsのどちらも無い記事では従来どおりアイコンにフォールバックする
-// （FutoukouDataTeaserは全カードが必ずheadlineValueを持つため常に数字表示だが、
-// こちらは記事ごとに有無が分かれる）。
-// 2026-11-10再修正：「バナーのデザインの配置バランス改善して」との指摘を受けて、
-// FutoukouDataTeaser.tsxと同じく、数字とミニグラフを離して置かず、数字の真下に
-// グラフを添えた1つの塊（.expertbanner-stat内）にまとめた（詳細はapp/globals.cssの
-// .expertbanner-statコメント参照）。
+// FutoukouDataTeaser（データ誘導バナー）と同じく、記事が見出し数字（headline）を
+// 持つ場合はアイコン（📰）の代わりにそれを表示するようにした。ただしニュース記事は
+// 数字の無いもの（施設開校のお知らせ等）も多いため、headlineの無い記事では従来どおり
+// アイコンにフォールバックする（FutoukouDataTeaserは全カードが必ずheadlineValueを
+// 持つため常に数字表示だが、こちらは記事ごとに有無が分かれる）。
+// 2026-11-10再修正：データ側で「数字だけでいいかも」と整理されたのに合わせ、
+// 一時追加していたミニグラフ（stats由来）は削除し、headline数字のみ／アイコンの
+// どちらかを出すシンプルな構成にした。
 export default function NewsTeaser() {
   // addedAtが同じ日付（1日2回のニュース収集タスクが同じ日に2件追加した場合など）の
   // ときは「>=」でタイブレークし、NEWS_ITEMS配列の中でより後ろにある方を選ぶ
@@ -62,30 +59,11 @@ export default function NewsTeaser() {
   );
   const isNew = diffDays >= 0 && diffDays <= 1;
 
-  // headline（見出し数字）があればアイコンの代わりに表示。statsがあれば実データの
-  // ミニ棒グラフも添える（FutoukouDataTeaser.tsxと同じ.expertbanner-stat／
-  // .expertbanner-today-graph--realを流用）。どちらも無い記事（施設開校の
-  // お知らせ等）では、従来どおり📰アイコンを出す。
-  const sparkHeights = getSparkHeights((latest.stats || []).slice(0, 5).map((s) => s.value));
-
   return (
     <Link href="/news" className="expertbanner expertbanner-today">
       {latest.headline ? (
         <div className="expertbanner-stat" aria-hidden="true">
           <span className="expertbanner-stat-value">{latest.headline.value}</span>
-          {sparkHeights.length >= 2 && (
-            <div className="expertbanner-stat-spark">
-              {sparkHeights.map((h, i) => (
-                <span
-                  key={i}
-                  style={{
-                    height: `${Math.round(h)}%`,
-                    background: i === sparkHeights.length - 1 ? 'var(--main)' : 'var(--sub)',
-                  }}
-                />
-              ))}
-            </div>
-          )}
         </div>
       ) : (
         <span className="expertbanner-icon" aria-hidden="true" style={{ fontSize: 18, lineHeight: 1 }}>📰</span>
