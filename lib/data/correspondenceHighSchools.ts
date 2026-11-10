@@ -495,7 +495,7 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   // 第26バッチ: 私立通信制0校県の未収録校（秋田・山形）
   // 出典: 秋田修英=JS日本の学校（狭域）・秋田県管内高等学校一覧PDF（学校法人杉澤学園）
   //       惺山=studychain.jp・複数ソース（狭域、山形市城西町3丁目13番7号）
-  //       羽黒=羽黒高校公式・山形県私立学校審議会資料（広域、令和7年4月設置）
+  //       羽黒=羽黒高校公式・山形県私立学校審議会資料（狭域：山形県・新潟県、令和7年4月設置）
   // 注: 一関学院高等学校（岩手県）は法人名未確認のため保留
   { no: 370, prefecture: '秋田県', municipality: '大仙市', name: '秋田修英高等学校', operator: '学校法人杉澤学園' },
   { no: 371, prefecture: '山形県', municipality: '山形市', name: '惺山高等学校', operator: '学校法人山本学園' },
@@ -569,4 +569,9 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   //   所在地：長崎市愛宕三丁目19番23号（長崎県高等学校一覧2025年6月版 pref.nagasaki.jp PDF）
   //   設置者：学校法人第二岩永学園（こころ未来高等学校と同一法人、長崎県公文書より確認）
   { no: 388, prefecture: '長崎県', municipality: '長崎市', name: 'こころ咲良高等学校', operator: '学校法人第二岩永学園' },
+  // 第37バッチ: 山形県の未収録私立通信制狭域校
+  // 出典: studychain.jp・minkou.jp「入学可能エリア：山形県・秋田県」（狭域、2004年設立）
+  //       山形県学校法人一覧（r7meibo.pdf、pref.yamagata.jp）「学校法人天真林昌学園 和順館高等学校 酒田市南千日町4-50」
+  //       山形県特定公益増進法人一覧（r0702kokenkojo2-5.pdf）でも確認
+  { no: 389, prefecture: '山形県', municipality: '酒田市', name: '和順館高等学校', operator: '学校法人天真林昌学園' },
 ];
