@@ -21,6 +21,7 @@ import {
   FUTOUKOU_BUDGET_ESTIMATE,
   FUTOUKOU_NO_SUPPORT_TREND,
   FUTOUKOU_ABSENCE_OVER_90DAYS,
+  FUTOUKOU_HIGH_SCHOOL_OUTCOME,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -237,6 +238,27 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
       type: 'trend',
       unit: '%',
       data: FUTOUKOU_ABSENCE_OVER_90DAYS.map((d) => ({ label: d.year, value: d.percent })),
+    },
+  },
+  {
+    // 2026-11-11追加。「高校生の不登校は増減を繰り返している」('koukou'カード)の
+    // 「その後」を見せるカード。不登校の高校生のうち中途退学・原級留置になった人の
+    // 割合を合計すると約2割に達することを示す（出典・検証経緯はfutoukouStats.tsの
+    // コメント参照）。
+    slug: 'chutai',
+    addedAt: '2026-11-11',
+    title: '不登校の高校生、5人に1人が中退・留年',
+    headlineValue: `約${Math.round((FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropout + FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBack) / FUTOUKOU_HIGH_SCHOOL_OUTCOME.totalFutoukou * 100)}%`,
+    headlineLabel: `不登校の高校生のうち中途退学・原級留置（留年）になった生徒の合計割合（${FUTOUKOU_HIGH_SCHOOL_OUTCOME.label}）`,
+    description: `${FUTOUKOU_HIGH_SCHOOL_OUTCOME.label}の不登校生徒${FUTOUKOU_HIGH_SCHOOL_OUTCOME.totalFutoukou.toLocaleString()}人のうち、中途退学に至った生徒は${FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropout.toLocaleString()}人（${FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropoutPercent}%）、原級留置（留年）になった生徒は${FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBack.toLocaleString()}人（${FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBackPercent}%）。合わせると約${Math.round((FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropout + FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBack) / FUTOUKOU_HIGH_SCHOOL_OUTCOME.totalFutoukou * 100)}%が、同級生と同じ形で高校生活を続けられていません（小・中学校の不登校には在籍・卒業の制度上、中途退学や原級留置という概念がないため、高校特有の数字です）。`,
+    tweetText: `不登校の高校生のうち、中途退学が${FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropoutPercent}%、原級留置（留年）が${FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBackPercent}%。合わせて約${Math.round((FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropout + FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBack) / FUTOUKOU_HIGH_SCHOOL_OUTCOME.totalFutoukou * 100)}%、5人に1人が同級生と同じ形で高校生活を続けられていません。`,
+    chart: {
+      type: 'bars',
+      caption: '不登校の高校生のうち、中途退学・原級留置（留年）になった生徒の割合。',
+      stats: [
+        { label: '中途退学', value: FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropoutPercent, unit: '%' },
+        { label: '原級留置（留年）', value: FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBackPercent, unit: '%' },
+      ],
     },
   },
 ];

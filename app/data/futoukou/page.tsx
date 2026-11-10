@@ -19,6 +19,7 @@ import {
   FUTOUKOU_BUDGET_ESTIMATE,
   FUTOUKOU_NO_SUPPORT_TREND,
   FUTOUKOU_ABSENCE_OVER_90DAYS,
+  FUTOUKOU_HIGH_SCHOOL_OUTCOME,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -201,6 +202,24 @@ export default function FutoukouDataPage() {
             </div>
             <Link href="/data/futoukou/koukou" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このグラフだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-11追加。上の「高校生の不登校の推移」カードの「その後」を見せる
+              カード（出典・検証経緯はlib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校の高校生、5人に1人が中退・留年</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              {FUTOUKOU_HIGH_SCHOOL_OUTCOME.label}の不登校生徒{FUTOUKOU_HIGH_SCHOOL_OUTCOME.totalFutoukou.toLocaleString()}人のうち、中途退学は{FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropout.toLocaleString()}人（{FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropoutPercent}%）、原級留置（留年）は{FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBack.toLocaleString()}人（{FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBackPercent}%）。合わせて約{Math.round((FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropout + FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBack) / FUTOUKOU_HIGH_SCHOOL_OUTCOME.totalFutoukou * 100)}%が、同級生と同じ形で高校生活を続けられていません。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: '中途退学', value: FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropoutPercent, unit: '%' },
+                { label: '原級留置（留年）', value: FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBackPercent, unit: '%' },
+              ]}
+            />
+            <Link href="/data/futoukou/chutai" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
             </Link>
           </div>
 
