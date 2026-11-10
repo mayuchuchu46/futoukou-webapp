@@ -558,4 +558,15 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   //       所在地：佐賀県伊万里市立花町86番地
   //       設置者：学校法人伊万里学園（2shin.jp記載）
   { no: 386, prefecture: '佐賀県', municipality: '伊万里市', name: '敬徳高等学校', operator: '学校法人伊万里学園' },
+  // 第36バッチ: 長崎県の私立通信制狭域校2校
+  // 出典: 長崎県私立学校審議会第268回（令和6年8月28日）資料（pref.nagasaki.jp PDF）
+  //       両校とも令和7年4月1日開校（狭域通信制）
+  // 創成館高等学校（狭域通信制）
+  //   所在地：長崎県諫早市貝津町621（長崎県高等学校一覧2025年6月版 pref.nagasaki.jp PDF）
+  //   設置者：学校法人奥田学園（minkou.jp「学校法人奥田学園が運営」）
+  { no: 387, prefecture: '長崎県', municipality: '諫早市', name: '創成館高等学校', operator: '学校法人奥田学園' },
+  // こころ咲良高等学校（狭域通信制）
+  //   所在地：長崎市愛宕三丁目19番23号（長崎県高等学校一覧2025年6月版 pref.nagasaki.jp PDF）
+  //   設置者：学校法人第二岩永学園（こころ未来高等学校と同一法人、長崎県公文書より確認）
+  { no: 388, prefecture: '長崎県', municipality: '長崎市', name: 'こころ咲良高等学校', operator: '学校法人第二岩永学園' },
 ];
