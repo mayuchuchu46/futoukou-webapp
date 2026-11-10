@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { cacheLife } from 'next/cache';
 import { getFutoukouDataCardsSortedByNewest, isFutoukouCardNew } from '@/lib/data/futoukouDataCards';
 
 // 「データで見る不登校」(/data/futoukou) の冒頭に置く、全データの一覧タイル
@@ -12,7 +13,16 @@ import { getFutoukouDataCardsSortedByNewest, isFutoukouCardNew } from '@/lib/dat
 // 新着順（addedAtが新しい順）に並べ替え、追加から日の浅いカードには🆕バッジを付けた。
 // 毎日ネタを追加していく運用（スケジュールタスク）なので、タイル一覧の先頭に自然と
 // 最新のデータが来るようになる。
-export default function FutoukouSummaryGrid() {
+//
+// 2026-11-10、本番ビルドが失敗する不具合を修正：next.config.tsでcacheComponentsを
+// 有効化しているため、isFutoukouCardNew内のDate.now()（動的API）を静的プリレンダー中に
+// 呼ぶとビルドエラーになる（「Error occurred prerendering page "/data/futoukou"」）。
+// コンポーネント全体を'use cache'でキャッシュし、Date.now()の評価をキャッシュ生成時に
+// 閉じ込めることで解消。🆕バッジは数日単位の精度で十分なため、cacheLife('hours')
+// （キャッシュの再検証間隔）で妥当な新鮮さを保つ。
+export default async function FutoukouSummaryGrid() {
+  'use cache';
+  cacheLife('hours');
   const cards = getFutoukouDataCardsSortedByNewest();
   return (
     <div className="futoukou-tile-grid">
