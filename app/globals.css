@@ -621,6 +621,16 @@ h2.pagetitle {
    棒3本だけの見本で、実際の集計ではない（本物は/todayで答えた人だけに見せる）。 */
 .expertbanner-today-graph { flex: 0 0 auto; display: flex; align-items: flex-end; gap: 4px; width: 56px; height: 48px; filter: blur(2px); opacity: 0.75; }
 .expertbanner-today-graph span { flex: 1; background: var(--sub); border-radius: 2px; }
+/* FutoukouDataTeaser.tsx専用：ぼかし見本ではなく実データをそのまま高さに反映する
+   ミニ棒グラフ（2026-11-10追加、「アイコンじゃなく、グラフや数字を入れたい」との
+   要望を受けて）。上の.expertbanner-today-graphのぼかし・不透明度だけ打ち消す。 */
+.expertbanner-today-graph--real { filter: none; opacity: 1; }
+/* 同コンポーネントの絵文字アイコンに代わる「見出し数字」枠。.futoukou-tile-value
+   と同じ丸ゴシック・太字・main色の数字を、アイコンと同じ左端の位置に表示する。
+   数字の桁数がカードによって変わる（「38.3%」〜「353,970人」）ため、幅は固定せず
+   最大72pxまでで折り返す（中身を省略せず、全桁が必ず見えるようにするため）。 */
+.expertbanner-stat { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; max-width: 72px; text-align: center; }
+.expertbanner-stat-value { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 15px; line-height: 1.15; color: var(--main); word-break: break-word; }
 
 /* TOPページ「みんなのデータ」誘導カード・未回答時のデザイン（2026-10-16、
    「もっとスタイリッシュに」との要望で、.cardと.chipの流用から専用デザインに

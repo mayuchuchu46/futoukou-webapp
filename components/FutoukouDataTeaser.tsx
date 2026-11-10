@@ -17,6 +17,19 @@ import { getFutoukouDataCardsSortedByNewest } from '@/lib/data/futoukouDataCards
 // 新しいCSSは増やさない（.new-badgeを再利用）。リンク先は個別シェアページではなく
 // 概要ページ（/data/futoukou）のまま——FutoukouSummaryGridが同じ新着順ソートで
 // タイル一覧の先頭に最新カードを出すため、ここから飛んでもすぐ見える。
+//
+// 2026-11-10再修正：「アイコンじゃなく、グラフや数字をこのバナーにも入れたい」との
+// 要望を受けて、絵文字アイコン（📊）を見出し数字（headlineValue、.futoukou-tile-value
+// と同じスタイル）に差し替え、カード自身のchartデータ（trend/bars/ranking問わず）から
+// 実データのミニ棒グラフを生成してCTA矢印の手前に追加した。TodayQuestionTeaser.tsxの
+// .expertbanner-today-graphは「ぼかした見本グラフ」だったが、こちらは実データをそのまま
+// 高さに反映する（.expertbanner-today-graph--realで、ぼかし・不透明度を解除）。
+function getSparkValues(chart: ReturnType<typeof getFutoukouDataCardsSortedByNewest>[number]['chart']): number[] {
+  if (chart.type === 'trend') return chart.data.slice(-5).map((d) => d.value);
+  if (chart.type === 'bars') return chart.stats.slice(0, 5).map((s) => s.value);
+  return chart.items.slice(0, 5).map((i) => i.value);
+}
+
 export default function FutoukouDataTeaser() {
   const latest = getFutoukouDataCardsSortedByNewest()[0];
   if (!latest) return null;
@@ -27,9 +40,21 @@ export default function FutoukouDataTeaser() {
   const diffDays = Math.round((Date.now() - new Date(`${latest.addedAt}T00:00:00+09:00`).getTime()) / 86400000);
   const isNew = diffDays >= 0 && diffDays <= 3;
 
+  // 最大5点に絞り、最小〜最大を20%〜100%の高さに正規化する（0%だと見えなくなるため
+  // 下限を20%にしている）。全点が同じ値の場合は全バーを70%の高さで揃える。
+  const sparkValues = getSparkValues(latest.chart);
+  const min = Math.min(...sparkValues);
+  const max = Math.max(...sparkValues);
+  const sparkHeights =
+    sparkValues.length >= 2
+      ? sparkValues.map((v) => (max === min ? 70 : 20 + ((v - min) / (max - min)) * 80))
+      : [];
+
   return (
     <Link href="/data/futoukou" className="expertbanner expertbanner-today">
-      <span className="expertbanner-icon" aria-hidden="true" style={{ fontSize: 18, lineHeight: 1 }}>📊</span>
+      <div className="expertbanner-stat" aria-hidden="true">
+        <span className="expertbanner-stat-value">{latest.headlineValue}</span>
+      </div>
       <div className="expertbanner-body">
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           {isNew && <span className="new-badge">NEW</span>}
@@ -37,6 +62,19 @@ export default function FutoukouDataTeaser() {
         </div>
         <div className="expertbanner-desc">データで見る不登校（文部科学省調査より）</div>
       </div>
+      {sparkHeights.length >= 2 && (
+        <div className="expertbanner-today-graph expertbanner-today-graph--real" aria-hidden="true">
+          {sparkHeights.map((h, i) => (
+            <span
+              key={i}
+              style={{
+                height: `${Math.round(h)}%`,
+                background: i === sparkHeights.length - 1 ? 'var(--main)' : 'var(--sub)',
+              }}
+            />
+          ))}
+        </div>
+      )}
       <span className="expertbanner-cta">›</span>
     </Link>
   );
