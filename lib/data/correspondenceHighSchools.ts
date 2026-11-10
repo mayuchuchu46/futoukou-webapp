@@ -534,4 +534,10 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   // 出典（城南）: minkou.jp「住所: 岐阜県岐阜市細畑1丁目10番地14号、入学エリア: 岐阜、愛知」→狭域確定
   //               学校法人石井学園が運営。2008年開校（studychain.jp）
   { no: 381, prefecture: '岐阜県', municipality: '岐阜市', name: '城南高等学校', operator: '学校法人石井学園' },
+  // 第32バッチ: 静岡県の私立通信制狭域校1校
+  // 出典（沼津中央）: studychain.jp「2024年4月、静岡県内で初めて全日制と通信制を同時に設置する学校として認可」
+  //                   東京都生活文化局リスト（2025年8月版）に不掲載→東京都を含まない狭域確定
+  //                   school.js88.com「私立 共学 静岡県沼津市」、学校法人沼津精華学園が設置者
+  //                   群馬県: R高等学校（角川ドワンゴ）→広域。私立通信制狭域校の確認なし
+  { no: 382, prefecture: '静岡県', municipality: '沼津市', name: '沼津中央高等学校', operator: '学校法人沼津精華学園' },
 ];
