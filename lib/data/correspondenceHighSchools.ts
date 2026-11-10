@@ -526,4 +526,12 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   //               minkou.jp「住所: 高知県高知市栄田町1-3-8、入学可能エリア: 高知」→狭域確定
   //               studychain.jp「学校法人太平洋学園が運営。1965年設立」
   { no: 379, prefecture: '高知県', municipality: '高知市', name: '太平洋学園高等学校', operator: '学校法人太平洋学園' },
+  // 第31バッチ: 岐阜県の私立通信制狭域校2校
+  // 出典（清凌）: minkou.jp「住所: 岐阜県大垣市清水町65-3、入学エリア: 岐阜、滋賀」→狭域確定
+  //               岐阜県私立高等学校入学試験志願状況（岐阜県）に通信制として記載
+  //               ぎふ国際高等学校・中京高等学校・啓晴高等学校・西濃桃李は広域のため対象外
+  { no: 380, prefecture: '岐阜県', municipality: '大垣市', name: '清凌高等学校', operator: '学校法人平野学園' },
+  // 出典（城南）: minkou.jp「住所: 岐阜県岐阜市細畑1丁目10番地14号、入学エリア: 岐阜、愛知」→狭域確定
+  //               学校法人石井学園が運営。2008年開校（studychain.jp）
+  { no: 381, prefecture: '岐阜県', municipality: '岐阜市', name: '城南高等学校', operator: '学校法人石井学園' },
 ];
