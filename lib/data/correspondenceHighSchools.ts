@@ -492,4 +492,12 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   // 誠英高等学校: 山口県私立学校一覧および公式サイトより山口県防府市（東三田尻1-2-14）を確認
   // 注: 文科省データの設置者名は「学校法人誠英学園」だが、複数ソースで「学校法人三田尻学園」と確認。正式名は三田尻学園を採用
   { no: 369, prefecture: '山口県', municipality: '防府市', name: '誠英高等学校', operator: '学校法人三田尻学園' },
+  // 第26バッチ: 私立通信制0校県の未収録校（秋田・山形）
+  // 出典: 秋田修英=JS日本の学校（狭域）・秋田県管内高等学校一覧PDF（学校法人杉澤学園）
+  //       惺山=studychain.jp・複数ソース（狭域、山形市城西町3丁目13番7号）
+  //       羽黒=羽黒高校公式・山形県私立学校審議会資料（広域、令和7年4月設置）
+  // 注: 一関学院高等学校（岩手県）は法人名未確認のため保留
+  { no: 370, prefecture: '秋田県', municipality: '大仙市', name: '秋田修英高等学校', operator: '学校法人杉澤学園' },
+  { no: 371, prefecture: '山形県', municipality: '山形市', name: '惺山高等学校', operator: '学校法人山本学園' },
+  { no: 372, prefecture: '山形県', municipality: '鶴岡市', name: '羽黒高等学校', operator: '学校法人羽黒学園' },
 ];
