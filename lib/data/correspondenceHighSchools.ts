@@ -574,4 +574,34 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   //       山形県学校法人一覧（r7meibo.pdf、pref.yamagata.jp）「学校法人天真林昌学園 和順館高等学校 酒田市南千日町4-50」
   //       山形県特定公益増進法人一覧（r0702kokenkojo2-5.pdf）でも確認
   { no: 389, prefecture: '山形県', municipality: '酒田市', name: '和順館高等学校', operator: '学校法人天真林昌学園' },
+  // 第38バッチ: 宮崎県の未収録私立通信制狭域校5校
+  // 出典: 宮崎県私立学校一覧（r7meibo.pdf、pref.miyazaki.lg.jp、令和7年5月1日現在）
+  //       宮崎県私立学校審議会資料（pref.miyazaki.lg.jp/documents/90455/）
+  //       各校minkou.jp・js88.com・wikid.orgより設置者確認
+  //       いずれも広域通信制校一覧（N高・クラーク等）に未掲載 → 狭域と判断
+  // 宮崎学園高等学校（狭域通信制）
+  //   所在地：宮崎市昭和町3（r7meibo.pdf記載）
+  //   設置者：学校法人宮崎学園（r7meibo.pdf「宮崎学園 高等学校 宮崎市昭和町3」）
+  //   通信制設置：R7.4.1（令和7年4月1日）
+  { no: 390, prefecture: '宮崎県', municipality: '宮崎市', name: '宮崎学園高等学校', operator: '学校法人宮崎学園' },
+  // 日南学園高等学校（狭域通信制）
+  //   所在地：日南市吾田東3-5-1（r7meibo.pdf記載）
+  //   設置者：学校法人日南学園（r7meibo.pdf記載）
+  //   通信制設置：R3.4.1（令和3年4月1日）
+  { no: 391, prefecture: '宮崎県', municipality: '日南市', name: '日南学園高等学校', operator: '学校法人日南学園' },
+  // 都城高等学校（狭域通信制）
+  //   所在地：都城市蓑原町7916（r7meibo.pdf記載）
+  //   設置者：学校法人久保学園（r7meibo.pdf記載）
+  //   通信制設置：R4.4.1（令和4年4月1日）
+  { no: 392, prefecture: '宮崎県', municipality: '都城市', name: '都城高等学校', operator: '学校法人久保学園' },
+  // 都城聖ドミニコ学園高等学校（狭域通信制）
+  //   所在地：都城市下長飯町881（r7meibo.pdf記載）
+  //   設置者：学校法人宮崎カリタス学院（wikid.org「設置者 学校法人宮崎カリタス学院」）
+  //   通信制設置：H31.4.1（平成31年4月1日）
+  { no: 393, prefecture: '宮崎県', municipality: '都城市', name: '都城聖ドミニコ学園高等学校', operator: '学校法人宮崎カリタス学院' },
+  // 小林西高等学校（狭域通信制）
+  //   所在地：小林市細野588-48（r7meibo.pdf記載）
+  //   設置者：学校法人高千穂学園（宮崎県私立学校審議会諮問第5号「設置者：学校法人 高千穂学園」）
+  //   通信制設置：R4.4.1（令和4年4月1日）
+  { no: 394, prefecture: '宮崎県', municipality: '小林市', name: '小林西高等学校', operator: '学校法人高千穂学園' },
 ];
