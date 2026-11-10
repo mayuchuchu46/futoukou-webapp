@@ -540,4 +540,17 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   //                   school.js88.com「私立 共学 静岡県沼津市」、学校法人沼津精華学園が設置者
   //                   群馬県: R高等学校（角川ドワンゴ）→広域。私立通信制狭域校の確認なし
   { no: 382, prefecture: '静岡県', municipality: '沼津市', name: '沼津中央高等学校', operator: '学校法人沼津精華学園' },
+  // 第34バッチ: 京都府の私立通信制狭域校3校
+  // 出典（廣学館）: minkou.jp「入学可能エリア：京都・大阪・奈良・滋賀・兵庫・三重」→狭域（6府県）確定
+  //                 設置者：学校法人南京都学園（minkou.jp記載）
+  //                 京都市教育委員会資料「京都廣学館 京都府相楽郡精華町下狛長芝11番地」
+  { no: 383, prefecture: '京都府', municipality: '相楽郡精華町', name: '京都廣学館高等学校', operator: '学校法人南京都学園' },
+  // 出典（西山）: studychain.jp「募集対象は京都府・大阪府に在住の方」→狭域（2府県）確定
+  //               設置者：学校法人京都西山学園（studychain.jp記載）
+  //               所在地：京都府向日市寺戸町西野辺25（minkou.jp記載）
+  { no: 384, prefecture: '京都府', municipality: '向日市', name: '京都西山高等学校', operator: '学校法人京都西山学園' },
+  // 出典（美山）: minkou.jp「入学可能エリア：京都・大阪・滋賀・奈良・兵庫・福井」→狭域（6府県）確定
+  //               設置者：学校法人両洋学園（studychain.jp記載）
+  //               所在地：京都府京都市上京区元真如堂町358（minkou.jp記載）
+  { no: 385, prefecture: '京都府', municipality: '京都市上京区', name: '京都美山高等学校', operator: '学校法人両洋学園' },
 ];
