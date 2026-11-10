@@ -500,9 +500,13 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 370, prefecture: '秋田県', municipality: '大仙市', name: '秋田修英高等学校', operator: '学校法人杉澤学園' },
   { no: 371, prefecture: '山形県', municipality: '山形市', name: '惺山高等学校', operator: '学校法人山本学園' },
   { no: 372, prefecture: '山形県', municipality: '鶴岡市', name: '羽黒高等学校', operator: '学校法人羽黒学園' },
-  // 第27バッチ: 私立通信制0校県の未収録校（富山）
-  // 出典: 富山県私立学校審議会（令和6年7月9日）「高岡龍谷高等学校の通信制課程設置認可について 適」
-  //       studychain.jp「2025年（令和7年）より通信制課程を新たに開設、定員1学年80名、富山県・石川県対象」
+  // 第27バッチ: 私立通信制0校県の未収録校（岩手・富山）
+  // 出典（岩手）: 岩手県私立学校一覧（平成28年度・令和3年度）「学校法人一関学院」「一関学院高等学校 一関市八幡町5-24」
+  //              studychain.jp「全日制課程と通信制課程を併設。狭域（岩手県・宮城県）」
+  // 注: 狭域（岩手県・宮城県）。エンカレッジコースとして通信制課程を設置
+  { no: 373, prefecture: '岩手県', municipality: '一関市', name: '一関学院高等学校', operator: '学校法人一関学院' },
+  // 出典（富山）: 富山県私立学校審議会（令和6年7月9日）「高岡龍谷高等学校の通信制課程設置認可について 適」
+  //              studychain.jp「2025年（令和7年）より通信制課程を新たに開設、定員1学年80名、富山県・石川県対象」
   // 注: 狭域（富山県・石川県）。令和7年4月1日設置認可済み・開設確認済み
-  { no: 373, prefecture: '富山県', municipality: '高岡市', name: '高岡龍谷高等学校', operator: '学校法人清光学園' },
+  { no: 374, prefecture: '富山県', municipality: '高岡市', name: '高岡龍谷高等学校', operator: '学校法人清光学園' },
 ];
