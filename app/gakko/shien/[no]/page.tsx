@@ -134,49 +134,6 @@ export default async function EducationSupportCenterPage({
             <div className="qtext">
               {center.prefecture}{center.city}にある、市区町村教育委員会が設置する公的・無料の不登校支援施設（教育支援センター／適応指導教室）です。
             </div>
-            {center.note && (
-              <div className="qtext">
-                <NoteParagraphs text={center.note} />
-              </div>
-            )}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-              {[
-                { label: '所在地', value: center.address || `${center.prefecture}${center.city}` },
-                { label: '連絡先', value: center.contact || '記載なし' },
-                { label: '出典の時点', value: center.asOf },
-              ].map((row) => (
-                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
-                  <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
-                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
-                </div>
-              ))}
-            </div>
-
-            {center.address && (
-              <div style={{ width: '100%' }}>
-                <iframe
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=18&output=embed`}
-                  width="100%"
-                  height={220}
-                  style={{ border: 0, borderRadius: 12, display: 'block' }}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title={`${center.name}の地図`}
-                />
-                <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
-                  <a
-                    href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="muted"
-                    style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
-                  >
-                    Googleマップで開く ›
-                  </a>
-                </div>
-              </div>
-            )}
-
             <Link
               href={`/ask?prefill=${encodeURIComponent(`「${center.name}」がうちの子に合うかどうか知りたいです。
 
@@ -186,7 +143,6 @@ export default async function EducationSupportCenterPage({
             >
               うちの子に合うか確かめる →
             </Link>
-
             {/* sourceUrlは施設単体の公式サイトではなく、その都道府県・市区町村分を
                 まとめた一覧PDF等を指しているため、「公式サイト」ではなく「出典」として
                 案内する（lib/data/educationSupportCenters.tsのコメント参照）。 */}
@@ -215,6 +171,59 @@ export default async function EducationSupportCenterPage({
               この施設をシェア
             </a>
           </div>
+
+          {center.note && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>施設の特徴</div>
+              <div className="qtext">
+                <NoteParagraphs text={center.note} />
+              </div>
+            </div>
+          )}
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>基本データ</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+              {[
+                { label: '所在地', value: center.address || `${center.prefecture}${center.city}` },
+                { label: '連絡先', value: center.contact || '記載なし' },
+                { label: '出典の時点', value: center.asOf },
+              ].map((row) => (
+                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
+                  <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
+                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {center.address && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>アクセス</div>
+              <div style={{ width: '100%' }}>
+                <iframe
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=18&output=embed`}
+                  width="100%"
+                  height={220}
+                  style={{ border: 0, borderRadius: 12, display: 'block' }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title={`${center.name}の地図`}
+                />
+                <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                  <a
+                    href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="muted"
+                    style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
+                  >
+                    Googleマップで開く ›
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* この施設名を含む実際の相談（他カテゴリの詳細ページと同じ仕組み、2026-11-02追加）。 */}
           <Suspense fallback={null}>

@@ -156,65 +156,6 @@ export default async function FreeSchoolPage({
             <div className="qtext">
               {school.prefecture}{school.city}にあるフリースクール（民間施設）です。
             </div>
-            {school.note && (
-              <div className="qtext">
-                <NoteParagraphs text={school.note} />
-              </div>
-            )}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-              {[
-                { label: '所在地', value: school.address || `${school.prefecture}${school.city}` },
-                { label: '連絡先', value: school.contact || '記載なし' },
-                { label: '対象', value: school.ageRange || '記載なし' },
-                { label: '出典の時点', value: school.asOf },
-              ].map((row) => (
-                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
-                  <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
-                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
-                </div>
-              ))}
-              {school.ageRangeSourceUrl && (
-                <div className="muted" style={{ fontSize: 12 }}>
-                  「対象」の出典：
-                  <a href={school.ageRangeSourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>公式サイトのページ</a>
-                </div>
-              )}
-            </div>
-
-            {/* 費用・特徴タグ（施設からの自己申告、承認済みのみ表示。2026-11-07追加）。 */}
-            <Suspense fallback={null}>
-              <FacilityInfoCard facilityType="free" facilityNo={school.no} />
-            </Suspense>
-            {/* 学びの多様化学校の詳細ページと同じ考え方（app/gakko/school/[no]/page.tsx参照）。
-                施設の写真は無断転載・AI生成どちらも避け、実際の所在地の地図で代替する。 */}
-            <div style={{ width: '100%' }}>
-              <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=18&output=embed`}
-                width="100%"
-                height={220}
-                style={{ border: 0, borderRadius: 12, display: 'block' }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title={`${school.name}の地図`}
-              />
-              <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
-                <a
-                  href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="muted"
-                  style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
-                >
-                  Googleマップで開く ›
-                </a>
-              </div>
-            </div>
-
-            {/* 相談CTAはこのカードの下部（情報カードの外）にもあるが、情報カードの中で
-                すでに検討材料が揃った人向けに、もっと早い位置にもCTAを置く（2026-10-22、
-                離脱対策の一環）。最初はmutedの文字リンク→btn-secondaryと試したが、
-                「相談するボタンはいつもピンクがいい」との方針により、下部のCTAカードと
-                同じsidebar-ask-btn-pinkに統一した。 */}
             <Link
               href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
 
@@ -224,7 +165,6 @@ export default async function FreeSchoolPage({
             >
               うちの子に合うか確かめる →
             </Link>
-
             {/* 公式サイトURL（lib/data/freeSchools.tsのofficialUrl、Web調査で確認できた
                 施設のみ）。フリースクールは非営利・NPO運営が多くアフィリエイトの懸念が
                 薄いため、通信制高校（app/gakko/tsushin/[no]/page.tsx）の/out経由とは異なり、
@@ -256,6 +196,71 @@ export default async function FreeSchoolPage({
               <span className="share-btn-icon">𝕏</span>
               この施設をシェア
             </a>
+          </div>
+
+          {school.note && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>施設の特徴</div>
+              <div className="qtext">
+                <NoteParagraphs text={school.note} />
+              </div>
+            </div>
+          )}
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>基本データ</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+              {[
+                { label: '所在地', value: school.address || `${school.prefecture}${school.city}` },
+                { label: '連絡先', value: school.contact || '記載なし' },
+                { label: '対象', value: school.ageRange || '記載なし' },
+                { label: '出典の時点', value: school.asOf },
+              ].map((row) => (
+                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
+                  <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
+                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
+                </div>
+              ))}
+              {school.ageRangeSourceUrl && (
+                <div className="muted" style={{ fontSize: 12 }}>
+                  「対象」の出典：
+                  <a href={school.ageRangeSourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>公式サイトのページ</a>
+                </div>
+              )}
+            </div>
+
+            {/* 費用・特徴タグ（施設からの自己申告、承認済みのみ表示。2026-11-07追加）。 */}
+            <Suspense fallback={null}>
+              <FacilityInfoCard facilityType="free" facilityNo={school.no} />
+            </Suspense>
+          </div>
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>アクセス</div>
+            {/* 学びの多様化学校の詳細ページと同じ考え方（app/gakko/school/[no]/page.tsx参照）。
+                施設の写真は無断転載・AI生成どちらも避け、実際の所在地の地図で代替する。 */}
+            <div style={{ width: '100%' }}>
+              <iframe
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=18&output=embed`}
+                width="100%"
+                height={220}
+                style={{ border: 0, borderRadius: 12, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${school.name}の地図`}
+              />
+              <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                <a
+                  href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="muted"
+                  style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
+                >
+                  Googleマップで開く ›
+                </a>
+              </div>
+            </div>
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>

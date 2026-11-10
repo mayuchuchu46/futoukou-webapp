@@ -145,56 +145,10 @@ export default async function OnlineSchoolPage({
             <div className="qtext">
               居住地を問わず、全国どこからでも利用できるオンラインフリースクールです。
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-              {[
-                { label: '種類', value: CATEGORY_LABEL[school.category] },
-                { label: '運営', value: school.operator },
-                { label: '対象', value: school.ageRange },
-                { label: '連絡先', value: school.contact },
-              ].map((row) => (
-                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
-                  <span className="muted" style={{ fontSize: 13, flex: '0 0 auto' }}>{row.label}</span>
-                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
-                </div>
-              ))}
-            </div>
-            {school.note && (
-              <div className="muted" style={{ fontSize: 12 }}>{school.note}</div>
-            )}
 
-            {/* 費用・特徴タグ（施設からの自己申告、承認済みのみ表示。2026-11-07追加）。 */}
-            <Suspense fallback={null}>
-              <FacilityInfoCard facilityType="online" facilityNo={school.no} />
-            </Suspense>
-            {school.specialties && school.specialties.length > 0 && (
-              <div style={{ width: '100%' }}>
-                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
-                  伸ばせるコース・活動（公式サイトで確認できたもの）
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  {school.specialties.map((sp, i) => (
-                    <div key={`${sp.tag}-${i}`} style={{ fontSize: 13 }}>
-                      <span className="chip chip-tag" style={{ fontSize: 11, marginRight: 6 }}>{SPECIALTY_TAG_LABEL[sp.tag]}</span>
-                      <a href={sp.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>{sp.course}</a>
-                    </div>
-                  ))}
-                </div>
-                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                  開講状況は年度で異なる場合があります。最新の内容は公式サイトでご確認ください。
-                </div>
-              </div>
-            )}
-            {school.sourceKind === 'official-site' && (
-              <div className="muted" style={{ fontSize: 12 }}>
-                ※ 政府・教育委員会の公開一覧には掲載されておらず、運営会社・団体自身の公式サイト等の発表に基づく情報です。
-              </div>
-            )}
-
-            {/* 相談CTAはこのカードの下部（情報カードの外）にもあるが、情報カードの中で
-                すでに検討材料が揃った人向けに、もっと早い位置にもCTAを置く（2026-10-22、
-                離脱対策の一環）。最初はmutedの文字リンク→btn-secondaryと試したが、
-                「相談するボタンはいつもピンクがいい」との方針により、下部のCTAカードと
-                同じsidebar-ask-btn-pinkに統一した。 */}
+            {/* CTA（相談・公式サイト・お気に入り・シェア）は、情報が多い学校ほど下に
+                埋もれがちだったため、ページ上部にまとめる（2026-11-10、「各ページの
+                デザインを読みやすく」との要望を受けて複数カードに再構成）。 */}
             <Link
               href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
 
@@ -233,22 +187,50 @@ export default async function OnlineSchoolPage({
             </a>
           </div>
 
-          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>
-              うちの子に合うか、確かめてみませんか？
+          {school.specialties && school.specialties.length > 0 && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>伸ばせるコース・活動</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>
+                {school.specialties.map((sp, i) => (
+                  <div key={`${sp.tag}-${i}`} style={{ fontSize: 13 }}>
+                    <span className="chip chip-tag" style={{ fontSize: 11, marginRight: 6 }}>{SPECIALTY_TAG_LABEL[sp.tag]}</span>
+                    <a href={sp.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>{sp.course}</a>
+                  </div>
+                ))}
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                開講状況は年度で異なる場合があります。最新の内容は公式サイトでご確認ください。
+              </div>
             </div>
-            <div className="qtext">
-              子どもの状況を話すだけで、どうする先生がこの学校との相性を一緒に考えます。登録不要・匿名で使えます。
-            </div>
-            <Link
-              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
+          )}
 
-`)}&childHint=1`}
-              className="btn-primary sidebar-ask-btn-pink"
-              style={{ textDecoration: 'none', width: '100%' }}
-            >
-              相性を確かめる →
-            </Link>
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>基本データ</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+              {[
+                { label: '種類', value: CATEGORY_LABEL[school.category] },
+                { label: '運営', value: school.operator },
+                { label: '対象', value: school.ageRange },
+                { label: '連絡先', value: school.contact },
+              ].map((row) => (
+                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
+                  <span className="muted" style={{ fontSize: 13, flex: '0 0 auto' }}>{row.label}</span>
+                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
+                </div>
+              ))}
+            </div>
+            {school.note && (
+              <div className="muted" style={{ fontSize: 12 }}>{school.note}</div>
+            )}
+            {school.sourceKind === 'official-site' && (
+              <div className="muted" style={{ fontSize: 12 }}>
+                ※ 政府・教育委員会の公開一覧には掲載されておらず、運営会社・団体自身の公式サイト等の発表に基づく情報です。
+              </div>
+            )}
+            {/* 費用・特徴タグ（施設からの自己申告、承認済みのみ表示。2026-11-07追加）。 */}
+            <Suspense fallback={null}>
+              <FacilityInfoCard facilityType="online" facilityNo={school.no} />
+            </Suspense>
           </div>
 
           {/* この施設名を含む実際の相談（2026-10-22追加）。 */}

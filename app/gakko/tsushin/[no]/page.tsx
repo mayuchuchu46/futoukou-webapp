@@ -171,12 +171,92 @@ export default async function TsushinSchoolPage({
             <div className="qtext">
               本校が{school.prefecture}{school.municipality}にある、「広域」通信制高校です。本校の都道府県以外からも入学できます。
             </div>
-            {school.note && (
+
+            {/* CTA（相談・公式サイト・お気に入り・シェア）は、情報が多い学校ほど下に
+                埋もれがちだったため、ページ上部にまとめる（2026-11-10、「各ページの
+                デザインを読みやすく」との要望を受けて複数カードに再構成）。 */}
+            <Link
+              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
+
+`)}&childHint=1`}
+              className="btn-primary sidebar-ask-btn-pink"
+              style={{ textDecoration: 'none', width: '100%' }}
+            >
+              うちの子に合うか確かめる →
+            </Link>
+            {/* 公式サイトURL（lib/data/correspondenceHighSchools.tsのofficialUrl、Web調査で
+                確認できた学校のみ）。通信制高校は私立運営が多く、資料請求等のアフィリエイト
+                プログラムを持つ学校があるため、学びの多様化学校・フリースクールの詳細ページ
+                （中立な直リンク）とは異なり、app/out/route.ts経由でリンクする（将来
+                アフィリエイトタグ・クリック計測を付けたくなっても、このページ側は
+                書き換え不要にするための下準備。2026-10-21追加、現時点ではURLデータが
+                無いためこのボタン自体はまだどの学校にも表示されない）。 */}
+            {school.officialUrl && (
+              <TrackedOutLink
+                href={`/out?to=${encodeURIComponent(school.officialUrl)}&id=tsushin-${school.no}`}
+                className="btn-secondary"
+                style={{ width: '100%', textAlign: 'center' }}
+              >
+                学校の公式サイトを見る ›
+              </TrackedOutLink>
+            )}
+            <FavoriteButton type="tsushin" no={school.no} name={school.name} meta={`${school.prefecture}${school.municipality}`} />
+            <a
+              className="share-btn"
+              style={{ width: '100%' }}
+              href={`https://twitter.com/intent/tweet?${new URLSearchParams({
+                text: `【通信制高校】「${school.name}」（本校：${school.prefecture}${school.municipality}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
+                url: schoolUrl,
+                hashtags: 'どうする先生,通信制高校',
+              })}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="share-btn-icon">𝕏</span>
+              この学校をシェア
+            </a>
+          </div>
+
+          {school.note && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>学校の特徴</div>
               <div className="qtext">
                 <NoteParagraphs text={school.note} />
               </div>
-            )}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
+            </div>
+          )}
+
+          {school.admission && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>入学・入試について</div>
+              <div className="qtext" style={{ fontSize: 13 }}>{school.admission.text}</div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                <a href={school.admission.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>出典ページ</a>
+                　募集内容は年度で変わります。最新の情報は必ず公式にご確認ください。
+              </div>
+            </div>
+          )}
+
+          {school.specialties && school.specialties.length > 0 && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>伸ばせるコース・専攻</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>
+                {school.specialties.map((sp, i) => (
+                  <div key={`${sp.tag}-${i}`} style={{ fontSize: 13 }}>
+                    <span className="chip chip-tag" style={{ fontSize: 11, marginRight: 6 }}>{SPECIALTY_TAG_LABEL[sp.tag]}</span>
+                    <a href={sp.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>{sp.course}</a>
+                  </div>
+                ))}
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                開講状況はキャンパスや年度で異なる場合があります。最新の内容は公式サイトでご確認ください。
+              </div>
+            </div>
+          )}
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>基本データ</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
               {[
                 { label: '本校所在地（所轄庁）', value: `${school.prefecture}${school.municipality}` },
                 { label: '設置者', value: school.operator },
@@ -203,53 +283,6 @@ export default async function TsushinSchoolPage({
                 </div>
               )}
             </div>
-            {school.admission && (
-              <div style={{ width: '100%' }}>
-                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
-                  入学・入試について（公式情報で確認できたもの）
-                </div>
-                <div style={{ fontSize: 13 }}>{school.admission.text}</div>
-                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                  <a href={school.admission.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>出典ページ</a>
-                  　募集内容は年度で変わります。最新の情報は必ず公式にご確認ください。
-                </div>
-              </div>
-            )}
-            {school.specialties && school.specialties.length > 0 && (
-              <div style={{ width: '100%' }}>
-                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
-                  伸ばせるコース・専攻（公式サイトで確認できたもの）
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  {school.specialties.map((sp, i) => (
-                    <div key={`${sp.tag}-${i}`} style={{ fontSize: 13 }}>
-                      <span className="chip chip-tag" style={{ fontSize: 11, marginRight: 6 }}>{SPECIALTY_TAG_LABEL[sp.tag]}</span>
-                      <a href={sp.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>{sp.course}</a>
-                    </div>
-                  ))}
-                </div>
-                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                  開講状況はキャンパスや年度で異なる場合があります。最新の内容は公式サイトでご確認ください。
-                </div>
-              </div>
-            )}
-            {/* 公式サイトURL（lib/data/correspondenceHighSchools.tsのofficialUrl、Web調査で
-                確認できた学校のみ）。通信制高校は私立運営が多く、資料請求等のアフィリエイト
-                プログラムを持つ学校があるため、学びの多様化学校・フリースクールの詳細ページ
-                （中立な直リンク）とは異なり、app/out/route.ts経由でリンクする（将来
-                アフィリエイトタグ・クリック計測を付けたくなっても、このページ側は
-                書き換え不要にするための下準備。2026-10-21追加、現時点ではURLデータが
-                無いためこのボタン自体はまだどの学校にも表示されない）。 */}
-            {school.officialUrl && (
-              <TrackedOutLink
-                href={`/out?to=${encodeURIComponent(school.officialUrl)}&id=tsushin-${school.no}`}
-                className="btn-secondary"
-                style={{ width: '100%', textAlign: 'center' }}
-              >
-                学校の公式サイトを見る ›
-              </TrackedOutLink>
-            )}
-            <FavoriteButton type="tsushin" no={school.no} name={school.name} meta={`${school.prefecture}${school.municipality}`} />
             {/* 本校以外のキャンパス・学習センター等（lib/data/correspondenceHighSchools.tsの
                 campuses、2026-10-27追加）。確認できた学校のみ表示し、campusesが無い学校
                 （調査中・未確認）には何も表示しない。 */}
@@ -277,6 +310,10 @@ export default async function TsushinSchoolPage({
                 </div>
               </div>
             )}
+          </div>
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>アクセス</div>
             <div style={{ width: '100%' }}>
               <iframe
                 src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=14&output=embed`}
@@ -299,54 +336,6 @@ export default async function TsushinSchoolPage({
                 </a>
               </div>
             </div>
-
-            {/* 相談CTAはこのカードの下部（情報カードの外）にもあるが、情報カードの中で
-                すでに検討材料が揃った人向けに、もっと早い位置にもCTAを置く（2026-10-22、
-                離脱対策の一環）。最初はmutedの文字リンク→btn-secondaryと試したが、
-                「相談するボタンはいつもピンクがいい」との方針により、下部のCTAカードと
-                同じsidebar-ask-btn-pinkに統一した。 */}
-            <Link
-              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
-
-`)}&childHint=1`}
-              className="btn-primary sidebar-ask-btn-pink"
-              style={{ textDecoration: 'none', width: '100%' }}
-            >
-              うちの子に合うか確かめる →
-            </Link>
-
-            <a
-              className="share-btn"
-              style={{ width: '100%' }}
-              href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `【通信制高校】「${school.name}」（本校：${school.prefecture}${school.municipality}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
-                url: schoolUrl,
-                hashtags: 'どうする先生,通信制高校',
-              })}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="share-btn-icon">𝕏</span>
-              この学校をシェア
-            </a>
-          </div>
-
-          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>
-              うちの子に合うか、確かめてみませんか？
-            </div>
-            <div className="qtext">
-              子どもの状況を話すだけで、どうする先生がこの学校との相性を一緒に考えます。登録不要・匿名で使えます。
-            </div>
-            <Link
-              href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
-
-`)}&childHint=1`}
-              className="btn-primary sidebar-ask-btn-pink"
-              style={{ textDecoration: 'none', width: '100%' }}
-            >
-              相性を確かめる →
-            </Link>
           </div>
 
           {/* この学校名を含む実際の相談（2026-10-22追加）。 */}

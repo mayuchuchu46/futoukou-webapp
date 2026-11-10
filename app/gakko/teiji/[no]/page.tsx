@@ -157,49 +157,6 @@ export default async function TeijiSchoolPage({
             <div className="qtext">
               {school.prefecture}{school.municipality || ''}にある{school.publicPrivate}の定時制高校です。
             </div>
-            {school.note && (
-              <div className="qtext">
-                <NoteParagraphs text={school.note} />
-              </div>
-            )}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-              {[
-                { label: '所在地', value: school.municipality ? `${school.prefecture}${school.municipality}` : school.prefecture },
-                { label: '設置者', value: school.operator || '記載なし' },
-                { label: '課程', value: schoolCategoryLabel(school) || '記載なし' },
-                { label: '部制', value: school.parts || '記載なし' },
-                { label: '仕組み', value: school.curriculumType || '記載なし' },
-              ].map((row) => (
-                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
-                  <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
-                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ width: '100%' }}>
-              <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=15&output=embed`}
-                width="100%"
-                height={220}
-                style={{ border: 0, borderRadius: 12, display: 'block' }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title={`${school.name}の地図`}
-              />
-              <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
-                <a
-                  href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="muted"
-                  style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
-                >
-                  Googleマップで開く ›
-                </a>
-              </div>
-            </div>
-
             <Link
               href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。
 
@@ -209,7 +166,6 @@ export default async function TeijiSchoolPage({
             >
               うちの子に合うか確かめる →
             </Link>
-
             {school.officialUrl && (
               <a
                 href={school.officialUrl}
@@ -236,6 +192,59 @@ export default async function TeijiSchoolPage({
               <span className="share-btn-icon">𝕏</span>
               この学校をシェア
             </a>
+          </div>
+
+          {school.note && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>学校の特徴</div>
+              <div className="qtext">
+                <NoteParagraphs text={school.note} />
+              </div>
+            </div>
+          )}
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>基本データ</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+              {[
+                { label: '所在地', value: school.municipality ? `${school.prefecture}${school.municipality}` : school.prefecture },
+                { label: '設置者', value: school.operator || '記載なし' },
+                { label: '課程', value: schoolCategoryLabel(school) || '記載なし' },
+                { label: '部制', value: school.parts || '記載なし' },
+                { label: '仕組み', value: school.curriculumType || '記載なし' },
+              ].map((row) => (
+                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
+                  <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
+                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>アクセス</div>
+            <div style={{ width: '100%' }}>
+              <iframe
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=15&output=embed`}
+                width="100%"
+                height={220}
+                style={{ border: 0, borderRadius: 12, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${school.name}の地図`}
+              />
+              <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                <a
+                  href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="muted"
+                  style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
+                >
+                  Googleマップで開く ›
+                </a>
+              </div>
+            </div>
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>

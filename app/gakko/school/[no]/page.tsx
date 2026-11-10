@@ -202,29 +202,90 @@ export default async function GakkoSchoolPage({
             </Link>
           </div>
 
+          {/* 以前は名前〜地図〜各種ボタンまで全部を1つの巨大なカードに詰め込んでいて、
+              「テキストが羅列してあるのが読みにくい」「デザインよく読みやすく、コンテンツ
+              しっかりあるイメージにしたい」との指摘を受けた（2026-11-10）。他ページ
+              （FacilityCategoryInfo等）と同じ「用件ごとに別カード＋answer-labelの
+              見出し」というこのサイト既存のパターンに合わせて分割した。相談CTAは、以前は
+              カードの中盤（地図の後）に置いていたが、名前・一言説明の直後に引き上げた
+              （「相談するボタンはいつもピンクがいい」との方針は変わらずsidebar-ask-btn-pink
+              のまま）。 */}
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <h1 className="answer-label" style={{ fontSize: 14, margin: 0 }}>{fullName}</h1>
             <div className="qtext">
               {school.prefecture}{school.city}にある、{school.publicPrivate}の{school.schoolType}の学びの多様化学校（旧：不登校特例校）です。{school.designatedYear}に指定を受けた、設置形態「{school.type}」の学校です。
             </div>
-            {school.note && (
+            <Link
+              href={`/ask?prefill=${encodeURIComponent(`「${fullName}」がうちの子に合うかどうか知りたいです。
+
+`)}&childHint=1`}
+              className="btn-primary sidebar-ask-btn-pink"
+              style={{ textDecoration: 'none', width: '100%' }}
+            >
+              うちの子に合うか確かめる →
+            </Link>
+            {school.officialUrl && (
+              <a
+                href={school.officialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary"
+                style={{ width: '100%', textAlign: 'center' }}
+              >
+                学校の公式サイトを見る ›
+              </a>
+            )}
+            {/* お気に入り保存ボタン（2026-10-22追加）。オーガニック検索から各学校の
+                詳細ページに来た訪問者がそのまま離脱してしまうのを防ぐ導線のひとつ。
+                lib/favorites.tsにlocalStorageだけで保存し、/gakko/favoritesで
+                一覧を見返せる（ログイン不要）。 */}
+            <FavoriteButton type="school" no={school.no} name={fullName} meta={`${school.prefecture}${school.city}`} />
+
+            {/* このページ自体をシェアできるボタン（2026-10-19、「各学校の詳細ページも
+                シェアできるボタンほしい」との要望を受けて追加）。/result/[id]のシェア
+                ボタンと同じ.share-btnクラスを使い、学校名＋このページのURLをXで
+                共有できるようにする。シェア時のカード画像は、同じく今回追加した
+                opengraph-image.tsx（学校名入りの動的OGP画像）が使われる。 */}
+            <a
+              className="share-btn"
+              style={{ width: '100%' }}
+              href={`https://twitter.com/intent/tweet?${new URLSearchParams({
+                text: `【学びの多様化学校】「${fullName}」（${school.prefecture}${school.city}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
+                url: schoolUrl,
+                hashtags: 'どうする先生,学びの多様化学校',
+              })}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="share-btn-icon">𝕏</span>
+              この学校をシェア
+            </a>
+          </div>
+
+          {school.note && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>学校の特徴</div>
               <div className="qtext">
                 <NoteParagraphs text={school.note} />
               </div>
-            )}
-            {school.admission && (
-              <div style={{ width: '100%' }}>
-                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
-                  入学・入試について（公式情報で確認できたもの）
-                </div>
-                <div style={{ fontSize: 13 }}>{school.admission.text}</div>
-                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                  <a href={school.admission.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>出典ページ</a>
-                  　募集内容は年度で変わります。最新の情報は必ず公式にご確認ください。
-                </div>
+            </div>
+          )}
+
+          {school.admission && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>入学・入試について</div>
+              <div className="muted" style={{ fontSize: 12 }}>公式情報で確認できたもの</div>
+              <div className="qtext" style={{ fontSize: 13 }}>{school.admission.text}</div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                <a href={school.admission.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>出典ページ</a>
+                　募集内容は年度で変わります。最新の情報は必ず公式にご確認ください。
               </div>
-            )}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
+            </div>
+          )}
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>基本データ</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
               {[
                 { label: '所在地', value: school.address || `${school.prefecture}${school.city}` },
                 { label: '学校種', value: school.schoolType },
@@ -238,6 +299,10 @@ export default async function GakkoSchoolPage({
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>アクセス</div>
             {/* 「写真イメージはのせられないかなぁ？」との要望を受けて追加（2026-10-18）。
                 学校自体の写真は、公式サイト等の写真を無断転載できず、AI生成では実在の学校の
                 見た目として不正確な画像になってしまうため、どちらも避けた。代わりに、実際の
@@ -284,59 +349,6 @@ export default async function GakkoSchoolPage({
                 </a>
               </div>
             </div>
-
-            {/* 相談CTAはこのカードの下部（情報カードの外）にもあるが、情報カードの中で
-                すでに検討材料が揃った人向けに、もっと早い位置にもCTAを置く（2026-10-22、
-                離脱対策の一環）。最初はmutedの文字リンク→btn-secondaryと試したが、
-                「相談するボタンはいつもピンクがいい」との方針により、下部のCTAカードと
-                同じsidebar-ask-btn-pinkに統一した（このページ内で相談への導線は常に
-                同じ色＝ピンクで一目で分かるようにする）。 */}
-            <Link
-              href={`/ask?prefill=${encodeURIComponent(`「${fullName}」がうちの子に合うかどうか知りたいです。
-
-`)}&childHint=1`}
-              className="btn-primary sidebar-ask-btn-pink"
-              style={{ textDecoration: 'none', width: '100%' }}
-            >
-              うちの子に合うか確かめる →
-            </Link>
-
-            {school.officialUrl && (
-              <a
-                href={school.officialUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary"
-                style={{ width: '100%', textAlign: 'center' }}
-              >
-                学校の公式サイトを見る ›
-              </a>
-            )}
-            {/* お気に入り保存ボタン（2026-10-22追加）。オーガニック検索から各学校の
-                詳細ページに来た訪問者がそのまま離脱してしまうのを防ぐ導線のひとつ。
-                lib/favorites.tsにlocalStorageだけで保存し、/gakko/favoritesで
-                一覧を見返せる（ログイン不要）。 */}
-            <FavoriteButton type="school" no={school.no} name={fullName} meta={`${school.prefecture}${school.city}`} />
-
-            {/* このページ自体をシェアできるボタン（2026-10-19、「各学校の詳細ページも
-                シェアできるボタンほしい」との要望を受けて追加）。/result/[id]のシェア
-                ボタンと同じ.share-btnクラスを使い、学校名＋このページのURLをXで
-                共有できるようにする。シェア時のカード画像は、同じく今回追加した
-                opengraph-image.tsx（学校名入りの動的OGP画像）が使われる。 */}
-            <a
-              className="share-btn"
-              style={{ width: '100%' }}
-              href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-                text: `【学びの多様化学校】「${fullName}」（${school.prefecture}${school.city}）${shareNoteExcerpt ? `\n${shareNoteExcerpt}` : ''}`,
-                url: schoolUrl,
-                hashtags: 'どうする先生,学びの多様化学校',
-              })}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="share-btn-icon">𝕏</span>
-              この学校をシェア
-            </a>
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>

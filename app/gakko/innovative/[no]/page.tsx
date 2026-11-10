@@ -156,85 +156,6 @@ export default async function InnovativeSchoolPage({
               {school.prefecture}{school.city}にある認可私立学校（一条校）です（{methodLabel}）。
               {school.schoolType && <> 対象学年は{school.schoolType}です。</>}
             </div>
-            {school.note && (
-              <div className="qtext">
-                <NoteParagraphs text={school.note} />
-              </div>
-            )}
-            {school.specialties && school.specialties.length > 0 && (
-              <div style={{ width: '100%' }}>
-                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
-                  伸ばせるコース・活動（公式サイトで確認できたもの）
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  {school.specialties.map((sp, i) => (
-                    <div key={`${sp.tag}-${i}`} style={{ fontSize: 13 }}>
-                      <span className="chip chip-tag" style={{ fontSize: 11, marginRight: 6 }}>{SPECIALTY_TAG_LABEL[sp.tag]}</span>
-                      <a href={sp.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>{sp.course}</a>
-                    </div>
-                  ))}
-                </div>
-                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                  開講状況は年度で異なる場合があります。最新の内容は公式サイトでご確認ください。
-                </div>
-              </div>
-            )}
-            {school.admission && (
-              <div style={{ width: '100%' }}>
-                <div className="muted" style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
-                  入学・入試について（公式情報で確認できたもの）
-                </div>
-                <div style={{ fontSize: 13 }}>{school.admission.text}</div>
-                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                  <a href={school.admission.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>出典ページ</a>
-                  　募集内容は年度で変わります。最新の情報は必ず公式にご確認ください。
-                </div>
-              </div>
-            )}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 4 }}>
-              {[
-                { label: '所在地', value: school.address || `${school.prefecture}${school.city}` },
-                { label: '対象学年', value: school.schoolType },
-                { label: '教育メソッド', value: methodLabel },
-                { label: '認可区分', value: '一条校（認可私立学校）' },
-                ...(school.contact ? [{ label: '連絡先', value: school.contact }] : []),
-              ].map((row) => (
-                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
-                  <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
-                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* 費用・特徴タグ（施設からの自己申告、承認済みのみ表示）。 */}
-            <Suspense fallback={null}>
-              <FacilityInfoCard facilityType="innovative" facilityNo={school.no} />
-            </Suspense>
-
-            {/* 地図 */}
-            <div style={{ width: '100%' }}>
-              <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=18&output=embed`}
-                width="100%"
-                height={220}
-                style={{ border: 0, borderRadius: 12, display: 'block' }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title={`${school.name}の地図`}
-              />
-              <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
-                <a
-                  href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="muted"
-                  style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
-                >
-                  Googleマップで開く ›
-                </a>
-              </div>
-            </div>
-
             <Link
               href={`/ask?prefill=${encodeURIComponent(`「${school.name}」がうちの子に合うかどうか知りたいです。\n\n`)}&childHint=1`}
               className="btn-primary sidebar-ask-btn-pink"
@@ -242,7 +163,6 @@ export default async function InnovativeSchoolPage({
             >
               うちの子に合うか確かめる →
             </Link>
-
             {school.officialUrl && (
               <a
                 href={school.officialUrl}
@@ -269,6 +189,94 @@ export default async function InnovativeSchoolPage({
               <span className="share-btn-icon">𝕏</span>
               この学校をシェア
             </a>
+          </div>
+
+          {school.note && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>学校の特徴</div>
+              <div className="qtext">
+                <NoteParagraphs text={school.note} />
+              </div>
+            </div>
+          )}
+
+          {school.specialties && school.specialties.length > 0 && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>伸ばせるコース・活動</div>
+              <div className="muted" style={{ fontSize: 12 }}>公式サイトで確認できたもの</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>
+                {school.specialties.map((sp, i) => (
+                  <div key={`${sp.tag}-${i}`} style={{ fontSize: 13 }}>
+                    <span className="chip chip-tag" style={{ fontSize: 11, marginRight: 6 }}>{SPECIALTY_TAG_LABEL[sp.tag]}</span>
+                    <a href={sp.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>{sp.course}</a>
+                  </div>
+                ))}
+              </div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                開講状況は年度で異なる場合があります。最新の内容は公式サイトでご確認ください。
+              </div>
+            </div>
+          )}
+
+          {school.admission && (
+            <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 14 }}>入学・入試について</div>
+              <div className="muted" style={{ fontSize: 12 }}>公式情報で確認できたもの</div>
+              <div className="qtext" style={{ fontSize: 13 }}>{school.admission.text}</div>
+              <div className="muted" style={{ fontSize: 12 }}>
+                <a href={school.admission.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>出典ページ</a>
+                　募集内容は年度で変わります。最新の情報は必ず公式にご確認ください。
+              </div>
+            </div>
+          )}
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>基本データ</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+              {[
+                { label: '所在地', value: school.address || `${school.prefecture}${school.city}` },
+                { label: '対象学年', value: school.schoolType },
+                { label: '教育メソッド', value: methodLabel },
+                { label: '認可区分', value: '一条校（認可私立学校）' },
+                ...(school.contact ? [{ label: '連絡先', value: school.contact }] : []),
+              ].map((row) => (
+                <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: 6 }}>
+                  <span className="muted" style={{ fontSize: 13 }}>{row.label}</span>
+                  <span className="qtext" style={{ fontSize: 13, fontWeight: 700, textAlign: 'right' }}>{row.value}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* 費用・特徴タグ（施設からの自己申告、承認済みのみ表示）。 */}
+            <Suspense fallback={null}>
+              <FacilityInfoCard facilityType="innovative" facilityNo={school.no} />
+            </Suspense>
+          </div>
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>アクセス</div>
+            <div style={{ width: '100%' }}>
+              <iframe
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&t=k&z=18&output=embed`}
+                width="100%"
+                height={220}
+                style={{ border: 0, borderRadius: 12, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${school.name}の地図`}
+              />
+              <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                <a
+                  href={`https://www.google.com/maps/search/${encodeURIComponent(mapQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="muted"
+                  style={{ fontSize: 12, textDecoration: 'underline', display: 'inline-block' }}
+                >
+                  Googleマップで開く ›
+                </a>
+              </div>
+            </div>
           </div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
