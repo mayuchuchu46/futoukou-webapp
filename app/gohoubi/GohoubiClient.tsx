@@ -1,11 +1,18 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import CrisisModal from '@/components/CrisisModal';
 import { getUid } from '@/lib/uid';
 import { CRISIS_PRECHECK_WORDS } from '@/lib/kotobaHonyaku';
 import { SITE_URL } from '@/lib/site';
+import {
+  type GohoubiTriedItem,
+  clearGohoubiTried,
+  getGohoubiTried,
+  setGohoubiTried,
+  updateGohoubiTriedStatus,
+} from '@/lib/gohoubiTried';
 
 const EXAMPLES = [
   '子どもと長時間、進路の話をした',
@@ -32,7 +39,31 @@ export default function GohoubiClient() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<GohoubiResult | null>(null);
   const [showCrisisModal, setShowCrisisModal] = useState(false);
+  const [triedItem, setTriedItem] = useState<GohoubiTriedItem | null>(null);
   const resultRef = useRef<HTMLDivElement | null>(null);
+
+  // localStorageはクライアントでしか読めないため、マウント後に読み込む。
+  // 前回「これやってみる！」を押した提案が残っていれば、次に来たときに
+  // 「できましたか？」と軽く気づかせるきっかけにする。
+  useEffect(() => {
+    setTriedItem(getGohoubiTried());
+  }, []);
+
+  function checkTried(title: string, category: string) {
+    setGohoubiTried(title, category);
+    setTriedItem(getGohoubiTried());
+  }
+
+  function answerTriedCheckIn(status: 'done' | 'skipped') {
+    updateGohoubiTriedStatus(status);
+    // 答えたら表示自体は消す（「できた」の達成感を残すためだけに一瞬メッセージを
+    // 見せたい場合もあるが、まずはシンプルに閉じるだけにする）
+    setTimeout(() => {
+      clearGohoubiTried();
+      setTriedItem(null);
+    }, status === 'done' ? 1600 : 0);
+    setTriedItem((prev) => (prev ? { ...prev, status } : prev));
+  }
 
   async function analyze() {
     const text = input.trim();
@@ -105,6 +136,26 @@ export default function GohoubiClient() {
         </div>
       </div>
 
+      {triedItem && triedItem.status === 'pending' && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 8, marginBottom: 10, border: '2px dashed var(--main)' }}>
+          <div className="muted" style={{ fontSize: 12 }}>前回チェックしたご褒美</div>
+          <div className="qtext-main">「{triedItem.title}」、できましたか？</div>
+          <div style={{ display: 'flex', gap: 8, width: '100%' }}>
+            <button className="btn-primary" style={{ flex: 1 }} onClick={() => answerTriedCheckIn('done')}>
+              できた！
+            </button>
+            <button className="btn-secondary" style={{ flex: 1 }} onClick={() => answerTriedCheckIn('skipped')}>
+              まだ／今回はいいや
+            </button>
+          </div>
+        </div>
+      )}
+      {triedItem && triedItem.status === 'done' && (
+        <div className="card" style={{ alignItems: 'flex-start', gap: 6, marginBottom: 10, border: '2px solid var(--main)', background: 'var(--sub)' }}>
+          <div className="qtext-main">よくできました！🎉</div>
+        </div>
+      )}
+
       <div className="card" style={{ alignItems: 'stretch', gap: 10 }}>
         <textarea
           className="input"
@@ -154,13 +205,25 @@ export default function GohoubiClient() {
           <div className="muted" style={{ fontSize: 13, margin: '14px 0 8px' }}>
             今のあなたへのご褒美はこちら
           </div>
-          {result.suggestions.map((s, i) => (
-            <div className="card" key={i} style={{ alignItems: 'flex-start', gap: 8, marginBottom: 10 }}>
-              <span className="cat-badge" style={{ background: 'var(--sub)', color: '#1F4A3C' }}>{s.category}</span>
-              <div className="qtext-main">{s.title}</div>
-              <div className="muted" style={{ fontSize: 13 }}>{s.reason}</div>
-            </div>
-          ))}
+          {result.suggestions.map((s, i) => {
+            const isChecked = triedItem?.title === s.title && triedItem.status !== 'skipped';
+            return (
+              <div className="card" key={i} style={{ alignItems: 'flex-start', gap: 8, marginBottom: 10 }}>
+                <span className="cat-badge" style={{ background: 'var(--sub)', color: '#1F4A3C' }}>{s.category}</span>
+                <div className="qtext-main">{s.title}</div>
+                <div className="muted" style={{ fontSize: 13 }}>{s.reason}</div>
+                <button
+                  type="button"
+                  className={isChecked ? 'btn-secondary' : 'btn-primary'}
+                  style={{ width: '100%' }}
+                  disabled={isChecked}
+                  onClick={() => checkTried(s.title, s.category)}
+                >
+                  {isChecked ? '✓ やってみることにしました' : 'これやってみる！'}
+                </button>
+              </div>
+            );
+          })}
 
           <div className="share-btn-row" style={{ margin: '0 0 10px' }}>
             <a
