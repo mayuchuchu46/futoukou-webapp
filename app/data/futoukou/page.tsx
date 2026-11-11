@@ -20,6 +20,7 @@ import {
   FUTOUKOU_NO_SUPPORT_TREND,
   FUTOUKOU_ABSENCE_OVER_90DAYS,
   FUTOUKOU_HIGH_SCHOOL_OUTCOME,
+  FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -243,6 +244,27 @@ export default function FutoukouDataPage() {
               学校外の機関等で相談・指導を受け、指導要録上「出席扱い」となった児童生徒は{FUTOUKOU_LATEST.attendanceCountedOutsideSchool.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedOutsideSchool.toLocaleString()}人）、自宅でのICT等を活用した学習を出席扱いとされた児童生徒は{FUTOUKOU_LATEST.attendanceCountedIctHome.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevAttendanceCountedIctHome.toLocaleString()}人）で、どちらも前年度より増えています。
             </div>
             <Link href="/data/futoukou/shusseki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-11追加（2回目）。上の「出席扱い制度」カードをさらに掘り下げて、
+              学校外の機関のうち教育支援センターとフリースクール等（民間団体・民間施設）
+              を比べると、相談・指導を受けた人が実際に「出席扱い」とされる割合に差が
+              あることを見せるカード（出典・検証経緯はlib/data/futoukouStats.tsのコメント
+              参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>「出席扱い」になる割合は機関によって差がある</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              {FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.label}、教育支援センター（適応指導教室）で相談・指導を受けた{FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.receivedCount.toLocaleString()}人のうち{FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.attendanceCountedPercent}%が「指導要録上出席扱い」とされましたが、民間団体・民間施設（フリースクール等）で相談・指導を受けた{FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.receivedCount.toLocaleString()}人では{FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.attendanceCountedPercent}%でした。同じ「学校外で相談・指導を受けた」でも、機関によって出席扱いになる割合には差があります。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: '教育支援センター', value: FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.attendanceCountedPercent, unit: '%' },
+                { label: '民間団体・フリースクール等', value: FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.attendanceCountedPercent, unit: '%' },
+              ]}
+            />
+            <Link href="/data/futoukou/shussekiritsu" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>

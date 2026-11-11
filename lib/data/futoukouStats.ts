@@ -336,6 +336,49 @@ export const FUTOUKOU_HIGH_SCHOOL_OUTCOME = {
   heldBackPercent: 4.4,
 } as const;
 
+// ---- 学校外の相談・指導機関別「出席扱い」率の違い（教育支援センター vs 民間団体・フリースクール等、R6） ----
+// 2026-11-11追加。出典：文部科学省「令和6年度 児童生徒の問題行動・不登校等生徒指導上の
+// 諸課題に関する調査結果について」（公表：令和7年10月29日、一部修正：令和8年1月16日）
+// https://www.mext.go.jp/content/20260116-mxt_jidou02-100002753_1_3.pdf
+// （4(9)「学校内外の機関等で専門的な相談・指導等を受けた児童生徒数等」の表、P.90、
+// 「③小・中合計」列）
+//
+// 既存の'shusseki'カード（FUTOUKOU_LATEST.attendanceCountedOutsideSchool=42,978人）は
+// 学校外の全機関（教育委員会所管の機関・児童相談所等・保健所・病院等も含む）を
+// 合算した数字だが、このデータはそのうち「①教育支援センター（適応指導教室）」と
+// 「⑥民間団体，民間施設（フリースクール等）」の2つを個別に取り出し、相談・指導を
+// 受けた人数のうち実際に「指導要録上出席扱い」とされた人数の割合（＝出席扱い率）を
+// 比較するもの。
+//
+// 相互確認済み：同じPDFを異なるオフセットで2回独立して抽出し、どちらも同じ数値
+// （教育支援センター：32,240人・9.1%、うち出席扱い23,368人・72.5%、通学定期乗車券
+// 適用417人／民間団体，民間施設：18,566人・5.2%、うち出席扱い9,329人・50.2%、
+// 通学定期乗車券適用402人）を確認した。さらに検算
+// （23,368÷32,240≈72.49%→72.5%、9,329÷18,566≈50.22%→50.2%、
+// 32,240÷353,970≈9.11%→9.1%、18,566÷353,970≈5.24%→5.2%）により、printed percentが
+// 全て一致することを確認済み。分母の353,970人はFUTOUKOU_LATEST.totalと同一（既に
+// 確認済みの数値）。
+export const FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE = {
+  year: 'R6',
+  label: '令和6年度',
+  kyouikuShienCenter: {
+    name: '教育支援センター（適応指導教室）',
+    receivedCount: 32240,
+    receivedPercent: 9.1,
+    attendanceCountedCount: 23368,
+    attendanceCountedPercent: 72.5,
+    commuterPassCount: 417,
+  },
+  minkanDantai: {
+    name: '民間団体，民間施設（フリースクール等）',
+    receivedCount: 18566,
+    receivedPercent: 5.2,
+    attendanceCountedCount: 9329,
+    attendanceCountedPercent: 50.2,
+    commuterPassCount: 402,
+  },
+} as const;
+
 export const FUTOUKOU_SOURCE = {
   name: '文部科学省「令和6年度 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する調査結果」',
   publishedAt: '令和7年10月29日（令和8年1月16日一部修正）',

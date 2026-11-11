@@ -22,6 +22,7 @@ import {
   FUTOUKOU_NO_SUPPORT_TREND,
   FUTOUKOU_ABSENCE_OVER_90DAYS,
   FUTOUKOU_HIGH_SCHOOL_OUTCOME,
+  FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -258,6 +259,29 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
       stats: [
         { label: '中途退学', value: FUTOUKOU_HIGH_SCHOOL_OUTCOME.dropoutPercent, unit: '%' },
         { label: '原級留置（留年）', value: FUTOUKOU_HIGH_SCHOOL_OUTCOME.heldBackPercent, unit: '%' },
+      ],
+    },
+  },
+  {
+    // 2026-11-11追加（2回目）。「学校以外の学びも『出席扱い』に」('shusseki'カード)は
+    // 学校外の機関（教育委員会所管の機関・児童相談所等・保健所・病院等も含む）を合算
+    // した数字だったが、そのうち主な2機関（教育支援センターとフリースクール等の
+    // 民間団体・民間施設）を個別に取り出すと、相談・指導を受けた人のうち実際に
+    // 「出席扱い」とされる割合に大きな差があることを見せるカード（出典・検証経緯は
+    // futoukouStats.tsのコメント参照）。
+    slug: 'shussekiritsu',
+    addedAt: '2026-11-11',
+    title: '「出席扱い」になる割合、機関によって差',
+    headlineValue: `${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.attendanceCountedPercent}%`,
+    headlineLabel: `教育支援センター利用者が「指導要録上出席扱い」とされる割合（${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.label}、民間団体・フリースクール等は${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.attendanceCountedPercent}%）`,
+    description: `${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.label}、教育支援センター（適応指導教室）で相談・指導を受けた不登校児童生徒は${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.receivedCount.toLocaleString()}人（不登校児童生徒数の${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.receivedPercent}%）で、このうち${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.attendanceCountedPercent}%が「指導要録上出席扱い」とされました。一方、民間団体・民間施設（フリースクール等）で相談・指導を受けた${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.receivedCount.toLocaleString()}人（同${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.receivedPercent}%）のうち出席扱いとされたのは${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.attendanceCountedPercent}%でした。同じ「学校外で相談・指導を受けた」でも、機関によって出席扱いになる割合には差があります。`,
+    tweetText: `不登校の子が学校外で相談・指導を受けたとき「出席扱い」になる割合は、教育支援センターで${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.attendanceCountedPercent}%、フリースクール等の民間団体で${FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.attendanceCountedPercent}%。利用する機関によって差があります。`,
+    chart: {
+      type: 'bars',
+      caption: '学校外で相談・指導を受けた人のうち「指導要録上出席扱い」とされた人の割合。',
+      stats: [
+        { label: '教育支援センター', value: FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.attendanceCountedPercent, unit: '%' },
+        { label: '民間団体・フリースクール等', value: FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.attendanceCountedPercent, unit: '%' },
       ],
     },
   },
