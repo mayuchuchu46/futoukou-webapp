@@ -55,7 +55,11 @@ export default async function Image() {
           justifyContent: 'space-between',
           background: '#FAF8F3',
           padding: '60px',
-          fontFamily: fontData ? 'M PLUS Rounded 1c' : undefined,
+          // fontFamily: undefined を明示的にstyleへ渡すと、next/og（@vercel/og）が
+          // 内部でfontFamily.split(',')を呼んで例外になりフォント取得失敗時に画像生成
+          // 自体が落ちる不具合があったため（2026-11-13、Xシェア時にOGP画像が出ない
+          // 不具合の原因として判明）、未取得時はキー自体を付けないようにする。
+          ...(fontData ? { fontFamily: 'M PLUS Rounded 1c' } : {}),
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
