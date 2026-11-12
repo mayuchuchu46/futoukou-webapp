@@ -217,6 +217,21 @@ export const NEWS_ITEMS: NewsItem[] = [
     relatedThemeWord: '教育支援センター',
   },
   {
+    id: 'nijin-zenkoku-futoko-soudankai-2026-11',
+    date: '2026-11-02',
+    addedAt: '2026-11-12',
+    title:
+      '不登校の子ども・保護者向け「全国一斉不登校相談会」、オルタナティブスクール「NIJINアカデミー」運営の株式会社NIJINが全国49教室で11月から開催',
+    summary:
+      '不登校の小中学生を対象としたオルタナティブスクール「NIJINアカデミー」を運営する株式会社NIJIN（東京都江東区）は、2026年11月1日から12月上旬にかけて、全国49か所のリアル教室で「全国一斉不登校相談会」を開催すると発表しました。不登校や行き渋りのある子どもとその保護者を対象に、親子で教室の雰囲気を体験できる会や、心理職・大学関係者などの専門家に相談できるミニセミナー、保護者同士で語り合うテーマ型の会など、教室ごとに異なる形式で実施するとしています。',
+    sourceName: '株式会社NIJIN（PR TIMES）',
+    sourceUrl: 'https://prtimes.jp/main/html/rd/p/000000940.000099150.html',
+    category: 'other',
+    headline: { value: '全国49教室', label: 'NIJINが全国49教室で不登校・保護者向け相談会を開催' },
+    // 発表内容に「オルタナティブスクール」と明記されているため設定（2026-11-12）。
+    relatedThemeWord: 'オルタナティブスクール',
+  },
+  {
     id: 'yokkaichi-futoko-1114nin-hogosyakai-2026-10',
     date: '2026-10-30',
     addedAt: '2026-10-31',
