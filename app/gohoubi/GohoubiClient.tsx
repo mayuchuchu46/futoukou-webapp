@@ -13,6 +13,7 @@ import {
   setGohoubiTried,
   updateGohoubiTriedStatus,
 } from '@/lib/gohoubiTried';
+import { buildRakutenSearchAffiliateLink } from '@/lib/rakutenAffiliate';
 
 const EXAMPLES = [
   '子どもと長時間、進路の話をした',
@@ -25,6 +26,8 @@ type Suggestion = {
   title: string;
   category: string;
   reason: string;
+  is_product?: boolean;
+  shop_keyword?: string;
 };
 
 type GohoubiResult = {
@@ -212,6 +215,17 @@ export default function GohoubiClient() {
                 <span className="cat-badge" style={{ background: 'var(--sub)', color: '#1F4A3C' }}>{s.category}</span>
                 <div className="qtext-main">{s.title}</div>
                 <div className="muted" style={{ fontSize: 13 }}>{s.reason}</div>
+                {s.is_product && s.shop_keyword && (
+                  <a
+                    className="share-btn"
+                    style={{ width: '100%', justifyContent: 'center' }}
+                    href={buildRakutenSearchAffiliateLink(s.shop_keyword)}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                  >
+                    楽天市場で探す
+                  </a>
+                )}
                 <button
                   type="button"
                   className={isChecked ? 'btn-secondary' : 'btn-primary'}
@@ -224,6 +238,12 @@ export default function GohoubiClient() {
               </div>
             );
           })}
+
+          {result.suggestions.some((s) => s.is_product && s.shop_keyword) && (
+            <div className="muted" style={{ fontSize: 11, textAlign: 'center', margin: '0 0 10px' }}>
+              ※「楽天市場で探す」は広告（アフィリエイトリンク）です。購入いただくと運営者に紹介料が入る場合があります。
+            </div>
+          )}
 
           <div className="share-btn-row" style={{ margin: '0 0 10px' }}>
             <a

@@ -10,6 +10,13 @@ import Anthropic from '@anthropic-ai/sdk';
 // 「消えたい」等の自己危機的な表現が入る可能性はこちらにもあるため、安全策として
 // lib/kotobaHonyaku.tsのCRISIS_PRECHECK_WORDS・CRISIS_FALLBACK_MESSAGEをそのまま
 // 再利用する（判定ロジックを増やさず、既存の窓口案内と文言を統一するため）。
+//
+// アフィリエイト連携（2026-11-12追加）：もしもアフィリエイトでfutoko-dosuru.comの
+// 楽天市場提携が承認されたことを受け、提案のうち「購入可能なモノ」については
+// is_product・shop_keywordを判定させ、GohoubiClient.tsx側で楽天市場の検索リンク
+// （lib/rakutenAffiliate.ts）を添える。「お風呂にゆっくり浸かる」のような行動系の
+// 提案には出さない（無理に物販に結びつけない）。Amazonは提携審査中のため未実装、
+// 承認後に同様の仕組みで追加予定。
 
 export const GOHOUBI_SYSTEM_PROMPT = `あなたは「どうする先生」の一機能「親のご褒美クラブ」として、不登校・学校生活に悩む
 子を持つ保護者が今日あったこと・頑張ったことを書いた内容を読み、その保護者自身への
@@ -23,6 +30,11 @@ export const GOHOUBI_SYSTEM_PROMPT = `あなたは「どうする先生」の一
 - 提案は2〜3件。それぞれに短いタイトルと、入力内容のどの部分を受けてこの提案に
   至ったかが伝わる理由（1〜2文）を付ける。理由は入力内容に具体的に触れること
   （テンプレート的な一般論にしない）。
+- 提案の中に、購入可能な具体的な商品（お菓子・入浴剤・コーヒー・文房具等）であるものが
+  自然に含まれる場合は is_product を true にし、楽天市場で検索するのに適した短い
+  キーワード（shop_keyword、例：「入浴剤」「ドリップコーヒー」）を付ける。
+  「10分だけ一人になる」のような行動・体験の提案には is_product を true にしない
+  （無理に物販に結びつけない。該当なしで構わない）。
 - 提案全体とは別に、今日の頑張りをねぎらう一言（encouragement、1〜2文）を付ける。
   「よくやっている」と決めつけるのではなく、書かれた内容に即した労い方にする。
 - 入力が短すぎる・ご褒美を考える材料にならない場合（例：空白に近い、意味不明な文字列）は
@@ -55,8 +67,10 @@ export const GOHOUBI_TOOL: Anthropic.Tool = {
             title: { type: 'string', description: 'ご褒美の短いタイトル（例：コンビニのちょっといいスイーツ）' },
             category: { type: 'string', description: 'タグ（例：ひとり時間／五感を癒す／頑張りを認める）' },
             reason: { type: 'string', description: '入力内容のどの部分を受けてこの提案になったかの説明（1〜2文）' },
+            is_product: { type: 'boolean', description: '購入可能な具体的な商品の提案である場合true（行動・体験の提案はfalse）' },
+            shop_keyword: { type: 'string', description: 'is_productがtrueの場合のみ：楽天市場で検索するのに適した短いキーワード' },
           },
-          required: ['title', 'category', 'reason'],
+          required: ['title', 'category', 'reason', 'is_product'],
         },
       },
     },
@@ -68,6 +82,8 @@ export type GohoubiSuggestion = {
   title: string;
   category: string;
   reason: string;
+  is_product?: boolean;
+  shop_keyword?: string;
 };
 
 export type GohoubiResult = {
