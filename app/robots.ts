@@ -30,6 +30,16 @@ export default function robots(): MetadataRoute.Robots {
           // 既にブロック対象、経験者版だけ漏れていた。
           '/senpai/register',
           '/api/*',
+          // Next.js App RouterのOGP画像エンドポイント（2026-11-12追加）。
+          // /gakko/free/387/opengraph-image?... のようなURLをGoogleがクロールして
+          // 「クロール済み - インデックス未登録」として積み上がっており、クロールバジェットを
+          // 消費していた。これらはHTMLページではなく画像ファイルなので、クロール対象外にする。
+          // twitter-imageも同様。
+          '/*opengraph-image*',
+          '/*twitter-image*',
+          // 外部リンクリダイレクトハンドラ（2026-11-12追加）。
+          // /out?to=https://... のURLをGoogleがクロールして同様にクロールバジェットを消費していた。
+          '/out',
         ],
       },
     ],
