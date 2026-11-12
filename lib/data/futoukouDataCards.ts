@@ -23,6 +23,7 @@ import {
   FUTOUKOU_ABSENCE_OVER_90DAYS,
   FUTOUKOU_HIGH_SCHOOL_OUTCOME,
   FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE,
+  FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -282,6 +283,32 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
       stats: [
         { label: '教育支援センター', value: FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.kyouikuShienCenter.attendanceCountedPercent, unit: '%' },
         { label: '民間団体・フリースクール等', value: FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE.minkanDantai.attendanceCountedPercent, unit: '%' },
+      ],
+    },
+  },
+  {
+    // 2026-11-12追加。学校外に設置される「教育支援センター（適応指導教室）」
+    // （'shussekiritsu'カード）とは別に、各学校の中に設ける「校内教育支援センター」
+    // （不登校（傾向）の児童生徒が落ち着いて過ごせる校内の居場所）の設置率が、
+    // 1年で12.6ポイント上昇したことを見せるカード（出典・検証経緯はfutoukouStats.ts
+    // のコメント参照）。
+    slug: 'kounaishien',
+    addedAt: '2026-11-12',
+    title: '「校内の居場所」設置率、1年で12.6ポイント増',
+    headlineValue: `${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.nationalPercent}%`,
+    headlineLabel: `公立小中学校の「校内教育支援センター」設置率（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.label}、前年度比+${(FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.nationalPercent - FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.nationalPercent).toFixed(1)}ポイント）`,
+    description: `不登校（傾向）の児童生徒が校内で落ち着いて過ごせる場所「校内教育支援センター」を設置している公立小中学校は、${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.label}の${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.nationalPercent}%（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.schools.toLocaleString()}校）から、${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.label}には${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.nationalPercent}%（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.schools.toLocaleString()}校）まで上昇しました。中学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.juniorHighPercent}%）の方が小学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.elementaryPercent}%）より設置が進んでいます。学校外の「教育支援センター（適応指導教室）」とは別の、校内に設ける居場所の数字です。`,
+    tweetText: `不登校の子が校内で落ち着いて過ごせる「校内教育支援センター」の設置率は58.7%。1年前の46.1%から12.6ポイント上昇しました（中学校77.5%・小学校49.1%）。`,
+    chart: {
+      type: 'bars',
+      caption: '公立小中学校における「校内教育支援センター」設置率の変化。',
+      stats: [
+        { label: `全国（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.nationalPercent, unit: '%' },
+        { label: `全国（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.nationalPercent, unit: '%' },
+        { label: `小学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.elementaryPercent, unit: '%' },
+        { label: `小学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.elementaryPercent, unit: '%' },
+        { label: `中学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.juniorHighPercent, unit: '%' },
+        { label: `中学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.juniorHighPercent, unit: '%' },
       ],
     },
   },

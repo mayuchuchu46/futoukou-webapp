@@ -21,6 +21,7 @@ import {
   FUTOUKOU_ABSENCE_OVER_90DAYS,
   FUTOUKOU_HIGH_SCHOOL_OUTCOME,
   FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE,
+  FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -281,6 +282,29 @@ export default function FutoukouDataPage() {
             <YearTrendChart data={noSupportTrendData} unit="%" />
             <Link href="/data/futoukou/mushien" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このグラフだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-12追加。上の「相談も指導も受けていない子どもが増えている」カードと
+              対になる、支援体制側の動きを見せるカード。学校外の「教育支援センター
+              （適応指導教室）」（'shussekiritsu'カード）とは別に、各学校の中に設ける
+              「校内教育支援センター」の設置率が1年で12.6ポイント上昇したことを示す
+              （出典・検証経緯はlib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>校内の「居場所」はこの1年で増えている</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              不登校（傾向）の児童生徒が校内で落ち着いて過ごせる場所「校内教育支援センター」を設置している公立小中学校は、{FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.label}の{FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.nationalPercent}%から、{FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.label}には{FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.nationalPercent}%まで上昇しました（中学校{FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.juniorHighPercent}%、小学校{FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.elementaryPercent}%）。学校外の「教育支援センター（適応指導教室）」とは別の、校内に設ける居場所の数字です。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: `全国（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.nationalPercent, unit: '%' },
+                { label: `全国（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.nationalPercent, unit: '%' },
+                { label: `中学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.juniorHighPercent, unit: '%' },
+                { label: `小学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.elementaryPercent, unit: '%' },
+              ]}
+            />
+            <Link href="/data/futoukou/kounaishien" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
             </Link>
           </div>
 
