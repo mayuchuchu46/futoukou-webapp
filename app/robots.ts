@@ -42,6 +42,16 @@ export default function robots(): MetadataRoute.Robots {
           '/out',
         ],
       },
+      // X（Twitter）のカード生成クローラー（Twitterbot）向けの例外（2026-11-14追加）。
+      // 上の「*」向けルールで/*opengraph-image*・/*twitter-image*をdisallowしたところ、
+      // Xでニュース記事・データカードをシェアした際にOGP画像（summary_large_image）が
+      // 表示されなくなる不具合が発生した（Xのカード取得クローラーもrobots.txtの
+      // disallowに従うため）。Googleのクロール予算対策は維持しつつ、Twitterbotには
+      // 画像エンドポイントを含め全許可し、シェア画像を復旧する。
+      {
+        userAgent: 'Twitterbot',
+        allow: '/',
+      },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
