@@ -7,13 +7,16 @@ import { getUid } from '@/lib/uid';
 // 「通報する」ボタン。likeとは違い取り消し不要なので一方向のみ。クリック後は
 // 確認を一度挟み、送信したら「ご報告ありがとうございました」に変えて押せなくする
 // （誤タップ対策＋多重送信防止。2026-10-12追加）。
-export default function ReportButton({ id }: { id: string }) {
+// endpointはconsultations向けの/api/reportがデフォルト。他テーブル（例：
+// gohoubi_posts向けの/api/gohoubi-voices/report）向けには呼び出し側で指定する
+// （2026-11-14追加、「みんなのご褒美」機能用）。
+export default function ReportButton({ id, endpoint = '/api/report' }: { id: string; endpoint?: string }) {
   const [state, setState] = useState<'idle' | 'confirming' | 'sending' | 'done'>('idle');
 
   async function send() {
     setState('sending');
     try {
-      await fetch('/api/report', {
+      await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, uid: getUid() }),

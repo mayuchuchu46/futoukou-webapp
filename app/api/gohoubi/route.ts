@@ -3,11 +3,17 @@ import Anthropic from '@anthropic-ai/sdk';
 import { analyzeGohoubi } from '@/lib/gohoubi';
 import { CRISIS_PRECHECK_WORDS, CRISIS_FALLBACK_MESSAGE } from '@/lib/kotobaHonyaku';
 import { checkGohoubiRateLimit, recordGohoubiRequest, getClientIp } from '@/lib/rateLimit';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 // 「親のご褒美クラブ」機能のAPI（2026-11-10追加）。/kotobaと同じ、ログイン不要の
-// ミニツールパターン。入力内容は保存しない（レート制限用にuid・IPのみgohoubi_logへ
-// 記録する。/kotobaのような「みんなの相談」への自動公開もしない。ご褒美提案は
-// Q&Aコンテンツではなく、公開前提にすると書きにくくなるため）。
+// ミニツールパターン。レート制限用にuid・IPをgohoubi_logへ記録する。
+//
+// [2026-11-14更新] 当初は「公開前提にすると書きにくくなる」との考えで本文を一切
+// 保存せず、/kotobaのような「みんなの相談」への自動公開も行わない設計だった。
+// その後「せっかくの投稿をTOP/別ページで流したい」との方針変更を受け、危険信号の
+// 一次フィルタに掛からず・is_fallbackでもない（＝実際に提案が出た）投稿のみ
+// gohoubi_postsへ保存し、/gohoubi/voicesで公開する。保存は結果を待たない
+// fire-and-forgetにし、失敗してもユーザーへのレスポンス自体は妨げない。
 export async function POST(req: NextRequest) {
   const { text, uid } = await req.json();
 
@@ -45,6 +51,24 @@ export async function POST(req: NextRequest) {
   try {
     const result = await analyzeGohoubi(anthropic, trimmed);
     recordGohoubiRequest(uidStr, ip);
+
+    if (!result.is_fallback && result.suggestions?.length > 0) {
+      const supabase = getSupabaseAdmin();
+      supabase
+        .from('gohoubi_posts')
+        .insert({
+          text: trimmed,
+          encouragement: result.encouragement,
+          suggestions: result.suggestions,
+          uid: uidStr,
+          client_ip: ip,
+        })
+        .then(
+          () => {},
+          () => {}
+        );
+    }
+
     return NextResponse.json({ is_crisis: false, ...result });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : 'unknown error';

@@ -1220,3 +1220,25 @@ create index if not exists school_reviews_expert_id_idx on school_reviews (exper
 -- 子どもが特定されるのが嫌」との指摘を受けて追加。未入力ならこれまでどおり
 -- プロフィールの表示名にフォールバックする（既存の投稿にも影響しない）。
 alter table school_reviews add column if not exists author_label text;
+
+-- 「親のご褒美クラブ」の投稿をTOP/専用ページで公開する「みんなのご褒美」機能
+-- （2026-11-14追加）。gohoubi_log（レート制限用、本文を保存しない）とは別に、
+-- 公開表示用にここへ本文・AIの労いコメント・提案をまとめて保存する。
+-- 2026-11-10の実装時点では「公開前提にすると書きにくくなる」との考えで非公開運用
+-- だったが、「せっかくだから投稿をTOPで流したい」との方針変更を受けて新設した。
+-- ログイン不要の匿名投稿のため、通報（reports/reported_by）とhidden（運営による
+-- 非表示）で最低限のモデレーションのみ行う（consultationsと同じ考え方）。
+create table if not exists gohoubi_posts (
+  id uuid primary key default gen_random_uuid(),
+  text text not null,
+  encouragement text not null default '',
+  suggestions jsonb not null default '[]',
+  uid text,
+  client_ip text,
+  reports int not null default 0,
+  reported_by text[] not null default '{}',
+  hidden boolean not null default false,
+  created_at timestamptz not null default now()
+);
+alter table gohoubi_posts enable row level security;
+create index if not exists gohoubi_posts_created_at_idx on gohoubi_posts (created_at desc);

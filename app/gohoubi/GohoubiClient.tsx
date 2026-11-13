@@ -137,6 +137,9 @@ export default function GohoubiClient() {
         <div className="qtext" style={{ marginTop: 8 }}>
           今日あったこと・頑張ったことを一言書いてみてください。今のあなたに合ったご褒美を提案します。
         </div>
+        <Link href="/gohoubi/voices" style={{ display: 'inline-block', marginTop: 8, fontSize: 12.5, color: 'var(--main)', textDecoration: 'underline' }}>
+          みんなの投稿を見る →
+        </Link>
       </div>
 
       {triedItem && triedItem.status === 'pending' && (
@@ -167,6 +170,9 @@ export default function GohoubiClient() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="例：子どもと長時間、進路の話をした"
         />
+        <div className="muted" style={{ fontSize: 11 }}>
+          ※投稿内容は匿名で「みんなのご褒美」ページに公開されます。氏名や学校名など、特定につながる内容は書かないようにしてください。
+        </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {EXAMPLES.map((ex) => (
             <button
