@@ -30,27 +30,22 @@ export default function robots(): MetadataRoute.Robots {
           // 既にブロック対象、経験者版だけ漏れていた。
           '/senpai/register',
           '/api/*',
-          // Next.js App RouterのOGP画像エンドポイント（2026-11-12追加）。
-          // /gakko/free/387/opengraph-image?... のようなURLをGoogleがクロールして
-          // 「クロール済み - インデックス未登録」として積み上がっており、クロールバジェットを
-          // 消費していた。これらはHTMLページではなく画像ファイルなので、クロール対象外にする。
-          // twitter-imageも同様。
-          '/*opengraph-image*',
-          '/*twitter-image*',
           // 外部リンクリダイレクトハンドラ（2026-11-12追加）。
           // /out?to=https://... のURLをGoogleがクロールして同様にクロールバジェットを消費していた。
           '/out',
+          // 【2026-11-12に追加→2026-11-14に削除】OGP画像エンドポイント
+          // （/news/[id]/opengraph-image等）を、Googleのクロール予算対策として
+          // 一時期ここでdisallowしていたが、これはUser-agent: *向けのルールのため、
+          // X（Twitter）等のシェアカード生成クローラーもdisallowの対象になってしまい、
+          // ニュース記事・データカードをXでシェアした際に画像が表示されなくなる不具合が
+          // 発生した。Twitterbot個別にallowするルールも試したが、Xのカード検証ツール
+          // （Card Validator）が「robots.txtに制限されている可能性がある」という警告を
+          // 出し続け、実際のXクローラーで確実に効くか断言できなかったため、この方式自体を
+          // やめた。代わりに、next.config.tsのheaders()で/opengraph-image・/twitter-image
+          // パスに`X-Robots-Tag: noindex`を付与する方式に変更済み（クロール自体は誰にでも
+          // 許可するので、どのSNS・チャットのプレビュークローラーでも画像を確実に取得できる。
+          // Googleには見せつつ検索結果には出さない、という形でクロール予算対策の目的は維持）。
         ],
-      },
-      // X（Twitter）のカード生成クローラー（Twitterbot）向けの例外（2026-11-14追加）。
-      // 上の「*」向けルールで/*opengraph-image*・/*twitter-image*をdisallowしたところ、
-      // Xでニュース記事・データカードをシェアした際にOGP画像（summary_large_image）が
-      // 表示されなくなる不具合が発生した（Xのカード取得クローラーもrobots.txtの
-      // disallowに従うため）。Googleのクロール予算対策は維持しつつ、Twitterbotには
-      // 画像エンドポイントを含め全許可し、シェア画像を復旧する。
-      {
-        userAgent: 'Twitterbot',
-        allow: '/',
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
