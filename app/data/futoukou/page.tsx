@@ -22,6 +22,7 @@ import {
   FUTOUKOU_HIGH_SCHOOL_OUTCOME,
   FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE,
   FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE,
+  FUTOUKOU_TAYOUKA_GAKKOU,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -304,6 +305,26 @@ export default function FutoukouDataPage() {
               ]}
             />
             <Link href="/data/futoukou/kounaishien" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-13追加。「校内教育支援センター」（校内の居場所）や「教育支援
+              センター（適応指導教室）」（学校外の相談・指導機関）とは別に、不登校の
+              子ども向けに教育課程を柔軟にできる専用の「学校」そのものの設置数を見せる
+              カード（出典・検証経緯はlib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校の子のための「学校」は全国84校</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              授業時数の削減や教科の新設など教育課程を柔軟にできる「学びの多様化学校（いわゆる不登校特例校）」は、{FUTOUKOU_TAYOUKA_GAKKOU.asOf}時点で全国{FUTOUKOU_TAYOUKA_GAKKOU.total}校（公立{FUTOUKOU_TAYOUKA_GAKKOU.public}校・私立{FUTOUKOU_TAYOUKA_GAKKOU.private}校）。政府の将来目標{FUTOUKOU_TAYOUKA_GAKKOU.goalFuture}校の約{Math.round((FUTOUKOU_TAYOUKA_GAKKOU.total / FUTOUKOU_TAYOUKA_GAKKOU.goalFuture) * 100)}%にとどまり、設置予定がない県も{FUTOUKOU_TAYOUKA_GAKKOU.prefecturesWithNone}県あります。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: '現在の設置数', value: FUTOUKOU_TAYOUKA_GAKKOU.total, unit: '校' },
+                { label: '政府目標（将来的に）', value: FUTOUKOU_TAYOUKA_GAKKOU.goalFuture, unit: '校' },
+              ]}
+            />
+            <Link href="/data/futoukou/tayouka" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>

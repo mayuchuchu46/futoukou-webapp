@@ -24,6 +24,7 @@ import {
   FUTOUKOU_HIGH_SCHOOL_OUTCOME,
   FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE,
   FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE,
+  FUTOUKOU_TAYOUKA_GAKKOU,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -309,6 +310,29 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         { label: `小学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.elementaryPercent, unit: '%' },
         { label: `中学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r6.juniorHighPercent, unit: '%' },
         { label: `中学校（${FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.year}）`, value: FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE.r7.juniorHighPercent, unit: '%' },
+      ],
+    },
+  },
+  {
+    // 2026-11-13追加。「校内教育支援センター」（'kounaishien'カード）や
+    // 「教育支援センター（適応指導教室）」（'shussekiritsu'カード）とは別に、
+    // 不登校の子ども向けに教育課程を柔軟にできる専用の「学校」そのものの設置数
+    // （出典・検証経緯はfutoukouStats.tsのコメント参照）。
+    slug: 'tayouka',
+    addedAt: '2026-11-13',
+    title: '不登校の子のための学校、全国84校',
+    headlineValue: `${FUTOUKOU_TAYOUKA_GAKKOU.total}校`,
+    headlineLabel: `「学びの多様化学校（いわゆる不登校特例校）」の全国設置数（${FUTOUKOU_TAYOUKA_GAKKOU.asOf}時点）`,
+    description: `不登校の状況にある児童生徒に合わせ、授業時数の削減や教科の新設など教育課程を柔軟にできる学校「学びの多様化学校」は、${FUTOUKOU_TAYOUKA_GAKKOU.asOf}時点で全国${FUTOUKOU_TAYOUKA_GAKKOU.total}校（公立${FUTOUKOU_TAYOUKA_GAKKOU.public}校・私立${FUTOUKOU_TAYOUKA_GAKKOU.private}校）。政府は将来的に全国${FUTOUKOU_TAYOUKA_GAKKOU.goalFuture}校を目指していますが、現状はその約${Math.round((FUTOUKOU_TAYOUKA_GAKKOU.total / FUTOUKOU_TAYOUKA_GAKKOU.goalFuture) * 100)}%にとどまり、設置の予定がない県も${FUTOUKOU_TAYOUKA_GAKKOU.prefecturesWithNone}県あります。`,
+    tweetText: `不登校の子のための学校「学びの多様化学校」は全国84校（${FUTOUKOU_TAYOUKA_GAKKOU.asOf}時点）。政府目標の300校にはまだ遠く、設置予定のない県も13県あります。`,
+    chart: {
+      type: 'bars',
+      caption: '「学びの多様化学校」の現在の設置数と、政府が将来目標とする校数。',
+      stats: [
+        { label: '現在の設置数', value: FUTOUKOU_TAYOUKA_GAKKOU.total, unit: '校' },
+        { label: 'うち公立', value: FUTOUKOU_TAYOUKA_GAKKOU.public, unit: '校' },
+        { label: 'うち私立', value: FUTOUKOU_TAYOUKA_GAKKOU.private, unit: '校' },
+        { label: '政府目標（将来的に）', value: FUTOUKOU_TAYOUKA_GAKKOU.goalFuture, unit: '校' },
       ],
     },
   },
