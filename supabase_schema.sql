@@ -1242,3 +1242,11 @@ create table if not exists gohoubi_posts (
 );
 alter table gohoubi_posts enable row level security;
 create index if not exists gohoubi_posts_created_at_idx on gohoubi_posts (created_at desc);
+
+-- 「みんなのご褒美」投稿への「褒めワードのスタンプ」機能（2026-11-14追加）。
+-- consultationsのreactions/reacted_by（lib/reactions.ts、定型リアクション）と
+-- 同じ仕組みをgohoubi_posts向けに追加する。既存のempathy/same/cheer
+-- （共感・連帯用）とは別の、ご褒美投稿向けの「褒める」用の語彙
+-- （lib/gohoubiReactions.ts）を使う。
+alter table gohoubi_posts add column if not exists reactions jsonb not null default '{}';
+alter table gohoubi_posts add column if not exists reacted_by jsonb not null default '{}';

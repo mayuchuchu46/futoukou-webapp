@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getUid } from '@/lib/uid';
 import { relativeTimeLabel } from '@/lib/relativeTime';
 import ReportButton from '@/components/ReportButton';
+import ReactionIcons from '@/components/ReactionIcons';
+import { GOHOUBI_REACTION_TYPES } from '@/lib/gohoubiReactions';
 
 type Suggestion = { title: string; category: string; reason: string };
 type Post = {
@@ -12,6 +13,8 @@ type Post = {
   text: string;
   encouragement: string;
   suggestions: Suggestion[];
+  reactions: Partial<Record<string, number>>;
+  reacted_by: Partial<Record<string, string[]>>;
   created_at: string;
 };
 
@@ -91,7 +94,16 @@ export default function VoicesClient() {
               ))}
             </div>
           )}
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <ReactionIcons
+                id={p.id}
+                initialReactions={p.reactions}
+                initialReactedBy={p.reacted_by}
+                types={GOHOUBI_REACTION_TYPES}
+                endpoint="/api/gohoubi-voices/react"
+              />
+            </div>
             <ReportButton id={p.id} endpoint="/api/gohoubi-voices/report" />
           </div>
         </div>

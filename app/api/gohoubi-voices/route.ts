@@ -8,7 +8,7 @@ export async function GET() {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
     .from('gohoubi_posts')
-    .select('id, text, encouragement, suggestions, created_at')
+    .select('id, text, encouragement, suggestions, reactions, reacted_by, created_at')
     .eq('hidden', false)
     .order('created_at', { ascending: false })
     .limit(30);
