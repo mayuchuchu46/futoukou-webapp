@@ -10,12 +10,18 @@
 //
 // 更新日: 2026-11-08
 //
-// 【調査済み5校・今後追加可能な状況】
+// 【調査済み・今後追加可能な状況】（2026-11-14追記）
 // - きのくに子どもの村グループ (innovative, no: 4,5,6,7,8): 山梨県行政・HugKum記事・映画レビュー
 // - 星槎国際高等学校 (tsushin, no: 2): 富山県公式サイト
 // - クラーク記念国際高等学校 (tsushin, no: 1): 文科省資料（学校自己PR）
 // - N高等学校・S高等学校 (tsushin, no: 113, 16): Business Insider取材記事
 // - 八洲学園高等学校 (tsushin, no: 76): 学校公式の学校関係者評価PDF（保護者自由記述）
+// - フリースクール東京シューレ王子・大田・新宿 (free, no: 160,161,162): 国立女性教育会館発行誌の生徒紹介記事・文春オンラインの理事長インタビュー
+//
+// 【分かっていること】教育理念型・老舗・大手ブランド校以外では、行政・独立メディア軸の
+// 「掲載可能な声」はほぼ見つからない（claude/futoukou-school-reviews-pilot-kinokuni.md、
+// 15校調査で9校がゼロ件だった）。全校への横展開には、minkou.jp等への掲載許諾取得、または
+// どうする先生の自前アンケート整備が必要（同ドキュメント参照）。
 
 export type FacilityType =
   | 'school'
@@ -229,6 +235,65 @@ const SCHOOL_QUOTED_REVIEWS: FacilityQuotedReviews[] = [
         sourceName: '八洲学園高等学校 学校関係者評価（保護者）',
         sourceDetail: '2023年度・保護者自由記述',
         sourceType: 'school_self',
+      },
+    ],
+  },
+  // -------------------------
+  // フリースクール東京シューレ王子 (free, no=160)
+  // -------------------------
+  {
+    facilityType: 'free',
+    facilityNo: 160,
+    reviews: [
+      {
+        quote:
+          '小学校6年生から東京シューレ王子に通い始め、現在高三部に在籍。仲間と2年半の準備を重ね、アラスカで現地フリースクールの子どもたちと交流しオーロラを見る夢をかなえた。',
+        sourceUrl: 'https://nwec.repo.nii.ac.jp/record/17676/files/NWEC-NJM00450251.pdf',
+        sourceName: '国立女性教育会館（NWEC）発行誌',
+        sourceDetail: '東京シューレ王子に通う生徒（当時16歳）の紹介記事より',
+        sourceType: 'government',
+      },
+      {
+        quote:
+          '不登校をとりまく環境は、大きな転換点を迎えつつあります。ところが、それをご存知ない方が多いのも事実です。',
+        sourceUrl: 'https://bunshun.jp/articles/-/15690',
+        sourceName: '文春オンライン',
+        sourceDetail: '東京シューレ理事長・奥地圭子氏インタビュー',
+        sourceType: 'media',
+      },
+    ],
+  },
+  // -------------------------
+  // フリースクール東京シューレ大田 (free, no=161) ※運営団体・活動内容は王子と共通
+  // -------------------------
+  {
+    facilityType: 'free',
+    facilityNo: 161,
+    reviews: [
+      {
+        quote:
+          '不登校をとりまく環境は、大きな転換点を迎えつつあります。ところが、それをご存知ない方が多いのも事実です。',
+        sourceUrl: 'https://bunshun.jp/articles/-/15690',
+        sourceName: '文春オンライン',
+        sourceDetail: '運営団体（NPO法人東京シューレ）理事長・奥地圭子氏インタビュー',
+        sourceType: 'media',
+      },
+    ],
+  },
+  // -------------------------
+  // フリースクール東京シューレ新宿 (free, no=162) ※運営団体・活動内容は王子と共通
+  // -------------------------
+  {
+    facilityType: 'free',
+    facilityNo: 162,
+    reviews: [
+      {
+        quote:
+          '不登校をとりまく環境は、大きな転換点を迎えつつあります。ところが、それをご存知ない方が多いのも事実です。',
+        sourceUrl: 'https://bunshun.jp/articles/-/15690',
+        sourceName: '文春オンライン',
+        sourceDetail: '運営団体（NPO法人東京シューレ）理事長・奥地圭子氏インタビュー',
+        sourceType: 'media',
       },
     ],
   },

@@ -13,6 +13,7 @@ import FavoriteButton from '@/components/FavoriteButton';
 import FacilityConsultations from '@/components/FacilityConsultations';
 import FacilityExperiencedParents from '@/components/FacilityExperiencedParents';
 import FacilityReviews from '@/components/FacilityReviews';
+import SchoolQuotedReviews from '@/components/SchoolQuotedReviews';
 import FacilityInfoCard from '@/components/FacilityInfoCard';
 import FacilityInfoSubmitForm from '@/components/FacilityInfoSubmitForm';
 import FacilityCategoryInfo from '@/components/FacilityCategoryInfo';
@@ -288,6 +289,9 @@ export default async function FreeSchoolPage({
           <Suspense fallback={null}>
             <FacilityExperiencedParents name={school.name} label="経験者からこの学校の話を聞く" />
           </Suspense>
+          {/* 行政資料・メディア取材記事・学校公式資料等からの実在の引用口コミ
+              （2026-11-14追加）。データがある施設のみ表示（大多数は非表示）。 */}
+          <SchoolQuotedReviews facilityType="free" facilityNo={school.no} />
           <Suspense fallback={null}>
             <FacilityReviews facilityType="free" facilityNo={school.no} facilityName={school.name} />
           </Suspense>
