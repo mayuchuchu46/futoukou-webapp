@@ -25,6 +25,7 @@ import {
   FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE,
   FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE,
   FUTOUKOU_TAYOUKA_GAKKOU,
+  FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -333,6 +334,29 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         { label: 'うち公立', value: FUTOUKOU_TAYOUKA_GAKKOU.public, unit: '校' },
         { label: 'うち私立', value: FUTOUKOU_TAYOUKA_GAKKOU.private, unit: '校' },
         { label: '政府目標（将来的に）', value: FUTOUKOU_TAYOUKA_GAKKOU.goalFuture, unit: '校' },
+      ],
+    },
+  },
+  {
+    // 2026-11-14追加。「相談も指導も受けていない子どもの割合は増えている」('mushien'
+    // カード、現在在籍中の不登校児童生徒に関する行政統計）とは別に、不登校を経験した
+    // 成人（18〜59歳）への回顧調査で、当時「相談した人・機関はない」と自己回答した割合を
+    // 見せるカード（出典・検証経緯はfutoukouStats.tsのコメント参照）。調査方法・対象が
+    // 異なるため直接比較する数字ではないが、「相談先につながれていない経験」という
+    // テーマで'mushien'カードと響き合う、本サイトでまだ扱っていない調査。
+    slug: 'sodannashi',
+    addedAt: '2026-11-14',
+    title: '不登校経験者の半数超「相談先はなかった」',
+    headlineValue: `${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.noConsultPercent}%`,
+    headlineLabel: `小・中学校時に不登校を経験した人（18〜59歳）が、当時「相談した人・機関はない」と回答した割合（文部科学省、令和7年調査、インターネット調査n=${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.n.toLocaleString()}）`,
+    description: `文部科学省が18〜59歳の不登校経験者を対象に行った調査で、当時「相談した人・機関はない」と答えた人はインターネット調査（n=${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.n.toLocaleString()}）で${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.noConsultPercent}%、支援団体等の協力によるオンライン調査（n=${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.n}）で${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.noConsultPercent}%でした。現在の在籍児童生徒に関する行政統計（「相談も指導も受けていない子どもの割合は増えている」カード参照）とは調査方法が異なりますが、どちらも「相談先につながれていない」経験の広さを示しています。`,
+    tweetText: `不登校を経験した人（18〜59歳）への調査で、当時「相談した人・機関はない」と答えた人は${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.noConsultPercent}%（文部科学省調査）。半数超が相談先につながれていませんでした。`,
+    chart: {
+      type: 'bars',
+      caption: '不登校経験者（18〜59歳）が当時「相談した人・機関はない」と回答した割合。',
+      stats: [
+        { label: `${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.label}（n=${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.n.toLocaleString()}）`, value: FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.noConsultPercent, unit: '%' },
+        { label: `${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.label}（n=${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.n}）`, value: FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.noConsultPercent, unit: '%' },
       ],
     },
   },

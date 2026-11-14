@@ -23,6 +23,7 @@ import {
   FUTOUKOU_SUPPORT_INSTITUTION_ATTENDANCE,
   FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE,
   FUTOUKOU_TAYOUKA_GAKKOU,
+  FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -283,6 +284,28 @@ export default function FutoukouDataPage() {
             <YearTrendChart data={noSupportTrendData} unit="%" />
             <Link href="/data/futoukou/mushien" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このグラフだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-14追加。上の「相談も指導も受けていない子どもの割合は増えている」
+              カード（現在在籍中の不登校児童生徒に関する行政統計）とは別に、不登校を
+              経験した成人（18〜59歳）への回顧調査で、当時「相談した人・機関はない」と
+              自己回答した割合を見せるカード（出典・検証経緯はlib/data/futoukouStats.ts
+              のコメント参照）。調査方法・対象は異なるが、「相談先につながれていない
+              経験」というテーマで上のカードと響き合う。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校経験者の半数超「相談先はなかった」</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              18〜59歳の不登校経験者を対象にした文部科学省の調査で、当時「相談した人・機関はない」と回答した人は、インターネット調査（n={FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.n.toLocaleString()}）で{FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.noConsultPercent}%、支援団体等の協力によるオンライン調査（n={FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.n}）で{FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.noConsultPercent}%でした。上の行政統計とは調査方法が異なりますが、どちらも「相談先につながれていない」経験の広さを示しています。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: `${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.label}（n=${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.n.toLocaleString()}）`, value: FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.noConsultPercent, unit: '%' },
+                { label: `${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.label}（n=${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.n}）`, value: FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.noConsultPercent, unit: '%' },
+              ]}
+            />
+            <Link href="/data/futoukou/sodannashi" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
             </Link>
           </div>
 
