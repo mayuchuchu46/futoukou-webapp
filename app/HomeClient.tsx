@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
@@ -15,6 +15,7 @@ import NewsTeaser from '@/components/NewsTeaser';
 import FutoukouDataTeaser from '@/components/FutoukouDataTeaser';
 import KotobaTeaser from '@/components/KotobaTeaser';
 import GohoubiTeaser from '@/components/GohoubiTeaser';
+import GohoubiFeedCard from '@/components/GohoubiFeedCard';
 import MimamoriShindanTeaser from '@/components/MimamoriShindanTeaser';
 import FeaturedGakkoRanking from '@/components/FeaturedGakkoRanking';
 import ExpertsTeaser, { ExpertProfile } from '@/components/ExpertsTeaser';
@@ -833,7 +834,19 @@ export default function HomeClient({
               {!loading && items.length === 0 && (
                 <div className="muted">{showExtras ? 'まだ相談がありません。' : '該当する相談が見つかりません。'}</div>
               )}
-              {!loading && items.slice(0, visibleCount).map((item) => <ConsultationCard key={item.id} item={item} />)}
+              {!loading &&
+                items.slice(0, visibleCount).map((item, i) => (
+                  <Fragment key={item.id}>
+                    <ConsultationCard item={item} />
+                    {/* 「TOPのフィードにもさりげなくこの投稿の回答だけのせたい」との要望
+                        （2026-11-14）。相談本体の並び替え・フィルタ・ページングには
+                        一切影響させず、デフォルト表示（カテゴリ絞り込み・検索語なし＝
+                        showExtras）の3件目の位置にだけ、最新の「親のご褒美クラブ」
+                        投稿を1件差し込む。絞り込み中は出さない（文脈と無関係な投稿が
+                        紛れ込むのを避けるため）。 */}
+                    {showExtras && i === 1 && <GohoubiFeedCard />}
+                  </Fragment>
+                ))}
               {/* AUTO_LOAD_MAXまではスクロールで自動読み込み（sentinel要素）。
                   それ以降は手動の「もっと見る」ボタンに切り替える（2026-10-18）。 */}
               {!loading && visibleCount < items.length && visibleCount < AUTO_LOAD_MAX && (
