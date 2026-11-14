@@ -12,6 +12,8 @@ type Post = { id: string; text: string; encouragement: string; created_at: strin
 // 一覧とは別枠の、見た目を合わせた軽量カードとして実装した。相談本体
 // （consultations）には一切手を加えず、/api/gohoubi-voicesの最新1件だけを
 // 表示する。投稿が無い・取得前はカード自体を出さない（空の枠を見せない）。
+// AIの労いコメント（encouragement）は「出さなくていいかも」との指摘を受けて
+// 同日中に削除し、投稿本文のみ表示する形にした。
 export default function GohoubiFeedCard() {
   const [post, setPost] = useState<Post | null>(null);
 
@@ -43,9 +45,6 @@ export default function GohoubiFeedCard() {
         <span className="muted" style={{ fontSize: 11 }}>{relativeTimeLabel(post.created_at)}</span>
       </div>
       <div className="qtext" style={{ marginTop: 6 }}>{post.text}</div>
-      {post.encouragement && (
-        <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>{post.encouragement}</div>
-      )}
     </Link>
   );
 }
