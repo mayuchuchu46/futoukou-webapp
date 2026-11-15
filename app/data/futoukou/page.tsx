@@ -24,6 +24,7 @@ import {
   FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE,
   FUTOUKOU_TAYOUKA_GAKKOU,
   FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT,
+  FUTOUKOU_ABSENCE_START_TIMING,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -305,6 +306,27 @@ export default function FutoukouDataPage() {
               ]}
             />
             <Link href="/data/futoukou/sodannashi" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-15追加。上の「相談なし」カードと同じ調査（不登校経験者等を対象と
+              する調査）から、まだカード化していない「学校を休みはじめた時期」を見せる
+              カード。新学期（4月）直後が多いというイメージに反し、実際は8〜12月が
+              最多という結果（出典・検証経緯はlib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校が始まるのは「4月」より「8〜12月」</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              不登校経験者（18〜59歳）に休みはじめた時期を聞いた同じ調査では、「8〜12月」が{FUTOUKOU_ABSENCE_START_TIMING.internet.augToDec}%で最多、「4〜7月」が{FUTOUKOU_ABSENCE_START_TIMING.internet.aprToJul}%、「1〜3月」が{FUTOUKOU_ABSENCE_START_TIMING.internet.janToMar}%でした（オンライン調査でも同じ傾向）。新学期直後に集中するイメージとは異なる結果です。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: '4〜7月', value: FUTOUKOU_ABSENCE_START_TIMING.internet.aprToJul, unit: '%' },
+                { label: '8〜12月', value: FUTOUKOU_ABSENCE_START_TIMING.internet.augToDec, unit: '%' },
+                { label: '1〜3月', value: FUTOUKOU_ABSENCE_START_TIMING.internet.janToMar, unit: '%' },
+              ]}
+            />
+            <Link href="/data/futoukou/jiki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>

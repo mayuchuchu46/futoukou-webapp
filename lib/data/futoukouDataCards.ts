@@ -26,6 +26,7 @@ import {
   FUTOUKOU_SCHOOL_SUPPORT_CENTER_RATE,
   FUTOUKOU_TAYOUKA_GAKKOU,
   FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT,
+  FUTOUKOU_ABSENCE_START_TIMING,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -357,6 +358,31 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
       stats: [
         { label: `${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.label}（n=${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.n.toLocaleString()}）`, value: FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.internet.noConsultPercent, unit: '%' },
         { label: `${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.label}（n=${FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.n}）`, value: FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT.online.noConsultPercent, unit: '%' },
+      ],
+    },
+  },
+  {
+    // 2026-11-15追加。'sodannashi'カードと同じ調査（不登校経験者等を対象とする調査）
+    // から、まだカード化していない「学校を休みはじめた時期」を取り出したカード。
+    // 新学期（4月）直後が多いというイメージに反し、実際は8〜12月が最多という結果
+    // （出典・検証経緯はfutoukouStats.tsのコメント参照）。
+    slug: 'jiki',
+    addedAt: '2026-11-15',
+    title: '不登校が始まるのは「4月」より「8〜12月」',
+    headlineValue: `${FUTOUKOU_ABSENCE_START_TIMING.internet.augToDec}%`,
+    headlineLabel: `不登校経験者が学校を休みはじめた時期のうち「8〜12月」の割合（文部科学省調査、インターネット調査n=${FUTOUKOU_ABSENCE_START_TIMING.internet.n.toLocaleString()}）`,
+    description: `小・中学校時に不登校を経験した人（18〜59歳）に、休みはじめた時期を聞いた文部科学省の調査では、「8〜12月」が${FUTOUKOU_ABSENCE_START_TIMING.internet.augToDec}%で最多、「4〜7月」が${FUTOUKOU_ABSENCE_START_TIMING.internet.aprToJul}%、「1〜3月」が${FUTOUKOU_ABSENCE_START_TIMING.internet.janToMar}%でした（オンライン調査n=${FUTOUKOU_ABSENCE_START_TIMING.online.n}でも8〜12月${FUTOUKOU_ABSENCE_START_TIMING.online.augToDec}%が最多で同じ傾向）。新学期が始まる4月前後に集中するイメージとは異なり、2学期・3学期が始まった後の時期の方が多い結果でした。`,
+    tweetText: `不登校が始まる時期は「4〜7月」ではなく「8〜12月」が最多（${FUTOUKOU_ABSENCE_START_TIMING.internet.augToDec}%）。新学期直後のイメージとは違う結果でした（文部科学省の不登校経験者調査より）。`,
+    chart: {
+      type: 'bars',
+      caption: '不登校経験者が学校を休みはじめた時期（複数回答ではなく単一回答）。',
+      stats: [
+        { label: `4〜7月（${FUTOUKOU_ABSENCE_START_TIMING.internet.label}）`, value: FUTOUKOU_ABSENCE_START_TIMING.internet.aprToJul, unit: '%' },
+        { label: `8〜12月（${FUTOUKOU_ABSENCE_START_TIMING.internet.label}）`, value: FUTOUKOU_ABSENCE_START_TIMING.internet.augToDec, unit: '%' },
+        { label: `1〜3月（${FUTOUKOU_ABSENCE_START_TIMING.internet.label}）`, value: FUTOUKOU_ABSENCE_START_TIMING.internet.janToMar, unit: '%' },
+        { label: `4〜7月（${FUTOUKOU_ABSENCE_START_TIMING.online.label}）`, value: FUTOUKOU_ABSENCE_START_TIMING.online.aprToJul, unit: '%' },
+        { label: `8〜12月（${FUTOUKOU_ABSENCE_START_TIMING.online.label}）`, value: FUTOUKOU_ABSENCE_START_TIMING.online.augToDec, unit: '%' },
+        { label: `1〜3月（${FUTOUKOU_ABSENCE_START_TIMING.online.label}）`, value: FUTOUKOU_ABSENCE_START_TIMING.online.janToMar, unit: '%' },
       ],
     },
   },
