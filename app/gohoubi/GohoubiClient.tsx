@@ -36,7 +36,7 @@ type GohoubiResult = {
   suggestions: Suggestion[];
 };
 
-export default function GohoubiClient() {
+export default function GohoubiClient({ embedded = false }: { embedded?: boolean } = {}) {
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -118,29 +118,31 @@ export default function GohoubiClient() {
 
   return (
     <>
-      <div style={{ margin: '14px 0 10px' }}>
-        <div
-          style={{
-            display: 'inline-block',
-            fontWeight: 800,
-            fontSize: 19,
-            color: '#fff',
-            background: 'var(--main)',
-            padding: '3px 12px',
-            borderRadius: 8,
-            letterSpacing: '0.02em',
-          }}
-        >
-          親のご褒美クラブ
+      {!embedded && (
+        <div style={{ margin: '14px 0 10px' }}>
+          <div
+            style={{
+              display: 'inline-block',
+              fontWeight: 800,
+              fontSize: 19,
+              color: '#fff',
+              background: 'var(--main)',
+              padding: '3px 12px',
+              borderRadius: 8,
+              letterSpacing: '0.02em',
+            }}
+          >
+            親のご褒美クラブ
+          </div>
+          <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>今日もがんばった自分に、ご褒美を</div>
+          <div className="qtext" style={{ marginTop: 8 }}>
+            今日あったこと・頑張ったことを一言書いてみてください。今のあなたに合ったご褒美を提案します。
+          </div>
+          <Link href="/gohoubi/voices" style={{ display: 'inline-block', marginTop: 8, fontSize: 12.5, color: 'var(--main)', textDecoration: 'underline' }}>
+            みんなの投稿を見る →
+          </Link>
         </div>
-        <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>今日もがんばった自分に、ご褒美を</div>
-        <div className="qtext" style={{ marginTop: 8 }}>
-          今日あったこと・頑張ったことを一言書いてみてください。今のあなたに合ったご褒美を提案します。
-        </div>
-        <Link href="/gohoubi/voices" style={{ display: 'inline-block', marginTop: 8, fontSize: 12.5, color: 'var(--main)', textDecoration: 'underline' }}>
-          みんなの投稿を見る →
-        </Link>
-      </div>
+      )}
 
       {triedItem && triedItem.status === 'pending' && (
         <div className="card" style={{ alignItems: 'flex-start', gap: 8, marginBottom: 10, border: '2px dashed var(--main)' }}>

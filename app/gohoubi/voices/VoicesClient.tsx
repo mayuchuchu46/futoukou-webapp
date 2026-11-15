@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { relativeTimeLabel } from '@/lib/relativeTime';
 import ReportButton from '@/components/ReportButton';
 import ReactionIcons from '@/components/ReactionIcons';
 import { GOHOUBI_REACTION_TYPES } from '@/lib/gohoubiReactions';
+import GohoubiClient from '@/app/gohoubi/GohoubiClient';
 
 type Suggestion = { title: string; category: string; reason: string };
 type Post = {
@@ -55,9 +55,9 @@ export default function VoicesClient() {
         </div>
       </div>
 
-      <Link href="/gohoubi" className="btn-primary" style={{ display: 'block', textAlign: 'center', textDecoration: 'none', marginBottom: 14 }}>
-        自分にもご褒美を提案してもらう
-      </Link>
+      <div style={{ marginBottom: 14 }}>
+        <GohoubiClient embedded />
+      </div>
 
       {error && <div style={{ color: 'var(--seal-text)', fontSize: 13 }}>{error}</div>}
       {posts === null && !error && <div className="muted" style={{ fontSize: 13 }}>読み込み中…</div>}
