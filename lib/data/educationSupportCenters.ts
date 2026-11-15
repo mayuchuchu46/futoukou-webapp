@@ -279,7 +279,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '048-688-1414',
     sourceUrl: 'https://www.pref.saitama.lg.jp/documents/180350/r8itirann.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: 'さいたま市内6か所の教育支援センターの一つ（堀崎教育相談室）。学校に通うことが難しい市内在住の小中学生を対象に、学習の場の確保と体験活動を通じた社会性育成を目的とする。午前中は個別学習、ほかに芸術活動・協働的な活動、生活リズム改善のためのバドミントンや卓球などの運動を行う。利用は申込後、見学・体験（30分〜1時間程度）を経て入室する。',
   },
   {
     no: 24,
@@ -290,7 +290,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '048-711-5433',
     sourceUrl: 'https://www.pref.saitama.lg.jp/documents/180350/r8itirann.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: 'さいたま市内6か所の教育支援センターの一つ（あいぱれっと教育相談室）。学校に通うことが難しい市内在住の小中学生を対象に、学習の場の確保と体験活動を通じた社会性育成を目的とする。午前中は個別学習、ほかに芸術活動・協働的な活動、生活リズム改善のためのバドミントンや卓球などの運動を行う。利用は申込後、見学・体験（30分〜1時間程度）を経て入室する。',
   },
   {
     no: 25,
@@ -301,7 +301,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '048-838-8686',
     sourceUrl: 'https://www.pref.saitama.lg.jp/documents/180350/r8itirann.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: 'さいたま市内6か所の教育支援センターの一つ（岸町教育相談室）。学校に通うことが難しい市内在住の小中学生を対象に、学習の場の確保と体験活動を通じた社会性育成を目的とする。午前中は個別学習、ほかに芸術活動・協働的な活動、生活リズム改善のためのバドミントンや卓球などの運動を行う。利用は申込後、見学・体験（30分〜1時間程度）を経て入室する。',
   },
   {
     no: 26,
@@ -312,7 +312,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '048-711-7215',
     sourceUrl: 'https://www.pref.saitama.lg.jp/documents/180350/r8itirann.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: 'さいたま市内6か所の教育支援センターの一つ（美園教育相談室）。学校に通うことが難しい市内在住の小中学生を対象に、学習の場の確保と体験活動を通じた社会性育成を目的とする。午前中は個別学習、ほかに芸術活動・協働的な活動、生活リズム改善のためのバドミントンや卓球などの運動を行う。利用は申込後、見学・体験（30分〜1時間程度）を経て入室する。',
   },
   {
     no: 27,
@@ -323,7 +323,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '048-790-0227',
     sourceUrl: 'https://www.pref.saitama.lg.jp/documents/180350/r8itirann.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: 'さいたま市内6か所の教育支援センターの一つ（岩槻教育相談室）。学校に通うことが難しい市内在住の小中学生を対象に、学習の場の確保と体験活動を通じた社会性育成を目的とする。午前中は個別学習、ほかに芸術活動・協働的な活動、生活リズム改善のためのバドミントンや卓球などの運動を行う。利用は申込後、見学・体験（30分〜1時間程度）を経て入室する。',
   },
   {
     no: 28,
