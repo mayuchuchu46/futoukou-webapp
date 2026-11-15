@@ -2305,7 +2305,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 208,
@@ -2316,7 +2316,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 209,
@@ -2327,7 +2327,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 210,
@@ -2338,7 +2338,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 211,
@@ -2349,7 +2349,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 212,
@@ -2360,7 +2360,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 213,
@@ -2371,7 +2371,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 214,
@@ -2382,7 +2382,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 215,
@@ -2393,7 +2393,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 216,
@@ -2404,7 +2404,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '浜松市教育委員会が開設している、不登校児童生徒のための学校外の居場所「校外まなびの教室」の一つ（市内に11教室開設）。利用料は無料で、個々に応じた学習や生活面の支援・相談を行う。自宅にいる子ども向けのオンライン交流「お家de交流まなびの窓」とも連携している。',
   },
   {
     no: 217,
@@ -2415,7 +2415,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '静岡市が設置する教育支援センターの一つ。不登校傾向にある児童生徒や、学習面・生活面で不安を抱える児童生徒を対象に、社会的自立に向けた支援を行う。静岡市内には「ふれあい教室」「かがやく教室」「はばたく教室」の3教室がある。',
   },
   {
     no: 218,
@@ -2426,7 +2426,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '静岡市が設置する教育支援センターの一つ。不登校傾向にある児童生徒や、学習面・生活面で不安を抱える児童生徒を対象に、社会的自立に向けた支援を行う。静岡市内には「ふれあい教室」「かがやく教室」「はばたく教室」の3教室がある。',
   },
   {
     no: 219,
@@ -2437,7 +2437,7 @@ export const EDUCATION_SUPPORT_CENTERS: EducationSupportCenter[] = [
     contact: '記載なし',
     sourceUrl: 'https://www.pref.shizuoka.jp/_res/projects/default_project/_page_/001/048/669/center061113.pdf',
     asOf: '2026-10-18',
-    note: '',
+    note: '静岡市が設置する教育支援センターの一つ。不登校傾向にある児童生徒や、学習面・生活面で不安を抱える児童生徒を対象に、社会的自立に向けた支援を行う。静岡市内には「ふれあい教室」「かがやく教室」「はばたく教室」の3教室がある。',
   },
   {
     no: 220,
