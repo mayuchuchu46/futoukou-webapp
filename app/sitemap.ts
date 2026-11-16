@@ -202,10 +202,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // 定時制高校紹介ページ（/gakko/teiji/[no]）。app/gakko/teiji/[no]/page.tsxの
-  // hasEnoughInfoと同じ条件（municipalityまたはofficialUrlが確認できている学校のみ
-  // index対象）に合わせる（2026-10-29追加）。
+  // hasEnoughInfoと同じ条件に合わせる（2026-10-29追加、2026-11-16に条件を強化。
+  // 526校を10/27〜10/30の短期間で一気に追加した結果、noteが「普通科」「定時制課程は
+  // 普通科」等の極めて短い定型文のみの重複コンテンツが過半数を占めており（25文字未満の
+  // noteが291件）、Search Consoleでクロールリクエスト数の急減・表示回数の急落が発生。
+  // 薄い重複ページの母数を減らしクロール予算を内容のあるページに集中させるため、
+  // municipality/officialUrlに加えてnoteが一定の長さ（25文字）以上あることを
+  // index対象の条件に追加した）。
+  const TEIJI_MIN_NOTE_LENGTH = 25;
   const teijiSchoolEntries: MetadataRoute.Sitemap = teijiseiHighSchools.filter(
-    (s) => s.municipality || s.officialUrl
+    (s) => (s.municipality || s.officialUrl) && (s.note?.length ?? 0) >= TEIJI_MIN_NOTE_LENGTH
   ).map((s) => ({
     url: `${SITE_URL}/gakko/teiji/${s.no}`,
     changeFrequency: 'monthly',
