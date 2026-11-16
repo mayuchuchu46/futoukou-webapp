@@ -49,7 +49,18 @@ export async function generateMetadata({
   const baseDescription = `${school.prefecture}${school.municipality || ''}にある定時制高校「${school.name}」の情報です。`;
   const description = school.note ? `${baseDescription}${school.note}` : baseDescription;
   const url = `${SITE_URL}/gakko/teiji/${school.no}`;
-  const hasEnoughInfo = !!(school.municipality || school.officialUrl);
+  // 2026-11-16：526校を10/27〜10/30の短期間で一気に追加した結果、noteが「普通科」
+  // 「定時制課程は普通科」等、他校と文言が完全一致する極めて短い定型文のみのページが
+  // 過半数を占めていることが判明（25文字未満のnoteが291/526校）。Search Consoleで
+  // クロールリクエスト数の急減・表示回数の急落（futoukou-seo-drop-2026-11.md参照）が
+  // 発生しており、薄い重複コンテンツの母数を減らしクロール予算を内容のあるページに
+  // 集中させるため、municipality/officialUrlに加えてnoteの最低文字数も条件に加えた。
+  // app/sitemap.tsのteijiSchoolEntriesフィルターと同じ条件に揃える。
+  const TEIJI_MIN_NOTE_LENGTH = 25;
+  const hasEnoughInfo = !!(
+    (school.municipality || school.officialUrl) &&
+    (school.note?.length ?? 0) >= TEIJI_MIN_NOTE_LENGTH
+  );
 
   return {
     title,
