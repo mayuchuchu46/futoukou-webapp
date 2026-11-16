@@ -25,6 +25,7 @@ import {
   FUTOUKOU_TAYOUKA_GAKKOU,
   FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT,
   FUTOUKOU_ABSENCE_START_TIMING,
+  FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -285,6 +286,26 @@ export default function FutoukouDataPage() {
             <YearTrendChart data={noSupportTrendData} unit="%" />
             <Link href="/data/futoukou/mushien" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このグラフだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-16追加。上の「相談も指導も受けていない子どもの割合は増えている」
+              カードの"その後"を掘り下げるカード。専門的な相談・指導は受けていなくても、
+              担任等からは週1回程度以上の継続的な関わりを受けている人が多いことを見せる
+              （出典・検証経緯はlib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>相談なしでも、担任からの関わりは89%に</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              {FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].label}、専門的な相談・指導等を受けていない不登校児童生徒{FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].noProfessionalSupport.toLocaleString()}人のうち、{FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].teacherContact.toLocaleString()}人（{FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].teacherContactPercent.toFixed(1)}%）は担任等の教職員から週1回程度以上の継続的な関わりを受けていました（前年度も{FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[0].teacherContactPercent.toFixed(1)}%で同程度）。「専門的な相談・指導なし」は「誰からも一切関わりがない」という意味ではありません。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[0].label, value: FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[0].teacherContactPercent, unit: '%' },
+                { label: FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].label, value: FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].teacherContactPercent, unit: '%' },
+              ]}
+            />
+            <Link href="/data/futoukou/tanninkanyo" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
             </Link>
           </div>
 

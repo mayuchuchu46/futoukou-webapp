@@ -27,6 +27,7 @@ import {
   FUTOUKOU_TAYOUKA_GAKKOU,
   FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT,
   FUTOUKOU_ABSENCE_START_TIMING,
+  FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -383,6 +384,28 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         { label: `4〜7月（${FUTOUKOU_ABSENCE_START_TIMING.online.label}）`, value: FUTOUKOU_ABSENCE_START_TIMING.online.aprToJul, unit: '%' },
         { label: `8〜12月（${FUTOUKOU_ABSENCE_START_TIMING.online.label}）`, value: FUTOUKOU_ABSENCE_START_TIMING.online.augToDec, unit: '%' },
         { label: `1〜3月（${FUTOUKOU_ABSENCE_START_TIMING.online.label}）`, value: FUTOUKOU_ABSENCE_START_TIMING.online.janToMar, unit: '%' },
+      ],
+    },
+  },
+  {
+    // 2026-11-16追加。「相談も指導も受けていない子どもの割合は増えている」('mushien'
+    // カード)の"その後"を掘り下げるカード。専門的な相談・指導（スクールカウンセラーや
+    // 教育支援センター等）は受けていなくても、担任等からは週1回程度以上の継続的な
+    // 関わりを受けている人が多いことを見せる（出典・検証経緯はfutoukouStats.tsの
+    // コメント参照）。
+    slug: 'tanninkanyo',
+    addedAt: '2026-11-16',
+    title: '相談なしでも、担任からの関わりは89%に',
+    headlineValue: `${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].teacherContactPercent.toFixed(1)}%`,
+    headlineLabel: `学校内外で専門的な相談・指導等を受けていない不登校児童生徒のうち、担任等から週1回程度以上の継続的な関わりを受けていた割合（${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].label}）`,
+    description: `${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].label}、学校内外のどこからも専門的な相談・指導等を受けていない不登校児童生徒${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].noProfessionalSupport.toLocaleString()}人のうち、${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].teacherContact.toLocaleString()}人（${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].teacherContactPercent.toFixed(1)}%）は担任等の教職員から週1回程度以上の継続的な関わりを受けていました（前年度も${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[0].teacherContactPercent.toFixed(1)}%で同程度）。「専門的な相談・指導なし」＝「誰からも一切関わりがない」ではない点に注意が必要です。`,
+    tweetText: `専門的な相談・指導を受けていない不登校児童生徒（${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].noProfessionalSupport.toLocaleString()}人）のうち、${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].teacherContactPercent.toFixed(1)}%は担任等から週1回程度以上の関わりを受けています。「相談なし」は「関わりゼロ」ではありません。`,
+    chart: {
+      type: 'bars',
+      caption: '学校内外で専門的な相談・指導等を受けていない児童生徒のうち、担任等から週1回程度以上の継続的な関わりを受けていた割合。',
+      stats: [
+        { label: `${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[0].label}`, value: FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[0].teacherContactPercent, unit: '%' },
+        { label: `${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].label}`, value: FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].teacherContactPercent, unit: '%' },
       ],
     },
   },
