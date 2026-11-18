@@ -32,6 +32,7 @@ import { SEARCH_TAG_CANDIDATES, matchesThemeText, getThemeDisplayLabel } from '@
 import { findMentionedSchool } from '@/lib/schoolFacts';
 import { findMentionedFreeSchool, findMentionedCorrespondenceSchool, findMentionedOnlineFreeSchool } from '@/lib/facilityLinkMatch';
 import { stripSchoolAskBoilerplate } from '@/lib/schoolAskPrefill';
+import { shouldShowClinicSuggestion } from '@/lib/clinicSuggestion';
 
 // データベースの最新状態を毎回サーバー側で取得して表示するページなので、
 // ビルド時の静的化（prerender）はせず、リクエストごとに生成する。
@@ -407,6 +408,24 @@ export default async function ResultPage({
     </Link>
   );
 
+  // AIの回答（または相談文）に小児科・心療内科・児童精神科等、医療機関への受診を
+  // 示唆する語が出てきた場合、/supportの「思春期外来（児童精神科など）」セクションへの
+  // 案内カードを出す（2026-11-19追加、「こういう回答後に、思春期外来とかの情報出して
+  // あげれたらいいな」との指摘を受けて）。判定ロジックはlib/clinicSuggestion.ts参照。
+  // 現時点でリストが東京都・大阪府の一部しかカバーできていないため、カード文言でも
+  // その限定を正直に明記する。
+  const clinicBlock = shouldShowClinicSuggestion([item.question, answerTextForJsonLd]) && (
+    <Link href="/support#adolescent-clinic" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+      <div className="answer-label" style={{ fontSize: 14 }}>🏥 思春期外来（児童精神科など）を探す</div>
+      <div className="qtext">
+        思春期のお子さんのこころの不調を専門にみている医療機関の情報です（現時点では東京都・大阪府の一部のみ掲載。順次拡充予定）。
+      </div>
+      <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
+        相談窓口一覧を見る ›
+      </div>
+    </Link>
+  );
+
   // 上と同じ考え方を、フリースクール一覧（freeSchools.ts）・通信制高校一覧
   // （correspondenceHighSchools.ts）にも広げたもの（2026-10-21追加）。きっかけ：
   // 「学校法人角川ドワンゴ学園N中等部秋葉原キャンパスについて相談したいです」という
@@ -705,6 +724,8 @@ export default async function ResultPage({
         )}
 
         {!isCrisis && (anySchoolDetailBlock || gakkoBlock)}
+
+        {!isCrisis && clinicBlock}
 
         {isCrisis ? (
           // 希死念慮・自傷等の安全上書きが発動した相談専用の案内カード。以前は回答カード下の
