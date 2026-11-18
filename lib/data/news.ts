@@ -70,6 +70,20 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'yokohama-metaverse-futoko-manabi-ibasho-2026-11',
+    date: '2026-11-19',
+    addedAt: '2026-11-19',
+    title:
+      '横浜市、メタバースを使った不登校児童生徒向けの「学び」「居場所」提供を開始――週3日開室、横浜ビー・コルセアーズとの交流プログラムも',
+    summary:
+      '横浜市教育委員会は、市内在住で不登校や学校に行きにくさを感じている小中学生を対象に、仮想空間（メタバース）を使って自宅から学びや居場所につながれる事業を10月20日から始めました。横浜市立大学が導入しているメタバース空間を使い、火・水・木曜の週3日開室し、朝のホームルームや自学自習に参加できるほか、プロバスケットボールチーム「横浜ビー・コルセアーズ」の選手らとの交流プログラムも行われます。参加は自由で、同時接続は50人まで、登録の上限は200人としており、2027年3月末までの実施を予定しています。',
+    sourceName: 'タウンニュース',
+    sourceUrl: 'https://www.townnews.co.jp/0110/2026/11/19/862435.html',
+    category: 'local',
+    headline: { value: '200人', label: '横浜市のメタバース不登校支援、登録の上限は200人' },
+    relatedMunicipality: { prefecture: '神奈川県', city: '横浜市' },
+  },
+  {
     id: 'keydesign-haha-rishoku-30bai-chosa-2026-11',
     date: '2026-11-17',
     addedAt: '2026-11-17',
