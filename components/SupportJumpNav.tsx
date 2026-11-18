@@ -13,10 +13,12 @@ export default function SupportJumpNav() {
   const items: { id: string; label: string }[] = [
     { id: 'ask-dosuru', label: '💬 相談する' },
     { id: 'child', label: '🧒 子ども本人' },
+    { id: 'online-sns', label: '📱 LINE・SNS相談' },
     { id: 'school-life', label: '🏫 学校生活' },
     { id: 'prefecture', label: '📍 都道府県別' },
     { id: 'adolescent-clinic', label: '🏥 思春期外来' },
     { id: 'development-test', label: '🧩 発達検査' },
+    { id: 'parent-group', label: '👥 保護者会・親の会' },
     { id: 'attendance-system', label: '📚 出席扱い制度' },
     { id: 'materials', label: '✏️ 教材・サービス' },
   ];

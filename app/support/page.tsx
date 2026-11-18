@@ -135,6 +135,71 @@ export default function SupportPage() {
           </div>
         </div>
 
+        {/* オンライン・SNS相談窓口（2026-11-19追加）。「もっと情報ふやせられない？」
+            への対応として行った調査で、電話が苦手な人向けにLINE等のチャットで相談
+            できる公的・準公的な窓口をまとめてほしいという判断から追加。いずれも
+            厚労省・こども家庭庁・法務省の公式資料、または自治体の公式ページで
+            運営主体・受付時間・連絡先を確認できたものだけを掲載している。 */}
+        <div id="online-sns" className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>📱 LINE・SNSで相談したいとき</div>
+          <div className="qtext">
+            電話が苦手なときや、声を出しづらい時間帯でも、LINE・チャットで相談できる窓口です。匿名で利用できるものが多くあります。
+          </div>
+          <div>
+            <div style={{ fontWeight: 700 }}>親子のための相談LINE（こども家庭庁）</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              LINEで「親子のための相談LINE」を検索し、友だち追加。子育て・親子関係の悩みを相談できます。
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              対象：18歳未満の子どもとその保護者（全国共通アカウント）／受付時間は自治体により多少異なりますが、平日9:00〜23:00（受付22:30まで）、土日祝9:00〜17:00が目安です。
+            </div>
+          </div>
+          <div>
+            <div style={{ fontWeight: 700 }}>あなたのいばしょチャット相談</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              <a href="https://talkme.jp/" target="_blank" rel="noopener noreferrer">talkme.jp</a>
+              　24時間365日、年齢・性別を問わず無料・匿名で利用できるチャット相談窓口です。
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              厚生労働省の事業の一つ。NPO法人あなたのいばしょが運営しています。
+            </div>
+          </div>
+          <div>
+            <div style={{ fontWeight: 700 }}>こころのほっとチャット（東京メンタルヘルス・スクエア）</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              LINEで「こころのほっとチャット」（ID検索：@kokorohotchat）を友だち追加するか、
+              {' '}<a href="https://www.npo-tms.or.jp/service/sns.html" target="_blank" rel="noopener noreferrer">ウェブチャット</a>
+              で相談できます。
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              毎日7:00〜23:50（受付は23:00まで）。年齢・性別を問わず無料・匿名・予約不要。
+            </div>
+          </div>
+          <div>
+            <div style={{ fontWeight: 700 }}>生きづらびっと（自殺対策支援センターライフリンク）</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              LINEで「生きづらびっと」（ID検索：@yorisoi-chat）を友だち追加するか、
+              {' '}<a href="https://yorisoi-chat.jp/" target="_blank" rel="noopener noreferrer">yorisoi-chat.jp</a>
+              のWebフォームから相談できます。
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              月・金6:00〜22:30、日・火・水・木・土8:00〜22:30（受付は22:00まで）。
+            </div>
+          </div>
+          <div>
+            <div style={{ fontWeight: 700 }}>法務局LINEじんけん相談（法務省）</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              LINEで「法務局LINEじんけん相談」（ID検索：@linejinkensoudan）を友だち追加。いじめや暴言・暴力など、人権に関わる悩みを相談できます。
+            </div>
+            <div className="muted" style={{ fontSize: 12 }}>
+              平日8:30〜17:15。
+            </div>
+          </div>
+          <div className="muted" style={{ fontSize: 11 }}>
+            出典：厚生労働省公式サイト（mhlw.go.jp「SNS相談」ページ）、こども家庭庁・東京都福祉局公式資料、文部科学省公式サイト、法務省公式サイト（moj.go.jp）（2026年11月時点）。受付時間は変更される場合があるため、最新情報は各窓口の公式サイトでご確認ください。
+          </div>
+        </div>
+
         {/* 都道府県別の自治体相談窓口案内（2026-11-08追加）。claude/futoukou-event-links-research.md
             の調査結果（2026-11-02時点、47都道府県中27件でURL確認済み）をもとにしている。
             未確認の20都道府県は、市区町村の教育委員会への問い合わせを促す汎用案内にしている。 */}
@@ -222,7 +287,7 @@ export default function SupportPage() {
             </div>
           ))}
           <div className="muted" style={{ fontSize: 12 }}>
-            公式サイト等で確認できた医療機関のみを掲載した小規模な試験的リストです（現在は東京都・大阪府のみ）。他地域・他施設への拡充は今後検討します。掲載内容は変更される場合があるため、受診前に必ず各医療機関の公式サイト等でご確認ください。
+            公式サイト等で確認できた医療機関のみを掲載した小規模な試験的リストです（現在は東京都・大阪府・神奈川県の一部のみ）。他地域・他施設への拡充は今後検討します。掲載内容は変更される場合があるため、受診前に必ず各医療機関の公式サイト等でご確認ください。
           </div>
         </div>
 
@@ -254,6 +319,49 @@ export default function SupportPage() {
           </div>
           <div className="muted" style={{ fontSize: 12 }}>
             出典：東京都福祉局公式サイト（fukushi.metro.tokyo.lg.jp）、港区公式サイト掲載情報（2026年11月時点）。TOSCAは相談・情報提供の窓口であり、発達検査そのものを実施する機関ではない場合があります。検査の実施場所については窓口にご相談ください。
+          </div>
+        </div>
+
+        {/* 保護者会・親の会（2026-11-19追加）。「もっと情報ふやせられない？」への対応の
+            一環。不登校の親の会は全国に数多くあるが、連絡先・開催日時が独立して確認
+            できる情報源は少ない。ここでは自治体の公式資料・NPO支援団体名簿で運営主体・
+            開催頻度・連絡先を確認できた候補のみを、精度が限定的であることを明記した
+            うえで掲載する（思春期外来と同じ「公式ソースのみ掲載」の方針を踏襲）。 */}
+        <div id="parent-group" className="card" style={{ alignItems: 'flex-start', gap: 8 }}>
+          <div className="answer-label" style={{ fontSize: 14 }}>👥 保護者会・親の会</div>
+          <div className="qtext">
+            同じ立場の保護者同士で話せる交流の場です。お住まいの地域に無い場合も多いため、まずは自治体の教育委員会や社会福祉協議会に「不登校の親の会」の情報が無いか確認するのもおすすめです。
+          </div>
+          <div style={{ width: '100%' }}>
+            <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 8, width: '100%' }}>
+              <li style={{ background: 'var(--sub)', borderRadius: 10, padding: '10px 12px' }}>
+                <div style={{ fontWeight: 700 }}>不登校・引きこもり親の会（埼玉県北本市）</div>
+                <div className="qtext" style={{ fontSize: 13 }}>
+                  北本市地域活動支援センター「かばざくら」で、年4回（土曜13:00〜16:00、出入り自由）開催。参加費無料。北本市参加支援事業の委託事業者であるNPO北本福祉の会かがやきの郷が運営。
+                </div>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  対象：北本市在住・在勤で、不登校・ひきこもり状態の子どもがいる保護者／電話：048-594-5517
+                </div>
+                <div className="muted" style={{ fontSize: 11 }}>
+                  出典：北本市公式サイト掲載のチラシPDF（city.kitamoto.lg.jp、2026年度版で確認）。
+                </div>
+              </li>
+              <li style={{ background: 'var(--sub)', borderRadius: 10, padding: '10px 12px' }}>
+                <div style={{ fontWeight: 700 }}>親の会「うてなの会」（NPO法人子どもと共に歩むフリースペースたんぽぽ／横浜市鶴見区）</div>
+                <div className="qtext" style={{ fontSize: 13 }}>
+                  2008年設立。不登校の子どもの居場所「フリースペースたんぽぽ」を中心に、親の会（うてなの会）を基本第3土曜日に開催（小学生向けの会は基本第4日曜日）。
+                </div>
+                <div className="muted" style={{ fontSize: 12 }}>
+                  対象：主に学齢期（小学生〜大学生）で不登校の子どもの保護者／電話相談：045-834-7970（月・火・木・金 10:30〜17:00）
+                </div>
+                <div className="muted" style={{ fontSize: 11 }}>
+                  出典：横浜市公式サイト・神奈川県公式サイト掲載の支援団体紹介ページ（city.yokohama.lg.jp、pref.kanagawa.jp、2026年時点）。
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div className="muted" style={{ fontSize: 12 }}>
+            開催日時・会費・対象地域は団体の都合で変更されることがあります。参加前に、各団体・自治体の公式サイトや電話で最新情報をご確認ください。全国の親の会情報は、お住まいの都道府県・市区町村の教育委員会のサイトにも掲載されている場合があります。
           </div>
         </div>
 

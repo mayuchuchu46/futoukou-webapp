@@ -412,13 +412,13 @@ export default async function ResultPage({
   // 示唆する語が出てきた場合、/supportの「思春期外来（児童精神科など）」セクションへの
   // 案内カードを出す（2026-11-19追加、「こういう回答後に、思春期外来とかの情報出して
   // あげれたらいいな」との指摘を受けて）。判定ロジックはlib/clinicSuggestion.ts参照。
-  // 現時点でリストが東京都・大阪府の一部しかカバーできていないため、カード文言でも
-  // その限定を正直に明記する。
+  // 現時点でリストが東京都・大阪府・神奈川県の一部しかカバーできていないため、
+  // カード文言でもその限定を正直に明記する。
   const clinicBlock = shouldShowClinicSuggestion([item.question, answerTextForJsonLd]) && (
     <Link href="/support#adolescent-clinic" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
       <div className="answer-label" style={{ fontSize: 14 }}>🏥 思春期外来（児童精神科など）を探す</div>
       <div className="qtext">
-        思春期のお子さんのこころの不調を専門にみている医療機関の情報です（現時点では東京都・大阪府の一部のみ掲載。順次拡充予定）。
+        思春期のお子さんのこころの不調を専門にみている医療機関の情報です（現時点では東京都・大阪府・神奈川県の一部のみ掲載。順次拡充予定）。
       </div>
       <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
         相談窓口一覧を見る ›
