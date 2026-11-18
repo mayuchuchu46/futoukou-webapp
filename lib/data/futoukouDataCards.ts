@@ -28,6 +28,7 @@ import {
   FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT,
   FUTOUKOU_ABSENCE_START_TIMING,
   FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT,
+  FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -406,6 +407,28 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
       stats: [
         { label: `${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[0].label}`, value: FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[0].teacherContactPercent, unit: '%' },
         { label: `${FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].label}`, value: FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT[1].teacherContactPercent, unit: '%' },
+      ],
+    },
+  },
+  {
+    // 2026-11-18追加。「校内の居場所」設置率（'kounaishien'カード）を支える「支援員」
+    // 配置事業の予算額そのものが、R7予算4億円→R8予算9億円と1年で2倍以上に増え、
+    // R9概算要求ではさらに19億円まで要求されていることを見せるカード（出典・検証経緯は
+    // futoukouStats.tsのコメント参照）。R9は概算要求（未確定）であることを明記する。
+    slug: 'shienin',
+    addedAt: '2026-11-18',
+    title: '校内の居場所、支援員の予算が2年で2倍超に',
+    headlineValue: `${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.budgetOku}億円`,
+    headlineLabel: `「校内教育支援センター支援員の配置事業」予算（${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.label}、前年度の${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.budgetOku}億円から倍以上に増加）`,
+    description: `不登校（傾向）の児童生徒が校内で落ち着いて過ごせる「校内教育支援センター」（設置率58.7%、kounaishienカード参照）に支援員を配置するための国の補助事業の予算は、${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.label}の${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.budgetOku}億円から、${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.label}には${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.budgetOku}億円まで増えました。さらに${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.label}では${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.budgetOku}億円が要求されています（対象校数も${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.targetSchools.toLocaleString()}校から${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.targetSchools.toLocaleString()}校へ拡大予定）。令和9年度分は概算要求であり、今後の予算編成で変動する可能性があります。`,
+    tweetText: `不登校の子が校内で過ごせる居場所に支援員を配置する事業の予算は、${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.label}${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.budgetOku}億円→${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.label}${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.budgetOku}億円と2倍超に。来年度の概算要求ではさらに${FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.budgetOku}億円を要求中です。`,
+    chart: {
+      type: 'bars',
+      caption: '「校内教育支援センター支援員の配置事業」予算額の推移。令和9年度は概算要求（未確定）。',
+      stats: [
+        { label: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.label, value: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.budgetOku, unit: '億円' },
+        { label: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.label, value: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.budgetOku, unit: '億円' },
+        { label: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.label, value: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.budgetOku, unit: '億円' },
       ],
     },
   },

@@ -26,6 +26,7 @@ import {
   FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT,
   FUTOUKOU_ABSENCE_START_TIMING,
   FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT,
+  FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -419,6 +420,30 @@ export default function FutoukouDataPage() {
               ※この按分計算は文部科学省の公式見解ではなく、どうする先生が一次資料をもとに独自に試算したものです。
             </div>
             <Link href="/data/futoukou/yosan" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* ④ お金の話：校内教育支援センター支援員の配置事業の予算推移（2026-11-18追加）。
+              「校内の居場所」設置率（'kounaishien'カード）を支える支援員配置の予算が
+              1年で2倍以上に増えていることを見せるカード（出典・検証経緯は
+              lib/data/futoukouStats.tsのコメント参照）。令和9年度分は概算要求（未確定）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>「校内の居場所」の支援員予算、1年で2倍超に</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              校内教育支援センターに支援員を配置する国の補助事業の予算は、{FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.label}の{FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.budgetOku}億円から{FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.label}には{FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.budgetOku}億円まで増加。{FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.label}の概算要求ではさらに{FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.budgetOku}億円が要求されています。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.label, value: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.budgetOku, unit: '億円' },
+                { label: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.label, value: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.budgetOku, unit: '億円' },
+                { label: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.label, value: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.budgetOku, unit: '億円' },
+              ]}
+            />
+            <div className="muted" style={{ fontSize: 11 }}>
+              ※令和9年度分は概算要求額であり、確定額ではありません（今後変動する可能性があります）。
+            </div>
+            <Link href="/data/futoukou/shienin" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>
