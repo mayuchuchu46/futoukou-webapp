@@ -931,8 +931,14 @@ h2.pagetitle {
   .home-main-col .home-gakko-link {
     display: none !important;
   }
-  .home-main-col .viewtabs { order: 5; }
-  .home-main-col .home-list { order: 6; }
+  /* .viewtabsと.home-listは、タブ＋一覧を1枚のカードに見せる.viewtabs-card
+     （2026-11追加）でラップされて以降、.home-main-colの直接の子ではなくなった。
+     flexのorderは直接の子にしか効かないため、この2つへの指定は無効になっており、
+     結果としてorder未指定（＝0扱い）の.viewtabs-cardが検索・ランキングより前
+     （画面最上部寄り）に出てしまっていた（「PCでランキング表示がなくなってる」
+     との指摘で発覚。実際には一覧の下、カテゴリ件数テキストの手前という
+     大きくずれた位置に表示されていた）。ラッパー自身にorder:5を指定するよう修正。 */
+  .home-main-col .viewtabs-card { order: 5; }
   /* タグ一覧はPCではサイド側（.pc-sidebar内）に出すので、
      一覧内に残っているモバイル用の方は隠す。 */
   .home-tags-mobile { display: none; }
