@@ -13,6 +13,10 @@ import { getFutoukouDataCard, type FutoukouDataCard } from '@/lib/data/futoukouD
 // "比較"のインパクトが伝わらないため、カードのchartデータ（bars/trend/ranking）を
 // 画像内に簡易グラフとして描画するように変更。見出し数字はやや小さくして上部に残し、
 // その下にグラフを置く2段構成にした。
+// 2026-11-19改修：「療育のミカタ」さん（@ryoiku_mikata）のX投稿にあった、項目と数値を
+// 並べた表組み画像（ヘッダー行＋縞模様の行、インパクトのある数値を強調表示）のイメージが
+// 良いとのフィードバックを受け、棒グラフ／縦棒グラフ描画をやめて、全カード共通で
+// 「ヘッダー行＋データ行」の表組みレイアウトに変更した。
 // ランキング・要因別など項目数が多いchartは、画像内では見やすさを優先して上位6件までに
 // 絞って表示する（全件は本文ページ側で見てもらう設計）。
 
@@ -58,6 +62,24 @@ function normalizeChartItems(chart: FutoukouDataCard['chart']): { items: ChartIt
 
 function formatChartValue(v: number, unit: string): string {
   return `${v.toLocaleString()}${unit}`;
+}
+
+// 表の右列ヘッダーに出す見出し（データの単位から判断）。
+function unitColumnHeader(unit: string | undefined): string {
+  switch (unit) {
+    case '人':
+      return '人数';
+    case '%':
+      return '割合';
+    case '億円':
+      return '金額';
+    case '件':
+      return '件数';
+    case '校':
+      return '校数';
+    default:
+      return unit || '数値';
+  }
 }
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
@@ -120,53 +142,84 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           </div>
         </div>
 
-        {/* グラフ本体（bars: 横棒／trend: 縦棒） */}
-        <div style={{ display: 'flex', flex: 1, marginTop: 14, marginBottom: 8 }}>
-          {items.length === 0 ? null : kind === 'trend' ? (
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 18, width: '100%', paddingBottom: 6 }}>
-              {items.map((it, idx) => (
-                <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, gap: 8 }}>
-                  <div style={{ display: 'flex', fontSize: 18, fontWeight: 700, color: '#2B2B28' }}>
-                    {formatChartValue(it.value, it.unit)}
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      width: '62%',
-                      height: `${Math.max(12, (it.value / maxValue) * 220)}px`,
-                      background: idx === items.length - 1 ? '#3D7E65' : '#A9C9BD',
-                      borderRadius: '6px 6px 0 0',
-                    }}
-                  />
-                  <div style={{ display: 'flex', fontSize: 17, color: '#7A7566' }}>{it.label}</div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 12 }}>
-              {items.map((it, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 14, width: '100%' }}>
-                  <div style={{ display: 'flex', width: 300, fontSize: 19, color: '#2B2B28', fontWeight: 700 }}>
-                    {it.label.length > 16 ? `${it.label.slice(0, 16)}…` : it.label}
-                  </div>
-                  <div style={{ display: 'flex', flex: 1, height: 26, background: '#EDE8DA', borderRadius: 6 }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        width: `${Math.max(4, (it.value / maxValue) * 100)}%`,
-                        height: '100%',
-                        background: '#3D7E65',
-                        borderRadius: 6,
-                      }}
-                    />
-                  </div>
-                  <div style={{ display: 'flex', width: 130, fontSize: 19, fontWeight: 700, color: '#3D7E65', justifyContent: 'flex-end' }}>
-                    {formatChartValue(it.value, it.unit)}
-                  </div>
-                </div>
-              ))}
+        {/* 表組み本体（項目名＋数値の2列テーブル。ヘッダー行＋縞模様の行、
+            インパクトのある数値の行だけ強調表示する） */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+            marginTop: 14,
+            marginBottom: 8,
+            borderRadius: 16,
+            overflow: 'hidden',
+            border: '1px solid #EDE8DA',
+          }}
+        >
+          {items.length > 0 && (
+            <div style={{ display: 'flex', background: '#DDEEE8' }}>
+              <div style={{ display: 'flex', flex: 1, alignItems: 'center', padding: '0 26px', fontSize: 20, fontWeight: 700, color: '#3D7E65' }}>
+                {kind === 'trend' ? '年度' : '項目'}
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  width: 220,
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  padding: '0 26px',
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: '#3D7E65',
+                }}
+              >
+                {unitColumnHeader(items[0]?.unit)}
+              </div>
             </div>
           )}
+          {items.map((it, idx) => {
+            // trend（経年推移）は直近の年度、bars/ranking（項目比較）は最大値の行を
+            // インパクトのある数値として強調する。
+            const isHighlight = kind === 'trend' ? idx === items.length - 1 : it.value === maxValue;
+            return (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  alignItems: 'center',
+                  background: isHighlight ? '#FBF0E4' : idx % 2 === 0 ? '#FFFFFF' : '#FAF8F3',
+                  borderTop: '1px solid #EDE8DA',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    padding: '0 26px',
+                    fontSize: 19,
+                    fontWeight: isHighlight ? 700 : 500,
+                    color: '#2B2B28',
+                  }}
+                >
+                  {it.label.length > 20 ? `${it.label.slice(0, 20)}…` : it.label}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    width: 220,
+                    justifyContent: 'flex-end',
+                    padding: '0 26px',
+                    fontSize: 23,
+                    fontWeight: 800,
+                    color: isHighlight ? '#C2622B' : '#3D7E65',
+                  }}
+                >
+                  {formatChartValue(it.value, it.unit)}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
