@@ -148,15 +148,18 @@ export default async function DictionaryCategoryPage({
             </Link>
           )}
 
-          <Link href="/ask" className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+          {/* テキストリンク「相談するページへ ›」はタップ要素として弱く見過ごされやすいとの
+              指摘を受け、他ページ（/gakko/matome等）と同じ目立つピンクボタンに変更
+              （2026-11-19）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>あなたの状況も相談してみませんか？</div>
             <div className="qtext">
               学年や状況をかんたんに入力するだけで、どうする先生が今できる次の一手を一緒に考えます。登録不要・匿名で利用できます。
             </div>
-            <div className="muted" style={{ alignSelf: 'flex-end', fontWeight: 700, color: 'var(--orange-text)' }}>
-              相談するページへ ›
-            </div>
-          </Link>
+            <Link href="/ask" className="btn-primary sidebar-ask-btn-pink" style={{ textDecoration: 'none', width: '100%', textAlign: 'center' }}>
+              相談する →
+            </Link>
+          </div>
         </div>
         <PcSidebar />
       </div>
