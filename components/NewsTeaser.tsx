@@ -8,13 +8,15 @@ import { todayJstDateString } from '@/lib/dailyQuestions';
 // バナーと同じ.expertbanner/.expertbanner-todayを流用し、新しいCSSは増やさない。
 // ニュースが1件も無いうちはバナー自体を出さない（空のページへ誘導しても意味がないため）。
 //
-// リンク先は一覧ページ（/news）にする。一時/news/{id}（最新記事への直リンク）に
-// していたが、このバナーがTOP画面で常時表示される唯一の目立つ入り口であるため、
-// ここが個別記事止まりだと一覧（過去分含む全体）への導線が実質無くなってしまう
-// （ヘッダー・サイドメニューのニュースリンクは別途あるが、PC限定・ページ下部等で
-// 目立たない。「ニュース一覧への導線がまだ弱い」との指摘を受けて2026-10-29に修正）。
-// 一覧ページ自体が新しい順で最新記事をいちばん上に出すため、ここで一覧に飛んでも
-// 最新記事はすぐ見える。
+// リンク先は個別記事ページ（/news/{id}）にする。
+// 以前は一覧ページ（/news）にしていたが、バナーに特定の記事の見出し・数字を
+// 表示しているのに押すと一覧に飛んでしまい、その記事自体にはたどり着けない
+// （一覧はdate基準の並びのため、バナーで見せているaddedAt最新の記事が
+// 必ずしも先頭に出るとは限らない）という不具合があった（2026-11-19、
+// 「トップからの不登校ニュースだけど、クリックしても一覧だからそのニュースに
+// 辿り着けない」との指摘を受けて修正）。ニュース一覧自体への導線は
+// ヘッダー・サイドメニュー・個別記事ページ側に別途あるため、ここは
+// バナーが見せている記事そのものへ直接飛ばす。
 //
 // バナーに出す1件は、NEWS_ITEMS[0]（date＝記事・発表の公開日が最新のもの）ではなく、
 // addedAt（当サイトへの掲載日）が最新のものを選ぶ（2026-11-05修正）。dateだけで選ぶと、
@@ -60,7 +62,7 @@ export default function NewsTeaser() {
   const isNew = diffDays >= 0 && diffDays <= 1;
 
   return (
-    <Link href="/news" className="expertbanner expertbanner-today">
+    <Link href={`/news/${latest.id}`} className="expertbanner expertbanner-today">
       {latest.headline ? (
         <div className="expertbanner-stat" aria-hidden="true">
           <span className="expertbanner-stat-value">{latest.headline.value}</span>
