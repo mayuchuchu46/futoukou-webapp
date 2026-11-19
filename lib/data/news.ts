@@ -108,6 +108,18 @@ export const NEWS_ITEMS: NewsItem[] = [
     relatedThemeWord: '行き渋り',
   },
   {
+    id: 'nijin-oya-buchimake-talk-2026-12',
+    date: '2026-11-15',
+    addedAt: '2026-11-20',
+    title:
+      '不登校の子を持つ保護者が気持ちを吐き出せる「ぶちまけトーク会」、不登校の子ども向けの学びの場「NIJINアカデミー」練馬石神井公園校・池袋校が12月4日に東京都内で開催',
+    summary:
+      '不登校や学校に合わないと感じる子どもを対象にした学びの場「NIJINアカデミー」を運営する株式会社NIJIN（東京都江東区）は、練馬石神井公園校・池袋校の共催で、不登校の子どもを持つ保護者を対象にした「不登校子を持つ親のぶちまけトーク会」を2026年12月4日午後7時から東京都文京区のカフェで開催すると発表しました。深い相談やアドバイスを行う場ではなく、保護者が率直な気持ちを話せる場とすることを目的としており、聞くだけの参加も可能です。参加費は2,000円（当日現金払い）で、事前申込制です。',
+    sourceName: '株式会社NIJIN（PR TIMES／リセマム）',
+    sourceUrl: 'https://resemom.jp/release/prtimes/20261115/229333.html',
+    category: 'other',
+  },
+  {
     id: 'uptree-miracle-camp-houkokukai-2026-11',
     date: '2026-11-13',
     addedAt: '2026-11-14',
