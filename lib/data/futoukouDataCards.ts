@@ -29,6 +29,7 @@ import {
   FUTOUKOU_ABSENCE_START_TIMING,
   FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT,
   FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET,
+  FUTOUKOU_SC_SSW_DEPLOYMENT,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -429,6 +430,29 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         { label: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.label, value: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r7.budgetOku, unit: '億円' },
         { label: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.label, value: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r8.budgetOku, unit: '億円' },
         { label: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.label, value: FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET.r9.budgetOku, unit: '億円' },
+      ],
+    },
+  },
+  {
+    // 2026-11-21追加。「校内教育支援センター」('kounaishien'カード)や「教育支援
+    // センター等での出席扱い率」('shussekiritsu'カード)とは別に、相談を担う「人」の
+    // 配置状況（SC・SSWの配置実績）を見せるカード（出典・検証経緯はfutoukouStats.ts
+    // のコメント参照）。
+    slug: 'scssw',
+    addedAt: '2026-11-21',
+    title: 'SC・SSWの配置実績、中学校では99%超',
+    headlineValue: `${FUTOUKOU_SC_SSW_DEPLOYMENT.sc.juniorHigh}%`,
+    headlineLabel: `スクールカウンセラー（SC）の配置実績があった中学校の割合（${FUTOUKOU_SC_SSW_DEPLOYMENT.label}）`,
+    description: `${FUTOUKOU_SC_SSW_DEPLOYMENT.label}、SCの配置実績は小学校${FUTOUKOU_SC_SSW_DEPLOYMENT.sc.elementary}%・中学校${FUTOUKOU_SC_SSW_DEPLOYMENT.sc.juniorHigh}%・高等学校${FUTOUKOU_SC_SSW_DEPLOYMENT.sc.highSchool}%。スクールソーシャルワーカー（SSW）は中学校区単位で${FUTOUKOU_SC_SSW_DEPLOYMENT.sswJuniorHighDistrictPercent}%でした（文部科学省の表現は「配置実績」であり、常勤・専任を意味するものではありません）。`,
+    tweetText: `SC（スクールカウンセラー）の配置実績は小学校${FUTOUKOU_SC_SSW_DEPLOYMENT.sc.elementary}%・中学校${FUTOUKOU_SC_SSW_DEPLOYMENT.sc.juniorHigh}%・高等学校${FUTOUKOU_SC_SSW_DEPLOYMENT.sc.highSchool}%。SSWは中学校区の${FUTOUKOU_SC_SSW_DEPLOYMENT.sswJuniorHighDistrictPercent}%で配置実績がありました（文部科学省）。`,
+    chart: {
+      type: 'bars',
+      caption: 'SC・SSWの配置実績があった学校（SSWは中学校区）の割合。',
+      stats: [
+        { label: 'SC・小学校', value: FUTOUKOU_SC_SSW_DEPLOYMENT.sc.elementary, unit: '%' },
+        { label: 'SC・中学校', value: FUTOUKOU_SC_SSW_DEPLOYMENT.sc.juniorHigh, unit: '%' },
+        { label: 'SC・高等学校', value: FUTOUKOU_SC_SSW_DEPLOYMENT.sc.highSchool, unit: '%' },
+        { label: 'SSW・中学校区', value: FUTOUKOU_SC_SSW_DEPLOYMENT.sswJuniorHighDistrictPercent, unit: '%' },
       ],
     },
   },

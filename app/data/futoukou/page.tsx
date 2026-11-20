@@ -27,6 +27,7 @@ import {
   FUTOUKOU_ABSENCE_START_TIMING,
   FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT,
   FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET,
+  FUTOUKOU_SC_SSW_DEPLOYMENT,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -392,6 +393,28 @@ export default function FutoukouDataPage() {
               ]}
             />
             <Link href="/data/futoukou/tayouka" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-21追加。「校内教育支援センター」('kounaishien'カード)や「教育
+              支援センター等での出席扱い率」('shussekiritsu'カード)とは別に、相談を
+              担う「人」の配置状況（SC・SSWの配置実績）を見せるカード（出典・検証
+              経緯はlib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>SC・SSWの配置実績（{FUTOUKOU_SC_SSW_DEPLOYMENT.label}）</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              スクールカウンセラー（SC）の配置実績は小学校{FUTOUKOU_SC_SSW_DEPLOYMENT.sc.elementary}%・中学校{FUTOUKOU_SC_SSW_DEPLOYMENT.sc.juniorHigh}%・高等学校{FUTOUKOU_SC_SSW_DEPLOYMENT.sc.highSchool}%。スクールソーシャルワーカー（SSW）は中学校区単位で{FUTOUKOU_SC_SSW_DEPLOYMENT.sswJuniorHighDistrictPercent}%でした。文部科学省の表現は「配置実績」であり、常勤・専任を意味するものではありません。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: 'SC・小学校', value: FUTOUKOU_SC_SSW_DEPLOYMENT.sc.elementary, unit: '%' },
+                { label: 'SC・中学校', value: FUTOUKOU_SC_SSW_DEPLOYMENT.sc.juniorHigh, unit: '%' },
+                { label: 'SC・高等学校', value: FUTOUKOU_SC_SSW_DEPLOYMENT.sc.highSchool, unit: '%' },
+                { label: 'SSW・中学校区', value: FUTOUKOU_SC_SSW_DEPLOYMENT.sswJuniorHighDistrictPercent, unit: '%' },
+              ]}
+            />
+            <Link href="/data/futoukou/scssw" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>
