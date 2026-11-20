@@ -70,6 +70,34 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'nijin-miyagi-natori-soudankai-2026-11',
+    date: '2026-11-20',
+    addedAt: '2026-11-21',
+    title:
+      '不登校の小・中学生向けオルタナティブスクール「NIJINアカデミー宮城名取校」、保護者向け個別相談会を11月23日開催',
+    summary:
+      '不登校の小中学生を対象としたオルタナティブスクール「NIJINアカデミー」の宮城名取校（宮城県名取市、運営：株式会社NIJIN）は、不登校に悩む保護者を対象にした個別相談会を2026年11月23日（月・祝）午前10時から開催すると発表しました。専門スタッフが子ども一人ひとりに合った支援の提案や、オンライン・オフラインでの学び方について個別に説明するとしています。参加費は無料で、事前予約制です。',
+    sourceName: '株式会社NIJIN（PR TIMES）',
+    sourceUrl: 'https://prtimes.jp/main/html/rd/p/000000967.000099150.html',
+    category: 'other',
+    // 発表内容に「オルタナティブスクール」と明記されているため設定（2026-11-21）。
+    relatedThemeWord: 'オルタナティブスクール',
+  },
+  {
+    id: 'satsuki-nijin-gyomu-teikei-2026-11',
+    date: '2026-11-19',
+    addedAt: '2026-11-21',
+    title:
+      '電子黒板メーカーのさつきと、不登校支援の「NIJIN」が業務提携――教室の外で学ぶ子ども向けの新製品をNIJIN監修で企画へ',
+    summary:
+      'インクルーシブ電子黒板「MIRAI TOUCH」を手がける株式会社さつきと、不登校の小中学生を対象としたオルタナティブスクール「NIJINアカデミー」を運営する株式会社NIJINは、2026年11月19日に業務提携を発表しました。さつきはNIJINの監修のもと、教室以外の場で学ぶ子ども向けの新製品を企画するほか、既存製品の改善や、NIJINアカデミーの教室・メタバース校舎での活用研究にも取り組むとしています。NIJINアカデミーの名古屋・越谷・京都の教室には、すでにMIRAI TOUCHが3台導入されています。',
+    sourceName: 'ICT教育ニュース（ict-enews.net）',
+    sourceUrl: 'https://ict-enews.net/2026/11/20satsuki-2/',
+    category: 'other',
+    // 発表内容に「オルタナティブスクール」と明記されているため設定（2026-11-21）。
+    relatedThemeWord: 'オルタナティブスクール',
+  },
+  {
     id: 'yokohama-metaverse-futoko-manabi-ibasho-2026-11',
     date: '2026-11-19',
     addedAt: '2026-11-19',
