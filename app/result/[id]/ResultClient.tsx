@@ -177,24 +177,23 @@ export default function ResultClient({ id, initialItem }: { id: string; initialI
             <div />
             <div />
           </div>
+          {/* 「今だけ無料」を前面に出した大きなオレンジの告知ボックス＋別建ての
+              緑ボタン、という2段構えの見せ方だと、先に売り込まれている感じが
+              出て身構えられてしまう（2026-11-21、「今だとかまえちゃいそう」との
+              指摘を受けて変更）。「この回答を読む」という素直な行動のボタンを
+              先に置き、「読むには登録が必要」という説明はその下に小さく添える
+              だけにして、押した結果として登録が必要だと自然に分かる流れにした。 */}
+          <Link href="/account" className="btn-primary">
+            この回答を読む →
+          </Link>
           {EXPERT_VOLUNTEER_MODE ? (
-            <>
-              <div className="locked-note" style={{ fontWeight: 700 }}>
-                この相談は回答済みです。今だけ、無料の会員登録だけで本文が読み放題になります（ベータ版・期間限定）。
-              </div>
-              <Link href="/account" className="btn-primary">
-                無料で読み放題会員になる
-              </Link>
-            </>
+            <div className="muted" style={{ fontSize: 12 }}>
+              読むには無料の会員登録が必要です（ベータ版は今だけ無料・期間限定）。
+            </div>
           ) : (
-            <>
-              <div className="locked-note">
-                この相談は回答済みですが、本文を読むには読み放題会員の登録が必要です。
-              </div>
-              <Link href="/account" className="btn-primary">
-                読み放題会員になる
-              </Link>
-            </>
+            <div className="muted" style={{ fontSize: 12 }}>
+              読むには読み放題会員の登録が必要です。
+            </div>
           )}
           {/* プロフィールカードは会員登録ボタンのあとに置く（2026-11-01、「プロフィールの
               位置は回答テキストのあとがよくない？」→「ぼかしのあとがいいよ」→「それが
