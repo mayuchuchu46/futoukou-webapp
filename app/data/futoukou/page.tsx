@@ -28,6 +28,7 @@ import {
   FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT,
   FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET,
   FUTOUKOU_SC_SSW_DEPLOYMENT,
+  FUTOUKOU_LEARNING_OUTCOME_REFLECTED,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -272,6 +273,26 @@ export default function FutoukouDataPage() {
               ]}
             />
             <Link href="/data/futoukou/shussekiritsu" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-22追加。上の「出席扱い」（欠席日数の扱い）とは別の指標として、
+              欠席期間中の学習成果が成績評価（指導要録の評定・総合所見）に反映された
+              人数・割合を見せるカード（出典・検証経緯はlib/data/futoukouStats.tsの
+              コメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>欠席中の学習成果、約2割が成績評価に反映</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              {FUTOUKOU_LEARNING_OUTCOME_REFLECTED.label}、自宅や学校外の機関等で欠席期間中に行った学習の成果を指導要録に反映された不登校児童生徒は{FUTOUKOU_LEARNING_OUTCOME_REFLECTED.total.toLocaleString()}人（不登校児童生徒全体の{FUTOUKOU_LEARNING_OUTCOME_REFLECTED.reflectedPercentOfAllFutoukou}%）。このうち{FUTOUKOU_LEARNING_OUTCOME_REFLECTED.kyoukaHyoutei.percentOfReflected}%は各教科の評価・評定等に、{FUTOUKOU_LEARNING_OUTCOME_REFLECTED.sougoShoken.percentOfReflected}%は総合所見等に反映されました。「出席扱い」（欠席日数の扱い）とは別の、成績評価そのものに関する指標です。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: '反映あり（小学校）', value: FUTOUKOU_LEARNING_OUTCOME_REFLECTED.elementary, unit: '人' },
+                { label: '反映あり（中学校）', value: FUTOUKOU_LEARNING_OUTCOME_REFLECTED.juniorHigh, unit: '人' },
+              ]}
+            />
+            <Link href="/data/futoukou/hyoukahanei" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>
