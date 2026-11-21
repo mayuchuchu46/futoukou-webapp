@@ -269,10 +269,17 @@ export default function ExpertManagementPanel({
       {answeredByMe.slice(0, answeredVisibleCount).map((item) => {
         const cat = CATS[item.category] || CATS.other;
         const isEditing = editingId === item.id;
+        // 直近20件ぶん、質問文・回答文をどちらも全文表示すると縦に長くなりすぎる
+        // ため（2026-11-21、「このマイページに、テキスト全部のせなくてもよくない？」
+        // との指摘を受けて）、編集していない時は短く切って表示し、全文は
+        // /result/[id]で確認できるようにする。編集時は切り詰めず全文を入力欄に出す。
+        const questionPreview = item.question.length > 50 ? `${item.question.slice(0, 50)}…` : item.question;
+        const answerText = item.expert_answer || '';
+        const answerPreview = answerText.length > 80 ? `${answerText.slice(0, 80)}…` : answerText;
         return (
           <div key={item.id} className="card">
             <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
-            <div className="qtext">{item.question}</div>
+            <div className="qtext">{questionPreview}</div>
             <div className="answer-label">回答内容</div>
             {isEditing ? (
               <>
@@ -302,18 +309,23 @@ export default function ExpertManagementPanel({
               </>
             ) : (
               <>
-                <div className="qtext">{item.expert_answer}</div>
-                <button
-                  type="button"
-                  className="btn-ghost"
-                  style={{ alignSelf: 'flex-start', fontSize: 13 }}
-                  onClick={() => {
-                    setEditDrafts({ ...editDrafts, [item.id]: item.expert_answer || '' });
-                    setEditingId(item.id);
-                  }}
-                >
-                  編集する
-                </button>
+                <div className="qtext">{answerPreview}</div>
+                <div className="row" style={{ gap: 8 }}>
+                  <a href={`/result/${item.id}`} className="btn-ghost" style={{ fontSize: 13 }}>
+                    全文を見る
+                  </a>
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    style={{ fontSize: 13 }}
+                    onClick={() => {
+                      setEditDrafts({ ...editDrafts, [item.id]: item.expert_answer || '' });
+                      setEditingId(item.id);
+                    }}
+                  >
+                    編集する
+                  </button>
+                </div>
               </>
             )}
           </div>
