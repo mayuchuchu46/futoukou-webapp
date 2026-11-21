@@ -9,6 +9,17 @@ import { relativeTimeLabel } from '@/lib/relativeTime';
 
 type Expert = { id: string; name: string; credential: string };
 
+// PendingCardはExpertManagementPanelの中で定義された関数コンポーネントだったため、
+// drafts（回答入力欄の下書き）が1文字変わるたびにExpertManagementPanel自体が
+// 再レンダリングされ、その都度「新しいPendingCardという関数＝別のコンポーネント型」が
+// 作られてReactがtextareaごとDOMを作り直していた。結果、入力中のIME変換（日本語の
+// 文字合成）がキー入力のたびに強制終了させられ、PCで日本語入力しようとすると
+// 1文字目しか反映されない（合成が壊れて以降の入力が受け付けられない）不具合が
+// 発生していた（2026-11-21、「入力しようとすると文字が入れられない、パソコンで」
+// との報告を受けて特定・修正）。コンポーネント定義をモジュールトップレベルに
+// 出すことで、再レンダリングのたびに型が変わらないようにし、textareaのDOM要素が
+// 保持されるようにした。
+
 // 旧/expert/dashboardの回答キュー・回答済み一覧（DashboardClient.tsx）を、
 // アカウントページに統合するために切り出したもの（2026-11-01、「アカウントページに、
 // 専門家や保護者の管理内容も入れ込んじゃえばいい」との方針を受けて）。
@@ -125,122 +136,6 @@ export default function ExpertManagementPanel({
     router.refresh();
   }
 
-  function PendingCard({ item, deferred }: { item: Consultation; deferred: boolean }) {
-    const cat = CATS[item.category] || CATS.other;
-    return (
-      <div className="card">
-        <div className="row">
-          <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
-          {item.requested_expert_id === expert.id && (
-            <span className="muted" style={{ fontWeight: 700 }}>あなた指名の相談</span>
-          )}
-          {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
-          {/* 「専門家・経験者が見たときに回答したくなるような誘導」の一環
-              （2026-11-07追加）。投稿からの経過時間を添えることで、「今まさに
-              困っている人がいる」という実感を持ちやすくする（ホームの一覧で
-              使っているrelativeTimeLabelと同じ表示）。 */}
-          {item.created_at && <span className="muted">{relativeTimeLabel(item.created_at)}</span>}
-        </div>
-        <div className="qtext">{item.question}</div>
-        {/* すでにAIの回答がこのページで読まれている（＝困っている人に実際に
-            届いている）ことが伝わると、「ここに専門家・経験者としての一言を
-            足すと、誰かの役に立つ」という実感につながりやすい。views/likesは
-            selectで既に取得済みのため、ここでは表示のみ追加（2026-11-07）。 */}
-        {(item.views > 0 || item.likes > 0) && (
-          <div className="muted" style={{ fontSize: 12 }}>
-            {item.views > 0 && `すでに${item.views}回読まれています`}
-            {item.views > 0 && item.likes > 0 && '・'}
-            {item.likes > 0 && `「参考になった」が${item.likes}件付いています`}
-          </div>
-        )}
-        {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AIが
-            既にどう答えているかをここに表示する（以前はrequest_type==='expert'の
-            相談にAI回答が存在しなかったため、質問文だけが出ていた）。専門家・
-            経験者がAIの回答を踏まえて、それに付け足す形で回答しやすくする。
-            2026-11-07、初期状態では畳んでおき、ボタンで展開する形に変更。
-            先にAIの回答を読むと専門家の判断がそれに引っ張られやすいため、
-            まず相談文だけを見て自分の考えを作ってから、必要に応じて
-            AIの回答と照合できるようにする。 */}
-        {item.answer && (
-          aiAnswerOpen[item.id] ? (
-            <div className="muted" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px', whiteSpace: 'pre-wrap' }}>
-              <div className="row" style={{ justifyContent: 'space-between', marginBottom: 4 }}>
-                <span style={{ fontWeight: 700 }}>AIの回答：</span>
-                <button
-                  type="button"
-                  className="btn-ghost"
-                  style={{ fontSize: 12 }}
-                  onClick={() => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: false })}
-                >
-                  閉じる
-                </button>
-              </div>
-              {item.answer}
-            </div>
-          ) : (
-            <button
-              type="button"
-              className="btn-ghost"
-              style={{ fontSize: 13, alignSelf: 'flex-start' }}
-              onClick={() => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: true })}
-            >
-              AIの回答を見る
-            </button>
-          )
-        )}
-        {isSenpai && (
-          <div className="muted" style={{ fontSize: 12 }}>
-            専門的な判断ではなく、ご自身の経験に基づいてお答えいただければ十分です。
-          </div>
-        )}
-        {/* 募集ページ（/expert/recruit・/senpai/recruit）では「回答がプロフィールへの
-            露出・集客になる」と説明しているが、実際に回答する画面（ここ）には
-            その一言が無く、書く直前に思い出せなかった。「回答したくなるような
-            誘導」の一環として、送信直前の場所に短く再掲する（2026-11-07）。 */}
-        <div className="muted" style={{ fontSize: 12 }}>
-          回答すると、あなたのプロフィールへのリンクが表示されます。
-        </div>
-        <textarea
-          className="input"
-          rows={6}
-          placeholder={isSenpai ? 'ご自身の経験を書いてください' : '回答を入力してください'}
-          value={drafts[item.id] || ''}
-          onChange={(e) => setDrafts({ ...drafts, [item.id]: e.target.value })}
-        />
-        <div className="row" style={{ gap: 8 }}>
-          <button
-            className="btn-primary"
-            disabled={submitting === item.id || !(drafts[item.id] || '').trim()}
-            onClick={() => submitAnswer(item.id)}
-          >
-            {submitting === item.id ? '送信中…' : '回答を送信する'}
-          </button>
-          {/* 「一度確認したものは確認済みにして、バッジの数字は未確認のものだけにしたい」
-              との要望を受けて追加（2026-11-07）。回答するつもりがない／まだ決めて
-              いない相談を、削除ではなく「あとで見る」として仕分けできるようにする。 */}
-          {deferred ? (
-            <button
-              type="button"
-              className="btn-ghost"
-              disabled={deferring === item.id}
-              onClick={() => undeferItem(item.id)}
-            >
-              一覧に戻す
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="btn-ghost"
-              disabled={deferring === item.id}
-              onClick={() => deferItem(item.id)}
-            >
-              あとで見る
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -283,7 +178,22 @@ export default function ExpertManagementPanel({
       <div style={{ fontWeight: 700, marginTop: 8 }}>回答待ちの相談（{items.length}件）</div>
       {items.length === 0 && <div className="muted">今は回答待ちの相談はありません。</div>}
       {items.map((item) => (
-        <PendingCard key={item.id} item={item} deferred={false} />
+        <PendingCard
+          key={item.id}
+          item={item}
+          deferred={false}
+          expertId={expert.id}
+          isSenpai={isSenpai}
+          draft={drafts[item.id] || ''}
+          onDraftChange={(value) => setDrafts({ ...drafts, [item.id]: value })}
+          submitting={submitting === item.id}
+          onSubmit={() => submitAnswer(item.id)}
+          deferring={deferring === item.id}
+          onDefer={() => deferItem(item.id)}
+          onUndefer={() => undeferItem(item.id)}
+          aiAnswerOpen={!!aiAnswerOpen[item.id]}
+          onToggleAiAnswer={(open) => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: open })}
+        />
       ))}
 
       {/* 「あとで見る」に退避した相談（2026-11-07追加）。バッジの件数には含めず、
@@ -299,7 +209,22 @@ export default function ExpertManagementPanel({
             {deferredOpen ? '閉じる' : `あとで見る（${deferredItems.length}件）を開く`}
           </button>
           {deferredOpen && deferredItems.map((item) => (
-            <PendingCard key={item.id} item={item} deferred />
+            <PendingCard
+              key={item.id}
+              item={item}
+              deferred
+              expertId={expert.id}
+              isSenpai={isSenpai}
+              draft={drafts[item.id] || ''}
+              onDraftChange={(value) => setDrafts({ ...drafts, [item.id]: value })}
+              submitting={submitting === item.id}
+              onSubmit={() => submitAnswer(item.id)}
+              deferring={deferring === item.id}
+              onDefer={() => deferItem(item.id)}
+              onUndefer={() => undeferItem(item.id)}
+              aiAnswerOpen={!!aiAnswerOpen[item.id]}
+              onToggleAiAnswer={(open) => setAiAnswerOpen({ ...aiAnswerOpen, [item.id]: open })}
+            />
           ))}
         </>
       )}
@@ -327,5 +252,150 @@ export default function ExpertManagementPanel({
         </button>
       )}
     </>
+  );
+}
+
+function PendingCard({
+  item,
+  deferred,
+  expertId,
+  isSenpai,
+  draft,
+  onDraftChange,
+  submitting,
+  onSubmit,
+  deferring,
+  onDefer,
+  onUndefer,
+  aiAnswerOpen,
+  onToggleAiAnswer,
+}: {
+  item: Consultation;
+  deferred: boolean;
+  expertId: string;
+  isSenpai: boolean;
+  draft: string;
+  onDraftChange: (value: string) => void;
+  submitting: boolean;
+  onSubmit: () => void;
+  deferring: boolean;
+  onDefer: () => void;
+  onUndefer: () => void;
+  aiAnswerOpen: boolean;
+  onToggleAiAnswer: (open: boolean) => void;
+}) {
+  const cat = CATS[item.category] || CATS.other;
+  return (
+    <div className="card">
+      <div className="row">
+        <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
+        {item.requested_expert_id === expertId && (
+          <span className="muted" style={{ fontWeight: 700 }}>あなた指名の相談</span>
+        )}
+        {metaLabel(item) && <span className="muted">{metaLabel(item)}</span>}
+        {/* 「専門家・経験者が見たときに回答したくなるような誘導」の一環
+            （2026-11-07追加）。投稿からの経過時間を添えることで、「今まさに
+            困っている人がいる」という実感を持ちやすくする（ホームの一覧で
+            使っているrelativeTimeLabelと同じ表示）。 */}
+        {item.created_at && <span className="muted">{relativeTimeLabel(item.created_at)}</span>}
+      </div>
+      <div className="qtext">{item.question}</div>
+      {/* すでにAIの回答がこのページで読まれている（＝困っている人に実際に
+          届いている）ことが伝わると、「ここに専門家・経験者としての一言を
+          足すと、誰かの役に立つ」という実感につながりやすい。views/likesは
+          selectで既に取得済みのため、ここでは表示のみ追加（2026-11-07）。 */}
+      {(item.views > 0 || item.likes > 0) && (
+        <div className="muted" style={{ fontSize: 12 }}>
+          {item.views > 0 && `すでに${item.views}回読まれています`}
+          {item.views > 0 && item.likes > 0 && '・'}
+          {item.likes > 0 && `「参考になった」が${item.likes}件付いています`}
+        </div>
+      )}
+      {/* 2026-11-01、専門家への質問をAI回答つきの相談に統合したのに伴い、AIが
+          既にどう答えているかをここに表示する（以前はrequest_type==='expert'の
+          相談にAI回答が存在しなかったため、質問文だけが出ていた）。専門家・
+          経験者がAIの回答を踏まえて、それに付け足す形で回答しやすくする。
+          2026-11-07、初期状態では畳んでおき、ボタンで展開する形に変更。
+          先にAIの回答を読むと専門家の判断がそれに引っ張られやすいため、
+          まず相談文だけを見て自分の考えを作ってから、必要に応じて
+          AIの回答と照合できるようにする。 */}
+      {item.answer && (
+        aiAnswerOpen ? (
+          <div className="muted" style={{ fontSize: 13, background: 'var(--bg)', borderRadius: 8, padding: '8px 10px', whiteSpace: 'pre-wrap' }}>
+            <div className="row" style={{ justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ fontWeight: 700 }}>AIの回答：</span>
+              <button
+                type="button"
+                className="btn-ghost"
+                style={{ fontSize: 12 }}
+                onClick={() => onToggleAiAnswer(false)}
+              >
+                閉じる
+              </button>
+            </div>
+            {item.answer}
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="btn-ghost"
+            style={{ fontSize: 13, alignSelf: 'flex-start' }}
+            onClick={() => onToggleAiAnswer(true)}
+          >
+            AIの回答を見る
+          </button>
+        )
+      )}
+      {isSenpai && (
+        <div className="muted" style={{ fontSize: 12 }}>
+          専門的な判断ではなく、ご自身の経験に基づいてお答えいただければ十分です。
+        </div>
+      )}
+      {/* 募集ページ（/expert/recruit・/senpai/recruit）では「回答がプロフィールへの
+          露出・集客になる」と説明しているが、実際に回答する画面（ここ）には
+          その一言が無く、書く直前に思い出せなかった。「回答したくなるような
+          誘導」の一環として、送信直前の場所に短く再掲する（2026-11-07）。 */}
+      <div className="muted" style={{ fontSize: 12 }}>
+        回答すると、あなたのプロフィールへのリンクが表示されます。
+      </div>
+      <textarea
+        className="input"
+        rows={6}
+        placeholder={isSenpai ? 'ご自身の経験を書いてください' : '回答を入力してください'}
+        value={draft}
+        onChange={(e) => onDraftChange(e.target.value)}
+      />
+      <div className="row" style={{ gap: 8 }}>
+        <button
+          className="btn-primary"
+          disabled={submitting || !draft.trim()}
+          onClick={onSubmit}
+        >
+          {submitting ? '送信中…' : '回答を送信する'}
+        </button>
+        {/* 「一度確認したものは確認済みにして、バッジの数字は未確認のものだけにしたい」
+            との要望を受けて追加（2026-11-07）。回答するつもりがない／まだ決めて
+            いない相談を、削除ではなく「あとで見る」として仕分けできるようにする。 */}
+        {deferred ? (
+          <button
+            type="button"
+            className="btn-ghost"
+            disabled={deferring}
+            onClick={onUndefer}
+          >
+            一覧に戻す
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="btn-ghost"
+            disabled={deferring}
+            onClick={onDefer}
+          >
+            あとで見る
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
