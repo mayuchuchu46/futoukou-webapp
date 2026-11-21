@@ -67,6 +67,32 @@ export default function ExpertManagementPanel({
   // 「あとで見る」セクションはデフォルト畳んでおく（最初から全部開くと、結局
   // バッジの数字と同じ分量が画面に出てしまい、今回の目的＝スッキリ見せる、に反するため）。
   const [deferredOpen, setDeferredOpen] = useState(false);
+  // 自分が回答した相談を後から修正できるようにするための状態（2026-11-21追加）。
+  // 「編集する」を押した相談だけ入力欄に切り替える。
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDrafts, setEditDrafts] = useState<Record<string, string>>({});
+  const [savingEdit, setSavingEdit] = useState<string | null>(null);
+
+  async function saveEdit(id: string) {
+    const answer = editDrafts[id];
+    if (!answer || !answer.trim()) return;
+    setSavingEdit(id);
+    const res = await fetch('/api/expert/answer', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ consultation_id: id, answer }),
+    });
+    setSavingEdit(null);
+    if (res.ok) {
+      setEditingId(null);
+      // answeredByMeはサーバーコンポーネントから渡されたpropsなので、
+      // 修正後の文面を一覧に反映するにはサーバー側のデータを取り直す必要がある。
+      router.refresh();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || '保存に失敗しました');
+    }
+  }
 
   async function submitAnswer(id: string) {
     const answer = drafts[id];
@@ -242,12 +268,54 @@ export default function ExpertManagementPanel({
       {answeredByMe.length === 0 && <div className="muted">まだ回答した相談はありません。</div>}
       {answeredByMe.slice(0, answeredVisibleCount).map((item) => {
         const cat = CATS[item.category] || CATS.other;
+        const isEditing = editingId === item.id;
         return (
           <div key={item.id} className="card">
             <div className={`cat-badge ${cat.cls}`}>{cat.label}</div>
             <div className="qtext">{item.question}</div>
             <div className="answer-label">回答内容</div>
-            <div className="qtext">{item.expert_answer}</div>
+            {isEditing ? (
+              <>
+                <textarea
+                  className="input"
+                  rows={6}
+                  value={editDrafts[item.id] ?? item.expert_answer ?? ''}
+                  onChange={(e) => setEditDrafts({ ...editDrafts, [item.id]: e.target.value })}
+                />
+                <div className="row" style={{ gap: 8 }}>
+                  <button
+                    className="btn-primary"
+                    disabled={savingEdit === item.id || !(editDrafts[item.id] ?? item.expert_answer ?? '').trim()}
+                    onClick={() => saveEdit(item.id)}
+                  >
+                    {savingEdit === item.id ? '保存中…' : '保存する'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-ghost"
+                    disabled={savingEdit === item.id}
+                    onClick={() => setEditingId(null)}
+                  >
+                    キャンセル
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="qtext">{item.expert_answer}</div>
+                <button
+                  type="button"
+                  className="btn-ghost"
+                  style={{ alignSelf: 'flex-start', fontSize: 13 }}
+                  onClick={() => {
+                    setEditDrafts({ ...editDrafts, [item.id]: item.expert_answer || '' });
+                    setEditingId(item.id);
+                  }}
+                >
+                  編集する
+                </button>
+              </>
+            )}
           </div>
         );
       })}

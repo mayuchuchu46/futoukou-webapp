@@ -87,3 +87,45 @@ ${SITE_URL}`,
 
   return NextResponse.json({ ok: true });
 }
+
+// 回答済みの自分の回答テキストをあとから修正できるようにするための編集API
+// （2026-11-21、「自分が回答したテキスト、あとでなおしたいときは？」との
+// 質問を受けて追加。以前は一度送信すると二度と直せなかった）。POST（新規回答）
+// とは別にして、報酬額・通知メールなど初回回答時だけの副作用を編集時に
+// 誤って再実行しないようにする。
+export async function PATCH(req: NextRequest) {
+  const expert = await getCurrentExpert();
+  if (!expert) {
+    return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 });
+  }
+
+  const { consultation_id, answer } = await req.json();
+  if (!consultation_id || !answer || !answer.trim()) {
+    return NextResponse.json({ error: '回答を入力してください' }, { status: 400 });
+  }
+
+  const supabase = getSupabaseAdmin();
+  const { data: row } = await supabase
+    .from('consultations')
+    .select('id, expert_status, expert_id')
+    .eq('id', consultation_id)
+    .single();
+
+  if (!row || row.expert_status !== 'answered') {
+    return NextResponse.json({ error: 'この相談はまだ回答されていません' }, { status: 400 });
+  }
+  // 自分が回答したもの以外は編集できない（他の専門家・経験者の回答を
+  // 書き換えられてしまわないようにする）。
+  if (row.expert_id !== expert.id) {
+    return NextResponse.json({ error: 'この相談はご自身の回答ではないため編集できません' }, { status: 403 });
+  }
+
+  const { error } = await supabase
+    .from('consultations')
+    .update({ expert_answer: answer.trim() })
+    .eq('id', consultation_id);
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  return NextResponse.json({ ok: true });
+}
