@@ -81,6 +81,15 @@ export default function ExpertManagementPanel({
     if (res.ok) {
       setItems((list) => list.filter((it) => it.id !== id));
       setDeferredItems((list) => list.filter((it) => it.id !== id));
+      // 回答済みの相談は「自分が回答した相談」に出るはずだが、answeredByMeは
+      // ExpertSection（サーバーコンポーネント）がページ読み込み時に取得した
+      // propsをそのまま表示しているだけで、ここでは更新していなかった。その結果、
+      // 回答送信直後は一覧から消えるだけで、回答済み一覧には次にページを
+      // 読み込み直すまで反映されず、「回答した分が消えた」ように見えていた
+      // （2026-11-21、「回答した後、マイページから回答ぶんが消えてる」との
+      // 報告を受けて修正）。router.refresh()でサーバーコンポーネントを再実行させ、
+      // pending/answeredByMeを最新の状態に取り直す。
+      router.refresh();
     } else {
       const data = await res.json();
       alert(data.error || '送信に失敗しました');
