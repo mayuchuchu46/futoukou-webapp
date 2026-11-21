@@ -117,7 +117,21 @@ export default async function NewsDetailPage({
             <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ fontSize: 13 }}>
               出典：{item.sourceName} ›
             </a>
+          </div>
 
+          {/* 深掘りセクション（2026-11-21追加、「同じような感じで深掘りしていきたい」との
+              要望を受けて）。学年別の内訳・原因動機・国際比較など、本文とは別の切り口の
+              追加情報を、見出しごとのカードとして並べる。記事ごとにadditionalSectionsが
+              設定されていなければ何も表示しない。 */}
+          {item.additionalSections?.map((section, i) => (
+            <div key={i} className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+              <div className="answer-label" style={{ fontSize: 15 }}>{section.heading}</div>
+              <div className="qtext" style={{ whiteSpace: 'pre-line' }}>{section.body}</div>
+              {section.stats && <NewsStatsChart stats={section.stats} caption={section.statsCaption} />}
+            </div>
+          ))}
+
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             {/* このページ自体をシェアできるボタン（2026-10-29追加）。インパクト数字が
                 あればそれをツイート文に入れる（無い場合は見出しだけ）。シェア時の
                 カード画像はopengraph-image.tsx（記事ごとの動的OGP画像）が使われる。 */}
