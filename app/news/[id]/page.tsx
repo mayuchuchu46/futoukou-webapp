@@ -109,6 +109,11 @@ export default async function NewsDetailPage({
 
             {item.stats && <NewsStatsChart stats={item.stats} caption={item.statsCaption} />}
 
+            {/* 2つ目のグラフ（2026-11-21追加、「グラフを残してほしい」との要望を受けて）。
+                直近の比較（item.stats）とは別の切り口（年ごとの推移など）を見せたい
+                記事だけ、stats2が設定されていれば追加で表示する。 */}
+            {item.stats2 && <NewsStatsChart stats={item.stats2} caption={item.statsCaption2} />}
+
             <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ fontSize: 13 }}>
               出典：{item.sourceName} ›
             </a>
