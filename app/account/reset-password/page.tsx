@@ -1,0 +1,98 @@
+'use client';
+
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Header from '@/components/Header';
+import BottomNav from '@/components/BottomNav';
+
+// 会員向けパスワード再設定ページ（2026-11-21追加）。メール内のリンク
+// （/account/reset-password?token=...）から開く。
+// useSearchParams()はレンダリング時点でしか値が確定しないため、
+// app/ask/page.tsxと同じ理由でSuspenseで囲む（ヘッダー等の外枠は外側に出す）。
+export default function AccountResetPasswordPage() {
+  return (
+    <div className="app-shell">
+      <Header supervised={false} />
+      <div className="main">
+        <Suspense fallback={null}>
+          <ResetPasswordForm />
+        </Suspense>
+      </div>
+      <BottomNav />
+    </div>
+  );
+}
+
+function ResetPasswordForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token') || '';
+  const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    if (password !== password2) {
+      setError('パスワードが一致しません');
+      return;
+    }
+    setLoading(true);
+    const res = await fetch('/api/account/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, password }),
+    });
+    const data = await res.json();
+    setLoading(false);
+    if (!res.ok) {
+      setError(data.error || 'エラーが発生しました');
+      return;
+    }
+    router.push('/account');
+    router.refresh();
+  }
+
+  if (!token) {
+    return (
+      <div className="card">
+        <div className="qtext">
+          リンクが正しくないか、有効期限が切れています。もう一度パスワード再設定をお申し込みください。
+        </div>
+        <a className="btn-ghost" href="/account/forgot-password" style={{ alignSelf: 'flex-start' }}>
+          パスワードを忘れた方はこちら
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <h1 className="pagetitle">新しいパスワードを設定</h1>
+      <form onSubmit={submit} className="card" style={{ gap: 14 }}>
+        <input
+          className="input"
+          type="password"
+          placeholder="新しいパスワード（8文字以上）"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <input
+          className="input"
+          type="password"
+          placeholder="新しいパスワード（確認）"
+          value={password2}
+          onChange={(e) => setPassword2(e.target.value)}
+          required
+        />
+        {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
+        <button className="btn-primary" type="submit" disabled={loading}>
+          {loading ? '設定中…' : 'パスワードを設定する'}
+        </button>
+      </form>
+    </>
+  );
+}

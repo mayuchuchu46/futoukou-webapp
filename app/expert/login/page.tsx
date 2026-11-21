@@ -40,6 +40,11 @@ export default function ExpertLoginPage() {
         <input className="input" type="password" placeholder="パスワード" value={password} onChange={(e) => setPassword(e.target.value)} required />
         {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
         <button className="btn-primary" type="submit" disabled={loading}>{loading ? '確認中…' : 'ログイン'}</button>
+        {/* パスワード再設定フローが一切なかったため追加（2026-11-21、
+            「パスワード忘れた場合どうするんだっけ？」との指摘を受けて）。 */}
+        <a href="/expert/forgot-password" className="muted" style={{ fontSize: 13, textAlign: 'center', textDecoration: 'underline' }}>
+          パスワードを忘れた方はこちら
+        </a>
         <a className="btn-ghost" href="/expert/register" style={{ textAlign: 'center' }}>新規登録はこちら</a>
       </form>
     </div>

@@ -61,6 +61,11 @@ export default function AccountLoginPage() {
           <button className="btn-primary" type="submit" disabled={loading}>
             {loading ? 'ログイン中…' : 'ログインする'}
           </button>
+          {/* パスワード再設定フローが一切なかったため追加（2026-11-21、
+              「パスワード忘れた場合どうするんだっけ？」との指摘を受けて）。 */}
+          <a href="/account/forgot-password" className="muted" style={{ fontSize: 13, textAlign: 'center', textDecoration: 'underline' }}>
+            パスワードを忘れた方はこちら
+          </a>
           <a className="btn-ghost" href="/account/register" style={{ textAlign: 'center' }}>
             アカウントをお持ちでない方はこちら
           </a>

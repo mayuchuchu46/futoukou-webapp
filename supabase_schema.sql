@@ -1250,3 +1250,18 @@ create index if not exists gohoubi_posts_created_at_idx on gohoubi_posts (create
 -- （lib/gohoubiReactions.ts）を使う。
 alter table gohoubi_posts add column if not exists reactions jsonb not null default '{}';
 alter table gohoubi_posts add column if not exists reacted_by jsonb not null default '{}';
+
+-- 会員（members）・専門家/経験者（experts）どちらのログインにも「パスワードを
+-- 忘れた方」の再設定フローが一切存在しなかったため追加（2026-11-21、「会員登録の
+-- 時さ、パスワード忘れた場合どうするんだっけ？」との指摘を受けて）。メール宛に
+-- 送る使い捨てトークン（crypto.randomBytesで生成した64文字のランダム文字列）と
+-- その有効期限を保存する。有効なトークンでパスワードを更新したら、再利用され
+-- ないようこの2カラムはNULLに戻す（app/api/account/reset-password、
+-- app/api/expert/reset-passwordで実施）。
+alter table members add column if not exists reset_token text;
+alter table members add column if not exists reset_token_expires_at timestamptz;
+create index if not exists members_reset_token_idx on members (reset_token);
+
+alter table experts add column if not exists reset_token text;
+alter table experts add column if not exists reset_token_expires_at timestamptz;
+create index if not exists experts_reset_token_idx on experts (reset_token);
