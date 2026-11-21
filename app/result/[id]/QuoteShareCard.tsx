@@ -41,6 +41,12 @@ export default function QuoteShareCard({
   }
 
   const quoteImageUrl = `${resultUrl}/quote-image`;
+  // Xのシェア先urlは/result/[id]（相談詳細ページ）ではなく、一言カード専用の
+  // /result/[id]/hitokotoにする（2026-11-21）。/result/[id]は「この相談をシェア」
+  // ボタンの共有先と共通のため、先にどちらかがシェアされるとXがそのURL単位で
+  // OGP画像をキャッシュしてしまい、後から一言カードをシェアしても質問文ベースの
+  // 古いカードのままになる不具合があった。URLを分離してキャッシュも分離する。
+  const quoteShareUrl = `${resultUrl}/hitokoto`;
 
   return (
     <div className="card quote-share-card" style={{ alignItems: 'center', gap: 14 }}>
@@ -60,7 +66,7 @@ export default function QuoteShareCard({
             className="share-btn"
             href={`https://twitter.com/intent/tweet?${new URLSearchParams({
               text: `${oneLiner}\n\nーどうする先生`,
-              url: resultUrl,
+              url: quoteShareUrl,
               hashtags: 'どうする先生,不登校',
             })}`}
             target="_blank"
