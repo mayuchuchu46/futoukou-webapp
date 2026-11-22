@@ -25,6 +25,7 @@ import {
   FUTOUKOU_TAYOUKA_GAKKOU,
   FUTOUKOU_EXPERIENCE_SURVEY_NO_CONSULT,
   FUTOUKOU_ABSENCE_START_TIMING,
+  FUTOUKOU_ABSENCE_START_GRADE,
   FUTOUKOU_NO_PROFESSIONAL_SUPPORT_TEACHER_CONTACT,
   FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET,
   FUTOUKOU_SC_SSW_DEPLOYMENT,
@@ -371,6 +372,24 @@ export default function FutoukouDataPage() {
               ]}
             />
             <Link href="/data/futoukou/jiki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-23追加。上の「jiki」カードと同じ調査・同じ見出し（〇学校を休みはじめた
+              学年と時期）のうち、まだカード化していなかった「学年」側を見せるカード。
+              インターネット調査（n=18,207）では中学2年生が最多、オンライン調査（n=321）では
+              中学1年生が最多と調査によって結果が異なる点も含めて提示する
+              （出典・検証経緯はlib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校が始まる学年、中学1・2年にピーク</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              同じ調査で「学校を休みはじめた学年」を聞いたところ、{FUTOUKOU_ABSENCE_START_GRADE.internet.label}（n={FUTOUKOU_ABSENCE_START_GRADE.internet.n.toLocaleString()}）では中学2年生が{[...FUTOUKOU_ABSENCE_START_GRADE.internet.grades].sort((a, b) => b.percent - a.percent)[0].percent}%で最多、{FUTOUKOU_ABSENCE_START_GRADE.online.label}（n={FUTOUKOU_ABSENCE_START_GRADE.online.n}）では中学1年生が{[...FUTOUKOU_ABSENCE_START_GRADE.online.grades].sort((a, b) => b.percent - a.percent)[0].percent}%で最多でした。調査によって最頻学年は異なりますが、どちらも小学5年生あたりから中学1〜2年生にかけて割合が高まる傾向は共通しています。
+            </div>
+            <NewsStatsChart
+              stats={[...FUTOUKOU_ABSENCE_START_GRADE.internet.grades].map((g) => ({ label: g.grade, value: g.percent, unit: '%' }))}
+            />
+            <Link href="/data/futoukou/kaishi" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>

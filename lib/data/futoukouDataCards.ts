@@ -31,6 +31,7 @@ import {
   FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET,
   FUTOUKOU_SC_SSW_DEPLOYMENT,
   FUTOUKOU_LEARNING_OUTCOME_REFLECTED,
+  FUTOUKOU_ABSENCE_START_GRADE,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -477,6 +478,21 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         { label: 'うち評価・評定等に反映', value: FUTOUKOU_LEARNING_OUTCOME_REFLECTED.kyoukaHyoutei.total, unit: '人' },
         { label: 'うち総合所見等に反映', value: FUTOUKOU_LEARNING_OUTCOME_REFLECTED.sougoShoken.total, unit: '人' },
       ],
+    },
+  },
+  {
+    slug: 'kaishi',
+    addedAt: '2026-11-23',
+    title: '不登校が始まる学年、中学1・2年にピーク',
+    headlineValue: `${[...FUTOUKOU_ABSENCE_START_GRADE.internet.grades].sort((a, b) => b.percent - a.percent)[0].percent}%`,
+    headlineLabel: `不登校経験者が学校を休みはじめた学年で最も多いのは中学2年生（${FUTOUKOU_ABSENCE_START_GRADE.internet.label}、n=${FUTOUKOU_ABSENCE_START_GRADE.internet.n.toLocaleString()}）`,
+    description: `不登校を経験した18〜59歳への回顧調査で「学校を休みはじめた学年」を聞いたところ、${FUTOUKOU_ABSENCE_START_GRADE.internet.label}（n=${FUTOUKOU_ABSENCE_START_GRADE.internet.n.toLocaleString()}）では中学2年生が${[...FUTOUKOU_ABSENCE_START_GRADE.internet.grades].sort((a, b) => b.percent - a.percent)[0].percent}%で最多、${FUTOUKOU_ABSENCE_START_GRADE.online.label}（n=${FUTOUKOU_ABSENCE_START_GRADE.online.n}）では中学1年生が${[...FUTOUKOU_ABSENCE_START_GRADE.online.grades].sort((a, b) => b.percent - a.percent)[0].percent}%で最多と、調査によって最頻学年は異なります。ただしどちらの調査でも、小学5年生あたりから中学1〜2年生にかけて割合が高まる傾向は共通しています。`,
+    tweetText: `不登校が始まった学年を聞いた調査では、中学2年生が${[...FUTOUKOU_ABSENCE_START_GRADE.internet.grades].sort((a, b) => b.percent - a.percent)[0].percent}%で最多（別の調査では中学1年生が最多）。小5〜中2にかけて割合が高まる傾向は共通しています。`,
+    chart: {
+      type: 'ranking',
+      items: [...FUTOUKOU_ABSENCE_START_GRADE.internet.grades]
+        .sort((a, b) => b.percent - a.percent)
+        .map((g) => ({ label: g.grade, value: g.percent, unit: '%' })),
     },
   },
 ];
