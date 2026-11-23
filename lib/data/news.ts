@@ -146,6 +146,26 @@ export const NEWS_ITEMS: NewsItem[] = [
     relatedMunicipality: { prefecture: '神奈川県', city: '横浜市' },
   },
   {
+    id: 'yokohama-eboard-futoko-gakushushien-2026-11',
+    date: '2026-11-18',
+    addedAt: '2026-11-23',
+    title:
+      '横浜市、不登校の小中学生にICT教材「eboard」を無償提供――市立482校でアカウント発行体制、在籍校とのつながりを保ちながら家庭学習',
+    summary:
+      'NPO法人eboardは2026年11月18日、横浜市と不登校児童生徒の学習支援に関する連携協定を締結したと発表しました。横浜市内に住み、学校に通っていない、または行きにくさを感じている小中学生を対象に、無償のICT学習教材「eboard」（映像授業約2,000本・デジタルドリル2万6,000問）を提供します。利用を希望する保護者や児童生徒はまず在籍校に相談し、学校がログイン情報を発行する仕組みで、横浜市立の小学校・中学校・義務教育学校・中高一貫校の計482校でアカウント発行の体制が整えられました。',
+    sourceName: 'ReseEd（リシード）',
+    sourceUrl: 'https://reseed.resemom.jp/article/2026/11/19/14599.html',
+    category: 'local',
+    headline: {
+      value: '482校',
+      label: '横浜市立の小中学校など482校で、不登校児童生徒向けICT教材のアカウント発行体制を整備',
+    },
+    // 横浜市（神奈川県）の自治体の取組のため、lib/data/freeSchools.ts・
+    // manabiTayoukaGakko.tsに横浜市のフリースクール・学びの多様化学校が複数
+    // あることを確認して設定（2026-11-23）。
+    relatedMunicipality: { prefecture: '神奈川県', city: '横浜市' },
+  },
+  {
     id: 'keydesign-haha-rishoku-30bai-chosa-2026-11',
     date: '2026-11-17',
     addedAt: '2026-11-17',
