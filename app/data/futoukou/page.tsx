@@ -30,6 +30,7 @@ import {
   FUTOUKOU_SCHOOL_SUPPORT_STAFF_BUDGET,
   FUTOUKOU_SC_SSW_DEPLOYMENT,
   FUTOUKOU_LEARNING_OUTCOME_REFLECTED,
+  FUTOUKOU_SUPPORT_NEEDS,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -390,6 +391,28 @@ export default function FutoukouDataPage() {
               stats={[...FUTOUKOU_ABSENCE_START_GRADE.internet.grades].map((g) => ({ label: g.grade, value: g.percent, unit: '%' }))}
             />
             <Link href="/data/futoukou/kaishi" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-24追加。'jiki'・'kaishi'・'sodannashi'カードと同じ調査（不登校経験者等を
+              対象とする調査、参考資料3）の、まだカード化していなかった「不登校当時に欲しかった
+              支援（ニーズ）」設問。複数回答可・上位5つのみ資料に掲載。インターネット調査では
+              「とくにない」が2番目に多い（31.3%）点もあわせて見せる（出典・検証経緯は
+              lib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校当時に欲しかった支援、最多は「気持ちの表現・人づきあいの相談」</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              同じ調査で「不登校だった当時に欲しかった相談や手助け」（複数回答可、上位5つ）を聞いたところ、{FUTOUKOU_SUPPORT_NEEDS.internet.label}（n={FUTOUKOU_SUPPORT_NEEDS.internet.n.toLocaleString()}）では「自分の気持ちをはっきり表現したり、人とうまくつきあったりするための方法についての相談や手助け」が{FUTOUKOU_SUPPORT_NEEDS.internet.items[0].percent}%で最多でした。一方「とくにない」と回答した人も{FUTOUKOU_SUPPORT_NEEDS.internet.items[1].percent}%で僅差の2位。{FUTOUKOU_SUPPORT_NEEDS.online.label}（n={FUTOUKOU_SUPPORT_NEEDS.online.n}）では同じ項目が{FUTOUKOU_SUPPORT_NEEDS.online.items[0].percent}%とさらに高く、「とくにない」は上位5項目に入りませんでした。
+            </div>
+            <NewsStatsChart
+              stats={FUTOUKOU_SUPPORT_NEEDS.internet.items.map((i) => ({
+                label: i.isNone ? i.item : i.item.length > 16 ? `${i.item.slice(0, 16)}…` : i.item,
+                value: i.percent,
+                unit: '%',
+              }))}
+            />
+            <Link href="/data/futoukou/shienneeds" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>

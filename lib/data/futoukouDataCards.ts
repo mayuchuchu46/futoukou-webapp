@@ -32,6 +32,7 @@ import {
   FUTOUKOU_SC_SSW_DEPLOYMENT,
   FUTOUKOU_LEARNING_OUTCOME_REFLECTED,
   FUTOUKOU_ABSENCE_START_GRADE,
+  FUTOUKOU_SUPPORT_NEEDS,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -493,6 +494,27 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
       items: [...FUTOUKOU_ABSENCE_START_GRADE.internet.grades]
         .sort((a, b) => b.percent - a.percent)
         .map((g) => ({ label: g.grade, value: g.percent, unit: '%' })),
+    },
+  },
+  {
+    // 2026-11-24追加。'jiki'・'kaishi'・'sodannashi'カードと同じ回顧調査（参考資料3）の、
+    // まだカード化していなかった「不登校当時に欲しかった支援（ニーズ）」設問。複数回答可で
+    // 上位5つのみ資料に掲載。インターネット調査では「とくにない」が2番目に多い（31.3%）点も
+    // あわせて見せる（出典・検証経緯はfutoukouStats.tsのコメント参照）。
+    slug: 'shienneeds',
+    addedAt: '2026-11-24',
+    title: '不登校当時に欲しかった支援、最多は「気持ちの表現・人づきあいの相談」',
+    headlineValue: `${FUTOUKOU_SUPPORT_NEEDS.internet.items[0].percent}%`,
+    headlineLabel: `不登校当時に欲しかった支援で最も多かった回答（${FUTOUKOU_SUPPORT_NEEDS.internet.label}、n=${FUTOUKOU_SUPPORT_NEEDS.internet.n.toLocaleString()}、複数回答可）`,
+    description: `不登校を経験した18〜59歳への回顧調査で「不登校だった当時に欲しかった相談や手助け」（複数回答可、上位5つ）を聞いたところ、${FUTOUKOU_SUPPORT_NEEDS.internet.label}（n=${FUTOUKOU_SUPPORT_NEEDS.internet.n.toLocaleString()}）では「自分の気持ちをはっきり表現したり、人とうまくつきあったりするための方法についての相談や手助け」が${FUTOUKOU_SUPPORT_NEEDS.internet.items[0].percent}%で最多でした。一方で「とくにない」と回答した人も${FUTOUKOU_SUPPORT_NEEDS.internet.items[1].percent}%で僅差の2位に入っています。${FUTOUKOU_SUPPORT_NEEDS.online.label}（n=${FUTOUKOU_SUPPORT_NEEDS.online.n}、支援団体等経由の回答者が多く若年層の割合が高いとされる）では同じ項目が${FUTOUKOU_SUPPORT_NEEDS.online.items[0].percent}%とさらに高く、「とくにない」は上位5項目に入りませんでした。`,
+    tweetText: `不登校当時に欲しかった支援を聞いた調査で最多だったのは「気持ちの表現・人づきあいについての相談や手助け」（${FUTOUKOU_SUPPORT_NEEDS.internet.items[0].percent}%）。一方「とくにない」という回答も${FUTOUKOU_SUPPORT_NEEDS.internet.items[1].percent}%で僅差の2位でした。`,
+    chart: {
+      type: 'ranking',
+      items: FUTOUKOU_SUPPORT_NEEDS.internet.items.map((i) => ({
+        label: i.isNone ? i.item : i.item.length > 20 ? `${i.item.slice(0, 20)}…` : i.item,
+        value: i.percent,
+        unit: '%',
+      })),
     },
   },
 ];
