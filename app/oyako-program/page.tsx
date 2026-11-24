@@ -10,10 +10,10 @@ import { SITE_URL } from '@/lib/site';
 // 使わず、.oyako-lpスコープ内に閉じたスタイルで独立したページとして実装している
 // （2026-11-24）。
 //
-// 画像（アイキャッチ写真・田村さんの顔写真など、計49点）はArtifact内部のストレージに
-// あり外部から取得できないため、この初版では全て省略している。実際の写真が用意でき次第、
-// 差し替えが必要（2026-11-24）。
-// 関連記事カルーセル（てつなぎ記事へのリンク、画像依存のセクション）も同じ理由で省略。
+// 画像（写真・イラストアイコン、計30点）はArtifact内のアセットストレージから
+// 取得し、public/images/oyako-program/ 配下にそのまま保存している（2026-11-25）。
+// てつなぎ関連記事カルーセル（.tetsunagi-auto-scroll）用の自動スクロールJSも
+// そのまま移植済み。
 //
 // 価格・開講時期・お支払い方法は企画の進行に合わせて今後も変わりうるため、
 // 詳細な実施日は申込み後に個別案内とし、開講時期は「2027年1月中旬〜2月開講予定」という
@@ -66,7 +66,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
 
   <!-- HERO -->
   <section class="hero-section" style="position:relative;overflow:hidden;min-height:560px;display:flex;align-items:center;padding:64px 24px 80px">
-    
+    <img src="/images/oyako-program/d958e240cd492914484b48b7ffef597d.png" alt="親子" class="hero-photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0">
     <div class="hero-gradient-h" style="position:absolute;inset:0;z-index:0;background:linear-gradient(100deg,var(--cream) 0%,var(--cream) 34%,rgba(247,250,250,0.94) 48%,rgba(247,250,250,0.55) 62%,rgba(247,250,250,0.15) 76%);"></div>
     <div class="hero-gradient-v" style="position:absolute;inset:0;z-index:0;background:linear-gradient(0deg,var(--peach) 0%,rgba(243,233,220,0) 22%);"></div>
     <div class="hero-mobile-scrim" style="position:absolute;inset:0;z-index:0;background:rgba(251,246,239,0.4);display:none"></div>
@@ -77,15 +77,15 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
         <p class="hero-desc" style="font-size:clamp(15px,4vw,17px);line-height:1.8;color:var(--ink-soft);margin:0;max-width:520px">不登校や発達面の心配、行き渋りなど、お子さんとの関わり方に迷いや不安があるご家庭へ。<strong style="color:var(--ink)">3ヶ月間、公認心理師と一緒に実践できる関わり方を身につけます。</strong></p>
         <div class="hero-pills-row" style="display:flex;gap:8px">
           <div class="pill" style="flex:1 1 0;min-width:0;padding:8px 10px 8px 8px">
-            <span class="mini-icon" style="background:#DFF3F4;flex:0 0 30px"></span>
+            <span class="mini-icon" style="background:#DFF3F4;flex:0 0 30px"><img src="/images/oyako-program/66d392c36711cc29a556d2ce65bbc4d2.png" alt="" style="width:20px;height:20px;object-fit:contain"></span>
             グループワーク
           </div>
           <div class="pill" style="flex:1 1 0;min-width:0;padding:8px 10px 8px 8px">
-            <span class="mini-icon" style="background:var(--gold-bg);flex:0 0 30px"></span>
+            <span class="mini-icon" style="background:var(--gold-bg);flex:0 0 30px"><img src="/images/oyako-program/1f9984e3f8e0e0c6de51d9efc411a443.png" alt="" style="width:20px;height:20px;object-fit:contain"></span>
             カウンセリング
           </div>
           <div class="pill" style="flex:1 1 0;min-width:0;padding:8px 10px 8px 8px">
-            <span class="mini-icon" style="background:var(--sage-bg);flex:0 0 30px"></span>
+            <span class="mini-icon" style="background:var(--sage-bg);flex:0 0 30px"><img src="/images/oyako-program/81497ab9a33ed1c2373dd660ace63926.png" alt="" style="width:20px;height:20px;object-fit:contain"></span>
             コミュニティ
           </div>
         </div>
@@ -106,7 +106,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
 
   <!-- GOALS -->
   <section style="padding:64px 24px 56px;max-width:860px;margin:0 auto;text-align:center;display:flex;flex-direction:column;gap:28px;position:relative">
-    
+    <img src="/images/oyako-program/4bf347b0d99f50a5ae1cb6ed0155d282.png" alt="" style="position:absolute;top:-10px;right:0;width:90px;height:90px;object-fit:contain;opacity:0.5;pointer-events:none">
     <div>
       <h2 style="font-size:clamp(21px,5.5vw,26px);color:var(--ink)">このプログラムで目指すこと</h2>
       <p style="font-size:15px;color:var(--ink-soft);margin:12px 0 0">3ヶ月後には、お子さんの言動の背景を理解し、落ち着いて関わり方を選べる状態を目指します。</p>
@@ -114,21 +114,21 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
     <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(220px, 100%), 1fr));gap:18px">
       <div style="background:var(--card);border-radius:14px;padding:22px 20px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
         <div class="goal-icon-wrap" style="position:relative;width:68px;height:68px;margin-bottom:4px">
-          
+          <img class="goal-icon" src="/images/oyako-program/243707ff1e003ac3b8350d577eefd88d.png" alt="" style="width:68px;height:68px;border-radius:50%;object-fit:cover;object-position:center 40%">
           <div class="goal-badge" style="position:absolute;bottom:-4px;right:-4px;width:24px;height:24px;border-radius:50%;background:var(--sage-bg);color:var(--sage);display:flex;align-items:center;justify-content:center;border:2px solid var(--card)"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
         </div>
         <div style="font-size:15px;font-weight:600;color:var(--ink);line-height:1.6">子どもとの関わり方に自信が持てる</div>
       </div>
       <div style="background:var(--card);border-radius:14px;padding:22px 20px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
         <div class="goal-icon-wrap" style="position:relative;width:68px;height:68px;margin-bottom:4px">
-          
+          <img class="goal-icon" src="/images/oyako-program/7f8472ed14f6555145f28320e141160b.png" alt="" style="width:68px;height:68px;border-radius:50%;object-fit:cover;object-position:center 40%">
           <div class="goal-badge" style="position:absolute;bottom:-4px;right:-4px;width:24px;height:24px;border-radius:50%;background:var(--sage-bg);color:var(--sage);display:flex;align-items:center;justify-content:center;border:2px solid var(--card)"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
         </div>
         <div style="font-size:15px;font-weight:600;color:var(--ink);line-height:1.6">一人で抱え込まず相談できる場ができる</div>
       </div>
       <div style="background:var(--card);border-radius:14px;padding:22px 20px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
         <div class="goal-icon-wrap" style="position:relative;width:68px;height:68px;margin-bottom:4px">
-          
+          <img class="goal-icon" src="/images/oyako-program/6e7956d6ce55ed774e0ac0be4f6c2ce4.png" alt="" style="width:68px;height:68px;border-radius:50%;object-fit:cover;object-position:center 40%">
           <div class="goal-badge" style="position:absolute;bottom:-4px;right:-4px;width:24px;height:24px;border-radius:50%;background:var(--sage-bg);color:var(--sage);display:flex;align-items:center;justify-content:center;border:2px solid var(--card)"><svg width="12" height="12" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
         </div>
         <div style="font-size:15px;font-weight:600;color:var(--ink);line-height:1.6">不安な気持ちが少しずつ軽くなる</div>
@@ -141,7 +141,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
     <h2 style="font-size:clamp(22px,6vw,28px);color:var(--ink)">こんなお悩み、ありませんか？</h2>
     <div style="display:flex;flex-direction:column;gap:16px;text-align:left;margin-top:8px">
       <div style="display:flex;align-items:stretch;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
-        
+        <img src="/images/oyako-program/c3c23bca86b2aa4414e285bca2e106fb.png" alt="" style="width:120px;flex:0 0 120px;object-fit:cover">
         <div style="width:1px;background:#EFE6D8;flex:0 0 1px"></div>
         <div style="display:flex;gap:10px;align-items:flex-start;padding:18px 20px;flex:1">
           <span style="flex:0 0 24px;width:24px;height:24px;border-radius:8px;background:#DFF3F4;color:var(--coral);display:flex;align-items:center;justify-content:center;margin-top:2px"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
@@ -149,7 +149,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
         </div>
       </div>
       <div style="display:flex;align-items:stretch;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
-        
+        <img src="/images/oyako-program/5244f88952ac720365ef7d5df4362a26.png" alt="" style="width:120px;flex:0 0 120px;object-fit:cover">
         <div style="width:1px;background:#EFE6D8;flex:0 0 1px"></div>
         <div style="display:flex;gap:10px;align-items:flex-start;padding:18px 20px;flex:1">
           <span style="flex:0 0 24px;width:24px;height:24px;border-radius:8px;background:#DFF3F4;color:var(--coral);display:flex;align-items:center;justify-content:center;margin-top:2px"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
@@ -157,7 +157,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
         </div>
       </div>
       <div style="display:flex;align-items:stretch;background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
-        
+        <img src="/images/oyako-program/dd5c7278b156792d6d13b637637ccd3b.png" alt="" style="width:120px;flex:0 0 120px;object-fit:cover">
         <div style="width:1px;background:#EFE6D8;flex:0 0 1px"></div>
         <div style="display:flex;gap:10px;align-items:flex-start;padding:18px 20px;flex:1">
           <span style="flex:0 0 24px;width:24px;height:24px;border-radius:8px;background:#DFF3F4;color:var(--coral);display:flex;align-items:center;justify-content:center;margin-top:2px"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
@@ -204,13 +204,13 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(260px, 100%), 1fr));gap:24px">
         <div style="background:var(--card);border-radius:14px;padding:32px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
-          
+          <img src="/images/oyako-program/aadee301a173523a3137c97e0efd3599.png" alt="" style="width:100%;max-width:160px;height:auto;border-radius:12px;object-fit:contain;align-self:center">
           <div style="font-size:13px;font-weight:600;color:var(--coral);letter-spacing:0.04em">月2回・1時間</div>
           <h3 style="font-size:20px">オンラインワークショップ</h3>
           <p style="font-size:15px;line-height:1.7;color:var(--ink-soft);margin:0">公認心理師が講師を担当し、関わり方の具体的なスキルを毎回テーマに沿って学びます。</p>
         </div>
         <div style="background:var(--card);border-radius:14px;padding:32px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
-          
+          <img src="/images/oyako-program/7aabb5d69b9b0015862bcae4e8e7bf92.png" alt="" style="width:100%;max-width:160px;height:auto;border-radius:12px;object-fit:contain;align-self:center">
           <div style="font-size:13px;font-weight:600;color:var(--coral);letter-spacing:0.04em">月1回・30分</div>
           <h3 style="font-size:20px">個別オンラインカウンセリング</h3>
           <p style="font-size:15px;line-height:1.7;color:var(--ink-soft);margin:0">ご家庭ごとの状況に合わせて、公認心理師が1対1でじっくり相談に応じます。</p>
@@ -254,7 +254,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
     <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(280px, 100%), 1fr));gap:20px">
       <div style="background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
         <div style="background:#DFF3F4;color:var(--ink);padding:16px 20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;border-left:4px solid var(--coral)">
-          
+          <img src="/images/oyako-program/56c2a5400801e9702c55b68189e3f7be.png" alt="" style="width:28px;height:28px;object-fit:contain">
           1ヶ月目｜子どもの今を理解する
         </div>
         <div style="padding:20px;display:flex;flex-direction:column;gap:12px;font-size:14px;color:var(--ink-soft);line-height:1.6">
@@ -264,7 +264,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </div>
       <div style="background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
         <div style="background:#DFF3F4;color:var(--ink);padding:16px 20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;border-left:4px solid var(--coral)">
-          
+          <img src="/images/oyako-program/eeeff1db2c7bd437e60d86c933cfcf2a.png" alt="" style="width:28px;height:28px;object-fit:contain">
           2ヶ月目｜見えにくいサインと専門的な視点
         </div>
         <div style="padding:20px;display:flex;flex-direction:column;gap:12px;font-size:14px;color:var(--ink-soft);line-height:1.6">
@@ -274,7 +274,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </div>
       <div style="background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
         <div style="background:#DFF3F4;color:var(--ink);padding:16px 20px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;border-left:4px solid var(--coral)">
-          
+          <img src="/images/oyako-program/84dea915739a11cc9ddb99ea1f0b4e85.png" alt="" style="width:28px;height:28px;object-fit:contain">
           3ヶ月目｜これからの関わり方
         </div>
         <div style="padding:20px;display:flex;flex-direction:column;gap:12px;font-size:14px;color:var(--ink-soft);line-height:1.6">
@@ -321,7 +321,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
     <div class="instructor-wrap" style="display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start">
       <div class="instructor-left" style="flex:0 1 220px;min-width:200px;display:flex;flex-direction:column;gap:20px">
         <div class="instructor-photo-col" style="display:flex;flex-direction:column;align-items:center;gap:10px">
-          
+          <img src="/images/oyako-program/04b3718ce70b94545a4281afbd58cea7.png" alt="田村俊作（公認心理師）" style="width:120px;height:120px;border-radius:50%;object-fit:cover;background:var(--peach);border:3px solid var(--card);box-shadow:0 2px 8px rgba(0,0,0,0.08)">
           <div style="background:#DFF3F4;color:var(--coral-dark);font-size:12px;font-weight:600;padding:5px 14px;border-radius:999px">伴走する専門家</div>
         </div>
         <div class="instructor-side" style="background:var(--card);border-radius:14px;padding:24px;flex-direction:column;gap:14px;display:none">
@@ -346,7 +346,17 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
         </div>
     </div>
     <p style="font-size:14px;line-height:1.7;color:var(--mute);margin:24px 0 0">子育て情報メディア「<a href="https://tetsunagi-p.com/" target="_blank" style="color:var(--coral)">てつなぎ</a>」にて、掲示板の声をもとにしたインタビューコラムの監修・取材対応を継続的に担当。</p>
-    
+    <div class="slide-in tetsunagi-auto-scroll" style="display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 4px 10px;margin-top:14px">
+      <a href="https://tetsunagi-p.com/writing/66" style="flex:0 0 220px;scroll-snap-align:start;border-radius:10px;overflow:hidden;display:block"><img src="/images/oyako-program/5e96e654dc4e9d9c72c802e678b06677.jpg" alt="不登校編" style="width:100%;display:block"></a>
+      <div style="flex:0 0 220px;scroll-snap-align:start;border-radius:10px;overflow:hidden"><img src="/images/oyako-program/5f385dbe6fba5b27ca9904e53453a06c.jpg" alt="限界・追い詰められる親の心理" style="width:100%;display:block"></div>
+      <div style="flex:0 0 220px;scroll-snap-align:start;border-radius:10px;overflow:hidden"><img src="/images/oyako-program/389f509d48c10af301d90e08c3f92ca7.jpg" alt="夫婦関係編" style="width:100%;display:block"></div>
+      <div style="flex:0 0 220px;scroll-snap-align:start;border-radius:10px;overflow:hidden"><img src="/images/oyako-program/ea490bd8178bdf6ad183e59925ea6953.jpg" alt="子どもの性被害と性教育" style="width:100%;display:block"></div>
+      <div style="flex:0 0 220px;scroll-snap-align:start;border-radius:10px;overflow:hidden"><img src="/images/oyako-program/b9c7207aa46467c6b68ef85498ab0b30.jpg" alt="学校に行きたくないと言われたとき" style="width:100%;display:block"></div>
+      <div style="flex:0 0 220px;scroll-snap-align:start;border-radius:10px;overflow:hidden"><img src="/images/oyako-program/ec1bd3b0af876a47ebdc83a1057a5aab.jpg" alt="いじめられてる？いじめてる？" style="width:100%;display:block"></div>
+      <div style="flex:0 0 220px;scroll-snap-align:start;border-radius:10px;overflow:hidden"><img src="/images/oyako-program/cf1dc8bb39221188d9276fd9e1e64e77.jpg" alt="子どものSOSサイン7選" style="width:100%;display:block"></div>
+      <div style="flex:0 0 220px;scroll-snap-align:start;border-radius:10px;overflow:hidden"><img src="/images/oyako-program/ee6cb2be7b3c75513be6772ae7c25c0b.jpg" alt="実母がしんどい" style="width:100%;display:block"></div>
+    </div>
+    <p style="font-size:12px;color:var(--mute);margin-top:6px">※画像を横にスクロールすると他のコラムもご覧いただけます。リンク先が確認できた「不登校編」以外は未リンクです。</p>
   </section>
 
   <!-- DIFFERENTIATION -->
@@ -358,7 +368,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
     <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(240px, 100%), 1fr));gap:20px">
       <div class="diff-card" style="background:var(--card);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:10px">
         <div class="diff-icon" style="position:relative;width:52px;height:52px">
-          
+          <img src="/images/oyako-program/f3e41f2dcd0f5ebf7aa1983470e30956.png" alt="" style="width:52px;height:52px;object-fit:contain">
           <div style="position:absolute;bottom:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--coral);color:#FFFDF9;font-family:'Fraunces',serif;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--card)">01</div>
         </div>
         <div class="diff-text" style="display:flex;flex-direction:column;gap:10px">
@@ -368,7 +378,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </div>
       <div class="diff-card" style="background:var(--card);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:10px">
         <div class="diff-icon" style="position:relative;width:52px;height:52px">
-          
+          <img src="/images/oyako-program/fca61f45b72e6fb5fef5c12811af00f9.png" alt="" style="width:52px;height:52px;object-fit:contain">
           <div style="position:absolute;bottom:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--coral);color:#FFFDF9;font-family:'Fraunces',serif;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--card)">02</div>
         </div>
         <div class="diff-text" style="display:flex;flex-direction:column;gap:10px">
@@ -378,7 +388,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </div>
       <div class="diff-card" style="background:var(--card);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:10px">
         <div class="diff-icon" style="position:relative;width:52px;height:52px">
-          
+          <img src="/images/oyako-program/f7b30c791a8b9a2691ebe7fb22a8b155.png" alt="" style="width:52px;height:52px;object-fit:contain">
           <div style="position:absolute;bottom:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--coral);color:#FFFDF9;font-family:'Fraunces',serif;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--card)">03</div>
         </div>
         <div class="diff-text" style="display:flex;flex-direction:column;gap:10px">
@@ -388,7 +398,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </div>
       <div class="diff-card" style="background:var(--card);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:10px">
         <div class="diff-icon" style="position:relative;width:52px;height:52px">
-          
+          <img src="/images/oyako-program/de471b98085c340e1a66e00da4850bc9.png" alt="" style="width:52px;height:52px;object-fit:contain">
           <div style="position:absolute;bottom:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--coral);color:#FFFDF9;font-family:'Fraunces',serif;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--card)">04</div>
         </div>
         <div class="diff-text" style="display:flex;flex-direction:column;gap:10px">
@@ -398,7 +408,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </div>
       <div class="diff-card" style="background:var(--card);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:10px">
         <div class="diff-icon" style="position:relative;width:52px;height:52px">
-          
+          <img src="/images/oyako-program/56c2a5400801e9702c55b68189e3f7be.png" alt="" style="width:52px;height:52px;object-fit:contain">
           <div style="position:absolute;bottom:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--coral);color:#FFFDF9;font-family:'Fraunces',serif;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--card)">05</div>
         </div>
         <div class="diff-text" style="display:flex;flex-direction:column;gap:10px">
@@ -408,7 +418,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </div>
       <div class="diff-card" style="background:var(--card);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:10px">
         <div class="diff-icon" style="position:relative;width:52px;height:52px">
-          
+          <img src="/images/oyako-program/d33e10b8493ce6b029cccc6c9769f7ea.png" alt="" style="width:52px;height:52px;object-fit:contain">
           <div style="position:absolute;bottom:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--coral);color:#FFFDF9;font-family:'Fraunces',serif;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--card)">06</div>
         </div>
         <div class="diff-text" style="display:flex;flex-direction:column;gap:10px">
@@ -421,7 +431,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
 
   <!-- FAQ -->
   <section id="faq" style="background:var(--peach);padding:72px 24px;position:relative">
-    
+    <img src="/images/oyako-program/4bf347b0d99f50a5ae1cb6ed0155d282.png" alt="" style="position:absolute;bottom:40px;left:0;width:110px;height:110px;object-fit:contain;opacity:0.35;pointer-events:none;transform:scaleX(-1)">
     <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px;position:relative;z-index:1">
       <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:12px">
         <div class="icon-badge" style="background:var(--card);color:var(--coral)"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"></circle><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 .9-1 1.7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path><circle cx="12" cy="17" r="0.9" fill="currentColor"></circle></svg></div>
@@ -453,7 +463,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </details>
       <details style="background:var(--card);border-radius:12px;padding:20px 24px">
         <summary style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:16px;font-weight:600;color:var(--coral)">夫婦で参加することはできますか？<span class="chev">▾</span></summary>
-        <div style="font-size:15px;color:var(--ink-soft);line-height:1.7;margin-top:10px">はい。おひとり分のお申し込みで、ご夫婦お二人でご参加いただけます。お二人目は半額（¥34,000）で、個別カウンセリングは1回45分になり、お二人そろって一緒にご参加いただくことも、お二人で時間を分けてそれぞれご利用いただくことも可能です。</div>
+        <div style="font-size:15px;color:var(--ink-soft);line-height:1.7;margin-top:10px">はい。おひとり分のお申し込みで、ご夫婦お二人でご参加いただけます。お二人目は半額（¥34,900）で、個別カウンセリングは1回45分になり、お二人そろって一緒にご参加いただくことも、お二人で時間を分けてそれぞれご利用いただくことも可能です。</div>
       </details>
     </div>
     <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:40px;position:absolute;left:0;bottom:-1px">
@@ -525,7 +535,41 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
     公認心理師が伴走する、子どもとの関わり方実践プログラム
   </footer>
 
-</div>`;
+</div>
+`;
+
+const AUTO_SCROLL_JS = `
+(function(){
+  function initAutoScroll(el){
+    var speed = 0.6, paused = false, hovered = false, touching = false;
+    function step(){
+      if(!paused && !hovered && !touching){
+        if(el.scrollLeft + el.clientWidth >= el.scrollWidth - 1){
+          el.scrollLeft = 0;
+        } else {
+          el.scrollLeft += speed;
+        }
+      }
+      requestAnimationFrame(step);
+    }
+    el.addEventListener('mouseenter', function(){ hovered = true; });
+    el.addEventListener('mouseleave', function(){ hovered = false; });
+    el.addEventListener('touchstart', function(){ touching = true; }, {passive:true});
+    el.addEventListener('touchend', function(){ setTimeout(function(){ touching = false; }, 2500); }, {passive:true});
+    el.addEventListener('pointerdown', function(){ paused = true; });
+    window.addEventListener('pointerup', function(){ setTimeout(function(){ paused = false; }, 1500); });
+    requestAnimationFrame(step);
+  }
+  function start(){
+    document.querySelectorAll('.tetsunagi-auto-scroll').forEach(initAutoScroll);
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+`;
 
 export default async function OyakoProgramPage() {
   'use cache';
@@ -556,6 +600,7 @@ export default async function OyakoProgramPage() {
         </div>
         <div dangerouslySetInnerHTML={{ __html: PAGE_BODY }} />
       </div>
+      <script dangerouslySetInnerHTML={{ __html: AUTO_SCROLL_JS }} />
     </>
   );
 }
