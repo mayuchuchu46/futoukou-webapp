@@ -122,6 +122,32 @@ export function buildCorrespondenceSchoolFactsLines(school: CorrespondenceHighSc
     );
   }
   if (school.note) facts.push(`その他の確認済み情報（不登校生徒への対応・支援内容等）：${school.note}`);
+  // 2026-11-25、「もうちょい具体的な解答できなかったかなぁ」との指摘を受けて調査した
+  // ところ、attendanceStyles/attendanceNote（通う頻度）・tuitionNote（学費）・
+  // specialties（好きなこと・得意なことを伸ばせるコース）は学校詳細ページ
+  // （app/gakko/tsushin/[no]/page.tsx）には表示されるのに、AIへ渡すfactsBlockには
+  // 一切含まれていなかった（noteとadmissionしか渡していなかった）ことが判明。この
+  // ファイルの冒頭コメントに記録されている「noteを追加したのにfactsBlockへの配線を
+  // 忘れていた」のと同種の抜けで、通学頻度・学費・特色コースの確認済みデータがある
+  // 学校でも、相談文でそれらを尋ねられると「確認できていません」という的外れな回答に
+  // なっていた。以下を追加してこの3種類も渡すようにする。
+  if (school.attendanceNote) {
+    facts.push(
+      `通う頻度について確認できている情報${school.attendanceSourceUrl ? `（出典：${school.attendanceSourceUrl}）` : ''}：${school.attendanceNote}${school.attendanceFlexible ? '（登校日数・登校日は生徒の状況に合わせて選べる、または後から変更できると確認できている）' : ''}`
+    );
+  }
+  if (school.tuitionNote) {
+    facts.push(
+      `学費について確認できている情報${school.tuitionSourceUrl ? `（出典：${school.tuitionSourceUrl}）` : ''}：${school.tuitionNote}（コース・年度・就学支援金の適用有無で変わりうるため、断定せず「確認できている範囲では」といった形で伝えること）`
+    );
+  }
+  if (school.specialties && school.specialties.length > 0) {
+    facts.push(
+      `好きなこと・得意なことを伸ばせるコース・専攻として確認できているもの：${school.specialties
+        .map((s) => s.course)
+        .join('、')}（開講状況はキャンパスで異なる場合がある）`
+    );
+  }
   if (school.admission) {
     facts.push(
       `入学・入試について確認できている情報（出典：${school.admission.sourceUrl}）：${school.admission.text}（これ以外の入試情報——倍率・合格基準など——は確認できていないため、断定しないこと）`

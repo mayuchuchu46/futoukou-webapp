@@ -265,7 +265,24 @@ export const CORRESPONDENCE_HIGH_SCHOOLS: CorrespondenceHighSchool[] = [
   { no: 120, prefecture: '東京都', municipality: '千代田区', name: '東京都立一橋高等学校', operator: '東京都', officialUrl: 'https://www.hitotsubashi-h.metro.tokyo.lg.jp/', note: '前身校は明治時代にさかのぼる歴史を持ち、昭和25年に都立一橋高校として創立。平成17年度に単位制3部制の定時制課程と通信制課程を開設した。通信制課程はレポート・面接指導（スクーリング）・試験を組み合わせて単位を積み上げる仕組み。' },
   { no: 121, prefecture: '東京都', municipality: '新宿区', name: '東京都立新宿山吹高等学校', operator: '東京都', officialUrl: 'https://www.shinjukuyamabuki-h.metro.tokyo.lg.jp/', note: '単位制・無学年制の普通科で、3年間での卒業を目指せる。自分で科目や時間割を選べる学び方を特色とし、デジタルを活用した学びのパイロット校「高等学校DX加速化推進事業（DXハイスクール）」にも採択されている。' },
   { no: 122, prefecture: '東京都', municipality: '立川市', name: '東京都立砂川高等学校', operator: '東京都', officialUrl: 'https://www.sunagawa-h.metro.tokyo.lg.jp/', note: '多摩地域で唯一、昼夜間定時制課程と通信制課程を併置する都立高校。通信制課程は単位制・無学年制の普通科で、レポート・面接指導（スクーリング）・考査の「加点法」で単位を積み上げる仕組み。' },
-  { no: 123, prefecture: '神奈川県', municipality: '横浜市泉区', name: '神奈川県立横浜修悠館高等学校', operator: '神奈川県', officialUrl: 'https://www.pen-kanagawa.ed.jp/yokohamashuyukan-h/', note: '平成20年4月、神奈川県立湘南高等学校通信制と神奈川県立横浜平沼高等学校通信制を集約して開校した県立の通信制単独校（単位制・普通科）。募集定員は年1,250名で、公立通信制高校としては生徒数・開講講座数ともに最大規模とされる。' },
+  {
+    no: 123,
+    prefecture: '神奈川県',
+    municipality: '横浜市泉区',
+    name: '神奈川県立横浜修悠館高等学校',
+    operator: '神奈川県',
+    officialUrl: 'https://www.pen-kanagawa.ed.jp/yokohamashuyukan-h/',
+    // 2026-11-25、「もうちょい具体的な解答できなかったかなぁ」との指摘を受けて、
+    // この学校を名指しした相談でAIが「自主学習のサポート体制やスクーリングの
+    // 頻度はサイトで確認できていない」としか答えられなかった（＝factsBlockに
+    // 入る確認済み事実が乏しかった）ことが原因と判明。神奈川県教育委員会・
+    // 文部科学省の公開資料を調査し、まさにこの2点（通学頻度の具体例・個別支援
+    // プログラムの内容）を確認できたため追加した。
+    attendanceStyles: ['schooling'],
+    attendanceNote: '単位修得に必要な出席（スクーリング）回数は科目ごとに定められており、例として数学Ⅰは4回以上、公共は2回以上、美術Ⅰは8回以上、体育Ⅰは10回以上とされる（日曜講座・平日講座から科目ごとに選べる）。',
+    attendanceSourceUrl: 'https://www.pen-kanagawa.ed.jp/y-shuyukan-h/nyugaku/documents/gakkouannnai2026.pdf',
+    note: '平成20年4月、神奈川県立湘南高等学校通信制と神奈川県立横浜平沼高等学校通信制を集約して開校した県立の通信制単独校（単位制・普通科）。募集定員は年1,250名で、公立通信制高校としては生徒数・開講講座数ともに最大規模とされる。「日曜講座」「平日講座」を科目ごとに選べる仕組みで、令和7年度から全講座でオンラインレポートが導入された。神奈川県教育委員会・文部科学省の公開資料によれば、小中学校内容の学び直し・補習を行う「トライ教室」、外国につながりのある生徒の学習相談・生活支援を行う「架け橋教室」、発達障害等の生徒向けに自校・他校通級の指導を行う「キャリア・ポート」（月曜1限・木曜4限・日曜4〜5限隔週開講）、進路体験活動の「キャリア活動C」など、複数の個別支援プログラムを備えている。',
+  },
   { no: 124, prefecture: '神奈川県', municipality: '厚木市', name: '神奈川県立厚木清南高等学校', operator: '神奈川県', officialUrl: 'https://www.pen-kanagawa.ed.jp/atsugi-seinan-h/', note: '全日制・定時制・通信制の3課程を一つの校舎で一体的に運営する単位制普通科の「フレキシブルスクール」。通信制は基本的に自学自習で、日曜・火曜のスクーリングとレポート・テストを組み合わせて単位を修得する。' },
   { no: 125, prefecture: '埼玉県', municipality: 'さいたま市北区', name: '埼玉県立大宮中央高等学校', operator: '埼玉県', officialUrl: 'https://omiyachuo-h.spec.ed.jp/', note: '「通信制の課程」「単位制による通信制の課程」「単位制による定時制の課程」の3課程を持つ県立の普通科高校。通信制の課程は自分で時間割を作成する仕組みで、3年制のほか4年以上かけてゆっくり卒業することも選べる。' },
   { no: 126, prefecture: '茨城県', municipality: '水戸市', name: '茨城県立水戸南高等学校', operator: '茨城県', officialUrl: 'https://www.mitominami-h.ibk.ed.jp/', note: '昭和46年に定時制・通信制の独立高校として発足。通信制課程は学年制ではなく、教科書・学習書によるレポート作成と添削、面接指導（スクーリング）、前期・後期の試験を組み合わせて74単位以上を修得する仕組み。' },
