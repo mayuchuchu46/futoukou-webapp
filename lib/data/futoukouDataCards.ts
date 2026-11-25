@@ -33,6 +33,7 @@ import {
   FUTOUKOU_LEARNING_OUTCOME_REFLECTED,
   FUTOUKOU_ABSENCE_START_GRADE,
   FUTOUKOU_SUPPORT_NEEDS,
+  FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -515,6 +516,29 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         value: i.percent,
         unit: '%',
       })),
+    },
+  },
+  {
+    // 2026-11-26追加。'jiki'・'kaishi'・'sodannashi'・'shienneeds'カードと同じ回顧調査
+    // （参考資料3）の、まだカード化していなかった「不登校経験と中学校卒業後の経験との関連」
+    // 設問。7項目のうち、最も割合が高い「人との関わりに不安を感じたり、人と関わりをもつ
+    // ことに苦労した」をヘッドラインに採用（出典・検証経緯はfutoukouStats.tsのコメント参照）。
+    slug: 'sotsugo',
+    addedAt: '2026-11-26',
+    title: '不登校経験者の7割、卒業後も「人との関わりに不安」',
+    headlineValue: `${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items[4].yesPercent}%`,
+    headlineLabel: `中学卒業後に「人との関わりに不安を感じたり、人と関わりをもつことに苦労した」人の割合（${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.label}、n=${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.n.toLocaleString()}）`,
+    description: `不登校を経験した18〜59歳への回顧調査で「中学校卒業後今までに、次のようなことがあったか」を聞いたところ、${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.label}（n=${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.n.toLocaleString()}）では「人との関わりに不安を感じたり、人と関わりをもつことに苦労した」が${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items[4].yesPercent}%と最も高くなりました（${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.online.label}では${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.online.items[4].yesPercent}%）。一方で「成長した、視野が広がった」（${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items[5].yesPercent}%）、「人に優しくなった、人の痛みが分かるようになった」（${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items[6].yesPercent}%）という前向きな変化を挙げた人も過半数を占めています。`,
+    tweetText: `不登校を経験した人への調査で、中学卒業後「人との関わりに不安を感じたり、人と関わりをもつことに苦労した」と答えた人は${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items[4].yesPercent}%。一方「人に優しくなった、人の痛みが分かるようになった」人も${FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items[6].yesPercent}%いました。`,
+    chart: {
+      type: 'ranking',
+      items: [...FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items]
+        .sort((a, b) => b.yesPercent - a.yesPercent)
+        .map((i) => ({
+          label: i.item.length > 20 ? `${i.item.slice(0, 20)}…` : i.item,
+          value: i.yesPercent,
+          unit: '%',
+        })),
     },
   },
 ];

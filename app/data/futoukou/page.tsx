@@ -31,6 +31,7 @@ import {
   FUTOUKOU_SC_SSW_DEPLOYMENT,
   FUTOUKOU_LEARNING_OUTCOME_REFLECTED,
   FUTOUKOU_SUPPORT_NEEDS,
+  FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE,
   FUTOUKOU_SOURCE,
 } from '@/lib/data/futoukouStats';
 
@@ -413,6 +414,30 @@ export default function FutoukouDataPage() {
               }))}
             />
             <Link href="/data/futoukou/shienneeds" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
+          {/* 2026-11-26追加。'jiki'・'kaishi'・'sodannashi'・'shienneeds'カードと同じ調査
+              （不登校経験者等を対象とする調査、参考資料3）の、まだカード化していなかった
+              「不登校経験と中学校卒業後の経験との関連」設問。7項目のうち最も割合が高い
+              「人との関わりに不安」をメインに、前向きな変化（成長した・優しくなった）も
+              あわせて見せる（出典・検証経緯はlib/data/futoukouStats.tsのコメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>不登校経験者の7割、卒業後も「人との関わりに不安」</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              同じ調査で「中学校卒業後今までに、次のようなことがあったか」を聞いたところ、{FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.label}（n={FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.n.toLocaleString()}）では「人との関わりに不安を感じたり、人と関わりをもつことに苦労した」が{FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items[4].yesPercent}%と最も高くなりました（{FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.online.label}では{FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.online.items[4].yesPercent}%）。一方「成長した、視野が広がった」（{FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items[5].yesPercent}%）、「人に優しくなった、人の痛みが分かるようになった」（{FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items[6].yesPercent}%）という前向きな変化を挙げた人も過半数を占めています。
+            </div>
+            <NewsStatsChart
+              stats={[...FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE.internet.items]
+                .sort((a, b) => b.yesPercent - a.yesPercent)
+                .map((i) => ({
+                  label: i.item.length > 16 ? `${i.item.slice(0, 16)}…` : i.item,
+                  value: i.yesPercent,
+                  unit: '%',
+                }))}
+            />
+            <Link href="/data/futoukou/sotsugo" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このデータだけをシェアする →
             </Link>
           </div>
