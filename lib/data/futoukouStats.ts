@@ -843,8 +843,146 @@ export const FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE = {
   },
 } as const;
 
+// ================================================================
+// ここから令和7年度（2025年度）調査結果（2026-11-26公表、2026-11-26追加）
+// ================================================================
+// 文部科学省は令和8年11月26日、令和7年度（2025年度）「児童生徒の問題行動・不登校等
+// 生徒指導上の諸課題に関する調査結果」を公表した（前年度＝令和6年度分は上記までの
+// 「確認の方針」に基づきR6のまま据え置き、本セクションはR7分として別立てで追加する）。
+//
+// 出典：文部科学省「令和7年度 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する
+// 調査結果の概要」（公表：令和8年11月26日）
+// https://www.mext.go.jp/content/20261226-mxt-jidou02-100012536_g.pdf
+// （掲載元の一覧ページ：https://www.mext.go.jp/a_menu/shotou/seitoshidou/1302902.htm）
+//
+// 【確認の方針・注意】
+// ・本セクションの数値は、上記PDFをブラウザで直接開き、該当ページを画面表示で
+//   目視確認して転記したもの（「確認済み」）。既存セクションで行っているような
+//   「別プロンプトでの2回独立抽出による相互確認」までは、今回は公表直後の時間的制約
+//   により実施できていない。将来、文部科学省の「不登校抜粋版」のような整理された
+//   資料が出た際に再確認し、相互確認済みに格上げする。
+// ・令和7年度から、長期欠席（不登校等）の調査対象に特別支援学校（小・中学部）が
+//   初めて追加された（PDF内に「※令和7年度より、長期欠席（不登校等）…について、
+//   特別支援学校を本調査の調査対象に加えた。」と明記）。そのため、令和7年度の
+//   「359,424人」という数字は小・中学校に加えて特別支援学校（小・中学部）を含む
+//   合計値であり、令和6年度までのFUTOUKOU_YEARLY_TREND（小・中学校のみ、合計
+//   353,970人）とはそのままでは比較できない点に注意。PDF内の前年度比較値
+//   「355,401人」は、特別支援学校分を学校基本調査から遡って加えた比較用の数字
+//   （PDF内の別の注記「特別支援学校（小・中学部）において令和6年度以前は、学校基本
+//   調査による。」より）。
+// ・学年別（小1〜中3）および都道府県別・指定都市別の内訳については、令和7年度分が
+//   2026-11-26付けでe-Stat（政府統計の総合窓口）に統計表として新規公開されている
+//   ことを確認済み（表4-4「長期欠席の学年別状況　学年別不登校児童生徒数」、表4-5・
+//   4-6「都道府県別・指定都市別　理由別長期欠席者数」等。
+//   https://www.e-stat.go.jp/stat-search/files?toukei=00400304&tstat=000001112655&tclass1=000001251141&tclass2=000001251142&tclass3=000001251146 ）。
+//   ただしExcel形式でのみ提供されており、本サイトの更新作業時点ではファイルの中身
+//   （具体的な数値）を未取得。ユーザーの「適当な推測はなし、正確な情報だけを述べる」
+//   という方針に従い、取得できるまでは学年別・都道府県別のR7版データは追加しない
+//   （既存のFUTOUKOU_BY_GRADE・FUTOUKOU_BY_PREFECTURE はR6のまま）。
+
+// ---- 令和7年度 主要サマリー数値 ----
+// 出典：上記概要PDF 4ページ目「3.不登校の状況について（小・中・特別支援学校
+// （小・中学部））」、5ページ目、9ページ目（高等学校）。
+export const FUTOUKOU_LATEST_R7 = {
+  year: 'R7',
+  label: '令和7年度',
+  // 小・中学校のみ（特別支援学校を含まない、R6までと同じ集計範囲）
+  elementary: 140946,
+  juniorHigh: 216762,
+  totalElementaryJuniorHigh: 357708,
+  // 特別支援学校（小・中学部）を含む合計（令和7年度から対象に追加された新しい集計範囲）
+  specialSupport: 1716,
+  totalIncludingSpecialSupport: 359424,
+  // 比較用の前年度値（特別支援学校分を学校基本調査から遡及加算したPDF記載の数字）
+  prevYearTotalIncludingSpecialSupport: 355401,
+  prevYearTotalElementaryJuniorHigh: 353970,
+  // 増加率（令和6年度→令和7年度、カッコ内は令和5年度→令和6年度）
+  increaseRateTotal: 1.1,
+  increaseRateElementary: 2.4,
+  increaseRateJuniorHigh: 0.2,
+  prevIncreaseRateTotal: 2.2,
+  prevIncreaseRateElementary: 5.6,
+  prevIncreaseRateJuniorHigh: 0.1,
+  // 新規不登校児童生徒数（小・中学校合計、学年別の内訳は未取得）
+  newTotal: 150908,
+  prevNewTotal: 153828,
+  // 不登校継続率（小・中学校計、前回調査で不登校だった児童生徒のうち今回も不登校
+  // だった人の割合。既存のFUTOUKOU_CONTINUATION_RATEは小学校・中学校を別々に出した
+  // 数字だが、PDFに記載されていたのは小中学校を合わせた数字のため、本フィールドは
+  // それとは別の集計として扱う）
+  continuationRateCombined: 75.6,
+  prevContinuationRateCombined: 75.2,
+  // 高等学校（国公私立）
+  highSchoolTotal: 67844,
+  prevHighSchoolTotal: 67782,
+  specialSupportHighSchoolTotal: 4139,
+  newHighSchoolTotal: 48094,
+  prevNewHighSchoolTotal: 48869,
+} as const;
+
+// ---- 新規不登校児童生徒数の推移（小・中学校合計、R1〜R7） ----
+// 出典：上記概要PDF 5ページ目のグラフ。既存のFUTOUKOU_LATEST.newTotal（R6:153,828人）・
+// prevNewTotal（R5:165,300人）と一致することを確認済み。
+// 令和7年度は150,908人で、令和6年度（9年ぶりの減少）に続き2年連続の減少。
+export const FUTOUKOU_NEW_FUTOUKOU_TREND: YearlyCount[] = [
+  { year: 'R1', value: 89567 },
+  { year: 'R2', value: 99045 },
+  { year: 'R3', value: 129261 },
+  { year: 'R4', value: 154607 },
+  { year: 'R5', value: 165300 },
+  { year: 'R6', value: 153828 },
+  { year: 'R7', value: 150908 },
+];
+
+// ---- 不登校継続率の推移（小・中学校計、R1〜R7） ----
+// 出典：上記概要PDF 5ページ目のグラフ。既存のFUTOUKOU_CONTINUATION_RATE（小学校・
+// 中学校を別々に算出したもの）とは異なり、こちらはPDFに記載されていた小中学校計の
+// 数字をそのまま使用。令和4年度まで上昇傾向だったが、令和5年度をピークに2年連続で
+// 低下した後、令和7年度はわずかに上昇（75.2%→75.6%）している。
+export const FUTOUKOU_CONTINUATION_RATE_COMBINED: AbsenceOver90DaysByYear[] = [
+  { year: 'R1', percent: 76.9 },
+  { year: 'R2', percent: 73.0 },
+  { year: 'R3', percent: 78.1 },
+  { year: 'R4', percent: 77.6 },
+  { year: 'R5', percent: 78.9 },
+  { year: 'R6', percent: 75.2 },
+  { year: 'R7', percent: 75.6 },
+];
+
+// ---- 学校内外の相談・指導等の状況（令和7年度、小・中・特別支援学校（小・中学部）計） ----
+// 出典：上記概要PDF 4〜5ページ目「学校内外の機関等における専門的な相談・指導等の状況」。
+// 令和7年度から特別支援学校（小・中学部）を含む集計のため、既存のFUTOUKOU_NO_SUPPORT_TREND
+// （R1〜R6、小・中学校のみ）とは集計範囲が異なり、直接の接続はしない（別の独立した
+// セクションとして扱う）。
+export const FUTOUKOU_CONSULTATION_STATUS_R7 = {
+  year: 'R7',
+  label: '令和7年度',
+  totalFutoukou: 359424,
+  // 学校内外の機関等で専門的な相談・指導等を受けた児童生徒
+  consulted: 236979,
+  consultedPercent: 65.9,
+  // 学校内外の機関等で専門的な相談・指導等を受けていない児童生徒
+  notConsulted: 122445,
+  notConsultedPercent: 34.1,
+  // 上記「受けていない」122,445人のうち、担任等から継続的な相談・指導を受けた人数
+  teacherOnlyContact: 99777,
+  teacherOnlyContactPercent: 27.8,
+  // 学校内外の機関等「または」担任等から相談・指導等を受けた児童生徒（①＋②）
+  consultedOrTeacherTotal: 336756,
+  consultedOrTeacherPercent: 93.7,
+  // 上記のどちらも受けていない児童生徒
+  notConsultedAtAll: 22668,
+  notConsultedAtAllPercent: 6.3,
+} as const;
+
 export const FUTOUKOU_SOURCE = {
   name: '文部科学省「令和6年度 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する調査結果」',
   publishedAt: '令和7年10月29日（令和8年1月16日一部修正）',
   url: 'https://www.mext.go.jp/a_menu/shotou/seitoshidou/1422178_00006.htm',
+};
+
+export const FUTOUKOU_SOURCE_R7 = {
+  name: '文部科学省「令和7年度 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する調査結果の概要」',
+  publishedAt: '令和8年11月26日',
+  url: 'https://www.mext.go.jp/content/20261226-mxt-jidou02-100012536_g.pdf',
 };

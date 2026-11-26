@@ -34,6 +34,10 @@ import {
   FUTOUKOU_ABSENCE_START_GRADE,
   FUTOUKOU_SUPPORT_NEEDS,
   FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE,
+  FUTOUKOU_LATEST_R7,
+  FUTOUKOU_NEW_FUTOUKOU_TREND,
+  FUTOUKOU_CONTINUATION_RATE_COMBINED,
+  FUTOUKOU_CONSULTATION_STATUS_R7,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -539,6 +543,84 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
           value: i.yesPercent,
           unit: '%',
         })),
+    },
+  },
+  {
+    // 2026-11-26追加（2回目）。令和7年度（2025年度）調査結果の速報。文部科学省が
+    // 令和8年11月26日に公表した最新値（出典・注意点はfutoukouStats.tsのコメント参照、
+    // 令和7年度から特別支援学校（小・中学部）が集計対象に加わった点に注意）。
+    slug: 'r7saishin',
+    addedAt: '2026-11-26',
+    title: '令和7年度も不登校は過去最多、ただし増加率は1.1%に鈍化',
+    headlineValue: `${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人`,
+    headlineLabel: `不登校の小・中学生（特別支援学校含む）は過去最多の${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人（${FUTOUKOU_LATEST_R7.label}、前年度比${FUTOUKOU_LATEST_R7.increaseRateTotal}%増）`,
+    description: `文部科学省が令和8年11月26日に公表した${FUTOUKOU_LATEST_R7.label}の調査結果によると、不登校の小・中学生（特別支援学校の小・中学部を含む、令和7年度から新たに対象に追加）は${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人（前年度比較値${FUTOUKOU_LATEST_R7.prevYearTotalIncludingSpecialSupport.toLocaleString()}人）で過去最多を更新しましたが、増加率は${FUTOUKOU_LATEST_R7.prevIncreaseRateTotal}%（前年度）から${FUTOUKOU_LATEST_R7.increaseRateTotal}%へとさらに低下しました。内訳は小学校${FUTOUKOU_LATEST_R7.elementary.toLocaleString()}人、中学校${FUTOUKOU_LATEST_R7.juniorHigh.toLocaleString()}人、特別支援学校（小・中学部）${FUTOUKOU_LATEST_R7.specialSupport.toLocaleString()}人です。`,
+    tweetText: `不登校の小・中学生（特別支援学校含む）は${FUTOUKOU_LATEST_R7.label}も過去最多の${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人。ただし増加率は${FUTOUKOU_LATEST_R7.increaseRateTotal}%とさらに鈍化しています（文部科学省、令和8年11月26日公表）。`,
+    chart: {
+      type: 'bars',
+      caption: `${FUTOUKOU_LATEST_R7.label}の不登校児童生徒数の内訳（特別支援学校（小・中学部）を含む）。`,
+      stats: [
+        { label: '小学校', value: FUTOUKOU_LATEST_R7.elementary, unit: '人' },
+        { label: '中学校', value: FUTOUKOU_LATEST_R7.juniorHigh, unit: '人' },
+        { label: '特別支援学校（小・中学部）', value: FUTOUKOU_LATEST_R7.specialSupport, unit: '人' },
+      ],
+    },
+  },
+  {
+    // 2026-11-26追加（3回目）。'shinki'カード（R6:9年ぶりの減少）の続き。令和7年度も
+    // 新規不登校児童生徒数が減少し、2年連続の減少となったことを見せる（出典は
+    // futoukouStats.tsのコメント参照）。
+    slug: 'r7shinki',
+    addedAt: '2026-11-26',
+    title: '新規の不登校、2年連続で減少',
+    headlineValue: `${FUTOUKOU_LATEST_R7.newTotal.toLocaleString()}人`,
+    headlineLabel: `新規不登校児童生徒数（${FUTOUKOU_LATEST_R7.label}、小・中学校計）— 2年連続の減少`,
+    description: `新たに不登校になった児童生徒数（新規不登校児童生徒数、小・中学校計）は、令和5年度の165,300人をピークに、令和6年度153,828人、${FUTOUKOU_LATEST_R7.label}${FUTOUKOU_LATEST_R7.newTotal.toLocaleString()}人と2年連続で減少しています。不登校児童生徒数全体は過去最多を更新し続けていますが、新しく不登校になる子どもの数という観点では改善の兆しが続いています。`,
+    tweetText: `新規不登校児童生徒数（小・中学校計）は${FUTOUKOU_LATEST_R7.label}${FUTOUKOU_LATEST_R7.newTotal.toLocaleString()}人。令和5年度をピークに2年連続で減少しています。`,
+    chart: {
+      type: 'trend',
+      unit: '人',
+      data: FUTOUKOU_NEW_FUTOUKOU_TREND.map((d) => ({ label: d.year, value: d.value })),
+    },
+  },
+  {
+    // 2026-11-26追加（4回目）。'keizoku'カード（R6まで、小学校・中学校別の継続率）とは
+    // 別に、PDFに記載されていた小中学校計の継続率推移を見せる。令和5年度をピークに
+    // 2年連続で低下していた継続率が、令和7年度はわずかに上昇に転じた点が新しい動き
+    // （出典はfutoukouStats.tsのコメント参照）。
+    slug: 'r7keizoku',
+    addedAt: '2026-11-26',
+    title: '下がり続けていた継続率、令和7年度はわずかに上昇',
+    headlineValue: `${FUTOUKOU_LATEST_R7.continuationRateCombined}%`,
+    headlineLabel: `不登校継続率（小・中学校計、${FUTOUKOU_LATEST_R7.label}、前年度${FUTOUKOU_LATEST_R7.prevContinuationRateCombined}%）`,
+    description: `前回調査で不登校だった児童生徒のうち、今回調査でも不登校に計上された人の割合（不登校継続率、小・中学校計）は、令和5年度の78.9%をピークに令和6年度75.2%まで2年連続で低下していましたが、${FUTOUKOU_LATEST_R7.label}は${FUTOUKOU_LATEST_R7.continuationRateCombined}%とわずかに上昇しました。新規の不登校は2年連続で減少している一方、一度不登校になった子が「続く」割合はわずかに増えており、単純に状況が改善しているとは言い切れない結果です。`,
+    tweetText: `不登校継続率（小・中学校計）は令和5年度78.9%→令和6年度75.2%と2年連続で低下していましたが、${FUTOUKOU_LATEST_R7.label}は${FUTOUKOU_LATEST_R7.continuationRateCombined}%とわずかに上昇しました。`,
+    chart: {
+      type: 'trend',
+      unit: '%',
+      data: FUTOUKOU_CONTINUATION_RATE_COMBINED.map((d) => ({ label: d.year, value: d.percent })),
+    },
+  },
+  {
+    // 2026-11-26追加（5回目）。'mushien'カード（R1〜R6、小・中学校のみ）の令和7年度版。
+    // 令和7年度から特別支援学校（小・中学部）を含む集計に変わったため、既存の
+    // FUTOUKOU_NO_SUPPORT_TRENDには接続せず、独立したカードとして追加（出典・注意点は
+    // futoukouStats.tsのコメント参照）。
+    slug: 'r7soudan',
+    addedAt: '2026-11-26',
+    title: '相談・指導を受けていない子は34.1%、担任からの関わりを含めると93.7%に',
+    headlineValue: `${FUTOUKOU_CONSULTATION_STATUS_R7.notConsultedPercent}%`,
+    headlineLabel: `学校内外のどこからも専門的な相談・指導等を受けていない不登校児童生徒の割合（${FUTOUKOU_CONSULTATION_STATUS_R7.label}、${FUTOUKOU_CONSULTATION_STATUS_R7.notConsulted.toLocaleString()}人）`,
+    description: `${FUTOUKOU_CONSULTATION_STATUS_R7.label}（特別支援学校の小・中学部を含む）、学校内外の機関等で専門的な相談・指導等を受けた不登校児童生徒は${FUTOUKOU_CONSULTATION_STATUS_R7.consulted.toLocaleString()}人（${FUTOUKOU_CONSULTATION_STATUS_R7.consultedPercent}%）、受けていない児童生徒は${FUTOUKOU_CONSULTATION_STATUS_R7.notConsulted.toLocaleString()}人（${FUTOUKOU_CONSULTATION_STATUS_R7.notConsultedPercent}%）でした。ただし「受けていない」とされた児童生徒のうち${FUTOUKOU_CONSULTATION_STATUS_R7.teacherOnlyContact.toLocaleString()}人（${FUTOUKOU_CONSULTATION_STATUS_R7.teacherOnlyContactPercent}%）は担任等から継続的な相談・指導を受けており、学校内外の機関等か担任等のどちらかから相談・指導等を受けた児童生徒は合計${FUTOUKOU_CONSULTATION_STATUS_R7.consultedOrTeacherTotal.toLocaleString()}人（${FUTOUKOU_CONSULTATION_STATUS_R7.consultedOrTeacherPercent}%）に達します。どちらからも相談・指導を受けていない児童生徒は${FUTOUKOU_CONSULTATION_STATUS_R7.notConsultedAtAll.toLocaleString()}人（${FUTOUKOU_CONSULTATION_STATUS_R7.notConsultedAtAllPercent}%）でした。`,
+    tweetText: `不登校の子のうち、学校内外の専門機関からの相談・指導を受けていない子は${FUTOUKOU_CONSULTATION_STATUS_R7.notConsultedPercent}%。ただし担任からの関わりを含めると${FUTOUKOU_CONSULTATION_STATUS_R7.consultedOrTeacherPercent}%は何らかの関わりを受けています（${FUTOUKOU_CONSULTATION_STATUS_R7.label}）。`,
+    chart: {
+      type: 'bars',
+      caption: '学校内外の相談・指導等の状況（特別支援学校の小・中学部を含む）。',
+      stats: [
+        { label: '機関等で相談・指導を受けた', value: FUTOUKOU_CONSULTATION_STATUS_R7.consulted, unit: '人' },
+        { label: '受けていないが担任等の継続関与あり', value: FUTOUKOU_CONSULTATION_STATUS_R7.teacherOnlyContact, unit: '人' },
+        { label: 'どちらも受けていない', value: FUTOUKOU_CONSULTATION_STATUS_R7.notConsultedAtAll, unit: '人' },
+      ],
     },
   },
 ];
