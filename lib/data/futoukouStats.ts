@@ -75,18 +75,22 @@ export const FUTOUKOU_LATEST = {
 
 // ---- 学年別の不登校児童生徒数（R4〜R6） ----
 // 確認済み：表構造（学年ごとの列）がそのままテキストとして読み取れた。
-export type GradeFutoukouCount = { grade: string; r4: number; r5: number; r6: number };
+// r7追加：2026-11-26、ユーザー提供のe-Stat公式Excelファイル
+// （表4-4①「学年別不登校児童生徒数」小・中学校の「計」行＝国公私立合計）から
+// 直接読み取った数値。小学校6学年の合計は140,946人、中学校3学年の合計は
+// 216,762人で、いずれもFUTOUKOU_LATEST_R7.elementary／juniorHighと完全一致。
+export type GradeFutoukouCount = { grade: string; r4: number; r5: number; r6: number; r7: number };
 
 export const FUTOUKOU_BY_GRADE: GradeFutoukouCount[] = [
-  { grade: '小1', r4: 6668, r5: 9154, r6: 8738 },
-  { grade: '小2', r4: 10047, r5: 13694, r6: 14125 },
-  { grade: '小3', r4: 13823, r5: 17997, r6: 19460 },
-  { grade: '小4', r4: 18373, r5: 23090, r6: 25322 },
-  { grade: '小5', r4: 25430, r5: 29847, r6: 31979 },
-  { grade: '小6', r4: 30771, r5: 36588, r6: 38080 },
-  { grade: '中1', r4: 53770, r5: 58035, r6: 58736 },
-  { grade: '中2', r4: 70622, r5: 77768, r6: 77066 },
-  { grade: '中3', r4: 69544, r5: 80309, r6: 80464 },
+  { grade: '小1', r4: 6668, r5: 9154, r6: 8738, r7: 8627 },
+  { grade: '小2', r4: 10047, r5: 13694, r6: 14125, r7: 13702 },
+  { grade: '小3', r4: 13823, r5: 17997, r6: 19460, r7: 19628 },
+  { grade: '小4', r4: 18373, r5: 23090, r6: 25322, r7: 26335 },
+  { grade: '小5', r4: 25430, r5: 29847, r6: 31979, r7: 33379 },
+  { grade: '小6', r4: 30771, r5: 36588, r6: 38080, r7: 39275 },
+  { grade: '中1', r4: 53770, r5: 58035, r6: 58736, r7: 59173 },
+  { grade: '中2', r4: 70622, r5: 77768, r6: 77066, r7: 76844 },
+  { grade: '中3', r4: 69544, r5: 80309, r6: 80464, r7: 80745 },
 ];
 
 // ---- 都道府県別 1,000人当たり不登校児童生徒数（R6、小・中学校） ----
@@ -95,56 +99,66 @@ export const FUTOUKOU_BY_GRADE: GradeFutoukouCount[] = [
 // 全国平均は38.6人／1,000人。
 export const FUTOUKOU_NATIONAL_AVG_PER_1000 = 38.6;
 
-export type PrefFutoukouRate = { prefecture: string; per1000: number };
+// r7追加：2026-11-26、ユーザー提供のe-Stat公式Excelファイル
+// （表4-15①「（都道府県別・指定都市別）不登校児童生徒数」の「小・中学校」
+// 1,000人当たり不登校児童生徒数列）から直接読み取った数値（per1000R7）。
+// 全国平均は39.6人／1,000人（表4-15①「全国」行）。
+// 相互確認：同じ全国・都道府県別の不登校実数（人）が、別表「表4-5②（国公私立別・
+// 都道府県別）理由別長期欠席者数　合計（小・中学校）」の「不登校」列（同じく
+// ユーザー提供ファイル r7-4-5-2.xlsx）と全47都道府県・全国計で完全一致することを
+// 確認済み（全国計357,708人）。
+export const FUTOUKOU_NATIONAL_AVG_PER_1000_R7 = 39.6;
+
+export type PrefFutoukouRate = { prefecture: string; per1000: number; per1000R7: number };
 
 export const FUTOUKOU_BY_PREFECTURE: PrefFutoukouRate[] = [
-  { prefecture: '北海道', per1000: 42.2 },
-  { prefecture: '青森県', per1000: 36.3 },
-  { prefecture: '岩手県', per1000: 33.3 },
-  { prefecture: '宮城県', per1000: 47.0 },
-  { prefecture: '秋田県', per1000: 36.4 },
-  { prefecture: '山形県', per1000: 32.5 },
-  { prefecture: '福島県', per1000: 34.5 },
-  { prefecture: '茨城県', per1000: 38.0 },
-  { prefecture: '栃木県', per1000: 43.2 },
-  { prefecture: '群馬県', per1000: 34.9 },
-  { prefecture: '埼玉県', per1000: 32.4 },
-  { prefecture: '千葉県', per1000: 32.9 },
-  { prefecture: '東京都', per1000: 35.7 },
-  { prefecture: '神奈川県', per1000: 38.2 },
-  { prefecture: '新潟県', per1000: 38.8 },
-  { prefecture: '富山県', per1000: 37.4 },
-  { prefecture: '石川県', per1000: 38.7 },
-  { prefecture: '福井県', per1000: 28.9 },
-  { prefecture: '山梨県', per1000: 41.2 },
-  { prefecture: '長野県', per1000: 48.6 },
-  { prefecture: '岐阜県', per1000: 39.8 },
-  { prefecture: '静岡県', per1000: 45.6 },
-  { prefecture: '愛知県', per1000: 41.8 },
-  { prefecture: '三重県', per1000: 37.5 },
-  { prefecture: '滋賀県', per1000: 36.7 },
-  { prefecture: '京都府', per1000: 35.8 },
-  { prefecture: '大阪府', per1000: 37.9 },
-  { prefecture: '兵庫県', per1000: 38.8 },
-  { prefecture: '奈良県', per1000: 39.7 },
-  { prefecture: '和歌山県', per1000: 38.9 },
-  { prefecture: '鳥取県', per1000: 42.3 },
-  { prefecture: '島根県', per1000: 48.8 },
-  { prefecture: '岡山県', per1000: 29.6 },
-  { prefecture: '広島県', per1000: 40.5 },
-  { prefecture: '山口県', per1000: 38.3 },
-  { prefecture: '徳島県', per1000: 36.5 },
-  { prefecture: '香川県', per1000: 31.6 },
-  { prefecture: '愛媛県', per1000: 41.1 },
-  { prefecture: '高知県', per1000: 34.9 },
-  { prefecture: '福岡県', per1000: 47.2 },
-  { prefecture: '佐賀県', per1000: 33.2 },
-  { prefecture: '長崎県', per1000: 38.1 },
-  { prefecture: '熊本県', per1000: 40.7 },
-  { prefecture: '大分県', per1000: 36.9 },
-  { prefecture: '宮崎県', per1000: 32.6 },
-  { prefecture: '鹿児島県', per1000: 38.2 },
-  { prefecture: '沖縄県', per1000: 49.5 },
+  { prefecture: '北海道', per1000: 42.2, per1000R7: 43.7 },
+  { prefecture: '青森県', per1000: 36.3, per1000R7: 37.8 },
+  { prefecture: '岩手県', per1000: 33.3, per1000R7: 35.1 },
+  { prefecture: '宮城県', per1000: 47.0, per1000R7: 47.5 },
+  { prefecture: '秋田県', per1000: 36.4, per1000R7: 38.4 },
+  { prefecture: '山形県', per1000: 32.5, per1000R7: 36.3 },
+  { prefecture: '福島県', per1000: 34.5, per1000R7: 36.7 },
+  { prefecture: '茨城県', per1000: 38.0, per1000R7: 38.7 },
+  { prefecture: '栃木県', per1000: 43.2, per1000R7: 45.1 },
+  { prefecture: '群馬県', per1000: 34.9, per1000R7: 35.9 },
+  { prefecture: '埼玉県', per1000: 32.4, per1000R7: 33.3 },
+  { prefecture: '千葉県', per1000: 32.9, per1000R7: 35.0 },
+  { prefecture: '東京都', per1000: 35.7, per1000R7: 35.8 },
+  { prefecture: '神奈川県', per1000: 38.2, per1000R7: 38.9 },
+  { prefecture: '新潟県', per1000: 38.8, per1000R7: 41.9 },
+  { prefecture: '富山県', per1000: 37.4, per1000R7: 38.4 },
+  { prefecture: '石川県', per1000: 38.7, per1000R7: 38.5 },
+  { prefecture: '福井県', per1000: 28.9, per1000R7: 29.3 },
+  { prefecture: '山梨県', per1000: 41.2, per1000R7: 40.5 },
+  { prefecture: '長野県', per1000: 48.6, per1000R7: 48.4 },
+  { prefecture: '岐阜県', per1000: 39.8, per1000R7: 40.4 },
+  { prefecture: '静岡県', per1000: 45.6, per1000R7: 47.6 },
+  { prefecture: '愛知県', per1000: 41.8, per1000R7: 42.5 },
+  { prefecture: '三重県', per1000: 37.5, per1000R7: 39.2 },
+  { prefecture: '滋賀県', per1000: 36.7, per1000R7: 38.0 },
+  { prefecture: '京都府', per1000: 35.8, per1000R7: 36.0 },
+  { prefecture: '大阪府', per1000: 37.9, per1000R7: 39.0 },
+  { prefecture: '兵庫県', per1000: 38.8, per1000R7: 39.9 },
+  { prefecture: '奈良県', per1000: 39.7, per1000R7: 40.0 },
+  { prefecture: '和歌山県', per1000: 38.9, per1000R7: 40.5 },
+  { prefecture: '鳥取県', per1000: 42.3, per1000R7: 44.6 },
+  { prefecture: '島根県', per1000: 48.8, per1000R7: 51.2 },
+  { prefecture: '岡山県', per1000: 29.6, per1000R7: 30.7 },
+  { prefecture: '広島県', per1000: 40.5, per1000R7: 42.5 },
+  { prefecture: '山口県', per1000: 38.3, per1000R7: 38.8 },
+  { prefecture: '徳島県', per1000: 36.5, per1000R7: 36.7 },
+  { prefecture: '香川県', per1000: 31.6, per1000R7: 33.7 },
+  { prefecture: '愛媛県', per1000: 41.1, per1000R7: 43.6 },
+  { prefecture: '高知県', per1000: 34.9, per1000R7: 37.8 },
+  { prefecture: '福岡県', per1000: 47.2, per1000R7: 48.6 },
+  { prefecture: '佐賀県', per1000: 33.2, per1000R7: 34.8 },
+  { prefecture: '長崎県', per1000: 38.1, per1000R7: 40.5 },
+  { prefecture: '熊本県', per1000: 40.7, per1000R7: 42.8 },
+  { prefecture: '大分県', per1000: 36.9, per1000R7: 37.5 },
+  { prefecture: '宮崎県', per1000: 32.6, per1000R7: 35.7 },
+  { prefecture: '鹿児島県', per1000: 38.2, per1000R7: 39.7 },
+  { prefecture: '沖縄県', per1000: 49.5, per1000R7: 48.2 },
 ];
 
 // ---- 不登校児童生徒について学校が把握した事実（要因・状況、R6、小・中学校合計） ----
@@ -870,15 +884,22 @@ export const FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE = {
 //   「355,401人」は、特別支援学校分を学校基本調査から遡って加えた比較用の数字
 //   （PDF内の別の注記「特別支援学校（小・中学部）において令和6年度以前は、学校基本
 //   調査による。」より）。
-// ・学年別（小1〜中3）および都道府県別・指定都市別の内訳については、令和7年度分が
-//   2026-11-26付けでe-Stat（政府統計の総合窓口）に統計表として新規公開されている
-//   ことを確認済み（表4-4「長期欠席の学年別状況　学年別不登校児童生徒数」、表4-5・
-//   4-6「都道府県別・指定都市別　理由別長期欠席者数」等。
-//   https://www.e-stat.go.jp/stat-search/files?toukei=00400304&tstat=000001112655&tclass1=000001251141&tclass2=000001251142&tclass3=000001251146 ）。
-//   ただしExcel形式でのみ提供されており、本サイトの更新作業時点ではファイルの中身
-//   （具体的な数値）を未取得。ユーザーの「適当な推測はなし、正確な情報だけを述べる」
-//   という方針に従い、取得できるまでは学年別・都道府県別のR7版データは追加しない
-//   （既存のFUTOUKOU_BY_GRADE・FUTOUKOU_BY_PREFECTURE はR6のまま）。
+// ・学年別（小1〜中3）および都道府県別・指定都市別の内訳についても、令和7年度分が
+//   2026-11-26付けでe-Stat（政府統計の総合窓口）に統計表として新規公開された。
+//   当初は本サイトの実行環境からExcelファイルの中身を直接取得する手段がなかった
+//   ため保留していたが、2026-11-26、ユーザー本人がe-Statから該当Excelファイル一式
+//   をダウンロードして本セッションに提供してくれたため、ファイルの中身を直接
+//   読み取って以下のFUTOUKOU_BY_GRADE・FUTOUKOU_BY_PREFECTUREのr7フィールドとして
+//   追加した。出典ファイル：
+//   - 表4-4①「学年別不登校児童生徒数」（ユーザー提供ファイル r7-4-4-1.xlsx）
+//   - 表4-15①「（都道府県別・指定都市別）不登校児童生徒数」（同 r7-4-15-1.xlsx、
+//     小・中学校の1,000人当たり不登校児童生徒数列を使用）
+//   相互確認：表4-15①の都道府県別「不登校児童生徒数」実数（人）は、別表である
+//   表4-5②「（国公私立別・都道府県別）理由別長期欠席者数　合計（小・中学校）」
+//   （同 r7-4-5-2.xlsx）の「不登校」列の実数と全47都道府県・全国計で完全一致を
+//   確認済み（例：全国計357,708人、北海道14,406人）。また全国計の数値
+//   （小140,946人・中216,762人・小中計357,708人・特別支援含む計359,424人）は
+//   上記概要PDFから目視確認したFUTOUKOU_LATEST_R7の値とも一致している。
 
 // ---- 令和7年度 主要サマリー数値 ----
 // 出典：上記概要PDF 4ページ目「3.不登校の状況について（小・中・特別支援学校

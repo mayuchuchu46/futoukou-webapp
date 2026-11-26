@@ -38,6 +38,7 @@ import {
   FUTOUKOU_NEW_FUTOUKOU_TREND,
   FUTOUKOU_CONTINUATION_RATE_COMBINED,
   FUTOUKOU_CONSULTATION_STATUS_R7,
+  FUTOUKOU_NATIONAL_AVG_PER_1000_R7,
 } from './futoukouStats';
 
 export type FutoukouChartStat = { label: string; value: number; unit: string };
@@ -621,6 +622,45 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         { label: '受けていないが担任等の継続関与あり', value: FUTOUKOU_CONSULTATION_STATUS_R7.teacherOnlyContact, unit: '人' },
         { label: 'どちらも受けていない', value: FUTOUKOU_CONSULTATION_STATUS_R7.notConsultedAtAll, unit: '人' },
       ],
+    },
+  },
+  {
+    // 2026-11-26追加（6回目）。'gakunen'カード（R6、最多は中2）の令和7年度版。
+    // ユーザーがe-Statから直接ダウンロードして提供してくれた表4-4①のExcelファイルを
+    // 読み取って作成（出典・相互確認の経緯はfutoukouStats.tsのコメント参照）。
+    // R6までは中学2年生が最多だったが、R7は中学3年生が最多に入れ替わっている点が
+    // 新しい動き。
+    slug: 'r7gakunen',
+    addedAt: '2026-11-26',
+    title: '学年別、令和7年度は中学3年生が最多に',
+    headlineValue: `${FUTOUKOU_BY_GRADE.reduce((m, g) => (g.r7 > m.r7 ? g : m)).r7.toLocaleString()}人`,
+    headlineLabel: `学年別で最も多いのは${FUTOUKOU_BY_GRADE.reduce((m, g) => (g.r7 > m.r7 ? g : m)).grade}（${FUTOUKOU_LATEST_R7.label}）`,
+    description: `${FUTOUKOU_LATEST_R7.label}を学年別に見ると、小学6年生から中学1年生にかけて大きく増える傾向は変わっていませんが、最も多い学年は令和6年度の中学2年生（77,066人）から中学3年生（${FUTOUKOU_BY_GRADE.reduce((m, g) => (g.r7 > m.r7 ? g : m)).r7.toLocaleString()}人）に入れ替わりました。`,
+    tweetText: `不登校児童生徒数を学年別に見ると、${FUTOUKOU_LATEST_R7.label}は中学3年生が${FUTOUKOU_BY_GRADE.reduce((m, g) => (g.r7 > m.r7 ? g : m)).r7.toLocaleString()}人で最多。令和6年度までの最多学年（中学2年生）から入れ替わりました。`,
+    chart: {
+      type: 'bars',
+      caption: `${FUTOUKOU_LATEST_R7.label}。小6→中1で大きく増え、今回は中3が最多でした。`,
+      stats: FUTOUKOU_BY_GRADE.map((g) => ({ label: g.grade, value: g.r7, unit: '人' })),
+    },
+  },
+  {
+    // 2026-11-26追加（7回目）。'todouhuken'カード（R6）の令和7年度版。
+    // ユーザーがe-Statから直接ダウンロードして提供してくれた表4-15①のExcelファイルを
+    // 読み取って作成（出典・相互確認の経緯はfutoukouStats.tsのコメント参照）。
+    // R6までは沖縄県が最多（49.5人）だったが、R7は島根県（51.2人）が最多に入れ替わった
+    // 点が新しい動き。
+    slug: 'r7todouhuken',
+    addedAt: '2026-11-26',
+    title: '都道府県別ランキング（令和7年度版）',
+    headlineValue: `${[...FUTOUKOU_BY_PREFECTURE].sort((a, b) => b.per1000R7 - a.per1000R7)[0].per1000R7}人`,
+    headlineLabel: `1,000人当たりの不登校児童生徒数が最も多いのは${[...FUTOUKOU_BY_PREFECTURE].sort((a, b) => b.per1000R7 - a.per1000R7)[0].prefecture}（${FUTOUKOU_LATEST_R7.label}、全国平均${FUTOUKOU_NATIONAL_AVG_PER_1000_R7}人）`,
+    description: `${FUTOUKOU_LATEST_R7.label}の全国平均は1,000人当たり${FUTOUKOU_NATIONAL_AVG_PER_1000_R7}人（令和6年度${FUTOUKOU_NATIONAL_AVG_PER_1000}人から上昇）です。令和6年度まで最も多かったのは沖縄県（49.5人）でしたが、令和7年度は島根県（${[...FUTOUKOU_BY_PREFECTURE].sort((a, b) => b.per1000R7 - a.per1000R7)[0].per1000R7}人）が最多となりました。`,
+    tweetText: `不登校児童生徒数、1,000人当たりで最も多いのは${[...FUTOUKOU_BY_PREFECTURE].sort((a, b) => b.per1000R7 - a.per1000R7)[0].prefecture}（${FUTOUKOU_LATEST_R7.label}、全国平均${FUTOUKOU_NATIONAL_AVG_PER_1000_R7}人）。令和6年度まで最多だった沖縄県から入れ替わりました。`,
+    chart: {
+      type: 'ranking',
+      items: [...FUTOUKOU_BY_PREFECTURE]
+        .sort((a, b) => b.per1000R7 - a.per1000R7)
+        .map((p) => ({ label: p.prefecture, value: p.per1000R7, unit: '人' })),
     },
   },
 ];
