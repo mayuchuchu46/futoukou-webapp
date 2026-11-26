@@ -25,11 +25,24 @@ export const metadata: Metadata = {
     description: DESC,
     url: `${SITE_URL}/shindan/mimamori`,
     siteName: SITE_NAME,
+    // Next.jsのmetadataはセグメントごとにopenGraph/twitterをまるごと上書きし、
+    // layout.tsxで指定したimagesは継承されない。このページにimagesが無かったため
+    // X(旧Twitter)等でシェアした際に画像が出ていなかった（2026-11-26、「Xにシェア
+    // した画像が反映されてない」との指摘を受けて追加）。
+    images: [
+      {
+        url: `${SITE_URL}/assets/shindan/mimamori-banner.jpg`,
+        width: 1600,
+        height: 534,
+        alt: TITLE,
+      },
+    ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: `${TITLE} | ${SITE_NAME}`,
     description: DESC,
+    images: [`${SITE_URL}/assets/shindan/mimamori-banner.jpg`],
   },
 };
 
