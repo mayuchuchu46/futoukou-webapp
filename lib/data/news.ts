@@ -107,6 +107,34 @@ export const NEWS_ITEMS: NewsItem[] = [
     headline: { value: '35万9424人', label: '不登校の小中学生は過去最多の35万9424人に（2025年度・前年度比1.1%増）' },
   },
   {
+    id: 'schorbit-futoko-kiso-gakuryoku-shindan-2026-11',
+    date: '2026-11-26',
+    addedAt: '2026-11-26',
+    title:
+      'フリースクール「シン・ガッコウ Schorbit」、不登校の中学生向け無料学力診断ツールを本格公開――英数国268問、登録不要',
+    summary:
+      '2026年1月開校のフリースクール「シン・ガッコウ Schorbit」（埼玉県上尾市）は、不登校の中学生向けWebツール「不登校の中学生のための基礎学力診断」を本格公開したと発表しました。英語・数学・国語の「ざっくり診断」（各教科6問・計18問）に加え、中学1〜3年の78単元・268問からなる「じっくり診断」があり、いずれも無料・アカウント登録不要・時間制限なしで利用できるとしています。2026年11月5日に公開した診断の本格版という位置づけです。',
+    sourceName: 'シン・ガッコウ Schorbit（PR TIMES）',
+    sourceUrl: 'https://prtimes.jp/main/html/rd/p/000000007.000162181.html',
+    category: 'other',
+    // 発表元が「2026年1月開校のフリースクール」と明記されているため設定（2026-11-26）。
+    relatedThemeWord: 'フリースクール',
+  },
+  {
+    id: 'nijin-osaka-ibaraki-soujiji-alternative-school-2026-11',
+    date: '2026-11-25',
+    addedAt: '2026-11-26',
+    title:
+      '不登校の子ども向けオルタナティブスクール「NIJINアカデミー」、大阪・茨木に新教室開校――毎週金曜開催、定員5名',
+    summary:
+      '不登校の小中学生を対象としたオルタナティブスクール「NIJINアカデミー」を運営する株式会社NIJIN（東京都江東区）は、大阪府茨木市に新教室「大阪茨木総持寺校」を2026年11月11日に開校したと発表しました。対象は小学1年生から中学3年生で、毎週金曜日10時から15時に茨木市立庄栄コミュニティセンターで開催し、定員5名の少人数制です。同社はNIJINアカデミーを全国50教室以上で展開しており、約1000人が在籍しているとしています。',
+    sourceName: '株式会社NIJIN（PR TIMES）',
+    sourceUrl: 'https://prtimes.jp/main/html/rd/p/000000951.000099150.html',
+    category: 'other',
+    // 発表内容に「オルタナティブスクール」と明記されているため設定（2026-11-26）。
+    relatedThemeWord: 'オルタナティブスクール',
+  },
+  {
     id: 'lanbile-cocokara-nagano-dainino-gakko-2026-11',
     date: '2026-11-24',
     addedAt: '2026-11-24',
