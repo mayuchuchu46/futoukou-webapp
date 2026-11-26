@@ -33,17 +33,19 @@ import { todayJstDateString } from '@/lib/dailyQuestions';
 // 一時追加していたミニグラフ（stats由来）は削除し、headline数字のみ／アイコンの
 // どちらかを出すシンプルな構成にした。
 export default function NewsTeaser() {
-  // addedAtが同じ日付（1日2回のニュース収集タスクが同じ日に2件追加した場合など）の
-  // ときは「>=」でタイブレークし、NEWS_ITEMS配列の中でより後ろにある方を選ぶ
-  // （2026-11-06修正、「でもTOPに出てないよ」との指摘を受けて。単純な「>」だと配列の
-  // 先頭寄り＝記事自体のdateが新しい方が常に勝ってしまい、同じ日の2回目の実行で
-  // 見つけた記事（dateは前の記事より古いがaddedAtは同じ今日）がバナーに反映されない
-  // 不具合があった。addedAtはYYYY-MM-DDのみで追加した時刻までは記録していないため、
-  // この配列内の前後関係によるタイブレークは厳密な解決ではないが、実際の運用
-  // （1日2回、見つかった記事をその都度追記していく）に対しては妥当な近似になる）。
+  // addedAtが同じ日付（1日に複数件のニュースを追加した場合など）のときのタイブレーク
+  // （2026-11-26修正）。NEWS_ITEMSは新しい記事を配列の先頭に追加していく運用
+  // （型定義のコメント「新しい順（配列の先頭が最新）に並べる」のとおり）なので、
+  // 同じaddedAtなら配列のより前方（先に見つかった方）を優先する「>」にする必要が
+  // あった。以前は逆の「>=」（後ろにある方を優先）になっており、同じ日にもう1件
+  // 別の記事のaddedAtだけを今日の日付に更新したケース（八王子市の記事、配列の後方）
+  // が、本当に新しく先頭に追加した記事より優先されてバナーに出てしまう不具合があった。
+  // addedAtはYYYY-MM-DDのみで時刻までは記録していないため、この配列内の前後関係に
+  // よるタイブレークは厳密な解決ではないが、「新しい記事は配列の先頭に追加する」
+  // という実際の運用に対しては妥当な近似になる。
   const latest = NEWS_ITEMS.reduce<typeof NEWS_ITEMS[number] | undefined>(
     (mostRecentlyAdded, item) =>
-      !mostRecentlyAdded || item.addedAt >= mostRecentlyAdded.addedAt ? item : mostRecentlyAdded,
+      !mostRecentlyAdded || item.addedAt > mostRecentlyAdded.addedAt ? item : mostRecentlyAdded,
     undefined
   );
   if (!latest) return null;
