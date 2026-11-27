@@ -97,6 +97,28 @@ export default function AccountPage() {
             <span>プライバシーポリシー</span>
             <span className="muted">›</span>
           </Link>
+
+          {/* 「不具合やわからないことを問い合わせる導線が無い」「アカウント削除の
+              導線がマイページにあってもいいかも」との指摘を受けて追加（2026-11-28）。
+              目立たせたくないとのことなので、カードではなく小さいテキストリンクに
+              とどめている。削除はアプリ内で完結する機能ではなく、これまで通り
+              メールでの本人確認を経た運営側の手動対応（FAQ参照）への入口。 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4 }}>
+            <a
+              href="mailto:mail.manapri@gmail.com?subject=%E3%81%A9%E3%81%86%E3%81%99%E3%82%8B%E5%85%88%E7%94%9F%EF%BC%9A%E4%B8%8D%E5%85%B7%E5%90%88%E3%83%BB%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B"
+              className="muted"
+              style={{ fontSize: 12, textDecoration: 'underline' }}
+            >
+              不具合のご報告・お問い合わせはこちら
+            </a>
+            <a
+              href="mailto:mail.manapri@gmail.com?subject=%E3%81%A9%E3%81%86%E3%81%99%E3%82%8B%E5%85%88%E7%94%9F%EF%BC%9A%E3%82%A2%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88%E5%89%8A%E9%99%A4%E3%81%AE%E3%81%94%E5%B8%8C%E6%9C%9B"
+              className="muted"
+              style={{ fontSize: 12, textDecoration: 'underline' }}
+            >
+              アカウントの削除をご希望の方はこちら
+            </a>
+          </div>
         </div>
         <PcSidebar />
       </div>
