@@ -82,7 +82,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     method: 'other',
     isAccredited: false,
     officialUrl: 'https://amazing-college.com/',
-    note: '「子どもが主役」をコンセプトにした認可外の小学生向け施設（2023年開校）。「未来そうぞう科」など独自科目を設定し、子ども自身の発想・起業体験を重視。',
+    note: '「子どもが主役」をコンセプトに2023年4月12日に開校した認可外の小学生向け施設。校長は岩﨑千佳氏。独自科目「未来そうぞう科」の設立メンバーが運営に参画し、子ども自身の発想や起業体験を重視したプログラムを展開している。',
   },
   {
     no: 13,
@@ -94,7 +94,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     method: 'sudbury',
     isAccredited: false,
     officialUrl: 'https://tokyosudbury.com/',
-    note: '子ども自身がすべてのルールを民主的に決め、自由に過ごしながら学ぶサドベリー型民主主義学校。年齢混合・完全自由学習が基本方針。',
+    note: '2009年、公的支援を持たない市民の手により開校したサドベリー型民主主義学校。代表理事は杉山まさる氏。子ども自身がすべてのルールを民主的に決め、自由に過ごしながら学ぶ年齢混合・完全自由学習が基本方針で、運営資金は生徒の学費と寄付でまかなわれている。2024年に開校15周年を迎えた。',
   },
   {
     no: 14,
@@ -105,7 +105,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     method: 'sudbury',
     isAccredited: false,
     officialUrl: 'https://shonan-sudbury.com/',
-    note: '子どもが自分の時間・活動を完全に管理するサドベリー型民主主義学校。学習指導要領に縛られず、子どもが「学びたい時に学びたいことを学ぶ」が原則。',
+    note: '2008年4月、サドベリー教育に共感した2、3家族が任意団体として開校。米国ボストン郊外のサドベリー・バレー・スクールをモデルに、4歳から18歳までの異年齢の子どもがカリキュラムや評価にとらわれず自分の意思で学びを選択し、学校運営にも子どもたちと共に関わる。',
   },
   {
     no: 15,
@@ -160,7 +160,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     method: 'sudbury',
     isAccredited: false,
     officialUrl: 'https://seedome.org/',
-    note: '東海地方のサドベリー型民主主義学校。子ども自身が自分の時間をすべて管理し、「学びたいことを学びたい時に」が基本方針。',
+    note: '2011年、黒柳佐智代氏が設立した東海地方のサドベリー型民主主義学校。米国ボストン郊外のサドベリー・バレー・スクールをモデルとし、子ども自身が自分の時間をすべて管理し、「学びたいことを学びたい時に」学ぶことを基本方針とする。',
   },
   {
     no: 20,
@@ -173,7 +173,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     method: 'other',
     isAccredited: false,
     officialUrl: 'https://tokyocs.org/',
-    note: '小学生を対象にした認可外の学校。「探求学習」「学際的テーマ学習」を中心に、子どもが「なぜ？」と問い続ける力を育てる教育を実践。',
+    note: '2004年、創立者・理事長の久保一之氏（株式会社グローバルパートナーズ代表取締役）が設立した、小学生を対象とする認可外の全日制マイクロスクール。認定NPO法人が運営し、「探究する学び」の研究開発・実践・普及に取り組んできた先駆的存在で、理念は「自和自和（じわじわ）」。オーストラリア・メルボルンのフィツロイ・コミュニティスクールを姉妹校とし、神戸市のラーンネット・グローバルスクールと提携関係にある。2024年に創立20周年を迎えた。',
   },
   {
     no: 21,
@@ -186,18 +186,19 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     method: 'other',
     isAccredited: false,
     officialUrl: 'https://sangosya.com/',
-    note: '沖縄・那覇の民間学校。学校に行けない・行かない子どもたちの学びと居場所を支援。沖縄の自然・文化を活かした体験的な学びを重視。',
+    note: '2001年、学校法人雙星舎が開校した沖縄の民間学校。理事長は星野人史氏。学校に行けない・行かない子どもたちの学びと居場所を支援し、沖縄の自然・文化を活かした体験的な学びを重視する。2024年には全国初の私立夜間中学校を開校した。',
   },
   {
     no: 22,
     name: 'まっくろくろすけ',
     prefecture: '兵庫県',
-    city: '神戸市',
+    city: '神崎郡市川町',
     schoolType: '小・中相当',
     method: 'sudbury',
     isAccredited: false,
-    officialUrl: 'https://makkurokuro.net/',
-    note: '兵庫・神戸のサドベリー型民主主義学校。子どもが自ら選択・決定する環境を提供し、強制的な学習指導は行わない。',
+    officialUrl: 'https://makkuro20.jp/',
+    address: '兵庫県神崎郡市川町坂戸592',
+    note: '一般社団法人デモクラティックスクールまっくろくろすけが1997年4月に設立した、日本最初期のサドベリー型民主主義学校の一つ（代表者・黒田喜美氏）。子どもが自ら選択・決定する環境を提供し、強制的な学習指導は行わない。姫路市の親の会とも連携している。',
   },
   // 2026-11-07追加。神戸市・京都市等が公開している「フリースクール等情報交換会」
   // 事業説明資料（認定施設の一覧）および神戸市の説明資料PDFで確認できた施設。
@@ -235,7 +236,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     isAccredited: false,
     officialUrl: 'https://l-net.com/',
     address: '神戸市東灘区岡本2-8-14',
-    note: '1996年設立、25年以上の歴史を持つ探究型のオルタナティブスクール（フルスクール）。「テーマ学習」「とことんプロジェクト」など独自科目を展開。',
+    note: '1996年、炭谷俊樹氏（元マッキンゼー・コンサルタント）が「偏差値教育でも自由教育でもない第3の教育」を掲げて開校した、探究型のオルタナティブスクール（フルスクール）。「テーマ学習」「とことんプロジェクト」「マイ・スタディー」など独自科目を展開する。入学・編入希望の増加を受け、2023年6月には小学生対象の二拠点目「ラーンネット・あーる」（神戸市灘区）を開校した。',
   },
   // no.11は元々このファイルにあったが2026-11-08にinnovativeSchools.tsへ
   // 誤って移設されていたもの。2026-11-27、公式情報の再確認で一条校ではなく
