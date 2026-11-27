@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import PcSidebar from '@/components/PcSidebar';
 import { SITE_URL, SITE_NAME } from '@/lib/site';
-import { METHOD_LABEL } from '@/lib/data/alternativeSchools';
+import { METHOD_LABEL, ALTERNATIVE_SCHOOLS } from '@/lib/data/alternativeSchools';
 import { INNOVATIVE_SCHOOLS } from '@/lib/data/innovativeSchools';
 import RelatedListingsCard from '@/components/RelatedListingsCard';
 import { NoteParagraphs } from '@/components/NoteParagraphs';
@@ -75,6 +75,12 @@ export default async function InnovativeSchoolPage({
   const { no } = await params;
   const school = findInnovativeSchool(no);
   if (!school) {
+    // no.11（箕面こどもの森学園）は2026-11-27にalternativeSchools.tsへ
+    // 移設したため、旧リンクをSEO維持のためリダイレクト。
+    const noNum = Number(no);
+    if (Number.isInteger(noNum) && ALTERNATIVE_SCHOOLS.some((s) => s.no === noNum)) {
+      redirect(`/gakko/alternative/${noNum}`);
+    }
     return notFound();
   }
 

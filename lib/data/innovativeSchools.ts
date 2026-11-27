@@ -46,7 +46,7 @@ export const INNOVATIVE_SCHOOLS: readonly InnovativeSchool[] = [
     method: 'other',
     isAccredited: true,
     officialUrl: 'https://kazakoshi.ed.jp/',
-    note: '2020年開校の幼小中一貫の認可私立学校。子どもの「問い」や「探求」を起点にしたプロジェクト型学習。「軽井沢」という地域環境を活かした自然体験も特色。',
+    note: '2020年開校、学校法人軽井沢風越学園が運営する幼稚園・義務教育学校（幼小中混在のコミュニティスクール）。理事長は本城慎之介氏。幼稚園（3〜5歳児）に加え義務教育学校の前期課程（1〜6年生）・後期課程（7〜9年生）を各学年定員35名で設置し、異なる学年の子どもたちが混ざり合いながら「じっくり・ゆったり・たっぷり」学ぶことを掲げる。子どもの「問い」や探究を起点にしたプロジェクト型学習を重視し、2023年には長野県教育委員会と探究を中核とした学びの充実に関する連携協定を締結した。',
   },
   {
     no: 3,
@@ -95,7 +95,7 @@ export const INNOVATIVE_SCHOOLS: readonly InnovativeSchool[] = [
     method: 'kinokuni',
     isAccredited: true,
     officialUrl: 'https://katsuyama.ac.jp/',
-    note: 'きのくに子どもの村学園グループの福井校。山、川、雪など福井の自然を活かしたプロジェクト学習が特色。',
+    note: 'きのくに子どもの村学園グループの2校目として1998年に開校した福井校。「自己決定」「個性化」「体験学習」というグループ共通の3原則のもと、既成の教科書に頼らず、デューイの提唱した「仕事（active occupations）」の考え方に基づくプロジェクト学習を教育の中心に据える。近隣にはスキージャム勝山や恐竜博物館があり、山・川・雪など福井の自然を生かした体験的な活動も特色。',
   },
   {
     no: 7,
@@ -118,7 +118,7 @@ export const INNOVATIVE_SCHOOLS: readonly InnovativeSchool[] = [
     method: 'kinokuni',
     isAccredited: true,
     officialUrl: 'https://nagasaki-higashisonogi.ac.jp/',
-    note: 'きのくに子どもの村学園グループの長崎校。農漁村の自然環境を活かしたプロジェクト学習を実践。',
+    note: 'きのくに子どもの村学園グループの長崎校。グループ共通の「自己決定」「個性化」「体験学習」の3原則のもと、教科学習ではなく実際の仕事に近いプロジェクト活動を中心に据える教育を行う。農漁村の自然環境を活かしたプロジェクト学習を実践。',
   },
   {
     no: 9,
@@ -129,7 +129,7 @@ export const INNOVATIVE_SCHOOLS: readonly InnovativeSchool[] = [
     method: 'steiner',
     isAccredited: true,
     officialUrl: 'https://www.steinerschule.ac.jp/',
-    note: '日本で初めて学校法人として設立されたシュタイナー学校（2010年認可）。子どもの発達段階に合わせた芸術・音楽・手仕事を重視する12年間一貫教育。',
+    note: '神奈川県相模原市緑区（旧・藤野町）の「教育芸術」構造改革特区の枠組みで、廃校になった町立小学校の校舎を活用して設立された、日本で初めて学校法人として認可されたシュタイナー学校（2005年設立、2010年に学校法人として認可）。子どもの発達段階に合わせた芸術・音楽・手仕事を重視する12年間一貫教育を行う。',
   },
   {
     no: 10,
@@ -140,17 +140,11 @@ export const INNOVATIVE_SCHOOLS: readonly InnovativeSchool[] = [
     method: 'steiner',
     isAccredited: true,
     officialUrl: 'https://www.izuminogakuen.com/',
-    note: '北海道初の認可シュタイナー学校（2010年代に北海道の私立小中学校として認可）。',
+    note: '2008年開校、学校法人北海道シュタイナー学園が運営する北海道初の認可シュタイナー学校（初等部・中等部）。毎朝2時間を同じ教科・テーマに3〜4週間かけて集中的に取り組む「メインレッスン（エポック授業）」を軸にしたカリキュラムが特徴。幼稚部「こどもの園」と高等部はNPO法人シュタイナースクールいずみの学校が運営しており、2024年には高等部が高等専修学校として認可され、大学入学資格付与校にも指定された。',
   },
-  {
-    no: 11,
-    name: '箕面こどもの森学園',
-    prefecture: '大阪府',
-    city: '箕面市',
-    schoolType: '小',
-    method: 'freinet',
-    isAccredited: true,
-    officialUrl: 'https://minohkodomonomoregakuen.ed.jp/',
-    note: 'フレネ教育を実践する大阪の認可私立小学校。子ども自身が印刷・出版する「学校新聞」が特色の一つ。',
-  },
+  // no.11（箕面こどもの森学園）は2026-11-27、公式情報の再確認により
+  // 一条校（認可私立学校）ではなく認定NPO法人コクレオの森が運営する
+  // 認可外のオルタナティブスクールであることが判明したため、
+  // lib/data/alternativeSchools.tsへ移設（noは11のまま）。
+  // /gakko/innovative/11へのアクセスは/gakko/alternative/11へリダイレクトする。
 ] as const;
