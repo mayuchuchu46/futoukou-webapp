@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { FUTOUKOU_LATEST } from '@/lib/data/futoukouStats';
+import { FUTOUKOU_LATEST_R7 } from '@/lib/data/futoukouStats';
 
 // 「データで見る不登校」ページ用の静的OGP画像（2026-11-08追加）。
 // app/news/[id]/opengraph-image.tsxと同じ仕組み（next/og + Google Fontsのサブセット
@@ -33,9 +33,9 @@ export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 export default async function Image() {
-  const headlineValue = `${FUTOUKOU_LATEST.total.toLocaleString()}人`;
-  const headlineLabel = `小・中学校の不登校児童生徒数（${FUTOUKOU_LATEST.label}）— 過去最多`;
-  const subText = `新規不登校は9年ぶりに減少（${FUTOUKOU_LATEST.newTotal.toLocaleString()}人）`;
+  const headlineValue = `${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人`;
+  const headlineLabel = `小・中学校・特別支援学校の不登校児童生徒数（${FUTOUKOU_LATEST_R7.label}）過去最多`;
+  const subText = `新規不登校は2年連続で減少（${FUTOUKOU_LATEST_R7.newTotal.toLocaleString()}人）`;
 
   const logoData = await readFile(join(process.cwd(), 'public/assets/sensei_logo.png'), 'base64');
   const logoSrc = `data:image/png;base64,${logoData}`;

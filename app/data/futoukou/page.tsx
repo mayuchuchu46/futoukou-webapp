@@ -10,6 +10,7 @@ import { SITE_URL, SITE_NAME } from '@/lib/site';
 import {
   FUTOUKOU_YEARLY_TREND,
   FUTOUKOU_LATEST,
+  FUTOUKOU_LATEST_R7,
   FUTOUKOU_BY_GRADE,
   FUTOUKOU_BY_PREFECTURE,
   FUTOUKOU_NATIONAL_AVG_PER_1000,
@@ -33,6 +34,7 @@ import {
   FUTOUKOU_SUPPORT_NEEDS,
   FUTOUKOU_POST_JUNIOR_HIGH_EXPERIENCE,
   FUTOUKOU_SOURCE,
+  FUTOUKOU_SOURCE_R7,
 } from '@/lib/data/futoukouStats';
 
 // 「データで見る不登校」ページ（2026-11-08新設）。
@@ -55,12 +57,12 @@ import {
 //    どうする」の3グループに分けて並べる（.futoukou-section-heading見出し）。
 //    以前は8セクションを単純に縦へ並べているだけだった。
 export const metadata: Metadata = {
-  title: `データで見る不登校｜不登校児童生徒数は過去最多353,970人 - ${SITE_NAME}`,
+  title: `データで見る不登校｜不登校児童生徒数は過去最多${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人 - ${SITE_NAME}`,
   description:
-    '文部科学省の最新調査（令和6年度）から、不登校児童生徒数の推移・学年別・都道府県別・要因別のデータをまとめました。小中学生の不登校は過去最多の353,970人。一方で新規の不登校は9年ぶりに減少しています。',
+    `文部科学省の最新調査（令和7年度）から、不登校児童生徒数の推移・学年別・都道府県別・要因別のデータをまとめました。小・中学校・特別支援学校の不登校児童生徒数は過去最多の${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人。一方で新規の不登校は2年連続で減少しています。`,
   alternates: { canonical: `${SITE_URL}/data/futoukou` },
   openGraph: {
-    title: '不登校児童生徒数は過去最多353,970人｜データで見る不登校',
+    title: `不登校児童生徒数は過去最多${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人｜データで見る不登校`,
     description: '文部科学省の最新調査から、不登校の推移・学年別・都道府県別・要因別のデータをまとめました。',
     url: `${SITE_URL}/data/futoukou`,
     siteName: SITE_NAME,
@@ -69,14 +71,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '不登校児童生徒数は過去最多353,970人｜データで見る不登校',
+    title: `不登校児童生徒数は過去最多${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人｜データで見る不登校`,
     description: '文部科学省の最新調査から、不登校の推移・学年別・都道府県別・要因別のデータをまとめました。',
   },
 };
 
 export default function FutoukouDataPage() {
   const trendData = FUTOUKOU_YEARLY_TREND.map((d) => ({ label: d.year, value: d.total }));
-  const gradeStats = FUTOUKOU_BY_GRADE.map((g) => ({ label: g.grade, value: g.r6, unit: '人' }));
+  const gradeStats = FUTOUKOU_BY_GRADE.map((g) => ({ label: g.grade, value: g.r7, unit: '人' }));
   const factorStats = FUTOUKOU_FACTORS.map((f) => ({ label: f.label, value: f.total, unit: '件' }));
   const prefRanked = [...FUTOUKOU_BY_PREFECTURE].sort((a, b) => b.per1000 - a.per1000);
   const highSchoolTrendData = FUTOUKOU_HIGH_SCHOOL_TREND.map((d) => ({ label: d.year, value: d.value }));
@@ -97,7 +99,7 @@ export default function FutoukouDataPage() {
         <div className="page-main">
           <h1 className="pagetitle">データで見る不登校</h1>
           <div className="muted" style={{ marginBottom: 4 }}>
-            文部科学省「{FUTOUKOU_LATEST.label} 児童生徒の問題行動・不登校等生徒指導上の諸課題に関する調査結果」（公表：{FUTOUKOU_SOURCE.publishedAt}）をもとに、不登校に関する統計データをまとめました。気になるものをタップすると、その数字だけのシェア用ページに飛べます。
+            文部科学省「{FUTOUKOU_SOURCE_R7.name}」（公表：{FUTOUKOU_SOURCE_R7.publishedAt}）および「{FUTOUKOU_SOURCE.name}」（公表：{FUTOUKOU_SOURCE.publishedAt}）をもとに、不登校に関する統計データをまとめました。気になるものをタップすると、その数字だけのシェア用ページに飛べます。
           </div>
 
           <FutoukouSummaryGrid />
@@ -106,10 +108,10 @@ export default function FutoukouDataPage() {
               同じ考え方）。 */}
           <div className="card" style={{ alignItems: 'flex-start', gap: 6, background: 'var(--main)', border: 'none' }}>
             <div style={{ fontSize: 44, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>
-              {FUTOUKOU_LATEST.total.toLocaleString()}人
+              {FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人
             </div>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.92)' }}>
-              小・中学校の不登校児童生徒数（{FUTOUKOU_LATEST.label}）— 過去最多、12年連続で増加
+              小・中学校・特別支援学校の不登校児童生徒数（{FUTOUKOU_LATEST_R7.label}）— 過去最多、13年連続で増加
             </div>
           </div>
 
@@ -120,7 +122,7 @@ export default function FutoukouDataPage() {
             <div className="answer-label" style={{ fontSize: 14 }}>不登校児童生徒数の推移（小・中学校合計）</div>
             <YearTrendChart data={trendData} unit="人" />
             <div className="qtext" style={{ fontSize: 13 }}>
-              平成26年度の122,897人から、{FUTOUKOU_LATEST.label}には{FUTOUKOU_LATEST.total.toLocaleString()}人へ。12年連続で増加していますが、増加率そのものは{FUTOUKOU_LATEST.prevIncreaseRateTotal}%（前年度）から{FUTOUKOU_LATEST.increaseRateTotal}%（{FUTOUKOU_LATEST.label}）に低下しています。
+              平成26年度の122,897人から、{FUTOUKOU_LATEST_R7.label}には{FUTOUKOU_LATEST_R7.totalElementaryJuniorHigh.toLocaleString()}人へ。13年連続で増加しています。なお、特別支援学校を含めた不登校児童生徒数全体の増加率は、前年度の{FUTOUKOU_LATEST_R7.prevIncreaseRateTotal}%から{FUTOUKOU_LATEST_R7.increaseRateTotal}%に低下しています。
             </div>
             <Link href="/data/futoukou/total" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このグラフだけをシェアする →
@@ -130,12 +132,12 @@ export default function FutoukouDataPage() {
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
             <div className="answer-label" style={{ fontSize: 14 }}>「増え続けている」わけではない数字も</div>
             <div className="qtext">
-              新たに不登校になった児童生徒数（新規不登校児童生徒数）は、小・中学校合計で{FUTOUKOU_LATEST.newTotal.toLocaleString()}人（前年度{FUTOUKOU_LATEST.prevNewTotal.toLocaleString()}人）と、<b>9年ぶりに減少</b>しました。不登校児童生徒数全体が過去最多になっている一方で、新しく不登校になる子どもの数自体は減っています。
+              新たに不登校になった児童生徒数（新規不登校児童生徒数）は、小・中学校合計で{FUTOUKOU_LATEST_R7.newTotal.toLocaleString()}人（前年度{FUTOUKOU_LATEST_R7.prevNewTotal.toLocaleString()}人）と、<b>2年連続で減少</b>しました。不登校児童生徒数全体が過去最多になっている一方で、新しく不登校になる子どもの数自体は2年連続で減っています。
             </div>
             <NewsStatsChart
               stats={[
-                { label: '新規（前年度）', value: FUTOUKOU_LATEST.prevNewTotal, unit: '人' },
-                { label: `新規（${FUTOUKOU_LATEST.label}）`, value: FUTOUKOU_LATEST.newTotal, unit: '人' },
+                { label: '新規（前年度）', value: FUTOUKOU_LATEST_R7.prevNewTotal, unit: '人' },
+                { label: `新規（${FUTOUKOU_LATEST_R7.label}）`, value: FUTOUKOU_LATEST_R7.newTotal, unit: '人' },
               ]}
             />
             <Link href="/data/futoukou/shinki" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
@@ -180,7 +182,7 @@ export default function FutoukouDataPage() {
           <div className="futoukou-section-heading">② 誰が・どこで多い？</div>
 
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
-            <div className="answer-label" style={{ fontSize: 14 }}>学年別の不登校児童生徒数（{FUTOUKOU_LATEST.label}）</div>
+            <div className="answer-label" style={{ fontSize: 14 }}>学年別の不登校児童生徒数（{FUTOUKOU_LATEST_R7.label}）</div>
             <NewsStatsChart stats={gradeStats} caption="学年が上がるほど多くなる傾向。小6→中1で大きく増えています。" />
             <Link href="/data/futoukou/gakunen" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
               このグラフだけをシェアする →
@@ -568,7 +570,7 @@ export default function FutoukouDataPage() {
             className="share-btn"
             style={{ width: '100%' }}
             href={`https://twitter.com/intent/tweet?${new URLSearchParams({
-              text: `不登校児童生徒数は過去最多の${FUTOUKOU_LATEST.total.toLocaleString()}人。でも新規不登校は9年ぶりに減少——文部科学省の最新データをまとめました。`,
+              text: `不登校児童生徒数は過去最多の${FUTOUKOU_LATEST_R7.totalIncludingSpecialSupport.toLocaleString()}人。新規不登校は2年連続で減少。文部科学省の最新データをまとめました。`,
               url,
               hashtags: '不登校,どうする先生',
             })}`}

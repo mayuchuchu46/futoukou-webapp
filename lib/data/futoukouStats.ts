@@ -40,6 +40,12 @@ export const FUTOUKOU_YEARLY_TREND: YearlyFutoukouCount[] = [
   { year: 'R4', label: '令和4年度', elementary: 105112, juniorHigh: 193936, total: 299048 },
   { year: 'R5', label: '令和5年度', elementary: 130370, juniorHigh: 216112, total: 346482 },
   { year: 'R6', label: '令和6年度', elementary: 137704, juniorHigh: 216266, total: 353970 },
+  // r7追加：2026-11-26公表。elementary/juniorHighはFUTOUKOU_LATEST_R7.elementary／
+  // juniorHighと同じ値（出典・確認経緯はFUTOUKOU_BY_GRADEのコメント参照）。
+  // total=357,708は小・中学校合計のみで、特別支援学校（1,716人）を含まない
+  // （この配列の他年度と同じ定義）。特別支援学校を含めた全体359,424人は
+  // FUTOUKOU_LATEST_R7.totalIncludingSpecialSupportを参照。
+  { year: 'R7', label: '令和7年度', elementary: 140946, juniorHigh: 216762, total: 357708 },
 ];
 
 // ---- 最新年度（R6）の主要サマリー数値 ----
