@@ -727,8 +727,8 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "publicPrivate": "公立",
     "designatedYear": "令和8年",
     "officialUrl": null,
-    "address": null,
-    "note": null
+    "address": "福岡県大野城市瑞穂町二丁目2番26号 〒816-0933",
+    "note": "大野城市立大野中学校の分校として令和8年4月に設置された、学びの多様化学校。"
   },
   {
     "no": 45,
@@ -1048,7 +1048,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": null,
     "address": null,
-    "note": null
+    "note": "学校法人雙星舎（理事長星野人史氏、南城市で珊瑚舎スコーレ高等部を運営）が設置する、全国初の私立夜間中学校「珊瑚舎スコーレ東表（あがりおもて）中学校」。母体となったNPO法人珊瑚舎スコーレは2004年から約20年間、自主夜間中学を運営してきた実績を持つ。"
   },
   {
     "no": 66,
@@ -1261,7 +1261,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和7年",
     "officialUrl": "http://www.akitashuei.net/",
     "address": "秋田県大仙市大曲諏訪町1-1-30",
-    "note": null
+    "note": "学校法人杉澤学園が運営する、秋田県内の私立高校で唯一通信制課程（2006年開設）を持つ学校。専門カウンセラーによる教育相談室を設置し、生徒・保護者双方へのカウンセリングを実施している。2025年4月には不登校を経験した生徒向けの新コースを設置した。"
   },
   {
     "no": 80,
@@ -1322,7 +1322,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "designatedYear": "令和8年",
     "officialUrl": "https://www.toogakuen.ac.jp/",
     "address": "青森県青森市勝田2-11-1",
-    "note": null
+    "note": "創立90年以上の歴史を持つ青森市の私立高校。全日制課程（普通科・調理科・情報科学科・福祉科・看護科）と通信制課程を併設している。"
   },
   // 【2026-10-28 要確認】島根県教育委員会の学校紹介資料では、本校の設置コースとして
   // 「智翠館特別コース」「文理進学コース」「スポーツコース」の3つのみが確認でき、
@@ -1339,7 +1339,7 @@ export const MANABI_TAYOUKA_GAKKO: ManabiTayoukaGakko[] = [
     "schoolType": "高等学校",
     "publicPrivate": "私立",
     "designatedYear": "令和8年",
-    "officialUrl": null,
+    "officialUrl": "https://iwamichisuikan.ed.jp/",
     "address": "島根県江津市渡津町1904-1",
     "note": null
   }
