@@ -90,6 +90,36 @@ export type NewsItem = {
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
+    id: 'kitakyushu-futoko-2677nin-kashin-2026-11',
+    date: '2026-11-27',
+    addedAt: '2026-11-27',
+    title: '北九州市立小中学校の不登校、2677人で過去最多を更新',
+    summary:
+      'NHKの報道によると、文部科学省と北九州市教育委員会の集計で、北九州市立の小中学校で不登校だった児童・生徒は2025年度に2677人となり、過去最多を更新したことが分かりました。前年度からの増減数や内訳は記事では確認できていません。',
+    sourceName: 'NHKニュース',
+    sourceUrl: 'https://news.web.nhk/newsweb/na/nd-20261127de82513',
+    category: 'research',
+    headline: {
+      value: '2677人',
+      label: '北九州市立小中学校の不登校の児童・生徒は2677人で過去最多を更新（2025年度）',
+    },
+  },
+  {
+    id: 'shikoku-4ken-futoko-9955nin-2026-11',
+    date: '2026-11-27',
+    addedAt: '2026-11-27',
+    title: '四国4県の不登校、9955人で過去最多に',
+    summary:
+      'NHKの報道によると、2025年度に四国4県（香川・徳島・愛媛・高知）で不登校だった小中学生などの数は9955人となり、過去最多を更新したことが分かりました。記事では、教員不足や多忙化などで学校内の子どもを支える体制が弱まっていることを背景に挙げる専門家のコメントが紹介されています。',
+    sourceName: 'NHKニュース',
+    sourceUrl: 'https://news.web.nhk/newsweb/na/nd-20261127de82151',
+    category: 'research',
+    headline: {
+      value: '9955人',
+      label: '四国4県の不登校の小中学生などは9955人で過去最多に（2025年度）',
+    },
+  },
+  {
     id: 'mext-futoko-chosa-r7-359424nin-2026-11',
     date: '2026-11-26',
     addedAt: '2026-11-26',
