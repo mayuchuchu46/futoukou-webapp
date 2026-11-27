@@ -663,6 +663,31 @@ export const FUTOUKOU_DATA_CARDS: FutoukouDataCard[] = [
         .map((p) => ({ label: p.prefecture, value: p.per1000R7, unit: '人' })),
     },
   },
+  {
+    // 2026-11-28追加。'koukou'カード（H26〜R6、増減を繰り返す高校生の不登校）の
+    // 令和7年度版。小・中学校が13年連続で過去最多を更新し続ける一方、高校生の
+    // 不登校生徒数は前年度からほぼ横ばい（+62人）だったことを見せる。数値の出典・
+    // 相互確認の経緯はfutoukouStats.tsのFUTOUKOU_LATEST_R7のコメント参照
+    // （本番の夜間自動実行からMEXT本体PDFへ直接アクセスできなかったため、同じ文科省
+    // 資料を引用する独立した報道2件で相互確認した数値を使用）。
+    slug: 'r7koukou',
+    addedAt: '2026-11-28',
+    title: '高校生の不登校、令和7年度もほぼ横ばい',
+    headlineValue: `${FUTOUKOU_LATEST_R7.highSchoolTotal.toLocaleString()}人`,
+    headlineLabel: `高等学校の不登校生徒数（${FUTOUKOU_LATEST_R7.label}、前年度${FUTOUKOU_LATEST_R7.prevHighSchoolTotal.toLocaleString()}人から${FUTOUKOU_LATEST_R7.highSchoolTotal - FUTOUKOU_LATEST_R7.prevHighSchoolTotal}人増）`,
+    description: `小・中学校の不登校児童生徒数が13年連続で過去最多を更新し続けているのに対し、高校生の不登校生徒数は増減を繰り返してきました（高校生の不登校は増減を繰り返しているカード参照）。${FUTOUKOU_LATEST_R7.label}は${FUTOUKOU_LATEST_R7.highSchoolTotal.toLocaleString()}人で、前年度の${FUTOUKOU_LATEST_R7.prevHighSchoolTotal.toLocaleString()}人から${FUTOUKOU_LATEST_R7.highSchoolTotal - FUTOUKOU_LATEST_R7.prevHighSchoolTotal}人増とほぼ横ばいでした。新規不登校生徒数（高校）は${FUTOUKOU_LATEST_R7.newHighSchoolTotal.toLocaleString()}人で前年度から引き続き減少しています。このほか、特別支援学校（高等部）の不登校生徒数は${FUTOUKOU_LATEST_R7.specialSupportHighSchoolTotal.toLocaleString()}人でした。`,
+    tweetText: `高校生の不登校生徒数は${FUTOUKOU_LATEST_R7.label}${FUTOUKOU_LATEST_R7.highSchoolTotal.toLocaleString()}人で、前年度の${FUTOUKOU_LATEST_R7.prevHighSchoolTotal.toLocaleString()}人からほぼ横ばい。小・中学校が13年連続で過去最多を更新する一方、高校生の不登校は増減を繰り返しています。`,
+    chart: {
+      type: 'bars',
+      caption: '高等学校の不登校生徒数（前年度比）と、新規不登校生徒数・特別支援学校（高等部）の内訳。',
+      stats: [
+        { label: '高校生（前年度）', value: FUTOUKOU_LATEST_R7.prevHighSchoolTotal, unit: '人' },
+        { label: `高校生（${FUTOUKOU_LATEST_R7.label}）`, value: FUTOUKOU_LATEST_R7.highSchoolTotal, unit: '人' },
+        { label: `新規不登校・高校（${FUTOUKOU_LATEST_R7.label}）`, value: FUTOUKOU_LATEST_R7.newHighSchoolTotal, unit: '人' },
+        { label: `特別支援学校（高等部、${FUTOUKOU_LATEST_R7.label}）`, value: FUTOUKOU_LATEST_R7.specialSupportHighSchoolTotal, unit: '人' },
+      ],
+    },
+  },
 ];
 
 export function getFutoukouDataCard(slug: string): FutoukouDataCard | null {

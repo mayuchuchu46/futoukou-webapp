@@ -219,6 +219,28 @@ export default function FutoukouDataPage() {
             </Link>
           </div>
 
+          {/* 2026-11-28追加。上の「高校生の不登校の推移」カード（H26〜R6）の令和7年度版。
+              小・中学校が13年連続で過去最多を更新する一方、高校生の不登校生徒数は前年度から
+              ほぼ横ばいだったことを見せる（出典・相互確認の経緯はlib/data/futoukouStats.tsの
+              FUTOUKOU_LATEST_R7コメント参照）。 */}
+          <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>
+            <div className="answer-label" style={{ fontSize: 14 }}>高校生の不登校、令和7年度もほぼ横ばい</div>
+            <div className="qtext" style={{ fontSize: 13 }}>
+              {FUTOUKOU_LATEST_R7.label}の高等学校の不登校生徒数は{FUTOUKOU_LATEST_R7.highSchoolTotal.toLocaleString()}人で、前年度の{FUTOUKOU_LATEST_R7.prevHighSchoolTotal.toLocaleString()}人から{FUTOUKOU_LATEST_R7.highSchoolTotal - FUTOUKOU_LATEST_R7.prevHighSchoolTotal}人増とほぼ横ばいでした。新規不登校生徒数（高校）は{FUTOUKOU_LATEST_R7.newHighSchoolTotal.toLocaleString()}人で前年度から引き続き減少しています。
+            </div>
+            <NewsStatsChart
+              stats={[
+                { label: '高校生（前年度）', value: FUTOUKOU_LATEST_R7.prevHighSchoolTotal, unit: '人' },
+                { label: `高校生（${FUTOUKOU_LATEST_R7.label}）`, value: FUTOUKOU_LATEST_R7.highSchoolTotal, unit: '人' },
+                { label: `新規不登校・高校（${FUTOUKOU_LATEST_R7.label}）`, value: FUTOUKOU_LATEST_R7.newHighSchoolTotal, unit: '人' },
+                { label: `特別支援学校（高等部、${FUTOUKOU_LATEST_R7.label}）`, value: FUTOUKOU_LATEST_R7.specialSupportHighSchoolTotal, unit: '人' },
+              ]}
+            />
+            <Link href="/data/futoukou/r7koukou" style={{ fontSize: 13, fontWeight: 700, color: 'var(--main)' }}>
+              このデータだけをシェアする →
+            </Link>
+          </div>
+
           {/* 2026-11-11追加。上の「高校生の不登校の推移」カードの「その後」を見せる
               カード（出典・検証経緯はlib/data/futoukouStats.tsのコメント参照）。 */}
           <div className="card" style={{ alignItems: 'flex-start', gap: 10 }}>

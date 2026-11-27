@@ -940,11 +940,26 @@ export const FUTOUKOU_LATEST_R7 = {
   continuationRateCombined: 75.6,
   prevContinuationRateCombined: 75.2,
   // 高等学校（国公私立）
+  // 2026-11-28追記：highSchoolTotal・prevHighSchoolTotal・specialSupportHighSchoolTotal・
+  // newHighSchoolTotalの4つは、本番環境（夜間の自動実行）からMEXT本体PDFへの直接アクセスが
+  // 権限待ちでタイムアウトしたため、同じ文部科学省資料を引用する独立した二次資料2件
+  // （インプレス「こどもとIT」記事 https://edu.watch.impress.co.jp/docs/news/2159754.html
+  // ［2026年11月27日公開］、前例リサーチ記事 https://zenreiresearch.com/?p=1916
+  // ［2026年11月26日更新］）を、それぞれ別のプロンプトで独立して取得し、相互確認した。
+  // ・highSchoolTotal/prevHighSchoolTotal：両記事とも「67,844人」「前年度67,782人（+62人、
+  //   ほぼ横ばい）」の一致した記述あり。
+  // ・specialSupportHighSchoolTotal：インプレス記事に「特別支援学校（高等部）の不登校生徒数は
+  //   4,139人だった」の記述あり（前例リサーチ記事には高等部の記載なし）。
+  // ・newHighSchoolTotal：インプレス記事に「新規不登校生徒数は48,094人となり、前年度から
+  //   引き続き減少している」の記述あり（前例リサーチ記事は高校の新規不登校数を扱っていない）。
+  // prevNewHighSchoolTotal（48,869人）のみ、上記二次資料のどちらにも前年度の高校新規不登校数の
+  // 記載がなく、今回の相互確認の対象外。元々の単独の目視確認（確認済み、未格上げ）のまま
+  // 据え置く。
   highSchoolTotal: 67844,
   prevHighSchoolTotal: 67782,
   specialSupportHighSchoolTotal: 4139,
   newHighSchoolTotal: 48094,
-  prevNewHighSchoolTotal: 48869,
+  prevNewHighSchoolTotal: 48869, // 未格上げ（2026-11-28時点で単独の目視確認のみ）
 } as const;
 
 // ---- 新規不登校児童生徒数の推移（小・中学校合計、R1〜R7） ----
