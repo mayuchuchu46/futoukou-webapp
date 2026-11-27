@@ -31,6 +31,7 @@ function ResetPasswordForm() {
   const [password2, setPassword2] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -72,17 +73,40 @@ function ResetPasswordForm() {
     <>
       <h1 className="pagetitle">新しいパスワードを設定</h1>
       <form onSubmit={submit} className="card" style={{ gap: 14 }}>
+        <div style={{ position: 'relative' }}>
+          <input
+            className="input"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="新しいパスワード（8文字以上）"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ width: '100%', paddingRight: 56 }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            style={{
+              position: 'absolute',
+              right: 10,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              color: 'var(--muted)',
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: 'pointer',
+              padding: 4,
+            }}
+            aria-label={showPassword ? 'パスワードを隠す' : 'パスワードを表示'}
+          >
+            {showPassword ? '隠す' : '表示'}
+          </button>
+        </div>
         <input
           className="input"
-          type="password"
-          placeholder="新しいパスワード（8文字以上）"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <input
-          className="input"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           placeholder="新しいパスワード（確認）"
           value={password2}
           onChange={(e) => setPassword2(e.target.value)}

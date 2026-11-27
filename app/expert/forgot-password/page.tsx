@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 // 専門家・経験者向け「パスワードを忘れた方」ページ（2026-11-21追加）。
 // app/account/forgot-password と同じ考え方。
@@ -23,6 +24,15 @@ export default function ExpertForgotPasswordPage() {
 
   return (
     <div className="login-wrap">
+      {/* どのページか分かりづらいとの指摘を受けて、login-wrap系ページ共通で
+          ワードマークロゴを追加（2026-11-28）。 */}
+      <Image
+        src="/assets/wordmark_logo.png"
+        alt="どうする先生"
+        width={220}
+        height={58}
+        style={{ height: 32, width: 'auto', alignSelf: 'center', marginBottom: -4 }}
+      />
       <div className="card" style={{ width: '100%', maxWidth: 360, gap: 14 }}>
         <a className="btn-ghost" href="/" style={{ alignSelf: 'flex-start' }}>← トップへ</a>
         <div style={{ fontWeight: 700, fontSize: 18 }}>パスワードを忘れた方</div>

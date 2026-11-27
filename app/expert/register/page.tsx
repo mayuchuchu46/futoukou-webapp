@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { CATS } from '@/lib/categories';
 import { CAREER_FIELD_OPTIONS } from '@/lib/careerFields';
@@ -75,6 +76,7 @@ export default function ExpertRegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [draftRestored, setDraftRestored] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const draft = loadDraft();
@@ -160,6 +162,15 @@ export default function ExpertRegisterPage() {
 
   return (
     <div className="login-wrap" style={{ alignItems: 'flex-start', paddingTop: 32, paddingBottom: 32 }}>
+      {/* どのページか分かりづらいとの指摘を受けて、login-wrap系ページ共通で
+          ワードマークロゴを追加（2026-11-28）。 */}
+      <Image
+        src="/assets/wordmark_logo.png"
+        alt="どうする先生"
+        width={220}
+        height={58}
+        style={{ height: 32, width: 'auto', alignSelf: 'center', marginBottom: -4 }}
+      />
       <form onSubmit={submit} className="card" style={{ width: '100%', maxWidth: 560, gap: 14 }}>
         {/* 専門家ログイン周りのページには戻る手段が無かったため追加（2026-10-12）。
             直前の画面（募集ページ等）に戻れるよう、決め打ちのリンク先ではなく
@@ -444,7 +455,35 @@ export default function ExpertRegisterPage() {
           </div>
         )}
         <input className="input" type="email" placeholder="メールアドレス" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
-        <input className="input" type="password" placeholder="パスワード（8文字以上）" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+        <div style={{ position: 'relative' }}>
+          <input
+            className="input"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="パスワード（8文字以上）"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            required
+            style={{ width: '100%' }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            className="muted"
+            style={{
+              position: 'absolute',
+              right: 10,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: 'none',
+              border: 'none',
+              fontSize: 12,
+              cursor: 'pointer',
+              textDecoration: 'underline',
+            }}
+          >
+            {showPassword ? '隠す' : '表示'}
+          </button>
+        </div>
 
         {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
         <button className="btn-primary" type="submit" disabled={loading}>{loading ? '登録中…' : '登録する'}</button>
