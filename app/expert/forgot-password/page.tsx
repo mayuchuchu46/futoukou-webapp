@@ -24,16 +24,18 @@ export default function ExpertForgotPasswordPage() {
 
   return (
     <div className="login-wrap">
-      {/* どのページか分かりづらいとの指摘を受けて、login-wrap系ページ共通で
-          ワードマークロゴを追加（2026-11-28）。 */}
-      <Image
-        src="/assets/wordmark_logo.png"
-        alt="どうする先生"
-        width={220}
-        height={58}
-        style={{ height: 32, width: 'auto', alignSelf: 'center', marginBottom: -4 }}
-      />
       <div className="card" style={{ width: '100%', maxWidth: 360, gap: 14 }}>
+        {/* どのページか分かりづらいとの指摘を受けて、login-wrap系ページ共通で
+            ワードマークロゴを追加（2026-11-28）。login-wrapはflex-direction:row
+            のため、カードの外（兄弟要素）に置くと横並びになってしまう。カードの
+            中の先頭に置くことで、カードの上部にロゴが来るようにする。 */}
+        <Image
+          src="/assets/wordmark_logo.png"
+          alt="どうする先生"
+          width={220}
+          height={58}
+          style={{ height: 32, width: 'auto', alignSelf: 'center' }}
+        />
         <a className="btn-ghost" href="/" style={{ alignSelf: 'flex-start' }}>← トップへ</a>
         <div style={{ fontWeight: 700, fontSize: 18 }}>パスワードを忘れた方</div>
         {sent ? (

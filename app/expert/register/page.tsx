@@ -162,16 +162,18 @@ export default function ExpertRegisterPage() {
 
   return (
     <div className="login-wrap" style={{ alignItems: 'flex-start', paddingTop: 32, paddingBottom: 32 }}>
-      {/* どのページか分かりづらいとの指摘を受けて、login-wrap系ページ共通で
-          ワードマークロゴを追加（2026-11-28）。 */}
-      <Image
-        src="/assets/wordmark_logo.png"
-        alt="どうする先生"
-        width={220}
-        height={58}
-        style={{ height: 32, width: 'auto', alignSelf: 'center', marginBottom: -4 }}
-      />
       <form onSubmit={submit} className="card" style={{ width: '100%', maxWidth: 560, gap: 14 }}>
+        {/* どのページか分かりづらいとの指摘を受けて、login-wrap系ページ共通で
+            ワードマークロゴを追加（2026-11-28）。login-wrapはflex-direction:row
+            のため、カードの外（兄弟要素）に置くと横並びになってしまう。カードの
+            中の先頭に置くことで、カードの上部にロゴが来るようにする。 */}
+        <Image
+          src="/assets/wordmark_logo.png"
+          alt="どうする先生"
+          width={220}
+          height={58}
+          style={{ height: 32, width: 'auto', alignSelf: 'center' }}
+        />
         {/* 専門家ログイン周りのページには戻る手段が無かったため追加（2026-10-12）。
             直前の画面（募集ページ等）に戻れるよう、決め打ちのリンク先ではなく
             router.back()にしている（2026-10-13、「トップへ」から「戻る」に変更）。

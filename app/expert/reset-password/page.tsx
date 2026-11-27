@@ -15,17 +15,25 @@ import { useRouter, useSearchParams } from 'next/navigation';
 export default function ExpertResetPasswordPage() {
   return (
     <div className="login-wrap">
-      <Image
-        src="/assets/wordmark_logo.png"
-        alt="どうする先生"
-        width={220}
-        height={58}
-        style={{ height: 32, width: 'auto', alignSelf: 'center', marginBottom: -4 }}
-      />
       <Suspense fallback={null}>
         <ResetPasswordForm />
       </Suspense>
     </div>
+  );
+}
+
+// login-wrapはflex-direction:rowのため、ロゴをlogin-wrap直下の兄弟要素として
+// 置くとカードと横並びになってしまう（2026-11-28、スマホでの見え方の指摘を受けて
+// 修正）。.cardはflex-direction:columnなので、各カードの先頭に置く。
+function Wordmark() {
+  return (
+    <Image
+      src="/assets/wordmark_logo.png"
+      alt="どうする先生"
+      width={220}
+      height={58}
+      style={{ height: 32, width: 'auto', alignSelf: 'center' }}
+    />
   );
 }
 
@@ -65,6 +73,7 @@ function ResetPasswordForm() {
   if (!token) {
     return (
       <div className="card" style={{ width: '100%', maxWidth: 360, gap: 14 }}>
+        <Wordmark />
         <div className="qtext" style={{ fontSize: 13 }}>
           リンクが正しくないか、有効期限が切れています。もう一度パスワード再設定をお申し込みください。
         </div>
@@ -77,6 +86,7 @@ function ResetPasswordForm() {
 
   return (
     <form onSubmit={submit} className="card" style={{ width: '100%', maxWidth: 360, gap: 14 }}>
+      <Wordmark />
       <div style={{ fontWeight: 700, fontSize: 18 }}>新しいパスワードを設定</div>
       <div style={{ position: 'relative' }}>
         <input

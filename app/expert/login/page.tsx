@@ -32,16 +32,18 @@ export default function ExpertLoginPage() {
 
   return (
     <div className="login-wrap">
-      {/* どのページか分かりづらいとの指摘を受けて、login-wrap系ページ共通で
-          ワードマークロゴを追加（2026-11-28）。 */}
-      <Image
-        src="/assets/wordmark_logo.png"
-        alt="どうする先生"
-        width={220}
-        height={58}
-        style={{ height: 32, width: 'auto', alignSelf: 'center', marginBottom: -4 }}
-      />
       <form onSubmit={submit} className="card" style={{ width: '100%', maxWidth: 360, gap: 14 }}>
+        {/* どのページか分かりづらいとの指摘を受けて、login-wrap系ページ共通で
+            ワードマークロゴを追加（2026-11-28）。login-wrapはflex-direction:rowの
+            ため、カードの外（兄弟要素）に置くと横並びになってしまう。カードの中の
+            先頭に置くことで、カードの上部にロゴが来るようにする。 */}
+        <Image
+          src="/assets/wordmark_logo.png"
+          alt="どうする先生"
+          width={220}
+          height={58}
+          style={{ height: 32, width: 'auto', alignSelf: 'center' }}
+        />
         {/* 専門家ログイン周りのページには戻る手段が無かったため追加
             （2026-10-12）。login-wrapはHeaderを使わない単体レイアウトなので、
             カード内に明示的なリンクを置く。 */}
