@@ -119,14 +119,37 @@ function ResetPasswordForm() {
           {showPassword ? '隠す' : '表示'}
         </button>
       </div>
-      <input
-        className="input"
-        type={showPassword ? 'text' : 'password'}
-        placeholder="新しいパスワード（確認）"
-        value={password2}
-        onChange={(e) => setPassword2(e.target.value)}
-        required
-      />
+      <div style={{ position: 'relative' }}>
+        <input
+          className="input"
+          type={showPassword ? 'text' : 'password'}
+          placeholder="新しいパスワード（確認）"
+          value={password2}
+          onChange={(e) => setPassword2(e.target.value)}
+          required
+          style={{ width: '100%', paddingRight: 56 }}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword((v) => !v)}
+          style={{
+            position: 'absolute',
+            right: 10,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            background: 'none',
+            border: 'none',
+            color: 'var(--muted)',
+            fontSize: 12,
+            fontWeight: 700,
+            cursor: 'pointer',
+            padding: 4,
+          }}
+          aria-label={showPassword ? 'パスワードを隠す' : 'パスワードを表示'}
+        >
+          {showPassword ? '隠す' : '表示'}
+        </button>
+      </div>
       {error && <div style={{ color: '#C0392B', fontSize: 13 }}>{error}</div>}
       <button className="btn-primary" type="submit" disabled={loading}>
         {loading ? '設定中…' : 'パスワードを設定する'}
