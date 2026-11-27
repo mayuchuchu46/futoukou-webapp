@@ -127,7 +127,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     method: 'steiner',
     isAccredited: false,
     officialUrl: 'https://kenji-steiner.jp/',
-    note: '東京都内のシュタイナー系民間学校。農業・手仕事・芸術を重視し、子どもの内的発達に寄り添う教育を実践。',
+    note: '特定非営利活動法人東京賢治の学校が運営するシュタイナー教育の学校で、幼稚園・保育園から小中学部・高等部までを運営する。「乳幼児から老人までの幅広い層がつながり合って学び育ち合う学校」を掲げて設立された。農業・手仕事・芸術を重視し、子どもの内的発達に寄り添う教育を実践。',
   },
   {
     no: 17,
@@ -137,8 +137,8 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     schoolType: '幼・小・中相当',
     method: 'steiner',
     isAccredited: false,
-    officialUrl: 'https://yokohama-steiner.com/',
-    note: '横浜のシュタイナー系学校（幼稚園・小学校・中学校相当の課程を持つ）。',
+    officialUrl: 'https://yokohama-steiner.jp/',
+    note: '2005年4月開校（NPO設立は2003年12月）、特定非営利活動法人横浜シュタイナー学園が運営する小中一貫のシュタイナー学校。1年生での文字の導入から始まり、3年生の稲作・家づくり体験、4年生の郷土学、5年生以降の日本史・世界史へとつながる、自国文化理解を重視した独自カリキュラムが特色。1年生から英語・中国語の2か国語を学ぶ。ユネスコスクールに認証されており、文部科学省のESD重点校（サステイナブルスクール）にも採択された。',
   },
   {
     no: 18,
@@ -149,7 +149,7 @@ export const ALTERNATIVE_SCHOOLS: readonly AlternativeSchool[] = [
     method: 'steiner',
     isAccredited: false,
     officialUrl: 'https://kyotanabe-steiner.net/',
-    note: '関西のシュタイナー系民間学校。12年間一貫のシュタイナー教育を実践。',
+    note: '1999年に開校した関西初のシュタイナー学校で、認定NPO法人京田辺シュタイナー学校が運営する。木造校舎で初等部（1〜6年生）から中等部・高等部までの12年間一貫教育を行う。ユネスコスクールのESD重点校（サステイナブルスクール）に採択されており、NPO法人立学校として教師と保護者が協働して運営する学校文化を特色とする。',
   },
   {
     no: 19,
