@@ -38,6 +38,13 @@ export default function AccountForgotPasswordPage() {
             <a className="btn-ghost" href="/account/login" style={{ textAlign: 'center' }}>
               ログインページへ戻る
             </a>
+            <a
+              href="mailto:mail.manapri@gmail.com?subject=%E3%81%A9%E3%81%86%E3%81%99%E3%82%8B%E5%85%88%E7%94%9F%EF%BC%9A%E4%B8%8D%E5%85%B7%E5%90%88%E3%83%BB%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B"
+              className="muted"
+              style={{ fontSize: 12, textAlign: 'center', textDecoration: 'underline' }}
+            >
+              メールが届かない場合はこちら
+            </a>
           </div>
         ) : (
           <form onSubmit={submit} className="card" style={{ gap: 14 }}>
@@ -57,6 +64,13 @@ export default function AccountForgotPasswordPage() {
             </button>
             <a className="btn-ghost" href="/account/login" style={{ textAlign: 'center' }}>
               ログインページへ戻る
+            </a>
+            <a
+              href="mailto:mail.manapri@gmail.com?subject=%E3%81%A9%E3%81%86%E3%81%99%E3%82%8B%E5%85%88%E7%94%9F%EF%BC%9A%E4%B8%8D%E5%85%B7%E5%90%88%E3%83%BB%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B"
+              className="muted"
+              style={{ fontSize: 12, textAlign: 'center', textDecoration: 'underline' }}
+            >
+              うまくいかない場合はこちら
             </a>
           </form>
         )}

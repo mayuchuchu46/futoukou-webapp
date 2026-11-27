@@ -46,6 +46,13 @@ export default function ExpertForgotPasswordPage() {
             <a className="btn-ghost" href="/expert/login" style={{ textAlign: 'center' }}>
               ログインページへ戻る
             </a>
+            <a
+              href="mailto:mail.manapri@gmail.com?subject=%E3%81%A9%E3%81%86%E3%81%99%E3%82%8B%E5%85%88%E7%94%9F%EF%BC%9A%E4%B8%8D%E5%85%B7%E5%90%88%E3%83%BB%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B"
+              className="muted"
+              style={{ fontSize: 12, textAlign: 'center', textDecoration: 'underline' }}
+            >
+              メールが届かない場合はこちら
+            </a>
           </>
         ) : (
           <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -65,6 +72,13 @@ export default function ExpertForgotPasswordPage() {
             </button>
             <a className="btn-ghost" href="/expert/login" style={{ textAlign: 'center' }}>
               ログインページへ戻る
+            </a>
+            <a
+              href="mailto:mail.manapri@gmail.com?subject=%E3%81%A9%E3%81%86%E3%81%99%E3%82%8B%E5%85%88%E7%94%9F%EF%BC%9A%E4%B8%8D%E5%85%B7%E5%90%88%E3%83%BB%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B"
+              className="muted"
+              style={{ fontSize: 12, textAlign: 'center', textDecoration: 'underline' }}
+            >
+              うまくいかない場合はこちら
             </a>
           </form>
         )}
