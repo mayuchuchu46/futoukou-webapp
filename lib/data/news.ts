@@ -201,6 +201,21 @@ export const NEWS_ITEMS: NewsItem[] = [
     relatedThemeWord: 'フリースクール',
   },
   {
+    id: 'tochigi-futoko-6099nin-2026-11',
+    date: '2026-11-26',
+    addedAt: '2026-11-28',
+    title: '栃木県内の不登校、6099人で13年連続の過去最多に――文科省調査をもとに県教育委員会が集計',
+    summary:
+      'NHKの報道によると、栃木県内の公立小中学校で不登校となっている児童生徒は2025年度に6099人となり、13年連続で増加して過去最多を更新したことが2026年11月26日までに分かりました。県教育委員会は、文部科学省が全国の学校を対象に行った調査結果をもとに集計したとしています。内訳や前年度からの増減数は記事では確認できていません。',
+    sourceName: 'NHKニュース',
+    sourceUrl: 'https://news.web.nhk/newsweb/na/nd-20261126de81933',
+    category: 'research',
+    headline: {
+      value: '6099人',
+      label: '栃木県内の不登校の小中学生は6099人で、13年連続の過去最多に（2025年度）',
+    },
+  },
+  {
     id: 'nijin-osaka-ibaraki-soujiji-alternative-school-2026-11',
     date: '2026-11-25',
     addedAt: '2026-11-26',
