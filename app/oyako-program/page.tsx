@@ -15,9 +15,9 @@ import { SITE_URL } from '@/lib/site';
 // てつなぎ関連記事カルーセル（.tetsunagi-auto-scroll）用の自動スクロールJSも
 // そのまま移植済み。
 //
-// 価格・開講時期・お支払い方法は企画の進行に合わせて今後も変わりうるため、
-// 詳細な実施日は申込み後に個別案内とし、開講時期は「2027年1月中旬〜2月開講予定」という
-// 目安の表現にとどめている（Projectのareaファイル参照）。
+// 価格・お支払い方法は企画の進行に合わせて今後も変わりうる。
+// 開催日程は2026-11-28に確定：2027年2月・3月・4月の第2・第4日曜日
+// （2/14, 2/28, 3/14, 3/28, 4/11, 4/25）、各回21:00〜（Projectのareaファイル参照）。
 //
 // 特定商取引法に基づく表記：サイト共通の/tokushohoページは、サイト本体の有料機能
 // （読み放題会員・専門家への質問）がまだベータ公開中で価格未定である旨の内容になっており、
@@ -96,7 +96,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
         <div>
           <a href="#apply" class="btn" style="font-size:18px;padding:18px 36px;box-shadow:0 6px 20px rgba(222,138,110,0.4)">お申し込みはこちら →</a>
         </div>
-        <div style="font-size:13px;color:var(--mute)">3ヶ月コース・定員先着６名｜2027年1月中旬〜2月開講予定。新学年を控える時期だからこそ、関わり方を整えておきたい。</div>
+        <div style="font-size:13px;color:var(--mute)">3ヶ月コース・定員先着６名｜2027年2月14日開講。新学年を控える時期だからこそ、関わり方を整えておきたい。</div>
       </div>
     </div>
     <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:40px;position:absolute;left:0;bottom:-1px">
@@ -422,7 +422,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
           <div style="position:absolute;bottom:-6px;right:-6px;width:24px;height:24px;border-radius:50%;background:var(--coral);color:#FFFDF9;font-family:'Fraunces',serif;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;border:2px solid var(--card)">06</div>
         </div>
         <div class="diff-text" style="display:flex;flex-direction:column;gap:10px">
-          <div style="font-size:16px;font-weight:600">現役のスクールカウンセラーが伴走</div>
+          <div style="font-size:16px;font-weight:600">現役の公認心理師が伴走</div>
           <div style="font-size:14px;color:var(--ink-soft);line-height:1.6">過去の経験談ではなく、今も現場で不登校の子ども・保護者と向き合いつづけている公認心理師が、実感に根ざした関わり方を一緒に考えます。</div>
         </div>
       </div>
@@ -482,7 +482,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
         <div style="flex:1 1 320px;min-width:260px;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;font-size:15px;color:var(--ink-soft)"><span style="color: var(--mute); white-space: nowrap">期間</span><span>3ヶ月間</span>
           <span style="color: var(--mute); white-space: nowrap">定員</span><span>先着６名（最少催行5名）</span>
           <span style="color: var(--mute); white-space: nowrap">対象</span><span>小学生～高校生くらいのお子さんを持つ保護者（目安。発達特性・診断の有無は問いません）</span>
-          <span style="color: var(--mute); white-space: nowrap">時間</span><span>土日または平日夜を予定（詳細は確定次第ご案内）</span>
+          <span style="color: var(--mute); white-space: nowrap">日程</span><span>2027年2月14日（日）・2月28日（日）・3月14日（日）・3月28日（日）・4月11日（日）・4月25日（日）　全6回、各回21:00〜</span>
           <span style="color: var(--mute); white-space: nowrap">開催方法</span><span>オンライン</span>
           <span style="color: var(--mute); white-space: nowrap">申込締切</span><span>開講時期確定後にご案内（最少催行人数に達し次第締切る場合あり）</span>
           <span style="color: var(--mute); white-space: nowrap">お支払い</span><span>お申込み後ご案内します</span>
@@ -496,7 +496,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
         </div>
       </div>
       <div style="border-top:1px solid #EFE6D8;padding-top:20px;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--ink-soft)">
-        <div style="font-size:12px;color:var(--mute);text-align:center">※具体的な実施日は、お申込みいただいた方に個別にご案内します。上記の開講時期は現時点の目安です。</div>
+        <div style="font-size:12px;color:var(--mute);text-align:center">※上記日程は現時点で確定しているものです。やむを得ず変更となる場合は、お申込みいただいた方に個別にご案内します。</div>
       </div>
     </div>
   </section>
@@ -517,7 +517,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       <div>販売価格：¥69,800（税込）</div>
       <div>お支払い方法：ご申込後の一括前払い</div>
       <div>お支払い時期：お申込みから1週間以内</div>
-      <div>提供時期：2027年2月〜4月（全6回）</div>
+      <div>提供時期：2027年2月14日・2月28日・3月14日・3月28日・4月11日・4月25日（全6回、各回21:00〜）</div>
       <div>キャンセル・返金について：上記FAQをご参照ください</div>
       <div>販売事業者情報：<a href="https://futoko-dosuru.com/tokushoho" target="_blank">どうする先生の特定商取引法に基づく表記</a>をご確認ください</div>
     </div>
