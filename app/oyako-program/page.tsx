@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
 };
 
-const FAQ_JSONLD = `{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "発達の診断を受けていなくても参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい、診断の有無は問いません。発達特性があるかどうかにかかわらず、ご参加いただけます。"}}, {"@type": "Question", "name": "不登校ではなく、行き渋り程度でも対象になりますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。不登校に限らず、お子さんとの関わり方に迷いや不安がある方であれば対象です。"}}, {"@type": "Question", "name": "対象は小学生〜高校生くらいとなっていますが、未就学児でも参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "対象の目安は小学生〜高校生くらいのお子さんですが、未就学児の方でもご希望があればご相談ください。"}}, {"@type": "Question", "name": "医療的な相談や診断もしてもらえますか？", "acceptedAnswer": {"@type": "Answer", "text": "本プログラムは診断や治療を行うものではありません。気づきと、必要に応じた相談先のご案内に範囲を限ります。"}}, {"@type": "Question", "name": "途中でやめることはできますか？キャンセルの場合、返金はありますか？", "acceptedAnswer": {"@type": "Answer", "text": "ご都合によるお取消・ご退会については、原則として返金はいたしかねます。なお、最少催行人数（5名）に満たず開催自体を中止する場合は、全額返金いたします。"}}, {"@type": "Question", "name": "個人情報やLINEでのやり取りの扱いについて教えてください。", "acceptedAnswer": {"@type": "Answer", "text": "ご登録いただいた情報やオンラインコミュニティでの投稿内容は、本プログラムの運営以外の目的には使用しません。"}}, {"@type": "Question", "name": "夫婦で参加することはできますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。おひとり分のお申し込みで、ご夫婦お二人でご参加いただけます。お二人目は半額（¥34,900）です。個別カウンセリング（オンライン）は1回45分、お二人そろって同じ画面でご参加いただく形です（アカウントは1つ）。オンラインコミュニティなどのコミュニティは、お二人それぞれのアカウントでご参加いただけます。"}}]}`;
+const FAQ_JSONLD = `{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "発達の診断を受けていなくても参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい、診断の有無は問いません。発達特性があるかどうかにかかわらず、ご参加いただけます。"}}, {"@type": "Question", "name": "不登校ではなく、行き渋り程度でも対象になりますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。不登校に限らず、お子さんとの関わり方に迷いや不安がある方であれば対象です。"}}, {"@type": "Question", "name": "対象は小学生〜高校生くらいとなっていますが、未就学児でも参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "対象の目安は小学生〜高校生くらいのお子さんですが、未就学児の方でもご希望があればご相談ください。"}}, {"@type": "Question", "name": "医療的な相談や診断もしてもらえますか？", "acceptedAnswer": {"@type": "Answer", "text": "本プログラムは診断や治療を行うものではありません。気づきと、必要に応じた相談先のご案内に範囲を限ります。"}}, {"@type": "Question", "name": "途中でやめることはできますか？キャンセルの場合、返金はありますか？", "acceptedAnswer": {"@type": "Answer", "text": "ご都合によるお取消・ご退会については、原則として返金はいたしかねます。なお、最少催行人数（4名）に満たず開催自体を中止する場合は、全額返金いたします。"}}, {"@type": "Question", "name": "個人情報やLINEでのやり取りの扱いについて教えてください。", "acceptedAnswer": {"@type": "Answer", "text": "ご登録いただいた情報やオンラインコミュニティでの投稿内容は、本プログラムの運営以外の目的には使用しません。"}}, {"@type": "Question", "name": "夫婦で参加することはできますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。おひとり分のお申し込みで、ご夫婦お二人でご参加いただけます。お二人目は半額（¥34,900）です。個別カウンセリング（オンライン）は1回45分、お二人そろって同じ画面でご参加いただく形です（アカウントは1つ）。オンラインコミュニティなどのコミュニティは、お二人それぞれのアカウントでご参加いただけます。"}}]}`;
 const COURSE_JSONLD = `{"@context": "https://schema.org", "@type": "Course", "name": "子どもとの関わり方実践プログラム", "description": "不登校・行き渋り・発達特性など、子どもとの関わり方に迷う保護者向けに、公認心理師が伴走する3ヶ月間の実践型プログラム（全六回のワークショップ、月一回の個別カウンセリング、オンラインコミュニティ付き）。", "inLanguage": "ja", "timeRequired": "P3M", "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "P1M2S"}, "offers": {"@type": "Offer", "price": "69800", "priceCurrency": "JPY", "availability": "https://schema.org/InStock"}}`;
 
 const PAGE_STYLE = `.oyako-lp{
@@ -455,7 +455,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </details>
       <details style="background:var(--card);border-radius:12px;padding:20px 24px">
         <summary style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:16px;font-weight:600;color:var(--coral)">途中でやめることはできますか？キャンセルの場合、返金はありますか？<span class="chev">▾</span></summary>
-        <div style="font-size:15px;color:var(--ink-soft);line-height:1.7;margin-top:10px">ご都合によるお取消・ご退会については、原則として返金はいたしかねます。なお、最少催行人数（5名）に満たず開催自体を中止する場合は、全額返金いたします。※本ポリシーは現時点の仮案です。</div>
+        <div style="font-size:15px;color:var(--ink-soft);line-height:1.7;margin-top:10px">ご都合によるお取消・ご退会については、原則として返金はいたしかねます。なお、最少催行人数（4名）に満たず開催自体を中止する場合は、全額返金いたします。※本ポリシーは現時点の仮案です。</div>
       </details>
       <details style="background:var(--card);border-radius:12px;padding:20px 24px">
         <summary style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:16px;font-weight:600;color:var(--coral)">個人情報やLINEでのやり取りの扱いについて教えてください。<span class="chev">▾</span></summary>
@@ -480,11 +480,11 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
       </div>
       <div style="display:flex;gap:32px;flex-wrap:wrap;align-items:center">
         <div style="flex:1 1 320px;min-width:260px;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;font-size:15px;color:var(--ink-soft)"><span style="color: var(--mute); white-space: nowrap">期間</span><span>3ヶ月間</span>
-          <span style="color: var(--mute); white-space: nowrap">定員</span><span>先着６名（最少催行5名）</span>
+          <span style="color: var(--mute); white-space: nowrap">定員</span><span>先着６名（最少催行4名）※先着順、定員に達し次第終了</span>
           <span style="color: var(--mute); white-space: nowrap">対象</span><span>小学生～高校生くらいのお子さんを持つ保護者（目安。発達特性・診断の有無は問いません）</span>
           <span style="color: var(--mute); white-space: nowrap">日程</span><span>2027年2月14日（日）・2月28日（日）・3月14日（日）・3月28日（日）・4月11日（日）・4月25日（日）　全6回、各回21:00〜</span>
           <span style="color: var(--mute); white-space: nowrap">開催方法</span><span>オンライン</span>
-          <span style="color: var(--mute); white-space: nowrap">申込締切</span><span>開講時期確定後にご案内（最少催行人数に達し次第締切る場合あり）</span>
+          <span style="color: var(--mute); white-space: nowrap">申込締切</span><span>2027年1月31日（日）※先着６名に達し次第、締切日前でも受付を終了します</span>
           <span style="color: var(--mute); white-space: nowrap">お支払い</span><span>お申込み後ご案内します</span>
         </div>
         <div style="flex:1 1 220px;min-width:220px;display:flex;flex-direction:column;align-items:center;gap:14px;background:var(--peach);border-radius:14px;padding:28px">
