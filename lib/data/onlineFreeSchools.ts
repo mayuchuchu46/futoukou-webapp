@@ -44,7 +44,7 @@ export const ONLINE_FREE_SCHOOLS: OnlineFreeSchool[] = [
     ageRange: '小学1年生～高校3年生',
     contact: '03-5050-0485',
     url: 'https://www.cjgakuen.com/',
-    note: 'オンライン上の教室で学習・交流する形式。出席扱い制度の活用支援も行っている。',
+    note: '2018年設立の、日本で先駆けて始まったオンラインフリースクールの一つ。代表・校長は10年の不登校経験を持つ小幡和輝氏。「ネットの先生」と呼ばれる担任がチャットを通じて日々伴走し、すらら・eboard・デキタスなど複数の教材から理解度に合わせて選んだ自宅学習をサポートするほか、学習の進捗をまとめたレポート作成を通じて在籍校への出席扱いの相談も行う。プログラミングやイラストなどのオンライン部活動、子ども同士が交流するホームルームも開かれている。',
     sourceKind: 'government',
     sourceUrl: 'https://www.city.kyoto.lg.jp/kyoiku/cmsfiles/contents/0000332/332077/8_kurasujapan.pdf',
     category: 'community',
