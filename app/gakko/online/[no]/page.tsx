@@ -145,6 +145,9 @@ export default async function OnlineSchoolPage({
             <div className="qtext">
               居住地を問わず、全国どこからでも利用できるオンラインフリースクールです。
             </div>
+            {school.note && (
+              <div className="qtext" style={{ fontSize: 13 }}>{school.note}</div>
+            )}
 
             {/* CTA（相談・公式サイト・お気に入り・シェア）は、情報が多い学校ほど下に
                 埋もれがちだったため、ページ上部にまとめる（2026-11-10、「各ページの
@@ -219,9 +222,6 @@ export default async function OnlineSchoolPage({
                 </div>
               ))}
             </div>
-            {school.note && (
-              <div className="muted" style={{ fontSize: 12 }}>{school.note}</div>
-            )}
             {school.sourceKind === 'official-site' && (
               <div className="muted" style={{ fontSize: 12 }}>
                 ※ 政府・教育委員会の公開一覧には掲載されておらず、運営会社・団体自身の公式サイト等の発表に基づく情報です。
