@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { cacheLife } from 'next/cache';
 import { SITE_URL } from '@/lib/site';
 
-// 「子どもとの関わり方実践プログラム」申込みLP（どうする先生×てつなぎ共催、
-// 田村さん担当の3ヶ月間プログラム）。
+// 「子どもとの関わり方3ヶ月実践プログラム」申込みLP（どうする先生×てつなぎ共催、
+// 田村さん担当の3ヶ月間プログラム）。プログラム名は2026-11-28に
+// 「子どもとの関わり方実践プログラム」から変更。
 // 元はClaude Artifact上でデザインしたページを移植したもの。独自のデザインシステム
 // （色・フォント・コンポーネント）を持つため、サイト共通のapp-shell/Header/Footerは
 // 使わず、.oyako-lpスコープ内に閉じたスタイルで独立したページとして実装している
@@ -18,6 +19,8 @@ import { SITE_URL } from '@/lib/site';
 // 価格・お支払い方法は企画の進行に合わせて今後も変わりうる。
 // 開催日程は2026-11-28に確定：2027年2月・3月・4月の第2・第4日曜日
 // （2/14, 2/28, 3/14, 3/28, 4/11, 4/25）、各回21:00〜（Projectのareaファイル参照）。
+// 早期割引（2026-11-28確定）：2026年12月31日までの申込みで¥3,000引き（¥66,800）。
+// 申込締切は2027年1月31日、最少催行人数は4名（先着順、定員6名）。
 //
 // 特定商取引法に基づく表記：サイト共通の/tokushohoページは、サイト本体の有料機能
 // （読み放題会員・専門家への質問）がまだベータ公開中で価格未定である旨の内容になっており、
@@ -26,19 +29,19 @@ import { SITE_URL } from '@/lib/site';
 // 自己完結する形で持たせている（2026-11-24）。
 
 export const metadata: Metadata = {
-  title: `公認心理師が伴走する、子どもとの関わり方実践プログラム | どうする先生`,
+  title: `公認心理師が伴走する、子どもとの関わり方3ヶ月実践プログラム | どうする先生`,
   description: `不登校・行き渋り・発達特性など、子どもとの関わり方に迷う保護者向けの3ヶ月間プログラム。現役スクールカウンセラーである公認心理師が、ワークショップ・個別カウンセリング・オンラインコミュニティで実践的に伴走します。`,
   alternates: { canonical: `${SITE_URL}/oyako-program` },
   openGraph: {
     type: 'website',
     locale: 'ja_JP',
-    title: `公認心理師が伴走する、子どもとの関わり方実践プログラム`,
+    title: `公認心理師が伴走する、子どもとの関わり方3ヶ月実践プログラム`,
     description: `不登校・行き渋り・発達特性など、子どもとの関わり方に迷う保護者向けの3ヶ月間プログラム。現役スクールカウンセラーである公認心理師が、ワークショップ・個別カウンセリング・オンラインコミュニティで実践的に伴走します。`,
   },
 };
 
-const FAQ_JSONLD = `{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "発達の診断を受けていなくても参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい、診断の有無は問いません。発達特性があるかどうかにかかわらず、ご参加いただけます。"}}, {"@type": "Question", "name": "不登校ではなく、行き渋り程度でも対象になりますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。不登校に限らず、お子さんとの関わり方に迷いや不安がある方であれば対象です。"}}, {"@type": "Question", "name": "対象は小学生〜高校生くらいとなっていますが、未就学児でも参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "対象の目安は小学生〜高校生くらいのお子さんですが、未就学児の方でもご希望があればご相談ください。"}}, {"@type": "Question", "name": "医療的な相談や診断もしてもらえますか？", "acceptedAnswer": {"@type": "Answer", "text": "本プログラムは診断や治療を行うものではありません。気づきと、必要に応じた相談先のご案内に範囲を限ります。"}}, {"@type": "Question", "name": "途中でやめることはできますか？キャンセルの場合、返金はありますか？", "acceptedAnswer": {"@type": "Answer", "text": "ご都合によるお取消・ご退会については、原則として返金はいたしかねます。なお、最少催行人数（4名）に満たず開催自体を中止する場合は、全額返金いたします。"}}, {"@type": "Question", "name": "個人情報やLINEでのやり取りの扱いについて教えてください。", "acceptedAnswer": {"@type": "Answer", "text": "ご登録いただいた情報やオンラインコミュニティでの投稿内容は、本プログラムの運営以外の目的には使用しません。"}}, {"@type": "Question", "name": "夫婦で参加することはできますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。おひとり分のお申し込みで、ご夫婦お二人でご参加いただけます。お二人目は半額（¥34,900）です。個別カウンセリング（オンライン）は1回45分、お二人そろって同じ画面でご参加いただく形です（アカウントは1つ）。オンラインコミュニティなどのコミュニティは、お二人それぞれのアカウントでご参加いただけます。"}}]}`;
-const COURSE_JSONLD = `{"@context": "https://schema.org", "@type": "Course", "name": "子どもとの関わり方実践プログラム", "description": "不登校・行き渋り・発達特性など、子どもとの関わり方に迷う保護者向けに、公認心理師が伴走する3ヶ月間の実践型プログラム（全六回のワークショップ、月一回の個別カウンセリング、オンラインコミュニティ付き）。", "inLanguage": "ja", "timeRequired": "P3M", "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "P1M2S"}, "offers": {"@type": "Offer", "price": "69800", "priceCurrency": "JPY", "availability": "https://schema.org/InStock"}}`;
+const FAQ_JSONLD = `{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "発達の診断を受けていなくても参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい、診断の有無は問いません。発達特性があるかどうかにかかわらず、ご参加いただけます。"}}, {"@type": "Question", "name": "不登校ではなく、行き渋り程度でも対象になりますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。不登校に限らず、お子さんとの関わり方に迷いや不安がある方であれば対象です。"}}, {"@type": "Question", "name": "対象は小学生〜高校生くらいとなっていますが、未就学児でも参加できますか？", "acceptedAnswer": {"@type": "Answer", "text": "対象の目安は小学生〜高校生くらいのお子さんですが、未就学児の方でもご希望があればご相談ください。"}}, {"@type": "Question", "name": "医療的な相談や診断もしてもらえますか？", "acceptedAnswer": {"@type": "Answer", "text": "本プログラムは診断や治療を行うものではありません。気づきと、必要に応じた相談先のご案内に範囲を限ります。"}}, {"@type": "Question", "name": "途中でやめることはできますか？キャンセルの場合、返金はありますか？", "acceptedAnswer": {"@type": "Answer", "text": "ご都合によるお取消・ご退会については、原則として返金はいたしかねます。なお、最少催行人数（4名）に満たず開催自体を中止する場合は、全額返金いたします。"}}, {"@type": "Question", "name": "欠席した場合、アーカイブ（録画）はありますか？", "acceptedAnswer": {"@type": "Answer", "text": "グループワークでは参加者同士の個人的なお話もうかがうため、全体の録画はおこなっておりません。欠席された回については、公認心理師による専門的な解説部分のみを録画し、後日共有いたします。"}}, {"@type": "Question", "name": "個人情報やLINEでのやり取りの扱いについて教えてください。", "acceptedAnswer": {"@type": "Answer", "text": "ご登録いただいた情報やオンラインコミュニティでの投稿内容は、本プログラムの運営以外の目的には使用しません。"}}, {"@type": "Question", "name": "夫婦で参加することはできますか？", "acceptedAnswer": {"@type": "Answer", "text": "はい。おひとり分のお申し込みで、ご夫婦お二人でご参加いただけます。お二人目は半額（¥34,900）です。個別カウンセリング（オンライン）は1回45分、お二人そろって同じ画面でご参加いただく形です（アカウントは1つ）。オンラインコミュニティなどのコミュニティは、お二人それぞれのアカウントでご参加いただけます。"}}]}`;
+const COURSE_JSONLD = `{"@context": "https://schema.org", "@type": "Course", "name": "子どもとの関わり方3ヶ月実践プログラム", "description": "不登校・行き渋り・発達特性など、子どもとの関わり方に迷う保護者向けに、公認心理師が伴走する3ヶ月間の実践型プログラム（全六回のワークショップ、月一回の個別カウンセリング、オンラインコミュニティ付き）。", "inLanguage": "ja", "timeRequired": "P3M", "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "P1M2S"}, "offers": {"@type": "Offer", "price": "69800", "priceCurrency": "JPY", "availability": "https://schema.org/InStock"}}`;
 
 const PAGE_STYLE = `.oyako-lp{
     --cream:#F7FAFA;
@@ -73,7 +76,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
     <div class="hero-content" style="max-width:1120px;margin:0 auto;width:100%;position:relative;z-index:1">
       <div class="hero-text-panel" style="flex:1 1 440px;display:flex;flex-direction:column;gap:20px;max-width:560px">
         <div style="display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--coral-dark);background:#DFF3F4;padding:6px 14px;border-radius:999px;width:fit-content"><span>全6回・3ヶ月コース</span><span style="color:var(--coral-dark);opacity:0.5;font-weight:400">｜</span><span>個別カウンセリング付</span></div>
-        <h1 style="line-height:1.15;color:var(--ink)"><span style="display:block;font-size:clamp(13px,3.2vw,16px);font-weight:600;color:var(--coral-dark);letter-spacing:0.02em;margin-bottom:10px;font-family:'Work Sans',system-ui,sans-serif">公認心理師が伴走する</span><span style="display:block;font-size:clamp(28px,8.5vw,54px);font-weight:800;letter-spacing:-0.01em">子どもとの関わり方</span><span style="display:inline-block;font-size:clamp(28px,8.5vw,54px);font-weight:800;letter-spacing:-0.01em;color:var(--coral);border-bottom:6px solid #FFD900;padding-bottom:2px;margin-top:4px">実践プログラム</span></h1>
+        <h1 style="line-height:1.15;color:var(--ink)"><span style="display:block;font-size:clamp(13px,3.2vw,16px);font-weight:600;color:var(--coral-dark);letter-spacing:0.02em;margin-bottom:10px;font-family:'Work Sans',system-ui,sans-serif">公認心理師が伴走する</span><span style="display:block;font-size:clamp(28px,8.5vw,54px);font-weight:800;letter-spacing:-0.01em">子どもとの関わり方</span><span style="display:inline-block;font-size:clamp(28px,8.5vw,54px);font-weight:800;letter-spacing:-0.01em;color:var(--coral);border-bottom:6px solid #FFD900;padding-bottom:2px;margin-top:4px"><span style="font-family:'Hiragino Mincho ProN','Yu Mincho',YuMincho,serif">3</span>ヶ月実践プログラム</span></h1>
         <p class="hero-desc" style="font-size:clamp(15px,4vw,17px);line-height:1.8;color:var(--ink-soft);margin:0;max-width:520px">不登校や発達面の心配、行き渋りなど、お子さんとの関わり方に迷いや不安があるご家庭へ。<strong style="color:var(--ink)">3ヶ月間、公認心理師と一緒に実践できる関わり方を身につけます。</strong></p>
         <div class="hero-pills-row" style="display:flex;gap:8px">
           <div class="pill" style="flex:1 1 0;min-width:0;padding:8px 10px 8px 8px">
@@ -230,7 +233,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
           </svg>
           <div style="font-size:13px;font-weight:600;color:var(--coral);letter-spacing:0.04em">期間中いつでも</div>
           <h3 style="font-size:20px">オンラインコミュニティ</h3>
-          <p style="font-size:15px;line-height:1.7;color:var(--ink-soft);margin:0">参加者専用のオンラインコミュニティで、同じ悩みを持つ保護者同士がつながり、一人で抱え込まずに続けられる場をつくります。</p>
+          <p style="font-size:15px;line-height:1.7;color:var(--ink-soft);margin:0">参加者専用のオンラインコミュニティで、同じ悩みを持つ保護者同士がつながり、一人で抱え込まずに続けられる場をつくります。すぐにでも誰かとつながりたい方のため、お申込み後、コミュニティにも準備が整い次第先にご案内できます。開講（2027年2月）を待たずにご利用いただけます。</p>
         </div>
       </div>
     </div>
@@ -458,6 +461,10 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
         <div style="font-size:15px;color:var(--ink-soft);line-height:1.7;margin-top:10px">ご都合によるお取消・ご退会については、原則として返金はいたしかねます。なお、最少催行人数（4名）に満たず開催自体を中止する場合は、全額返金いたします。※本ポリシーは現時点の仮案です。</div>
       </details>
       <details style="background:var(--card);border-radius:12px;padding:20px 24px">
+        <summary style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:16px;font-weight:600;color:var(--coral)">欠席した場合、アーカイブ（録画）はありますか？<span class="chev">▾</span></summary>
+        <div style="font-size:15px;color:var(--ink-soft);line-height:1.7;margin-top:10px">グループワークでは参加者同士の個人的なお話もうかがうため、全体の録画はおこなっておりません。欠席された回については、公認心理師による専門的な解説部分のみを録画し、後日共有いたします。</div>
+      </details>
+      <details style="background:var(--card);border-radius:12px;padding:20px 24px">
         <summary style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:16px;font-weight:600;color:var(--coral)">個人情報やLINEでのやり取りの扱いについて教えてください。<span class="chev">▾</span></summary>
         <div style="font-size:15px;color:var(--ink-soft);line-height:1.7;margin-top:10px">ご登録いただいた情報やオンラインコミュニティでの投稿内容は、本プログラムの運営以外の目的には使用しません。</div>
       </details>
@@ -484,14 +491,21 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
           <span style="color: var(--mute); white-space: nowrap">対象</span><span>小学生～高校生くらいのお子さんを持つ保護者（目安。発達特性・診断の有無は問いません）</span>
           <span style="color: var(--mute); white-space: nowrap">日程</span><span>2027年2月14日（日）・2月28日（日）・3月14日（日）・3月28日（日）・4月11日（日）・4月25日（日）　全6回、各回21:00〜</span>
           <span style="color: var(--mute); white-space: nowrap">開催方法</span><span>オンライン</span>
+          <span style="color: var(--mute); white-space: nowrap">早期割引</span><span>2026年12月31日（木）までのお申込みで¥3,000引き（¥66,800）</span>
           <span style="color: var(--mute); white-space: nowrap">申込締切</span><span>2027年1月31日（日）※先着６名に達し次第、締切日前でも受付を終了します</span>
-          <span style="color: var(--mute); white-space: nowrap">お支払い</span><span>お申込み後ご案内します</span>
+          <span style="color: var(--mute); white-space: nowrap">お支払い方法</span><span>お申込み後ご案内します</span>
         </div>
         <div style="flex:1 1 220px;min-width:220px;display:flex;flex-direction:column;align-items:center;gap:14px;background:var(--peach);border-radius:14px;padding:28px">
+          <div style="font-size:11px;font-weight:700;color:#FFFDF9;background:var(--coral);padding:4px 14px;border-radius:999px;letter-spacing:0.04em">早期割引キャンペーン実施中</div>
           <div style="font-size:13px;font-weight:600;color:var(--coral);letter-spacing:0.04em">初回特別価格</div>
-          <div style="font-size:clamp(28px,9vw,38px);font-weight:700;font-family:'Fraunces',serif;color:var(--ink)">¥69,800</div>
+          <div style="display:flex;align-items:baseline;gap:10px">
+            <div style="font-size:16px;color:var(--mute);text-decoration:line-through">¥69,800</div>
+            <div style="font-size:clamp(28px,9vw,38px);font-weight:700;font-family:'Fraunces',serif;color:var(--ink)">¥66,800</div>
+          </div>
           <div style="font-size:13px;color:var(--mute)">（3ヶ月・税込）</div>
+          <div style="font-size:12px;font-weight:600;color:var(--coral);text-align:center">2026年12月31日（木）までのお申込み限定</div>
           <a href="#apply" class="btn" style="width:100%">お申し込みはこちら</a>
+          <div style="font-size:12px;color:var(--coral);font-weight:600;text-align:center">お申込み後、コミュニティにも準備次第、先にご案内できます</div>
           <div style="font-size:12px;color:var(--mute);text-align:center">ご夫婦でご参加の場合、お二人目は半額（¥34,900）</div>
         </div>
       </div>
@@ -514,7 +528,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
     <details style="background:var(--peach);border-radius:10px;padding:16px 24px">
       <summary style="cursor:pointer;font-size:15px;font-weight:600;color:var(--ink);text-align:center;list-style:none">特定商取引法に基づく表記を見る</summary>
     <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--ink-soft);margin-top:16px">
-      <div>販売価格：¥69,800（税込）</div>
+      <div>販売価格：¥69,800（税込）※2026年12月31日までのお申込みは早期割引価格¥66,800（税込）</div>
       <div>お支払い方法：ご申込後の一括前払い</div>
       <div>お支払い時期：お申込みから1週間以内</div>
       <div>提供時期：2027年2月14日・2月28日・3月14日・3月28日・4月11日・4月25日（全6回、各回21:00〜）</div>
@@ -532,7 +546,7 @@ const PAGE_BODY = `<div id="top" style="width:100%;max-width:100%;overflow-x:hid
   </div>
 
   <footer style="padding:28px 24px;text-align:center;font-size:13px;color:var(--mute)">
-    公認心理師が伴走する、子どもとの関わり方実践プログラム
+    公認心理師が伴走する、子どもとの関わり方3ヶ月実践プログラム
   </footer>
 
 </div>
