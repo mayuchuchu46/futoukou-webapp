@@ -43,16 +43,13 @@ export default async function Image() {
   const titleLine2 = '3ヶ月実践プログラム';
   const badgeText = '早期割引実施中';
 
-  const [photoData, logoData] = await Promise.all([
-    readFile(join(process.cwd(), 'public/images/oyako-program/d958e240cd492914484b48b7ffef597d.png'), 'base64'),
-    readFile(join(process.cwd(), 'public/assets/sensei_logo.png'), 'base64'),
-  ]);
-  const photoSrc = `data:image/png;base64,${photoData}`;
-  const logoSrc = `data:image/png;base64,${logoData}`;
-
-  const fontData = await loadGoogleFont(
-    `${pillText1}${pillText2}${kicker}${titleLine1}${titleLine2}${badgeText}どうする先生×てつなぎ｜`
+  const photoData = await readFile(
+    join(process.cwd(), 'public/images/oyako-program/d958e240cd492914484b48b7ffef597d.png'),
+    'base64'
   );
+  const photoSrc = `data:image/png;base64,${photoData}`;
+
+  const fontData = await loadGoogleFont(`${pillText1}${pillText2}${kicker}${titleLine1}${titleLine2}${badgeText}`);
 
   return new ImageResponse(
     (
@@ -166,11 +163,6 @@ export default async function Image() {
               {titleLine2}
             </div>
           </div>
-        </div>
-
-        <div style={{ position: 'absolute', left: 68, bottom: 36, display: 'flex', alignItems: 'center', gap: 14 }}>
-          <img src={logoSrc} width={44} height={44} style={{ borderRadius: '50%' }} />
-          <div style={{ display: 'flex', fontSize: 22, fontWeight: 800, color: '#333638' }}>どうする先生 × てつなぎ</div>
         </div>
       </div>
     ),
